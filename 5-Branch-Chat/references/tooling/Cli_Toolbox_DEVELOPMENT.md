@@ -1,6 +1,6 @@
 # Cli_Toolbox 开发文档（入口）
 
-适用技能：`4-Branch-Chat`
+适用技能：`5-Branch-Chat`
 
 ## 命名约束
 - 工具统一命名为 `Cli_Toolbox.<tool_name>`。
@@ -29,6 +29,6 @@
 - 新增子命令时，必须先登记模块目录再提交实现。
 
 ## 版本变更记录
-- 2026-02-26：初始化 `4-Branch-Chat`，落地 session 定位、final reply 提取与 study packet 三个模块。
+- 2026-02-26：初始化 `5-Branch-Chat`，落地 session 定位、final reply 提取与 study packet 三个模块。
 - 2026-02-26：语义收敛为“定位历史回复并直接答疑”，新增 `answer-question` 命令与 `resume_id` 入参别名。
 - 2026-02-26：`answer-question` 增强为双模式：`keyword_match` 与 `topic_evidence`；支持仅 `resume_id + question` 自动收集证据并答疑，新增 `--evidence-limit`。

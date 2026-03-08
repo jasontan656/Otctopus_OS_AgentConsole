@@ -1,8 +1,8 @@
 # Observability Contract
 
 ## Runtime Anchors
-- `Codex_Skill_Runtime/4-Branch-Chat/machine.jsonl`
-- `Codex_Skill_Runtime/4-Branch-Chat/human.log`
+- `Codex_Skill_Runtime/5-Branch-Chat/machine.jsonl`
+- `Codex_Skill_Runtime/5-Branch-Chat/human.log`
 - `logs/machine.jsonl`（project-local anchor）
 - `logs/human.log`（project-local anchor）
 

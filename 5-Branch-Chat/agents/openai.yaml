@@ -1,0 +1,4 @@
+interface:
+  display_name: "5 Branch Chat"
+  short_description: "按 resume/session id + 关键词定位 assistant 回复，并直接回答用户问题。"
+  default_prompt: "请使用 5-Branch-Chat：接收 resume_id/session_id、keyword 和 question，定位命中回复后直接输出答案。"
