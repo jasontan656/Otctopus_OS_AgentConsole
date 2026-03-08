@@ -1,68 +1,25 @@
 {
   "contract_name": "2-Octupos-FullStack_RUNTIME_CONTRACT",
-  "contract_version": "v1.1",
-  "validation_mode": "static_contract_until_cli_ready",
+  "contract_version": "v2.0",
+  "validation_mode": "static_minimal",
   "required_fields": [
     "skill_name",
-    "profile",
-    "routing_policy",
-    "tool_contracts",
+    "role_definition",
+    "execution_model",
     "governance_rules"
   ],
   "optional_fields": [
     "notes"
   ],
   "skill_name": "2-Octupos-FullStack",
-  "profile": "staged_cli_first",
-  "stage_axis": [
-    "mother_doc",
-    "construction_plan",
-    "implementation",
-    "acceptance"
-  ],
-  "scope_categories": [
-    "frontend",
-    "backend",
-    "database",
-    "api_and_contracts",
-    "deployment_and_runtime",
-    "operations_and_maintenance",
-    "app_and_multi_client",
-    "integration_and_messaging",
-    "testing_and_acceptance",
-    "observability_and_security",
-    "documentation_and_mother_doc_governance",
-    "fullstack_graph_and_architecture_contracts"
-  ],
-  "routing_policy": {
-    "skill_md_role": "entry_only",
-    "runtime_guidance_source": "references/runtime/SKILL_RUNTIME_CONTRACT.json until Cli_Toolbox exists; then Cli_Toolbox commands",
-    "markdown_role": "human_audit_and_reference",
-    "detail_downstream_paths": [
-      "rules/FULLSTACK_SKILL_HARD_RULES.md",
-      "references/stages/00_STAGE_INDEX.md",
-      "references/tooling/Cli_Toolbox_USAGE.md",
-      "references/tooling/Cli_Toolbox_DEVELOPMENT.md"
-    ]
-  },
-  "tool_contracts": {
-    "Cli_Toolbox.stage-checklist": "reserved_interface; 输出阶段 checklist。",
-    "Cli_Toolbox.stage-doc-contract": "reserved_interface; 输出当前阶段可读文档边界。",
-    "Cli_Toolbox.stage-command-contract": "reserved_interface; 输出当前阶段命令入口与门禁。",
-    "Cli_Toolbox.stage-graph-contract": "reserved_interface; 输出当前阶段 graph 角色。"
-  },
+  "role_definition": "未来项目 admin panel 内置的运营AI“章鱼”，负责持续维护底层文档、开发代码并回填 evidence。",
+  "execution_model": "文档直达实现；新文档架构直接匹配代码结构，因此不保留独立的中间 plan / construction_plan 环节。",
   "governance_rules": [
-    "SKILL.md 必须保持轻量入口，不承载堆积式细节。",
-    "在阶段级 CLI 合同尚未完成前，以本 JSON 作为静态运行合同源；CLI 完成后切换为 CLI-first。",
-    "mother_doc 是顶层需求源与长期维护容器。",
-    "fullstack graph 不能替代 mother_doc 作为需求源。",
-    "公共内核只承载跨域稳定规则；域差异规则必须以下沉 overlay 承载。",
-    "阶段切换时只保留 resident docs，并显式丢弃上一阶段 focus。",
-    "技能内部规则不得覆盖 workspace/runtime 的外层硬合同。",
-    "若规则依赖真实项目状态，必须显式标记为 dynamic runtime contract。"
+    "文档、代码与 evidence 都是项目本体的一部分。",
+    "技能内部规则不得覆盖 workspace/runtime 的外层硬合同。"
   ],
   "notes": [
-    "当前轮只固化顶层目标、覆盖域与治理规则。",
-    "阶段命令接口已命名，但尚未实现。"
+    "当前轮只保留最小顶层定义。",
+    "工具、UI 合同与更细的目录结构后续再定。"
   ]
 }
