@@ -1,0 +1,29 @@
+{
+  "pack_id": "replace_me",
+  "evidence_domains": {
+    "code": [
+      "replace_me"
+    ],
+    "tests": [
+      "replace_me"
+    ],
+    "runtime": [
+      "replace_me"
+    ],
+    "logs": [
+      "replace_me"
+    ],
+    "db": [
+      "replace_me"
+    ],
+    "mq": [
+      "replace_me"
+    ],
+    "redis": [
+      "replace_me"
+    ],
+    "operator_notes": [
+      "replace_me"
+    ]
+  }
+}

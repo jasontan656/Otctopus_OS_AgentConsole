@@ -1,0 +1,16 @@
+export var SupportedLanguages;
+(function (SupportedLanguages) {
+    SupportedLanguages["JavaScript"] = "javascript";
+    SupportedLanguages["TypeScript"] = "typescript";
+    SupportedLanguages["Python"] = "python";
+    SupportedLanguages["Java"] = "java";
+    SupportedLanguages["C"] = "c";
+    SupportedLanguages["CPlusPlus"] = "cpp";
+    SupportedLanguages["CSharp"] = "csharp";
+    SupportedLanguages["Go"] = "go";
+    SupportedLanguages["Rust"] = "rust";
+    SupportedLanguages["PHP"] = "php";
+    SupportedLanguages["Kotlin"] = "kotlin";
+    // Ruby = 'ruby',
+    SupportedLanguages["Swift"] = "swift";
+})(SupportedLanguages || (SupportedLanguages = {}));

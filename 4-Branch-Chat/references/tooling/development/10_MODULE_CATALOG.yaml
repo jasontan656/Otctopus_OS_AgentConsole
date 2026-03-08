@@ -1,0 +1,28 @@
+catalog_version: v1
+toolbox_name: Cli_Toolbox
+maintain_rules:
+  naming: "Cli_Toolbox.<tool_name>"
+  docs_sync_required: true
+  required_docs:
+    - references/tooling/Cli_Toolbox_USAGE.md
+    - references/tooling/Cli_Toolbox_DEVELOPMENT.md
+    - references/tooling/development/20_CATEGORY_INDEX.md
+modules:
+  - module_id: session_locator
+    tool_alias: Cli_Toolbox.locate_session
+    entrypoint: scripts/branch_chat_toolbox.py:locate-session
+    status: active
+    doc: references/tooling/development/modules/session_locator.md
+  - module_id: final_reply_extractor
+    tool_alias: Cli_Toolbox.extract_assistant_final_reply
+    entrypoint: scripts/branch_chat_toolbox.py:extract-final-reply
+    status: active
+    doc: references/tooling/development/modules/final_reply_extractor.md
+  - module_id: answer_responder
+    tool_alias: Cli_Toolbox.answer_question
+    entrypoint: scripts/branch_chat_toolbox.py:answer-question
+    modes:
+      - keyword_match
+      - topic_evidence
+    status: active
+    doc: references/tooling/development/modules/answer_responder.md

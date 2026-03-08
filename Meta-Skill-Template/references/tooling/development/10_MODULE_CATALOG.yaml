@@ -1,0 +1,22 @@
+catalog_version: v1
+toolbox_name: Cli_Toolbox
+maintain_rules:
+  naming: "Cli_Toolbox.<tool_name>"
+  docs_sync_required: true
+  required_docs:
+    - references/tooling/Cli_Toolbox_USAGE.md
+    - references/tooling/Cli_Toolbox_DEVELOPMENT.md
+    - references/tooling/development/20_CATEGORY_INDEX.md
+modules:
+  - module_id: create_skill_from_template
+    tool_alias: Cli_Toolbox.create_skill_from_template
+    entrypoint: scripts/create_skill_from_template.py
+    doc_paths:
+      usage_doc: references/tooling/Cli_Toolbox_USAGE.md
+      development_doc: references/tooling/Cli_Toolbox_DEVELOPMENT.md
+      module_doc: references/tooling/development/modules/create_skill_from_template.md
+    category_tags:
+      - scaffold
+      - generation
+      - governance
+    status: active

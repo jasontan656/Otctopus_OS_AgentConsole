@@ -1,0 +1,1427 @@
+schema_version: mstg_tool_docs_structured_v1
+managed_skill: 2-Task-runtime-selfcheck
+tools:
+  - tool_id: runtime_pain_batch
+    usage:
+      summary: Governed tool contract for runtime_pain_batch; keep script/docs/ledger synchronized during 
+        self-evolution.
+      command_examples:
+        - python3 scripts/runtime_pain_batch.py --help
+      inputs:
+        - structured args
+        - instance runtime context
+        - machine-map anchors and tool docs references
+      outputs:
+        - json status payload
+        - runtime artifacts update
+        - traceable evolution evidence
+      script_anchor_refs:
+        - scripts/runtime_pain_batch.py
+      doc_anchor_refs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+    modification:
+      update_workflow:
+        - docs_pre_update
+        - script_update
+        - tool_docs_registry_sync_check
+        - machine_map_anchor_sync
+        - ledger_append
+        - full_gate_lint
+      required_docs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/L13/README.md
+        - docs/tooling/TOOL_DOC_SYNC_CONTRACT.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+      sync_contract:
+        require_tool_registry_docs_sync: true
+        require_machine_map_anchor_sync: true
+        require_tool_change_ledger_append: true
+      notes:
+        - Any 2-Task-runtime-selfcheck tool self-evolution must leave traceable records and keep docs with tool runtime 
+          in sync.
+        - timestamp_utc: '2026-02-23T06:12:30Z'
+          author: codex
+          summary: 'pre-change docs update: repair_semantics_update: runtime_pain_batch paths=4'
+          evidence:
+            - SKILL.md
+            - agents/openai.yaml
+            - scripts/runtime_pain_batch.py
+            - scripts/runtime_pain_repair.py
+        - timestamp_utc: '2026-02-23T06:12:30Z'
+          author: codex
+          summary: 'post-change ops/docs update: repair_semantics_update: runtime_pain_batch paths=4'
+          evidence:
+            - docs/L0/README.md
+            - docs/L13/README.md
+        - timestamp_utc: '2026-02-23T06:15:22Z'
+          author: codex
+          summary: 'pre-change docs update: governance_doc_param_fix: runtime_pain_batch paths=1'
+          evidence:
+            - SKILL.md
+        - timestamp_utc: '2026-02-23T06:15:22Z'
+          author: codex
+          summary: 'post-change ops/docs update: governance_doc_param_fix: runtime_pain_batch paths=1'
+          evidence:
+            - docs/L0/README.md
+            - docs/L13/README.md
+    development:
+      owner: ai_maintained
+      self_evolution_requirements:
+        - update tool docs before/alongside script changes
+        - append TOOL_CHANGE_LEDGER entry with required keys
+        - rerun full gate and outcome lint until PASS
+      records: []
+  - tool_id: runtime_pain_narrative
+    usage:
+      summary: Governed tool contract for runtime_pain_narrative; keep script/docs/ledger synchronized during 
+        self-evolution.
+      command_examples:
+        - python3 scripts/runtime_pain_narrative.py --help
+      inputs:
+        - structured args
+        - instance runtime context
+        - machine-map anchors and tool docs references
+      outputs:
+        - json status payload
+        - runtime artifacts update
+        - traceable evolution evidence
+      script_anchor_refs:
+        - scripts/runtime_pain_narrative.py
+      doc_anchor_refs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+    modification:
+      update_workflow:
+        - docs_pre_update
+        - script_update
+        - tool_docs_registry_sync_check
+        - machine_map_anchor_sync
+        - ledger_append
+        - full_gate_lint
+      required_docs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/L13/README.md
+        - docs/tooling/TOOL_DOC_SYNC_CONTRACT.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+      sync_contract:
+        require_tool_registry_docs_sync: true
+        require_machine_map_anchor_sync: true
+        require_tool_change_ledger_append: true
+      notes:
+        - Any 2-Task-runtime-selfcheck tool self-evolution must leave traceable records and keep docs with tool runtime 
+          in sync.
+    development:
+      owner: ai_maintained
+      self_evolution_requirements:
+        - update tool docs before/alongside script changes
+        - append TOOL_CHANGE_LEDGER entry with required keys
+        - rerun full gate and outcome lint until PASS
+      records: []
+  - tool_id: tg_governance_audit_log
+    usage:
+      summary: Governed tool contract for tg_governance_audit_log; keep script/docs/ledger synchronized during 
+        self-evolution.
+      command_examples:
+        - python3 tooling_governance/default/scripts/governance_audit_log.py --help
+      inputs:
+        - structured args
+        - instance runtime context
+        - machine-map anchors and tool docs references
+      outputs:
+        - json status payload
+        - runtime artifacts update
+        - traceable evolution evidence
+      script_anchor_refs:
+        - tooling_governance/default/scripts/governance_audit_log.py
+      doc_anchor_refs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+    modification:
+      update_workflow:
+        - docs_pre_update
+        - script_update
+        - tool_docs_registry_sync_check
+        - machine_map_anchor_sync
+        - ledger_append
+        - full_gate_lint
+      required_docs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/L13/README.md
+        - docs/tooling/TOOL_DOC_SYNC_CONTRACT.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+      sync_contract:
+        require_tool_registry_docs_sync: true
+        require_machine_map_anchor_sync: true
+        require_tool_change_ledger_append: true
+      notes:
+        - Any 2-Task-runtime-selfcheck tool self-evolution must leave traceable records and keep docs with tool runtime 
+          in sync.
+    development:
+      owner: ai_maintained
+      self_evolution_requirements:
+        - update tool docs before/alongside script changes
+        - append TOOL_CHANGE_LEDGER entry with required keys
+        - rerun full gate and outcome lint until PASS
+      records: []
+  - tool_id: tg_mstg_l0_l13_full_gate_lint
+    usage:
+      summary: Governed tool contract for tg_mstg_l0_l13_full_gate_lint; keep script/docs/ledger synchronized during 
+        self-evolution.
+      command_examples:
+        - python3 tooling_governance/default/scripts/mstg_l0_l13_full_gate_lint.py --help
+      inputs:
+        - structured args
+        - instance runtime context
+        - machine-map anchors and tool docs references
+      outputs:
+        - json status payload
+        - runtime artifacts update
+        - traceable evolution evidence
+      script_anchor_refs:
+        - tooling_governance/default/scripts/mstg_l0_l13_full_gate_lint.py
+      doc_anchor_refs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+    modification:
+      update_workflow:
+        - docs_pre_update
+        - script_update
+        - tool_docs_registry_sync_check
+        - machine_map_anchor_sync
+        - ledger_append
+        - full_gate_lint
+      required_docs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/L13/README.md
+        - docs/tooling/TOOL_DOC_SYNC_CONTRACT.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+      sync_contract:
+        require_tool_registry_docs_sync: true
+        require_machine_map_anchor_sync: true
+        require_tool_change_ledger_append: true
+      notes:
+        - Any 2-Task-runtime-selfcheck tool self-evolution must leave traceable records and keep docs with tool runtime 
+          in sync.
+    development:
+      owner: ai_maintained
+      self_evolution_requirements:
+        - update tool docs before/alongside script changes
+        - append TOOL_CHANGE_LEDGER entry with required keys
+        - rerun full gate and outcome lint until PASS
+      records: []
+  - tool_id: tg_mstg_l0_l13_layer_schema_lint
+    usage:
+      summary: Governed tool contract for tg_mstg_l0_l13_layer_schema_lint; keep script/docs/ledger synchronized during 
+        self-evolution.
+      command_examples:
+        - python3 tooling_governance/default/scripts/mstg_l0_l13_layer_schema_lint.py --help
+      inputs:
+        - structured args
+        - instance runtime context
+        - machine-map anchors and tool docs references
+      outputs:
+        - json status payload
+        - runtime artifacts update
+        - traceable evolution evidence
+      script_anchor_refs:
+        - tooling_governance/default/scripts/mstg_l0_l13_layer_schema_lint.py
+      doc_anchor_refs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+    modification:
+      update_workflow:
+        - docs_pre_update
+        - script_update
+        - tool_docs_registry_sync_check
+        - machine_map_anchor_sync
+        - ledger_append
+        - full_gate_lint
+      required_docs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/L13/README.md
+        - docs/tooling/TOOL_DOC_SYNC_CONTRACT.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+      sync_contract:
+        require_tool_registry_docs_sync: true
+        require_machine_map_anchor_sync: true
+        require_tool_change_ledger_append: true
+      notes:
+        - Any 2-Task-runtime-selfcheck tool self-evolution must leave traceable records and keep docs with tool runtime 
+          in sync.
+    development:
+      owner: ai_maintained
+      self_evolution_requirements:
+        - update tool docs before/alongside script changes
+        - append TOOL_CHANGE_LEDGER entry with required keys
+        - rerun full gate and outcome lint until PASS
+      records: []
+  - tool_id: tg_mstg_l0_l13_linear_composite
+    usage:
+      summary: Governed tool contract for tg_mstg_l0_l13_linear_composite; keep script/docs/ledger synchronized during 
+        self-evolution.
+      command_examples:
+        - python3 tooling_governance/default/scripts/mstg_l0_l13_linear_composite.py --help
+      inputs:
+        - structured args
+        - instance runtime context
+        - machine-map anchors and tool docs references
+      outputs:
+        - json status payload
+        - runtime artifacts update
+        - traceable evolution evidence
+      script_anchor_refs:
+        - tooling_governance/default/scripts/mstg_l0_l13_linear_composite.py
+      doc_anchor_refs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+    modification:
+      update_workflow:
+        - docs_pre_update
+        - script_update
+        - tool_docs_registry_sync_check
+        - machine_map_anchor_sync
+        - ledger_append
+        - full_gate_lint
+      required_docs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/L13/README.md
+        - docs/tooling/TOOL_DOC_SYNC_CONTRACT.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+      sync_contract:
+        require_tool_registry_docs_sync: true
+        require_machine_map_anchor_sync: true
+        require_tool_change_ledger_append: true
+      notes:
+        - Any 2-Task-runtime-selfcheck tool self-evolution must leave traceable records and keep docs with tool runtime 
+          in sync.
+    development:
+      owner: ai_maintained
+      self_evolution_requirements:
+        - update tool docs before/alongside script changes
+        - append TOOL_CHANGE_LEDGER entry with required keys
+        - rerun full gate and outcome lint until PASS
+      records: []
+  - tool_id: tg_mstg_l0_l13_linear_flow
+    usage:
+      summary: Governed tool contract for tg_mstg_l0_l13_linear_flow; keep script/docs/ledger synchronized during 
+        self-evolution.
+      command_examples:
+        - python3 tooling_governance/default/scripts/mstg_l0_l13_linear_flow.py --help
+      inputs:
+        - structured args
+        - instance runtime context
+        - machine-map anchors and tool docs references
+      outputs:
+        - json status payload
+        - runtime artifacts update
+        - traceable evolution evidence
+      script_anchor_refs:
+        - tooling_governance/default/scripts/mstg_l0_l13_linear_flow.py
+      doc_anchor_refs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+    modification:
+      update_workflow:
+        - docs_pre_update
+        - script_update
+        - tool_docs_registry_sync_check
+        - machine_map_anchor_sync
+        - ledger_append
+        - full_gate_lint
+      required_docs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/L13/README.md
+        - docs/tooling/TOOL_DOC_SYNC_CONTRACT.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+      sync_contract:
+        require_tool_registry_docs_sync: true
+        require_machine_map_anchor_sync: true
+        require_tool_change_ledger_append: true
+      notes:
+        - Any 2-Task-runtime-selfcheck tool self-evolution must leave traceable records and keep docs with tool runtime 
+          in sync.
+    development:
+      owner: ai_maintained
+      self_evolution_requirements:
+        - update tool docs before/alongside script changes
+        - append TOOL_CHANGE_LEDGER entry with required keys
+        - rerun full gate and outcome lint until PASS
+      records: []
+  - tool_id: tg_mstg_l0_l13_linear_layers
+    usage:
+      summary: Governed tool contract for tg_mstg_l0_l13_linear_layers; keep script/docs/ledger synchronized during 
+        self-evolution.
+      command_examples:
+        - python3 tooling_governance/default/scripts/mstg_l0_l13_linear_layers.py --help
+      inputs:
+        - structured args
+        - instance runtime context
+        - machine-map anchors and tool docs references
+      outputs:
+        - json status payload
+        - runtime artifacts update
+        - traceable evolution evidence
+      script_anchor_refs:
+        - tooling_governance/default/scripts/mstg_l0_l13_linear_layers.py
+      doc_anchor_refs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+    modification:
+      update_workflow:
+        - docs_pre_update
+        - script_update
+        - tool_docs_registry_sync_check
+        - machine_map_anchor_sync
+        - ledger_append
+        - full_gate_lint
+      required_docs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/L13/README.md
+        - docs/tooling/TOOL_DOC_SYNC_CONTRACT.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+      sync_contract:
+        require_tool_registry_docs_sync: true
+        require_machine_map_anchor_sync: true
+        require_tool_change_ledger_append: true
+      notes:
+        - Any 2-Task-runtime-selfcheck tool self-evolution must leave traceable records and keep docs with tool runtime 
+          in sync.
+    development:
+      owner: ai_maintained
+      self_evolution_requirements:
+        - update tool docs before/alongside script changes
+        - append TOOL_CHANGE_LEDGER entry with required keys
+        - rerun full gate and outcome lint until PASS
+      records: []
+  - tool_id: tg_mstg_l0_l13_linear_lint
+    usage:
+      summary: Governed tool contract for tg_mstg_l0_l13_linear_lint; keep script/docs/ledger synchronized during 
+        self-evolution.
+      command_examples:
+        - python3 tooling_governance/default/scripts/mstg_l0_l13_linear_lint.py --help
+      inputs:
+        - structured args
+        - instance runtime context
+        - machine-map anchors and tool docs references
+      outputs:
+        - json status payload
+        - runtime artifacts update
+        - traceable evolution evidence
+      script_anchor_refs:
+        - tooling_governance/default/scripts/mstg_l0_l13_linear_lint.py
+      doc_anchor_refs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+    modification:
+      update_workflow:
+        - docs_pre_update
+        - script_update
+        - tool_docs_registry_sync_check
+        - machine_map_anchor_sync
+        - ledger_append
+        - full_gate_lint
+      required_docs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/L13/README.md
+        - docs/tooling/TOOL_DOC_SYNC_CONTRACT.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+      sync_contract:
+        require_tool_registry_docs_sync: true
+        require_machine_map_anchor_sync: true
+        require_tool_change_ledger_append: true
+      notes:
+        - Any 2-Task-runtime-selfcheck tool self-evolution must leave traceable records and keep docs with tool runtime 
+          in sync.
+    development:
+      owner: ai_maintained
+      self_evolution_requirements:
+        - update tool docs before/alongside script changes
+        - append TOOL_CHANGE_LEDGER entry with required keys
+        - rerun full gate and outcome lint until PASS
+      records: []
+  - tool_id: tg_mstg_l0_l13_linear_profile
+    usage:
+      summary: Governed tool contract for tg_mstg_l0_l13_linear_profile; keep script/docs/ledger synchronized during 
+        self-evolution.
+      command_examples:
+        - python3 tooling_governance/default/scripts/mstg_l0_l13_linear_profile.py --help
+      inputs:
+        - structured args
+        - instance runtime context
+        - machine-map anchors and tool docs references
+      outputs:
+        - json status payload
+        - runtime artifacts update
+        - traceable evolution evidence
+      script_anchor_refs:
+        - tooling_governance/default/scripts/mstg_l0_l13_linear_profile.py
+      doc_anchor_refs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+    modification:
+      update_workflow:
+        - docs_pre_update
+        - script_update
+        - tool_docs_registry_sync_check
+        - machine_map_anchor_sync
+        - ledger_append
+        - full_gate_lint
+      required_docs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/L13/README.md
+        - docs/tooling/TOOL_DOC_SYNC_CONTRACT.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+      sync_contract:
+        require_tool_registry_docs_sync: true
+        require_machine_map_anchor_sync: true
+        require_tool_change_ledger_append: true
+      notes:
+        - Any 2-Task-runtime-selfcheck tool self-evolution must leave traceable records and keep docs with tool runtime 
+          in sync.
+    development:
+      owner: ai_maintained
+      self_evolution_requirements:
+        - update tool docs before/alongside script changes
+        - append TOOL_CHANGE_LEDGER entry with required keys
+        - rerun full gate and outcome lint until PASS
+      records: []
+  - tool_id: tg_mstg_l0_l13_linear_writeback
+    usage:
+      summary: Governed tool contract for tg_mstg_l0_l13_linear_writeback; keep script/docs/ledger synchronized during 
+        self-evolution.
+      command_examples:
+        - python3 tooling_governance/default/scripts/mstg_l0_l13_linear_writeback.py --help
+      inputs:
+        - structured args
+        - instance runtime context
+        - machine-map anchors and tool docs references
+      outputs:
+        - json status payload
+        - runtime artifacts update
+        - traceable evolution evidence
+      script_anchor_refs:
+        - tooling_governance/default/scripts/mstg_l0_l13_linear_writeback.py
+      doc_anchor_refs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+    modification:
+      update_workflow:
+        - docs_pre_update
+        - script_update
+        - tool_docs_registry_sync_check
+        - machine_map_anchor_sync
+        - ledger_append
+        - full_gate_lint
+      required_docs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/L13/README.md
+        - docs/tooling/TOOL_DOC_SYNC_CONTRACT.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+      sync_contract:
+        require_tool_registry_docs_sync: true
+        require_machine_map_anchor_sync: true
+        require_tool_change_ledger_append: true
+      notes:
+        - Any 2-Task-runtime-selfcheck tool self-evolution must leave traceable records and keep docs with tool runtime 
+          in sync.
+    development:
+      owner: ai_maintained
+      self_evolution_requirements:
+        - update tool docs before/alongside script changes
+        - append TOOL_CHANGE_LEDGER entry with required keys
+        - rerun full gate and outcome lint until PASS
+      records: []
+  - tool_id: tg_mstg_l0_l13_writeback_contracts
+    usage:
+      summary: Governed tool contract for tg_mstg_l0_l13_writeback_contracts; keep script/docs/ledger synchronized 
+        during self-evolution.
+      command_examples:
+        - python3 tooling_governance/default/scripts/mstg_l0_l13_writeback_contracts.py --help
+      inputs:
+        - structured args
+        - instance runtime context
+        - machine-map anchors and tool docs references
+      outputs:
+        - json status payload
+        - runtime artifacts update
+        - traceable evolution evidence
+      script_anchor_refs:
+        - tooling_governance/default/scripts/mstg_l0_l13_writeback_contracts.py
+      doc_anchor_refs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+    modification:
+      update_workflow:
+        - docs_pre_update
+        - script_update
+        - tool_docs_registry_sync_check
+        - machine_map_anchor_sync
+        - ledger_append
+        - full_gate_lint
+      required_docs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/L13/README.md
+        - docs/tooling/TOOL_DOC_SYNC_CONTRACT.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+      sync_contract:
+        require_tool_registry_docs_sync: true
+        require_machine_map_anchor_sync: true
+        require_tool_change_ledger_append: true
+      notes:
+        - Any 2-Task-runtime-selfcheck tool self-evolution must leave traceable records and keep docs with tool runtime 
+          in sync.
+    development:
+      owner: ai_maintained
+      self_evolution_requirements:
+        - update tool docs before/alongside script changes
+        - append TOOL_CHANGE_LEDGER entry with required keys
+        - rerun full gate and outcome lint until PASS
+      records: []
+  - tool_id: tg_mstg_target_governance_outcome_lint
+    usage:
+      summary: Governed tool contract for tg_mstg_target_governance_outcome_lint; keep script/docs/ledger synchronized 
+        during self-evolution.
+      command_examples:
+        - python3 tooling_governance/default/scripts/mstg_target_governance_outcome_lint.py --help
+      inputs:
+        - structured args
+        - instance runtime context
+        - machine-map anchors and tool docs references
+      outputs:
+        - json status payload
+        - runtime artifacts update
+        - traceable evolution evidence
+      script_anchor_refs:
+        - tooling_governance/default/scripts/mstg_target_governance_outcome_lint.py
+      doc_anchor_refs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+    modification:
+      update_workflow:
+        - docs_pre_update
+        - script_update
+        - tool_docs_registry_sync_check
+        - machine_map_anchor_sync
+        - ledger_append
+        - full_gate_lint
+      required_docs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/L13/README.md
+        - docs/tooling/TOOL_DOC_SYNC_CONTRACT.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+      sync_contract:
+        require_tool_registry_docs_sync: true
+        require_machine_map_anchor_sync: true
+        require_tool_change_ledger_append: true
+      notes:
+        - Any 2-Task-runtime-selfcheck tool self-evolution must leave traceable records and keep docs with tool runtime 
+          in sync.
+    development:
+      owner: ai_maintained
+      self_evolution_requirements:
+        - update tool docs before/alongside script changes
+        - append TOOL_CHANGE_LEDGER entry with required keys
+        - rerun full gate and outcome lint until PASS
+      records: []
+  - tool_id: tg_mstg_target_outcome_lint_helpers
+    usage:
+      summary: Governed tool contract for tg_mstg_target_outcome_lint_helpers; keep script/docs/ledger synchronized 
+        during self-evolution.
+      command_examples:
+        - python3 tooling_governance/default/scripts/mstg_target_outcome_lint_helpers.py --help
+      inputs:
+        - structured args
+        - instance runtime context
+        - machine-map anchors and tool docs references
+      outputs:
+        - json status payload
+        - runtime artifacts update
+        - traceable evolution evidence
+      script_anchor_refs:
+        - tooling_governance/default/scripts/mstg_target_outcome_lint_helpers.py
+      doc_anchor_refs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+    modification:
+      update_workflow:
+        - docs_pre_update
+        - script_update
+        - tool_docs_registry_sync_check
+        - machine_map_anchor_sync
+        - ledger_append
+        - full_gate_lint
+      required_docs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/L13/README.md
+        - docs/tooling/TOOL_DOC_SYNC_CONTRACT.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+      sync_contract:
+        require_tool_registry_docs_sync: true
+        require_machine_map_anchor_sync: true
+        require_tool_change_ledger_append: true
+      notes:
+        - Any 2-Task-runtime-selfcheck tool self-evolution must leave traceable records and keep docs with tool runtime 
+          in sync.
+    development:
+      owner: ai_maintained
+      self_evolution_requirements:
+        - update tool docs before/alongside script changes
+        - append TOOL_CHANGE_LEDGER entry with required keys
+        - rerun full gate and outcome lint until PASS
+      records: []
+  - tool_id: tg_mstg_target_skill_audit_helpers
+    usage:
+      summary: Governed tool contract for tg_mstg_target_skill_audit_helpers; keep script/docs/ledger synchronized 
+        during self-evolution.
+      command_examples:
+        - python3 tooling_governance/default/scripts/mstg_target_skill_audit_helpers.py --help
+      inputs:
+        - structured args
+        - instance runtime context
+        - machine-map anchors and tool docs references
+      outputs:
+        - json status payload
+        - runtime artifacts update
+        - traceable evolution evidence
+      script_anchor_refs:
+        - tooling_governance/default/scripts/mstg_target_skill_audit_helpers.py
+      doc_anchor_refs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+    modification:
+      update_workflow:
+        - docs_pre_update
+        - script_update
+        - tool_docs_registry_sync_check
+        - machine_map_anchor_sync
+        - ledger_append
+        - full_gate_lint
+      required_docs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/L13/README.md
+        - docs/tooling/TOOL_DOC_SYNC_CONTRACT.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+      sync_contract:
+        require_tool_registry_docs_sync: true
+        require_machine_map_anchor_sync: true
+        require_tool_change_ledger_append: true
+      notes:
+        - Any 2-Task-runtime-selfcheck tool self-evolution must leave traceable records and keep docs with tool runtime 
+          in sync.
+    development:
+      owner: ai_maintained
+      self_evolution_requirements:
+        - update tool docs before/alongside script changes
+        - append TOOL_CHANGE_LEDGER entry with required keys
+        - rerun full gate and outcome lint until PASS
+      records: []
+  - tool_id: tg_mstg_three_mode_workflow
+    usage:
+      summary: Governed tool contract for tg_mstg_three_mode_workflow; keep script/docs/ledger synchronized during 
+        self-evolution.
+      command_examples:
+        - python3 tooling_governance/default/scripts/mstg_three_mode_workflow.py --help
+      inputs:
+        - structured args
+        - instance runtime context
+        - machine-map anchors and tool docs references
+      outputs:
+        - json status payload
+        - runtime artifacts update
+        - traceable evolution evidence
+      script_anchor_refs:
+        - tooling_governance/default/scripts/mstg_three_mode_workflow.py
+      doc_anchor_refs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+    modification:
+      update_workflow:
+        - docs_pre_update
+        - script_update
+        - tool_docs_registry_sync_check
+        - machine_map_anchor_sync
+        - ledger_append
+        - full_gate_lint
+      required_docs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/L13/README.md
+        - docs/tooling/TOOL_DOC_SYNC_CONTRACT.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+      sync_contract:
+        require_tool_registry_docs_sync: true
+        require_machine_map_anchor_sync: true
+        require_tool_change_ledger_append: true
+      notes:
+        - Any 2-Task-runtime-selfcheck tool self-evolution must leave traceable records and keep docs with tool runtime 
+          in sync.
+    development:
+      owner: ai_maintained
+      self_evolution_requirements:
+        - update tool docs before/alongside script changes
+        - append TOOL_CHANGE_LEDGER entry with required keys
+        - rerun full gate and outcome lint until PASS
+      records: []
+  - tool_id: tg_mstg_yaml
+    usage:
+      summary: Governed tool contract for tg_mstg_yaml; keep script/docs/ledger synchronized during self-evolution.
+      command_examples:
+        - python3 tooling_governance/default/scripts/mstg_yaml.py --help
+      inputs:
+        - structured args
+        - instance runtime context
+        - machine-map anchors and tool docs references
+      outputs:
+        - json status payload
+        - runtime artifacts update
+        - traceable evolution evidence
+      script_anchor_refs:
+        - tooling_governance/default/scripts/mstg_yaml.py
+      doc_anchor_refs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+    modification:
+      update_workflow:
+        - docs_pre_update
+        - script_update
+        - tool_docs_registry_sync_check
+        - machine_map_anchor_sync
+        - ledger_append
+        - full_gate_lint
+      required_docs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/L13/README.md
+        - docs/tooling/TOOL_DOC_SYNC_CONTRACT.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+      sync_contract:
+        require_tool_registry_docs_sync: true
+        require_machine_map_anchor_sync: true
+        require_tool_change_ledger_append: true
+      notes:
+        - Any 2-Task-runtime-selfcheck tool self-evolution must leave traceable records and keep docs with tool runtime 
+          in sync.
+    development:
+      owner: ai_maintained
+      self_evolution_requirements:
+        - update tool docs before/alongside script changes
+        - append TOOL_CHANGE_LEDGER entry with required keys
+        - rerun full gate and outcome lint until PASS
+      records: []
+  - tool_id: tg_tooling_change_impact_mapper
+    usage:
+      summary: Governed tool contract for tg_tooling_change_impact_mapper; keep script/docs/ledger synchronized during 
+        self-evolution.
+      command_examples:
+        - python3 tooling_governance/default/scripts/tooling_change_impact_mapper.py --help
+      inputs:
+        - structured args
+        - instance runtime context
+        - machine-map anchors and tool docs references
+      outputs:
+        - json status payload
+        - runtime artifacts update
+        - traceable evolution evidence
+      script_anchor_refs:
+        - tooling_governance/default/scripts/tooling_change_impact_mapper.py
+      doc_anchor_refs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+    modification:
+      update_workflow:
+        - docs_pre_update
+        - script_update
+        - tool_docs_registry_sync_check
+        - machine_map_anchor_sync
+        - ledger_append
+        - full_gate_lint
+      required_docs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/L13/README.md
+        - docs/tooling/TOOL_DOC_SYNC_CONTRACT.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+      sync_contract:
+        require_tool_registry_docs_sync: true
+        require_machine_map_anchor_sync: true
+        require_tool_change_ledger_append: true
+      notes:
+        - Any 2-Task-runtime-selfcheck tool self-evolution must leave traceable records and keep docs with tool runtime 
+          in sync.
+    development:
+      owner: ai_maintained
+      self_evolution_requirements:
+        - update tool docs before/alongside script changes
+        - append TOOL_CHANGE_LEDGER entry with required keys
+        - rerun full gate and outcome lint until PASS
+      records: []
+  - tool_id: tg_tooling_change_ledger
+    usage:
+      summary: Governed tool contract for tg_tooling_change_ledger; keep script/docs/ledger synchronized during 
+        self-evolution.
+      command_examples:
+        - python3 tooling_governance/default/scripts/tooling_change_ledger.py --help
+      inputs:
+        - structured args
+        - instance runtime context
+        - machine-map anchors and tool docs references
+      outputs:
+        - json status payload
+        - runtime artifacts update
+        - traceable evolution evidence
+      script_anchor_refs:
+        - tooling_governance/default/scripts/tooling_change_ledger.py
+      doc_anchor_refs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+    modification:
+      update_workflow:
+        - docs_pre_update
+        - script_update
+        - tool_docs_registry_sync_check
+        - machine_map_anchor_sync
+        - ledger_append
+        - full_gate_lint
+      required_docs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/L13/README.md
+        - docs/tooling/TOOL_DOC_SYNC_CONTRACT.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+      sync_contract:
+        require_tool_registry_docs_sync: true
+        require_machine_map_anchor_sync: true
+        require_tool_change_ledger_append: true
+      notes:
+        - Any 2-Task-runtime-selfcheck tool self-evolution must leave traceable records and keep docs with tool runtime 
+          in sync.
+    development:
+      owner: ai_maintained
+      self_evolution_requirements:
+        - update tool docs before/alongside script changes
+        - append TOOL_CHANGE_LEDGER entry with required keys
+        - rerun full gate and outcome lint until PASS
+      records: []
+  - tool_id: tg_tooling_docs_query
+    usage:
+      summary: Governed tool contract for tg_tooling_docs_query; keep script/docs/ledger synchronized during 
+        self-evolution.
+      command_examples:
+        - python3 tooling_governance/default/scripts/tooling_docs_query.py --help
+      inputs:
+        - structured args
+        - instance runtime context
+        - machine-map anchors and tool docs references
+      outputs:
+        - json status payload
+        - runtime artifacts update
+        - traceable evolution evidence
+      script_anchor_refs:
+        - tooling_governance/default/scripts/tooling_docs_query.py
+      doc_anchor_refs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+    modification:
+      update_workflow:
+        - docs_pre_update
+        - script_update
+        - tool_docs_registry_sync_check
+        - machine_map_anchor_sync
+        - ledger_append
+        - full_gate_lint
+      required_docs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/L13/README.md
+        - docs/tooling/TOOL_DOC_SYNC_CONTRACT.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+      sync_contract:
+        require_tool_registry_docs_sync: true
+        require_machine_map_anchor_sync: true
+        require_tool_change_ledger_append: true
+      notes:
+        - Any 2-Task-runtime-selfcheck tool self-evolution must leave traceable records and keep docs with tool runtime 
+          in sync.
+    development:
+      owner: ai_maintained
+      self_evolution_requirements:
+        - update tool docs before/alongside script changes
+        - append TOOL_CHANGE_LEDGER entry with required keys
+        - rerun full gate and outcome lint until PASS
+      records: []
+  - tool_id: tg_tooling_docs_record
+    usage:
+      summary: Governed tool contract for tg_tooling_docs_record; keep script/docs/ledger synchronized during 
+        self-evolution.
+      command_examples:
+        - python3 tooling_governance/default/scripts/tooling_docs_record.py --help
+      inputs:
+        - structured args
+        - instance runtime context
+        - machine-map anchors and tool docs references
+      outputs:
+        - json status payload
+        - runtime artifacts update
+        - traceable evolution evidence
+      script_anchor_refs:
+        - tooling_governance/default/scripts/tooling_docs_record.py
+      doc_anchor_refs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+    modification:
+      update_workflow:
+        - docs_pre_update
+        - script_update
+        - tool_docs_registry_sync_check
+        - machine_map_anchor_sync
+        - ledger_append
+        - full_gate_lint
+      required_docs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/L13/README.md
+        - docs/tooling/TOOL_DOC_SYNC_CONTRACT.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+      sync_contract:
+        require_tool_registry_docs_sync: true
+        require_machine_map_anchor_sync: true
+        require_tool_change_ledger_append: true
+      notes:
+        - Any 2-Task-runtime-selfcheck tool self-evolution must leave traceable records and keep docs with tool runtime 
+          in sync.
+    development:
+      owner: ai_maintained
+      self_evolution_requirements:
+        - update tool docs before/alongside script changes
+        - append TOOL_CHANGE_LEDGER entry with required keys
+        - rerun full gate and outcome lint until PASS
+      records: []
+  - tool_id: tg_tooling_governance_apply_change
+    usage:
+      summary: Governed tool contract for tg_tooling_governance_apply_change; keep script/docs/ledger synchronized 
+        during self-evolution.
+      command_examples:
+        - python3 tooling_governance/default/scripts/tooling_governance_apply_change.py --help
+      inputs:
+        - structured args
+        - instance runtime context
+        - machine-map anchors and tool docs references
+      outputs:
+        - json status payload
+        - runtime artifacts update
+        - traceable evolution evidence
+      script_anchor_refs:
+        - tooling_governance/default/scripts/tooling_governance_apply_change.py
+      doc_anchor_refs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+    modification:
+      update_workflow:
+        - docs_pre_update
+        - script_update
+        - tool_docs_registry_sync_check
+        - machine_map_anchor_sync
+        - ledger_append
+        - full_gate_lint
+      required_docs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/L13/README.md
+        - docs/tooling/TOOL_DOC_SYNC_CONTRACT.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+      sync_contract:
+        require_tool_registry_docs_sync: true
+        require_machine_map_anchor_sync: true
+        require_tool_change_ledger_append: true
+      notes:
+        - Any 2-Task-runtime-selfcheck tool self-evolution must leave traceable records and keep docs with tool runtime 
+          in sync.
+    development:
+      owner: ai_maintained
+      self_evolution_requirements:
+        - update tool docs before/alongside script changes
+        - append TOOL_CHANGE_LEDGER entry with required keys
+        - rerun full gate and outcome lint until PASS
+      records: []
+  - tool_id: tg_tooling_governance_auto_writeback
+    usage:
+      summary: Governed tool contract for tg_tooling_governance_auto_writeback; keep script/docs/ledger synchronized 
+        during self-evolution.
+      command_examples:
+        - python3 tooling_governance/default/scripts/tooling_governance_auto_writeback.py --help
+      inputs:
+        - structured args
+        - instance runtime context
+        - machine-map anchors and tool docs references
+      outputs:
+        - json status payload
+        - runtime artifacts update
+        - traceable evolution evidence
+      script_anchor_refs:
+        - tooling_governance/default/scripts/tooling_governance_auto_writeback.py
+      doc_anchor_refs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+    modification:
+      update_workflow:
+        - docs_pre_update
+        - script_update
+        - tool_docs_registry_sync_check
+        - machine_map_anchor_sync
+        - ledger_append
+        - full_gate_lint
+      required_docs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/L13/README.md
+        - docs/tooling/TOOL_DOC_SYNC_CONTRACT.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+      sync_contract:
+        require_tool_registry_docs_sync: true
+        require_machine_map_anchor_sync: true
+        require_tool_change_ledger_append: true
+      notes:
+        - Any 2-Task-runtime-selfcheck tool self-evolution must leave traceable records and keep docs with tool runtime 
+          in sync.
+    development:
+      owner: ai_maintained
+      self_evolution_requirements:
+        - update tool docs before/alongside script changes
+        - append TOOL_CHANGE_LEDGER entry with required keys
+        - rerun full gate and outcome lint until PASS
+      records: []
+  - tool_id: tg_tooling_governance_context_backfill
+    usage:
+      summary: Governed tool contract for tg_tooling_governance_context_backfill; keep script/docs/ledger synchronized 
+        during self-evolution.
+      command_examples:
+        - python3 tooling_governance/default/scripts/tooling_governance_context_backfill.py --help
+      inputs:
+        - structured args
+        - instance runtime context
+        - machine-map anchors and tool docs references
+      outputs:
+        - json status payload
+        - runtime artifacts update
+        - traceable evolution evidence
+      script_anchor_refs:
+        - tooling_governance/default/scripts/tooling_governance_context_backfill.py
+      doc_anchor_refs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+    modification:
+      update_workflow:
+        - docs_pre_update
+        - script_update
+        - tool_docs_registry_sync_check
+        - machine_map_anchor_sync
+        - ledger_append
+        - full_gate_lint
+      required_docs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/L13/README.md
+        - docs/tooling/TOOL_DOC_SYNC_CONTRACT.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+      sync_contract:
+        require_tool_registry_docs_sync: true
+        require_machine_map_anchor_sync: true
+        require_tool_change_ledger_append: true
+      notes:
+        - Any 2-Task-runtime-selfcheck tool self-evolution must leave traceable records and keep docs with tool runtime 
+          in sync.
+    development:
+      owner: ai_maintained
+      self_evolution_requirements:
+        - update tool docs before/alongside script changes
+        - append TOOL_CHANGE_LEDGER entry with required keys
+        - rerun full gate and outcome lint until PASS
+      records: []
+  - tool_id: tg_tooling_governance_lint
+    usage:
+      summary: Governed tool contract for tg_tooling_governance_lint; keep script/docs/ledger synchronized during 
+        self-evolution.
+      command_examples:
+        - python3 tooling_governance/default/scripts/tooling_governance_lint.py --help
+      inputs:
+        - structured args
+        - instance runtime context
+        - machine-map anchors and tool docs references
+      outputs:
+        - json status payload
+        - runtime artifacts update
+        - traceable evolution evidence
+      script_anchor_refs:
+        - tooling_governance/default/scripts/tooling_governance_lint.py
+      doc_anchor_refs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+    modification:
+      update_workflow:
+        - docs_pre_update
+        - script_update
+        - tool_docs_registry_sync_check
+        - machine_map_anchor_sync
+        - ledger_append
+        - full_gate_lint
+      required_docs:
+        - docs/L1/README.md
+        - docs/L1/chains
+        - docs/L2/README.md
+        - docs/L2/chains
+        - docs/L10/README.md
+        - docs/L12/README.md
+        - docs/L13/README.md
+        - docs/tooling/TOOL_DOC_SYNC_CONTRACT.md
+        - docs/evolution/SELF_EVOLUTION_TRACEABILITY.md
+      sync_contract:
+        require_tool_registry_docs_sync: true
+        require_machine_map_anchor_sync: true
+        require_tool_change_ledger_append: true
+      notes:
+        - Any 2-Task-runtime-selfcheck tool self-evolution must leave traceable records and keep docs with tool runtime 
+          in sync.
+    development:
+      owner: ai_maintained
+      self_evolution_requirements:
+        - update tool docs before/alongside script changes
+        - append TOOL_CHANGE_LEDGER entry with required keys
+        - rerun full gate and outcome lint until PASS
+      records: []

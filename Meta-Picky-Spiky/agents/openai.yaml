@@ -1,0 +1,4 @@
+interface:
+  display_name: "Meta-Picky-Spiky"
+  short_description: "Review docs for unresolved semantics and ambiguity"
+  default_prompt: "Use Meta-Picky-Spiky to critique the target document(s) for unresolved semantics."

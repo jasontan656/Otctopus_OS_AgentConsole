@@ -1,0 +1,85 @@
+schema_version: mstg_l0_l13_composite_chain_v2
+managed_skill: 2-Task-runtime-selfcheck
+layer_count: 14
+linearity: backbone_strict_composite_docs
+docs_layout: composite_directory
+l1_l2_chain_doc_strategy: split_per_chain
+milestone_chain_count: 4
+milestone_chains:
+  - chain_tool_inventory_baseline
+  - chain_usage_contract_backfill
+  - chain_modification_development_backfill
+  - chain_sync_traceability_closure
+milestone_chain_source: capability_inference
+milestone_chain_closure_target: L13
+layers:
+  - layer_id: L0
+    path: docs/L0/README.md
+    upstream: none
+    downstream: L1
+    anchor: l0::composite_layer
+  - layer_id: L1
+    path: docs/L1/README.md
+    upstream: L0
+    downstream: L2
+    anchor: l1::composite_layer
+  - layer_id: L2
+    path: docs/L2/README.md
+    upstream: L1
+    downstream: L3
+    anchor: l2::composite_layer
+  - layer_id: L3
+    path: docs/L3/README.md
+    upstream: L2
+    downstream: L4
+    anchor: l3::composite_layer
+  - layer_id: L4
+    path: docs/L4/README.md
+    upstream: L3
+    downstream: L5
+    anchor: l4::composite_layer
+  - layer_id: L5
+    path: docs/L5/README.md
+    upstream: L4
+    downstream: L6
+    anchor: l5::composite_layer
+  - layer_id: L6
+    path: docs/L6/README.md
+    upstream: L5
+    downstream: L7
+    anchor: l6::composite_layer
+  - layer_id: L7
+    path: docs/L7/README.md
+    upstream: L6
+    downstream: L8
+    anchor: l7::composite_layer
+  - layer_id: L8
+    path: docs/L8/README.md
+    upstream: L7
+    downstream: L9
+    anchor: l8::composite_layer
+  - layer_id: L9
+    path: docs/L9/README.md
+    upstream: L8
+    downstream: L10
+    anchor: l9::composite_layer
+  - layer_id: L10
+    path: docs/L10/README.md
+    upstream: L9
+    downstream: L11
+    anchor: l10::composite_layer
+  - layer_id: L11
+    path: docs/L11/README.md
+    upstream: L10
+    downstream: L12
+    anchor: l11::composite_layer
+  - layer_id: L12
+    path: docs/L12/README.md
+    upstream: L11
+    downstream: L13
+    anchor: l12::composite_layer
+  - layer_id: L13
+    path: docs/L13/README.md
+    upstream: L12
+    downstream: none
+    anchor: l13::composite_layer

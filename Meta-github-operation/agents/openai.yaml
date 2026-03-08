@@ -1,0 +1,4 @@
+interface:
+  display_name: "Meta-GitHub-Operation"
+  short_description: "Precise Git and GitHub repo automation"
+  default_prompt: "Use Meta-github-operation to inspect repository state or perform precise commit, push, rollback, fetch, pull-rebase, and remote operations safely."

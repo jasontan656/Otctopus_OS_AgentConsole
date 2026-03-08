@@ -1,0 +1,1 @@
+"""Static constitution lint package."""

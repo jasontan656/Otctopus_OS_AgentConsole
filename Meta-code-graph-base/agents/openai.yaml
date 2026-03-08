@@ -1,0 +1,3 @@
+name: Meta-code-graph-base
+entry: SKILL.md
+description: 本地代码图谱技能，提供 analyze/query/context/impact/detect-changes/resource/wiki 等能力。

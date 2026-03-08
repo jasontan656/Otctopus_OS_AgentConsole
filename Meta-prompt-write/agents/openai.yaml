@@ -1,0 +1,4 @@
+interface:
+  display_name: "Meta-prompt-write"
+  short_description: "Survey the current repo, supplement missing context, and emit a fixed-shape structured execution contract prompt."
+  default_prompt: "Use $Meta-prompt-write to strengthen a user prompt into a structured execution contract. First survey the current repo and infer the affected scope, boundaries, outputs, and validation needs. Then emit the final prompt only through the CLI tool in a fixed 6-section shape: GOAL, REPO_CONTEXT_AND_IMPACT, INPUTS, OUTPUTS, BOUNDARIES, VALIDATION."

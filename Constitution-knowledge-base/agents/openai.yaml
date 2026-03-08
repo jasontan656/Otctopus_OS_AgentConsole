@@ -1,0 +1,4 @@
+interface:
+  display_name: "Constitution Knowledge Base"
+  short_description: "Constitution Knowledge Base 的模板化骨架。"
+  default_prompt: "请围绕 Constitution-knowledge-base 的实际业务目标执行任务；不要把创建技能流程本身当作技能目标。"

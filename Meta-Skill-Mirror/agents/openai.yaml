@@ -1,0 +1,4 @@
+interface:
+  display_name: "Meta Skill Mirror"
+  short_description: "将 codex skill mirror 单向同步到 codex skills 安装目录（全量或单技能）。"
+  default_prompt: "使用 scripts/Cli_Toolbox.py 执行 mirror_to_codex 单向同步，同步范围仅 all 或单技能。"

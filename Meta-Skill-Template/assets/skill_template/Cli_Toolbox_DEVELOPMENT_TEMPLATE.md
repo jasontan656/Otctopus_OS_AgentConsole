@@ -1,0 +1,28 @@
+# Cli_Toolbox 开发文档（入口）
+
+适用技能：`${skill_name}`
+
+## 命名约束
+- 工具统一命名为 `Cli_Toolbox.<tool_name>`。
+
+## 内联索引（阅读顺序）
+1. 架构总览：`references/tooling/development/00_ARCHITECTURE_OVERVIEW.md`
+2. 模块目录：`references/tooling/development/10_MODULE_CATALOG.yaml`
+3. 分类索引：`references/tooling/development/20_CATEGORY_INDEX.md`
+4. 模块文档模板：`references/tooling/development/modules/MODULE_TEMPLATE.md`
+5. 变更记录：`references/tooling/development/90_CHANGELOG.md`
+
+## 文档分类规则
+- 入口文档只做导航与约束，不承载全部实现细节。
+- 模块目录记录 tool alias、入口、状态与文档映射。
+- 分类索引负责跨模块视图。
+- 具体实现细节写入 `modules/<module_id>.md`。
+
+## 同步维护约束（强制）
+- 工具变更必须同步更新：
+  - `Cli_Toolbox_USAGE.md`
+  - `10_MODULE_CATALOG.yaml`
+  - 对应模块文档
+
+## 版本变更记录
+- [日期] [变更摘要]

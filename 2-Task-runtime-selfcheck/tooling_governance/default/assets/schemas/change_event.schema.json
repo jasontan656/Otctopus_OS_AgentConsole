@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Tool Change Event",
+  "type": "object",
+  "required": ["event_id", "timestamp_utc", "tool_id", "change_type", "summary"],
+  "properties": {
+    "event_id": {"type": "string"},
+    "timestamp_utc": {"type": "string"},
+    "tool_id": {"type": "string"},
+    "change_type": {"type": "string"},
+    "summary": {"type": "string"},
+    "docs_updated": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "artifacts_updated": {
+      "type": "array",
+      "items": {"type": "string"}
+    }
+  }
+}

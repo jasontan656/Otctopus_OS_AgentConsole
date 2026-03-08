@@ -1,0 +1,99 @@
+schema_version: mstg_toolbox_injection_manifest_v1
+managed_skill: 2-Task-runtime-selfcheck
+instance_root: /home/jasontan656/.codex/skills/2-Task-runtime-selfcheck/tooling_governance/default
+toolbox_dir: /home/jasontan656/.codex/skills/2-Task-runtime-selfcheck/tooling_governance/default/scripts
+script_count: 23
+scripts:
+  - script: mstg_yaml.py
+    source: /home/jasontan656/.codex/skills/Meta-skills-tooling-governance/scripts/mstg_yaml.py
+    target: /home/jasontan656/.codex/skills/2-Task-runtime-selfcheck/tooling_governance/default/scripts/mstg_yaml.py
+  - script: mstg_three_mode_workflow.py
+    source: /home/jasontan656/.codex/skills/Meta-skills-tooling-governance/scripts/mstg_three_mode_workflow.py
+    target: 
+      /home/jasontan656/.codex/skills/2-Task-runtime-selfcheck/tooling_governance/default/scripts/mstg_three_mode_workflow.py
+  - script: tooling_governance_apply_change.py
+    source: /home/jasontan656/.codex/skills/Meta-skills-tooling-governance/scripts/tooling_governance_apply_change.py
+    target: 
+      /home/jasontan656/.codex/skills/2-Task-runtime-selfcheck/tooling_governance/default/scripts/tooling_governance_apply_change.py
+  - script: tooling_governance_auto_writeback.py
+    source: /home/jasontan656/.codex/skills/Meta-skills-tooling-governance/scripts/tooling_governance_auto_writeback.py
+    target: 
+      /home/jasontan656/.codex/skills/2-Task-runtime-selfcheck/tooling_governance/default/scripts/tooling_governance_auto_writeback.py
+  - script: tooling_governance_context_backfill.py
+    source: 
+      /home/jasontan656/.codex/skills/Meta-skills-tooling-governance/scripts/tooling_governance_context_backfill.py
+    target: 
+      /home/jasontan656/.codex/skills/2-Task-runtime-selfcheck/tooling_governance/default/scripts/tooling_governance_context_backfill.py
+  - script: tooling_docs_query.py
+    source: /home/jasontan656/.codex/skills/Meta-skills-tooling-governance/scripts/tooling_docs_query.py
+    target: 
+      /home/jasontan656/.codex/skills/2-Task-runtime-selfcheck/tooling_governance/default/scripts/tooling_docs_query.py
+  - script: tooling_docs_record.py
+    source: /home/jasontan656/.codex/skills/Meta-skills-tooling-governance/scripts/tooling_docs_record.py
+    target: 
+      /home/jasontan656/.codex/skills/2-Task-runtime-selfcheck/tooling_governance/default/scripts/tooling_docs_record.py
+  - script: tooling_change_ledger.py
+    source: /home/jasontan656/.codex/skills/Meta-skills-tooling-governance/scripts/tooling_change_ledger.py
+    target: 
+      /home/jasontan656/.codex/skills/2-Task-runtime-selfcheck/tooling_governance/default/scripts/tooling_change_ledger.py
+  - script: tooling_change_impact_mapper.py
+    source: /home/jasontan656/.codex/skills/Meta-skills-tooling-governance/scripts/tooling_change_impact_mapper.py
+    target: 
+      /home/jasontan656/.codex/skills/2-Task-runtime-selfcheck/tooling_governance/default/scripts/tooling_change_impact_mapper.py
+  - script: tooling_governance_lint.py
+    source: /home/jasontan656/.codex/skills/Meta-skills-tooling-governance/scripts/tooling_governance_lint.py
+    target: 
+      /home/jasontan656/.codex/skills/2-Task-runtime-selfcheck/tooling_governance/default/scripts/tooling_governance_lint.py
+  - script: mstg_l0_l13_linear_writeback.py
+    source: /home/jasontan656/.codex/skills/Meta-skills-tooling-governance/scripts/mstg_l0_l13_linear_writeback.py
+    target: 
+      /home/jasontan656/.codex/skills/2-Task-runtime-selfcheck/tooling_governance/default/scripts/mstg_l0_l13_linear_writeback.py
+  - script: mstg_l0_l13_linear_layers.py
+    source: /home/jasontan656/.codex/skills/Meta-skills-tooling-governance/scripts/mstg_l0_l13_linear_layers.py
+    target: 
+      /home/jasontan656/.codex/skills/2-Task-runtime-selfcheck/tooling_governance/default/scripts/mstg_l0_l13_linear_layers.py
+  - script: mstg_l0_l13_linear_profile.py
+    source: /home/jasontan656/.codex/skills/Meta-skills-tooling-governance/scripts/mstg_l0_l13_linear_profile.py
+    target: 
+      /home/jasontan656/.codex/skills/2-Task-runtime-selfcheck/tooling_governance/default/scripts/mstg_l0_l13_linear_profile.py
+  - script: mstg_l0_l13_linear_flow.py
+    source: /home/jasontan656/.codex/skills/Meta-skills-tooling-governance/scripts/mstg_l0_l13_linear_flow.py
+    target: 
+      /home/jasontan656/.codex/skills/2-Task-runtime-selfcheck/tooling_governance/default/scripts/mstg_l0_l13_linear_flow.py
+  - script: mstg_l0_l13_linear_composite.py
+    source: /home/jasontan656/.codex/skills/Meta-skills-tooling-governance/scripts/mstg_l0_l13_linear_composite.py
+    target: 
+      /home/jasontan656/.codex/skills/2-Task-runtime-selfcheck/tooling_governance/default/scripts/mstg_l0_l13_linear_composite.py
+  - script: mstg_l0_l13_writeback_contracts.py
+    source: /home/jasontan656/.codex/skills/Meta-skills-tooling-governance/scripts/mstg_l0_l13_writeback_contracts.py
+    target: 
+      /home/jasontan656/.codex/skills/2-Task-runtime-selfcheck/tooling_governance/default/scripts/mstg_l0_l13_writeback_contracts.py
+  - script: mstg_l0_l13_linear_lint.py
+    source: /home/jasontan656/.codex/skills/Meta-skills-tooling-governance/scripts/mstg_l0_l13_linear_lint.py
+    target: 
+      /home/jasontan656/.codex/skills/2-Task-runtime-selfcheck/tooling_governance/default/scripts/mstg_l0_l13_linear_lint.py
+  - script: mstg_l0_l13_layer_schema_lint.py
+    source: /home/jasontan656/.codex/skills/Meta-skills-tooling-governance/scripts/mstg_l0_l13_layer_schema_lint.py
+    target: 
+      /home/jasontan656/.codex/skills/2-Task-runtime-selfcheck/tooling_governance/default/scripts/mstg_l0_l13_layer_schema_lint.py
+  - script: mstg_l0_l13_full_gate_lint.py
+    source: /home/jasontan656/.codex/skills/Meta-skills-tooling-governance/scripts/mstg_l0_l13_full_gate_lint.py
+    target: 
+      /home/jasontan656/.codex/skills/2-Task-runtime-selfcheck/tooling_governance/default/scripts/mstg_l0_l13_full_gate_lint.py
+  - script: mstg_target_governance_outcome_lint.py
+    source: 
+      /home/jasontan656/.codex/skills/Meta-skills-tooling-governance/scripts/mstg_target_governance_outcome_lint.py
+    target: 
+      /home/jasontan656/.codex/skills/2-Task-runtime-selfcheck/tooling_governance/default/scripts/mstg_target_governance_outcome_lint.py
+  - script: mstg_target_outcome_lint_helpers.py
+    source: /home/jasontan656/.codex/skills/Meta-skills-tooling-governance/scripts/mstg_target_outcome_lint_helpers.py
+    target: 
+      /home/jasontan656/.codex/skills/2-Task-runtime-selfcheck/tooling_governance/default/scripts/mstg_target_outcome_lint_helpers.py
+  - script: governance_audit_log.py
+    source: /home/jasontan656/.codex/skills/Meta-skills-tooling-governance/scripts/governance_audit_log.py
+    target: 
+      /home/jasontan656/.codex/skills/2-Task-runtime-selfcheck/tooling_governance/default/scripts/governance_audit_log.py
+  - script: mstg_target_skill_audit_helpers.py
+    source: /home/jasontan656/.codex/skills/Meta-skills-tooling-governance/scripts/mstg_target_skill_audit_helpers.py
+    target: 
+      /home/jasontan656/.codex/skills/2-Task-runtime-selfcheck/tooling_governance/default/scripts/mstg_target_skill_audit_helpers.py

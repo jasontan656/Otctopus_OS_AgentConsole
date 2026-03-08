@@ -1,0 +1,16 @@
+version: 1
+modules:
+  - module_id: cli_toolbox_sync
+    entrypoint: scripts/Cli_Toolbox.py
+    capabilities:
+      - Cli_Toolbox.sync_mirror_to_codex
+    scope:
+      directions:
+        - mirror_to_codex
+      range:
+        - all
+        - skill
+    docs:
+      usage: references/tooling/Cli_Toolbox_USAGE.md
+      development: references/tooling/Cli_Toolbox_DEVELOPMENT.md
+      module: references/tooling/development/modules/mod_sync_mirror.md
