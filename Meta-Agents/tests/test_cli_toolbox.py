@@ -37,6 +37,9 @@ class MetaAgentsCliTests(unittest.TestCase):
             self.assertEqual(payload["count"], 2)
             registry = json.loads((skill_root / "assets" / "managed_agents" / "registry.json").read_text(encoding="utf-8"))
             self.assertEqual(len(registry["entries"]), 2)
+            index_text = (skill_root / "assets" / "managed_agents" / "index.md").read_text(encoding="utf-8")
+            self.assertIn(str(source_root / "AGENTS.md"), index_text)
+            self.assertIn("root agents", index_text)
 
     def test_sync_out_overwrites_target_from_managed_copy(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

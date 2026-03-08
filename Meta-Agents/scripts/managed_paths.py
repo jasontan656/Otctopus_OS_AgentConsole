@@ -28,6 +28,10 @@ def registry_path(skill_root: Path) -> Path:
     return managed_root(skill_root) / "registry.json"
 
 
+def index_path(skill_root: Path) -> Path:
+    return managed_root(skill_root) / "index.md"
+
+
 def root_slug(source_root: Path) -> str:
     text = source_root.as_posix().strip("/")
     if not text:

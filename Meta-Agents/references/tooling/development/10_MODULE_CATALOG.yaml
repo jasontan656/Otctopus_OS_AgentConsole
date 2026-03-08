@@ -8,6 +8,9 @@ modules:
   - name: managed_registry
     path: scripts/managed_registry.py
     responsibility: registry 读写与条目构造
+  - name: managed_index
+    path: scripts/managed_index.py
+    responsibility: 生成受管 AGENTS 索引页
   - name: managed_collect
     path: scripts/managed_collect.py
     responsibility: 扫描并回收 AGENTS.md

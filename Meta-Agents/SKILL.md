@@ -15,9 +15,9 @@ description: "集中回收、托管并同步 workspace 内的 AGENTS.md。用于
 ## 2. 可用工具
 - 统一入口：`scripts/Cli_Toolbox.py`
 - 工具清单：
-  - `Cli_Toolbox.registry` - 查看当前托管的 `AGENTS.md` 映射。
-  - `Cli_Toolbox.scan_collect` - 扫描 source root，完整复制所有 `AGENTS.md` 进技能并更新 registry。
-  - `Cli_Toolbox.sync_out` - 把托管版本回写到指定目标或全部目标。
+- `Cli_Toolbox.registry` - 查看当前托管的 `AGENTS.md` 映射。
+- `Cli_Toolbox.scan_collect` - 扫描 source root，完整复制所有 `AGENTS.md` 进技能并更新 registry。
+- `Cli_Toolbox.sync_out` - 把托管版本回写到指定目标或全部目标。
 - 文档：
   - 使用文档：`references/tooling/Cli_Toolbox_USAGE.md`
   - 开发文档：`references/tooling/Cli_Toolbox_DEVELOPMENT.md`
@@ -32,6 +32,7 @@ description: "集中回收、托管并同步 workspace 内的 AGENTS.md。用于
   - 运行 `sync-out --target-source-path <abs_path>` 或 `sync-out --all`
 - 输出：
   - `registry.json`
+  - `index.md`
   - 托管副本目录 `assets/managed_agents/<root_slug>/.../AGENTS.md`
   - 结构化 JSON 执行结果
 - 完成判定：
@@ -41,6 +42,7 @@ description: "集中回收、托管并同步 workspace 内的 AGENTS.md。用于
 ## 4. 规则约束
 - 仅管理文件名严格等于 `AGENTS.md` 的文件。
 - `scan-collect` 必须完整复制文件内容，不做语义改写。
+- `scan-collect` 必须同步维护 `assets/managed_agents/index.md`，为每个受管 `AGENTS.md` 提供路径与责任摘要预览。
 - `sync-out` 只能把技能内托管副本回写到 registry 中记录过的源路径。
 - 扫描时必须排除技能自身的 `assets/managed_agents/` 托管副本，避免递归回收。
 - 扫描时必须排除 `Human_Work_Zone/`。
@@ -55,6 +57,7 @@ description: "集中回收、托管并同步 workspace 内的 AGENTS.md。用于
 - [Cli_Toolbox 工具入口] -> [scripts/Cli_Toolbox.py]
 - [Agent 元数据] -> [agents/openai.yaml]
 - [托管 registry] -> [assets/managed_agents/registry.json]
+- [托管索引] -> [assets/managed_agents/index.md]
 - [Cli_Toolbox 使用文档] -> [references/tooling/Cli_Toolbox_USAGE.md]
 - [Cli_Toolbox 开发文档] -> [references/tooling/Cli_Toolbox_DEVELOPMENT.md]
 - [Cli_Toolbox 开发架构总览] -> [references/tooling/development/00_ARCHITECTURE_OVERVIEW.md]
@@ -69,11 +72,13 @@ Meta-Agents/
 │   └── openai.yaml
 ├── assets/
 │   └── managed_agents/
+│       ├── index.md
 │       └── registry.json
 ├── scripts/
 │   ├── Cli_Toolbox.py
 │   ├── cli_parser_support.py
 │   ├── managed_collect.py
+│   ├── managed_index.py
 │   ├── managed_paths.py
 │   ├── managed_registry.py
 │   └── managed_sync.py

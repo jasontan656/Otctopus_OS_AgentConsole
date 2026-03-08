@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from managed_index import write_index
 from managed_paths import is_excluded_scan_path, managed_file_path, managed_rel_path, managed_root, root_slug
 from managed_registry import build_entry, load_registry, sha256_text, write_registry
 
@@ -63,6 +64,7 @@ def collect_agents(skill_root: Path, source_root: Path) -> dict[str, object]:
     _prune_missing(skill_root, source_root, live_rel_paths)
     merged = sorted(other_entries + new_entries, key=lambda item: item["source_path"])
     write_registry(skill_root, {"version": 1, "entries": merged})
+    write_index(skill_root, merged)
     return {
         "status": "ok",
         "action": "scan_collect",
