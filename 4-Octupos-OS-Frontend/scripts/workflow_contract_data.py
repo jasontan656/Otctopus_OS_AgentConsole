@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-# contract_name: octopus_backend_workflow_contract_data
+# contract_name: octopus_frontend_workflow_contract_data
 # contract_version: 2.1.0
 # validation_mode: strict
 # required_fields:

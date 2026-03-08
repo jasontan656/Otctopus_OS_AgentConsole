@@ -4,7 +4,7 @@ from pathlib import Path
 from construction_plan_contract import INNER_PHASE_PATTERN, INNER_PHASE_REQUIRED_KEYS
 from construction_plan_contract import MANIFEST_MACHINE_FILE_MAP, MANIFEST_REQUIRED_KEYS
 from construction_plan_contract import PACK_ALLOWED_WRITEBACK_FILES, PACK_ID_PATTERN
-# contract_name: octopus_backend_construction_plan_schema
+# contract_name: octopus_frontend_construction_plan_schema
 # contract_version: 1.0.0
 # validation_mode: strict
 # required_fields: validate_pack_manifest, validate_inner_phase_plan, machine_schema_violations

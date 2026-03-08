@@ -3,7 +3,7 @@
 ```python
 # replace_me_fill_rule:
 # - Replace every replace_me token with the validation and writeback contract for this pack.
-# - Keep evidence domains separate: code/test/runtime/log/db/mq/redis/operator-note should not be merged into one blob.
+# - Keep evidence domains separate: code/test/runtime/log/browser/network/assets/operator-note should not be merged into one blob.
 # - Remove this guidance block after drafting.
 ```
 

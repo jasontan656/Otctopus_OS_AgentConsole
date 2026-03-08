@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import re
 
-# contract_name: octopus_backend_construction_plan_contract
+# contract_name: octopus_frontend_construction_plan_contract
 # contract_version: 1.0.0
 # validation_mode: strict
 # required_fields:

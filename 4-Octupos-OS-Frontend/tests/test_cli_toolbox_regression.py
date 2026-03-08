@@ -49,7 +49,7 @@ class CliToolboxRegressionTest(unittest.TestCase):
         payload = run_cli("workflow-contract")
         self.assertEqual(payload["stage_order"], ["mother_doc", "construction_plan", "implementation", "acceptance"])
         self.assertIn("rules/OCTOPUS_SKILL_HARD_RULES.md", payload["top_level_resident_docs"])
-        self.assertIn("/home/jasontan656/AI_Projects/Octopus_CodeBase_Backend/AGENTS.md", payload["top_level_resident_docs"])
+        self.assertIn("/home/jasontan656/AI_Projects/Octopus_CodeBase_Frontend/AGENTS.md", payload["top_level_resident_docs"])
         self.assertEqual(
             payload["stage_specific_contract_tools"],
             ["stage-checklist", "stage-doc-contract", "stage-command-contract", "stage-graph-contract", "template-index"],
@@ -120,9 +120,9 @@ class CliToolboxRegressionTest(unittest.TestCase):
         self.assertIn("acceptance-lint", command_payload["gate_commands"][0])
         self.assertIn("mother-doc-archive", command_payload["gate_commands"][2])
         self.assertIn("read 07_env_and_deploy.md", command_payload["required_runtime_actions"][0])
-        self.assertIn("resolve secrets from local ignored env files", command_payload["required_runtime_actions"][1])
+        self.assertIn("resolve env values and local config from ignored env files", command_payload["required_runtime_actions"][1])
         self.assertIn("simulate at least one human interaction", command_payload["required_runtime_actions"][4])
-        self.assertIn("only after local config, service bring-up, health checks, and simulated human usage", command_payload["needs_real_env_threshold"][0])
+        self.assertIn("only after local config, build or preview readiness checks, connectivity checks, and simulated human usage", command_payload["needs_real_env_threshold"][0])
         self.assertIn("reconcile existing code reality", graph_payload["graph_role"]["read_policy"])
         self.assertIn("graph-preflight", graph_payload["recommended_commands"][0])
 
@@ -365,7 +365,7 @@ class CliToolboxRegressionTest(unittest.TestCase):
                         "",
                         "| requirement_atom_id | implemented | tested | witnessed | blocked_state | evidence_refs | notes |",
                         "|---|---|---|---|---|---|---|",
-                        "| `RA-01` | `true` | `true` | `false` | `needs_real_env` | `tests/test_state_machine.py`, `backend/domain/state_machine.py` | invalid |",
+                        "| `RA-01` | `true` | `true` | `false` | `needs_real_env` | `tests/test_route_shell.tsx`, `src/routes/route_shell.tsx` | invalid |",
                     ]
                 ),
                 encoding="utf-8",
@@ -378,7 +378,7 @@ class CliToolboxRegressionTest(unittest.TestCase):
                         "## 2. Plan Step Results",
                         "| plan_step_id | implemented_files | tests_run | real_witnesses | residual_risks |",
                         "|---|---|---|---|---|",
-                        "| `STEP-01` | `backend/domain/state_machine.py` | `tests/test_state_machine.py` | `pending` | `pending` |",
+                        "| `STEP-01` | `src/routes/route_shell.tsx` | `tests/test_route_shell.tsx` | `pending` | `pending` |",
                     ]
                 ),
                 encoding="utf-8",
@@ -394,12 +394,12 @@ class CliToolboxRegressionTest(unittest.TestCase):
     def test_acceptance_lint_passes_when_paths_exist_and_states_match(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
-            backend_dir = root / "backend" / "domain"
+            frontend_dir = root / "src" / "routes"
             tests_dir = root / "tests"
-            backend_dir.mkdir(parents=True)
+            frontend_dir.mkdir(parents=True)
             tests_dir.mkdir(parents=True)
-            (backend_dir / "state_machine.py").write_text("STATE = 'ok'\n", encoding="utf-8")
-            (tests_dir / "test_state_machine.py").write_text("def test_ok():\n    assert True\n", encoding="utf-8")
+            (frontend_dir / "route_shell.tsx").write_text("export const RouteShell = () => null;\n", encoding="utf-8")
+            (tests_dir / "test_route_shell.tsx").write_text("export const ok = true;\n", encoding="utf-8")
             matrix = root / "acceptance_matrix.md"
             report = root / "acceptance_report.md"
             matrix.write_text(
@@ -409,7 +409,7 @@ class CliToolboxRegressionTest(unittest.TestCase):
                         "",
                         "| requirement_atom_id | implemented | tested | witnessed | blocked_state | evidence_refs | notes |",
                         "|---|---|---|---|---|---|---|",
-                        f"| `RA-01` | `true` | `true` | `false` | `clear_to_proceed` | `{backend_dir / 'state_machine.py'}`, `{tests_dir / 'test_state_machine.py'}` | valid |",
+                        f"| `RA-01` | `true` | `true` | `false` | `clear_to_proceed` | `{frontend_dir / 'route_shell.tsx'}`, `{tests_dir / 'test_route_shell.tsx'}` | valid |",
                     ]
                 ),
                 encoding="utf-8",
@@ -422,7 +422,7 @@ class CliToolboxRegressionTest(unittest.TestCase):
                         "## 2. Plan Step Results",
                         "| plan_step_id | implemented_files | tests_run | real_witnesses | residual_risks |",
                         "|---|---|---|---|---|",
-                        f"| `STEP-01` | `{backend_dir / 'state_machine.py'}` | `{tests_dir / 'test_state_machine.py'}` | `pending` | `pending` |",
+                        f"| `STEP-01` | `{frontend_dir / 'route_shell.tsx'}` | `{tests_dir / 'test_route_shell.tsx'}` | `pending` | `pending` |",
                     ]
                 ),
                 encoding="utf-8",

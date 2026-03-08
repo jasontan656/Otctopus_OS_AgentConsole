@@ -18,8 +18,8 @@ from workflow_contract_data import EXECUTION_ATOM_PACK_ROOT_FILES, EXECUTION_ATO
 from workflow_contract_data import IMPLEMENTATION_SOURCE_POLICY
 from workflow_contract_data import REQUIREMENT_ATOM_FIELDS, STAGES, TEMPLATES
 
-RUNTIME_ROOT = Path("/home/jasontan656/AI_Projects/OctuposOS_Runtime_Backend")
-CODEBASE_ROOT = Path("/home/jasontan656/AI_Projects/Octopus_CodeBase_Backend")
+RUNTIME_ROOT = Path("/home/jasontan656/AI_Projects/OctuposOS_RunTime_Frontend")
+CODEBASE_ROOT = Path("/home/jasontan656/AI_Projects/Octopus_CodeBase_Frontend")
 GRAPH_RUNTIME_ROOT = RUNTIME_ROOT / "code_graph_runtime"
 MOTHER_DOC_ROOT = RUNTIME_ROOT / "docs" / "mother_doc"
 MOTHER_DOC_PATH = MOTHER_DOC_ROOT / "00_index.md"

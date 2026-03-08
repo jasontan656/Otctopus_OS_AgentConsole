@@ -3,7 +3,7 @@ from pathlib import Path
 from workflow_stage_contract import STAGES
 import re
 
-# contract_name: octopus_backend_stage_contract_support
+# contract_name: octopus_frontend_stage_contract_support
 # contract_version: 1.0.0
 # validation_mode: strict
 # required_fields: stage_doc_contract_payload, stage_command_contract_payload, stage_graph_contract_payload
@@ -15,6 +15,8 @@ ARCHIVE_DIR_PATTERN = re.compile(r"^(\d{2})_.+")
 
 def _latest_archived_mother_doc(mother_doc_root: Path) -> Path | None:
     docs_root = mother_doc_root.parent
+    if not docs_root.exists():
+        return None
     candidates: list[tuple[int, Path]] = []
     for child in docs_root.iterdir():
         if not child.is_dir() or child.name == mother_doc_root.name:
@@ -87,13 +89,13 @@ def stage_command_contract_payload(stage: str, mother_doc_root: Path, constructi
             "optional_commands": [],
             "required_runtime_actions": [
                 "read 07_env_and_deploy.md, 10_observability_and_evidence.md, 11_risks_and_blockers.md, and codebase AGENTS before deciding needs_real_env",
-                "resolve secrets from local ignored env files or other non-git secret sources declared by the project; do not expect tokens inside mother doc or pushable runtime docs",
-                "apply env/config/unit/webhook/ngrok settings to the local WSL environment until the runtime is actually runnable",
-                "start resident services and verify healthz plus concrete db/redis/mq/webhook connectivity",
-                "simulate at least one human interaction through the real local stack and capture service logs, db rows, queue events, redis keys, and outbound delivery evidence",
+                "resolve env values and local config from ignored env files or other non-git secret sources declared by the project; do not expect secrets inside mother doc or pushable runtime docs",
+                "apply frontend env/config/asset/runtime settings to the local WSL environment until the app is actually runnable",
+                "verify build or preview readiness, route availability, static asset loading, and concrete network or API connectivity",
+                "simulate at least one human interaction through the real local frontend stack and capture browser-visible behavior, network evidence, logs, and runtime witness refs",
             ],
             "needs_real_env_threshold": [
-                "only after local config, service bring-up, health checks, and simulated human usage have been attempted",
+                "only after local config, build or preview readiness checks, connectivity checks, and simulated human usage have been attempted",
                 "only for truly external blockers such as missing third-party credentials, account control, or remote resources outside local control",
             ],
         },

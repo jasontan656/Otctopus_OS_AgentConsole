@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-# contract_name: octopus_backend_workflow_policy_contract
+# contract_name: octopus_frontend_workflow_policy_contract
 # contract_version: 1.1.0
 # validation_mode: strict
 # required_fields:
@@ -30,20 +30,20 @@ from __future__ import annotations
 
 DISCOVERY_SCOPE_POLICY = {
     "allowed_roots": [
-        "/home/jasontan656/AI_Projects/Octopus_CodeBase_Backend",
-        "/home/jasontan656/AI_Projects/OctuposOS_Runtime_Backend",
-        "/home/jasontan656/AI_Projects/OctuposOS_Runtime_Backend/docs",
-        "/home/jasontan656/AI_Projects/OctuposOS_Runtime_Backend/docs/mother_doc",
+        "/home/jasontan656/AI_Projects/Octopus_CodeBase_Frontend",
+        "/home/jasontan656/AI_Projects/OctuposOS_RunTime_Frontend",
+        "/home/jasontan656/AI_Projects/OctuposOS_RunTime_Frontend/docs",
+        "/home/jasontan656/AI_Projects/OctuposOS_RunTime_Frontend/docs/mother_doc",
         "current_skill_files",
         "required_graph_skill_files",
     ],
     "workspace_container_root": "/home/jasontan656/AI_Projects",
     "workspace_container_root_is_discovery_target": False,
     "fixed_startup_paths": [
-        "/home/jasontan656/AI_Projects/OctuposOS_Runtime_Backend/docs/mother_doc/00_index.md",
-        "/home/jasontan656/AI_Projects/Octopus_CodeBase_Backend/AGENTS.md",
-        "/home/jasontan656/AI_Projects/Octopus_CodeBase_Backend/README.md",
-        "/home/jasontan656/AI_Projects/Octopus_CodeBase_Backend/Deployment_Guide.md",
+        "/home/jasontan656/AI_Projects/OctuposOS_RunTime_Frontend/docs/mother_doc/00_index.md",
+        "/home/jasontan656/AI_Projects/Octopus_CodeBase_Frontend/AGENTS.md",
+        "/home/jasontan656/AI_Projects/Octopus_CodeBase_Frontend/README.md",
+        "/home/jasontan656/AI_Projects/Octopus_CodeBase_Frontend/Deployment_Guide.md",
     ],
     "required_startup_sequence": [
         "read_mother_doc_index_or_directory",
@@ -64,7 +64,7 @@ PHASE_READ_POLICY = {
         "rules/OCTOPUS_SKILL_HARD_RULES.md",
         "references/tooling/SKILL_TOOLING_WORKFLOW_CONTRACT.md",
         "/home/jasontan656/AI_Projects/AGENTS.md",
-        "/home/jasontan656/AI_Projects/Octopus_CodeBase_Backend/AGENTS.md",
+        "/home/jasontan656/AI_Projects/Octopus_CodeBase_Frontend/AGENTS.md",
     ],
     "single_stage_rule": "read only the current stage checklist and the artifacts required by that stage",
     "multi_stage_rule": "when switching stages, reload the new stage checklist and discard the previous stage instruction focus",

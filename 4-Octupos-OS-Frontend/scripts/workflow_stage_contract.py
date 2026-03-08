@@ -1,7 +1,7 @@
 from __future__ import annotations
 from workflow_policy_contract import PHASE_READ_POLICY
 from workflow_template_contract import TEMPLATES
-# contract_name: octopus_backend_workflow_stage_contract
+# contract_name: octopus_frontend_workflow_stage_contract
 # contract_version: 1.2.0
 # validation_mode: strict
 # required_fields:
@@ -17,7 +17,7 @@ GRAPH_STAGE_ROLES = {
 }
 STAGES = {
     "mother_doc": {
-        "objective": "Create or refine the directory-based mother doc until every required chapter exists, every replace_me is gone, and each stage has explicit goals, assertions, tests, and exit evidence. For iterative projects, mother_doc must first absorb the latest archived iteration history and current code reality before drafting the next round.",
+        "objective": "Create or refine the directory-based frontend mother doc until every required chapter exists, every replace_me is gone, and each stage has explicit goals, assertions, tests, and exit evidence. For iterative projects, mother_doc must first absorb the latest archived iteration history and current frontend code reality before drafting the next round.",
         "required_outputs": [
             "docs/mother_doc/ directory",
             "fully filled project description chapters",
@@ -54,7 +54,7 @@ STAGES = {
         ],
     },
     "construction_plan": {
-        "objective": "Read the completed mother doc design plan and write separate Execution_atom_plan&validation_packs for the AI to use during implementation and stage acceptance.",
+        "objective": "Read the completed frontend mother doc design plan and write separate construction packs for the AI to use during implementation and stage acceptance.",
         "required_outputs": [
             "docs/mother_doc/execution_atom_plan_validation_packs/ directory",
             "00_index.md plus numbered pack directories",
@@ -88,7 +88,7 @@ STAGES = {
         ],
     },
     "implementation": {
-        "objective": "Implement strictly according to the active execution atom pack, update its ledgers and evidence files pack-by-pack, and prove each test result matches design intent rather than only checking that a feature appears to work.",
+        "objective": "Implement strictly according to the active construction pack, update its ledgers and evidence files pack-by-pack, and prove each test result matches frontend design intent rather than only checking that a page appears to render.",
         "required_outputs": [
             "code",
             "tests",
@@ -121,7 +121,7 @@ STAGES = {
         ],
     },
     "acceptance": {
-        "objective": "Bring the locally controllable runtime all the way to production-like readiness, then decide delivery against the mother doc and real witness evidence. Acceptance must finish local configuration, secrets resolution, resident services, health checks, simulated human interaction, and evidence writeback before closure; if the run is closed, archive mother_doc into the next numbered docs directory during evidence closeout.",
+        "objective": "Bring the locally controllable frontend runtime all the way to production-like readiness, then decide delivery against the mother doc and real witness evidence. Acceptance must finish local configuration, env injection, build or preview readiness, simulated human interaction, and evidence writeback before closure; if the run is closed, archive mother_doc into the next numbered docs directory during evidence closeout.",
         "required_outputs": ["acceptance report", "acceptance matrix"],
         "resident_docs": TOP_LEVEL_RESIDENT_DOCS,
         "stage_docs": [
@@ -135,16 +135,17 @@ STAGES = {
             "reload the acceptance checklist before reading acceptance artifacts",
             "discard implementation-only editing focus and keep only evidence needed for delivery judgement",
             "finish all locally controllable environment bring-up work before allowing needs_real_env",
-            "resolve tokens, webhook secrets, owner allowlists, and runtime endpoints from local ignored env files or other non-git secret sources declared in 07_env_and_deploy.md and codebase AGENTS",
-            "start and verify resident services inside the local WSL environment until healthz, webhook ingress, worker lanes, database, redis, mq, and outbound paths all expose observable runtime signals",
-            "run at least one simulated human interaction through the real local stack and capture database, queue, redis, service, and outbound witness refs",
+            "resolve frontend env values, runtime endpoints, feature flags, and any local non-git config from ignored env files or other non-git secret sources declared in 07_env_and_deploy.md and codebase AGENTS",
+            "apply frontend env files, runtime config, asset config, and local launch wiring inside the local WSL environment until the app is actually runnable",
+            "verify dev/build/preview or equivalent runtime readiness, route availability, asset loading, and network/API connectivity",
+            "run at least one simulated human interaction through the real local frontend stack and capture browser-visible behavior, network requests, logs, and deployment/runtime witness refs",
             "run acceptance-lint before final closure",
         ],
         "stage_exit_gate": [
             "acceptance-lint passes",
             "requirement-level evidence is linked",
-            "all locally controllable configuration is applied and documented, including env files, tokens, webhook secrets, owner allowlists, and runtime endpoints",
-            "local WSL resident services are running and have passed health and connectivity checks",
+            "all locally controllable configuration is applied and documented, including env files, runtime endpoints, asset delivery config, and launch commands",
+            "local WSL runtime has passed build or preview readiness plus connectivity checks",
             "at least one simulated human usage flow has traversed the intended runtime path and produced real witness refs",
             "blocked states are explicit where witness is still unavailable",
             "graph-postflight is triggered during closeout after acceptance evidence is complete",

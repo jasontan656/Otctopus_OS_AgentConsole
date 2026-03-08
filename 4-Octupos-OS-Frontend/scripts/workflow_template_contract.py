@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-# contract_name: octopus_backend_workflow_template_contract
+# contract_name: octopus_frontend_workflow_template_contract
 # contract_version: 1.0.0
 # validation_mode: strict
 # required_fields:

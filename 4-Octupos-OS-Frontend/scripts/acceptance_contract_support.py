@@ -5,7 +5,7 @@ from pathlib import Path
 
 from workflow_policy_contract import ACCEPTANCE_LINT_POLICY
 
-# contract_name: octopus_backend_acceptance_contract_support
+# contract_name: octopus_frontend_acceptance_contract_support
 # contract_version: 1.0.0
 # validation_mode: strict
 # required_fields:

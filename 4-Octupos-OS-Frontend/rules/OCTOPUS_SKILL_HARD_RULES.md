@@ -16,14 +16,14 @@
 - `rules/OCTOPUS_SKILL_HARD_RULES.md`
 - `references/tooling/SKILL_TOOLING_WORKFLOW_CONTRACT.md`
 - `/home/jasontan656/AI_Projects/AGENTS.md`
-- `/home/jasontan656/AI_Projects/Octopus_CodeBase_Backend/AGENTS.md`
+- `/home/jasontan656/AI_Projects/Octopus_CodeBase_Frontend/AGENTS.md`
 5. 每个阶段只能做本阶段的事，禁止跨阶段混写；进入新阶段前必须先读取 `stage-checklist --stage <current_stage>`。
 6. 阶段切换时只允许保留顶层常驻文档；上一阶段的 checklist、阶段文档、临时 focus、模板填写上下文必须显式丢弃，除非当前阶段合同明确要求重新读取。
 7. `mother_doc` 阶段必须先把需求固化成目录化项目说明与 `requirement_atom`；没有完整说明书，不得进入 `construction_plan`。
 7.0 `mother_doc` 阶段文档只允许包含：`docs/mother_doc/*` 与 `assets/templates/mother_doc/*`；不得提前读取 construction packs、implementation 证据或 acceptance artifacts。
 7.0.1 若 `docs/` 下已经存在编号归档的 `NN_slug` 目录，`mother_doc` 阶段必须先读取最新一轮归档，并抽取仍然有效的目标、架构决策、blocker 与交付增量；不得把新 mother_doc 当成与历史脱钩的空白起点。
 7.1 `mother_doc` 在进入 `construction_plan` 前必须通过 `mother-doc-lint`；若结构缺失、仍有 `replace_me`、缺少阶段断言/阶段测试/阶段验收，或出现 `最小闭环`、`最小实现`、`mvp`、`test profile` 等降级语义，必须先修正文档。
-7.2 发现范围固定限制为：`Octopus_CodeBase_Backend`、`OctuposOS_Runtime_Backend`、固定 `docs/` 与 `docs/mother_doc/` 路径，以及必要 skill 文件。
+7.2 发现范围固定限制为：`Octopus_CodeBase_Frontend`、`OctuposOS_RunTime_Frontend`、固定 `docs/` 与 `docs/mother_doc/` 路径，以及必要 skill 文件。
 7.3 若启动 cwd 恰好是 `/home/jasontan656/AI_Projects`，它只是容器根/钩子根，不得被视为 discoverable repo。
 7.4 禁止为了找上下文扫描整个 `/home/jasontan656/AI_Projects`，也不得读取 `Human_Work_Zone`、`GoogleDriveDump` 等 sibling 区域，除非 mother doc 显式引用。
 7.5 极简 prompt 启动时，第一批动作必须固定为：直接读取固定 `docs/mother_doc/00_index.md` 或执行 `mother-doc-init` 创建骨架；若已存在编号归档的 `docs/NN_slug`，先读取最新一轮归档；运行 `mother-doc-lint`；在 `mother_doc` 阶段若已有图谱必须读取它来校准现有代码现实；不得先用 `rg/find/ls` 在 workspace 根定位需求或仓库。
@@ -67,7 +67,7 @@
 20. implementation 回填的测试结果必须说明“为什么这组测试证明了设计理念与失败语义”，而不是只记录“功能试过了”。
 21. `acceptance` 阶段的读物边界、graph 更新动作与收口命令以 `stage-doc-contract --stage acceptance`、`stage-command-contract --stage acceptance`、`stage-graph-contract --stage acceptance` 为准；不得把 graph 当验收证据，也不得保留 implementation 局部调试 focus 来替代交付裁决。
 22. 验收必须绑定真实行为与真实 witness，不接受只靠自写 report、自写状态字段宣称完成。
-22.1 `acceptance` 不只是写报告；它必须把本地可控环境真正配到可运行状态，包括 token/webhook secret/owner allowlist/runtime endpoint、常驻服务、healthz/connectivity、以及至少一轮模拟人类使用。
+22.1 `acceptance` 不只是写报告；它必须把本地可控前端环境真正配到可运行状态，包括 env 注入、dev/build/preview 配置、静态资源、路由入口、网络连通、以及至少一轮模拟人类使用。
 22.2 若项目已声明本地 ignored env 文件或其他非 Git secrets source，`acceptance` 必须直接使用它们，不得要求这些 secrets 回写进 mother doc、runtime 文档或任何可推送文件。
 22.3 在本地可控 bring-up 尚未完成前，不得把 `needs_real_env` 当作收尾出口。
 22.4 若项目已声明模型目标，必须使用完整模型目标表达（例如 `gpt-5.4 reasoning effort high`），不得写成模糊的 `gpt-5` 或其他会丢失精度的缩写。

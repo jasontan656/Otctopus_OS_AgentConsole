@@ -1,7 +1,7 @@
 # 4-Octupos-OS-Frontend Tooling & Workflow Contract
 
 ## Contract Header
-- `contract_name`: `octopus_backend_narrative_workflow_contract`
+- `contract_name`: `octopus_frontend_narrative_workflow_contract`
 - `contract_version`: `3.1.0`
 - `validation_mode`: `strict`
 - `required_fields`:
@@ -25,15 +25,15 @@
   - `notes`
 
 ## 1. 定位
-- 本合同定义章鱼 OS backend skill 的四阶段项目说明驱动工作流。
+- 本合同定义章鱼 OS frontend skill 的四阶段项目说明驱动工作流。
 - 图谱能力由 `Meta-code-graph-base` 提供；本合同只定义它在工作流中的位置。
 
 ## 1.1 Discovery Scope Policy
 - 发现范围只允许包含：
-  - `/home/jasontan656/AI_Projects/Octopus_CodeBase_Backend`
-  - `/home/jasontan656/AI_Projects/OctuposOS_Runtime_Backend`
-  - `/home/jasontan656/AI_Projects/OctuposOS_Runtime_Backend/docs`
-  - `/home/jasontan656/AI_Projects/OctuposOS_Runtime_Backend/docs/mother_doc`
+  - `/home/jasontan656/AI_Projects/Octopus_CodeBase_Frontend`
+  - `/home/jasontan656/AI_Projects/OctuposOS_RunTime_Frontend`
+  - `/home/jasontan656/AI_Projects/OctuposOS_RunTime_Frontend/docs`
+  - `/home/jasontan656/AI_Projects/OctuposOS_RunTime_Frontend/docs/mother_doc`
   - 当前技能文件与必要图谱技能入口
 - 若启动 cwd 是 `/home/jasontan656/AI_Projects`，它只是容器根与钩子根，不是 discoverable repo。
 - 禁止为了找需求或上下文而扫描整个 `/home/jasontan656/AI_Projects`。
@@ -52,7 +52,7 @@
   - `rules/OCTOPUS_SKILL_HARD_RULES.md`
   - `references/tooling/SKILL_TOOLING_WORKFLOW_CONTRACT.md`
   - `/home/jasontan656/AI_Projects/AGENTS.md`
-  - `/home/jasontan656/AI_Projects/Octopus_CodeBase_Backend/AGENTS.md`
+  - `/home/jasontan656/AI_Projects/Octopus_CodeBase_Frontend/AGENTS.md`
 
 ## 1.3 Phase Read Policy
 - 单阶段执行时，只读取当前阶段 checklist 与当前阶段直接需要的文档/模板。
@@ -119,11 +119,11 @@
 - 不把 code graph 当验收证据，只把它当解释层。
 - `acceptance` 只能基于 mother doc 与前面各阶段已定义的断言/测试/验收做裁决，不得临时补写一套新标准。
 - `acceptance` 必须先完成以下本地可解动作，才允许写入 `needs_real_env`：
-  - 解析本地 ignored env 文件或项目声明的非 Git secrets source，补齐 token、webhook secret、owner allowlist、runtime endpoint 等配置
-  - 把项目声明的本地 ignored secrets source（本项目默认 `.env.example`）以及相关 config/unit/webhook/ngrok 配置真正落到本地 WSL 环境并实测
-  - 启动并验证常驻服务，至少覆盖 backend、worker、依赖服务连通性和 healthz
-  - 用至少一轮模拟人类使用打通真实链路，并收集日志、数据库、消息队列、Redis、delivery 等 witness
-- 如果项目把 token 或其他 secrets 明确放在本地 ignored env 文件中，`acceptance` 应直接消费该文件；不得要求这些 secrets 出现在 mother doc 或可推送文档中。
+  - 解析本地 ignored env 文件或项目声明的非 Git config source，补齐 frontend env、runtime endpoint、feature flag、asset base 等配置
+  - 把项目声明的本地 ignored config source（本项目默认 `.env.example`）以及相关 env/build/preview 配置真正落到本地 WSL 环境并实测
+  - 启动并验证前端运行入口，至少覆盖 dev/build/preview 可用性、路由入口、静态资源和网络连通性
+  - 用至少一轮模拟人类使用打通真实链路，并收集日志、浏览器可见行为、网络请求、asset 加载与运行态 witness
+- 如果项目把 env 或其他敏感配置明确放在本地 ignored env 文件中，`acceptance` 应直接消费该文件；不得要求这些配置出现在 mother doc 或可推送文档中。
 - 如果项目说明或本地 secrets source 已声明大模型目标，`acceptance` 与 bring-up 配置必须写成完整目标表达（例如 `gpt-5.4 reasoning effort high`），不得回退成模糊的 `gpt-5`。
 - 本阶段的读物边界、graph 更新动作、收口命令以 stage-specific CLI contracts 为准。
 
@@ -163,9 +163,9 @@
   - 安装或修复缺失依赖
   - 修复 `.venv-wsl`、启动命令、PATH、权限位
   - 创建或修正项目声明的本地 ignored secrets source（本项目默认 `.env.example`）以及相关 config/unit 文件
-  - 启停并验证 systemd/user units、健康检查、metrics、webhook、ngrok
-  - 验证真实 runner/worker/sidecar 可执行
-  - 使用真实或项目声明的本地 secrets source 补齐 token/webhook secret/owner allowlist，并进行至少一轮模拟人类使用
+  - 验证前端运行入口、构建结果、预览或部署态、路由、资源加载、以及必要网络连通性
+  - 验证真实前端 runtime entry 可执行
+  - 使用真实或项目声明的本地 config source 补齐 env/runtime endpoint/feature flags，并进行至少一轮模拟人类使用
 - 若以上动作仍未全部尝试，则 `blocked_state` 不能写成 `needs_real_env`。
 
 ## 7. Graph Preflight Policy
