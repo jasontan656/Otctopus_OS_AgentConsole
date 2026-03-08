@@ -36,6 +36,10 @@ def scan_report_path(skill_root: Path) -> Path:
     return managed_root(skill_root) / "scan_report.json"
 
 
+def lock_path(skill_root: Path) -> Path:
+    return managed_root(skill_root) / ".cli.lock"
+
+
 def root_slug(source_root: Path) -> str:
     text = source_root.as_posix().strip("/")
     if not text:

@@ -6,6 +6,7 @@
 - `registry`：只读查看当前托管映射。
 
 核心边界：
+- `scan / collect / push` 通过 `assets/managed_agents/.cli.lock` 串行化。
 - `scan` 不写托管副本。
 - `collect` 不重新扫描。
 - `push` 不绕过 registry。

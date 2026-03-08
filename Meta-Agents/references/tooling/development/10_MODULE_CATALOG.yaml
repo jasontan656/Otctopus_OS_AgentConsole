@@ -14,6 +14,9 @@ modules:
   - name: managed_index
     path: scripts/managed_index.py
     responsibility: 生成受管 AGENTS 索引页
+  - name: managed_lock
+    path: scripts/managed_lock.py
+    responsibility: 对 scan collect push 提供互斥锁
   - name: managed_collect
     path: scripts/managed_collect.py
     responsibility: 基于 scan_report 回收 AGENTS.md

@@ -47,6 +47,8 @@ def collect_from_scan(skill_root: Path, source_root: str | None = None) -> dict[
 
     for scanned in scan_report.get("entries", []):
         source_path = Path(scanned["source_path"])
+        if not source_path.exists():
+            raise FileNotFoundError(f"scanned source file missing: {source_path}")
         managed_path = Path(scanned["managed_path"])
         text = source_path.read_text(encoding="utf-8")
         managed_path.parent.mkdir(parents=True, exist_ok=True)

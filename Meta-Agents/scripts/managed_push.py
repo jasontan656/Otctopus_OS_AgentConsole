@@ -11,7 +11,7 @@ def push_out(
     target_source_paths: list[str],
     push_all: bool,
 ) -> dict[str, object]:
-    payload = load_registry(skill_root)
+    payload = load_registry(skill_root, require_existing=True, require_entries=True)
     entries = payload.get("entries", [])
     if push_all:
         selected = entries
@@ -28,6 +28,8 @@ def push_out(
         target = Path(entry["source_path"])
         if not source.exists():
             raise FileNotFoundError(f"managed copy missing: {source}")
+        if source.stat().st_size == 0:
+            raise ValueError(f"managed copy is empty: {source}")
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(source, target)
         text = source.read_text(encoding="utf-8")

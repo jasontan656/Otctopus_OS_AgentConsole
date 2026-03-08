@@ -11,6 +11,7 @@ if str(SCRIPT_DIR) not in sys.path:
 
 from cli_parser_support import build_parser
 from managed_collect import collect_from_scan
+from managed_lock import acquire_cli_lock
 from managed_paths import resolve_skill_root, resolve_source_root
 from managed_push import push_out
 from managed_registry import load_registry
@@ -36,14 +37,16 @@ def cmd_registry(args) -> int:
 def cmd_scan(args) -> int:
     skill_root = resolve_skill_root(args.skill_root)
     source_root = resolve_scan_source_root(args.source_root)
-    payload = write_scan_report(skill_root=skill_root, source_root=source_root)
+    with acquire_cli_lock(skill_root, "scan"):
+        payload = write_scan_report(skill_root=skill_root, source_root=source_root)
     return print_payload(payload, args.json)
 
 
 def cmd_collect(args) -> int:
     skill_root = resolve_skill_root(args.skill_root)
     source_root = resolve_source_root(args.source_root) if args.source_root else None
-    payload = collect_from_scan(skill_root=skill_root, source_root=str(source_root) if source_root else None)
+    with acquire_cli_lock(skill_root, "collect"):
+        payload = collect_from_scan(skill_root=skill_root, source_root=str(source_root) if source_root else None)
     return print_payload(payload, args.json)
 
 
@@ -51,11 +54,12 @@ def cmd_push(args) -> int:
     if not args.all and not args.target_source_path:
         raise SystemExit("pass --all or at least one --target-source-path")
     skill_root = resolve_skill_root(args.skill_root)
-    payload = push_out(
-        skill_root=skill_root,
-        target_source_paths=args.target_source_path,
-        push_all=args.all,
-    )
+    with acquire_cli_lock(skill_root, "push"):
+        payload = push_out(
+            skill_root=skill_root,
+            target_source_paths=args.target_source_path,
+            push_all=args.all,
+        )
     return print_payload(payload, args.json)
 
 

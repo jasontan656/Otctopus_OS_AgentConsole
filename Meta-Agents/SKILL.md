@@ -12,6 +12,7 @@ description: "集中管理 workspace 内的 AGENTS.md。提供显式分离的 sc
   - `scan`
   - `collect`
   - `push`
+- `scan / collect / push` 必须通过技能内互斥锁串行运行，禁止并行。
 
 ## 2. 可用工具
 - 工具入口：`scripts/Cli_Toolbox.py`
@@ -46,6 +47,9 @@ description: "集中管理 workspace 内的 AGENTS.md。提供显式分离的 sc
 - `scan` 不允许写托管副本。
 - `collect` 不允许重新扫描文件系统，只允许消费 `scan_report.json`。
 - `push` 不允许绕过 `registry.json` 直接推断目标。
+- `collect` 消费的 `scan_report.json` 不存在、为空或无条目时，必须显式报错。
+- `push` 消费的 `registry.json` 不存在、为空或无条目时，必须显式报错。
+- 除 `push` 对外回写源文件外，技能所有产物必须留在技能内部 `assets/managed_agents/`。
 
 ## 5. 方法论约束
 - 先 `scan`，再 `collect`，最后 `push`。
@@ -69,6 +73,7 @@ Meta-Agents/
 │   └── openai.yaml
 ├── assets/
 │   └── managed_agents/
+│       ├── .cli.lock
 │       ├── index.md
 │       ├── registry.json
 │       └── scan_report.json

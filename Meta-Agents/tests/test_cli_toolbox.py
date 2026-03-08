@@ -1,10 +1,14 @@
 from __future__ import annotations
 
 import json
+import sys
 import subprocess
 import tempfile
 import unittest
 from pathlib import Path
+
+sys.path.insert(0, str((Path(__file__).resolve().parents[1] / "scripts")))
+from managed_lock import acquire_cli_lock
 
 
 SCRIPT = Path(__file__).resolve().parents[1] / "scripts" / "Cli_Toolbox.py"
@@ -122,6 +126,84 @@ class MetaAgentsCliTests(unittest.TestCase):
             )
             stale = list((skill_root / "assets" / "managed_agents").rglob("*Human_Work_Zone*"))
             self.assertEqual(stale, [])
+
+    def test_collect_fails_when_scan_report_missing(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            skill_root = Path(tmp) / "skill"
+            completed = subprocess.run(
+                ["python3", str(SCRIPT), "collect", "--skill-root", str(skill_root), "--json"],
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            self.assertNotEqual(completed.returncode, 0)
+            self.assertIn("scan report missing", completed.stdout)
+
+    def test_push_fails_when_registry_missing(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            skill_root = Path(tmp) / "skill"
+            completed = subprocess.run(
+                ["python3", str(SCRIPT), "push", "--skill-root", str(skill_root), "--all", "--json"],
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            self.assertNotEqual(completed.returncode, 0)
+            self.assertIn("registry missing", completed.stdout)
+
+    def test_collect_fails_when_scan_report_empty(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            skill_root = Path(tmp) / "skill"
+            scan_report = skill_root / "assets" / "managed_agents" / "scan_report.json"
+            scan_report.parent.mkdir(parents=True)
+            scan_report.write_text("", encoding="utf-8")
+            completed = subprocess.run(
+                ["python3", str(SCRIPT), "collect", "--skill-root", str(skill_root), "--json"],
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            self.assertNotEqual(completed.returncode, 0)
+            self.assertIn("scan report file is empty", completed.stdout)
+
+    def test_push_fails_when_registry_empty(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            skill_root = Path(tmp) / "skill"
+            registry = skill_root / "assets" / "managed_agents" / "registry.json"
+            registry.parent.mkdir(parents=True)
+            registry.write_text("", encoding="utf-8")
+            completed = subprocess.run(
+                ["python3", str(SCRIPT), "push", "--skill-root", str(skill_root), "--all", "--json"],
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            self.assertNotEqual(completed.returncode, 0)
+            self.assertIn("registry file is empty", completed.stdout)
+
+    def test_stage_lock_blocks_parallel_run(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            skill_root = Path(tmp) / "skill"
+            source_root = Path(tmp) / "src"
+            source_root.mkdir(parents=True)
+            with acquire_cli_lock(skill_root, "test"):
+                completed = subprocess.run(
+                    [
+                        "python3",
+                        str(SCRIPT),
+                        "scan",
+                        "--skill-root",
+                        str(skill_root),
+                        "--source-root",
+                        str(source_root),
+                        "--json",
+                    ],
+                    check=False,
+                    capture_output=True,
+                    text=True,
+                )
+            self.assertNotEqual(completed.returncode, 0)
+            self.assertIn("command lock busy", completed.stdout)
 
 
 if __name__ == "__main__":

@@ -55,7 +55,14 @@ def load_scan_report(skill_root: Path) -> dict[str, object]:
     path = scan_report_path(skill_root)
     if not path.exists():
         raise FileNotFoundError(f"scan report missing: {path}")
-    return json.loads(path.read_text(encoding="utf-8"))
+    raw = path.read_text(encoding="utf-8")
+    if not raw.strip():
+        raise ValueError(f"scan report file is empty: {path}")
+    payload = json.loads(raw)
+    entries = payload.get("entries", [])
+    if not entries:
+        raise ValueError(f"scan report has no entries: {path}")
+    return payload
 
 
 def resolve_scan_source_root(raw: str | None) -> Path:

@@ -4,7 +4,7 @@
 
 ### `scan`
 - 人类输入：给一个 source root。
-- 电脑动作：扫描该 root 下全部 `AGENTS.md`，但忽略 `Human_Work_Zone/` 与技能自身托管目录；只写 `scan_report.json`。
+- 电脑动作：先抢技能内互斥锁；然后扫描该 root 下全部 `AGENTS.md`，但忽略 `Human_Work_Zone/` 与技能自身托管目录；只写技能内部的 `scan_report.json`。
 - 人类输出：得到本次扫描清单，但还没有托管副本。
 
 示例命令（强制）：
@@ -12,7 +12,7 @@
 
 ### `collect`
 - 人类输入：默认消费上一步 `scan` 生成的 `scan_report.json`。
-- 电脑动作：把扫描结果里的文件完整复制进托管目录，并更新 `registry.json` 与 `index.md`。
+- 电脑动作：先抢技能内互斥锁；若 `scan_report.json` 缺失、为空或无条目则直接报错；否则把扫描结果里的文件完整复制进托管目录，并更新技能内部的 `registry.json` 与 `index.md`。
 - 人类输出：得到当前纳管结果和托管索引页。
 
 示例命令（强制）：
@@ -20,7 +20,7 @@
 
 ### `push`
 - 人类输入：指定某个目标路径或 `--all`。
-- 电脑动作：把技能内托管的 `AGENTS.md` 副本回写到 registry 里的真实源路径。
+- 电脑动作：先抢技能内互斥锁；若 `registry.json` 缺失、为空或无条目则直接报错；否则把技能内托管的 `AGENTS.md` 副本回写到 registry 里的真实源路径。
 - 人类输出：得到被更新的目标列表。
 
 示例命令（强制）：
