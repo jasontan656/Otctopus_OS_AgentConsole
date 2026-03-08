@@ -29,7 +29,7 @@
 - source_path: `/home/jasontan656/AI_Projects/Codex_Skills_Mirror/AGENTS.md`
 - managed_path: `/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/home_jasontan656_AI_Projects/Codex_Skills_Mirror/AGENTS.md`
 - managed_rel_path: `home_jasontan656_AI_Projects/Codex_Skills_Mirror/AGENTS.md`
-- preview: # AGENTS.md - Codex Skills Mirror | [CODEX_SKILLS_MIRROR_CONTRACT - HARD ENFORCEMENT] | 0. Scope
+- preview: # AGENTS.md - Skills Governance Reminder | [SKILLS_GOVERNANCE_CONTRACT - HARD ENFORCEMENT] | 0. Scope
 
 ## /home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/.gitignore
 - target_kind: `.gitignore`
