@@ -8,12 +8,14 @@
 ## 职责
 - 生成技能骨架：`SKILL.md`、`agents/openai.yaml`、资源目录。
 - 生成 `Cli_Toolbox` 使用文档和开发文档基础结构。
+- 根据 `--profile` 选择基础骨架或 staged CLI-first 复杂技能骨架。
+- 对 staged profile 补齐 runtime contract skeleton、stage index 与 stage template kit。
 - 保障输出为稳定 JSON，便于上游自动化消费。
 - 默认文案避免把“创建技能流程”写入被创建技能的运行态目标描述。
 
 ## 输入输出契约
-- 输入：`--skill-name`、`--target-root`、`--resources`、`--description`、`--overwrite`
-- 输出：JSON（`skill_dir`、`resources_created`、`write_results`）
+- 输入：`--skill-name`、`--target-root`、`--resources`、`--description`、`--profile`、`--overwrite`
+- 输出：JSON（`skill_dir`、`profile`、`resources_created`、`write_results`）
 - 失败模式：参数缺失、模板文件缺失、路径不可写。
 
 ## 依赖与边界
@@ -25,6 +27,7 @@
 ```bash
 python3 scripts/create_skill_from_template.py --help
 python3 scripts/create_skill_from_template.py --skill-name meta-skill-template-sandbox --target-root ~/AI_Projects/Codex_Skill_Runtime/Meta-Skill-Template --overwrite
+python3 scripts/create_skill_from_template.py --skill-name staged-sandbox --target-root ~/AI_Projects/Codex_Skill_Runtime/Meta-Skill-Template --profile staged_cli_first --overwrite
 ```
 
 ## 文档同步

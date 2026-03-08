@@ -1,7 +1,7 @@
 # 技能模板契约 v1
 
 ## 目标
-使用“模板优先、确定性执行”的契约来创建或规范化技能，保证结构稳定、触发行为可预测。
+使用“模板优先、确定性执行”的契约来创建或规范化技能，保证结构稳定、触发行为可预测，并支持复杂 staged skill 的治理落盘。
 
 ## 必需文件
 - `SKILL.md`
@@ -11,6 +11,14 @@
 - `scripts/`
 - `references/`
 - `assets/`
+
+## Profile 契约
+- `basic`
+  - 适用于单目标、低阶段复杂度、弱运行态规则的技能。
+- `staged_cli_first`
+  - 适用于多阶段、多合同、强运行态边界的复杂技能。
+  - 必须把“当前阶段该读什么、该做什么、能看什么”从 CLI 输出。
+  - 必须提供 `references/stages/` 或等价的阶段化目录体系。
 
 ## SKILL.md 章节契约（1-7）
 1. 目标
@@ -36,6 +44,24 @@
   - 必须提供 markdown 审计版。
   - 必须在 `SKILL.md` 明示：模型禁止直接阅读 markdown 获取运行指引。
   - 更新时必须同步两份，且建议以 machine-readable 合同刷新 markdown。
+- 若技能属于 `staged_cli_first`：
+  - 必须定义显式阶段顺序或阶段集合。
+  - 必须定义 top-level resident docs，且数量应尽量少、固定。
+  - 必须定义阶段切换时的 drop/discard 规则。
+  - 必须将阶段级规则拆成多个独立文件或独立 CLI 合同，禁止堆成单文件大纲。
+  - 阶段合同至少应覆盖：`checklist`、`doc contract`、`command contract`、`graph contract` 中的适用子集。
+  - 若某类合同依赖真实项目状态，必须显式标为 dynamic contract，不得伪装成纯静态模板。
+
+## 目录深度与模板簇契约
+- 目录层级不仅是组织手段，也是模型的适用域收拢器。
+- 当规则、模板、工作流跨多个阶段或角色时，优先加深目录层级，不要继续扩写单文件。
+- 复杂技能推荐将内容拆为：
+  - 门面入口
+  - runtime 合同
+  - stages 阶段目录
+  - rules/workflow references
+  - assets/templates 模板簇
+- 模板簇中，人类叙事 markdown 与 machine files 应显式分离，不得混成一个巨型模板。
 
 ## 约束护栏
 - 每个技能只能有一个主决策目标，且该目标必须是技能运行态目标，不得写入“创建技能/改写模板”等建模流程目标。
@@ -52,6 +78,13 @@
 - 若技能存在运行态规则，推荐固定路径：
   - `references/runtime/`
   - `references/stages/`
+- 若技能属于 `staged_cli_first`，推荐同时提供：
+  - `references/stages/00_STAGE_INDEX.md`
+  - `assets/templates/stages/`
+  - `assets/templates/stages/STAGE_TEMPLATE/`
+- 若技能需要真实项目上下文才能生成某些命令或边界，必须在文档中区分：
+  - static authoring contract
+  - dynamic runtime contract
 
 ## 验收清单
 - frontmatter 中存在 `name` 与 `description` 字段。
@@ -63,6 +96,11 @@
 - `Cli_Toolbox_USAGE.md` 必须包含“示例命令（强制）”章节：`cd` 开头、一行可复制、包含管道、附最小用途描述。
 - 若 Toolbox 涉及多模块，必须存在开发分类索引与模块目录（`20_CATEGORY_INDEX.md` + `10_MODULE_CATALOG.yaml`）。
 - 若技能存在运行态规则，必须存在 CLI 输出入口、machine-readable 合同与 markdown 审计版三者闭环。
+- 若技能属于 `staged_cli_first`，必须能明确指出：
+  - 阶段顺序或阶段集合
+  - resident docs
+  - stage switch discard policy
+  - stage templates 或 stage references 的固定入口
 - 必需文件中不存在未替换占位符（如 `[TODO]`、`<...>`、`TBD`）。
 - 接口元数据与技能目标一致。
 - 创建或更新的文件以明确路径形式输出。

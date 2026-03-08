@@ -2,3 +2,4 @@
 
 - [日期]
   - [变更摘要]
+  - [若涉及 profile/runtime/stages，也在此显式记录]

@@ -7,4 +7,7 @@ maintain_rules:
     - references/tooling/Cli_Toolbox_USAGE.md
     - references/tooling/Cli_Toolbox_DEVELOPMENT.md
     - references/tooling/development/20_CATEGORY_INDEX.md
+profile_support:
+  - basic
+  - staged_cli_first
 modules: []

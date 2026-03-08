@@ -1,10 +1,11 @@
 {
   "contract_name": "META_SKILL_TEMPLATE_RUNTIME_CONTRACT",
-  "contract_version": "v1",
+  "contract_version": "v2",
   "validation_mode": "cli_first",
   "required_fields": [
     "skill_name",
     "routing_policy",
+    "profile_support",
     "tool_contracts",
     "governance_rules"
   ],
@@ -18,16 +19,24 @@
     "markdown_role": "human_audit_and_reference",
     "detail_downstream_paths": [
       "references/skill_template_contract_v1.md",
+      "references/staged_cli_first_profile_reference.md",
       "references/skill_architecture_playbook.md",
       "references/tooling/Cli_Toolbox_USAGE.md",
       "references/tooling/Cli_Toolbox_DEVELOPMENT.md"
     ]
   },
+  "profile_support": {
+    "basic": "基础技能骨架；适合低阶段复杂度技能。",
+    "staged_cli_first": "复杂技能骨架；强调阶段合同、目录深度、resident docs 与 CLI-first 运行边界。"
+  },
   "tool_contracts": {
     "Cli_Toolbox.create_skill_from_template": "统一入口创建或更新技能骨架。",
     "Cli_Toolbox.skill_template": "输出 SKILL 模板资产。",
+    "Cli_Toolbox.staged_skill_template": "输出 staged CLI-first 复杂技能 SKILL 模板资产。",
     "Cli_Toolbox.openai_template": "输出 openai.yaml 模板资产。",
     "Cli_Toolbox.contract_reference": "输出模板契约参考。",
+    "Cli_Toolbox.staged_skill_reference": "输出从 3-Octupos-OS-Backend 提炼出的复杂技能 profile 参考。",
+    "Cli_Toolbox.runtime_contract_template": "输出运行合同模板资产。",
     "Cli_Toolbox.architecture_playbook": "输出模板架构手册。",
     "Cli_Toolbox.runtime_contract": "输出本技能运行合同。"
   },
@@ -35,6 +44,8 @@
     "SKILL.md 必须保持轻量入口，不承载堆积式细节。",
     "统一工具入口优先使用 scripts/Cli_Toolbox.py。",
     "技能治理细节下沉到 references/ 与模板资产。",
+    "若目标技能属于 staged_cli_first，必须显式建模阶段目录、阶段合同与 resident docs。",
+    "若规则依赖真实项目状态，必须显式区分 static authoring contract 与 dynamic runtime contract。",
     "若治理规则变化，同时更新 SKILL.md 入口、references 合同、tooling 文档与模板资产。"
   ],
   "notes": [

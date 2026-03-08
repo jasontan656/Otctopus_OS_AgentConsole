@@ -17,3 +17,7 @@
 - 2026-03-09
   - 为 Meta-Skill-Template 自身补充 `scripts/Cli_Toolbox.py` 统一入口。
   - 将 `SKILL.md` 收缩为纯入口页，详细治理规则下沉到 runtime contract 与 references。
+- 2026-03-09
+  - 引入 `staged_cli_first` profile，吸收 `3-Octupos-OS-Backend` 的复杂技能治理结构。
+  - 新增 `SKILL_TEMPLATE_STAGED.md`、runtime contract 模板与 stage template kit。
+  - `create_skill_from_template.py` 新增 `--profile`，可直接生成 staged CLI-first 复杂技能骨架。

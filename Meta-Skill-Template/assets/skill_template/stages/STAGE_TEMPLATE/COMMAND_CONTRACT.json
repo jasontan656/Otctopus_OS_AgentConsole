@@ -1,0 +1,12 @@
+{
+  "stage": "<stage_slug>",
+  "entry_commands": [
+    "replace_me"
+  ],
+  "gate_commands": [
+    "replace_me"
+  ],
+  "optional_commands": [
+    "replace_me"
+  ]
+}

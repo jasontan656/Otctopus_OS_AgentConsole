@@ -12,12 +12,21 @@
 - `Cli_Toolbox.skill_template`
   - 入口：`scripts/Cli_Toolbox.py skill-template`
   - 用途：提供 1-7 章节描述模板。
+- `Cli_Toolbox.staged_skill_template`
+  - 入口：`scripts/Cli_Toolbox.py staged-skill-template`
+  - 用途：提供 staged CLI-first 复杂技能的门面模板。
 - `Cli_Toolbox.openai_template`
   - 入口：`scripts/Cli_Toolbox.py openai-template`
   - 用途：提供 `agents/openai.yaml` 基线结构。
 - `Cli_Toolbox.contract_reference`
   - 入口：`scripts/Cli_Toolbox.py contract-reference`
   - 用途：输出模板契约参考。
+- `Cli_Toolbox.staged_skill_reference`
+  - 入口：`scripts/Cli_Toolbox.py staged-skill-reference`
+  - 用途：输出复杂技能 profile 提炼参考。
+- `Cli_Toolbox.runtime_contract_template`
+  - 入口：`scripts/Cli_Toolbox.py runtime-contract-template`
+  - 用途：输出 staged skill 的 runtime contract 模板资产。
 - `Cli_Toolbox.architecture_playbook`
   - 入口：`scripts/Cli_Toolbox.py architecture-playbook`
   - 用途：输出模板架构手册。
@@ -40,12 +49,13 @@
 - 人类叙事版输入：
   - 我想新建一个技能，名称是 `my-skill`，并且希望把目录自动搭好。
 - 电脑动作发生了什么：
-  - 系统执行 `python3 scripts/Cli_Toolbox.py create-skill-from-template --skill-name my-skill --target-root ~/.codex/skills --overwrite`。
+  - 系统执行 `python3 scripts/Cli_Toolbox.py create-skill-from-template --skill-name my-skill --target-root ~/.codex/skills --profile staged_cli_first --overwrite`。
   - 脚本按模板生成 `SKILL.md`、`agents/openai.yaml`、`references/tooling/*` 以及开发文档分层结构。
+  - 若使用 `--profile staged_cli_first`，还会生成 `references/runtime/*`、`references/stages/00_STAGE_INDEX.md` 与 `assets/templates/stages/*`。
   - 生成内容会显式避免把“创建技能本身”写入被创建技能的 `1.目标` 章节。
   - 若技能后续存在运行态规则、约束、指引，模板正文会要求补齐 CLI 输出入口、machine-readable 合同与 markdown 审计版。
 - 人类叙事版输出：
-  - 你会得到一个可直接继续编辑的技能目录，并看到 JSON 结果（`skill_dir`、`resources_created`、`write_results`），可快速确认是否成功。
+  - 你会得到一个可直接继续编辑的技能目录，并看到 JSON 结果（`skill_dir`、`profile`、`resources_created`、`write_results`），可快速确认是否成功。
 
 ### Cli_Toolbox.skill_template
 - 人类叙事版输入：
@@ -54,6 +64,14 @@
   - 系统执行 `python3 scripts/Cli_Toolbox.py skill-template --json`，返回模板路径与正文内容。
 - 人类叙事版输出：
   - 你会得到一份结构完整的 `SKILL.md` 草稿，可直接填内容，不会因为漏章导致契约不合规。
+
+### Cli_Toolbox.staged_skill_template
+- 人类叙事版输入：
+  - 我需要一份适合复杂 staged skill 的门面模板。
+- 电脑动作发生了什么：
+  - 系统执行 `python3 scripts/Cli_Toolbox.py staged-skill-template --json`，返回模板路径与正文内容。
+- 人类叙事版输出：
+  - 你会得到一份强调阶段顺序、resident docs、CLI-first 合同与 stage template kit 的 `SKILL.md` 草稿。
 
 ### Cli_Toolbox.openai_template
 - 人类叙事版输入：
@@ -71,10 +89,18 @@
 - 人类叙事版输出：
   - 你会拿到契约文档内容和路径，便于比对治理要求。
 
+### Cli_Toolbox.staged_skill_reference
+- 人类叙事版输入：
+  - 我想知道复杂技能为什么要做阶段目录、resident docs 和 CLI-first 合同。
+- 电脑动作发生了什么：
+  - 系统执行 `python3 scripts/Cli_Toolbox.py staged-skill-reference --json`。
+- 人类叙事版输出：
+  - 你会拿到从 `3-Octupos-OS-Backend` 提炼出来的复杂技能 profile 参考。
+
 ## 参数与结果（供 AI/工程使用）
-- 核心输入参数：`create-skill-from-template` 的 `--skill-name`、`--target-root`、`--resources`、`--description`、`--overwrite`
+- 核心输入参数：`create-skill-from-template` 的 `--skill-name`、`--target-root`、`--resources`、`--description`、`--profile`、`--overwrite`
 - 核心输出结构：
-  - `create-skill-from-template`：JSON（`skill_dir`、`resources_created`、`write_results`）
+  - `create-skill-from-template`：JSON（`skill_dir`、`profile`、`resources_created`、`write_results`）
   - 资源查询类命令：JSON（`asset/path/content`）
 - 失败返回：参数缺失或模板/路径异常时返回非零退出码
 
@@ -86,5 +112,7 @@
   - 对应模块文档（`references/tooling/development/modules/*.md`）
 - 若模板契约变更影响运行态规则分发方式，还必须同步：
   - `references/skill_template_contract_v1.md`
+  - `references/staged_cli_first_profile_reference.md`
   - `references/skill_architecture_playbook.md`
   - `assets/skill_template/SKILL_TEMPLATE.md`
+  - `assets/skill_template/SKILL_TEMPLATE_STAGED.md`

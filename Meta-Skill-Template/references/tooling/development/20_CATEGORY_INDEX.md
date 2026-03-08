@@ -5,6 +5,9 @@
   - `scripts/Cli_Toolbox.py`
 - `架构与边界`
   - `00_ARCHITECTURE_OVERVIEW.md`
+- `复杂技能 profile`
+  - `references/staged_cli_first_profile_reference.md`
+  - `assets/skill_template/SKILL_TEMPLATE_STAGED.md`
 - `模块清单与映射`
   - `10_MODULE_CATALOG.yaml`
 - `模块文档`

@@ -30,4 +30,5 @@ modules:
       - scaffold
       - generation
       - governance
+      - staged-profile
     status: active

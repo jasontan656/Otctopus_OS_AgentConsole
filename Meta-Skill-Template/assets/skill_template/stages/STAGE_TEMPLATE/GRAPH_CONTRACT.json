@@ -1,0 +1,10 @@
+{
+  "stage": "<stage_slug>",
+  "graph_role": {
+    "read_policy": "replace_me",
+    "update_policy": "replace_me"
+  },
+  "recommended_commands": [
+    "replace_me"
+  ]
+}

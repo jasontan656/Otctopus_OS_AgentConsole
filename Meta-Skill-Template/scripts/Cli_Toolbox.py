@@ -41,6 +41,8 @@ def cmd_create_skill_from_template(args) -> int:
         args.resources,
         "--description",
         args.description,
+        "--profile",
+        args.profile,
     ]
     if args.overwrite:
         cmd.append("--overwrite")
@@ -55,12 +57,39 @@ def cmd_skill_template(args) -> int:
     return emit(text_payload(SKILL_ROOT / "assets" / "skill_template" / "SKILL_TEMPLATE.md", "skill_template"), args.json)
 
 
+def cmd_staged_skill_template(args) -> int:
+    return emit(
+        text_payload(SKILL_ROOT / "assets" / "skill_template" / "SKILL_TEMPLATE_STAGED.md", "staged_skill_template"),
+        args.json,
+    )
+
+
 def cmd_openai_template(args) -> int:
     return emit(text_payload(SKILL_ROOT / "assets" / "skill_template" / "openai_template.yaml", "openai_template"), args.json)
 
 
 def cmd_contract_reference(args) -> int:
     return emit(text_payload(SKILL_ROOT / "references" / "skill_template_contract_v1.md", "contract_reference"), args.json)
+
+
+def cmd_staged_skill_reference(args) -> int:
+    return emit(
+        text_payload(
+            SKILL_ROOT / "references" / "staged_cli_first_profile_reference.md",
+            "staged_skill_reference",
+        ),
+        args.json,
+    )
+
+
+def cmd_runtime_contract_template(args) -> int:
+    return emit(
+        text_payload(
+            SKILL_ROOT / "assets" / "skill_template" / "runtime" / "SKILL_RUNTIME_CONTRACT_TEMPLATE.json",
+            "runtime_contract_template",
+        ),
+        args.json,
+    )
 
 
 def cmd_architecture_playbook(args) -> int:
@@ -81,13 +110,17 @@ def build_parser() -> argparse.ArgumentParser:
     create_skill.add_argument("--target-root", required=True)
     create_skill.add_argument("--resources", default="scripts,references,assets")
     create_skill.add_argument("--description", default="")
+    create_skill.add_argument("--profile", default="basic", choices=("basic", "staged_cli_first"))
     create_skill.add_argument("--overwrite", action="store_true")
     create_skill.set_defaults(func=cmd_create_skill_from_template)
 
     for name, func in (
         ("skill-template", cmd_skill_template),
+        ("staged-skill-template", cmd_staged_skill_template),
         ("openai-template", cmd_openai_template),
         ("contract-reference", cmd_contract_reference),
+        ("staged-skill-reference", cmd_staged_skill_reference),
+        ("runtime-contract-template", cmd_runtime_contract_template),
         ("architecture-playbook", cmd_architecture_playbook),
         ("runtime-contract", cmd_runtime_contract),
     ):

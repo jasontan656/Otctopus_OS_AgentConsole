@@ -24,6 +24,7 @@
   - `10_MODULE_CATALOG.yaml`
   - 对应模块文档
 - 若模板或工具会影响模型如何读取运行态规则，必须同步更新模板合同、架构手册与正文模板。
+- 若技能使用 staged CLI-first profile，必须同步维护阶段目录与 runtime contract。
 
 ## 版本变更记录
 - [日期] [变更摘要]

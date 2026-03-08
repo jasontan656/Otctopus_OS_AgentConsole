@@ -13,6 +13,10 @@
 - 输出：
 - 失败模式：
 
+## profile 适配
+- `basic`:
+- `staged_cli_first`:
+
 ## 回归检查
 ```bash
 # 填写验证命令

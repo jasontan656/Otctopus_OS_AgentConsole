@@ -40,6 +40,10 @@
   - `references/tooling/development/10_MODULE_CATALOG.yaml`
   - `references/tooling/development/20_CATEGORY_INDEX.md`
   - 对应模块文档（`references/tooling/development/modules/*.md`）
+- 若技能采用 staged CLI-first 复杂 profile，还应补齐：
+  - `references/runtime/`
+  - `references/stages/`
+  - `assets/templates/stages/`
 - 若工具承载运行态规则、约束、指引，还必须同步更新：
   - machine-readable 合同（`json/yaml`）
   - markdown 审计版

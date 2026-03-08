@@ -1,4 +1,4 @@
 interface:
   display_name: "Meta-Skill-Template"
-  short_description: "通过统一 Cli_Toolbox 创建或改造 Codex 技能骨架。"
-  default_prompt: "先使用 Meta-Skill-Template 的 Cli_Toolbox.runtime-contract 明确边界，再通过 Cli_Toolbox.create-skill-from-template 创建或更新技能。"
+  short_description: "通过统一 Cli_Toolbox 创建或改造基础技能与 staged CLI-first 复杂技能骨架。"
+  default_prompt: "先使用 Meta-Skill-Template 的 Cli_Toolbox.runtime-contract 明确边界；若目标是复杂技能，继续读取 Cli_Toolbox.staged-skill-reference，并通过 Cli_Toolbox.create-skill-from-template --profile staged_cli_first 创建或更新技能。"
