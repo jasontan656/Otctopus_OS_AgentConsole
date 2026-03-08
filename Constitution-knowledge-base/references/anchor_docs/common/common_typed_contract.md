@@ -69,7 +69,7 @@ graph_hook:
 rg -n "common_typed_contract" references/anchor_docs/ANCHOR_DOC_REGISTRY.yaml references/anchor_docs/common
 
 # 2) 契约字段存在性检查
-rg -n "contract_name|contract_version|required_fields|optional_fields|validation_mode" src backend frontend -S
+rg -n "contract_name|contract_version|required_fields|optional_fields|validation_mode" src backend runtime -S
 ```
 
 ## 最小验收

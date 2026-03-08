@@ -17,7 +17,7 @@ graph_hook:
 
 | 维度 | 受约束对象 |
 |---|---|
-| `service_layout` | 后端/前端/运行时主目录组织 |
+| `service_layout` | 服务/运行时主目录组织 |
 | `domain_layout` | feature 级目录与职责边界 |
 | `shared_layout` | core/common/helpers 等公共能力目录 |
 | `temporary_layout` | tmp/cache/artifacts 等临时目录 |

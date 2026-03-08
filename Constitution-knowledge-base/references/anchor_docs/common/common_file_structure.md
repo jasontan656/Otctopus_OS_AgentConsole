@@ -18,7 +18,6 @@ graph_hook:
 | 域 | 受约束对象 |
 |---|---|
 | `backend` | controller/orchestrator/domain/repo/adapter/helper |
-| `frontend` | page/panel/flow/api/helper |
 | `database` | migration/schema/repository |
 | `tooling` | cli/task/check scripts |
 | `rule_files` | lint/policy/rule/constitution 定义文件 |
@@ -48,16 +47,6 @@ graph_hook:
 └── <feature>_helper.py          # 纯函数工具
 ```
 
-### Frontend
-```text
-<feature>/
-├── <Feature>Page.vue            # 页面编排与路由态
-├── <Feature>Panel*.vue          # 展示组件
-├── use<Feature>Flow.ts          # 状态机/流程控制
-├── <feature>.api.ts             # API 调用与错误映射
-└── <feature>.helper.ts          # 纯函数工具
-```
-
 ### Database / Rule
 ```text
 <feature>/
@@ -77,10 +66,6 @@ graph_hook:
 | `backend_domain_service` | `*_domain.py` + `*_helper.py` |
 | `backend_repository_or_model` | `*_repo.py` + `*.schema.*` |
 | `backend_adapter_client` | `*_adapter_<x>.py` + `*_helper.py` |
-| `frontend_page_container` | `*Page.vue` + `use*Flow.ts` |
-| `frontend_component_view` | `*Panel*.vue` + `*.helper.ts` |
-| `frontend_store_or_composable` | `use*Flow.ts` + `*.api.ts` |
-| `frontend_api_client` | `*.api.ts` + `*.helper.ts` |
 | `cli_or_task_script` | `cli_entry.*` + `task_runner.*` + `helper.*` |
 | `rule_definition_file` | `rules/<subdomain>_rule_*.yaml` 多文件分域 |
 

@@ -18,7 +18,6 @@ graph_hook:
 | 资产类型 | 治理焦点 |
 |---|---|
 | `backend` | 类型契约、错误码、分层职责、阈值拆分 |
-| `frontend` | 页面与逻辑解耦、状态边界、helper 纯度 |
 | `database` | 迁移单职责、schema 稳定、repo 边界 |
 | `tooling` | 脚本单职责、参数边界、校验可阻断 |
 | `rule_files` | 规则定义纯度、1000 行上限、子域拆分 |

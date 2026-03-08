@@ -5,7 +5,7 @@
 - 目标：把 `MOL_FULL_CANON.md` 中与工程实现相关、且适合静态检索和结构约束的语义锚点，整理为“可检索关键词图”。
 - 输入基线：`assets/goal/MOL_FULL_CANON.md`
 - 边界：本图只服务于可静态 gate 的行为合同、结构规则与域扩展，不承载技术栈选型、依赖裁决或运行时证据要求。
-- 约束：任意检索（后端/前端/数据库/渠道/运行时）都必须自动携带“通用静态治理锚点”。
+- 约束：任意检索（后端/数据库/渠道/运行时）都必须自动携带“通用静态治理锚点”。
 
 ## 2. MOL 锚点提取（证据）
 
@@ -66,24 +66,6 @@ graph_nodes:
       - payload
       - normalize
 
-  frontend_domain:
-    keywords:
-      - frontend
-      - ui
-      - page
-      - component
-      - panel
-      - webapp
-      - canvas
-      - route
-      - state
-      - form
-      - interaction
-      - mobile_first
-      - admin_ui
-      - view_receipt
-      - degrade_view
-
   database_domain:
     keywords:
       - database
@@ -135,10 +117,6 @@ graph_nodes:
 ```yaml
 graph_edges:
   - from: telegram_channel_domain
-    to: frontend_domain
-    reason: "渠道交互可能联动 WebApp 或其他前端可见状态"
-
-  - from: telegram_channel_domain
     to: backend_domain
     reason: "渠道更新通常由后端入口接收、归一化与分发"
 
@@ -155,19 +133,11 @@ graph_edges:
     reason: "会话与执行结果需具备契约与结构约束"
 
   - from: backend_domain
-    to: frontend_domain
-    reason: "前后端交互需共享契约与错误语义"
-
-  - from: backend_domain
     to: database_domain
     reason: "请求生命周期与状态持久化天然相关"
 
   - from: common_always_on
     to: backend_domain
-    reason: "通用静态治理常驻"
-
-  - from: common_always_on
-    to: frontend_domain
     reason: "通用静态治理常驻"
 
   - from: common_always_on
@@ -198,7 +168,7 @@ retrieval_policy:
 
   expansion_rules:
     - trigger_any_of: ["telegram", "channel", "webhook", "callback", "deep_link", "chat"]
-      attach: ["telegram_channel_domain", "frontend_domain", "backend_domain", "database_domain", "common_always_on"]
+      attach: ["telegram_channel_domain", "backend_domain", "database_domain", "common_always_on"]
 
     - trigger_any_of: ["codex", "runtime", "session", "resume", "reply", "exec", "thread"]
       attach: ["codex_runtime_domain", "backend_domain", "database_domain", "common_always_on"]

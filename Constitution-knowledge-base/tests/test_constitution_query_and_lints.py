@@ -10,6 +10,15 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class ConstitutionToolingTests(unittest.TestCase):
+    def test_frontend_governance_artifacts_are_removed(self) -> None:
+        registry = (ROOT / "references/anchor_docs/ANCHOR_DOC_REGISTRY.yaml").read_text(encoding="utf-8")
+        graph = (ROOT / "references/knowledge_graph/MOL_TECH_STACK_KEYWORD_ANCHOR_GRAPH_v1.md").read_text(encoding="utf-8")
+        machine = (ROOT / "references/anchor_docs_machine/anchor_docs_machine_v1.jsonl").read_text(encoding="utf-8")
+
+        self.assertNotIn("constraint_frontend_expansion_rule", registry)
+        self.assertNotIn("constraint_frontend_expansion_rule", machine)
+        self.assertNotIn("frontend_domain", graph)
+
     def test_query_contract_has_new_gates(self) -> None:
         output = subprocess.check_output(
             [

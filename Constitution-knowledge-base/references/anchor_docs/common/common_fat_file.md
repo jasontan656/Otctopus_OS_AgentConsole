@@ -38,11 +38,6 @@ graph_hook:
 | `backend_repository_or_model` | 220 | 只放持久化读写与模型映射。 |
 | `backend_adapter_client` | 220 | 只放外部系统交互适配。 |
 | `backend_helper` | 140 | 纯函数与通用小工具。 |
-| `frontend_page_container` | 220 | 页面组装与路由态，不写复杂逻辑。 |
-| `frontend_component_view` | 160 | 展示组件，只处理视图逻辑。 |
-| `frontend_store_or_composable` | 180 | 状态流与副作用协调。 |
-| `frontend_api_client` | 160 | 请求映射、错误映射、重试策略。 |
-| `frontend_helper` | 120 | 纯函数 helper。 |
 | `db_migration_file` | 180 | 单次迁移单职责。 |
 | `schema_or_contract_file` | 300 | 类型/契约定义，不混业务流程。 |
 | `workflow_or_contract_support` | 240 | `scripts/` 下的流程合同、策略支持、阶段支持类文件。 |
@@ -62,13 +57,6 @@ graph_hook:
 4. `<feature>_repo.py`：数据库读写、查询拼装、事务边界。
 5. `<feature>_adapter_<target>.py`：外部系统调用、协议映射、重试策略。
 6. `<feature>_helper.py`：纯函数工具，禁止持久化和网络 I/O。
-
-### Frontend 固定模板
-1. `<Feature>Page.vue`：页面编排、路由参数、状态挂载。
-2. `<Feature>Panel*.vue`：展示组件，禁止网络请求。
-3. `use<Feature>Flow.ts`：状态机/流程控制。
-4. `<feature>.api.ts`：接口调用与错误映射。
-5. `<feature>.helper.ts`：纯函数 helper。
 
 ### Rule 文件固定模板
 1. 规则类文件允许到 1000 行，但必须仅包含规则定义。

@@ -42,9 +42,6 @@ constraints:
 - anchor_id: constraint_backend_expansion_rule
   graph_node: common_always_on
   doc: references/anchor_docs/constraints/constraint_backend_expansion_rule.md
-- anchor_id: constraint_frontend_expansion_rule
-  graph_node: common_always_on
-  doc: references/anchor_docs/constraints/constraint_frontend_expansion_rule.md
 - anchor_id: constraint_database_expansion_rule
   graph_node: common_always_on
   doc: references/anchor_docs/constraints/constraint_database_expansion_rule.md

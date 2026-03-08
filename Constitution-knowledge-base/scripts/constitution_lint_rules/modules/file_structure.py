@@ -32,10 +32,6 @@ def lint(root: Path) -> dict[str, object]:
             violations.append({"path": rel(path, root), "reason": "repo_name_must_end_with__repo.py"})
         if "helper" in lower and not (lower.endswith("_helper.py") or lower.endswith(".helper.ts") or lower.endswith(".helper.js")):
             violations.append({"path": rel(path, root), "reason": "helper_name_must_use_helper_suffix"})
-        if name.endswith(".vue") and "Page" in name and not name.endswith("Page.vue"):
-            violations.append({"path": rel(path, root), "reason": "page_component_must_end_with_Page.vue"})
-        if name.endswith(".vue") and "Panel" in name and "Panel" not in name:
-            violations.append({"path": rel(path, root), "reason": "panel_component_must_include_Panel"})
         if path.suffix.lower() in RULE_EXTS and any(token in lower for token in RULE_SUFFIXES) and "rules" not in path.parts:
             violations.append({"path": rel(path, root), "reason": "rule_like_file_must_live_under_rules"})
     return make_gate("file_structure_gate", violations, checked)

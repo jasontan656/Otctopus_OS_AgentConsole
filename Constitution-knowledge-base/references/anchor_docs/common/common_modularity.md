@@ -10,7 +10,7 @@ graph_hook:
 
 ## 在项目中起什么作用
 - 固定模块职责与依赖方向，防止业务逻辑在代码库中无序扩散。
-- 让后端、前端、数据库、集成适配都可独立替换、独立测试、独立发布。
+- 让后端、数据库、集成适配都可独立替换、独立测试、独立发布。
 - 为 `common_fat_file` 与 `common_file_structure` 提供“拆分后该放哪里、能依赖谁”的硬约束。
 
 ## 适用范围（必须全覆盖）
@@ -18,7 +18,6 @@ graph_hook:
 | 模块域 | 最小模块集合 |
 |---|---|
 | `backend` | `controller`, `orchestrator`, `domain`, `repository`, `adapter`, `helper` |
-| `frontend` | `page`, `panel/component`, `flow/composable`, `api_client`, `helper` |
 | `database` | `migration`, `schema/contract`, `repository` |
 | `runtime_tooling` | `cli_entry`, `task_runner`, `validator/checker` |
 | `shared` | `shared_types`, `shared_errors`, `shared_utils` |

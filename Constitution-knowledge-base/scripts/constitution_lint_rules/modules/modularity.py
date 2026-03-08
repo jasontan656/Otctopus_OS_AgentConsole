@@ -16,6 +16,4 @@ def lint(root: Path) -> dict[str, object]:
             violations.append({"path": rel(path, root), "reason": "domain_or_helper_contains_io"})
         if any(token in lower for token in ("controller", "handler", "route")) and any(token in text for token in ("_repo", "Repository(", "adapter", "sqlalchemy", "psycopg")):
             violations.append({"path": rel(path, root), "reason": "controller_bypasses_orchestrator_boundary"})
-        if any(token in lower for token in ("page", "panel")) and any(token in text for token in ("fetch(", "axios(", "httpx.", "requests.")):
-            violations.append({"path": rel(path, root), "reason": "view_layer_contains_direct_network_io"})
     return make_gate("modularity_gate", violations, checked)
