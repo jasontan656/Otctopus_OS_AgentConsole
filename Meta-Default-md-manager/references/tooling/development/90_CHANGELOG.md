@@ -5,3 +5,4 @@
 - v3: 重构为显式三阶段 `scan / collect / push`，并增加阶段隔离文档。
 - v4: 为三阶段加入技能内互斥锁，并对被消费文件缺失/空内容做显式报错。
 - v5: 升级为 `Meta-Default-md-manager`，默认纳管 `AGENTS.md`、`.gitignore`、后端 `README.md` 与 `Deployment_Guide.md`。
+- v6: 运行态规则改为 CLI-only 输出，并引入 machine-readable JSON + markdown audit 双版本同步。

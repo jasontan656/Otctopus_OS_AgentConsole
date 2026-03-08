@@ -11,6 +11,7 @@ if str(SCRIPT_DIR) not in sys.path:
 
 from cli_parser_support import build_parser
 from managed_collect import collect_from_scan
+from managed_guidance import load_runtime_contract, load_stage_directive, render_audit_docs
 from managed_lock import acquire_cli_lock
 from managed_paths import resolve_skill_root, resolve_source_root
 from managed_push import push_out
@@ -31,6 +32,24 @@ def cmd_registry(args) -> int:
     skill_root = resolve_skill_root(args.skill_root)
     payload = load_registry(skill_root)
     payload["skill_root"] = str(skill_root)
+    return print_payload(payload, args.json)
+
+
+def cmd_contract(args) -> int:
+    skill_root = resolve_skill_root(args.skill_root)
+    payload = load_runtime_contract(skill_root)
+    return print_payload(payload, args.json)
+
+
+def cmd_directive(args) -> int:
+    skill_root = resolve_skill_root(args.skill_root)
+    payload = load_stage_directive(skill_root, args.stage)
+    return print_payload(payload, args.json)
+
+
+def cmd_render_audit_docs(args) -> int:
+    skill_root = resolve_skill_root(args.skill_root)
+    payload = render_audit_docs(skill_root)
     return print_payload(payload, args.json)
 
 
@@ -64,7 +83,15 @@ def cmd_push(args) -> int:
 
 
 def main() -> int:
-    parser = build_parser(cmd_registry, cmd_scan, cmd_collect, cmd_push)
+    parser = build_parser(
+        cmd_registry,
+        cmd_scan,
+        cmd_collect,
+        cmd_push,
+        cmd_contract,
+        cmd_directive,
+        cmd_render_audit_docs,
+    )
     args = parser.parse_args()
     return args.func(args)
 

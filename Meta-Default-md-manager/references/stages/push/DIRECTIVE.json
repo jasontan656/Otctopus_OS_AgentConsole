@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "stage": "push",
+  "entry_command": "python3 scripts/Cli_Toolbox.py directive --stage push --json",
+  "instruction": [
+    "只处理 push 阶段。",
+    "运行态只允许通过 Cli_Toolbox.directive 读取本阶段 machine-readable 指引。",
+    "禁止把 references/stages/push/*.md 当作运行规则源，除非用户显式要求审计 markdown。",
+    "输入前提是 registry.json 和托管副本已存在。"
+  ],
+  "workflow": [
+    "读取 registry.json。",
+    "选择 --all 或指定 --target-source-path。",
+    "将托管副本回写到源路径。",
+    "刷新 registry 内哈希。"
+  ],
+  "rules": [
+    "只允许基于 registry.json 里的目标回写。",
+    "运行前必须拿到技能内 .cli.lock；抢不到锁就显式报错。",
+    "registry.json 不存在、为空或无条目时，必须显式报错。",
+    "禁止通过扫描推断目标。",
+    "禁止写技能目录外的新路径。",
+    "--all 和指定路径都必须受 registry 约束。",
+    "禁止默认跨阶段读取 scan 或 collect 指引；除非用户显式要求。"
+  ]
+}

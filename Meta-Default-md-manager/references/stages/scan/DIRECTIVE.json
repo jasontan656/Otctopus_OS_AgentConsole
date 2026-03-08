@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "stage": "scan",
+  "entry_command": "python3 scripts/Cli_Toolbox.py directive --stage scan --json",
+  "instruction": [
+    "只处理 scan 阶段。",
+    "运行态只允许通过 Cli_Toolbox.directive 读取本阶段 machine-readable 指引。",
+    "禁止把 references/stages/scan/*.md 当作运行规则源，除非用户显式要求审计 markdown。",
+    "输出目标固定为 assets/managed_targets/scan_report.json。"
+  ],
+  "workflow": [
+    "解析 source_root。",
+    "扫描全部命中的默认文档目标。",
+    "应用排除规则并去重。",
+    "生成 scan_report.json，写入 target_kind、源路径和托管路径。",
+    "不写托管副本。"
+  ],
+  "rules": [
+    "只允许写 scan_report.json。",
+    "运行前必须拿到技能内 .cli.lock；抢不到锁就显式报错。",
+    "禁止写 registry.json、index.md 和托管副本。",
+    "必须扫描默认文档集合：AGENTS.md、.gitignore、Octopus_CodeBase_Backend/README.md、Octopus_CodeBase_Backend/Deployment_Guide.md。",
+    "必须忽略 Human_Work_Zone/、Codex_Skills_Result/、Codex_Skill_Runtime/、.git/、__pycache__/、.pytest_cache/、虚拟环境与 node_modules/。",
+    "必须忽略技能自身 assets/managed_targets/。",
+    "禁止默认跨阶段读取 collect 或 push 指引；除非用户显式要求。"
+  ]
+}

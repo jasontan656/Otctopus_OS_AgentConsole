@@ -11,3 +11,6 @@
 - 2026-02-26
   - 澄清模板语义：被创建技能的 `1.目标` 仅允许写运行态目标，不得写“创建技能本身”。
   - 调整 `create_skill_from_template.py` 默认 `description/default_prompt`，避免把建模流程目标注入生成技能。
+- 2026-03-09
+  - 增加模板契约：若技能存在运行态规则、约束、指引，必须提供 CLI 输出入口与 machine-readable 合同；markdown 只做审计版。
+  - 更新 `SKILL_TEMPLATE.md`、模板合同与架构手册，使模板同步支持 CLI-first 规则分发。

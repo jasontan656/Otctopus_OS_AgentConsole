@@ -25,6 +25,7 @@
   - 系统执行 `python3 scripts/create_skill_from_template.py --skill-name my-skill --target-root ~/.codex/skills --overwrite`。
   - 脚本按模板生成 `SKILL.md`、`agents/openai.yaml`、`references/tooling/*` 以及开发文档分层结构。
   - 生成内容会显式避免把“创建技能本身”写入被创建技能的 `1.目标` 章节。
+  - 若技能后续存在运行态规则、约束、指引，模板正文会要求补齐 CLI 输出入口、machine-readable 合同与 markdown 审计版。
 - 人类叙事版输出：
   - 你会得到一个可直接继续编辑的技能目录，并看到 JSON 结果（`skill_dir`、`resources_created`、`write_results`），可快速确认是否成功。
 
@@ -55,3 +56,7 @@
   - `references/tooling/development/10_MODULE_CATALOG.yaml`
   - `references/tooling/development/20_CATEGORY_INDEX.md`
   - 对应模块文档（`references/tooling/development/modules/*.md`）
+- 若模板契约变更影响运行态规则分发方式，还必须同步：
+  - `references/skill_template_contract_v1.md`
+  - `references/skill_architecture_playbook.md`
+  - `assets/skill_template/SKILL_TEMPLATE.md`

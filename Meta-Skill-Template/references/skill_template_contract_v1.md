@@ -30,6 +30,12 @@
 - 工具文档同步：每个工具必须同时维护使用文档与开发文档。
 - 示例命令契约：工具使用文档中的示例命令必须是“一行可复制”完整命令，且必须以 `cd <skill_root> &&` 开头并包含管道，附最小用途描述。
 - 开发文档结构化：复杂 Toolbox 必须采用“入口 + 分类 + 模块”分层文档。
+- 若技能存在运行态规则、约束、指引：
+  - 必须提供 CLI 输出入口。
+  - 必须提供 machine-readable `json/yaml` 合同。
+  - 必须提供 markdown 审计版。
+  - 必须在 `SKILL.md` 明示：模型禁止直接阅读 markdown 获取运行指引。
+  - 更新时必须同步两份，且建议以 machine-readable 合同刷新 markdown。
 
 ## 约束护栏
 - 每个技能只能有一个主决策目标，且该目标必须是技能运行态目标，不得写入“创建技能/改写模板”等建模流程目标。
@@ -43,6 +49,9 @@
   - `references/tooling/development/10_MODULE_CATALOG.yaml`
   - `references/tooling/development/20_CATEGORY_INDEX.md`
   - `references/tooling/development/modules/`
+- 若技能存在运行态规则，推荐固定路径：
+  - `references/runtime/`
+  - `references/stages/`
 
 ## 验收清单
 - frontmatter 中存在 `name` 与 `description` 字段。
@@ -53,6 +62,7 @@
 - 若技能包含工具，必须存在 `references/tooling/Cli_Toolbox_USAGE.md` 与 `references/tooling/Cli_Toolbox_DEVELOPMENT.md`。
 - `Cli_Toolbox_USAGE.md` 必须包含“示例命令（强制）”章节：`cd` 开头、一行可复制、包含管道、附最小用途描述。
 - 若 Toolbox 涉及多模块，必须存在开发分类索引与模块目录（`20_CATEGORY_INDEX.md` + `10_MODULE_CATALOG.yaml`）。
+- 若技能存在运行态规则，必须存在 CLI 输出入口、machine-readable 合同与 markdown 审计版三者闭环。
 - 必需文件中不存在未替换占位符（如 `[TODO]`、`<...>`、`TBD`）。
 - 接口元数据与技能目标一致。
 - 创建或更新的文件以明确路径形式输出。

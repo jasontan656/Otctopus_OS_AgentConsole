@@ -40,3 +40,7 @@
   - `references/tooling/development/10_MODULE_CATALOG.yaml`
   - `references/tooling/development/20_CATEGORY_INDEX.md`
   - 对应模块文档（`references/tooling/development/modules/*.md`）
+- 若工具承载运行态规则、约束、指引，还必须同步更新：
+  - machine-readable 合同（`json/yaml`）
+  - markdown 审计版
+- 运行态规则默认应通过 CLI 输出；markdown 不应被写成模型直接读取的运行规则源。

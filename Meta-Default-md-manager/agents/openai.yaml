@@ -1,4 +1,4 @@
 interface:
   display_name: "Meta-Default-md-manager"
-  short_description: "Collect and sync centralized default document copies"
-  default_prompt: "Use Meta-Default-md-manager to collect default resident documents such as AGENTS.md, .gitignore, README.md, and Deployment_Guide.md into one managed skill directory and sync managed copies back to selected targets."
+  short_description: "CLI-first default document manager with audit markdown mirrors"
+  default_prompt: "Use Meta-Default-md-manager by calling Cli_Toolbox.contract first, then Cli_Toolbox.directive for the target stage, and only then run scan, collect, or push. Do not read markdown files as runtime guidance."

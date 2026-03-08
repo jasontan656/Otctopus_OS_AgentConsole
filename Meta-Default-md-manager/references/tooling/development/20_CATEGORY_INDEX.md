@@ -1,6 +1,7 @@
 # Category Index
 
 - CLI 入口：`scripts/Cli_Toolbox.py`
+- 运行合同与阶段指引：`scripts/managed_guidance.py`
 - 扫描：`scripts/managed_scan.py`
 - 扫描回收：`scripts/managed_collect.py`
 - 索引生成：`scripts/managed_index.py`

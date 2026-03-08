@@ -2,6 +2,9 @@ modules:
   - name: cli_parser_support
     path: scripts/cli_parser_support.py
     responsibility: 定义 CLI 子命令和参数
+  - name: managed_guidance
+    path: scripts/managed_guidance.py
+    responsibility: 读取 machine-readable 合同并生成 markdown 审计版
   - name: managed_scan
     path: scripts/managed_scan.py
     responsibility: 生成 scan_report.json

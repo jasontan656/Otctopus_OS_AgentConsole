@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "stage": "collect",
+  "entry_command": "python3 scripts/Cli_Toolbox.py directive --stage collect --json",
+  "instruction": [
+    "只处理 collect 阶段。",
+    "运行态只允许通过 Cli_Toolbox.directive 读取本阶段 machine-readable 指引。",
+    "禁止把 references/stages/collect/*.md 当作运行规则源，除非用户显式要求审计 markdown。",
+    "输入前提是 assets/managed_targets/scan_report.json 已存在。"
+  ],
+  "workflow": [
+    "读取 scan_report.json。",
+    "将报告中的源文件完整复制到托管目录。",
+    "更新 registry.json，保留 target_kind 与哈希。",
+    "更新 index.md，供人工快速定位。",
+    "清理托管目录中已不在扫描结果内的旧副本。"
+  ],
+  "rules": [
+    "只允许消费 scan_report.json；禁止重新扫描文件系统。",
+    "运行前必须拿到技能内 .cli.lock；抢不到锁就显式报错。",
+    "scan_report.json 不存在、为空或无条目时，必须显式报错。",
+    "必须完整复制文件内容，不做语义改写。",
+    "必须刷新 registry.json 和 index.md。",
+    "必须只处理扫描报告里的条目。",
+    "禁止默认跨阶段读取 scan 或 push 指引；除非用户显式要求。"
+  ]
+}

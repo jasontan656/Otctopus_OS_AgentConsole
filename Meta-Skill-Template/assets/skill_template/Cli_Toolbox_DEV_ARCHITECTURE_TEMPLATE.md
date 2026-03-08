@@ -10,3 +10,6 @@
 2. 索引层：`10_MODULE_CATALOG.yaml`、`20_CATEGORY_INDEX.md`
 3. 模块层：`references/tooling/development/modules/`
 4. 变更层：`90_CHANGELOG.md`
+
+## 额外要求
+- 若技能存在运行态规则、约束、指引，开发架构必须明确 machine-readable 合同、CLI 输出入口与 markdown 审计版的关系。

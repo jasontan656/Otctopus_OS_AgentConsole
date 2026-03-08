@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 import json
-import sys
 import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -15,6 +15,49 @@ SCRIPT = Path(__file__).resolve().parents[1] / "scripts" / "Cli_Toolbox.py"
 
 
 class MetaDefaultMdManagerCliTests(unittest.TestCase):
+    def write_guidance_contracts(self, skill_root: Path) -> None:
+        runtime_dir = skill_root / "references" / "runtime"
+        runtime_dir.mkdir(parents=True, exist_ok=True)
+        (runtime_dir / "SKILL_RUNTIME_CONTRACT.json").write_text(
+            json.dumps(
+                {
+                    "version": 1,
+                    "skill_name": "Meta-Default-md-manager",
+                    "description": "test",
+                    "runtime_access_policy": {
+                        "model_must_not_read_markdown_for_runtime_guidance": True,
+                    },
+                    "command_map": {
+                        "contract": "skill contract",
+                        "directive": "stage contract",
+                    },
+                    "sync_policy": {
+                        "update_rule": "update json then render markdown",
+                    },
+                },
+                ensure_ascii=False,
+                indent=2,
+            ) + "\n",
+            encoding="utf-8",
+        )
+        for stage in ("scan", "collect", "push"):
+            stage_dir = skill_root / "references" / "stages" / stage
+            stage_dir.mkdir(parents=True, exist_ok=True)
+            (stage_dir / "DIRECTIVE.json").write_text(
+                json.dumps(
+                    {
+                        "version": 1,
+                        "stage": stage,
+                        "instruction": [f"{stage} instruction"],
+                        "workflow": [f"{stage} workflow"],
+                        "rules": [f"{stage} rule"],
+                    },
+                    ensure_ascii=False,
+                    indent=2,
+                ) + "\n",
+                encoding="utf-8",
+            )
+
     def run_cli(self, *args: str) -> dict[str, object]:
         completed = subprocess.run(
             ["python3", str(SCRIPT), *args, "--json"],
@@ -23,6 +66,25 @@ class MetaDefaultMdManagerCliTests(unittest.TestCase):
             text=True,
         )
         return json.loads(completed.stdout)
+
+    def test_contract_outputs_runtime_policy(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            skill_root = Path(tmp) / "skill"
+            self.write_guidance_contracts(skill_root)
+            payload = self.run_cli("contract", "--skill-root", str(skill_root))
+            self.assertEqual(payload["skill_name"], "Meta-Default-md-manager")
+            self.assertTrue(payload["runtime_access_policy"]["model_must_not_read_markdown_for_runtime_guidance"])
+
+    def test_directive_and_render_audit_docs_work(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            skill_root = Path(tmp) / "skill"
+            self.write_guidance_contracts(skill_root)
+            directive = self.run_cli("directive", "--skill-root", str(skill_root), "--stage", "scan")
+            self.assertEqual(directive["stage"], "scan")
+            render = self.run_cli("render-audit-docs", "--skill-root", str(skill_root))
+            self.assertEqual(render["count"], 10)
+            self.assertTrue((skill_root / "references" / "runtime" / "SKILL_RUNTIME_CONTRACT.md").exists())
+            self.assertTrue((skill_root / "references" / "stages" / "scan" / "INSTRUCTION.md").exists())
 
     def test_scan_collect_copies_default_docs_and_writes_registry(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
