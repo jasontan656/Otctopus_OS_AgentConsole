@@ -1,6 +1,8 @@
 # Cli_Toolbox 开发文档分类索引
 
 ## 分类导航
+- `统一入口`
+  - `scripts/Cli_Toolbox.py`
 - `架构与边界`
   - `00_ARCHITECTURE_OVERVIEW.md`
 - `模块清单与映射`

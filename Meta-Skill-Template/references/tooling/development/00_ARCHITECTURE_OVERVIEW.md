@@ -3,9 +3,11 @@
 ## 目标
 - 支撑复杂 Toolbox 的开发文档扩展，不依赖单一文档承载全部信息。
 - 通过“入口 + 分类 + 模块”结构降低认知负担与维护成本。
+- 保证 `SKILL.md` 维持纯入口式，而不是继续堆积治理细节。
 
 ## 分层结构
-1. 入口层：`references/tooling/Cli_Toolbox_DEVELOPMENT.md`
+0. 技能入口层：`SKILL.md`
+1. 工具入口层：`references/tooling/Cli_Toolbox_DEVELOPMENT.md`
 2. 索引层：
    - `references/tooling/development/10_MODULE_CATALOG.yaml`
    - `references/tooling/development/20_CATEGORY_INDEX.md`

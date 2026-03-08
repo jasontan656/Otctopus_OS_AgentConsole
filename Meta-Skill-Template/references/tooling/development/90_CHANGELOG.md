@@ -14,3 +14,6 @@
 - 2026-03-09
   - 增加模板契约：若技能存在运行态规则、约束、指引，必须提供 CLI 输出入口与 machine-readable 合同；markdown 只做审计版。
   - 更新 `SKILL_TEMPLATE.md`、模板合同与架构手册，使模板同步支持 CLI-first 规则分发。
+- 2026-03-09
+  - 为 Meta-Skill-Template 自身补充 `scripts/Cli_Toolbox.py` 统一入口。
+  - 将 `SKILL.md` 收缩为纯入口页，详细治理规则下沉到 runtime contract 与 references。

@@ -8,6 +8,17 @@ maintain_rules:
     - references/tooling/Cli_Toolbox_DEVELOPMENT.md
     - references/tooling/development/20_CATEGORY_INDEX.md
 modules:
+  - module_id: cli_toolbox
+    tool_alias: Cli_Toolbox
+    entrypoint: scripts/Cli_Toolbox.py
+    doc_paths:
+      usage_doc: references/tooling/Cli_Toolbox_USAGE.md
+      development_doc: references/tooling/Cli_Toolbox_DEVELOPMENT.md
+    category_tags:
+      - routing
+      - toolbox
+      - governance
+    status: active
   - module_id: create_skill_from_template
     tool_alias: Cli_Toolbox.create_skill_from_template
     entrypoint: scripts/create_skill_from_template.py

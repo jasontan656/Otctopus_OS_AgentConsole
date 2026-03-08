@@ -19,6 +19,7 @@
 ## 依赖与边界
 - 依赖：`assets/skill_template/*.md|*.yaml` 模板文件。
 - 边界：不负责 Git 提交、不负责 mirror 同步（由上层流程处理）。
+- 上层路由：优先由 `scripts/Cli_Toolbox.py create-skill-from-template` 进入。
 
 ## 回归检查
 ```bash

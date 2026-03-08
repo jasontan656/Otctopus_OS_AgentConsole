@@ -1,0 +1,43 @@
+{
+  "contract_name": "META_SKILL_TEMPLATE_RUNTIME_CONTRACT",
+  "contract_version": "v1",
+  "validation_mode": "cli_first",
+  "required_fields": [
+    "skill_name",
+    "routing_policy",
+    "tool_contracts",
+    "governance_rules"
+  ],
+  "optional_fields": [
+    "notes"
+  ],
+  "skill_name": "Meta-Skill-Template",
+  "routing_policy": {
+    "skill_md_role": "entry_only",
+    "runtime_guidance_source": "references/runtime/SKILL_RUNTIME_CONTRACT.json + Cli_Toolbox commands",
+    "markdown_role": "human_audit_and_reference",
+    "detail_downstream_paths": [
+      "references/skill_template_contract_v1.md",
+      "references/skill_architecture_playbook.md",
+      "references/tooling/Cli_Toolbox_USAGE.md",
+      "references/tooling/Cli_Toolbox_DEVELOPMENT.md"
+    ]
+  },
+  "tool_contracts": {
+    "Cli_Toolbox.create_skill_from_template": "统一入口创建或更新技能骨架。",
+    "Cli_Toolbox.skill_template": "输出 SKILL 模板资产。",
+    "Cli_Toolbox.openai_template": "输出 openai.yaml 模板资产。",
+    "Cli_Toolbox.contract_reference": "输出模板契约参考。",
+    "Cli_Toolbox.architecture_playbook": "输出模板架构手册。",
+    "Cli_Toolbox.runtime_contract": "输出本技能运行合同。"
+  },
+  "governance_rules": [
+    "SKILL.md 必须保持轻量入口，不承载堆积式细节。",
+    "统一工具入口优先使用 scripts/Cli_Toolbox.py。",
+    "技能治理细节下沉到 references/ 与模板资产。",
+    "若治理规则变化，同时更新 SKILL.md 入口、references 合同、tooling 文档与模板资产。"
+  ],
+  "notes": [
+    "本合同用于约束 Meta-Skill-Template 自身保持与其模板治理理念一致。"
+  ]
+}

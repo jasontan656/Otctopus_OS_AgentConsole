@@ -1,4 +1,4 @@
 interface:
   display_name: "Meta-Skill-Template"
-  short_description: "按治理模板创建并搭建 Codex 技能。"
-  default_prompt: "请使用 Meta-Skill-Template 的标准流程与目录架构，创建或更新一个 Codex 技能。"
+  short_description: "通过统一 Cli_Toolbox 创建或改造 Codex 技能骨架。"
+  default_prompt: "先使用 Meta-Skill-Template 的 Cli_Toolbox.runtime-contract 明确边界，再通过 Cli_Toolbox.create-skill-from-template 创建或更新技能。"
