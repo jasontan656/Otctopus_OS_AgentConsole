@@ -55,7 +55,7 @@ def _resolve_runtime_log_dir(run_id: str) -> Path:
         base = Path(runtime_root).expanduser().resolve()
     else:
         base = _default_runtime_root()
-    return (base / "2-Task-runtime-selfcheck" / "logs" / "runtime_pain_batch" / run_id).resolve()
+    return (base / "7-Task-runtime-selfcheck" / "logs" / "runtime_pain_batch" / run_id).resolve()
 
 
 def attach_observability_logs(*, run_id: str, mode: str, output: dict[str, Any]) -> dict[str, Any]:

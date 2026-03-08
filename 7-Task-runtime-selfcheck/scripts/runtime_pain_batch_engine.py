@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
-import argparse
 import json
 import os
 from pathlib import Path
@@ -38,56 +37,6 @@ from runtime_pain_batch_support import (
     _queue_items,
     _run_memory_runtime,
 )
-
-def build_parser() -> argparse.ArgumentParser:
-    ap = argparse.ArgumentParser(
-        description="Post-task runtime selfcheck: inspect previous-run pain points from an external provider, produce a remediation report, and only write back resolved status when explicitly asked."
-    )
-    ap.add_argument(
-        "mode_token",
-        nargs="*",
-        help="Use `>` (or omit mode) to diagnose the previous run. Use `修复` only for explicit post-change writeback.",
-    )
-    ap.add_argument("--mode", default="auto", choices=["auto", "diagnose", "repair"])
-    ap.add_argument(
-        "--memory-runtime",
-        default=DEFAULT_MEMORY_RUNTIME,
-        help="Path to an external runtime pain provider implementing optimization-list and optional optimization-resolve.",
-    )
-    ap.add_argument("--history-path", default=str(DEFAULT_HISTORY))
-    ap.add_argument("--session-id", default="")
-    ap.add_argument("--thread-id", default=os.environ.get("CODEX_THREAD_ID", ""))
-    ap.add_argument(
-        "--session-scope-mode",
-        default=FORCED_SCOPE_MODE,
-        choices=["auto", "thread_scoped", "all_threads"],
-        help="Accepted for compatibility, but runtime extraction is always enforced as all_threads.",
-    )
-    ap.add_argument("--max-results", type=int, default=200)
-    ap.add_argument("--include-resolved", action=argparse.BooleanOptionalAction, default=True)
-    ap.add_argument("--group-key", action="append", default=[])
-    ap.add_argument("--resolved-by", default="2-Task-runtime-selfcheck")
-    ap.add_argument("--turn-id", default="runtime-pain-batch")
-    ap.add_argument("--dry-run", action=argparse.BooleanOptionalAction, default=False)
-    ap.add_argument(
-        "--repair-cmd",
-        action="append",
-        default=[],
-        help="Deprecated: ignored. Code changes must be applied manually via apply_patch.",
-    )
-    ap.add_argument("--verify-cmd", action="append", default=[])
-    ap.add_argument("--repair-timeout-sec", type=int, default=180)
-    ap.add_argument("--repair-workdir", default="")
-    ap.add_argument(
-        "--auto-repair-cmd",
-        action=argparse.BooleanOptionalAction,
-        default=True,
-        help="Deprecated: ignored. Runtime selfcheck no longer auto-executes repair commands.",
-    )
-    ap.add_argument("--manual-repair-applied", action=argparse.BooleanOptionalAction, default=False)
-    ap.add_argument("--manual-repair-path", action="append", default=[])
-    return ap
-
 
 def _sum_execution_results(values: list[dict[str, Any]]) -> dict[str, Any]:
     if not values:
@@ -236,10 +185,7 @@ def _emit_report_only_output(*, run_id: str, mode: str, output: dict[str, Any]) 
     print(json.dumps(report_only_output, ensure_ascii=False, indent=2, sort_keys=True))
 
 
-def main() -> int:
-    ap = build_parser()
-    args = ap.parse_args()
-
+def run_with_args(args: Any) -> int:
     mode = _detect_mode(mode=args.mode, raw_tokens=list(args.mode_token or []))
     run_id = new_run_id(mode)
     memory_runtime_raw = str(args.memory_runtime or "").strip()
@@ -558,7 +504,7 @@ def main() -> int:
                     session_id=str(args.session_id or "").strip() or _latest_session_id(Path(args.history_path).expanduser()),
                     thread_id=str(args.thread_id or "").strip(),
                     target_groups=[group],
-                    resolved_by=str(args.resolved_by or "2-Task-runtime-selfcheck"),
+                    resolved_by=str(args.resolved_by or "7-Task-runtime-selfcheck"),
                     turn_id=str(args.turn_id or "runtime-pain-batch"),
                     dry_run=bool(args.dry_run),
                 )
@@ -697,7 +643,3 @@ def main() -> int:
 
     _emit_report_only_output(run_id=run_id, mode=mode, output=output)
     return 0 if output["status"] in {"ok", "partial"} else 1
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())
