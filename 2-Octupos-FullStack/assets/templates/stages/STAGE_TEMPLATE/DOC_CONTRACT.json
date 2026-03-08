@@ -1,0 +1,12 @@
+{
+  "stage": "<stage_slug>",
+  "resident_docs": [
+    "replace_me"
+  ],
+  "stage_docs": [
+    "replace_me"
+  ],
+  "drop_on_stage_switch": [
+    "replace_me"
+  ]
+}

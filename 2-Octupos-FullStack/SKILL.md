@@ -1,63 +1,66 @@
 ---
 name: "2-Octupos-FullStack"
-description: 用于 2-Octupos-FullStack 的实际业务目标（请按真实用途改写该描述）。
+description: "OctopusOS 全栈文档驱动开发与长期治理技能：mother doc、fullstack graph、construction packs、implementation、acceptance。"
 ---
 
 # 2-Octupos-FullStack
 
 ## 1. 目标
-- [描述此技能在运行态要解决的业务问题，不要写“创建/生成本技能”这类建模流程目标。]
-- [若当前技能是复杂 staged skill，请改用 `SKILL_TEMPLATE_STAGED.md`。]
+- 本技能用于 OctopusOS 的全栈开发、数据库设计、部署维护、多端协同与长期架构治理。
+- 本技能覆盖：`frontend`、`backend`、`database`、`api_and_contracts`、`deployment_and_runtime`、`operations_and_maintenance`、`app_and_multi_client`、`integration_and_messaging`、`testing_and_acceptance`、`observability_and_security`、`documentation_and_mother_doc_governance`、`fullstack_graph_and_architecture_contracts`。
+- 本技能的阶段主轴固定为：`mother_doc -> construction_plan -> implementation -> acceptance`。
 
 ## 2. 可用工具
-- [列出本技能可直接使用的工具与入口。若当前技能不涉及工具，请填写：N/A。]
-- 命名规则：工具统一命名为 `Cli_Toolbox.<tool_name>`。
-- [列出本技能可直接使用的脚本、模板、参考文件。]
-- 若声明工具，维护以下文档：
-  - 使用文档：`references/tooling/Cli_Toolbox_USAGE.md`
-  - 开发文档：`references/tooling/Cli_Toolbox_DEVELOPMENT.md`
-- 若工具为多模块结构，维护以下开发索引：
-  - `references/tooling/development/00_ARCHITECTURE_OVERVIEW.md`
-  - `references/tooling/development/10_MODULE_CATALOG.yaml`
-  - `references/tooling/development/20_CATEGORY_INDEX.md`
-  - `references/tooling/development/modules/MODULE_TEMPLATE.md`
-- 若技能存在运行态规则、约束、指引：
-  - 必须提供 CLI 输出入口。
-  - 必须提供 machine-readable `json/yaml` 合同。
-  - markdown 只可作为审计版，不能作为模型运行时规则源。
+- 统一工具入口预留为：`scripts/Cli_Toolbox.py`。
+- 当前轮先固化顶层规则与 runtime contract；不宣称阶段级 CLI 合同已经实现。
+- 后续阶段级命令统一收敛为：`Cli_Toolbox.stage-checklist`、`Cli_Toolbox.stage-doc-contract`、`Cli_Toolbox.stage-command-contract`、`Cli_Toolbox.stage-graph-contract`。
+- 使用文档与开发文档保留在 `references/tooling/`，待命令面稳定后再回填。
 
 ## 3. 工作流约束
-- [若当前技能涉及流程执行，请写明步骤、输入输出和完成判定；若不涉及，填写 N/A。]
-- [若技能存在运行态规则，请写明 machine-readable 合同路径、CLI 入口与 markdown 审计路径。]
-- [若存在多阶段切换与上下文丢弃规则，请改用 `SKILL_TEMPLATE_STAGED.md`。]
+- 顶层阶段顺序固定为：`mother_doc -> construction_plan -> implementation -> acceptance`。
+- `mother_doc` 是长期维护的顶层需求与设计容器；任何单域实施不得绕过它直接定义真实意图。
+- 在阶段级 CLI 合同尚未完成前，以 `references/runtime/SKILL_RUNTIME_CONTRACT.json` 作为静态运行合同源；CLI 完成后切换为 CLI-first。
+- 阶段切换时只保留 top-level resident docs，并显式丢弃上一阶段的局部 focus、临时文档上下文与实现噪音。
 
 ## 4. 规则约束
-- [若当前技能涉及规则边界，请写明命名、边界、门禁与禁止项；若不涉及，填写 N/A。]
-- [若技能存在运行态规则，请显式声明：模型禁止直接阅读 markdown 获取运行指引；必须通过 CLI 读取 machine-readable 合同。]
-- [若技能存在运行态规则，请显式声明：规则必须同时存在 markdown 与 json/yaml 两份，更新时必须同步。]
+- top-level resident docs 固定为：
+  - `rules/FULLSTACK_SKILL_HARD_RULES.md`
+  - `references/runtime/SKILL_RUNTIME_CONTRACT.json`
+  - `references/runtime/SKILL_RUNTIME_CONTRACT.md`
+  - `references/stages/00_STAGE_INDEX.md`
+  - `/home/jasontan656/AI_Projects/AGENTS.md`
+- 顶层规则不得覆盖 workspace/runtime 的外层硬合同。
+- 规则必须同时存在 markdown 审计版与 machine-readable 合同版，更新时必须同步。
+- 若某些合同依赖真实项目状态，必须显式标注为 dynamic runtime contract。
 
 ## 5. 方法论约束
-- [若当前技能涉及固定思维或推理方式，请写明采用条件与例外条件；若不涉及，填写 N/A。]
-- [若技能存在运行态规则，推荐声明“先 contract，再 directive，再动作”的 CLI-first 模式。]
+- 固定采用：先 `contract`，再 `directive`，再 `action`。
+- 文档必须原子化、分域清晰、可被人类阅读，也可被机器作为合同消费。
+- `fullstack graph` 管理的不只是 code，也包括文档、组件关系、合同依赖与架构回写意图；但它不能替代 `mother_doc` 作为需求源。
+- 全栈公共内核只承载跨域稳定规则；前端、后端、数据库、部署、运维、APP 等差异约束以下沉 overlay 承载。
 
 ## 6. 内联导航索引
-- [索引项 1] -> [相对路径]
-- [索引项 2] -> [相对路径]
+- [规则层] -> [rules/FULLSTACK_SKILL_HARD_RULES.md]
+- [运行合同 JSON] -> [references/runtime/SKILL_RUNTIME_CONTRACT.json]
+- [运行合同审计版] -> [references/runtime/SKILL_RUNTIME_CONTRACT.md]
+- [阶段索引] -> [references/stages/00_STAGE_INDEX.md]
+- [阶段模板簇] -> [assets/templates/stages/]
 - [Cli_Toolbox 使用文档] -> [references/tooling/Cli_Toolbox_USAGE.md]
 - [Cli_Toolbox 开发文档] -> [references/tooling/Cli_Toolbox_DEVELOPMENT.md]
-- [Cli_Toolbox 开发架构总览] -> [references/tooling/development/00_ARCHITECTURE_OVERVIEW.md]
-- [Cli_Toolbox 开发分类索引] -> [references/tooling/development/20_CATEGORY_INDEX.md]
-- [Cli_Toolbox 模块目录] -> [references/tooling/development/10_MODULE_CATALOG.yaml]
-- [若为复杂 staged skill：Stage 模板] -> [assets/templates/stages/]
-- [若存在运行态规则：运行合同 JSON] -> [references/runtime/<CONTRACT>.json]
-- [若存在运行态规则：运行合同审计版] -> [references/runtime/<CONTRACT>.md]
 
 ## 7. 架构契约
 ```text
-<skill-name>/
+2-Octupos-FullStack/
 ├── SKILL.md
 ├── agents/openai.yaml
+├── rules/
+│   └── FULLSTACK_SKILL_HARD_RULES.md
 ├── scripts/
 ├── references/
+│   ├── runtime/
+│   ├── stages/
+│   └── tooling/
 └── assets/
+    └── templates/
+        └── stages/
 ```
