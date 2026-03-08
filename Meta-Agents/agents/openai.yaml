@@ -1,0 +1,4 @@
+interface:
+  display_name: "Meta-Agents"
+  short_description: "Collect and sync centralized AGENTS.md copies"
+  default_prompt: "Use Meta-Agents to collect all AGENTS.md files into one managed skill directory and sync managed copies back to selected targets."
