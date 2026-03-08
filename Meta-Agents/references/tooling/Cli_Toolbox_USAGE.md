@@ -4,7 +4,7 @@
 
 ### `scan-collect`
 - 人类输入：给一个 source root。
-- 电脑动作：扫描该 root 下全部 `AGENTS.md`，完整复制进 `assets/managed_agents/`，并更新 `registry.json`。
+- 电脑动作：扫描该 root 下全部 `AGENTS.md`，但忽略 `Human_Work_Zone/` 与技能自身托管目录；其余命中的文件会被完整复制进 `assets/managed_agents/`，并更新 `registry.json`。
 - 人类输出：得到当前纳管文件清单与托管副本路径。
 
 示例命令（强制）：

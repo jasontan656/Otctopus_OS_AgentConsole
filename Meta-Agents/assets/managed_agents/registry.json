@@ -10,48 +10,6 @@
     },
     {
       "source_root": "/home/jasontan656/AI_Projects",
-      "source_path": "/home/jasontan656/AI_Projects/Human_Work_Zone/GitNexus/AGENTS.md",
-      "managed_rel_path": "home_jasontan656_AI_Projects/Human_Work_Zone/GitNexus/AGENTS.md",
-      "managed_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Agents/assets/managed_agents/home_jasontan656_AI_Projects/Human_Work_Zone/GitNexus/AGENTS.md",
-      "sha256": "ffda9790603eb7eda2970eee6755b97e35ffa619a88eba1c0e19ccf1d5d804a8"
-    },
-    {
-      "source_root": "/home/jasontan656/AI_Projects",
-      "source_path": "/home/jasontan656/AI_Projects/Human_Work_Zone/octopus_skill_reference_scan/OpenSpec/AGENTS.md",
-      "managed_rel_path": "home_jasontan656_AI_Projects/Human_Work_Zone/octopus_skill_reference_scan/OpenSpec/AGENTS.md",
-      "managed_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Agents/assets/managed_agents/home_jasontan656_AI_Projects/Human_Work_Zone/octopus_skill_reference_scan/OpenSpec/AGENTS.md",
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-    },
-    {
-      "source_root": "/home/jasontan656/AI_Projects",
-      "source_path": "/home/jasontan656/AI_Projects/Human_Work_Zone/octopus_skill_reference_scan/spec-kit/AGENTS.md",
-      "managed_rel_path": "home_jasontan656_AI_Projects/Human_Work_Zone/octopus_skill_reference_scan/spec-kit/AGENTS.md",
-      "managed_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Agents/assets/managed_agents/home_jasontan656_AI_Projects/Human_Work_Zone/octopus_skill_reference_scan/spec-kit/AGENTS.md",
-      "sha256": "4d92901e1b05412d438224c51a21fc77c55d628d9b2a75034f9d836f406d75d7"
-    },
-    {
-      "source_root": "/home/jasontan656/AI_Projects",
-      "source_path": "/home/jasontan656/AI_Projects/Human_Work_Zone/octopus_skill_reference_scan/spec-kitty/.kittify/AGENTS.md",
-      "managed_rel_path": "home_jasontan656_AI_Projects/Human_Work_Zone/octopus_skill_reference_scan/spec-kitty/.kittify/AGENTS.md",
-      "managed_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Agents/assets/managed_agents/home_jasontan656_AI_Projects/Human_Work_Zone/octopus_skill_reference_scan/spec-kitty/.kittify/AGENTS.md",
-      "sha256": "577909604671fa4da89c41e297ebf4c7934c91f7f280808fc345e4f5570d09a7"
-    },
-    {
-      "source_root": "/home/jasontan656/AI_Projects",
-      "source_path": "/home/jasontan656/AI_Projects/Human_Work_Zone/octopus_skill_reference_scan/spec-kitty/AGENTS.md",
-      "managed_rel_path": "home_jasontan656_AI_Projects/Human_Work_Zone/octopus_skill_reference_scan/spec-kitty/AGENTS.md",
-      "managed_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Agents/assets/managed_agents/home_jasontan656_AI_Projects/Human_Work_Zone/octopus_skill_reference_scan/spec-kitty/AGENTS.md",
-      "sha256": "c379480615e758b931c54a7031e219a376f596069ff2260e3727bf0984bcb739"
-    },
-    {
-      "source_root": "/home/jasontan656/AI_Projects",
-      "source_path": "/home/jasontan656/AI_Projects/Human_Work_Zone/octopus_skill_reference_scan/spec-kitty/src/specify_cli/templates/AGENTS.md",
-      "managed_rel_path": "home_jasontan656_AI_Projects/Human_Work_Zone/octopus_skill_reference_scan/spec-kitty/src/specify_cli/templates/AGENTS.md",
-      "managed_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Agents/assets/managed_agents/home_jasontan656_AI_Projects/Human_Work_Zone/octopus_skill_reference_scan/spec-kitty/src/specify_cli/templates/AGENTS.md",
-      "sha256": "577909604671fa4da89c41e297ebf4c7934c91f7f280808fc345e4f5570d09a7"
-    },
-    {
-      "source_root": "/home/jasontan656/AI_Projects",
       "source_path": "/home/jasontan656/AI_Projects/Octopus_CodeBase_Backend/AGENTS.md",
       "managed_rel_path": "home_jasontan656_AI_Projects/Octopus_CodeBase_Backend/AGENTS.md",
       "managed_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Agents/assets/managed_agents/home_jasontan656_AI_Projects/Octopus_CodeBase_Backend/AGENTS.md",

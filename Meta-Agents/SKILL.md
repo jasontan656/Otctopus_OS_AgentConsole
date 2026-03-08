@@ -43,6 +43,7 @@ description: "集中回收、托管并同步 workspace 内的 AGENTS.md。用于
 - `scan-collect` 必须完整复制文件内容，不做语义改写。
 - `sync-out` 只能把技能内托管副本回写到 registry 中记录过的源路径。
 - 扫描时必须排除技能自身的 `assets/managed_agents/` 托管副本，避免递归回收。
+- 扫描时必须排除 `Human_Work_Zone/`。
 - 不允许把托管副本直接写到技能目录之外的任意新路径；回写目标必须来自 registry。
 
 ## 5. 方法论约束

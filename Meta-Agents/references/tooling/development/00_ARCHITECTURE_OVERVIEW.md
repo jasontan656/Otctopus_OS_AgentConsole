@@ -1,6 +1,6 @@
 # Architecture Overview
 
-- `scan-collect`：source root -> 扫描 `AGENTS.md` -> 完整复制到 `assets/managed_agents/` -> 更新 registry。
+- `scan-collect`：source root -> 扫描 `AGENTS.md`（忽略 `Human_Work_Zone/` 与托管目录）-> 完整复制到 `assets/managed_agents/` -> 更新 registry。
 - `sync-out`：registry -> 选择托管副本 -> 回写到原始 `source_path`。
 - `registry`：只读查看当前托管映射。
 

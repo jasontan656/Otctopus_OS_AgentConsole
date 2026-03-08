@@ -84,6 +84,26 @@ class MetaAgentsCliTests(unittest.TestCase):
             )
             self.assertEqual(second["count"], 2)
 
+    def test_scan_collect_ignores_human_work_zone(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            skill_root = Path(tmp) / "skill"
+            source_root = Path(tmp) / "src"
+            (source_root / "repo-a").mkdir(parents=True)
+            (source_root / "repo-a" / "AGENTS.md").write_text("keep\n", encoding="utf-8")
+            (source_root / "Human_Work_Zone" / "repo-b").mkdir(parents=True)
+            (source_root / "Human_Work_Zone" / "repo-b" / "AGENTS.md").write_text("ignore\n", encoding="utf-8")
+
+            payload = self.run_cli(
+                "scan-collect",
+                "--skill-root", str(skill_root),
+                "--source-root", str(source_root),
+            )
+
+            self.assertEqual(payload["count"], 1)
+            self.assertEqual(payload["entries"][0]["source_path"], str(source_root / "repo-a" / "AGENTS.md"))
+            stale = list((skill_root / "assets" / "managed_agents").rglob("*Human_Work_Zone*"))
+            self.assertEqual(stale, [])
+
 
 if __name__ == "__main__":
     unittest.main()

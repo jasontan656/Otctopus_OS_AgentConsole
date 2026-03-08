@@ -5,6 +5,7 @@ from pathlib import Path
 
 
 DEFAULT_SOURCE_ROOT = Path("/home/jasontan656/AI_Projects")
+EXCLUDED_DIR_NAMES = {"Human_Work_Zone"}
 
 
 def resolve_skill_root(raw: str | None) -> Path:
@@ -44,6 +45,8 @@ def managed_file_path(skill_root: Path, source_root: Path, source_path: Path) ->
 
 def is_excluded_scan_path(candidate: Path, skill_root: Path) -> bool:
     if ".git" in candidate.parts:
+        return True
+    if any(part in EXCLUDED_DIR_NAMES for part in candidate.parts):
         return True
     managed = managed_root(skill_root)
     return candidate.is_relative_to(managed)

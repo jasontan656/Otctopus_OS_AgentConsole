@@ -1,9 +1,8 @@
 from __future__ import annotations
 
-import shutil
 from pathlib import Path
 
-from managed_paths import is_excluded_scan_path, managed_file_path, managed_rel_path, managed_root
+from managed_paths import is_excluded_scan_path, managed_file_path, managed_rel_path, managed_root, root_slug
 from managed_registry import build_entry, load_registry, sha256_text, write_registry
 
 
@@ -17,20 +16,21 @@ def _discover_agents(source_root: Path, skill_root: Path) -> list[Path]:
 
 
 def _prune_missing(skill_root: Path, source_root: Path, live_rel_paths: set[str]) -> None:
-    payload = load_registry(skill_root)
-    for entry in payload.get("entries", []):
-        if entry["source_root"] != str(source_root):
+    namespace_root = managed_root(skill_root) / root_slug(source_root)
+    if not namespace_root.exists():
+        return
+
+    for target in sorted(namespace_root.rglob("AGENTS.md")):
+        rel_path = target.relative_to(managed_root(skill_root)).as_posix()
+        if rel_path in live_rel_paths:
             continue
-        if entry["managed_rel_path"] in live_rel_paths:
-            continue
-        target = Path(entry["managed_path"])
-        if target.exists():
-            target.unlink()
-        parent = target.parent
-        stop = managed_root(skill_root)
-        while parent != stop and parent.exists() and not any(parent.iterdir()):
-            parent.rmdir()
-            parent = parent.parent
+        target.unlink()
+
+    for candidate in sorted(namespace_root.rglob("*"), reverse=True):
+        if candidate.is_dir() and not any(candidate.iterdir()):
+            candidate.rmdir()
+    if namespace_root.exists() and not any(namespace_root.iterdir()):
+        namespace_root.rmdir()
 
 
 def collect_agents(skill_root: Path, source_root: Path) -> dict[str, object]:
