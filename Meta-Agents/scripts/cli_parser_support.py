@@ -3,7 +3,7 @@ from __future__ import annotations
 import argparse
 
 
-def build_parser(cmd_registry, cmd_scan_collect, cmd_sync_out) -> argparse.ArgumentParser:
+def build_parser(cmd_registry, cmd_scan, cmd_collect, cmd_push) -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest="command", required=True)
 
@@ -12,16 +12,22 @@ def build_parser(cmd_registry, cmd_scan_collect, cmd_sync_out) -> argparse.Argum
     registry.add_argument("--json", action="store_true")
     registry.set_defaults(func=cmd_registry)
 
-    scan_collect = subparsers.add_parser("scan-collect")
-    scan_collect.add_argument("--skill-root")
-    scan_collect.add_argument("--source-root")
-    scan_collect.add_argument("--json", action="store_true")
-    scan_collect.set_defaults(func=cmd_scan_collect)
+    scan = subparsers.add_parser("scan")
+    scan.add_argument("--skill-root")
+    scan.add_argument("--source-root")
+    scan.add_argument("--json", action="store_true")
+    scan.set_defaults(func=cmd_scan)
 
-    sync_out = subparsers.add_parser("sync-out")
-    sync_out.add_argument("--skill-root")
-    sync_out.add_argument("--target-source-path", action="append", default=[])
-    sync_out.add_argument("--all", action="store_true")
-    sync_out.add_argument("--json", action="store_true")
-    sync_out.set_defaults(func=cmd_sync_out)
+    collect = subparsers.add_parser("collect")
+    collect.add_argument("--skill-root")
+    collect.add_argument("--source-root")
+    collect.add_argument("--json", action="store_true")
+    collect.set_defaults(func=cmd_collect)
+
+    push = subparsers.add_parser("push")
+    push.add_argument("--skill-root")
+    push.add_argument("--target-source-path", action="append", default=[])
+    push.add_argument("--all", action="store_true")
+    push.add_argument("--json", action="store_true")
+    push.set_defaults(func=cmd_push)
     return parser

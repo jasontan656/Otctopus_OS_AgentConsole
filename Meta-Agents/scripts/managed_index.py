@@ -38,7 +38,7 @@ def write_index(skill_root: Path, entries: list[dict[str, str]]) -> None:
         "# Managed AGENTS Index",
         "",
         f"- count: {len(entries)}",
-        "- generated_by: scan-collect",
+        "- generated_by: collect",
         "",
     ]
 

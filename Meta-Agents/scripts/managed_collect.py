@@ -3,17 +3,9 @@ from __future__ import annotations
 from pathlib import Path
 
 from managed_index import write_index
-from managed_paths import is_excluded_scan_path, managed_file_path, managed_rel_path, managed_root, root_slug
+from managed_paths import managed_root, root_slug
 from managed_registry import build_entry, load_registry, sha256_text, write_registry
-
-
-def _discover_agents(source_root: Path, skill_root: Path) -> list[Path]:
-    results: list[Path] = []
-    for candidate in source_root.rglob("AGENTS.md"):
-        if is_excluded_scan_path(candidate, skill_root):
-            continue
-        results.append(candidate.resolve())
-    return sorted(results)
+from managed_scan import load_scan_report
 
 
 def _prune_missing(skill_root: Path, source_root: Path, live_rel_paths: set[str]) -> None:
@@ -34,41 +26,50 @@ def _prune_missing(skill_root: Path, source_root: Path, live_rel_paths: set[str]
         namespace_root.rmdir()
 
 
-def collect_agents(skill_root: Path, source_root: Path) -> dict[str, object]:
-    discovered = _discover_agents(source_root, skill_root)
+def collect_from_scan(skill_root: Path, source_root: str | None = None) -> dict[str, object]:
+    scan_report = load_scan_report(skill_root)
+    report_source_root = str(Path(scan_report["source_root"]).resolve())
+    if source_root is not None:
+        wanted_source_root = str(Path(source_root).expanduser().resolve())
+        if wanted_source_root != report_source_root:
+            raise ValueError(
+                f"scan report source_root mismatch: wanted {wanted_source_root}, got {report_source_root}"
+            )
+
+    source_root_path = Path(report_source_root)
     payload = load_registry(skill_root)
     other_entries = [
         entry for entry in payload.get("entries", [])
-        if entry["source_root"] != str(source_root)
+        if entry["source_root"] != report_source_root
     ]
     new_entries: list[dict[str, str]] = []
     live_rel_paths: set[str] = set()
 
-    for source_path in discovered:
+    for scanned in scan_report.get("entries", []):
+        source_path = Path(scanned["source_path"])
+        managed_path = Path(scanned["managed_path"])
         text = source_path.read_text(encoding="utf-8")
-        managed_path = managed_file_path(skill_root, source_root, source_path)
         managed_path.parent.mkdir(parents=True, exist_ok=True)
         managed_path.write_text(text, encoding="utf-8")
-        rel_path = managed_rel_path(source_root, source_path)
-        live_rel_paths.add(rel_path.as_posix())
+        live_rel_paths.add(scanned["managed_rel_path"])
         new_entries.append(
             build_entry(
-                source_root=source_root,
+                source_root=source_root_path,
                 source_path=source_path,
                 managed_path=managed_path,
-                managed_rel_path=rel_path,
+                managed_rel_path=Path(scanned["managed_rel_path"]),
                 sha256=sha256_text(text),
             )
         )
 
-    _prune_missing(skill_root, source_root, live_rel_paths)
+    _prune_missing(skill_root, source_root_path, live_rel_paths)
     merged = sorted(other_entries + new_entries, key=lambda item: item["source_path"])
     write_registry(skill_root, {"version": 1, "entries": merged})
     write_index(skill_root, merged)
     return {
         "status": "ok",
-        "action": "scan_collect",
-        "source_root": str(source_root),
+        "action": "collect",
+        "source_root": report_source_root,
         "managed_root": str(managed_root(skill_root)),
         "count": len(new_entries),
         "entries": merged,

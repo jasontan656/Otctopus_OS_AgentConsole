@@ -1,68 +1,65 @@
 ---
 name: "Meta-Agents"
-description: "集中回收、托管并同步 workspace 内的 AGENTS.md。用于扫描现有 AGENTS.md 完整复制进技能目录、维护源路径到托管模板的映射，并把技能内托管版本回写到指定或全部目标位置。"
+description: "集中管理 workspace 内的 AGENTS.md。提供显式分离的 scan、collect、push 三阶段命令：scan 只扫描生成清单，collect 只回收生成托管副本与索引，push 只把托管副本回写目标。"
 ---
 
 # Meta-Agents
 
 ## 1. 目标
-- 集中托管 workspace 内所有 `AGENTS.md`，避免规则分散在各仓库各目录。
-- 提供两个固定动作：
-  - `scan-collect`：扫描并完整复制现有 `AGENTS.md` 到技能目录。
-  - `sync-out`：把技能内托管版本回写到指定目标或全部目标。
-- 当新的 `AGENTS.md` 在扫描范围内出现时，再跑一次 `scan-collect` 即可把它纳入管理范围。
+- 提供 `AGENTS.md` 的集中管理入口，但把 `scan / collect / push` 拆成三个互不混读的阶段。
+- 统一 CLI 入口为 `scripts/Cli_Toolbox.py`。
+- 阶段命令必须显式分离：
+  - `scan`
+  - `collect`
+  - `push`
 
 ## 2. 可用工具
-- 统一入口：`scripts/Cli_Toolbox.py`
-- 工具清单：
-- `Cli_Toolbox.registry` - 查看当前托管的 `AGENTS.md` 映射。
-- `Cli_Toolbox.scan_collect` - 扫描 source root，完整复制所有 `AGENTS.md` 进技能并更新 registry。
-- `Cli_Toolbox.sync_out` - 把托管版本回写到指定目标或全部目标。
-- 文档：
-  - 使用文档：`references/tooling/Cli_Toolbox_USAGE.md`
-  - 开发文档：`references/tooling/Cli_Toolbox_DEVELOPMENT.md`
+- 工具入口：`scripts/Cli_Toolbox.py`
+- 命令清单：
+  - `Cli_Toolbox.registry`
+  - `Cli_Toolbox.scan`
+  - `Cli_Toolbox.collect`
+  - `Cli_Toolbox.push`
+- 本技能默认只允许按阶段读取对应文档：
+  - `scan` 只读 `references/stages/scan/`
+  - `collect` 只读 `references/stages/collect/`
+  - `push` 只读 `references/stages/push/`
+- 禁止跨阶段读取 instruction / workflow / rules，除非用户显式要求。
 
 ## 3. 工作流约束
-- 输入：
-  - `source_root`，默认 `/home/jasontan656/AI_Projects`
-  - 可选 `target_source_path`
-- 步骤：
-  - 运行 `scan-collect`，把当前扫描到的全部 `AGENTS.md` 复制到 `assets/managed_agents/`
-  - 直接修改技能内托管副本
-  - 运行 `sync-out --target-source-path <abs_path>` 或 `sync-out --all`
-- 输出：
-  - `registry.json`
-  - `index.md`
-  - 托管副本目录 `assets/managed_agents/<root_slug>/.../AGENTS.md`
-  - 结构化 JSON 执行结果
-- 完成判定：
-  - `scan-collect` 返回 `status=ok`
-  - `sync-out` 返回 `status=ok`
+- `scan` 阶段入口：
+  - instruction: `references/stages/scan/INSTRUCTION.md`
+  - workflow: `references/stages/scan/WORKFLOW.md`
+  - rules: `references/stages/scan/RULES.md`
+- `collect` 阶段入口：
+  - instruction: `references/stages/collect/INSTRUCTION.md`
+  - workflow: `references/stages/collect/WORKFLOW.md`
+  - rules: `references/stages/collect/RULES.md`
+- `push` 阶段入口：
+  - instruction: `references/stages/push/INSTRUCTION.md`
+  - workflow: `references/stages/push/WORKFLOW.md`
+  - rules: `references/stages/push/RULES.md`
 
 ## 4. 规则约束
-- 仅管理文件名严格等于 `AGENTS.md` 的文件。
-- `scan-collect` 必须完整复制文件内容，不做语义改写。
-- `scan-collect` 必须同步维护 `assets/managed_agents/index.md`，为每个受管 `AGENTS.md` 提供路径与责任摘要预览。
-- `sync-out` 只能把技能内托管副本回写到 registry 中记录过的源路径。
-- 扫描时必须排除技能自身的 `assets/managed_agents/` 托管副本，避免递归回收。
-- 扫描时必须排除 `Human_Work_Zone/`。
-- 不允许把托管副本直接写到技能目录之外的任意新路径；回写目标必须来自 registry。
+- 默认禁止把阶段说明写回 `SKILL.md` 主体。
+- `SKILL.md` 只保留入口、边界和导航，不承载阶段细节。
+- `scan` 不允许写托管副本。
+- `collect` 不允许重新扫描文件系统，只允许消费 `scan_report.json`。
+- `push` 不允许绕过 `registry.json` 直接推断目标。
 
 ## 5. 方法论约束
-- 默认把技能内托管副本视为唯一可批量编辑的管理面。
-- 新出现的 `AGENTS.md` 先通过 `scan-collect` 纳入 registry，再允许统一回写。
-- 当用户只想更新单个目标时，优先 `sync-out --target-source-path ...`，避免全量覆盖。
+- 先 `scan`，再 `collect`，最后 `push`。
+- 如果用户只要求某一阶段，仅读该阶段目录。
+- 如果用户未显式要求跨阶段信息，不读取其他阶段目录。
 
 ## 6. 内联导航索引
 - [Cli_Toolbox 工具入口] -> [scripts/Cli_Toolbox.py]
-- [Agent 元数据] -> [agents/openai.yaml]
 - [托管 registry] -> [assets/managed_agents/registry.json]
 - [托管索引] -> [assets/managed_agents/index.md]
-- [Cli_Toolbox 使用文档] -> [references/tooling/Cli_Toolbox_USAGE.md]
-- [Cli_Toolbox 开发文档] -> [references/tooling/Cli_Toolbox_DEVELOPMENT.md]
-- [Cli_Toolbox 开发架构总览] -> [references/tooling/development/00_ARCHITECTURE_OVERVIEW.md]
-- [Cli_Toolbox 开发分类索引] -> [references/tooling/development/20_CATEGORY_INDEX.md]
-- [Cli_Toolbox 模块目录] -> [references/tooling/development/10_MODULE_CATALOG.yaml]
+- [扫描报告] -> [assets/managed_agents/scan_report.json]
+- [Scan Stage] -> [references/stages/scan/INSTRUCTION.md]
+- [Collect Stage] -> [references/stages/collect/INSTRUCTION.md]
+- [Push Stage] -> [references/stages/push/INSTRUCTION.md]
 
 ## 7. 架构契约
 ```text
@@ -73,16 +70,31 @@ Meta-Agents/
 ├── assets/
 │   └── managed_agents/
 │       ├── index.md
-│       └── registry.json
+│       ├── registry.json
+│       └── scan_report.json
 ├── scripts/
 │   ├── Cli_Toolbox.py
 │   ├── cli_parser_support.py
 │   ├── managed_collect.py
 │   ├── managed_index.py
 │   ├── managed_paths.py
+│   ├── managed_push.py
 │   ├── managed_registry.py
-│   └── managed_sync.py
+│   └── managed_scan.py
 ├── references/
+│   ├── stages/
+│   │   ├── scan/
+│   │   │   ├── INSTRUCTION.md
+│   │   │   ├── RULES.md
+│   │   │   └── WORKFLOW.md
+│   │   ├── collect/
+│   │   │   ├── INSTRUCTION.md
+│   │   │   ├── RULES.md
+│   │   │   └── WORKFLOW.md
+│   │   └── push/
+│   │       ├── INSTRUCTION.md
+│   │       ├── RULES.md
+│   │       └── WORKFLOW.md
 │   └── tooling/
 │       ├── Cli_Toolbox_USAGE.md
 │       ├── Cli_Toolbox_DEVELOPMENT.md
@@ -94,7 +106,8 @@ Meta-Agents/
 │           └── modules/
 │               ├── MODULE_TEMPLATE.md
 │               ├── mod_collect.md
-│               └── mod_sync.md
+│               ├── mod_push.md
+│               └── mod_scan.md
 └── tests/
     └── test_cli_toolbox.py
 ```

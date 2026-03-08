@@ -28,8 +28,14 @@ class MetaAgentsCliTests(unittest.TestCase):
             (source_root / "AGENTS.md").write_text("root agents\n", encoding="utf-8")
             (source_root / "repo-a" / "AGENTS.md").write_text("repo agents\n", encoding="utf-8")
 
+            scan_payload = self.run_cli(
+                "scan",
+                "--skill-root", str(skill_root),
+                "--source-root", str(source_root),
+            )
+            self.assertEqual(scan_payload["count"], 2)
             payload = self.run_cli(
-                "scan-collect",
+                "collect",
                 "--skill-root", str(skill_root),
                 "--source-root", str(source_root),
             )
@@ -49,8 +55,13 @@ class MetaAgentsCliTests(unittest.TestCase):
             target.parent.mkdir(parents=True)
             target.write_text("old\n", encoding="utf-8")
 
+            self.run_cli(
+                "scan",
+                "--skill-root", str(skill_root),
+                "--source-root", str(source_root),
+            )
             collect = self.run_cli(
-                "scan-collect",
+                "collect",
                 "--skill-root", str(skill_root),
                 "--source-root", str(source_root),
             )
@@ -58,7 +69,7 @@ class MetaAgentsCliTests(unittest.TestCase):
             managed.write_text("new managed\n", encoding="utf-8")
 
             self.run_cli(
-                "sync-out",
+                "push",
                 "--skill-root", str(skill_root),
                 "--target-source-path", str(target),
             )
@@ -72,7 +83,7 @@ class MetaAgentsCliTests(unittest.TestCase):
             (source_root / "one" / "AGENTS.md").write_text("one\n", encoding="utf-8")
 
             first = self.run_cli(
-                "scan-collect",
+                "scan",
                 "--skill-root", str(skill_root),
                 "--source-root", str(source_root),
             )
@@ -81,7 +92,7 @@ class MetaAgentsCliTests(unittest.TestCase):
             (source_root / "two").mkdir(parents=True)
             (source_root / "two" / "AGENTS.md").write_text("two\n", encoding="utf-8")
             second = self.run_cli(
-                "scan-collect",
+                "scan",
                 "--skill-root", str(skill_root),
                 "--source-root", str(source_root),
             )
@@ -97,13 +108,18 @@ class MetaAgentsCliTests(unittest.TestCase):
             (source_root / "Human_Work_Zone" / "repo-b" / "AGENTS.md").write_text("ignore\n", encoding="utf-8")
 
             payload = self.run_cli(
-                "scan-collect",
+                "scan",
                 "--skill-root", str(skill_root),
                 "--source-root", str(source_root),
             )
 
             self.assertEqual(payload["count"], 1)
             self.assertEqual(payload["entries"][0]["source_path"], str(source_root / "repo-a" / "AGENTS.md"))
+            self.run_cli(
+                "collect",
+                "--skill-root", str(skill_root),
+                "--source-root", str(source_root),
+            )
             stale = list((skill_root / "assets" / "managed_agents").rglob("*Human_Work_Zone*"))
             self.assertEqual(stale, [])
 

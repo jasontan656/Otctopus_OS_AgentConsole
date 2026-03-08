@@ -1,7 +1,7 @@
 # Managed AGENTS Index
 
 - count: 5
-- generated_by: scan-collect
+- generated_by: collect
 
 ## /home/jasontan656/AI_Projects/AGENTS.md
 - source_path: `/home/jasontan656/AI_Projects/AGENTS.md`

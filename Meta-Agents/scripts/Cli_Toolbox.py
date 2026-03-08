@@ -10,10 +10,11 @@ if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
 
 from cli_parser_support import build_parser
-from managed_collect import collect_agents
+from managed_collect import collect_from_scan
 from managed_paths import resolve_skill_root, resolve_source_root
+from managed_push import push_out
 from managed_registry import load_registry
-from managed_sync import sync_out
+from managed_scan import resolve_scan_source_root, write_scan_report
 
 
 def print_payload(payload: dict[str, object], as_json: bool) -> int:
@@ -32,27 +33,34 @@ def cmd_registry(args) -> int:
     return print_payload(payload, args.json)
 
 
-def cmd_scan_collect(args) -> int:
+def cmd_scan(args) -> int:
     skill_root = resolve_skill_root(args.skill_root)
-    source_root = resolve_source_root(args.source_root)
-    payload = collect_agents(skill_root=skill_root, source_root=source_root)
+    source_root = resolve_scan_source_root(args.source_root)
+    payload = write_scan_report(skill_root=skill_root, source_root=source_root)
     return print_payload(payload, args.json)
 
 
-def cmd_sync_out(args) -> int:
+def cmd_collect(args) -> int:
+    skill_root = resolve_skill_root(args.skill_root)
+    source_root = resolve_source_root(args.source_root) if args.source_root else None
+    payload = collect_from_scan(skill_root=skill_root, source_root=str(source_root) if source_root else None)
+    return print_payload(payload, args.json)
+
+
+def cmd_push(args) -> int:
     if not args.all and not args.target_source_path:
         raise SystemExit("pass --all or at least one --target-source-path")
     skill_root = resolve_skill_root(args.skill_root)
-    payload = sync_out(
+    payload = push_out(
         skill_root=skill_root,
         target_source_paths=args.target_source_path,
-        sync_all=args.all,
+        push_all=args.all,
     )
     return print_payload(payload, args.json)
 
 
 def main() -> int:
-    parser = build_parser(cmd_registry, cmd_scan_collect, cmd_sync_out)
+    parser = build_parser(cmd_registry, cmd_scan, cmd_collect, cmd_push)
     args = parser.parse_args()
     return args.func(args)
 

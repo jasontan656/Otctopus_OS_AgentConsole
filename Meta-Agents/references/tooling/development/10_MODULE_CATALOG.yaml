@@ -2,9 +2,12 @@ modules:
   - name: cli_parser_support
     path: scripts/cli_parser_support.py
     responsibility: 定义 CLI 子命令和参数
+  - name: managed_scan
+    path: scripts/managed_scan.py
+    responsibility: 生成 scan_report.json
   - name: managed_paths
     path: scripts/managed_paths.py
-    responsibility: 解析 skill/source 路径和托管路径
+    responsibility: 解析 skill/source 路径与各类产物路径
   - name: managed_registry
     path: scripts/managed_registry.py
     responsibility: registry 读写与条目构造
@@ -13,7 +16,7 @@ modules:
     responsibility: 生成受管 AGENTS 索引页
   - name: managed_collect
     path: scripts/managed_collect.py
-    responsibility: 扫描并回收 AGENTS.md
-  - name: managed_sync
-    path: scripts/managed_sync.py
+    responsibility: 基于 scan_report 回收 AGENTS.md
+  - name: managed_push
+    path: scripts/managed_push.py
     responsibility: 从托管副本回写原始文件
