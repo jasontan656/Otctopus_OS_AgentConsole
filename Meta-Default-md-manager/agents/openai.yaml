@@ -1,0 +1,4 @@
+interface:
+  display_name: "Meta-Default-md-manager"
+  short_description: "Collect and sync centralized default document copies"
+  default_prompt: "Use Meta-Default-md-manager to collect default resident documents such as AGENTS.md, .gitignore, README.md, and Deployment_Guide.md into one managed skill directory and sync managed copies back to selected targets."

@@ -1,0 +1,117 @@
+{
+  "version": 2,
+  "entries": [
+    {
+      "source_root": "/home/jasontan656/AI_Projects",
+      "source_path": "/home/jasontan656/AI_Projects/.gitignore",
+      "target_kind": ".gitignore",
+      "managed_rel_path": "home_jasontan656_AI_Projects/.gitignore",
+      "managed_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/home_jasontan656_AI_Projects/.gitignore",
+      "sha256": "782b22a01c0f3ba5a0d462237f39b3fdd94a59d4f7e58d000bc9954d821b965f"
+    },
+    {
+      "source_root": "/home/jasontan656/AI_Projects",
+      "source_path": "/home/jasontan656/AI_Projects/AGENTS.md",
+      "target_kind": "AGENTS.md",
+      "managed_rel_path": "home_jasontan656_AI_Projects/AGENTS.md",
+      "managed_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/home_jasontan656_AI_Projects/AGENTS.md",
+      "sha256": "46bd33110d46a0422a7fd7c45b4a262598cb62d597488ff2133955a777a31b01"
+    },
+    {
+      "source_root": "/home/jasontan656/AI_Projects",
+      "source_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/.gitignore",
+      "target_kind": ".gitignore",
+      "managed_rel_path": "home_jasontan656_AI_Projects/Codex_Skills_Mirror/.gitignore",
+      "managed_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/home_jasontan656_AI_Projects/Codex_Skills_Mirror/.gitignore",
+      "sha256": "5fc924bccd07c3c27ccaa8adb8f99b560b0df671a9f96a9bcbbc2b96ea382710"
+    },
+    {
+      "source_root": "/home/jasontan656/AI_Projects",
+      "source_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/.gitignore",
+      "target_kind": ".gitignore",
+      "managed_rel_path": "home_jasontan656_AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/.gitignore",
+      "managed_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/home_jasontan656_AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/.gitignore",
+      "sha256": "1a5b0320abb6f90acf30e5deb2762b23b649d9f1d043fe41079d274c9011a8af"
+    },
+    {
+      "source_root": "/home/jasontan656/AI_Projects",
+      "source_path": "/home/jasontan656/AI_Projects/GoogleDriveDump/Rise_OctuposOS_Dev/.gitignore",
+      "target_kind": ".gitignore",
+      "managed_rel_path": "home_jasontan656_AI_Projects/GoogleDriveDump/Rise_OctuposOS_Dev/.gitignore",
+      "managed_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/home_jasontan656_AI_Projects/GoogleDriveDump/Rise_OctuposOS_Dev/.gitignore",
+      "sha256": "afb4519d0921d772f942065322674664d144b07884aad2f80f6628c40fcae46e"
+    },
+    {
+      "source_root": "/home/jasontan656/AI_Projects",
+      "source_path": "/home/jasontan656/AI_Projects/Octopus_CodeBase_Backend/.gitignore",
+      "target_kind": ".gitignore",
+      "managed_rel_path": "home_jasontan656_AI_Projects/Octopus_CodeBase_Backend/.gitignore",
+      "managed_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/home_jasontan656_AI_Projects/Octopus_CodeBase_Backend/.gitignore",
+      "sha256": "915786b2226dc39febf51976544f3fa870caa592836090245e1c9ed0a78f8df8"
+    },
+    {
+      "source_root": "/home/jasontan656/AI_Projects",
+      "source_path": "/home/jasontan656/AI_Projects/Octopus_CodeBase_Backend/AGENTS.md",
+      "target_kind": "AGENTS.md",
+      "managed_rel_path": "home_jasontan656_AI_Projects/Octopus_CodeBase_Backend/AGENTS.md",
+      "managed_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/home_jasontan656_AI_Projects/Octopus_CodeBase_Backend/AGENTS.md",
+      "sha256": "d68782dfe29a1ea3951c91457125624a7e1e86904b77283b637de479c61a6fd5"
+    },
+    {
+      "source_root": "/home/jasontan656/AI_Projects",
+      "source_path": "/home/jasontan656/AI_Projects/Octopus_CodeBase_Backend/Deployment_Guide.md",
+      "target_kind": "Deployment_Guide.md",
+      "managed_rel_path": "home_jasontan656_AI_Projects/Octopus_CodeBase_Backend/Deployment_Guide.md",
+      "managed_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/home_jasontan656_AI_Projects/Octopus_CodeBase_Backend/Deployment_Guide.md",
+      "sha256": "654b9f617a56e7f241392ec67d42145d43f8dc221ef30273b92325de8b561eaa"
+    },
+    {
+      "source_root": "/home/jasontan656/AI_Projects",
+      "source_path": "/home/jasontan656/AI_Projects/Octopus_CodeBase_Backend/README.md",
+      "target_kind": "README.md",
+      "managed_rel_path": "home_jasontan656_AI_Projects/Octopus_CodeBase_Backend/README.md",
+      "managed_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/home_jasontan656_AI_Projects/Octopus_CodeBase_Backend/README.md",
+      "sha256": "27470596ede856e706a32a903dcddf153ff5d22c0c362c643926b428dea705f3"
+    },
+    {
+      "source_root": "/home/jasontan656/AI_Projects",
+      "source_path": "/home/jasontan656/AI_Projects/Octopus_CodeBase_Frontend/.gitignore",
+      "target_kind": ".gitignore",
+      "managed_rel_path": "home_jasontan656_AI_Projects/Octopus_CodeBase_Frontend/.gitignore",
+      "managed_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/home_jasontan656_AI_Projects/Octopus_CodeBase_Frontend/.gitignore",
+      "sha256": "81b391ce890792c46243603b532be184541ab4028fa3d459574f4bcc78fcf481"
+    },
+    {
+      "source_root": "/home/jasontan656/AI_Projects",
+      "source_path": "/home/jasontan656/AI_Projects/Octopus_CodeBase_Frontend/AGENTS.md",
+      "target_kind": "AGENTS.md",
+      "managed_rel_path": "home_jasontan656_AI_Projects/Octopus_CodeBase_Frontend/AGENTS.md",
+      "managed_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/home_jasontan656_AI_Projects/Octopus_CodeBase_Frontend/AGENTS.md",
+      "sha256": "2f06156b4de1c4c72c3c5405076e9a50e04c71d250016428c1d2b2dc4a7a9a12"
+    },
+    {
+      "source_root": "/home/jasontan656/AI_Projects",
+      "source_path": "/home/jasontan656/AI_Projects/OctuposOS_RunTime_Frontend/AGENTS.md",
+      "target_kind": "AGENTS.md",
+      "managed_rel_path": "home_jasontan656_AI_Projects/OctuposOS_RunTime_Frontend/AGENTS.md",
+      "managed_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/home_jasontan656_AI_Projects/OctuposOS_RunTime_Frontend/AGENTS.md",
+      "sha256": "9447de1bfd7150256ffb14b728e18062786f5281386d441e68fdb3a876c991c6"
+    },
+    {
+      "source_root": "/home/jasontan656/AI_Projects",
+      "source_path": "/home/jasontan656/AI_Projects/OctuposOS_Runtime_Backend/.gitignore",
+      "target_kind": ".gitignore",
+      "managed_rel_path": "home_jasontan656_AI_Projects/OctuposOS_Runtime_Backend/.gitignore",
+      "managed_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/home_jasontan656_AI_Projects/OctuposOS_Runtime_Backend/.gitignore",
+      "sha256": "34759d6a41f2111a37db324901151c4b69a607d4c0e196140efd03a9073f5bc0"
+    },
+    {
+      "source_root": "/home/jasontan656/AI_Projects",
+      "source_path": "/home/jasontan656/AI_Projects/OctuposOS_Runtime_Backend/AGENTS.md",
+      "target_kind": "AGENTS.md",
+      "managed_rel_path": "home_jasontan656_AI_Projects/OctuposOS_Runtime_Backend/AGENTS.md",
+      "managed_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/home_jasontan656_AI_Projects/OctuposOS_Runtime_Backend/AGENTS.md",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

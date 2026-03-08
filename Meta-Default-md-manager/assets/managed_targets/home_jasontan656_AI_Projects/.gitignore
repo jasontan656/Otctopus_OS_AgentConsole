@@ -1,0 +1,13 @@
+###############################################
+# Root policy: ignore everything except meta instructions
+###############################################
+
+# Ignore everything at repo root
+/*
+
+# Keep agent instructions tracked
+!/AGENTS.md
+
+# Keep this file tracked (optional but safe)
+!/.gitignore
+# Governance note: root remains restrictive by design.
