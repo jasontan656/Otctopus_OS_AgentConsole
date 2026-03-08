@@ -58,7 +58,7 @@ description: "Project-description-driven frontend skill: build a directory mothe
 
 ## 4. 适用域
 - 适用于：前端项目说明驱动的规划、施工、验收闭环。
-- 不适用于：后端服务编排、后端消息总线交付、图谱生成本体、多仓全域 discovery。
+- 不适用于：服务端基础设施编排、消息总线交付、图谱生成本体、多仓全域 discovery。
 - `Meta-code-graph-base` 负责生成与更新图谱；本技能只消费图谱产物和上下文。
 - 浏览器自动化不是本技能内置主流程；若后续 acceptance 需要浏览器操作，可在后续前端细化阶段接入对应浏览器技能。
 

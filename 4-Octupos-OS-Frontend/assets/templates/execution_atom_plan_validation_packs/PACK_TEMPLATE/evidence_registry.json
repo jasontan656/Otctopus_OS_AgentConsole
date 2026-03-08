@@ -13,13 +13,13 @@
     "logs": [
       "replace_me"
     ],
-    "db": [
+    "browser": [
       "replace_me"
     ],
-    "mq": [
+    "network": [
       "replace_me"
     ],
-    "redis": [
+    "assets": [
       "replace_me"
     ],
     "operator_notes": [
