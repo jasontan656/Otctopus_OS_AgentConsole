@@ -11,6 +11,7 @@
 
 - top-level runtime contract
 - tooling workflow contract
+- facade load map
 - stage contracts
 - stage carry-forward rules
 - skill-wide command scope boundaries
