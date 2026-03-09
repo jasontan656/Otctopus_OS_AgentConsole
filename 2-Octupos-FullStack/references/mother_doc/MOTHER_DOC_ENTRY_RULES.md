@@ -8,6 +8,8 @@
 - `Octopus_OS/Mother_Doc/agents.md` 是镜像根索引入口。
 - `Octopus_OS/Mother_Doc/Mother_Doc.md` 是镜像根目录自身的实体说明。
 - 每一层目录都延续同一规则：`README.md + agents.md + <folder_name>.md`。
+- `agents.md` 只存在于 `Octopus_OS/Mother_Doc/**` 这棵文档树内。
+- `Octopus_OS/<Container_Name>/` 这类实际工作目录容器不承载 `agents.md`。
 
 ## Dynamic Expansion
 

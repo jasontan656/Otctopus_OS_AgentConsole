@@ -25,6 +25,7 @@
   "governance_rules": [
     "进入任一阶段前，固定先读 stage-checklist、stage-doc-contract、stage-command-contract、stage-graph-contract。",
     "阶段切换时，只保留顶层常驻文档，再重读当前阶段合同。",
+    "agents.md 只允许存在于 Octopus_OS/Mother_Doc/**，不得进入实际工作目录容器。",
     "Mother_Doc 每一层目录都必须具备 README.md、agents.md、<folder_name>.md。",
     "mother_doc 阶段必须先用 Meta-prompt-write 强化用户意图，再递归选择作用域。",
     "implementation 阶段必须像独立开发者一样推进，并主动修复 doc-code drift。",

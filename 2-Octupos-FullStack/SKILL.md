@@ -36,7 +36,7 @@ description: "未来项目 admin panel 内置的运营AI“章鱼”，负责 mo
     - 作用：按已判定容器名创建工作目录与 `Mother_Doc` 同名目录，并补齐抽象层骨架。
     - 用法：`python3 scripts/Cli_Toolbox.py materialize-container-layout --container <Name> --json`
   - `sync-mother-doc-navigation`
-    - 作用：刷新 `README.md`、`agents.md` 与同名 `<folder_name>.md`。
+    - 作用：仅在 `Mother_Doc` 树内刷新 `README.md`、`agents.md` 与同名 `<folder_name>.md`。
     - 用法：`python3 scripts/Cli_Toolbox.py sync-mother-doc-navigation --json`
 - `implementation`：
   - `stage-checklist --stage implementation`
@@ -111,6 +111,8 @@ description: "未来项目 admin panel 内置的运营AI“章鱼”，负责 mo
     - `references/evidence/`
     - `references/stages/`
 - `mother_doc`：
+  - `agents.md` 只允许存在于 `Octopus_OS/Mother_Doc/**`。
+  - 实际工作目录容器 `Octopus_OS/<Container_Name>/` 不得创建 `agents.md`。
   - `Mother_Doc` 每一层目录必须同时具备：
     - `README.md`
     - `agents.md`

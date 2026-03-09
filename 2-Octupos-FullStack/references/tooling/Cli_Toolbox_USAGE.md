@@ -28,3 +28,4 @@
   - `created_scope_docs`
   - `updated_agents`
   - `removed_legacy_indexes`
+- `updated_agents` 只对应 `Octopus_OS/Mother_Doc/**` 内的导航文件，不会写入实际工作目录容器。

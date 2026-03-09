@@ -10,6 +10,7 @@
   - `README.md`
   - `agents.md`
   - `<folder_name>.md`
+- 上述刷新只发生在 `Octopus_OS/Mother_Doc/**` 内，不写入实际工作目录容器。
 
 ## Structural Rule
 

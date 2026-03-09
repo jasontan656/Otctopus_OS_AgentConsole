@@ -2,4 +2,4 @@
 
 ## Purpose
 
-- Refresh README.md, agents.md, and same-name scope markdown files under Mother_Doc.
+- Refresh README.md, agents.md, and same-name scope markdown files under Mother_Doc only.

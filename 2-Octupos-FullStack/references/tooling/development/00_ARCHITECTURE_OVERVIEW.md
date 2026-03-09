@@ -16,3 +16,4 @@
   - `README.md`
   - `agents.md`
   - `<folder_name>.md`
+- `agents.md` 只属于 `Mother_Doc` 树，不进入实际工作目录容器。

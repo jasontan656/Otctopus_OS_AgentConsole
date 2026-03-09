@@ -64,7 +64,7 @@ STAGE_COMMANDS = {
             },
             {
                 "command": "python3 scripts/Cli_Toolbox.py sync-mother-doc-navigation --json",
-                "purpose": "refresh README.md, agents.md, and same-name scope markdown files across the Mother_Doc tree",
+                "purpose": "refresh README.md, agents.md, and same-name scope markdown files across the Mother_Doc tree only",
             },
         ],
     },
@@ -158,11 +158,11 @@ STAGE_CHECKLISTS = {
         "entry_requirements": [
             "load top-level resident docs",
             "strengthen the user prompt with Meta-prompt-write",
-            "read root README.md and agents.md before selecting scope",
+            "read root README.md and agents.md inside Mother_Doc before selecting scope",
         ],
         "exit_requirements": [
             "updated Mother_Doc current-state content",
-            "updated README.md, agents.md, and <folder_name>.md for affected scopes",
+            "updated README.md, agents.md, and <folder_name>.md for affected Mother_Doc scopes only",
             "implementation inputs ready",
         ],
     },

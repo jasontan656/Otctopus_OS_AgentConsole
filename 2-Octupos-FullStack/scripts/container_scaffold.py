@@ -108,6 +108,7 @@ def build_workspace_readme(name: str, document_dir: Path) -> list[str]:
     return [
         "Stage-1 container directory.",
         f"Corresponding Mother_Doc path: `{document_dir}`.",
+        "This workspace container does not carry `agents.md`; recursive navigation files exist only under `Mother_Doc/`.",
     ]
 
 

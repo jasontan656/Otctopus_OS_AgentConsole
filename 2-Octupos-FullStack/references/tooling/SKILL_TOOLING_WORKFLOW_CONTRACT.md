@@ -32,6 +32,11 @@
   - 验证交付
 - doc-code drift 必须被显式识别并修复。
 
+## Mother_Doc Navigation Policy
+
+- `agents.md` 只属于 `Octopus_OS/Mother_Doc/**` 这棵文档树。
+- `sync-mother-doc-navigation` 只刷新 `Mother_Doc` 树内的导航文件，不得把 `agents.md` 写入实际工作目录容器。
+
 ## Evidence Policy
 
 - `evidence` 必须以 `OS_graph` 统一文档 graph 与代码 graph。

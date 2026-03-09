@@ -58,7 +58,7 @@ def build_directory_readme(path: Path, document_root: Path) -> str:
         description + ".",
         "",
         f"- Use `{path.name}.md` in the same directory as the scope-entity document for the current directory itself.",
-        "- Use `agents.md` in the same directory as the navigation index for the next scope selection.",
+        "- Use `agents.md` in the same Mother_Doc directory as the navigation index for the next scope selection.",
         "- Keep this file focused on what the current scope is for, not on child-path enumeration.",
         "",
     ]
