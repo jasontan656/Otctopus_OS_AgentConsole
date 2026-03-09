@@ -24,9 +24,12 @@
 - `agents.md` 之外的 `Mother_Doc` markdown 必须具备 `Document Status + Block Registry`，供机械探测变动。
 - `mother_doc` 阶段必须先用 `Meta-prompt-write` 强化用户意图，再递归选择作用域。
 - `mother_doc` 更新文档后，必须把受影响文档/区块标记为 `pending_implementation`。
+- `mother_doc` 阶段禁止写开发日志、部署日志与 Git / GitHub 留痕。
 - `implementation` 阶段必须像独立开发者一样推进，并主动修复 doc-code drift。
-- `implementation` 对齐完成后，必须把受影响文档/区块改回 `aligned`，并追加 implementation batch 日志。
+- `implementation` 对齐完成后，必须把受影响文档/区块改回 `aligned`，并把对齐范围交给 `evidence` 统一留痕。
+- `implementation` 阶段禁止写开发日志、部署日志与 Git / GitHub 留痕。
 - `evidence` 阶段必须以 `OS_graph` 统一文档图、代码图与 evidence 绑定。
+- `evidence` 阶段独占 implementation batch、deployment checkpoint 与 Git / GitHub 留痕。
 - deployment-level witness 出现后，必须追加 deployment checkpoint 日志。
 - 开发/部署日志只写摘要；摘要必须等于同轮 Git 提交 message，具体修改由 Git / GitHub 提供明细。
 - 所有回填都采用覆盖写入，只维护当前状态；项目内部不保留文档版本，但日志保留时间线。

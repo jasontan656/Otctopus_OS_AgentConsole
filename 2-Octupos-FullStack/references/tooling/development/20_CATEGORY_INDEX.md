@@ -19,7 +19,7 @@
 - `Cli_Toolbox.implementation_stage`
 - `Cli_Toolbox.evidence_stage`
 
-## delivery_logs
+## evidence_traceability
 
 - `Cli_Toolbox.append_implementation_log`
 - `Cli_Toolbox.append_deployment_log`

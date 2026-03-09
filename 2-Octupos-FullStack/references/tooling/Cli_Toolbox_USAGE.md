@@ -12,8 +12,8 @@
 - `Cli_Toolbox.sync_mother_doc_navigation`
 - `Cli_Toolbox.sync_mother_doc_status`
 - `Cli_Toolbox.implementation_stage`
-- `Cli_Toolbox.append_implementation_log`
 - `Cli_Toolbox.evidence_stage`
+- `Cli_Toolbox.append_implementation_log`
 - `Cli_Toolbox.append_deployment_log`
 
 ## 核心命令
@@ -36,5 +36,6 @@
   - `removed_legacy_indexes`
 - `updated_agents` 只对应 `Octopus_OS/Mother_Doc/**` 内的导航文件，不会写入实际工作目录容器。
 - `sync-mother-doc-status` 会返回受影响文档的状态块更新结果。
-- `append-implementation-log` 与 `append-deployment-log` 会返回日志目标文件与本次写入摘要。
+- `append-implementation-log` 与 `append-deployment-log` 只允许在 `evidence` 或 `implementation -> evidence` 联动中调用。
+- 上述日志命令会返回日志目标文件与本次写入摘要。
 - 上述日志命令中的 `summary` 必须直接复用同轮 Git 提交 message。

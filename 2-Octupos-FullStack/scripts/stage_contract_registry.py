@@ -18,7 +18,7 @@ STAGE_ORDER = ["mother_doc", "implementation", "evidence"]
 STAGE_SCOPES = {
     "mother_doc": "strengthen user intent, recursively navigate Mother_Doc, and write back current-state document structure",
     "implementation": "act as an independent delivery-grade developer and reconcile Mother_Doc with the actual codebase while implementing changes",
-    "evidence": "collect real witnesses and bind them back through the unified OS_graph contract",
+    "evidence": "collect real witnesses, append logs, and bind them back through the unified OS_graph contract",
 }
 
 STAGE_DOCS = {
@@ -36,11 +36,11 @@ STAGE_DOCS = {
         "references/stages/IMPLEMENTATION_STAGE.md",
         "references/implementation/IMPLEMENTATION_DELIVERY_RULES.md",
         "references/implementation/DOC_CODE_ALIGNMENT_RULES.md",
-        "references/implementation/IMPLEMENTATION_LOG_RULES.md",
         "references/stages/MOTHER_DOC_STAGE.md",
     ],
     "evidence": [
         "references/stages/EVIDENCE_STAGE.md",
+        "references/evidence/IMPLEMENTATION_LOG_RULES.md",
         "references/evidence/OS_GRAPH_RULES.md",
         "references/evidence/DEPLOYMENT_LOG_RULES.md",
         "references/stages/MOTHER_DOC_STAGE.md",
@@ -99,10 +99,6 @@ STAGE_COMMANDS = {
                 "command": "python3 scripts/Cli_Toolbox.py sync-mother-doc-status --stage implementation --path <relative-path> --sync-status aligned --no-requires-development --json",
                 "purpose": "flip affected Mother_Doc documents from pending implementation to aligned after code and docs match again",
             },
-            {
-                "command": "python3 scripts/Cli_Toolbox.py append-implementation-log --summary \"<summary>\" --doc-path <doc-path> --code-path <code-path> --json",
-                "purpose": "append an implementation batch log after comparing current code with the updated Mother_Doc state and applying the resulting changes",
-            },
         ],
     },
     "evidence": {
@@ -120,6 +116,10 @@ STAGE_COMMANDS = {
             {
                 "command": "project-native validation / smoke / test / health-check commands chosen from the actual codebase",
                 "purpose": "collect real delivery witnesses after implementation bring-up instead of fabricating completion status",
+            },
+            {
+                "command": "python3 scripts/Cli_Toolbox.py append-implementation-log --summary \"<summary>\" --doc-path <doc-path> --code-path <code-path> --json",
+                "purpose": "append an implementation batch log after implementation has already aligned code and docs and evidence is closing the traceability loop",
             },
             {
                 "command": "python3 scripts/Cli_Toolbox.py append-deployment-log --summary \"<summary>\" --doc-path <doc-path> --code-path <code-path> --json",
@@ -151,10 +151,9 @@ STAGE_GRAPH_CONTRACTS = {
             "module markdown -> module contract node",
             "helper markdown -> helper contract node",
             "code file / package / runtime artifact -> implementation node",
-            "implementation_batches.md entries -> implementation timeline node",
         ],
         "tooling_mode": "contract_first",
-        "action_rule": "detect doc-code drift, align code and Mother_Doc to the same current-state structure, then flip block statuses and append implementation logs before claiming progress",
+        "action_rule": "detect doc-code drift, align code and Mother_Doc to the same current-state structure, and flip block statuses before handing the aligned scope to evidence for traceability",
     },
     "evidence": {
         "graph_name": "OS_graph",
@@ -163,6 +162,7 @@ STAGE_GRAPH_CONTRACTS = {
             "directory -> scope node",
             "<folder_name>.md -> module or black-box description node",
             "code modules and helpers -> implementation nodes under the same hierarchy",
+            "implementation_batches.md entries -> implementation timeline node",
             "witnesses -> evidence nodes bound back to the same hierarchy",
             "deployment_batches.md entries -> deployment checkpoint node",
         ],
@@ -204,7 +204,7 @@ STAGE_CHECKLISTS = {
             "code and Mother_Doc are aligned to the same current-state structure",
             "affected document/block statuses are flipped away from pending implementation where implementation actually landed",
             "dependencies, runtime, and tests are handled to product-delivery standard within local control",
-            "an implementation batch log is appended under Mother_Doc/Mother_Doc/common/development_logs",
+            "the aligned implementation scope is ready for evidence-stage traceability",
             "evidence inputs are ready",
         ],
     },
@@ -221,6 +221,7 @@ STAGE_CHECKLISTS = {
         "exit_requirements": [
             "real witnesses are bound back to the same Mother_Doc hierarchy",
             "OS_graph contract is updated at the contract level for the current delivery state",
+            "implementation batch logs are appended under Mother_Doc/Mother_Doc/common/development_logs",
             "deployment checkpoints are appended under Mother_Doc/Mother_Doc/common/development_logs when deployment-level evidence exists",
             "writeback is complete without introducing internal version branches",
         ],

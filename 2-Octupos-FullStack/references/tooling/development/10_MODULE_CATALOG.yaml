@@ -39,6 +39,7 @@ modules:
     tool_alias: Cli_Toolbox.append_implementation_log
     entrypoint: scripts/Cli_Toolbox.py append-implementation-log
     status: active
+    stage_scope: evidence
   - module_id: evidence_stage
     tool_alias: Cli_Toolbox.evidence_stage
     entrypoint: scripts/Cli_Toolbox.py evidence-stage
@@ -47,3 +48,4 @@ modules:
     tool_alias: Cli_Toolbox.append_deployment_log
     entrypoint: scripts/Cli_Toolbox.py append-deployment-log
     status: active
+    stage_scope: evidence

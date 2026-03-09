@@ -12,12 +12,12 @@
   - 测试执行
   - 本地验证
   - 回填更新
-  - development log 追加
 
 ## Blocked Rule
 
 - 只有本地可控范围内的修复动作全部穷尽后，才允许写成真正 blocked。
 
-## Log Rule
+## Handoff Rule
 
-- 每轮批量文档更新转入实现后，必须在实现完成时追加 implementation batch。
+- 每轮批量文档更新转入实现后，必须在实现完成时整理出可供 `evidence` 追加 implementation batch 的对齐范围与差异摘要。
+- implementation 本阶段不得直接写开发日志，也不得直接承担 Git / GitHub 留痕。

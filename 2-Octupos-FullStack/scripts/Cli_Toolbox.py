@@ -61,7 +61,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     implementation_log = subparsers.add_parser(
         "append-implementation-log",
-        help="append an implementation batch log entry under Mother_Doc/common/development_logs",
+        help="append an evidence-stage implementation batch log entry under Mother_Doc/common/development_logs",
     )
     implementation_log.add_argument("--document-root", default=str(DEFAULT_DOCUMENT_ROOT), help="Mother_Doc root")
     implementation_log.add_argument("--summary", required=True)
@@ -73,7 +73,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     deployment_log = subparsers.add_parser(
         "append-deployment-log",
-        help="append a deployment checkpoint log entry under Mother_Doc/common/development_logs",
+        help="append an evidence-stage deployment checkpoint log entry under Mother_Doc/common/development_logs",
     )
     deployment_log.add_argument("--document-root", default=str(DEFAULT_DOCUMENT_ROOT), help="Mother_Doc root")
     deployment_log.add_argument("--summary", required=True)
