@@ -7,6 +7,7 @@ description: "未来项目 admin panel 内置的运营AI“章鱼”，负责 mo
 
 ## 1. 目标
 - 本技能用于 `Octopus_OS` 的全栈文档驱动开发与落盘维护。
+- 本技能本质上是 `Octopus_OS` 的开发操作手册；未来会继续扩展到项目运营手册。
 - 运行对象是未来项目 admin panel 内置的运营AI“章鱼”。
 - 本技能显式承载三个阶段：
   - `mother_doc`
@@ -85,10 +86,16 @@ description: "未来项目 admin panel 内置的运营AI“章鱼”，负责 mo
 
 ## 3. 工作流约束
 - 抽象总则：
+  - 技能内规则固定分成三层加载链：
+    - `skill_native_common`
+    - `skill_native_stage`
+    - `authored_domain_rules + container_common_docs`
   - 顶层常驻文档只保留：
     - `rules/FULLSTACK_SKILL_HARD_RULES.md`
     - `references/runtime/SKILL_RUNTIME_CONTRACT.md`
     - `references/tooling/SKILL_TOOLING_WORKFLOW_CONTRACT.md`
+    - `references/skill_native/00_SKILL_NATIVE_INDEX.md`
+    - `references/authored_domains/00_DOMAIN_INDEX.md`
     - `/home/jasontan656/AI_Projects/AGENTS.md`
   - 进入任一阶段前，固定先读：
     - `stage-checklist --stage <stage>`
@@ -99,13 +106,15 @@ description: "未来项目 admin panel 内置的运营AI“章鱼”，负责 mo
   - 阶段切换时，必须显式丢弃上一阶段的阶段文档与临时 focus，只保留顶层常驻文档。
 - `mother_doc`：
   - 先结合上下文使用 `Meta-prompt-write` 强化用户意图。
-  - 再从 `Octopus_OS/Mother_Doc/README.md` 与 `Octopus_OS/Mother_Doc/agents.md` 进入作用域选择。
+  - `Octopus_OS/Mother_Doc/` 是代码容器根，不再直接承载完整文档树。
+  - 再从 `Octopus_OS/Mother_Doc/docs/README.md` 与 `Octopus_OS/Mother_Doc/docs/agents.md` 进入作用域选择。
   - 每进入下一层目录，都必须先读该层 `README.md`、再读该层 `agents.md`、再读该层同名 `<folder_name>.md`，再选择下一层路径。
   - 每次更新非 `agents.md` 文档后，必须同步把受影响文档与区块显式标记为 `requires_development: true`。
   - 本阶段禁止写开发日志、部署日志与任何 Git / GitHub 留痕。
   - 写回时只保留当前状态，覆盖更新，不规划项目内文档版本。
 - `implementation`：
   - 必须显式承接 `mother_doc` 当前状态产物。
+  - 进入具体容器前，必须先读取对应域族的 `authored_domain_rules`，再读取该容器自己的 `common/` 文档。
   - 必须像独立人类开发者一样自行发现问题、安装依赖、修复环境、运行测试、启动服务、验证行为、直至达到产品上线级交付标准。
   - 必须主动发现 `Mother_Doc` 与实际代码库/运行时的不一致，并在代码与文档两侧做对齐更新。
   - 每次批量文档更新进入实现后，必须先读代码、再读更新后的文档，并按差异完成实现与对齐。
@@ -114,25 +123,30 @@ description: "未来项目 admin panel 内置的运营AI“章鱼”，负责 mo
   - 必须显式承接 `mother_doc + implementation` 当前状态产物。
   - `evidence` 的 graph 主体是 `OS_graph`，不再是单纯 `code graph`。
   - `OS_graph` 同时管理文档结构、代码结构、模块映射与 evidence 绑定关系。
+  - `OS_graph` 资产固定落在 `Octopus_OS/Mother_Doc/graph/`，不再混在 docs 树内。
   - 本阶段独占开发日志、部署日志与 Git / GitHub 留痕。
   - `evidence` 可以直接写 deployment checkpoint，也可以承接前一阶段实现结果补写 implementation batch；日志 `summary` 必须等于同轮 Git 提交 message。
 
 ## 4. 规则约束
 - 抽象总则：
   - 整个技能禁止混写作用域；规则必须按抽象层与阶段层分开承载。
+  - 技能本体规则与产物域规则必须显式分离，不得把所有域都收束成单一 `mother_doc` 规则。
   - 规则正文统一下沉到：
     - `rules/`
     - `references/runtime/`
+    - `references/skill_native/`
+    - `references/authored_domains/`
     - `references/tooling/`
     - `references/mother_doc/`
     - `references/implementation/`
     - `references/evidence/`
     - `references/stages/`
 - `mother_doc`：
-  - `agents.md` 只允许存在于 `Octopus_OS/Mother_Doc/**`。
+  - `agents.md` 只允许存在于 `Octopus_OS/Mother_Doc/docs/**`。
   - 实际工作目录容器 `Octopus_OS/<Container_Name>/` 不得创建 `agents.md`。
-  - `agents.md` 之外的 `Mother_Doc` markdown 必须带有 `Document Status + Block Registry`。
-  - `Mother_Doc` 每一层目录必须同时具备：
+  - `Octopus_OS/Mother_Doc/` 容器根本身不得承载导航树；导航树固定存在于 `Octopus_OS/Mother_Doc/docs/`。
+  - `agents.md` 之外的 `Mother_Doc/docs` markdown 必须带有 `Document Status + Block Registry`。
+  - `Mother_Doc/docs` 每一层目录必须同时具备：
     - `README.md`
     - `agents.md`
     - `<folder_name>.md`
@@ -142,6 +156,7 @@ description: "未来项目 admin panel 内置的运营AI“章鱼”，负责 mo
   - 文档如未细分多个区块，默认必须至少有一个 `block_id: primary`。
 - `implementation`：
   - 不得脱离 `mother_doc` 当前状态产物单独实施。
+  - 不得跳过域族规则直接只看单个容器文档；必须先读域族 `implementation` 规则，再读容器 `common/implementation_guides` 与其他 `common/` 文档。
   - 发现 doc-code drift 时，不得忽略；必须显式更新代码、文档或两者以恢复一致。
   - 不得因为本地可修问题而提前写成 `blocked`。
   - 实现完成后，必须把对应文档状态从 `pending_implementation` 回写为 `aligned`。
@@ -158,25 +173,32 @@ description: "未来项目 admin panel 内置的运营AI“章鱼”，负责 mo
   - 文档即代码，代码组织最终应与 `Mother_Doc` 组织对齐。
   - 架构优先服务人类阅读与长期维护，但必须同时保留机械合同可读性。
   - 抽象功能可共享，特定域命令禁止共享。
+  - 开发相关宪法子集应回收到各域/容器的 `common/dev_canon/`，供本技能自动化消费。
 - `mother_doc`：
-  - 目录结构就是文档架构骨架。
+  - `Octopus_OS/Mother_Doc/` 是 Mother_Doc 容器的代码根。
+  - `Octopus_OS/Mother_Doc/docs/` 是完整文档骨架根。
+  - 文档目录结构就是文档架构骨架。
   - `<folder_name>.md` 让每个目录自身也成为可读对象，不再只靠 `README.md` 或下层文件隐式表达。
   - `Document Status + Block Registry` 让每个文档变成可替换、可探测、可回写的机械合同对象。
 - `implementation`：
   - 目录结构就是实现组织的主参照。
   - 每个模块 = 一个文档；每个模块 helper = 一个 helper 文档。
   - 模型默认要像独立开发者一样逐步推进：发现、实现、修复、测试、bring-up、验证、交付。
+  - 代码落盘时，只自动消费已进入 `dev_canon` 的内容；其余 `replace_me` 留在容器文档中等待后续补写。
 - `evidence`：
   - `OS_graph` 是文档图与代码图的统一视图。
-  - `Mother_Doc/Mother_Doc/common/development_logs/` 是 evidence 阶段维护的开发时间线与部署检查点载体。
+  - `Mother_Doc/docs/Mother_Doc/common/development_logs/` 是 evidence 阶段维护的开发时间线与部署检查点载体。
   - 日志只保留摘要；具体文件与代码改动回到 Git / GitHub。
   - evidence 必须能回指到同一层级结构中的模块文档、helper 文档、代码模块、开发日志、Git 追踪与运行 witness。
+  - `Octopus_OS/Mother_Doc/graph/` 是 graph 资产根，不属于 docs 树。
 
 ## 6. 内联导航索引
 - 抽象总则：
   - [顶层规则](rules/FULLSTACK_SKILL_HARD_RULES.md)
   - [运行合同 JSON](references/runtime/SKILL_RUNTIME_CONTRACT.json)
   - [运行合同审计版](references/runtime/SKILL_RUNTIME_CONTRACT.md)
+  - [skill native 索引](references/skill_native/00_SKILL_NATIVE_INDEX.md)
+  - [authored domains 索引](references/authored_domains/00_DOMAIN_INDEX.md)
   - [workflow contract](references/tooling/SKILL_TOOLING_WORKFLOW_CONTRACT.md)
   - [Cli_Toolbox 工具入口](scripts/Cli_Toolbox.py)
   - [阶段合同支持模块](scripts/stage_contract_support.py)
@@ -224,6 +246,13 @@ description: "未来项目 admin panel 内置的运营AI“章鱼”，负责 mo
     │   ├── DEPLOYMENT_LOG_RULES.md
     │   ├── IMPLEMENTATION_LOG_RULES.md
     │   └── OS_GRAPH_RULES.md
+    ├── authored_domains/
+    │   ├── 00_DOMAIN_INDEX.md
+    │   ├── data_infra/
+    │   ├── gateway/
+    │   ├── mother_doc/
+    │   ├── service/
+    │   └── ui/
     ├── implementation/
     │   ├── DOC_CODE_ALIGNMENT_RULES.md
     │   └── IMPLEMENTATION_DELIVERY_RULES.md
@@ -238,6 +267,8 @@ description: "未来项目 admin panel 内置的运营AI“章鱼”，负责 mo
     ├── runtime/
     │   ├── SKILL_RUNTIME_CONTRACT.json
     │   └── SKILL_RUNTIME_CONTRACT.md
+    ├── skill_native/
+    │   └── 00_SKILL_NATIVE_INDEX.md
     ├── stages/
     │   ├── 00_STAGE_INDEX.md
     │   ├── MOTHER_DOC_STAGE.md

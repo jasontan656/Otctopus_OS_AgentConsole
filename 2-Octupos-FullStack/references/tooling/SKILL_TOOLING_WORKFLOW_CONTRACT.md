@@ -44,7 +44,7 @@
 - `implementation` 阶段只产生对齐结果与差异范围，不直接写日志，也不直接承担 Git / GitHub 留痕。
 - `evidence` 阶段负责追加 implementation batch。
 - `evidence` 形成真实部署 witness 后，必须追加 deployment checkpoint。
-- 日志固定写入 `Octopus_OS/Mother_Doc/Mother_Doc/common/development_logs/`。
+- 日志固定写入 `Octopus_OS/Mother_Doc/docs/Mother_Doc/common/development_logs/`。
 - 日志只写摘要；摘要必须等于同轮 Git 提交 message，具体修改交由 Git / GitHub 追踪。
 
 ## Evidence Policy

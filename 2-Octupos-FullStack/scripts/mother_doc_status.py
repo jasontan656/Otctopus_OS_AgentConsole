@@ -12,10 +12,16 @@ def _bool_text(value: bool) -> str:
     return "true" if value else "false"
 
 
+def _scope_doc_name(parent: Path, document_root: Path) -> str:
+    if parent == document_root:
+        return "Mother_Doc.md"
+    return f"{parent.name}.md"
+
+
 def infer_doc_role(path: Path, document_root: Path) -> str:
     if path.name == "README.md":
         return "scope_purpose"
-    if path.name == f"{path.parent.name}.md":
+    if path.name == _scope_doc_name(path.parent, document_root):
         return "scope_entity"
     rel = path.relative_to(document_root)
     if "contracts" in rel.parts:

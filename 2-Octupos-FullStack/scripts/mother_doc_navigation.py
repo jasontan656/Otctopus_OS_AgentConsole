@@ -10,12 +10,21 @@ DOMAIN_DESCRIPTIONS = {
     "naming": "naming rules abstraction scope for the current container",
     "contracts": "contract rules abstraction scope for the current container",
     "operations": "operations and maintenance abstraction scope for the current container",
+    "writing_guides": "authored-doc update guidance scope for the current container",
+    "implementation_guides": "implementation-stage writeback guidance scope for the current container",
+    "dev_canon": "recovered development canon scope for the current container",
     "development_logs": "development and deployment log scope for the Mother_Doc container",
 }
 
 
 def titleize(name: str) -> str:
     return name.replace("_", " ")
+
+
+def scope_doc_name(path: Path, document_root: Path) -> str:
+    if path == document_root:
+        return "Mother_Doc.md"
+    return f"{path.name}.md"
 
 
 def describe_directory(path: Path, document_root: Path) -> str:
@@ -40,7 +49,7 @@ def describe_leaf_file(path: Path, document_root: Path) -> str:
         return "peer purpose document for the current scope"
     if path.name == "agents.md":
         return "navigation index for the current scope"
-    if path.name == f"{path.parent.name}.md":
+    if path.name == scope_doc_name(path.parent, document_root):
         return "scope-entity document for the current directory itself"
     stem = path.stem
     parent = path.parent.name
@@ -53,12 +62,13 @@ def build_directory_readme(path: Path, document_root: Path) -> str:
     rel = path.relative_to(document_root)
     title = rel.name if rel.parts else "Mother_Doc"
     description = describe_directory(path, document_root)
+    peer_scope_doc = scope_doc_name(path, document_root)
     lines = [
         f"# {title}",
         "",
         description + ".",
         "",
-        f"- Use `{path.name}.md` in the same directory as the scope-entity document for the current directory itself.",
+        f"- Use `{peer_scope_doc}` in the same directory as the scope-entity document for the current directory itself.",
         "- Use `agents.md` in the same Mother_Doc directory as the navigation index for the next scope selection.",
         "- Keep this file focused on what the current scope is for, not on child-path enumeration.",
         "",
@@ -69,6 +79,7 @@ def build_directory_readme(path: Path, document_root: Path) -> str:
 def build_scope_entity_doc(path: Path, document_root: Path) -> str:
     rel = path.relative_to(document_root)
     scope_label = str(rel) if rel.parts else "Mother_Doc"
+    title = "Mother_Doc" if path == document_root else path.name
     if path.name == "contracts":
         lines = [
             "# contracts",
@@ -86,7 +97,7 @@ def build_scope_entity_doc(path: Path, document_root: Path) -> str:
         ]
         return "\n".join(lines)
     lines = [
-        f"# {path.name}",
+        f"# {title}",
         "",
         f"This file is the scope-entity document for `{scope_label}`.",
         f"It describes the directory itself as a module, parent scope, black-box container, or authored documentation carrier.",
@@ -177,7 +188,7 @@ def sync_navigation_tree(document_root: Path, *, dry_run: bool) -> dict[str, lis
             created_readmes.append(str(readme_path))
             if not dry_run:
                 readme_path.write_text(build_directory_readme(directory, document_root), encoding="utf-8")
-        scope_doc_path = directory / f"{directory.name}.md"
+        scope_doc_path = directory / scope_doc_name(directory, document_root)
         if not scope_doc_path.exists():
             created_scope_docs.append(str(scope_doc_path))
             if not dry_run:

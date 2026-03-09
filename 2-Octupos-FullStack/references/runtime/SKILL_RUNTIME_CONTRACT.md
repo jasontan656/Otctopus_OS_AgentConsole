@@ -5,10 +5,14 @@
 - `skill_name`: `2-Octupos-FullStack`
 - `role_definition`: 未来项目 admin panel 内置的运营AI“章鱼”，负责持续维护 `Mother_Doc`、开发代码并回填 evidence。
 - `workspace_root`: `/home/jasontan656/AI_Projects/Octopus_OS`
-- `document_root`: `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/`
+- `mother_doc_container_root`: `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/`
+- `document_root`: `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/`
+- `graph_asset_root`: `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/graph/`
 - `always_load_rules`:
   - `rules/FULLSTACK_SKILL_HARD_RULES.md`
   - `references/runtime/SKILL_RUNTIME_CONTRACT.md`
+  - `references/skill_native/00_SKILL_NATIVE_INDEX.md`
+  - `references/authored_domains/00_DOMAIN_INDEX.md`
   - `references/tooling/SKILL_TOOLING_WORKFLOW_CONTRACT.md`
   - `/home/jasontan656/AI_Projects/AGENTS.md`
 - `stages`:

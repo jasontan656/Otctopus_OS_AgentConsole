@@ -23,6 +23,9 @@ FAMILY_FILE_MAP: dict[str, dict[str, tuple[str, ...]]] = {
         "naming": ("directory_naming", "file_naming", "node_naming", "container_naming"),
         "contracts": ("read_api", "writeback_api", "evidence_contract", "sync_contract"),
         "operations": ("maintenance_entry", "query_commands", "change_policy", "recovery_entry"),
+        "writing_guides": ("docs_root_update_guide", "docs_navigation_update_guide", "graph_asset_update_guide"),
+        "implementation_guides": ("container_runtime_binding", "docs_tree_binding", "graph_asset_binding"),
+        "dev_canon": ("stack_selection_canon", "architecture_selection_canon", "automation_scope"),
         "development_logs": ("implementation_batches", "deployment_batches", "log_entry_contract", "comparison_basis"),
     },
     "UI": {
@@ -31,6 +34,9 @@ FAMILY_FILE_MAP: dict[str, dict[str, tuple[str, ...]]] = {
         "naming": ("route_naming", "component_naming", "state_naming", "event_naming"),
         "contracts": ("backend_api_usage", "event_contract", "permission_contract", "error_feedback_contract"),
         "operations": ("release_entry", "debug_commands", "environment_notes"),
+        "writing_guides": ("screen_doc_update_guide", "component_doc_update_guide"),
+        "implementation_guides": ("stack_binding", "architecture_binding"),
+        "dev_canon": ("stack_selection_canon", "architecture_selection_canon", "automation_scope"),
     },
     "Gateway": {
         "architecture": ("routing_boundary", "upstream_map", "auth_forwarding", "traffic_boundary"),
@@ -38,6 +44,9 @@ FAMILY_FILE_MAP: dict[str, dict[str, tuple[str, ...]]] = {
         "naming": ("route_prefixes", "upstream_aliases", "header_naming"),
         "contracts": ("inbound_contract", "upstream_contract", "auth_contract", "error_contract"),
         "operations": ("rate_limit_policy", "debug_commands", "rollback_entry"),
+        "writing_guides": ("routing_doc_update_guide", "upstream_doc_update_guide"),
+        "implementation_guides": ("stack_binding", "architecture_binding"),
+        "dev_canon": ("stack_selection_canon", "architecture_selection_canon", "automation_scope"),
     },
     "Service": {
         "architecture": ("bounded_context", "component_map", "dependency_boundary", "async_boundary"),
@@ -45,6 +54,9 @@ FAMILY_FILE_MAP: dict[str, dict[str, tuple[str, ...]]] = {
         "naming": ("entity_naming", "api_naming", "event_naming", "job_naming"),
         "contracts": ("inbound_api", "outbound_api", "event_contract", "error_contract", "healthcheck_contract"),
         "operations": ("deploy_entry", "healthcheck", "query_commands", "recovery_entry"),
+        "writing_guides": ("bounded_context_update_guide", "api_doc_update_guide"),
+        "implementation_guides": ("stack_binding", "architecture_binding"),
+        "dev_canon": ("stack_selection_canon", "architecture_selection_canon", "automation_scope"),
     },
     "Data_Infra": {
         "architecture": ("role", "ownership_boundary", "client_boundary", "data_boundary"),
@@ -52,6 +64,9 @@ FAMILY_FILE_MAP: dict[str, dict[str, tuple[str, ...]]] = {
         "naming": ("resource_naming", "namespace_naming", "key_or_schema_naming"),
         "contracts": ("access_policy", "client_contract", "backup_restore_contract", "retention_contract"),
         "operations": ("query_commands", "maintenance_commands", "recovery_entry", "monitoring_entry"),
+        "writing_guides": ("resource_doc_update_guide", "client_boundary_update_guide"),
+        "implementation_guides": ("stack_binding", "architecture_binding"),
+        "dev_canon": ("stack_selection_canon", "architecture_selection_canon", "automation_scope"),
     },
 }
 
@@ -100,15 +115,28 @@ def build_document_readme(name: str, workspace_dir: Path, family: str) -> list[s
         f"Corresponding workspace path: `{workspace_dir}`.",
         "This directory carries authored development and operations docs for the same-named container.",
         "Stable abstracted knowledge lives under `common/`.",
+        "`common/writing_guides/` carries authored-doc update guidance for the current domain family.",
+        "`common/implementation_guides/` carries implementation-stage code drop guidance for the current domain family.",
+        "`common/dev_canon/` carries the development canon subset that has been recovered into Octopus OS for automation.",
         f"`{name}.md` in this directory describes the container itself as the authored module entity.",
         "Use the peer `agents.md` in this directory as the recursive navigation index.",
     ]
     if family == "Mother_Doc":
         lines.append("`common/development_logs/` carries append-oriented implementation and deployment checkpoints for document-led delivery.")
+        lines.append("This authored tree lives under the `docs/` subdirectory because the Mother_Doc container root is reserved for code/runtime assets.")
     return lines
 
 
 def build_workspace_readme(name: str, document_dir: Path) -> list[str]:
+    if name == "Mother_Doc":
+        return [
+            "Mother_Doc code container root.",
+            f"Corresponding authored-doc root: `{document_dir.parent}`.",
+            f"Corresponding container-doc directory: `{document_dir}`.",
+            "Use `docs/` to carry the full authored Mother_Doc tree.",
+            "Use `graph/` to carry OS_graph runtime assets and evidence-side graph artifacts.",
+            "This container root does not carry `agents.md`; recursive navigation files exist only under `docs/`.",
+        ]
     return [
         "Stage-1 container directory.",
         f"Corresponding Mother_Doc path: `{document_dir}`.",
@@ -116,18 +144,49 @@ def build_workspace_readme(name: str, document_dir: Path) -> list[str]:
     ]
 
 
+def build_graph_readme() -> list[str]:
+    return [
+        "OS_graph asset root for the Mother_Doc container.",
+        "This directory is not part of the authored-doc tree under `docs/`.",
+        "Use it to carry graph runtime assets, graph writeback artifacts, and evidence-side structural outputs.",
+    ]
+
+
 def build_common_file_body(name: str, family: str, domain: str, topic: str) -> list[str]:
+    if domain == "writing_guides":
+        return [
+            f"This file defines `{topic}` for the `{name}` container's authored-doc update workflow.",
+            f"Container family: `{family}`.",
+            "Use it to constrain how this domain updates its own documentation shape and replaceable sections.",
+            "Keep the rule focused on authored content for this domain family, not on other families.",
+        ]
+    if domain == "implementation_guides":
+        return [
+            f"This file defines `{topic}` for the `{name}` container's implementation-stage code writeback.",
+            f"Container family: `{family}`.",
+            "Bind implementation behavior back to the authored `common/stack` and `common/architecture` documents for the same container.",
+            "Only canonized development rules should be automated; all non-canonized parts should stay `replace_me` until authored later.",
+        ]
+    if domain == "dev_canon":
+        return [
+            f"This file stores the recovered development canon topic `{topic}` for the `{name}` container.",
+            f"Container family: `{family}`.",
+            "Only development-related canon that should be automated belongs here.",
+            "Anything not yet canonized must remain `replace_me` and should not be auto-filled by the skill.",
+        ]
     if domain == "development_logs":
         if topic == "implementation_batches":
             return [
                 "This file records implementation batches after Mother_Doc updates.",
-                "Compare current code first, then compare the updated Mother_Doc state, and log the resulting implementation work.",
-                "When there is no code yet, record the current authored-document state as the initial implementation batch.",
+                "Only evidence, or linked implementation-to-evidence writeback, may append entries here.",
+                "Compare current code first, then compare the updated Mother_Doc state, and let implementation produce aligned scope for evidence-side logging.",
+                "When there is no code yet, record the current authored-document state as the initial implementation batch against the empty code baseline.",
                 "Log entries keep only summary-level traceability; the summary must match the Git commit message for the same write turn.",
             ]
         if topic == "deployment_batches":
             return [
                 "This file records deployment checkpoints once the project reaches a deployable state.",
+                "Only evidence may append entries here.",
                 "Each entry acts as an operational release checkpoint without introducing internal document version branches.",
                 "Bind each deployment checkpoint back to the corresponding implementation batch and runtime witness.",
                 "Log entries keep only summary-level traceability; the summary must match the Git commit message for the same write turn.",
@@ -149,15 +208,17 @@ def build_common_file_body(name: str, family: str, domain: str, topic: str) -> l
                 "- witness_refs",
                 "",
                 "This file defines the fixed fields required for implementation and deployment log entries.",
+                "Only evidence may write entries under this contract.",
                 "Each log entry must remain append-oriented and mechanically readable.",
                 "The `summary` field is the local log summary and must exactly match the Git commit message for the same write turn.",
                 "Detailed file/code changes stay in Git and GitHub history; the log only keeps the summary-level breadcrumb.",
-                "Keep the contract aligned with the actual logging workflow used by implementation and evidence stages.",
+                "Keep the contract aligned with the actual logging workflow where implementation produces aligned scope and evidence performs the trace writeback.",
             ]
         if topic == "comparison_basis":
             return [
                 "This file defines the comparison order for drift resolution.",
                 "Read current code first, then read the updated Mother_Doc state, and derive the implementation gap from that delta.",
+                "Implementation uses this comparison basis to produce aligned change scope; evidence then records the trace.",
                 "Use the same comparison basis for first-time implementation when code is still empty.",
             ]
     return [

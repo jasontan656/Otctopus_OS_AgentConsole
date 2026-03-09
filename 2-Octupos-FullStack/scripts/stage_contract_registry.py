@@ -9,6 +9,8 @@ from __future__ import annotations
 TOP_LEVEL_RESIDENT_DOCS = [
     "rules/FULLSTACK_SKILL_HARD_RULES.md",
     "references/runtime/SKILL_RUNTIME_CONTRACT.md",
+    "references/skill_native/00_SKILL_NATIVE_INDEX.md",
+    "references/authored_domains/00_DOMAIN_INDEX.md",
     "references/tooling/SKILL_TOOLING_WORKFLOW_CONTRACT.md",
     "/home/jasontan656/AI_Projects/AGENTS.md",
 ]
@@ -34,6 +36,7 @@ STAGE_DOCS = {
     ],
     "implementation": [
         "references/stages/IMPLEMENTATION_STAGE.md",
+        "references/authored_domains/00_DOMAIN_INDEX.md",
         "references/implementation/IMPLEMENTATION_DELIVERY_RULES.md",
         "references/implementation/DOC_CODE_ALIGNMENT_RULES.md",
         "references/stages/MOTHER_DOC_STAGE.md",
@@ -88,7 +91,7 @@ STAGE_COMMANDS = {
                 "purpose": "print the implementation-stage contract with independent developer obligations and delivery expectations",
             },
             {
-                "command": "rg -n \"<target>\" /home/jasontan656/AI_Projects/Octopus_OS /home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc",
+                "command": "rg -n \"<target>\" /home/jasontan656/AI_Projects/Octopus_OS /home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs",
                 "purpose": "inspect doc-code drift and locate implementation slices without scanning unrelated sibling repositories",
             },
             {
@@ -198,6 +201,7 @@ STAGE_CHECKLISTS = {
             "load top-level resident docs",
             "read implementation-specific stage contracts",
             "carry forward current-state outputs from mother_doc",
+            "load the matching authored domain family rules before entering a specific container",
             "inspect codebase and runtime to locate doc-code drift before editing",
         ],
         "exit_requirements": [
@@ -221,8 +225,8 @@ STAGE_CHECKLISTS = {
         "exit_requirements": [
             "real witnesses are bound back to the same Mother_Doc hierarchy",
             "OS_graph contract is updated at the contract level for the current delivery state",
-            "implementation batch logs are appended under Mother_Doc/Mother_Doc/common/development_logs",
-            "deployment checkpoints are appended under Mother_Doc/Mother_Doc/common/development_logs when deployment-level evidence exists",
+            "implementation batch logs are appended under Mother_Doc/docs/Mother_Doc/common/development_logs",
+            "deployment checkpoints are appended under Mother_Doc/docs/Mother_Doc/common/development_logs when deployment-level evidence exists",
             "writeback is complete without introducing internal version branches",
         ],
     },

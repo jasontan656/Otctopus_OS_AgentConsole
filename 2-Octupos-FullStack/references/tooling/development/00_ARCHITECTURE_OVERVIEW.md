@@ -18,4 +18,4 @@
   - `<folder_name>.md`
 - `agents.md` 只属于 `Mother_Doc` 树，不进入实际工作目录容器。
 - 非 `agents.md` 文档必须具备 `Document Status + Block Registry`。
-- `Mother_Doc/Mother_Doc/common/development_logs/` 由 `evidence` 阶段维护，用于承接 implementation batch 与 deployment checkpoint 时间线。
+- `Mother_Doc/docs/Mother_Doc/common/development_logs/` 由 `evidence` 阶段维护，用于承接 implementation batch 与 deployment checkpoint 时间线。

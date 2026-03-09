@@ -6,6 +6,7 @@ from pathlib import Path
 
 from container_scaffold import (
     build_document_readme,
+    build_graph_readme,
     build_workspace_readme,
     detect_family,
     ensure_markdown,
@@ -18,7 +19,7 @@ from mother_doc_status import sync_status_tree
 
 
 DEFAULT_WORKSPACE_ROOT = Path("/home/jasontan656/AI_Projects/Octopus_OS")
-DEFAULT_DOCUMENT_ROOT = DEFAULT_WORKSPACE_ROOT / "Mother_Doc"
+DEFAULT_DOCUMENT_ROOT = DEFAULT_WORKSPACE_ROOT / "Mother_Doc" / "docs"
 
 
 def emit_contract(payload: dict[str, object], *, as_json: bool) -> int:
@@ -47,7 +48,7 @@ def materialize_layout(args: argparse.Namespace) -> int:
     for name in containers:
         warnings.extend(validate_container_name(name))
         family = detect_family(name)
-        workspace_dir = document_root if name == "Mother_Doc" else workspace_root / name
+        workspace_dir = workspace_root / name
         document_dir = document_root / name
 
         if workspace_dir.exists():
@@ -70,6 +71,13 @@ def materialize_layout(args: argparse.Namespace) -> int:
             body_lines=build_workspace_readme(name, document_dir),
             dry_run=args.dry_run,
         )
+        if name == "Mother_Doc":
+            ensure_markdown(
+                workspace_dir / "graph" / "README.md",
+                title="graph",
+                body_lines=build_graph_readme(),
+                dry_run=args.dry_run,
+            )
         ensure_markdown(
             document_dir / "README.md",
             title=name,

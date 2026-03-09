@@ -18,7 +18,7 @@
 ## Log Location
 
 - 日志固定落在：
-  - `Octopus_OS/Mother_Doc/Mother_Doc/common/development_logs/implementation_batches.md`
+  - `Octopus_OS/Mother_Doc/docs/Mother_Doc/common/development_logs/implementation_batches.md`
 
 ## Entry Semantics
 
