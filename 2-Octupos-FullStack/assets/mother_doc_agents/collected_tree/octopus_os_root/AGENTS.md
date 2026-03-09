@@ -2,11 +2,11 @@
 
 ## 1. 目标
 - 当前层作用：`Octopus_OS` 总容器根，是 AI 进入项目开发与维护链路的第一站。
-- 项目相关介绍只看 `README.md`。
-- 开发、文档、evidence、工具和 graph 的维护方式都从章鱼OS全栈技能锚点进入。
+- 项目相关介绍看同层 `README.md`；本文件不展开项目正文。
+- 本文件只负责把章鱼OS全栈技能锚点、代码去处、文档去处、graph 去处和工具入口说清楚。
 
 ## 2. 同层入口
-- `README.md`: 项目相关介绍与当前顶层容器布局说明。
+- `README.md`: 当前总容器层的浓缩总结说明；可选阅读，但如果本层容器布局或维护入口发生变化，必须同步维护对应章节总结。
 
 ## 3. 章鱼OS技能锚点
 - `/home/jasontan656/.codex/skills/2-Octupos-FullStack/SKILL.md`: 技能总门面。
@@ -22,7 +22,7 @@
 - `Octopus_OS/Mother_Doc/graph/`: OS_graph 资产与 evidence graph runtime 根。
 
 ## 5. 选择规则
-- 先读当前层 `README.md` 获取项目介绍。
+- 先看当前任务是否只需要技能锚点即可判断；若不足，再可选读取同层 `README.md`。
 - 再读章鱼OS全栈技能锚点，确认当前任务属于 `mother_doc`、`implementation` 还是 `evidence`。
 - 确认阶段后，再选择进入对应容器路径或 `Mother_Doc` 文档树，不跨到无关容器。
 
@@ -30,6 +30,7 @@
 - 当前根层 `AGENTS.md` 属于 `octopus_os_root` 分支。
 - 它必须固定指向 `README.md` 和章鱼OS全栈技能锚点。
 - 它不负责展开具体文档正文或具体实现细节。
+- 当本层内容发生变更时，必须同时检查同层 `README.md` 是否需要更新总结。
 
 ## 7. 递归动作
 - 进入 `Account_Service/`：account and profile domain container。

@@ -1,6 +1,6 @@
 {
   "stage": "collect",
-  "purpose": "pull current AGENTS.md files back into the skill-side registry after product-side changes",
+  "purpose": "pull current AGENTS.md and README.md files back into the skill-side registry after product-side changes",
   "inputs": [
     "assets/mother_doc_agents/scan_report.json"
   ],

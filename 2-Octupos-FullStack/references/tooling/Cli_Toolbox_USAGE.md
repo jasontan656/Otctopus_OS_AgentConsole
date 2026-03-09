@@ -51,13 +51,14 @@
   - `created_scope_docs`
   - `updated_agents`
   - `removed_legacy_indexes`
-- `mother-doc-agents-scan` 会返回当前 `AGENTS.md` 覆盖面、缺失目录和遗留小写文件。
+- `mother-doc-agents-scan` 会返回当前 `AGENTS.md + README.md` 覆盖面、缺失目录和遗留小写文件。
 - `mother-doc-agents-collect` 会刷新：
   - `assets/mother_doc_agents/registry.json`
   - `assets/mother_doc_agents/index.md`
   - `assets/mother_doc_agents/collected_tree/`
 - `mother-doc-agents-push` 会返回组合结果：
   - `navigation_sync`
+  - `root_and_container_sync`
   - `scan`
   - `collect`
 - `updated_agents` 只对应 `Octopus_OS/Mother_Doc/**` 内的导航文件，不会写入实际工作目录容器。

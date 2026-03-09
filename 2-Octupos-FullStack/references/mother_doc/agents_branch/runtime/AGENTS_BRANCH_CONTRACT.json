@@ -1,14 +1,17 @@
 {
-  "contract_name": "mother_doc_agents_branch_runtime_contract",
+  "contract_name": "mother_doc_agents_readme_branch_runtime_contract",
   "contract_version": "v1.0",
   "validation_mode": "static_minimal",
-  "branch_name": "mother_doc_agents",
+  "branch_name": "mother_doc_agents_readme",
   "managed_scopes": [
-    "/home/jasontan656/AI_Projects/Octopus_OS/AGENTS.md",
-    "/home/jasontan656/AI_Projects/Octopus_OS/<Container_Name>/AGENTS.md",
-    "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/**/AGENTS.md"
+    "/home/jasontan656/AI_Projects/Octopus_OS/AGENTS.md + README.md",
+    "/home/jasontan656/AI_Projects/Octopus_OS/<Container_Name>/AGENTS.md + README.md",
+    "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/**/AGENTS.md + README.md"
   ],
-  "managed_filename": "AGENTS.md",
+  "managed_filenames": [
+    "AGENTS.md",
+    "README.md"
+  ],
   "stage_order": [
     "scan",
     "collect",
@@ -23,10 +26,10 @@
     "templates": "assets/mother_doc_agents/templates/"
   },
   "rules": [
-    "This branch manages Octopus_OS root AGENTS, container-root AGENTS, and Mother_Doc docs AGENTS together.",
-    "scan must inspect product-side AGENTS.md state without rewriting content.",
-    "collect must consume scan_report.json and copy current AGENTS.md files back into the skill-side registry.",
-    "push must regenerate AGENTS.md from the skill-side template tree and refresh the registry again.",
+    "This branch manages Octopus_OS root AGENTS/README, container-root AGENTS/README, and Mother_Doc docs AGENTS/README together.",
+    "scan must inspect product-side AGENTS.md plus README.md state without rewriting ordinary content.",
+    "collect must consume scan_report.json and copy current AGENTS.md plus README.md files back into the skill-side registry.",
+    "push must regenerate root/container AGENTS.md plus README.md, refresh Mother_Doc docs AGENTS.md navigation, and sync the registry again.",
     "This branch is still inside mother_doc stage and must not perform implementation or evidence actions."
   ]
 }

@@ -72,7 +72,7 @@ STAGE_COMMANDS = {
             },
             {
                 "command": "read references/mother_doc/00_MOTHER_DOC_BRANCH_INDEX.md",
-                "purpose": "choose the correct mother_doc sub-branch before writing anything: direct_writeback, question_backfill, or AGENTS manager",
+                "purpose": "choose the correct mother_doc sub-branch before writing anything: direct_writeback, question_backfill, or AGENTS/README manager",
             },
             {
                 "command": "python3 scripts/Cli_Toolbox.py materialize-container-layout --container <Name> --json",
@@ -96,19 +96,19 @@ STAGE_COMMANDS = {
             },
             {
                 "command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-directive --stage <scan|collect|push> --json",
-                "purpose": "load the sub-branch directive when the current mother_doc task is specifically about AGENTS.md scaffolding management",
+                "purpose": "load the sub-branch directive when the current mother_doc task is specifically about AGENTS/README scaffolding management",
             },
             {
                 "command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-scan --json",
-                "purpose": "discover the managed AGENTS.md files across Octopus_OS root, container roots, and Mother_Doc/docs",
+                "purpose": "discover the managed AGENTS/README scopes across Octopus_OS root, container roots, and Mother_Doc/docs",
             },
             {
                 "command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-collect --json",
-                "purpose": "collect current AGENTS.md files back into the skill-side registry when product-side AGENTS changed first",
+                "purpose": "collect current AGENTS/README files back into the skill-side registry when product-side content changed first",
             },
             {
                 "command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-push --json",
-                "purpose": "push the skill-side AGENTS.md template tree back across Octopus_OS root, container roots, and Mother_Doc/docs, then refresh the registry",
+                "purpose": "push the skill-side AGENTS/README template tree back across Octopus_OS root, container roots, and Mother_Doc/docs, then refresh the registry",
             },
         ],
     },
@@ -220,7 +220,7 @@ STAGE_CHECKLISTS = {
             "load top-level resident docs",
             "strengthen the user prompt with Meta-prompt-write",
             "read references/mother_doc/00_MOTHER_DOC_BRANCH_INDEX.md before choosing any mother_doc action",
-            "choose direct_writeback, question_backfill, or AGENTS manager before reading deeper scope docs",
+            "choose direct_writeback, question_backfill, or AGENTS/README manager before reading deeper scope docs",
             "read root README.md and AGENTS.md inside Mother_Doc before selecting scope",
         ],
         "exit_requirements": [

@@ -35,13 +35,13 @@
 ## Mother_Doc Navigation Policy
 
 - `AGENTS.md` 只属于 `Octopus_OS/Mother_Doc/**` 这棵文档树。
-- `mother_doc` 阶段下固定存在 `AGENTS manager` 子分支，专门处理 `AGENTS.md` 模板管理。
-- `AGENTS manager` 固定采用 `scan / collect / push` 三阶段。
+- `mother_doc` 阶段下固定存在 `AGENTS/README manager` 子分支，专门处理 `AGENTS.md + README.md` 模板管理。
+- `AGENTS/README manager` 固定采用 `scan / collect / push` 三阶段。
 - `sync-mother-doc-navigation` 只刷新 `Mother_Doc` 树内的导航文件，不得把 `AGENTS.md` 写入实际工作目录容器。
 - `sync-mother-doc-status-from-git` 负责在 `mother_doc` 阶段基于本地 `git` 差异刷新非 `AGENTS.md` 文档的生命周期状态。
 - `sync-mother-doc-status` 负责在显式阶段回写时把目标文档状态覆盖成指定生命周期值，主要用于 `evidence -> developed`。
-- `mother-doc-agents-scan` 只扫描产品侧 `AGENTS.md` 现状。
-- `mother-doc-agents-collect` 只把产品侧 `AGENTS.md` 回收到技能内 registry。
+- `mother-doc-agents-scan` 只扫描产品侧 `AGENTS.md + README.md` 现状。
+- `mother-doc-agents-collect` 只把产品侧 `AGENTS.md + README.md` 回收到技能内 registry。
 - `mother-doc-agents-push` 只把技能侧当前模板反推回产品树，并自动重扫回收。
 
 ## Delivery Log Policy

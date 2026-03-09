@@ -50,11 +50,11 @@
 24. `AGENTS.md` 只承担当前层递归索引。
 25. `<folder_name>.md` 只承担当前目录自身这个模块、父级域、黑盒容器或文档承载体的实体说明。
 26. `mother_doc` 阶段每次撰写前，必须先结合上下文使用 `Meta-prompt-write` 强化用户意图。
-27. 强化完成后，必须先读取 `references/mother_doc/00_MOTHER_DOC_BRANCH_INDEX.md`，判定当前任务属于 `direct_writeback`、`question_backfill` 还是 `AGENTS manager`。
+27. 强化完成后，必须先读取 `references/mother_doc/00_MOTHER_DOC_BRANCH_INDEX.md`，判定当前任务属于 `direct_writeback`、`question_backfill` 还是 `AGENTS/README manager`。
 28. `direct_writeback` 只负责把用户已明确描述的内容写入受影响的 `overview / features / shared / common`。
 29. `question_backfill` 只负责把未收口问题整理、追问并回填到原文档，不得代替 implementation。
-30. `AGENTS manager` 是 `mother_doc` 阶段内的独立子分支，统一管理 `Octopus_OS` 根层、各容器根层与 `Mother_Doc/docs` 文档树的 `AGENTS.md`。
-31. `AGENTS manager` 固定采用 `scan / collect / push` 三阶段；不得与普通文档正文覆盖写回混写。
+30. `AGENTS/README manager` 是 `mother_doc` 阶段内的独立子分支，统一管理 `Octopus_OS` 根层、各容器根层与 `Mother_Doc/docs` 文档树的 `AGENTS.md + README.md`。
+31. `AGENTS/README manager` 固定采用 `scan / collect / push` 三阶段；不得与普通文档正文覆盖写回混写。
 32. 完成子分支判定后，必须从 `Octopus_OS/Mother_Doc/docs/` 根层 `README.md + AGENTS.md + Mother_Doc.md` 进入，再逐层读取当前层 `README.md + AGENTS.md + <folder_name>.md`，递归覆盖完整影响面。
 33. `mother_doc` 阶段禁止写开发日志、部署日志与 Git / GitHub 留痕；本阶段只负责覆盖式更新当前文档状态。
 33.1 `mother_doc` 结束前必须运行本地 `git` 驱动的状态脚本；变更文档写成 `modified`，空占位写成 `null`，清洁但已闭环的文档保持 `developed`。

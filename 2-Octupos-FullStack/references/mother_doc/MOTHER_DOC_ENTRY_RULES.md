@@ -9,7 +9,7 @@
 - `Octopus_OS/Mother_Doc/docs/AGENTS.md` 是文档镜像根索引入口。
 - `Octopus_OS/Mother_Doc/docs/Mother_Doc.md` 是文档镜像根目录自身的实体说明。
 - 进入普通文档更新前，先读 [00_MOTHER_DOC_BRANCH_INDEX.md](00_MOTHER_DOC_BRANCH_INDEX.md) 判定子分支。
-- 进入 `AGENTS.md` 管理任务前，先读 [AGENTS Branch Index](agents_branch/00_BRANCH_INDEX.md)。
+- 进入 `AGENTS.md / README.md` 管理任务前，先读 [AGENTS Branch Index](agents_branch/00_BRANCH_INDEX.md)。
 - 每一层目录都延续同一规则：`README.md + AGENTS.md + <folder_name>.md`。
 - 每个容器目录在三类固定文件之外，还必须固定具备：
   - `overview/`

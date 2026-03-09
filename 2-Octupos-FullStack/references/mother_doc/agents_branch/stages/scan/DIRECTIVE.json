@@ -1,9 +1,9 @@
 {
   "stage": "scan",
-  "purpose": "discover current AGENTS.md coverage across Octopus_OS root, container roots, and Mother_Doc docs",
+  "purpose": "discover current AGENTS.md and README.md coverage across Octopus_OS root, container roots, and Mother_Doc docs",
   "inputs": [
     "Mother_Doc docs tree",
-    "existing AGENTS.md files"
+    "existing AGENTS.md and README.md files"
   ],
   "outputs": [
     "assets/mother_doc_agents/scan_report.json"

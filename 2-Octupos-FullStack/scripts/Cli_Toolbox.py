@@ -54,7 +54,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     agents_contract = subparsers.add_parser(
         "mother-doc-agents-contract",
-        help="print the runtime contract for the Mother_Doc AGENTS.md manager branch",
+        help="print the runtime contract for the Mother_Doc AGENTS/README manager branch",
     )
     agents_contract.add_argument("--skill-root", default=None, help="override skill root")
     agents_contract.add_argument("--json", action="store_true")
@@ -62,7 +62,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     agents_directive = subparsers.add_parser(
         "mother-doc-agents-directive",
-        help="print the stage directive for the Mother_Doc AGENTS.md manager branch",
+        help="print the stage directive for the Mother_Doc AGENTS/README manager branch",
     )
     agents_directive.add_argument("--skill-root", default=None, help="override skill root")
     agents_directive.add_argument("--stage", choices=("scan", "collect", "push"), required=True)
@@ -71,7 +71,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     agents_registry = subparsers.add_parser(
         "mother-doc-agents-registry",
-        help="print the collected registry for managed Mother_Doc AGENTS.md files",
+        help="print the collected registry for managed Mother_Doc AGENTS/README files",
     )
     agents_registry.add_argument("--skill-root", default=None, help="override skill root")
     agents_registry.add_argument("--json", action="store_true")
@@ -79,7 +79,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     agents_scan = subparsers.add_parser(
         "mother-doc-agents-scan",
-        help="scan managed AGENTS.md across Octopus_OS root, container roots, and Mother_Doc/docs",
+        help="scan managed AGENTS/README scopes across Octopus_OS root, container roots, and Mother_Doc/docs",
     )
     agents_scan.add_argument("--skill-root", default=None, help="override skill root")
     agents_scan.add_argument("--document-root", default=str(DEFAULT_DOCUMENT_ROOT), help="Mother_Doc docs root")
@@ -88,7 +88,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     agents_collect = subparsers.add_parser(
         "mother-doc-agents-collect",
-        help="collect current managed AGENTS.md files back into the skill-side registry",
+        help="collect current managed AGENTS/README files back into the skill-side registry",
     )
     agents_collect.add_argument("--skill-root", default=None, help="override skill root")
     agents_collect.add_argument("--json", action="store_true")
@@ -96,7 +96,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     agents_push = subparsers.add_parser(
         "mother-doc-agents-push",
-        help="push the current AGENTS.md template tree back through Octopus_OS root, container roots, and Mother_Doc/docs",
+        help="push the current AGENTS/README template tree back through Octopus_OS root, container roots, and Mother_Doc/docs",
     )
     agents_push.add_argument("--skill-root", default=None, help="override skill root")
     agents_push.add_argument("--document-root", default=str(DEFAULT_DOCUMENT_ROOT), help="Mother_Doc docs root")
