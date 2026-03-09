@@ -12,8 +12,10 @@
 - `README.md` = 当前层用途节点
 - `agents.md` = 当前层导航节点
 - `<folder_name>.md` = 当前目录自身实体节点
+- `Document Status + Block Registry` = 变更探测与实现待办节点
 - 代码模块 = 实现节点
 - helper = helper 节点
+- development log entry = 时间线节点
 - witness = evidence 节点
 
 ## Writeback Rule

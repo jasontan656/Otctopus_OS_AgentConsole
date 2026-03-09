@@ -23,6 +23,7 @@ FAMILY_FILE_MAP: dict[str, dict[str, tuple[str, ...]]] = {
         "naming": ("directory_naming", "file_naming", "node_naming", "container_naming"),
         "contracts": ("read_api", "writeback_api", "evidence_contract", "sync_contract"),
         "operations": ("maintenance_entry", "query_commands", "change_policy", "recovery_entry"),
+        "development_logs": ("implementation_batches", "deployment_batches", "log_entry_contract", "comparison_basis"),
     },
     "UI": {
         "architecture": ("screen_map", "component_layers", "state_boundary", "interaction_boundary"),
@@ -93,7 +94,7 @@ def ensure_markdown(path: Path, *, title: str, body_lines: list[str], dry_run: b
 
 
 def build_document_readme(name: str, workspace_dir: Path, family: str) -> list[str]:
-    return [
+    lines = [
         f"Mother_Doc entry for the `{name}` container.",
         f"Container family: `{family}`.",
         f"Corresponding workspace path: `{workspace_dir}`.",
@@ -102,6 +103,9 @@ def build_document_readme(name: str, workspace_dir: Path, family: str) -> list[s
         f"`{name}.md` in this directory describes the container itself as the authored module entity.",
         "Use the peer `agents.md` in this directory as the recursive navigation index.",
     ]
+    if family == "Mother_Doc":
+        lines.append("`common/development_logs/` carries append-oriented implementation and deployment checkpoints for document-led delivery.")
+    return lines
 
 
 def build_workspace_readme(name: str, document_dir: Path) -> list[str]:
@@ -113,6 +117,45 @@ def build_workspace_readme(name: str, document_dir: Path) -> list[str]:
 
 
 def build_common_file_body(name: str, family: str, domain: str, topic: str) -> list[str]:
+    if domain == "development_logs":
+        if topic == "implementation_batches":
+            return [
+                "This file records implementation batches after Mother_Doc updates.",
+                "Compare current code first, then compare the updated Mother_Doc state, and log the resulting implementation work.",
+                "When there is no code yet, record the current authored-document state as the initial implementation batch.",
+            ]
+        if topic == "deployment_batches":
+            return [
+                "This file records deployment checkpoints once the project reaches a deployable state.",
+                "Each entry acts as an operational release checkpoint without introducing internal document version branches.",
+                "Bind each deployment checkpoint back to the corresponding implementation batch and runtime witness.",
+            ]
+        if topic == "log_entry_contract":
+            return [
+                "## Contract Markers",
+                "",
+                "contract_name: Mother_Doc_development_log_entry_contract",
+                "contract_version: v0",
+                "validation_mode: placeholder",
+                "required_fields:",
+                "- entry_kind",
+                "- comparison_order",
+                "- summary",
+                "- doc_paths",
+                "- code_paths",
+                "optional_fields:",
+                "- witness_refs",
+                "",
+                "This file defines the fixed fields required for implementation and deployment log entries.",
+                "Each log entry must remain append-oriented and mechanically readable.",
+                "Keep the contract aligned with the actual logging workflow used by implementation and evidence stages.",
+            ]
+        if topic == "comparison_basis":
+            return [
+                "This file defines the comparison order for drift resolution.",
+                "Read current code first, then read the updated Mother_Doc state, and derive the implementation gap from that delta.",
+                "Use the same comparison basis for first-time implementation when code is still empty.",
+            ]
     return [
         f"This file defines the `{topic}` abstraction for the `{name}` container.",
         f"Container family: `{family}`.",

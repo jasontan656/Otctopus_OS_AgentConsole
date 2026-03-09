@@ -21,7 +21,11 @@
 - 阶段切换时，只保留顶层常驻文档，再重读当前阶段合同。
 - `agents.md` 只允许存在于 `Octopus_OS/Mother_Doc/**`，不得进入实际工作目录容器。
 - `Mother_Doc` 每一层目录都必须具备 `README.md`、`agents.md`、`<folder_name>.md`。
+- `agents.md` 之外的 `Mother_Doc` markdown 必须具备 `Document Status + Block Registry`，供机械探测变动。
 - `mother_doc` 阶段必须先用 `Meta-prompt-write` 强化用户意图，再递归选择作用域。
+- `mother_doc` 更新文档后，必须把受影响文档/区块标记为 `pending_implementation`。
 - `implementation` 阶段必须像独立开发者一样推进，并主动修复 doc-code drift。
+- `implementation` 对齐完成后，必须把受影响文档/区块改回 `aligned`，并追加 implementation batch 日志。
 - `evidence` 阶段必须以 `OS_graph` 统一文档图、代码图与 evidence 绑定。
-- 所有回填都采用覆盖写入，只维护当前状态。
+- deployment-level witness 出现后，必须追加 deployment checkpoint 日志。
+- 所有回填都采用覆盖写入，只维护当前状态；项目内部不保留文档版本，但日志保留时间线。

@@ -19,5 +19,7 @@
 ## Carry-Forward Rules
 
 - `implementation` 必须显式引用 `mother_doc` 当前状态产物。
+- `implementation` 必须承接 `mother_doc` 产出的 `pending_implementation` 状态信号。
 - `evidence` 必须显式引用 `mother_doc` 与 `implementation` 当前状态产物。
+- `evidence` 必须承接 implementation 追加的开发日志与对齐状态。
 - 阶段切换时，上一阶段的阶段文档与临时 focus 必须丢弃。

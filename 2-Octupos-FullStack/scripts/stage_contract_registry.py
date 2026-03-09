@@ -26,6 +26,7 @@ STAGE_DOCS = {
         "references/stages/MOTHER_DOC_STAGE.md",
         "references/mother_doc/MOTHER_DOC_ENTRY_RULES.md",
         "references/mother_doc/AGENTS_MD_RULES.md",
+        "references/mother_doc/DOC_STATUS_RULES.md",
         "references/mother_doc/README_MD_RULES.md",
         "references/mother_doc/SCOPE_ENTITY_MD_RULES.md",
         "references/mother_doc/MOTHER_DOC_WRITEBACK_RULES.md",
@@ -35,11 +36,13 @@ STAGE_DOCS = {
         "references/stages/IMPLEMENTATION_STAGE.md",
         "references/implementation/IMPLEMENTATION_DELIVERY_RULES.md",
         "references/implementation/DOC_CODE_ALIGNMENT_RULES.md",
+        "references/implementation/IMPLEMENTATION_LOG_RULES.md",
         "references/stages/MOTHER_DOC_STAGE.md",
     ],
     "evidence": [
         "references/stages/EVIDENCE_STAGE.md",
         "references/evidence/OS_GRAPH_RULES.md",
+        "references/evidence/DEPLOYMENT_LOG_RULES.md",
         "references/stages/MOTHER_DOC_STAGE.md",
         "references/stages/IMPLEMENTATION_STAGE.md",
     ],
@@ -66,6 +69,10 @@ STAGE_COMMANDS = {
                 "command": "python3 scripts/Cli_Toolbox.py sync-mother-doc-navigation --json",
                 "purpose": "refresh README.md, agents.md, and same-name scope markdown files across the Mother_Doc tree only",
             },
+            {
+                "command": "python3 scripts/Cli_Toolbox.py sync-mother-doc-status --stage mother_doc --path <relative-path> --sync-status pending_implementation --requires-development --json",
+                "purpose": "mark affected Mother_Doc documents and block registries as requiring implementation after a document-side change",
+            },
         ],
     },
     "implementation": {
@@ -88,6 +95,14 @@ STAGE_COMMANDS = {
                 "command": "project-native install / repair / test / bring-up commands chosen from the actual codebase",
                 "purpose": "act like an independent human developer: install dependencies, repair runtime, run tests, bring up services, and verify real behavior",
             },
+            {
+                "command": "python3 scripts/Cli_Toolbox.py sync-mother-doc-status --stage implementation --path <relative-path> --sync-status aligned --no-requires-development --json",
+                "purpose": "flip affected Mother_Doc documents from pending implementation to aligned after code and docs match again",
+            },
+            {
+                "command": "python3 scripts/Cli_Toolbox.py append-implementation-log --summary \"<summary>\" --doc-path <doc-path> --code-path <code-path> --json",
+                "purpose": "append an implementation batch log after comparing current code with the updated Mother_Doc state and applying the resulting changes",
+            },
         ],
     },
     "evidence": {
@@ -106,6 +121,10 @@ STAGE_COMMANDS = {
                 "command": "project-native validation / smoke / test / health-check commands chosen from the actual codebase",
                 "purpose": "collect real delivery witnesses after implementation bring-up instead of fabricating completion status",
             },
+            {
+                "command": "python3 scripts/Cli_Toolbox.py append-deployment-log --summary \"<summary>\" --doc-path <doc-path> --code-path <code-path> --json",
+                "purpose": "append a deployment checkpoint once implementation becomes deployable or has been deployed with a real witness set",
+            },
         ],
     },
 }
@@ -119,9 +138,10 @@ STAGE_GRAPH_CONTRACTS = {
             "README.md -> scope-purpose node",
             "agents.md -> navigation-index node",
             "<folder_name>.md -> scope-entity node",
+            "Document Status + Block Registry -> mechanical change-detection node",
         ],
         "tooling_mode": "contract_first",
-        "action_rule": "keep the Mother_Doc tree structurally complete so later code and evidence can map onto the same graph",
+        "action_rule": "keep the Mother_Doc tree structurally complete and mark changed document blocks as pending implementation so later code and evidence can map onto the same graph",
     },
     "implementation": {
         "graph_name": "OS_graph",
@@ -131,9 +151,10 @@ STAGE_GRAPH_CONTRACTS = {
             "module markdown -> module contract node",
             "helper markdown -> helper contract node",
             "code file / package / runtime artifact -> implementation node",
+            "implementation_batches.md entries -> implementation timeline node",
         ],
         "tooling_mode": "contract_first",
-        "action_rule": "detect doc-code drift, then align code and Mother_Doc to the same current-state structure before claiming progress",
+        "action_rule": "detect doc-code drift, align code and Mother_Doc to the same current-state structure, then flip block statuses and append implementation logs before claiming progress",
     },
     "evidence": {
         "graph_name": "OS_graph",
@@ -143,9 +164,10 @@ STAGE_GRAPH_CONTRACTS = {
             "<folder_name>.md -> module or black-box description node",
             "code modules and helpers -> implementation nodes under the same hierarchy",
             "witnesses -> evidence nodes bound back to the same hierarchy",
+            "deployment_batches.md entries -> deployment checkpoint node",
         ],
         "tooling_mode": "contract_first_until_os_graph_runtime_lands",
-        "action_rule": "treat OS_graph as the combined doc+code graph contract and bind evidence to the corresponding structural nodes",
+        "action_rule": "treat OS_graph as the combined doc+code graph contract, bind evidence to the corresponding structural nodes, and record deployment checkpoints as timeline witnesses",
     },
 }
 
@@ -163,6 +185,7 @@ STAGE_CHECKLISTS = {
         "exit_requirements": [
             "updated Mother_Doc current-state content",
             "updated README.md, agents.md, and <folder_name>.md for affected Mother_Doc scopes only",
+            "affected non-agents Mother_Doc markdown files are marked as pending implementation in their document/block status sections",
             "implementation inputs ready",
         ],
     },
@@ -179,7 +202,9 @@ STAGE_CHECKLISTS = {
         ],
         "exit_requirements": [
             "code and Mother_Doc are aligned to the same current-state structure",
+            "affected document/block statuses are flipped away from pending implementation where implementation actually landed",
             "dependencies, runtime, and tests are handled to product-delivery standard within local control",
+            "an implementation batch log is appended under Mother_Doc/Mother_Doc/common/development_logs",
             "evidence inputs are ready",
         ],
     },
@@ -196,6 +221,7 @@ STAGE_CHECKLISTS = {
         "exit_requirements": [
             "real witnesses are bound back to the same Mother_Doc hierarchy",
             "OS_graph contract is updated at the contract level for the current delivery state",
+            "deployment checkpoints are appended under Mother_Doc/Mother_Doc/common/development_logs when deployment-level evidence exists",
             "writeback is complete without introducing internal version branches",
         ],
     },

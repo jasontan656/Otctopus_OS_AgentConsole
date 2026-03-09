@@ -10,6 +10,7 @@
 - 每一层目录都延续同一规则：`README.md + agents.md + <folder_name>.md`。
 - `agents.md` 只存在于 `Octopus_OS/Mother_Doc/**` 这棵文档树内。
 - `Octopus_OS/<Container_Name>/` 这类实际工作目录容器不承载 `agents.md`。
+- `agents.md` 之外的 markdown 必须带有 `Document Status + Block Registry`。
 
 ## Dynamic Expansion
 

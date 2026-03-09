@@ -32,21 +32,31 @@
 - `README.md`
 - `agents.md`
 - `<folder_name>.md`
-17. `README.md` 只承担当前层用途说明。
-18. `agents.md` 只承担当前层递归索引。
-19. `<folder_name>.md` 只承担当前目录自身这个模块、父级域、黑盒容器或文档承载体的实体说明。
-20. `mother_doc` 阶段每次撰写前，必须先结合上下文使用 `Meta-prompt-write` 强化用户意图。
-21. 强化完成后，必须先从根层 `README.md + agents.md + Mother_Doc.md` 进入，再逐层读取当前层 `README.md + agents.md + <folder_name>.md`，递归覆盖完整影响面。
-22. 容器目录参考内容可以静态存在，但真实容器集合是项目驱动的动态集合，不是封闭白名单。
-23. 若需求引入可独立部署、可独立演进或可独立承载职责的模块，AI 必须同步新增工作目录容器与 `Mother_Doc` 同名目录。
-24. 每个容器文档目录必须先固定为 `README.md + agents.md + <folder_name>.md + common/`。
-25. `common/` 只承载稳定抽象层，不承载 feature-specific 细节。
-26. `common/` 当前固定 5 个一级域：`architecture/`、`stack/`、`naming/`、`contracts/`、`operations/`。
-27. 每个最小知识点必须单独落一个 `*.md` 文件，不得留空文件。
-28. 容器族模板当前固定 5 类：`Mother_Doc`、`UI`、`Gateway`、`Service`、`Data_Infra`。
-29. `implementation` 阶段必须像独立人类开发者一样推进：自行安装依赖、修复环境、运行测试、bring-up、验证、回填。
-30. `implementation` 阶段发现 `Mother_Doc` 与代码库/运行时不一致时，必须显式更新代码、文档或两者以恢复一致，不得忽略 drift。
-31. 只有在本地可控范围内的依赖修复、环境修复、配置补齐、服务拉起、测试执行都已穷尽后，才允许进入真实 blocked 状态。
-32. `evidence` 阶段的 graph 主体是 `OS_graph`，它同时管理文档 graph、代码 graph、模块映射与 evidence 绑定。
-33. evidence 必须是真实 witness，不得伪造，不得把 `OS_graph` 降级成只解释代码的附属图。
-34. `mother_doc`、`implementation`、`evidence` 的回填都采用覆盖写入，只维护当前状态；项目内部不规划文档版本。
+17. `agents.md` 之外的 `Mother_Doc` markdown 必须带有 `Document Status + Block Registry`。
+18. 每次 `mother_doc` 更新非 `agents.md` 文档后，必须把文档级与区块级状态同步标记为：
+- `requires_development: true`
+- `sync_status: pending_implementation`
+19. 文档如未细分多个区块，默认必须至少存在一个 `block_id: primary`。
+20. `README.md` 只承担当前层用途说明。
+21. `agents.md` 只承担当前层递归索引。
+22. `<folder_name>.md` 只承担当前目录自身这个模块、父级域、黑盒容器或文档承载体的实体说明。
+23. `mother_doc` 阶段每次撰写前，必须先结合上下文使用 `Meta-prompt-write` 强化用户意图。
+24. 强化完成后，必须先从根层 `README.md + agents.md + Mother_Doc.md` 进入，再逐层读取当前层 `README.md + agents.md + <folder_name>.md`，递归覆盖完整影响面。
+25. 容器目录参考内容可以静态存在，但真实容器集合是项目驱动的动态集合，不是封闭白名单。
+26. 若需求引入可独立部署、可独立演进或可独立承载职责的模块，AI 必须同步新增工作目录容器与 `Mother_Doc` 同名目录。
+27. 每个容器文档目录必须先固定为 `README.md + agents.md + <folder_name>.md + common/`。
+28. `common/` 只承载稳定抽象层，不承载 feature-specific 细节。
+29. `common/` 至少固定 5 个一级域：`architecture/`、`stack/`、`naming/`、`contracts/`、`operations/`。
+30. `Mother_Doc` 容器自己的 `common/` 额外固定包含 `development_logs/`。
+31. 每个最小知识点必须单独落一个 `*.md` 文件，不得留空文件。
+32. 容器族模板当前固定 5 类：`Mother_Doc`、`UI`、`Gateway`、`Service`、`Data_Infra`。
+33. `implementation` 阶段必须像独立人类开发者一样推进：自行安装依赖、修复环境、运行测试、bring-up、验证、回填。
+34. `implementation` 阶段发现 `Mother_Doc` 与代码库/运行时不一致时，必须显式更新代码、文档或两者以恢复一致，不得忽略 drift。
+35. 实现完成后，必须把对应文档/区块状态从 `pending_implementation` 回写为 `aligned`，并追加 implementation batch 日志。
+36. `implementation` 的日志固定追加到 `Octopus_OS/Mother_Doc/Mother_Doc/common/development_logs/implementation_batches.md`。
+37. 首次无代码时，implementation 仍必须写首条 batch 日志，把当前文档状态视为领先于空代码基线的实现输入。
+38. 只有在本地可控范围内的依赖修复、环境修复、配置补齐、服务拉起、测试执行都已穷尽后，才允许进入真实 blocked 状态。
+39. `evidence` 阶段的 graph 主体是 `OS_graph`，它同时管理文档 graph、代码 graph、模块映射、日志节点与 evidence 绑定。
+40. evidence 必须是真实 witness，不得伪造，不得把 `OS_graph` 降级成只解释代码的附属图。
+41. deployment checkpoint 只能在存在真实部署/上线 witness 时追加到 `Octopus_OS/Mother_Doc/Mother_Doc/common/development_logs/deployment_batches.md`。
+42. `mother_doc`、`implementation`、`evidence` 的回填都采用覆盖写入，只维护当前状态；项目内部不规划文档版本，但开发/部署日志承担时间线与检查点语义。

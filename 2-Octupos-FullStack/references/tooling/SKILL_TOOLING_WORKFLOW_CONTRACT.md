@@ -36,6 +36,13 @@
 
 - `agents.md` 只属于 `Octopus_OS/Mother_Doc/**` 这棵文档树。
 - `sync-mother-doc-navigation` 只刷新 `Mother_Doc` 树内的导航文件，不得把 `agents.md` 写入实际工作目录容器。
+- `sync-mother-doc-status` 负责刷新非 `agents.md` 文档的 `Document Status + Block Registry`。
+
+## Delivery Log Policy
+
+- `implementation` 完成对齐后，必须追加 implementation batch。
+- `evidence` 形成真实部署 witness 后，必须追加 deployment checkpoint。
+- 日志固定写入 `Octopus_OS/Mother_Doc/Mother_Doc/common/development_logs/`。
 
 ## Evidence Policy
 

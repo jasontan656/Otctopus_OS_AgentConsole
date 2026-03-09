@@ -10,6 +10,7 @@ DOMAIN_DESCRIPTIONS = {
     "naming": "naming rules abstraction scope for the current container",
     "contracts": "contract rules abstraction scope for the current container",
     "operations": "operations and maintenance abstraction scope for the current container",
+    "development_logs": "development and deployment log scope for the Mother_Doc container",
 }
 
 

@@ -38,6 +38,9 @@ description: "未来项目 admin panel 内置的运营AI“章鱼”，负责 mo
   - `sync-mother-doc-navigation`
     - 作用：仅在 `Mother_Doc` 树内刷新 `README.md`、`agents.md` 与同名 `<folder_name>.md`。
     - 用法：`python3 scripts/Cli_Toolbox.py sync-mother-doc-navigation --json`
+  - `sync-mother-doc-status`
+    - 作用：把受影响文档的状态块显式标记为 `须开发 / 待实现`。
+    - 用法：`python3 scripts/Cli_Toolbox.py sync-mother-doc-status --stage mother_doc --path <relative-path> --sync-status pending_implementation --requires-development --json`
 - `implementation`：
   - `stage-checklist --stage implementation`
     - 作用：打印 `implementation` 阶段 checklist。
@@ -54,6 +57,12 @@ description: "未来项目 admin panel 内置的运营AI“章鱼”，负责 mo
   - `implementation-stage`
     - 作用：打印 `implementation` 阶段总合同。
     - 用法：`python3 scripts/Cli_Toolbox.py implementation-stage --json`
+  - `sync-mother-doc-status`
+    - 作用：把已完成实现的文档状态块回写为 `已对齐`。
+    - 用法：`python3 scripts/Cli_Toolbox.py sync-mother-doc-status --stage implementation --path <relative-path> --sync-status aligned --no-requires-development --json`
+  - `append-implementation-log`
+    - 作用：在 `Mother_Doc` 开发日志中追加一条 implementation batch。
+    - 用法：`python3 scripts/Cli_Toolbox.py append-implementation-log --summary "<summary>" --doc-path <doc-path> --code-path <code-path> --json`
 - `evidence`：
   - `stage-checklist --stage evidence`
     - 作用：打印 `evidence` 阶段 checklist。
@@ -70,6 +79,9 @@ description: "未来项目 admin panel 内置的运营AI“章鱼”，负责 mo
   - `evidence-stage`
     - 作用：打印 `evidence` 阶段总合同。
     - 用法：`python3 scripts/Cli_Toolbox.py evidence-stage --json`
+  - `append-deployment-log`
+    - 作用：在 `Mother_Doc` 开发日志中追加一条 deployment checkpoint。
+    - 用法：`python3 scripts/Cli_Toolbox.py append-deployment-log --summary "<summary>" --doc-path <doc-path> --code-path <code-path> --json`
 
 ## 3. 工作流约束
 - 抽象总则：
@@ -89,15 +101,18 @@ description: "未来项目 admin panel 内置的运营AI“章鱼”，负责 mo
   - 先结合上下文使用 `Meta-prompt-write` 强化用户意图。
   - 再从 `Octopus_OS/Mother_Doc/README.md` 与 `Octopus_OS/Mother_Doc/agents.md` 进入作用域选择。
   - 每进入下一层目录，都必须先读该层 `README.md`、再读该层 `agents.md`、再读该层同名 `<folder_name>.md`，再选择下一层路径。
+  - 每次更新非 `agents.md` 文档后，必须同步把受影响文档与区块显式标记为 `requires_development: true`。
   - 写回时只保留当前状态，覆盖更新，不规划项目内文档版本。
 - `implementation`：
   - 必须显式承接 `mother_doc` 当前状态产物。
   - 必须像独立人类开发者一样自行发现问题、安装依赖、修复环境、运行测试、启动服务、验证行为、直至达到产品上线级交付标准。
   - 必须主动发现 `Mother_Doc` 与实际代码库/运行时的不一致，并在代码与文档两侧做对齐更新。
+  - 每次批量文档更新进入实现后，必须先读代码、再读更新后的文档，并在完成对齐后追加 implementation batch 日志。
 - `evidence`：
   - 必须显式承接 `mother_doc + implementation` 当前状态产物。
   - `evidence` 的 graph 主体是 `OS_graph`，不再是单纯 `code graph`。
   - `OS_graph` 同时管理文档结构、代码结构、模块映射与 evidence 绑定关系。
+  - 当系统达到可部署状态或产生真实上线 witness 时，必须追加 deployment checkpoint 日志。
 
 ## 4. 规则约束
 - 抽象总则：
@@ -113,6 +128,7 @@ description: "未来项目 admin panel 内置的运营AI“章鱼”，负责 mo
 - `mother_doc`：
   - `agents.md` 只允许存在于 `Octopus_OS/Mother_Doc/**`。
   - 实际工作目录容器 `Octopus_OS/<Container_Name>/` 不得创建 `agents.md`。
+  - `agents.md` 之外的 `Mother_Doc` markdown 必须带有 `Document Status + Block Registry`。
   - `Mother_Doc` 每一层目录必须同时具备：
     - `README.md`
     - `agents.md`
@@ -120,14 +136,17 @@ description: "未来项目 admin panel 内置的运营AI“章鱼”，负责 mo
   - `README.md` 只说明当前层用途。
   - `agents.md` 只承担递归索引。
   - `<folder_name>.md` 只承担当前目录自身这个模块/父级域/黑盒容器/文档承载体的实体说明。
+  - 文档如未细分多个区块，默认必须至少有一个 `block_id: primary`。
 - `implementation`：
   - 不得脱离 `mother_doc` 当前状态产物单独实施。
   - 发现 doc-code drift 时，不得忽略；必须显式更新代码、文档或两者以恢复一致。
   - 不得因为本地可修问题而提前写成 `blocked`。
+  - 实现完成后，必须把对应文档状态从 `pending_implementation` 回写为 `aligned`，并追加 implementation batch 日志。
 - `evidence`：
   - 不得伪造 witness。
   - 不得把 `OS_graph` 当成仅代码侧的解释层；它必须同时反映文档结构与代码结构。
   - 每个模块、每个 helper、每个父级目录都必须能在 `Mother_Doc` 层找到对应节点。
+  - deployment checkpoint 只能由真实部署/交付 witness 触发，不得预写。
 
 ## 5. 方法论约束
 - 抽象总则：
@@ -137,13 +156,15 @@ description: "未来项目 admin panel 内置的运营AI“章鱼”，负责 mo
 - `mother_doc`：
   - 目录结构就是文档架构骨架。
   - `<folder_name>.md` 让每个目录自身也成为可读对象，不再只靠 `README.md` 或下层文件隐式表达。
+  - `Document Status + Block Registry` 让每个文档变成可替换、可探测、可回写的机械合同对象。
 - `implementation`：
   - 目录结构就是实现组织的主参照。
   - 每个模块 = 一个文档；每个模块 helper = 一个 helper 文档。
   - 模型默认要像独立开发者一样逐步推进：发现、实现、修复、测试、bring-up、验证、交付。
+  - `Mother_Doc/Mother_Doc/common/development_logs/` 是项目内部开发时间线与版本检查点载体。
 - `evidence`：
   - `OS_graph` 是文档图与代码图的统一视图。
-  - evidence 必须能回指到同一层级结构中的模块文档、helper 文档、代码模块与运行 witness。
+  - evidence 必须能回指到同一层级结构中的模块文档、helper 文档、代码模块、开发日志与运行 witness。
 
 ## 6. 内联导航索引
 - 抽象总则：
@@ -159,6 +180,7 @@ description: "未来项目 admin panel 内置的运营AI“章鱼”，负责 mo
   - [mother_doc 阶段](references/stages/MOTHER_DOC_STAGE.md)
   - [Mother_Doc 入口规则](references/mother_doc/MOTHER_DOC_ENTRY_RULES.md)
   - [agents.md 规则](references/mother_doc/AGENTS_MD_RULES.md)
+  - [文档状态规则](references/mother_doc/DOC_STATUS_RULES.md)
   - [README.md 规则](references/mother_doc/README_MD_RULES.md)
   - [scope entity 规则](references/mother_doc/SCOPE_ENTITY_MD_RULES.md)
   - [Mother_Doc 回填规则](references/mother_doc/MOTHER_DOC_WRITEBACK_RULES.md)
@@ -167,9 +189,11 @@ description: "未来项目 admin panel 内置的运营AI“章鱼”，负责 mo
   - [implementation 阶段](references/stages/IMPLEMENTATION_STAGE.md)
   - [独立开发者交付规则](references/implementation/IMPLEMENTATION_DELIVERY_RULES.md)
   - [doc-code 对齐规则](references/implementation/DOC_CODE_ALIGNMENT_RULES.md)
+  - [implementation 日志规则](references/implementation/IMPLEMENTATION_LOG_RULES.md)
 - `evidence`：
   - [evidence 阶段](references/stages/EVIDENCE_STAGE.md)
   - [OS_graph 规则](references/evidence/OS_GRAPH_RULES.md)
+  - [deployment 日志规则](references/evidence/DEPLOYMENT_LOG_RULES.md)
 
 ## 7. 架构契约
 ```text
@@ -180,20 +204,26 @@ description: "未来项目 admin panel 内置的运营AI“章鱼”，负责 mo
 ├── scripts/
 │   ├── Cli_Toolbox.py
 │   ├── container_scaffold.py
+│   ├── development_log.py
 │   ├── mother_doc_navigation.py
+│   ├── mother_doc_status.py
 │   ├── stage_contract_registry.py
 │   ├── stage_contract_support.py
-│   └── stage_runtime.py
+│   ├── stage_runtime.py
+│   └── toolbox_ops.py
 ├── rules/
 │   └── FULLSTACK_SKILL_HARD_RULES.md
 └── references/
     ├── evidence/
+    │   ├── DEPLOYMENT_LOG_RULES.md
     │   └── OS_GRAPH_RULES.md
     ├── implementation/
     │   ├── DOC_CODE_ALIGNMENT_RULES.md
+    │   ├── IMPLEMENTATION_LOG_RULES.md
     │   └── IMPLEMENTATION_DELIVERY_RULES.md
     ├── mother_doc/
     │   ├── AGENTS_MD_RULES.md
+    │   ├── DOC_STATUS_RULES.md
     │   ├── MOTHER_DOC_ENTRY_RULES.md
     │   ├── MOTHER_DOC_WRITEBACK_RULES.md
     │   ├── PHASE1_CONTAINER_NAMING_REFERENCE.md
