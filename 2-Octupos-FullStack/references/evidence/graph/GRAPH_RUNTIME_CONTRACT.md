@@ -18,6 +18,12 @@
 - `snapshots/`: future compare artifacts.
 - `frontend_views/`: human-facing aggregated bundles derived from fragmented storage.
 
+## Git Boundary
+
+- `Mother_Doc/graph/` 是固定资产根，保留在仓库中。
+- `Mother_Doc/graph/runtime/` 只保留目录骨架与 `README.md`。
+- runtime 下的 generated json / kuzu / map / wiki / frontend bundles 默认是本地产物，必须由 `.gitignore` 排除，不作为长期跟踪资产提交。
+
 ## Bridge Rule
 
 - 当前 CLI 与 runtime 已内生到章鱼OS evidence。
