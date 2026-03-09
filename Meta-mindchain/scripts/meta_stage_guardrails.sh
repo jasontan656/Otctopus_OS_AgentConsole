@@ -43,15 +43,15 @@ case "$stage" in
     echo "[DONT][Meta-keyword-first-edit] no additive-first edits when replacement can satisfy intent"
     echo "[DO][Meta-refactor-behavior-preserving] define OEC (consumer/observables/invariants/witness) before refactor"
     echo "[DONT][Meta-refactor-behavior-preserving] do not change observable behavior unless in allowed_deltas"
-    echo "[DO][Meta-github-operation] complete commit+push traceability at turn end for write turns"
-    echo "[DONT][Meta-github-operation] do not finish write turn without repository trace"
+    echo "[DO][Meta-github-operation] temporarily disabled; do not depend on GitHub trace workflow during redesign"
+    echo "[DONT][Meta-github-operation] do not invoke removed Meta-github-operation CLI entrypoints"
     ;;
   TURN_END)
     print_common_header "TURN_END"
     echo "[DO][Closure] verify branch obligations and print completion evidence"
     echo "[DONT][Closure] do not skip required hooks"
-    echo "[DO][Meta-github-operation] if write turn, execute exactly one mapped push script with full commit message"
-    echo "[DONT][Meta-github-operation] do not use partial commit messages or skip push"
+    echo "[DO][Meta-github-operation] keep GitHub workflow disabled until redesign is explicitly restored"
+    echo "[DONT][Meta-github-operation] do not use removed commit-and-push bindings"
     ;;
   *)
     echo "INVALID_STAGE: $stage" >&2
