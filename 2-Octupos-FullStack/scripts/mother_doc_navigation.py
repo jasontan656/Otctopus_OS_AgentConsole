@@ -8,6 +8,9 @@ LEGACY_AGENTS_FILENAME = "agents.md"
 
 DOMAIN_DESCRIPTIONS = {
     "common": "current container's abstract layer root; choose one abstract domain below",
+    "overview": "human-readable overview scope for the current container; start here when you need top-level comprehension",
+    "features": "feature document scope for the current container; choose the affected requirement or unresolved question slice below",
+    "shared": "shared integration scope for the current container; choose APIs, events, contracts, or cross-container dependencies below",
     "writing_guides": "authored-doc writing rules for the current container",
     "code_abstractions": "code abstraction root for the current container; choose one code-facing abstract domain below",
     "architecture": "architecture abstraction scope under code abstractions for the current container",

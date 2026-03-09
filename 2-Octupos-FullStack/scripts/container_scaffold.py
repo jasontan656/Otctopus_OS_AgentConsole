@@ -19,10 +19,10 @@ PREFERRED_SUFFIXES = (
 FAMILY_FILE_MAP: dict[str, dict[str, tuple[str, ...]]] = {
     "Mother_Doc": {
         "writing_guides": ("docs_root_update_guide", "docs_navigation_update_guide", "graph_asset_update_guide"),
-        "code_abstractions/architecture": ("role", "boundary", "container_mapping", "visualization_mapping", "writeback_model"),
+        "code_abstractions/architecture": ("role", "boundary", "container_mapping", "visualization_mapping", "writeback_model", "authored_doc_layer_model", "question_backfill_model"),
         "code_abstractions/stack": ("storage_model", "access_model", "graph_model", "indexing_model"),
         "code_abstractions/naming": ("directory_naming", "file_naming", "node_naming", "container_naming"),
-        "code_abstractions/contracts": ("read_api", "writeback_api", "evidence_contract", "sync_contract"),
+        "code_abstractions/contracts": ("read_api", "writeback_api", "evidence_contract", "sync_contract", "doc_code_binding_contract"),
         "code_abstractions/operations": ("maintenance_entry", "query_commands", "change_policy", "recovery_entry"),
         "dev_canon": ("stack_selection_canon", "architecture_selection_canon", "automation_scope"),
         "development_logs": ("implementation_batches", "deployment_batches", "log_entry_contract", "comparison_basis"),
@@ -63,6 +63,12 @@ FAMILY_FILE_MAP: dict[str, dict[str, tuple[str, ...]]] = {
         "code_abstractions/operations": ("query_commands", "maintenance_commands", "recovery_entry", "monitoring_entry"),
         "dev_canon": ("stack_selection_canon", "architecture_selection_canon", "automation_scope"),
     },
+}
+
+CONTENT_LAYER_FILE_MAP: dict[str, tuple[str, ...]] = {
+    "overview": ("container_overview", "capability_map", "surface_index"),
+    "features": ("feature_catalog", "active_requirements", "open_questions"),
+    "shared": ("api_surfaces", "event_and_message_flows", "shared_contracts", "cross_container_dependencies", "open_questions"),
 }
 
 
@@ -109,6 +115,9 @@ def build_document_readme(name: str, workspace_dir: Path, family: str) -> list[s
         f"Container family: `{family}`.",
         f"Corresponding workspace path: `{workspace_dir}`.",
         "This directory carries authored development and operations docs for the same-named container.",
+        "`overview/` carries human-readable top-level summaries and capability overviews for the current container.",
+        "`features/` carries concrete feature documents, active requirements, and unresolved question backfill for the current container.",
+        "`shared/` carries dynamic shared layers such as APIs, events, contracts, and cross-container dependency notes for the current container.",
         "Stable abstracted knowledge lives under `common/`.",
         "`common/writing_guides/` carries authored-doc update guidance for the current domain family.",
         "`common/code_abstractions/` carries code abstraction, code-to-doc mapping, and reusable code-facing structure contracts for the current domain family.",
@@ -148,6 +157,41 @@ def build_graph_readme() -> list[str]:
 
 
 def build_common_file_body(name: str, family: str, domain: str, topic: str) -> list[str]:
+    if domain == "code_abstractions/contracts" and topic == "doc_code_binding_contract":
+        return [
+            "## Contract Markers",
+            "",
+            "contract_name: doc_code_binding_contract",
+            "contract_version: v0",
+            "validation_mode: placeholder",
+            "required_fields:",
+            "- semantic_unit_id",
+            "- document_nodes",
+            "- implementation_nodes",
+            "optional_fields:",
+            "- contract_nodes",
+            "- evidence_nodes",
+            "",
+            f"This file defines `{topic}` for the `{name}` container's code abstraction layer.",
+            f"Container family: `{family}`.",
+            "Use it to define how semantic documentation units bind to implementation slices and later evidence/graph nodes.",
+            "This file is part of the authored Mother_Doc template and is not the implementation-stage execution rule itself.",
+        ]
+    if domain == "code_abstractions/architecture" and topic == "authored_doc_layer_model":
+        return [
+            "## Permission Markers",
+            "",
+            "actor_id: octopus_mother_doc_stage",
+            "authz_result: allow",
+            "deny_code: none",
+            "policy_version: v0",
+            "scope: authored_doc_layer_model",
+            "",
+            f"This file defines `{topic}` for the `{name}` container's code abstraction layer.",
+            f"Container family: `{family}`.",
+            "Use it to define the authored-doc layer stack: overview, features, shared, and common.",
+            "This file exists so the Mother_Doc stage can update the correct document layer without mixing unrelated scopes.",
+        ]
     if domain == "writing_guides":
         return [
             f"This file defines `{topic}` for the `{name}` container's authored-doc update workflow.",
@@ -226,6 +270,55 @@ def build_common_file_body(name: str, family: str, domain: str, topic: str) -> l
     ]
 
 
+def build_content_file_body(name: str, family: str, layer: str, topic: str) -> list[str]:
+    if layer == "shared" and topic == "shared_contracts":
+        return [
+            "## Contract Markers",
+            "",
+            "contract_name: shared_contracts",
+            "contract_version: v0",
+            "validation_mode: placeholder",
+            "required_fields:",
+            "- contract_scope",
+            "- participating_containers",
+            "- interface_or_event_refs",
+            "optional_fields:",
+            "- dependency_notes",
+            "- unresolved_items",
+            "",
+            f"This file defines `{topic}` for the `{name}` container's shared integration layer.",
+            f"Container family: `{family}`.",
+            "Use it for APIs, events, shared contracts, and cross-container dependency notes that are dynamically consumed during development.",
+            "Keep the content aligned with both human-readable authored docs and future OS_graph bindings.",
+        ]
+    if layer == "overview":
+        return [
+            f"This file defines `{topic}` for the `{name}` container's top-level human overview layer.",
+            f"Container family: `{family}`.",
+            "Use it for human-readable summaries, capability maps, and scope-level overviews before entering deeper feature or shared documents.",
+            "Keep it broad, observable, and suitable for admin-panel browsing.",
+        ]
+    if layer == "features":
+        return [
+            f"This file defines `{topic}` for the `{name}` container's feature layer.",
+            f"Container family: `{family}`.",
+            "Use it for concrete feature scopes, current requirements, and unresolved feature questions.",
+            "A single feature document may cover one file, many files, or a semantic slice that spans multiple implementation files.",
+        ]
+    if layer == "shared":
+        return [
+            f"This file defines `{topic}` for the `{name}` container's shared integration layer.",
+            f"Container family: `{family}`.",
+            "Use it for APIs, events, shared contracts, and cross-container dependency notes that are dynamically consumed during development.",
+            "Keep the content aligned with both human-readable authored docs and future OS_graph bindings.",
+        ]
+    return [
+        f"This file defines `{topic}` for the `{name}` container.",
+        f"Container family: `{family}`.",
+        f"Layer: `{layer}`.",
+    ]
+
+
 def scaffold_common_tree(*, container_name: str, document_dir: Path, family: str, dry_run: bool) -> list[str]:
     created_files: list[str] = []
     for domain, topics in FAMILY_FILE_MAP[family].items():
@@ -235,6 +328,22 @@ def scaffold_common_tree(*, container_name: str, document_dir: Path, family: str
                 target,
                 title=topic,
                 body_lines=build_common_file_body(container_name, family, domain, topic),
+                dry_run=dry_run,
+            )
+            if created:
+                created_files.append(str(target))
+    return created_files
+
+
+def scaffold_content_tree(*, container_name: str, document_dir: Path, family: str, dry_run: bool) -> list[str]:
+    created_files: list[str] = []
+    for layer, topics in CONTENT_LAYER_FILE_MAP.items():
+        for topic in topics:
+            target = document_dir / layer / f"{topic}.md"
+            created = ensure_markdown(
+                target,
+                title=topic,
+                body_lines=build_content_file_body(container_name, family, layer, topic),
                 dry_run=dry_run,
             )
             if created:

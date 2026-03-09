@@ -27,13 +27,17 @@ STAGE_DOCS = {
     "mother_doc": [
         "references/stages/MOTHER_DOC_STAGE.md",
         "references/mother_doc/00_MOTHER_DOC_BRANCH_INDEX.md",
-        "references/mother_doc/CONTENT_WRITEBACK_BRANCH.md",
+        "references/mother_doc/DIRECT_WRITEBACK_BRANCH.md",
+        "references/mother_doc/QUESTION_BACKFILL_BRANCH.md",
         "references/mother_doc/MOTHER_DOC_ENTRY_RULES.md",
         "references/mother_doc/AGENTS_MD_RULES.md",
         "references/mother_doc/DOC_STATUS_RULES.md",
         "references/mother_doc/README_MD_RULES.md",
         "references/mother_doc/SCOPE_ENTITY_MD_RULES.md",
         "references/mother_doc/MOTHER_DOC_WRITEBACK_RULES.md",
+        "references/mother_doc/OVERVIEW_LAYER_RULES.md",
+        "references/mother_doc/FEATURE_LAYER_RULES.md",
+        "references/mother_doc/SHARED_LAYER_RULES.md",
         "references/mother_doc/PHASE1_CONTAINER_NAMING_REFERENCE.md",
         "references/mother_doc/agents_branch/00_BRANCH_INDEX.md",
         "references/mother_doc/agents_branch/runtime/AGENTS_BRANCH_CONTRACT.md",
@@ -47,6 +51,8 @@ STAGE_DOCS = {
     ],
     "evidence": [
         "references/stages/EVIDENCE_STAGE.md",
+        "references/evidence/OS_GRAPH_LAYER_MODEL.md",
+        "references/evidence/DOC_CODE_BINDING_RULES.md",
         "references/evidence/IMPLEMENTATION_LOG_RULES.md",
         "references/evidence/OS_GRAPH_RULES.md",
         "references/evidence/DEPLOYMENT_LOG_RULES.md",
@@ -69,6 +75,10 @@ STAGE_COMMANDS = {
                 "purpose": "strengthen the current user prompt with full repo context before selecting Mother_Doc scope",
             },
             {
+                "command": "read references/mother_doc/00_MOTHER_DOC_BRANCH_INDEX.md",
+                "purpose": "choose the correct mother_doc sub-branch before writing anything: direct_writeback, question_backfill, or AGENTS manager",
+            },
+            {
                 "command": "python3 scripts/Cli_Toolbox.py materialize-container-layout --container <Name> --json",
                 "purpose": "materialize new container directories and initial authored-document skeletons once the semantic decision is made",
             },
@@ -79,6 +89,14 @@ STAGE_COMMANDS = {
             {
                 "command": "python3 scripts/Cli_Toolbox.py sync-mother-doc-status --stage mother_doc --path <relative-path> --sync-status pending_implementation --requires-development --json",
                 "purpose": "mark affected Mother_Doc documents and block registries as requiring implementation after a document-side change",
+            },
+            {
+                "command": "direct_writeback -> update overview/features/shared/common for the affected container scopes only",
+                "purpose": "write the explicit user-described content into the correct authored-doc layers without inventing missing detail",
+            },
+            {
+                "command": "question_backfill -> ask unresolved design questions after initial writeback and then overwrite the same authored-doc files with the answers",
+                "purpose": "close open design gaps iteratively while staying inside mother_doc and without starting implementation or evidence",
             },
             {
                 "command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-directive --stage <scan|collect|push> --json",
@@ -180,17 +198,16 @@ STAGE_GRAPH_CONTRACTS = {
     },
     "evidence": {
         "graph_name": "OS_graph",
-        "stage_role": "merge document graph and code graph into a delivery-state explanation layer with evidence bindings",
+        "stage_role": "merge document graph and code graph into a delivery-state explanation layer with evidence bindings and four explicit graph layers",
         "node_mapping": [
-            "directory -> scope node",
-            "<folder_name>.md -> module or black-box description node",
-            "code modules and helpers -> implementation nodes under the same hierarchy",
-            "implementation_batches.md entries -> implementation timeline node",
-            "witnesses -> evidence nodes bound back to the same hierarchy",
-            "deployment_batches.md entries -> deployment checkpoint node",
+            "overview/*.md -> narrative_layer nodes",
+            "features/*.md and shared/*.md -> contract_layer nodes",
+            "code modules, helpers, and runtime artifacts -> implementation_layer nodes",
+            "implementation/deployment logs and witnesses -> evidence_layer nodes",
+            "Document Status + Block Registry -> graph change-detection metadata nodes",
         ],
         "tooling_mode": "contract_first_until_os_graph_runtime_lands",
-        "action_rule": "treat OS_graph as the combined doc+code graph contract, bind evidence to the corresponding structural nodes, and record deployment checkpoints as timeline witnesses",
+        "action_rule": "treat OS_graph as the combined doc+code graph contract, bind semantic doc units to implementation slices, record evidence on the same hierarchy, and keep the four graph layers readable to humans and machines",
     },
 }
 
@@ -203,12 +220,15 @@ STAGE_CHECKLISTS = {
         "entry_requirements": [
             "load top-level resident docs",
             "strengthen the user prompt with Meta-prompt-write",
+            "read references/mother_doc/00_MOTHER_DOC_BRANCH_INDEX.md before choosing any mother_doc action",
+            "choose direct_writeback, question_backfill, or AGENTS manager before reading deeper scope docs",
             "read root README.md and AGENTS.md inside Mother_Doc before selecting scope",
-            "if the task is about AGENTS scaffolding itself, enter the mother_doc AGENTS sub-branch before editing",
         ],
         "exit_requirements": [
             "updated Mother_Doc current-state content",
             "updated README.md, AGENTS.md, and <folder_name>.md for affected Mother_Doc scopes only",
+            "affected overview/features/shared/common docs are aligned with the current explicit user intent",
+            "unresolved scope is written into the correct open-question docs when question_backfill is still pending",
             "affected non-AGENTS Mother_Doc markdown files are marked as pending implementation in their document/block status sections",
             "implementation inputs ready",
         ],
@@ -246,6 +266,7 @@ STAGE_CHECKLISTS = {
         "exit_requirements": [
             "real witnesses are bound back to the same Mother_Doc hierarchy",
             "OS_graph contract is updated at the contract level for the current delivery state",
+            "OS_graph uses narrative_layer, contract_layer, implementation_layer, and evidence_layer consistently",
             "implementation batch logs are appended under Mother_Doc/docs/Mother_Doc/common/development_logs",
             "deployment checkpoints are appended under Mother_Doc/docs/Mother_Doc/common/development_logs when deployment-level evidence exists",
             "writeback is complete without introducing internal version branches",

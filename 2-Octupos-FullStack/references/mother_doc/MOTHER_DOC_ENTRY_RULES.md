@@ -11,6 +11,11 @@
 - 进入普通文档更新前，先读 [00_MOTHER_DOC_BRANCH_INDEX.md](00_MOTHER_DOC_BRANCH_INDEX.md) 判定子分支。
 - 进入 `AGENTS.md` 管理任务前，先读 [AGENTS Branch Index](agents_branch/00_BRANCH_INDEX.md)。
 - 每一层目录都延续同一规则：`README.md + AGENTS.md + <folder_name>.md`。
+- 每个容器目录在三类固定文件之外，还必须固定具备：
+  - `overview/`
+  - `features/`
+  - `shared/`
+  - `common/`
 - `AGENTS.md` 只存在于 `Octopus_OS/Mother_Doc/docs/**` 这棵文档树内。
 - `Octopus_OS/<Container_Name>/` 这类实际工作目录容器不承载 `AGENTS.md`。
 - `Octopus_OS/Mother_Doc/graph/` 承载 `OS_graph` 资产，不属于 docs 树。
@@ -19,6 +24,20 @@
   - `writing_guides/`
   - `code_abstractions/`
   - `dev_canon/`
+- 每个容器的 `overview/` 固定承载：
+  - `container_overview.md`
+  - `capability_map.md`
+  - `surface_index.md`
+- 每个容器的 `features/` 固定承载：
+  - `feature_catalog.md`
+  - `active_requirements.md`
+  - `open_questions.md`
+- 每个容器的 `shared/` 固定承载：
+  - `api_surfaces.md`
+  - `event_and_message_flows.md`
+  - `shared_contracts.md`
+  - `cross_container_dependencies.md`
+  - `open_questions.md`
 - `common/code_abstractions/` 下固定再拆：
   - `architecture/`
   - `stack/`

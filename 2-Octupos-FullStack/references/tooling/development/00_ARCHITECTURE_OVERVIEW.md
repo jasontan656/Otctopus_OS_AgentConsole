@@ -17,8 +17,9 @@
   - `AGENTS.md`
   - `<folder_name>.md`
 - `AGENTS.md` 只属于 `Mother_Doc` 树，不进入实际工作目录容器。
-- `mother_doc` 阶段内部再拆两条链：
-  - `content_writeback`
+- `mother_doc` 阶段内部再拆三条链：
+  - `direct_writeback`
+  - `question_backfill`
   - `AGENTS manager`
 - `AGENTS manager` 进一步固定为：
   - `scan`

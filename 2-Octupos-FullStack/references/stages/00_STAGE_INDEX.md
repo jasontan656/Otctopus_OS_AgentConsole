@@ -18,7 +18,7 @@
 
 ## Carry-Forward Rules
 
-- `mother_doc` 内部先读 `00_MOTHER_DOC_BRANCH_INDEX.md`，再选择 `content_writeback` 或 `AGENTS manager` 子链。
+- `mother_doc` 内部先读 `00_MOTHER_DOC_BRANCH_INDEX.md`，再选择 `direct_writeback`、`question_backfill` 或 `AGENTS manager` 子链。
 - `implementation` 必须显式引用 `mother_doc` 当前状态产物。
 - `implementation` 必须承接 `mother_doc` 产出的 `pending_implementation` 状态信号。
 - `evidence` 必须显式引用 `mother_doc` 与 `implementation` 当前状态产物。
