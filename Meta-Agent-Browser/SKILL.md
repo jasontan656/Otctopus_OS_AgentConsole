@@ -6,6 +6,28 @@ allowed-tools: Bash(npx agent-browser:*), Bash(agent-browser:*)
 
 # Browser Automation with agent-browser
 
+## Local Runtime Notes (WSL)
+
+For this workspace, use the globally installed `agent-browser` binary and avoid `npx agent-browser` for persistent multi-step sessions.
+
+Before running a browser workflow, prepare the local runtime once:
+
+```bash
+scripts/agent-browser-runtime-guard.sh
+```
+
+For stable execution, prefer:
+
+```bash
+scripts/agent-browser-stable.sh --session qa open https://example.com
+```
+
+Local compatibility notes:
+
+- Refs are returned as `ref=e10` style values; pass bare refs like `e10` to commands.
+- `npx`-spawned temporary daemons can leave stale sockets behind in WSL and break later commands.
+- The guard script cleans stale `npx` daemons and verifies Chromium is installed.
+
 ## Core Workflow
 
 Every browser automation follows this pattern:
