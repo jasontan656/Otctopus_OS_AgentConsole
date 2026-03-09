@@ -16,11 +16,21 @@ description: "未来项目 admin panel 内置的运营AI“章鱼”，负责 mo
 
 ## 2. 可用工具
 - 统一工具入口：`scripts/Cli_Toolbox.py`
-- 当前主要命令：
+- `mother_doc` 阶段：
   - `mother-doc-stage`
+    - 作用：打印 `mother_doc` 阶段的作用域、必须加载规则、输入输出。
+    - 用法：`python3 scripts/Cli_Toolbox.py mother-doc-stage --json`
   - `materialize-container-layout`
+    - 作用：按已判定容器名落工作目录与 `Mother_Doc` 同名目录，并补齐 `common/` 抽象层骨架。
+    - 用法：`python3 scripts/Cli_Toolbox.py materialize-container-layout --container <Name> --json`
+- `implementation` 阶段：
   - `implementation-stage`
+    - 作用：打印 `implementation` 阶段的作用域、必须承接的前序产物、以及当前阶段产出。
+    - 用法：`python3 scripts/Cli_Toolbox.py implementation-stage --json`
+- `evidence` 阶段：
   - `evidence-stage`
+    - 作用：打印 `evidence` 阶段的作用域、必须承接的前序产物、以及回填输出。
+    - 用法：`python3 scripts/Cli_Toolbox.py evidence-stage --json`
 - 各阶段共用同一 CLI 入口，但命令必须显式区分作用域。
 - 详细工具说明下沉到 `references/tooling/`。
 
