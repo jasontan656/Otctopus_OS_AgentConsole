@@ -1,4 +1,4 @@
 interface:
   display_name: "Meta-GitHub-Operation"
-  short_description: "Precise Git and GitHub repo automation"
-  default_prompt: "Use Meta-github-operation to inspect repository state or perform precise commit, push, rollback, fetch, pull-rebase, and remote operations safely."
+  short_description: "受限 GitHub control plane，仅服务 Octopus_OS 与 Codex_Skills_Mirror。"
+  default_prompt: "仅对 Octopus_OS 与 Codex_Skills_Mirror 执行 Git / GitHub 自动化操作。优先使用 scripts/Cli_Toolbox.py；不要对 workspace 根目录或其他未注册仓库执行 GitHub 自动化。"
