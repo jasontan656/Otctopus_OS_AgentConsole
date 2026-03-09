@@ -28,6 +28,46 @@ Local compatibility notes:
 - `npx`-spawned temporary daemons can leave stale sockets behind in WSL and break later commands.
 - The guard script cleans stale `npx` daemons and verifies Chromium is installed.
 
+## Stable Workflow (Workspace Standard)
+
+Use this exact sequence for stable browser work in this workspace:
+
+1. Prepare runtime once
+```bash
+scripts/agent-browser-runtime-guard.sh
+```
+
+2. Open a page with a named session
+```bash
+scripts/agent-browser-stable.sh --session qa open https://www.python.org
+scripts/agent-browser-stable.sh --session qa wait --load networkidle
+```
+
+3. Inspect interactive elements
+```bash
+scripts/agent-browser-stable.sh --session qa snapshot -i
+```
+
+4. Interact using bare refs
+```bash
+scripts/agent-browser-stable.sh --session qa fill e10 "asyncio"
+scripts/agent-browser-stable.sh --session qa click e11
+scripts/agent-browser-stable.sh --session qa wait --load networkidle
+```
+
+5. Capture evidence and close
+```bash
+scripts/agent-browser-stable.sh --session qa screenshot /tmp/qa-result.png
+scripts/agent-browser-stable.sh --session qa close
+```
+
+Workspace rules:
+
+- Do not run multiple commands against the same session in parallel.
+- Prefer `agent-browser-stable.sh` over raw `agent-browser` for multi-step work.
+- Prefer named sessions such as `qa`, `search`, `docs`.
+- Use bare refs like `e10`, not `@e10`, in this environment.
+
 ## Core Workflow
 
 Every browser automation follows this pattern:

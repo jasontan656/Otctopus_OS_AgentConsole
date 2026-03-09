@@ -10,7 +10,11 @@
   - `Octopus_OS/<Container_Name>/AGENTS.md`
   - `Octopus_OS/Mother_Doc/docs/**/AGENTS.md`
 - `Octopus_OS/AGENTS.md` 是总容器根入口，必须显式指向 `Octopus_OS/README.md` 与章鱼OS技能锚点。
-- `Octopus_OS/AGENTS.md` 还必须承载该仓库自己的 GitHub 留痕规则：仅当本仓库写入回合有文件变动时才触发 GitHub 收尾。
+- `Octopus_OS/AGENTS.md` 还必须承载该仓库自己的 GitHub hook 硬合同：仅当本仓库在 Non-read-only 回合实际发生写入时才触发。
+- 该合同必须要求在同一回合结束前完成 GitHub 收尾，不得延后到后续回合补留痕。
+- 该合同必须给出精确命令：
+  - `python3 /home/jasontan656/.codex/skills/Meta-github-operation/scripts/Cli_Toolbox.py commit-and-push --repo Octopus_OS --message "<commit message>" --use-latest-claims --auto-scope --allow-empty`
+- 若命令失败、被跳过、或与实际写入不一致，必须声明 `violation` 并先修复后收尾。
 - `Octopus_OS/AGENTS.md` 还必须承载该仓库自己的宪法技能与静态 lint 责任：只对本仓库真实被改的 concrete target root 运行 `Constitution-knowledge-base` static lint。
 - `Octopus_OS/<Container_Name>/AGENTS.md` 是容器根的开发回写合同入口，必须指向同级 `README.md`。
 - `Octopus_OS/User_UI/AGENTS.md` 与 `Octopus_OS/Admin_UI/AGENTS.md` 还必须提醒：前端开发、页面联调、浏览器测试、交互验证时加载 `Meta-browser-operation`。

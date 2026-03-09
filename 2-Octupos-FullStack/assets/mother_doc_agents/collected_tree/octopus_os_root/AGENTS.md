@@ -27,7 +27,13 @@
 - 先看当前任务是否只需要技能锚点即可判断；若不足，再可选读取同层 `README.md`。
 - 再读章鱼OS全栈技能锚点与项目统一目标基线，确认当前任务属于 `mother_doc`、`implementation` 还是 `evidence`。
 - 确认阶段后，再选择进入对应容器路径或 `Mother_Doc` 文档树，不跨到无关容器。
-- 如果本仓库在写入回合发生文件变动，则必须进行 GitHub 留痕；commit message 必须依据本轮实际变动内容编写。
+- 仅当本回合是 Non-read-only 且本仓库实际发生写入时，才启用 GitHub 留痕。
+- Read-only 回合不启用。
+- 这是同回合硬合同：不得把本回合写入延后到后续回合再补留痕。
+- 必须使用以下命令完成收尾：
+  - `python3 /home/jasontan656/.codex/skills/Meta-github-operation/scripts/Cli_Toolbox.py commit-and-push --repo Octopus_OS --message "<commit message>" --use-latest-claims --auto-scope --allow-empty`
+- `commit message` 必须依据本轮实际变动内容编写。
+- 若命令失败、被跳过、或与实际写入不一致，属于 `violation`，必须修复后才能结束回合。
 - 本仓库承担宪法技能与静态 lint 收口责任；写入本仓库时，必须对实际被修改的 concrete target root 运行 `Constitution-knowledge-base` static lint。
 - 禁止把 `/home/jasontan656/AI_Projects` 当作 lint 目标；若出现非零退出或 `status=fail`，必须声明 `violation` 并修复后重跑。
 

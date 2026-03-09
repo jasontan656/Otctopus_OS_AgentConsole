@@ -43,15 +43,15 @@ case "$stage" in
     echo "[DONT][Meta-keyword-first-edit] no additive-first edits when replacement can satisfy intent"
     echo "[DO][Meta-refactor-behavior-preserving] define OEC (consumer/observables/invariants/witness) before refactor"
     echo "[DONT][Meta-refactor-behavior-preserving] do not change observable behavior unless in allowed_deltas"
-    echo "[DO][Meta-github-operation] temporarily disabled; do not depend on GitHub trace workflow during redesign"
-    echo "[DONT][Meta-github-operation] do not invoke removed Meta-github-operation CLI entrypoints"
+    echo "[DO][Meta-github-operation] if this write turn touched Octopus_OS or Codex_Skills_Mirror, finish same-turn GitHub traceability before closing"
+    echo "[DONT][Meta-github-operation] do not defer required repo traceability to a later turn"
     ;;
   TURN_END)
     print_common_header "TURN_END"
     echo "[DO][Closure] verify branch obligations and print completion evidence"
     echo "[DONT][Closure] do not skip required hooks"
-    echo "[DO][Meta-github-operation] keep GitHub workflow disabled until redesign is explicitly restored"
-    echo "[DONT][Meta-github-operation] do not use removed commit-and-push bindings"
+    echo "[DO][Meta-github-operation] verify required commit-and-push traceability is complete for each affected repo"
+    echo "[DONT][Meta-github-operation] do not close a write turn with missing required repo traceability"
     ;;
   *)
     echo "INVALID_STAGE: $stage" >&2

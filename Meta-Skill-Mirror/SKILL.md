@@ -33,6 +33,7 @@ description: 将 codex skill mirror 单向同步到 codex skills 安装目录（
   - 校验根路径与 `skill_name`。
   - 归一化 mirror 根目录（可见目录优先）。
   - 执行 `rsync -a --delete`。
+  - 若本回合此前已对 `Codex_Skills_Mirror` 发生实际写入，则在 sync 完成后，必须在同一回合执行该仓库的 GitHub 留痕收尾。
   - 输出结构化 JSON 执行结果。
 - 输出：`status/action(固定 mirror_to_codex)/scope/source/destination/command`。
 - 完成判定：返回 `status=ok`，且 `exit_code=0`。
@@ -43,6 +44,8 @@ description: 将 codex skill mirror 单向同步到 codex skills 安装目录（
 - `--skill-name` 必须通过白名单字符校验：`[A-Za-z0-9._-]+`。
 - 只允许同步 skills 边界目录，禁止越界路径拼接。
 - 默认 mirror 根目录必须是非隐藏路径：`/home/jasontan656/AI_Projects/Codex_Skills_Mirror`。
+- 本技能不代替 GitHub hook；若本回合修改了 `Codex_Skills_Mirror`，必须在 sync 后另行执行：
+  - `python3 /home/jasontan656/.codex/skills/Meta-github-operation/scripts/Cli_Toolbox.py commit-and-push --repo Codex_Skills_Mirror --message "<commit message>" --use-latest-claims --auto-scope --allow-empty`
 
 ## 5. 方法论约束
 - 采用单入口 CLI：对外只暴露 `Cli_Toolbox.py`，避免多脚本并行入口。

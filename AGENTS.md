@@ -28,8 +28,14 @@
   - 再通过确定性脚本或流程刷新 markdown 审计版
 - 禁止只改 markdown 不改 machine-readable 合同。
 
-5. GitHub Traceability Rule
-- 如果本仓库在写入回合发生文件变动，则必须进行 GitHub 留痕；commit message 必须依据本轮实际变动内容编写。
+5. GitHub Hook Rule
+- 仅当本回合是 Non-read-only 且本仓库实际发生写入时，才启用 GitHub 留痕。
+- Read-only 回合不启用。
+- 这是同回合硬合同：不得把本回合写入延后到后续回合再补留痕。
+- 必须使用以下命令完成收尾：
+  - `python3 /home/jasontan656/.codex/skills/Meta-github-operation/scripts/Cli_Toolbox.py commit-and-push --repo Codex_Skills_Mirror --message "<commit message>" --use-latest-claims --auto-scope --allow-empty`
+- `commit message` 必须依据本轮实际变动内容编写。
+- 若命令失败、被跳过、或与实际写入不一致，属于 `violation`，必须修复后才能结束回合。
 
 6. Constitution/Lint Rule
 - 只有本仓库与 `Octopus_OS` 承担宪法技能与静态 lint 收口责任。
