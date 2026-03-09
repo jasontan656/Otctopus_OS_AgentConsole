@@ -50,6 +50,11 @@
   - `naming/`
   - `contracts/`
   - `operations/`
+- `common/code_abstractions/operations/` 的跨容器固定命名统一为：
+  - `deployment_guide.md`
+  - `operation_commands.md`
+  - `recovery_guide.md`
+- 其余 operations 文档只允许承载真正的家族特有语义，不允许再用不同文件名重复承载部署、通用操作命令或恢复语义。
 
 ## Dynamic Expansion
 

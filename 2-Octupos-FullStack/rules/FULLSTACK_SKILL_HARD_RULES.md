@@ -76,6 +76,10 @@
 42. `common/` 只承载稳定抽象层，不承载 feature-specific 细节。
 43. `common/` 至少固定 3 个一级域：`writing_guides/`、`code_abstractions/`、`dev_canon/`。
 44. `common/code_abstractions/` 下至少固定 5 个二级域：`architecture/`、`stack/`、`naming/`、`contracts/`、`operations/`。
+44.1 `common/code_abstractions/operations/` 的跨容器统一文件名固定为 `deployment_guide.md`、`operation_commands.md`、`recovery_guide.md`。
+44.2 部署语义只能落在 `common/code_abstractions/operations/deployment_guide.md`，不得再由 `deploy_entry`、`release_entry`、`deployment_mode` 或其他目录/文件名承载。
+44.3 通用操作命令语义只能落在 `common/code_abstractions/operations/operation_commands.md`，不得再由 `query_commands`、`debug_commands`、`maintenance_commands` 等异名重复承载。
+44.4 恢复/回滚语义只能落在 `common/code_abstractions/operations/recovery_guide.md`，不得再由 `recovery_entry`、`rollback_entry` 等异名重复承载。
 45. `Mother_Doc` 容器自己的 `common/` 额外固定包含 `development_logs/`。
 46. 每个最小知识点必须单独落一个 `*.md` 文件，不得留空文件。
 47. 容器族模板当前固定 5 类：`Mother_Doc`、`UI`、`Gateway`、`Service`、`Data_Infra`。
