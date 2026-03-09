@@ -17,6 +17,7 @@
   - 调用 `scripts/Cli_Toolbox.py materialize-container-layout`。
   - 在 `Octopus_OS/` 下创建同名容器目录。
   - 在 `Octopus_OS/Mother_Doc/` 下创建同名文档目录。
+  - 若容器名是 `Mother_Doc`，则保留工作目录 `Octopus_OS/Mother_Doc/`，只新增自描述目录 `Octopus_OS/Mother_Doc/Mother_Doc/`。
   - 若目录已存在，则保持幂等。
 - 人类叙事版输出：
   - 返回已创建目录、已存在目录与命名告警，便于继续写文档和落代码。
@@ -30,7 +31,7 @@
   - 必须包含管道（例如 `| sed -n '1,200p'`）以便快速查看结果。
   - 命令必须能一键直达脚本预期参数并得到可复现输出。
 - 示例：
-  - `cd /home/jasontan656/AI_Projects/Codex_Skills_Mirror/2-Octupos-FullStack && python3 scripts/Cli_Toolbox.py materialize-container-layout --container User_UI --container Admin_UI --container Mongo_DB --dry-run | sed -n '1,200p'`
+  - `cd /home/jasontan656/AI_Projects/Codex_Skills_Mirror/2-Octupos-FullStack && python3 scripts/Cli_Toolbox.py materialize-container-layout --container Mother_Doc --container User_UI --container Mongo_DB --dry-run | sed -n '1,200p'`
 
 ## 参数与结果（供 AI/工程使用）
 - 输入：

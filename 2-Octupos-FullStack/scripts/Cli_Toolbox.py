@@ -24,10 +24,10 @@ PREFERRED_SUFFIXES = (
 
 def validate_container_name(name: str) -> list[str]:
     warnings: list[str] = []
-    if name == "Mother_Doc":
-        raise ValueError("container name `Mother_Doc` is reserved")
     if not VALID_NAME_RE.fullmatch(name):
         raise ValueError(f"invalid container name: {name}")
+    if name == "Mother_Doc":
+        return warnings
     if any(name.startswith(prefix) for prefix in DISCOURAGED_PREFIXES):
         warnings.append(f"discouraged bucket-style name: {name}")
     if not any(name.endswith(suffix) for suffix in PREFERRED_SUFFIXES):
@@ -63,6 +63,11 @@ def materialize_layout(args: argparse.Namespace) -> int:
 
         workspace_dir = workspace_root / name
         document_dir = document_root / name
+
+        # Mother_Doc is a self-reference case: the workspace container already exists
+        # at document_root, while its authored entry lives under document_root/Mother_Doc.
+        if name == "Mother_Doc":
+            workspace_dir = document_root
 
         if workspace_dir.exists():
             existing_workspace_dirs.append(str(workspace_dir))

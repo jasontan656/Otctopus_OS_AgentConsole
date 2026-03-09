@@ -14,3 +14,4 @@
 
 - Container names must be readable and filesystem-safe.
 - Avoid `Shared_*`, `Business_*`, and `Runtime_*`.
+- `Mother_Doc` is a special self-reference case: workspace path stays `Octopus_OS/Mother_Doc/`, while the document entry is `Octopus_OS/Mother_Doc/Mother_Doc/`.

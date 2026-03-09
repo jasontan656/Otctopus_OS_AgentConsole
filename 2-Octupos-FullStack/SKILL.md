@@ -28,6 +28,9 @@ description: "未来项目 admin panel 内置的运营AI“章鱼”，负责维
 - 若需求引入可独立部署、可独立演进或可独立承载职责的模块，AI 必须同步新增：
   - `Octopus_OS/<Container_Name>/`
   - `Octopus_OS/Mother_Doc/<Container_Name>/`
+- `Mother_Doc` 本身是特例：
+  - 工作目录容器为 `Octopus_OS/Mother_Doc/`
+  - 其自描述文档目录为 `Octopus_OS/Mother_Doc/Mother_Doc/`
 
 ## 4. 规则约束
 - 不保留旧的 staged 施工叙事。
@@ -47,6 +50,7 @@ description: "未来项目 admin panel 内置的运营AI“章鱼”，负责维
 - 先区分规则层级，再写内容：先明确哪些是技能自有规则，再明确哪些是被撰写规则。
 - `Mother_Doc` 文件树应尽量与未来 Admin Panel 可视化节点树保持同构。
 - `Mother_Doc` 当前应采用 `README.md + 00_INDEX.md + 同名容器目录` 的入口结构。
+- `Mother_Doc` 容器自身也必须在 `Mother_Doc/Mother_Doc/` 拥有同名入口目录。
 - 第一阶段命名规范采用“一个目录 = 一个可独立部署或独立演进的单元”。
 - 第一阶段优先使用可读的单元后缀：
   - `_UI`
@@ -90,6 +94,7 @@ description: "未来项目 admin panel 内置的运营AI“章鱼”，负责维
   - 代码落盘和 evidence 回填规范
   - 技能自有规则与被撰写规则的分层边界
 - 写进 `Mother_Doc`：
+  - `Mother_Doc` 容器自身的开发文档
   - Admin Panel UI
   - event
   - backend

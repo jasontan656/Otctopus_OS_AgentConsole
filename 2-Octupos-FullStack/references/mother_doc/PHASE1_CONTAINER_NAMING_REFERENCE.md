@@ -28,6 +28,7 @@
 
 ## 示例
 
+- `Mother_Doc`（self-description entry lives at `Mother_Doc/Mother_Doc/`）
 - `User_UI`
 - `Admin_UI`
 - `API_Gateway`

@@ -27,6 +27,11 @@
 - UI 一眼映射
 - AI 不需要额外维护名字映射表
 
+`Mother_Doc` 特例：
+
+- 工作目录容器本身就是 `Octopus_OS/Mother_Doc/`
+- 其自描述文档目录应为 `Octopus_OS/Mother_Doc/Mother_Doc/`
+
 ## 判定示例
 
 - 若用户说需要 `MongoDB`，且它被作为独立技术模块引入，则 AI 应判定可以新增 `Mongo_DB/`。
