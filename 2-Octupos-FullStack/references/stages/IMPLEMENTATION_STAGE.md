@@ -10,7 +10,7 @@
 
 ## Required Workflow
 
-1. 显式承接 `mother_doc` 当前状态产物。
+1. 显式承接 `mother_doc` 当前状态产物，并继续保留项目统一目标基线。
 2. 先读取匹配的域族规则，再读取目标容器自己的 `common/code_abstractions/`、`common/dev_canon/` 与必要的 `common/writing_guides/` 文档。
 3. 读取代码库、运行时与当前文档结构，发现 doc-code drift。
 4. 先对齐文档与代码的当前状态，再继续实施。

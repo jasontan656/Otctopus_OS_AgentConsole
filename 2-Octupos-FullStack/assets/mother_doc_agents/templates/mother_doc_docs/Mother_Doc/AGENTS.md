@@ -1,7 +1,7 @@
 # AGENTS
 
 ## 1. 目标
-- 当前层作用：self-description container scope for the Mother_Doc container itself。
+- 当前层作用：self-description and project-baseline container scope for the Mother_Doc container itself。
 - 本文件只承担当前层入口索引与递归选域，不承载正文细节。
 
 ## 2. 同层入口
@@ -12,6 +12,7 @@
 - `Mother_Doc/common`: current container's abstract layer root; choose one abstract domain below.
 - `Mother_Doc/features`: feature document scope for the current container; choose the affected requirement or unresolved question slice below.
 - `Mother_Doc/overview`: human-readable overview scope for the current container; start here when you need top-level comprehension.
+- `Mother_Doc/project_baseline`: project-level baseline scope for current objectives, impact pruning, and dynamic growth rules.
 - `Mother_Doc/shared`: shared integration scope for the current container; choose APIs, events, contracts, or cross-container dependencies below.
 
 ## 4. 选择规则

@@ -4,7 +4,7 @@
 
 ## 1. 容器定位
 - 当前文件是 `Mother_Doc` 容器根的 AI-facing README。
-- 对应容器说明：authoritative authored-document and OS_graph container。
+- 对应容器说明：authoritative authored-document, project-baseline, and OS_graph container。
 
 ## 2. 阅读关系
 - 同层 `AGENTS.md` 是当前容器的开发回写合同入口。
@@ -14,6 +14,7 @@
 ## 3. 对应文档入口
 - `../Mother_Doc/docs/Mother_Doc/`: 当前容器对应的 authored-doc 根。
 - `../Mother_Doc/docs/Mother_Doc/README.md`: 当前容器文档域的浓缩总结。
+- `../Mother_Doc/docs/Mother_Doc/project_baseline/`: 项目统一目标基线与当前开发说明。
 
 ## 4. 当前维护摘要
 - `replace_me`: 当前容器主要职责。

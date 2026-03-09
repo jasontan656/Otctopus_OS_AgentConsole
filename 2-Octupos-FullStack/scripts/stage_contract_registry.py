@@ -5,14 +5,7 @@ from __future__ import annotations
 # required_fields: top_level_resident_docs,stage_order,stage_scopes,stage_docs,stage_commands,stage_graph_contracts,stage_checklists | optional_fields: none
 
 from stage_contract_graph_data import EVIDENCE_GRAPH_COMMANDS, EVIDENCE_GRAPH_DOCS
-TOP_LEVEL_RESIDENT_DOCS = [
-    "rules/FULLSTACK_SKILL_HARD_RULES.md",
-    "references/runtime/SKILL_RUNTIME_CONTRACT.md",
-    "references/skill_native/00_SKILL_NATIVE_INDEX.md",
-    "references/authored_domains/00_DOMAIN_INDEX.md",
-    "references/tooling/SKILL_TOOLING_WORKFLOW_CONTRACT.md",
-    "/home/jasontan656/AI_Projects/AGENTS.md",
-]
+TOP_LEVEL_RESIDENT_DOCS = ["rules/FULLSTACK_SKILL_HARD_RULES.md", "references/runtime/SKILL_RUNTIME_CONTRACT.md", "references/skill_native/00_SKILL_NATIVE_INDEX.md", "references/skill_native/10_PROJECT_BASELINE_INDEX.md", "references/authored_domains/00_DOMAIN_INDEX.md", "references/tooling/SKILL_TOOLING_WORKFLOW_CONTRACT.md", "/home/jasontan656/AI_Projects/AGENTS.md"]
 STAGE_ORDER = ["mother_doc", "implementation", "evidence"]
 STAGE_SCOPES = {
     "mother_doc": "strengthen user intent, recursively navigate Mother_Doc, and write back current-state document structure",
@@ -23,6 +16,7 @@ STAGE_DOCS = {
     "mother_doc": [
         "references/stages/MOTHER_DOC_STAGE.md",
         "references/mother_doc/00_MOTHER_DOC_BRANCH_INDEX.md",
+        "references/mother_doc/PROJECT_BASELINE_ROUTING_RULES.md",
         "references/mother_doc/DIRECT_WRITEBACK_BRANCH.md",
         "references/mother_doc/QUESTION_BACKFILL_BRANCH.md",
         "references/mother_doc/MOTHER_DOC_ENTRY_RULES.md",
@@ -69,6 +63,10 @@ STAGE_COMMANDS = {
             {
                 "command": "python3 /home/jasontan656/.codex/skills/Meta-prompt-write/scripts/filter_active_invoke_output.py --mode active_invoke --input-text \"<RAW_PROMPT_OUTPUT>\"",
                 "purpose": "strengthen the current user prompt with full repo context before selecting Mother_Doc scope",
+            },
+            {
+                "command": "read references/skill_native/10_PROJECT_BASELINE_INDEX.md",
+                "purpose": "load the project-wide operating model, impact selection rule, and dynamic authored-doc growth baseline before choosing concrete container scope",
             },
             {
                 "command": "read references/mother_doc/00_MOTHER_DOC_BRANCH_INDEX.md",
@@ -218,6 +216,7 @@ STAGE_CHECKLISTS = {
         "stage_docs": STAGE_DOCS["mother_doc"],
         "entry_requirements": [
             "load top-level resident docs",
+            "load the project baseline before selecting container scope",
             "strengthen the user prompt with Meta-prompt-write",
             "read references/mother_doc/00_MOTHER_DOC_BRANCH_INDEX.md before choosing any mother_doc action",
             "choose direct_writeback, question_backfill, or AGENTS/README manager before reading deeper scope docs",
@@ -239,6 +238,7 @@ STAGE_CHECKLISTS = {
         "stage_docs": STAGE_DOCS["implementation"],
         "entry_requirements": [
             "load top-level resident docs",
+            "retain the project baseline before selecting implementation scope",
             "read implementation-specific stage contracts",
             "carry forward current-state outputs from mother_doc",
             "load the matching authored domain family rules before entering a specific container",
@@ -259,6 +259,7 @@ STAGE_CHECKLISTS = {
         "stage_docs": STAGE_DOCS["evidence"],
         "entry_requirements": [
             "load top-level resident docs",
+            "retain the project baseline before selecting evidence scope",
             "read evidence-specific stage contracts",
             "carry forward current-state outputs from mother_doc and implementation",
             "enter references/evidence/00_EVIDENCE_INDEX.md before choosing graph/log/binding focus",

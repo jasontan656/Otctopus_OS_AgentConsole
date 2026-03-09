@@ -13,6 +13,7 @@
 
 ## 4. 选择规则
 - 如果当前任务需要确认容器用途、维护范围或当前阶段总结，可选读取同层 `README.md`。
+- 如果当前任务是新需求的项目级目标、作用面或当前试点范围判定，`Mother_Doc` 容器先进入 `docs/Mother_Doc/project_baseline/`。
 - 若任务是文档设计、需求回写或结构浏览，优先转入对应的 `Mother_Doc/docs` 路径。
 - 若任务是代码落盘或运行时处理，则留在当前容器路径，并同时回看对应的 `Mother_Doc/docs/<Container_Name>/common/`。
 - 涉及前端开发、页面联调、浏览器测试或交互验证时，`User_UI` 与 `Admin_UI` 必须加载 `Meta-browser-operation`。

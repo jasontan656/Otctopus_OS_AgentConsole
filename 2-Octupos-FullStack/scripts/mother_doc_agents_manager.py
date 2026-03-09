@@ -20,7 +20,7 @@ CONTAINER_DESCRIPTIONS = {
     "User_UI": "user-facing client container",
     "Admin_UI": "admin-facing client container and future operator surface",
     "API_Gateway": "unified ingress container for routing, auth forwarding, and traffic control",
-    "Mother_Doc": "authoritative authored-document and OS_graph container",
+    "Mother_Doc": "authoritative authored-document, project-baseline, and OS_graph container",
     "Identity_Service": "identity and auth domain container",
     "Account_Service": "account and profile domain container",
     "Order_Service": "order domain container",
@@ -153,6 +153,7 @@ def build_octopus_root_agents(workspace_root: Path) -> str:
         "## 3. 章鱼OS技能锚点",
         "- `/home/jasontan656/.codex/skills/2-Octupos-FullStack/SKILL.md`: 技能总门面。",
         "- `/home/jasontan656/.codex/skills/2-Octupos-FullStack/references/skill_native/01_FACADE_LOAD_MAP.md`: 技能总入口图与规则分流。",
+        "- `/home/jasontan656/.codex/skills/2-Octupos-FullStack/references/skill_native/10_PROJECT_BASELINE_INDEX.md`: 项目统一目标基线入口。",
         "- `/home/jasontan656/.codex/skills/2-Octupos-FullStack/references/stages/MOTHER_DOC_STAGE.md`: `mother_doc` 阶段入口。",
         "- `/home/jasontan656/.codex/skills/2-Octupos-FullStack/references/stages/IMPLEMENTATION_STAGE.md`: `implementation` 阶段入口。",
         "- `/home/jasontan656/.codex/skills/2-Octupos-FullStack/references/stages/EVIDENCE_STAGE.md`: `evidence` 阶段入口。",
@@ -161,11 +162,12 @@ def build_octopus_root_agents(workspace_root: Path) -> str:
         "## 4. 项目资产去处",
         "- `Octopus_OS/<Container_Name>/`: 各独立容器的代码与运行时根路径。",
         "- `Octopus_OS/Mother_Doc/docs/`: 所有容器的 authored-doc 文档树。",
+        "- `Octopus_OS/Mother_Doc/docs/Mother_Doc/project_baseline/`: 项目统一目标基线与当前开发说明。",
         "- `Octopus_OS/Mother_Doc/graph/`: OS_graph 资产与 evidence graph runtime 根。",
         "",
         "## 5. 选择规则",
         "- 先看当前任务是否只需要技能锚点即可判断；若不足，再可选读取同层 `README.md`。",
-        "- 再读章鱼OS全栈技能锚点，确认当前任务属于 `mother_doc`、`implementation` 还是 `evidence`。",
+        "- 再读章鱼OS全栈技能锚点与项目统一目标基线，确认当前任务属于 `mother_doc`、`implementation` 还是 `evidence`。",
         "- 确认阶段后，再选择进入对应容器路径或 `Mother_Doc` 文档树，不跨到无关容器。",
         "- 如果本仓库在写入回合发生文件变动，则必须进行 GitHub 留痕；commit message 必须依据本轮实际变动内容编写。",
         "- 本仓库承担宪法技能与静态 lint 收口责任；写入本仓库时，必须对实际被修改的 concrete target root 运行 `Constitution-knowledge-base` static lint。",
@@ -258,6 +260,7 @@ def build_container_root_agents(container_root: Path, document_root: Path) -> st
     )
     if container_name == "Mother_Doc":
         lines.append("- `docs/`: Mother_Doc authored-doc 树根。")
+        lines.append("- `docs/Mother_Doc/project_baseline/`: 项目统一目标基线与当前开发说明。")
         lines.append("- `graph/`: OS_graph 资产根。")
     elif doc_scope.exists():
         lines.append(f"- `../Mother_Doc/docs/{container_name}/`: 当前容器对应的文档树入口。")
@@ -272,6 +275,7 @@ def build_container_root_agents(container_root: Path, document_root: Path) -> st
             "",
             "## 4. 选择规则",
             "- 如果当前任务需要确认容器用途、维护范围或当前阶段总结，可选读取同层 `README.md`。",
+            "- 如果当前任务是新需求的项目级目标、作用面或当前试点范围判定，`Mother_Doc` 容器先进入 `docs/Mother_Doc/project_baseline/`。",
             "- 若任务是文档设计、需求回写或结构浏览，优先转入对应的 `Mother_Doc/docs` 路径。",
             "- 若任务是代码落盘或运行时处理，则留在当前容器路径，并同时回看对应的 `Mother_Doc/docs/<Container_Name>/common/`。",
             "- 涉及前端开发、页面联调、浏览器测试或交互验证时，`User_UI` 与 `Admin_UI` 必须加载 `Meta-browser-operation`。",
@@ -318,6 +322,8 @@ def build_container_root_readme(container_root: Path, document_root: Path) -> st
     if doc_scope.exists():
         lines.append(f"- `../Mother_Doc/docs/{container_name}/`: 当前容器对应的 authored-doc 根。")
         lines.append(f"- `../Mother_Doc/docs/{container_name}/README.md`: 当前容器文档域的浓缩总结。")
+        if container_name == "Mother_Doc":
+            lines.append("- `../Mother_Doc/docs/Mother_Doc/project_baseline/`: 项目统一目标基线与当前开发说明。")
     else:
         lines.append("- `replace_me`: 当前容器对应的 authored-doc 根尚未补齐。")
     lines.extend(

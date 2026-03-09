@@ -11,9 +11,16 @@
 
 - [顶层规则](../../rules/FULLSTACK_SKILL_HARD_RULES.md)
 - [运行合同审计版](../runtime/SKILL_RUNTIME_CONTRACT.md)
+- [项目统一目标基线](10_PROJECT_BASELINE_INDEX.md)
 - [workflow contract](../tooling/SKILL_TOOLING_WORKFLOW_CONTRACT.md)
 - [authored domains 索引](../authored_domains/00_DOMAIN_INDEX.md)
 - `/home/jasontan656/AI_Projects/AGENTS.md`
+
+## Project Baseline Entry
+
+- [项目统一目标基线索引](10_PROJECT_BASELINE_INDEX.md)
+- `mother_doc`、`implementation`、`evidence` 在进入具体容器或域前，先读取这层项目基线。
+- `mother_doc` 的影响面判断固定采用：默认全相关，再按高概率不相关域做减法。
 
 ## Stage Entry
 

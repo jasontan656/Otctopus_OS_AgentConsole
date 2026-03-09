@@ -18,7 +18,7 @@
 - `API_Gateway/`: unified ingress container for routing, auth forwarding, and traffic control.
 - `File_Service/`: file domain container.
 - `Identity_Service/`: identity and auth domain container.
-- `Mother_Doc/`: authoritative authored-document and OS_graph container.
+- `Mother_Doc/`: authoritative authored-document, project-baseline, and OS_graph container.
 - `MQ_Broker/`: message broker container.
 - `Notification_Service/`: notification domain container.
 - `Object_Storage/`: object storage container.

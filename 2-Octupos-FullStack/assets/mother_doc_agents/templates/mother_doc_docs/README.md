@@ -40,6 +40,7 @@ change_detection_mode: block_registry
 - same-named container directories: the primary authored-document entry shape.
 - `Mother_Doc/Mother_Doc/README.md`: the self-description purpose doc for the `Mother_Doc` container itself.
 - `Mother_Doc/Mother_Doc/AGENTS.md`: the self-description recursive index for the `Mother_Doc` container itself.
+- `Mother_Doc/Mother_Doc/project_baseline/`: the project-wide baseline layer that must be read before entering concrete containers.
 
 ## Container Mirror Directories
 
@@ -69,4 +70,5 @@ Boundary rule:
 Special case:
 
 - `Mother_Doc/Mother_Doc/` is the authored documentation node for the `Octopus_OS/Mother_Doc/` container itself.
+- `Mother_Doc/Mother_Doc/project_baseline/` carries the current project positioning, impact selection rule, and dynamic-growth baseline above container-local docs.
 - Read this file first for root purpose, then use the peer `AGENTS.md` to choose the next scope, and use `Mother_Doc.md` to understand the root directory as an authored object.

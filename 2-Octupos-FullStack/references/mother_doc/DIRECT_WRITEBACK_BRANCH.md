@@ -4,6 +4,7 @@
 
 ## Entry
 
+- [项目级基线路由规则](PROJECT_BASELINE_ROUTING_RULES.md)
 - [入口规则](MOTHER_DOC_ENTRY_RULES.md)
 - [回填规则](MOTHER_DOC_WRITEBACK_RULES.md)
 - [总览层规则](OVERVIEW_LAYER_RULES.md)
@@ -19,6 +20,7 @@
   - `features/`
   - `shared/`
   - `common/`
+- 项目级目标、当前开发说明、影响面裁决与动态增长原则优先回填到 `Mother_Doc/project_baseline/`。
 - 缺失细节允许留 `replace_me`、占位段或问题缺口，但不得自行假装收口。
 
 ## Output

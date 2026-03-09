@@ -4,11 +4,13 @@
 - This family owns authored-doc tree shape, navigation shape, and docs-vs-container-root separation.
 - `Octopus_OS/Mother_Doc/` is the code container root; authored docs live only under `docs/`.
 - `graph/` is an asset root and must not be mixed into docs navigation.
+- `Mother_Doc` container also owns a project-level `project_baseline/` scope above container-local details.
 - Every container doc directory must route authored content into:
   - `overview/` for human-observable summaries
   - `features/` for semantic feature coverage and unresolved requirements
   - `shared/` for API/event/shared-contract/cross-container dependency content
   - `common/` for stable abstract layers only
+- `Mother_Doc/project_baseline/` owns project-wide positioning, current delivery focus, impact pruning, dynamic growth, and front-end dynamic consumption guidance.
 - Mother_Doc container writing must keep the core chain explicit:
   - `doc_code_authority`
   - `semantic_coverage_unit`

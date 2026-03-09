@@ -15,7 +15,7 @@
 - `API_Gateway`: container documentation scope for `API_Gateway`.
 - `File_Service`: container documentation scope for `File_Service`.
 - `Identity_Service`: container documentation scope for `Identity_Service`.
-- `Mother_Doc`: self-description container scope for the Mother_Doc container itself.
+- `Mother_Doc`: self-description and project-baseline container scope for the Mother_Doc container itself.
 - `MQ_Broker`: container documentation scope for `MQ_Broker`.
 - `Notification_Service`: container documentation scope for `Notification_Service`.
 - `Object_Storage`: container documentation scope for `Object_Storage`.

@@ -11,6 +11,7 @@ DOMAIN_DESCRIPTIONS = {
     "overview": "human-readable overview scope for the current container; start here when you need top-level comprehension",
     "features": "feature document scope for the current container; choose the affected requirement or unresolved question slice below",
     "shared": "shared integration scope for the current container; choose APIs, events, contracts, or cross-container dependencies below",
+    "project_baseline": "project-level baseline scope for current objectives, impact pruning, and dynamic growth rules",
     "writing_guides": "authored-doc writing rules for the current container",
     "code_abstractions": "code abstraction root for the current container; choose one code-facing abstract domain below",
     "architecture": "architecture abstraction scope under code abstractions for the current container",
@@ -42,7 +43,7 @@ def describe_directory(path: Path, document_root: Path) -> str:
         return "root navigation scope for Mother_Doc docs; choose the container documentation scope to enter"
     if len(parts) == 1:
         if parts[0] == "Mother_Doc":
-            return "self-description container scope for the Mother_Doc container itself"
+            return "self-description and project-baseline container scope for the Mother_Doc container itself"
         return f"container documentation scope for `{parts[0]}`"
     if parts[-1] in DOMAIN_DESCRIPTIONS:
         return DOMAIN_DESCRIPTIONS[parts[-1]]

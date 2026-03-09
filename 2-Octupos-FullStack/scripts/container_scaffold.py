@@ -71,6 +71,15 @@ CONTENT_LAYER_FILE_MAP: dict[str, tuple[str, ...]] = {
     "shared": ("api_surfaces", "event_and_message_flows", "shared_contracts", "cross_container_dependencies", "open_questions"),
 }
 
+MOTHER_DOC_PROJECT_BASELINE_FILES: tuple[str, ...] = (
+    "project_positioning",
+    "operating_model",
+    "impact_selection_baseline",
+    "current_project_development_baseline",
+    "dynamic_document_growth",
+    "front_end_dynamic_consumption",
+)
+
 
 def validate_container_name(name: str) -> list[str]:
     warnings: list[str] = []
@@ -128,6 +137,7 @@ def build_document_readme(name: str, workspace_dir: Path, family: str) -> list[s
     if family == "Mother_Doc":
         lines.append("`common/development_logs/` carries append-oriented implementation and deployment checkpoints for document-led delivery.")
         lines.append("This authored tree lives under the `docs/` subdirectory because the Mother_Doc container root is reserved for code/runtime assets.")
+        lines.append("`project_baseline/` carries the always-load project baseline before any container-specific scope selection.")
     return lines
 
 
@@ -339,6 +349,44 @@ def build_content_file_body(name: str, family: str, layer: str, topic: str) -> l
     ]
 
 
+def build_project_baseline_file_body(topic: str) -> list[str]:
+    if topic == "project_positioning":
+        return [
+            "This file defines the top-level project positioning for Octopus_OS.",
+            "Use it to explain what the project is, why it is operated through Octopus OS, and how the container set belongs to one evolving project.",
+            "Keep it human-readable first while preserving stable anchors for later OS_graph binding.",
+        ]
+    if topic == "operating_model":
+        return [
+            "This file defines the operating model where humans issue intent and the Octopus AI writes docs, implements code, tests, deploys, and later operates the system.",
+            "Keep the responsibilities explicit and aligned with the current project baseline.",
+        ]
+    if topic == "impact_selection_baseline":
+        return [
+            "This file defines the project-wide impact selection rule.",
+            "Always start from default_all_relevant and only then prune by highest-probability-unrelated scopes.",
+            "Do not collapse this rule into a guessed short list of related containers.",
+        ]
+    if topic == "current_project_development_baseline":
+        return [
+            "This file records the current project objective, current delivery focus, and current readable inclusion/exclusion judgment for the active requirement set.",
+            "Refresh it whenever a new project-level requirement changes the likely impact surface.",
+        ]
+    if topic == "dynamic_document_growth":
+        return [
+            "This file defines how the authored-doc tree is allowed to grow new branches over time.",
+            "Growth must stay rule-driven, navigable, and compatible with future OS_graph bindings.",
+        ]
+    if topic == "front_end_dynamic_consumption":
+        return [
+            "This file defines how Admin_UI and other front-end consumers discover and compose dynamic authored docs.",
+            "Offline storage stays fragmented and machine-first; online presentation may aggregate and visualize the same content for human reading.",
+        ]
+    return [
+        f"This file defines the `{topic}` project-baseline slice for the Mother_Doc container.",
+    ]
+
+
 def scaffold_common_tree(*, container_name: str, document_dir: Path, family: str, dry_run: bool) -> list[str]:
     created_files: list[str] = []
     for domain, topics in FAMILY_FILE_MAP[family].items():
@@ -364,6 +412,17 @@ def scaffold_content_tree(*, container_name: str, document_dir: Path, family: st
                 target,
                 title=topic,
                 body_lines=build_content_file_body(container_name, family, layer, topic),
+                dry_run=dry_run,
+            )
+            if created:
+                created_files.append(str(target))
+    if family == "Mother_Doc":
+        for topic in MOTHER_DOC_PROJECT_BASELINE_FILES:
+            target = document_dir / "project_baseline" / f"{topic}.md"
+            created = ensure_markdown(
+                target,
+                title=topic,
+                body_lines=build_project_baseline_file_body(topic),
                 dry_run=dry_run,
             )
             if created:

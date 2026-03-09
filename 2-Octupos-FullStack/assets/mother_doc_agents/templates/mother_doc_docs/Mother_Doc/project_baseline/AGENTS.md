@@ -1,19 +1,20 @@
 # AGENTS
 
 ## 1. 目标
-- 当前层作用：self-description and project-baseline container scope for the Mother_Doc container itself。
+- 当前层作用：project-level baseline scope for current objectives, impact pruning, and dynamic growth rules。
 - 本文件只承担当前层入口索引与递归选域，不承载正文细节。
 
 ## 2. 同层入口
 - `README.md`: 当前层用途说明；可选阅读，但如果当前目录内容发生变更，则必须考虑维护它。
-- `Mother_Doc.md`: 当前层目录实体说明。
+- `project_baseline.md`: 当前层目录实体说明。
 
 ## 3. 下一层入口
-- `Mother_Doc/common`: current container's abstract layer root; choose one abstract domain below.
-- `Mother_Doc/features`: feature document scope for the current container; choose the affected requirement or unresolved question slice below.
-- `Mother_Doc/overview`: human-readable overview scope for the current container; start here when you need top-level comprehension.
-- `Mother_Doc/project_baseline`: project-level baseline scope for current objectives, impact pruning, and dynamic growth rules.
-- `Mother_Doc/shared`: shared integration scope for the current container; choose APIs, events, contracts, or cross-container dependencies below.
+- `Mother_Doc/project_baseline/current_project_development_baseline.md`: `current project development baseline` leaf rule file inside the `project_baseline` abstract domain.
+- `Mother_Doc/project_baseline/dynamic_document_growth.md`: `dynamic document growth` leaf rule file inside the `project_baseline` abstract domain.
+- `Mother_Doc/project_baseline/front_end_dynamic_consumption.md`: `front end dynamic consumption` leaf rule file inside the `project_baseline` abstract domain.
+- `Mother_Doc/project_baseline/impact_selection_baseline.md`: `impact selection baseline` leaf rule file inside the `project_baseline` abstract domain.
+- `Mother_Doc/project_baseline/operating_model.md`: `operating model` leaf rule file inside the `project_baseline` abstract domain.
+- `Mother_Doc/project_baseline/project_positioning.md`: `project positioning` leaf rule file inside the `project_baseline` abstract domain.
 
 ## 4. 选择规则
 - 若当前 `AGENTS.md` 的索引不足以判断，再读取当前层 `README.md` 与同名实体文档。

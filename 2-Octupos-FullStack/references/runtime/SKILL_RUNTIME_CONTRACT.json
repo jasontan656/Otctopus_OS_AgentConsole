@@ -13,6 +13,7 @@
     "rules/FULLSTACK_SKILL_HARD_RULES.md",
     "references/runtime/SKILL_RUNTIME_CONTRACT.md",
     "references/skill_native/00_SKILL_NATIVE_INDEX.md",
+    "references/skill_native/10_PROJECT_BASELINE_INDEX.md",
     "references/authored_domains/00_DOMAIN_INDEX.md",
     "references/tooling/SKILL_TOOLING_WORKFLOW_CONTRACT.md",
     "/home/jasontan656/AI_Projects/AGENTS.md"
@@ -35,8 +36,10 @@
     "Mother_Doc 每一层目录都必须具备 README.md、AGENTS.md、<folder_name>.md。",
     "每个容器文档目录都必须固定具备 overview/、features/、shared/、common/。",
     "AGENTS.md 之外的 Mother_Doc markdown 必须具备 Document Status + Block Registry，供机械探测变动。",
+    "project baseline 属于 always-load 层；进入任何具体容器或域前，固定先读。",
     "mother_doc 阶段必须先用 Meta-prompt-write 强化用户意图，再读取 mother_doc 子分支入口判定当前任务链。",
     "mother_doc 阶段固定先判定 direct_writeback、question_backfill 或 AGENTS/README manager；不得混写。",
+    "mother_doc 的影响面判断固定采用 默认全相关 -> 排除高概率不相关项。",
     "AGENTS/README manager 统一管理 Octopus_OS 根层、各容器根层与 Mother_Doc/docs 文档树中的 AGENTS.md + README.md，并固定采用 scan / collect / push 三阶段。",
     "direct_writeback 只写已明确内容；question_backfill 只关闭未收口问题。",
     "mother_doc 更新文档后，必须运行本地 git 驱动的状态脚本；变更文档标记为 modified，空占位标记为 null。",

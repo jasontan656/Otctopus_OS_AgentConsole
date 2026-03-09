@@ -18,7 +18,7 @@ description: "未来项目 admin panel 内置的运营AI“章鱼”，负责 mo
 
 ## 3. 工作流约束
 - 统一工作流入口：[Facade Load Map](references/skill_native/01_FACADE_LOAD_MAP.md)
-- 顶层常驻文档、阶段进入顺序、阶段切换方式都从该入口继续读取。
+- 顶层常驻文档、项目统一目标基线、阶段进入顺序、阶段切换方式都从该入口继续读取。
 - `mother_doc` 进入后先读子分支入口，再选择 `direct_writeback`、`question_backfill` 或 `AGENTS/README manager`。
 - `mother_doc`、`implementation`、`evidence` 的细则不在门面展开。
 
@@ -35,6 +35,7 @@ description: "未来项目 admin panel 内置的运营AI“章鱼”，负责 mo
 ## 6. 内联导航索引
 - [总入口图](references/skill_native/01_FACADE_LOAD_MAP.md)
 - [skill native 索引](references/skill_native/00_SKILL_NATIVE_INDEX.md)
+- [项目统一目标基线](references/skill_native/10_PROJECT_BASELINE_INDEX.md)
 - [顶层规则](rules/FULLSTACK_SKILL_HARD_RULES.md)
 - [运行合同](references/runtime/SKILL_RUNTIME_CONTRACT.md)
 - [authored domains 索引](references/authored_domains/00_DOMAIN_INDEX.md)

@@ -12,7 +12,7 @@
 
 ## Required Workflow
 
-1. 显式承接 `mother_doc + implementation` 当前状态产物。
+1. 显式承接 `mother_doc + implementation` 当前状态产物，并继续保留项目统一目标基线。
 2. 以 `OS_graph` 的四层模型组织总览文档、共享合同、代码模块、helper、父级目录与 witness。
 3. 把 graph 运行产物写回 `Octopus_OS/Mother_Doc/graph/`。
 4. graph 命令域统一从 `python3 scripts/os_graph_cli.py <command> [args...]` 进入，不得与其他阶段命令串用。

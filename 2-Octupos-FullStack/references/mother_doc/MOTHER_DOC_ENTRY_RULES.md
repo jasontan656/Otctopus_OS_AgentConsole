@@ -8,6 +8,7 @@
 - `Octopus_OS/Mother_Doc/docs/README.md` 是文档镜像根用途说明。
 - `Octopus_OS/Mother_Doc/docs/AGENTS.md` 是文档镜像根索引入口。
 - `Octopus_OS/Mother_Doc/docs/Mother_Doc.md` 是文档镜像根目录自身的实体说明。
+- 进入任何具体容器前，先读取技能侧 `references/skill_native/10_PROJECT_BASELINE_INDEX.md` 与产品侧 `Octopus_OS/Mother_Doc/docs/Mother_Doc/project_baseline/`。
 - 进入普通文档更新前，先读 [00_MOTHER_DOC_BRANCH_INDEX.md](00_MOTHER_DOC_BRANCH_INDEX.md) 判定子分支。
 - 进入 `AGENTS.md / README.md` 管理任务前，先读 [AGENTS Branch Index](agents_branch/00_BRANCH_INDEX.md)。
 - 每一层目录都延续同一规则：`README.md + AGENTS.md + <folder_name>.md`。
@@ -16,6 +17,7 @@
   - `features/`
   - `shared/`
   - `common/`
+- `Mother_Doc` 容器是特例；除上述固定层外，还固定具备 `project_baseline/`。
 - `AGENTS.md` 管理由 3 个路径分支组成：
   - `Octopus_OS/AGENTS.md`
   - `Octopus_OS/<Container_Name>/AGENTS.md`
@@ -51,6 +53,7 @@
 
 ## Dynamic Expansion
 
+- 影响面判断固定从默认全相关开始，再按高概率不相关域做减法。
 - 容器集合不是封闭白名单。
 - AI 必须依据项目描述判断是否新增容器。
 - 新增容器后，必须同步新增工作目录容器与 `Mother_Doc/docs` 同名目录，并补齐三类固定文件与 `common/` 骨架。
