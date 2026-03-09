@@ -2,11 +2,4 @@
 
 ## Purpose
 
-- Print the scope contract for the `evidence` stage.
-
-## Output
-
-- stage name
-- must-load rules
-- required previous-stage inputs
-- produced outputs
+- Print the aggregated `evidence` stage contract.

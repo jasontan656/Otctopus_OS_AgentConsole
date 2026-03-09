@@ -14,6 +14,12 @@ from container_scaffold import (
     validate_container_name,
 )
 from mother_doc_navigation import sync_navigation_tree
+from stage_contract_support import (
+    get_stage_checklist,
+    get_stage_command_contract,
+    get_stage_doc_contract,
+    get_stage_graph_contract,
+)
 from stage_runtime import emit_stage_payload
 
 
@@ -114,6 +120,15 @@ def sync_mother_doc_navigation(args: argparse.Namespace) -> int:
     return 0
 
 
+def emit_contract(payload: dict[str, object], *, as_json: bool) -> int:
+    if as_json:
+        print(json.dumps(payload, ensure_ascii=False, indent=2))
+    else:
+        for key, value in payload.items():
+            print(f"{key}: {value}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="2-Octupos-FullStack toolbox")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -137,6 +152,38 @@ def build_parser() -> argparse.ArgumentParser:
     navigation.add_argument("--dry-run", action="store_true")
     navigation.add_argument("--json", action="store_true")
     navigation.set_defaults(func=sync_mother_doc_navigation)
+
+    checklist = subparsers.add_parser(
+        "stage-checklist",
+        help="print the checklist for a specific stage",
+    )
+    checklist.add_argument("--stage", choices=("mother_doc", "implementation", "evidence"), required=True)
+    checklist.add_argument("--json", action="store_true")
+    checklist.set_defaults(func=lambda args: emit_contract(get_stage_checklist(args.stage), as_json=args.json))
+
+    doc_contract = subparsers.add_parser(
+        "stage-doc-contract",
+        help="print the document-loading contract for a specific stage",
+    )
+    doc_contract.add_argument("--stage", choices=("mother_doc", "implementation", "evidence"), required=True)
+    doc_contract.add_argument("--json", action="store_true")
+    doc_contract.set_defaults(func=lambda args: emit_contract(get_stage_doc_contract(args.stage), as_json=args.json))
+
+    command_contract = subparsers.add_parser(
+        "stage-command-contract",
+        help="print the command contract for a specific stage",
+    )
+    command_contract.add_argument("--stage", choices=("mother_doc", "implementation", "evidence"), required=True)
+    command_contract.add_argument("--json", action="store_true")
+    command_contract.set_defaults(func=lambda args: emit_contract(get_stage_command_contract(args.stage), as_json=args.json))
+
+    graph_contract = subparsers.add_parser(
+        "stage-graph-contract",
+        help="print the graph contract for a specific stage",
+    )
+    graph_contract.add_argument("--stage", choices=("mother_doc", "implementation", "evidence"), required=True)
+    graph_contract.add_argument("--json", action="store_true")
+    graph_contract.set_defaults(func=lambda args: emit_contract(get_stage_graph_contract(args.stage), as_json=args.json))
 
     mother_doc = subparsers.add_parser(
         "mother-doc-stage",

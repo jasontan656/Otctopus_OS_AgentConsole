@@ -1,36 +1,37 @@
 modules:
-  - module_id: mother_doc_stage
-    tool_alias: Cli_Toolbox.mother_doc_stage
-    entrypoint: scripts/Cli_Toolbox.py mother-doc-stage
+  - module_id: stage_checklist
+    tool_alias: Cli_Toolbox.stage_checklist
+    entrypoint: scripts/Cli_Toolbox.py stage-checklist
     status: active
-    docs:
-      usage: references/tooling/Cli_Toolbox_USAGE.md
-      module: references/tooling/development/modules/mother_doc_stage.md
+  - module_id: stage_doc_contract
+    tool_alias: Cli_Toolbox.stage_doc_contract
+    entrypoint: scripts/Cli_Toolbox.py stage-doc-contract
+    status: active
+  - module_id: stage_command_contract
+    tool_alias: Cli_Toolbox.stage_command_contract
+    entrypoint: scripts/Cli_Toolbox.py stage-command-contract
+    status: active
+  - module_id: stage_graph_contract
+    tool_alias: Cli_Toolbox.stage_graph_contract
+    entrypoint: scripts/Cli_Toolbox.py stage-graph-contract
+    status: active
   - module_id: materialize_container_layout
     tool_alias: Cli_Toolbox.materialize_container_layout
     entrypoint: scripts/Cli_Toolbox.py materialize-container-layout
     status: active
-    docs:
-      usage: references/tooling/Cli_Toolbox_USAGE.md
-      module: references/tooling/development/modules/materialize_container_layout.md
   - module_id: sync_mother_doc_navigation
     tool_alias: Cli_Toolbox.sync_mother_doc_navigation
     entrypoint: scripts/Cli_Toolbox.py sync-mother-doc-navigation
     status: active
-    docs:
-      usage: references/tooling/Cli_Toolbox_USAGE.md
-      module: references/tooling/development/modules/sync_mother_doc_navigation.md
+  - module_id: mother_doc_stage
+    tool_alias: Cli_Toolbox.mother_doc_stage
+    entrypoint: scripts/Cli_Toolbox.py mother-doc-stage
+    status: active
   - module_id: implementation_stage
     tool_alias: Cli_Toolbox.implementation_stage
     entrypoint: scripts/Cli_Toolbox.py implementation-stage
     status: active
-    docs:
-      usage: references/tooling/Cli_Toolbox_USAGE.md
-      module: references/tooling/development/modules/implementation_stage.md
   - module_id: evidence_stage
     tool_alias: Cli_Toolbox.evidence_stage
     entrypoint: scripts/Cli_Toolbox.py evidence-stage
     status: active
-    docs:
-      usage: references/tooling/Cli_Toolbox_USAGE.md
-      module: references/tooling/development/modules/evidence_stage.md

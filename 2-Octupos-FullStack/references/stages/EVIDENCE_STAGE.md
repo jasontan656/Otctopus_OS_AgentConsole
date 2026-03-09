@@ -4,26 +4,18 @@
 
 ## Scope
 
-- 从 `implementation` 当前状态产物中提取执行证据、验收 witness 与回写记录，并绑定回 `Mother_Doc`。
+- 从 `implementation` 当前状态中提取真实 witness。
+- 以 `OS_graph` 统一文档 graph、代码 graph 与 evidence 绑定。
 
-## Must Load
+## Required Workflow
 
-- `rules/FULLSTACK_SKILL_HARD_RULES.md`
-- `references/runtime/SKILL_RUNTIME_CONTRACT.md`
-- `references/stages/MOTHER_DOC_STAGE.md`
-- `references/stages/IMPLEMENTATION_STAGE.md`
-
-## Required Inputs
-
-- `mother_doc` 阶段产物
-- `implementation` 阶段产物
+1. 显式承接 `mother_doc + implementation` 当前状态产物。
+2. 以 `OS_graph` 的层级关系组织模块、helper、父级目录与 witness。
+3. 把真实 evidence 回填到对应的文档节点与代码节点。
+4. 覆盖写回当前状态，不保留项目内部版本分支。
 
 ## Produces
 
 - execution evidence
 - acceptance witnesses
-- writeback records
-
-## CLI Scope
-
-- `scripts/Cli_Toolbox.py evidence-stage`
+- OS_graph contract-level writeback

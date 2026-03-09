@@ -99,6 +99,7 @@ def build_document_readme(name: str, workspace_dir: Path, family: str) -> list[s
         f"Corresponding workspace path: `{workspace_dir}`.",
         "This directory carries authored development and operations docs for the same-named container.",
         "Stable abstracted knowledge lives under `common/`.",
+        f"`{name}.md` in this directory describes the container itself as the authored module entity.",
         "Use the peer `agents.md` in this directory as the recursive navigation index.",
     ]
 

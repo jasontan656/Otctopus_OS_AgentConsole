@@ -1,12 +1,19 @@
 # Category Index
 
-## stage_runtime
+## stage_contracts
+
+- `Cli_Toolbox.stage_checklist`
+- `Cli_Toolbox.stage_doc_contract`
+- `Cli_Toolbox.stage_command_contract`
+- `Cli_Toolbox.stage_graph_contract`
+
+## structure_sync
+
+- `Cli_Toolbox.materialize_container_layout`
+- `Cli_Toolbox.sync_mother_doc_navigation`
+
+## stage_payloads
 
 - `Cli_Toolbox.mother_doc_stage`
 - `Cli_Toolbox.implementation_stage`
 - `Cli_Toolbox.evidence_stage`
-
-## mother_doc_structure
-
-- `Cli_Toolbox.materialize_container_layout`
-- `Cli_Toolbox.sync_mother_doc_navigation`

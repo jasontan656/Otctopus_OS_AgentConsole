@@ -39,6 +39,8 @@ def describe_leaf_file(path: Path, document_root: Path) -> str:
         return "peer purpose document for the current scope"
     if path.name == "agents.md":
         return "navigation index for the current scope"
+    if path.name == f"{path.parent.name}.md":
+        return "scope-entity document for the current directory itself"
     stem = path.stem
     parent = path.parent.name
     if parent in DOMAIN_DESCRIPTIONS:
@@ -55,8 +57,39 @@ def build_directory_readme(path: Path, document_root: Path) -> str:
         "",
         description + ".",
         "",
+        f"- Use `{path.name}.md` in the same directory as the scope-entity document for the current directory itself.",
         "- Use `agents.md` in the same directory as the navigation index for the next scope selection.",
         "- Keep this file focused on what the current scope is for, not on child-path enumeration.",
+        "",
+    ]
+    return "\n".join(lines)
+
+
+def build_scope_entity_doc(path: Path, document_root: Path) -> str:
+    rel = path.relative_to(document_root)
+    scope_label = str(rel) if rel.parts else "Mother_Doc"
+    if path.name == "contracts":
+        lines = [
+            "# contracts",
+            "",
+            "- `contract_name`: current_scope_contract_domain",
+            "- `contract_version`: 1.0.0",
+            "- `validation_mode`: static_minimal",
+            "- `required_fields`: contract_name, contract_version, validation_mode, domain_scope",
+            "- `optional_fields`: notes",
+            "",
+            f"- `domain_scope`: `{scope_label}`",
+            "- This file is the scope-entity contract for the current `contracts/` directory itself.",
+            "- Keep it aligned with the contract files and contract semantics that live under this directory.",
+            "",
+        ]
+        return "\n".join(lines)
+    lines = [
+        f"# {path.name}",
+        "",
+        f"This file is the scope-entity document for `{scope_label}`.",
+        f"It describes the directory itself as a module, parent scope, black-box container, or authored documentation carrier.",
+        "Keep the content aligned with the actual code and document structure for the same scope.",
         "",
     ]
     return "\n".join(lines)
@@ -117,6 +150,7 @@ def build_agents_index(path: Path, document_root: Path) -> str:
 
 def sync_navigation_tree(document_root: Path, *, dry_run: bool) -> dict[str, list[str]]:
     created_readmes: list[str] = []
+    created_scope_docs: list[str] = []
     updated_agents: list[str] = []
     removed_legacy_indexes: list[str] = []
 
@@ -142,6 +176,11 @@ def sync_navigation_tree(document_root: Path, *, dry_run: bool) -> dict[str, lis
             created_readmes.append(str(readme_path))
             if not dry_run:
                 readme_path.write_text(build_directory_readme(directory, document_root), encoding="utf-8")
+        scope_doc_path = directory / f"{directory.name}.md"
+        if not scope_doc_path.exists():
+            created_scope_docs.append(str(scope_doc_path))
+            if not dry_run:
+                scope_doc_path.write_text(build_scope_entity_doc(directory, document_root), encoding="utf-8")
         agents_path = directory / "agents.md"
         updated_agents.append(str(agents_path))
         if not dry_run:
@@ -149,6 +188,7 @@ def sync_navigation_tree(document_root: Path, *, dry_run: bool) -> dict[str, lis
 
     return {
         "created_readmes": created_readmes,
+        "created_scope_docs": created_scope_docs,
         "updated_agents": updated_agents,
         "removed_legacy_indexes": removed_legacy_indexes,
     }
