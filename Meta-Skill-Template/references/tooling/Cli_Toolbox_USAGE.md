@@ -53,6 +53,9 @@
   - 脚本按模板生成 `SKILL.md`、`agents/openai.yaml`、`references/tooling/*` 以及开发文档分层结构。
   - 若使用 `--profile staged_cli_first`，还会生成 `references/runtime/*`、`references/stages/00_STAGE_INDEX.md` 与 `assets/templates/stages/*`。
   - 生成内容会显式避免把“创建技能本身”写入被创建技能的 `1.目标` 章节。
+  - 生成内容默认要求采用“抽象层 + 业务需求层”分域写法。
+  - 若业务需求层有多个域或多个阶段域，模板会要求在 `3/4/5/6` 章节显式逐域拆分，禁止混写。
+  - 统一 CLI 入口允许共享，但模板会要求各域对应命令独立，不得串用。
   - 若技能后续存在运行态规则、约束、指引，模板正文会要求补齐 CLI 输出入口、machine-readable 合同与 markdown 审计版。
 - 人类叙事版输出：
   - 你会得到一个可直接继续编辑的技能目录，并看到 JSON 结果（`skill_dir`、`profile`、`resources_created`、`write_results`），可快速确认是否成功。

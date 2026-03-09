@@ -9,8 +9,12 @@
 ## 核心原则
 - 运行时指引优先由 CLI 输出，不直接让模型读 markdown 当规则源。
 - markdown 必须结构化分层，作为人类审计与窄域导航。
-- 目录深度本身就是模型约束工具；层级越深，适用域越窄。
 - `SKILL.md` 只做门面入口，不承载规则正文。
+- 复杂技能默认采用：
+  - 抽象层
+  - 业务需求层
+- 在 staged skill 中，业务需求层默认按阶段域承载。
+- `3/4/5/6` 章节都必须采用“抽象层 + 各阶段域”显式拆分写法，禁止混写。
 
 ## 推荐结构
 - 门面层：`SKILL.md`
@@ -23,7 +27,7 @@
 - 接口层：`agents/openai.yaml`
 
 ## resident docs 规则
-- 跨阶段只保留极少、固定的 resident docs。
+- 跨阶段只保留极少、固定的一组抽象层入口。
 - resident docs 负责维持全局边界，不负责承载某阶段细节。
 - 阶段切换后，上一阶段 checklist、focus、模板填写上下文必须显式丢弃。
 
@@ -34,6 +38,8 @@
   - `stage-command-contract`
   - `stage-graph-contract`
 - 每类合同都应有明确消费方与适用域，避免“一个大文档全都写”。
+- 抽象合同可共享。
+- 阶段域命令必须独立，不得串用。
 
 ## 模板簇规则
 - 模板不能只有一份总模板。
@@ -43,6 +49,7 @@
   - runtime contract 模板
   - stage system 模板
   - per-stage contract 模板
+- 模板正文必须显式表达抽象层与阶段域边界，不得依赖模型自行推理。
 
 ## static / dynamic contract 规则
 - static contract：
@@ -57,8 +64,9 @@
 - `Meta-Skill-Template` 应支持至少两个 profile：
   - `basic`
   - `staged_cli_first`
-- 复杂技能生成器应默认产出：
+- 未来生成技能应默认产出：
   - entry-only `SKILL.md`
+  - 抽象层与业务需求层分域结构
   - runtime contract skeleton
   - stage system reference
   - stage template kit

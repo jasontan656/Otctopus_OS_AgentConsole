@@ -22,6 +22,9 @@
 - `SKILL.md` 必须保持轻量入口，不承载堆积式细节。
 - 统一工具入口优先使用 `scripts/Cli_Toolbox.py`。
 - 技能治理细节下沉到 `references/` 与模板资产。
+- 未来生成技能默认采用“抽象层 + 业务需求层”分域写法。
+- `3/4/5/6` 章节必须先写抽象层，再写各业务域；禁止混写。
+- 允许统一 CLI 入口；抽象功能可共享，但业务域或阶段域命令必须独立，不得串用。
 - 若目标技能属于 `staged_cli_first`，必须显式建模阶段目录、阶段合同与 resident docs。
 - 若规则依赖真实项目状态，必须显式区分 static authoring contract 与 dynamic runtime contract。
 - 若治理规则变化，同时更新 `SKILL.md` 入口、`references` 合同、tooling 文档与模板资产。

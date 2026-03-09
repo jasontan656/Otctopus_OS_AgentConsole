@@ -1,4 +1,4 @@
 interface:
   display_name: "Meta-Skill-Template"
   short_description: "通过统一 Cli_Toolbox 创建或改造基础技能与 staged CLI-first 复杂技能骨架。"
-  default_prompt: "先使用 Meta-Skill-Template 的 Cli_Toolbox.runtime-contract 明确边界；若目标是复杂技能，继续读取 Cli_Toolbox.staged-skill-reference，并通过 Cli_Toolbox.create-skill-from-template --profile staged_cli_first 创建或更新技能。"
+  default_prompt: "先使用 Meta-Skill-Template 的 Cli_Toolbox.runtime-contract 明确边界；未来生成技能默认采用抽象层加业务需求层的分域写法。若目标是复杂技能，业务需求层默认按阶段域承载，并要求 3/4/5/6 章节都采用抽象层加各阶段域的显式拆分写法；统一 CLI 入口允许共享，但各域命令必须独立，不得串用。"
