@@ -8,6 +8,7 @@
 - `mother_doc_container_root`: `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/`
 - `document_root`: `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/`
 - `graph_asset_root`: `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/graph/`
+- `os_graph_runtime_root`: `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/graph/runtime/`
 - `always_load_rules`:
   - `rules/FULLSTACK_SKILL_HARD_RULES.md`
   - `references/runtime/SKILL_RUNTIME_CONTRACT.md`
@@ -38,6 +39,8 @@
 - `implementation` 阶段禁止写开发日志、部署日志与 Git / GitHub 留痕。
 - `evidence` 阶段必须以 `OS_graph` 统一文档图、代码图与 evidence 绑定。
 - `OS_graph` 固定区分 `narrative_layer`、`contract_layer`、`implementation_layer`、`evidence_layer`。
+- `evidence` 固定先读 `references/evidence/00_EVIDENCE_INDEX.md`，再按 graph 子域入口继续读取。
+- graph 命令域统一入口为 `python3 scripts/os_graph_cli.py <command> [args...]`。
 - `evidence` 闭环完成后，必须把对应文档/区块状态回写为 `developed`。
 - `evidence` 阶段独占 implementation batch、deployment checkpoint 与 Git / GitHub 留痕。
 - deployment-level witness 出现后，必须追加 deployment checkpoint 日志。

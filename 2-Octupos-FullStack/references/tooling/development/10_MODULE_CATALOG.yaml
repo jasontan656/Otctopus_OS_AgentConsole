@@ -80,3 +80,23 @@ modules:
     entrypoint: scripts/Cli_Toolbox.py append-deployment-log
     status: active
     stage_scope: evidence
+  - module_id: os_graph_status
+    tool_alias: OS_Graph_Cli.status
+    entrypoint: scripts/os_graph_cli.py status
+    status: active
+    stage_scope: evidence
+  - module_id: os_graph_sync_doc_bindings
+    tool_alias: OS_Graph_Cli.sync_doc_bindings
+    entrypoint: scripts/os_graph_cli.py sync-doc-bindings
+    status: active
+    stage_scope: evidence
+  - module_id: os_graph_sync_evidence
+    tool_alias: OS_Graph_Cli.sync_evidence
+    entrypoint: scripts/os_graph_cli.py sync-evidence
+    status: active
+    stage_scope: evidence
+  - module_id: os_graph_engine_bridge
+    tool_alias: OS_Graph_Cli.engine_bridge
+    entrypoint: scripts/os_graph_cli.py <analyze|query|context|impact|detect-changes|resource|map|wiki|cypher>
+    status: active
+    stage_scope: evidence

@@ -10,6 +10,7 @@
   - `contract_layer`
   - `implementation_layer`
   - `evidence_layer`
+- 运行时、命令域、节点模型、前端消费与迁移映射统一继续进入 `graph/00_GRAPH_INDEX.md`。
 
 ## Node Equivalence
 
@@ -32,3 +33,4 @@
 - `OS_graph` 不是只解释代码；它同时解释文档与代码。
 - 文档节点与代码节点的绑定依据是“语义覆盖单元”，不是机械文件 1:1。
 - graph 写回既要支持机械锚点关系，也要支持人类可视化连线。
+- 本页只定义总则，不混写 graph 子域的 runtime、命令域和前端消费细节。

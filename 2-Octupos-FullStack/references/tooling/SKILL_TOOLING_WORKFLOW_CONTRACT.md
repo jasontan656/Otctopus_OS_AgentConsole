@@ -56,4 +56,9 @@
 ## Evidence Policy
 
 - `evidence` 必须以 `OS_graph` 统一文档 graph 与代码 graph。
+- `evidence` 固定先进入 `references/evidence/00_EVIDENCE_INDEX.md`，再进入 `references/evidence/graph/00_GRAPH_INDEX.md`。
+- graph 命令域固定通过 `python3 scripts/os_graph_cli.py <command> [args...]` 进入。
 - evidence 必须绑定回同一层级结构中的模块、helper、父级目录与 witness 节点。
+- `sync-doc-bindings` 负责把 `Mother_Doc/docs` 编成文档节点、边和前端层视图。
+- `sync-evidence` 负责把 development logs 与 lifecycle 状态编成 evidence 节点和证据时间线。
+- `Mother_Doc/graph/runtime/frontend_views/` 只承载人类界面的聚合结果；源 authored docs 与碎片化 graph 资产仍然分开维护。

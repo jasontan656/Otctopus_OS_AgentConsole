@@ -31,6 +31,8 @@
   - [对齐规则](../implementation/DOC_CODE_ALIGNMENT_RULES.md)
 - `evidence`
   - [阶段说明](../stages/EVIDENCE_STAGE.md)
+  - [evidence 索引](../evidence/00_EVIDENCE_INDEX.md)
+  - [graph 子域入口](../evidence/graph/00_GRAPH_INDEX.md)
   - [OS_graph 规则](../evidence/OS_GRAPH_RULES.md)
   - [OS_graph 四层模型](../evidence/OS_GRAPH_LAYER_MODEL.md)
   - [doc-code 绑定规则](../evidence/DOC_CODE_BINDING_RULES.md)
@@ -67,6 +69,7 @@
 - [Mother_Doc 导航模块](../../scripts/mother_doc_navigation.py)
 - [Mother_Doc AGENTS 管理模块](../../scripts/mother_doc_agents_manager.py)
 - [阶段合同支持模块](../../scripts/stage_contract_support.py)
+- [OS_graph CLI](../../scripts/os_graph_cli.py)
 
 ## Lookup Hints
 

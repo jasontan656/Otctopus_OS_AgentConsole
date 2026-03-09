@@ -21,6 +21,7 @@
 - `Cli_Toolbox.evidence_stage`
 - `Cli_Toolbox.append_implementation_log`
 - `Cli_Toolbox.append_deployment_log`
+- `OS_Graph_Cli.*`
 
 ## 核心命令
 
@@ -38,6 +39,10 @@
 - `python3 scripts/Cli_Toolbox.py sync-mother-doc-status-from-git --repo-root /home/jasontan656/AI_Projects/Octopus_OS --stage mother_doc --path <relative-path> --json`
 - `python3 scripts/Cli_Toolbox.py append-implementation-log --summary "<git-commit-message>" --doc-path <doc-path> --code-path <code-path> --json`
 - `python3 scripts/Cli_Toolbox.py append-deployment-log --summary "<git-commit-message>" --doc-path <doc-path> --code-path <code-path> --json`
+- `python3 scripts/os_graph_cli.py status`
+- `python3 scripts/os_graph_cli.py sync-doc-bindings`
+- `python3 scripts/os_graph_cli.py sync-evidence`
+- `python3 scripts/os_graph_cli.py <analyze|list|query|context|impact|detect-changes|resource|map|wiki|cypher> [args...]`
 
 ## 结构结果
 
@@ -60,3 +65,4 @@
 - `append-implementation-log` 与 `append-deployment-log` 只允许在 `evidence` 或 `implementation -> evidence` 联动中调用。
 - 上述日志命令会返回日志目标文件与本次写入摘要。
 - 上述日志命令中的 `summary` 必须直接复用同轮 Git 提交 message。
+- `os_graph_cli.py` 是 evidence graph 命令域专用子 CLI；统一 skill 入口共享，但 graph 命令域独立。

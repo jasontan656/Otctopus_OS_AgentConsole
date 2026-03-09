@@ -23,3 +23,10 @@
 
 - `Cli_Toolbox.append_implementation_log`
 - `Cli_Toolbox.append_deployment_log`
+
+## evidence_graph
+
+- `OS_Graph_Cli.status`
+- `OS_Graph_Cli.sync_doc_bindings`
+- `OS_Graph_Cli.sync_evidence`
+- `OS_Graph_Cli.engine_bridge`

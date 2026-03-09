@@ -1,11 +1,10 @@
 from __future__ import annotations
-
 # contract_name: 2_octupos_fullstack_stage_contract_registry
 # contract_version: 1.0.0
 # validation_mode: static_minimal
-# required_fields: top_level_resident_docs,stage_order,stage_scopes,stage_docs,stage_commands,stage_graph_contracts,stage_checklists
-# optional_fields: none
+# required_fields: top_level_resident_docs,stage_order,stage_scopes,stage_docs,stage_commands,stage_graph_contracts,stage_checklists | optional_fields: none
 
+from stage_contract_graph_data import EVIDENCE_GRAPH_COMMANDS, EVIDENCE_GRAPH_DOCS
 TOP_LEVEL_RESIDENT_DOCS = [
     "rules/FULLSTACK_SKILL_HARD_RULES.md",
     "references/runtime/SKILL_RUNTIME_CONTRACT.md",
@@ -14,15 +13,12 @@ TOP_LEVEL_RESIDENT_DOCS = [
     "references/tooling/SKILL_TOOLING_WORKFLOW_CONTRACT.md",
     "/home/jasontan656/AI_Projects/AGENTS.md",
 ]
-
 STAGE_ORDER = ["mother_doc", "implementation", "evidence"]
-
 STAGE_SCOPES = {
     "mother_doc": "strengthen user intent, recursively navigate Mother_Doc, and write back current-state document structure",
     "implementation": "act as an independent delivery-grade developer and reconcile Mother_Doc with the actual codebase while implementing changes",
     "evidence": "collect real witnesses, append logs, and bind them back through the unified OS_graph contract",
 }
-
 STAGE_DOCS = {
     "mother_doc": [
         "references/stages/MOTHER_DOC_STAGE.md",
@@ -51,6 +47,7 @@ STAGE_DOCS = {
     ],
     "evidence": [
         "references/stages/EVIDENCE_STAGE.md",
+        *EVIDENCE_GRAPH_DOCS,
         "references/evidence/OS_GRAPH_LAYER_MODEL.md",
         "references/evidence/DOC_CODE_BINDING_RULES.md",
         "references/evidence/IMPLEMENTATION_LOG_RULES.md",
@@ -60,7 +57,6 @@ STAGE_DOCS = {
         "references/stages/IMPLEMENTATION_STAGE.md",
     ],
 }
-
 STAGE_COMMANDS = {
     "mother_doc": {
         "required_contract_reads": [
@@ -154,6 +150,7 @@ STAGE_COMMANDS = {
                 "command": "python3 scripts/Cli_Toolbox.py evidence-stage --json",
                 "purpose": "print the evidence-stage contract with writeback and witness requirements",
             },
+            *EVIDENCE_GRAPH_COMMANDS,
             {
                 "command": "project-native validation / smoke / test / health-check commands chosen from the actual codebase",
                 "purpose": "collect real delivery witnesses after implementation bring-up instead of fabricating completion status",
@@ -173,7 +170,6 @@ STAGE_COMMANDS = {
         ],
     },
 }
-
 STAGE_GRAPH_CONTRACTS = {
     "mother_doc": {
         "graph_name": "OS_graph",
@@ -210,11 +206,10 @@ STAGE_GRAPH_CONTRACTS = {
             "implementation/deployment logs and witnesses -> evidence_layer nodes",
             "Document Status + Block Registry -> graph change-detection metadata nodes",
         ],
-        "tooling_mode": "contract_first_until_os_graph_runtime_lands",
-        "action_rule": "treat OS_graph as the combined doc+code graph contract, bind semantic doc units to implementation slices, record evidence on the same hierarchy, and keep the four graph layers readable to humans and machines",
+        "tooling_mode": "contract_first_with_os_graph_runtime",
+        "action_rule": "treat OS_graph as the combined doc+code graph contract, sync authored-doc nodes into graph/runtime, bind semantic doc units to implementation slices, record evidence on the same hierarchy, and keep the four graph layers readable to humans and machines",
     },
 }
-
 STAGE_CHECKLISTS = {
     "mother_doc": {
         "stage": "mother_doc",
@@ -266,11 +261,13 @@ STAGE_CHECKLISTS = {
             "load top-level resident docs",
             "read evidence-specific stage contracts",
             "carry forward current-state outputs from mother_doc and implementation",
+            "enter references/evidence/00_EVIDENCE_INDEX.md before choosing graph/log/binding focus",
         ],
         "exit_requirements": [
             "real witnesses are bound back to the same Mother_Doc hierarchy",
             "OS_graph contract is updated at the contract level for the current delivery state",
             "OS_graph uses narrative_layer, contract_layer, implementation_layer, and evidence_layer consistently",
+            "graph runtime assets exist under Mother_Doc/graph/runtime with document nodes, evidence nodes, indexes, and frontend bundles",
             "implementation batch logs are appended under Mother_Doc/docs/Mother_Doc/common/development_logs",
             "deployment checkpoints are appended under Mother_Doc/docs/Mother_Doc/common/development_logs when deployment-level evidence exists",
             "writeback is complete without introducing internal version branches",

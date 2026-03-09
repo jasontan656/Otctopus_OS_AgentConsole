@@ -8,6 +8,7 @@
   "mother_doc_container_root": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/",
   "document_root": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/",
   "graph_asset_root": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/graph/",
+  "os_graph_runtime_root": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/graph/runtime/",
   "always_load_rules": [
     "rules/FULLSTACK_SKILL_HARD_RULES.md",
     "references/runtime/SKILL_RUNTIME_CONTRACT.md",
@@ -26,6 +27,7 @@
     "authored_rules": "各容器文档中定义的架构、技术栈、命名、合同、运维与运行时规则。"
   },
   "execution_model": "文档即代码；代码组织最终与 Mother_Doc 组织对齐；implementation 按独立开发者标准推进；evidence 以 OS_graph 统一文档图与代码图。",
+  "os_graph_cli_entry": "python3 scripts/os_graph_cli.py <command> [args...]",
   "governance_rules": [
     "进入任一阶段前，固定先读 stage-checklist、stage-doc-contract、stage-command-contract、stage-graph-contract。",
     "阶段切换时，只保留顶层常驻文档，再重读当前阶段合同。",

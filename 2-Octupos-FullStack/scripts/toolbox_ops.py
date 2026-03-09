@@ -23,6 +23,26 @@ DEFAULT_WORKSPACE_ROOT = Path("/home/jasontan656/AI_Projects/Octopus_OS")
 DEFAULT_DOCUMENT_ROOT = DEFAULT_WORKSPACE_ROOT / "Mother_Doc" / "docs"
 
 
+def scaffold_graph_runtime_tree(graph_root: Path, *, dry_run: bool) -> list[str]:
+    created: list[str] = []
+    runtime_dirs = {
+        "runtime": "OS_graph runtime root.",
+        "runtime/registry": "Node registries for documents and evidence.",
+        "runtime/indexes": "Edge indexes, bindings, and lifecycle-aware lookup data.",
+        "runtime/reports": "Graph sync reports and change-detection outputs.",
+        "runtime/maps": "Graph-derived resource and structural maps.",
+        "runtime/wiki": "Local wiki bundles generated from graph resources.",
+        "runtime/snapshots": "Future snapshot and compare artifacts.",
+        "runtime/frontend_views": "Frontend-facing aggregated bundles derived from fragmented graph storage.",
+    }
+    for relative_path, description in runtime_dirs.items():
+        target = graph_root / relative_path / "README.md"
+        was_created = ensure_markdown(target, title=Path(relative_path).name, body_lines=[description], dry_run=dry_run)
+        if was_created:
+            created.append(str(target))
+    return created
+
+
 def emit_contract(payload: dict[str, object], *, as_json: bool) -> int:
     if as_json:
         print(json.dumps(payload, ensure_ascii=False, indent=2))
@@ -79,6 +99,7 @@ def materialize_layout(args: argparse.Namespace) -> int:
                 body_lines=build_graph_readme(),
                 dry_run=args.dry_run,
             )
+            created_document_files.extend(scaffold_graph_runtime_tree(workspace_dir / "graph", dry_run=args.dry_run))
         ensure_markdown(
             document_dir / "README.md",
             title=name,

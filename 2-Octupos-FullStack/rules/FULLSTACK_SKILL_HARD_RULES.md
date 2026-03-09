@@ -86,6 +86,9 @@
 56. `evidence` 阶段的 graph 主体是 `OS_graph`，它同时管理文档 graph、代码 graph、模块映射、日志节点与 evidence 绑定。
 57. `OS_graph` 固定拆成 `narrative_layer`、`contract_layer`、`implementation_layer`、`evidence_layer` 四层。
 58. evidence 必须是真实 witness，不得伪造，不得把 `OS_graph` 降级成只解释代码的附属图。
+58.1 `OS_graph` runtime 根固定为 `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/graph/runtime/`。
+58.2 graph 子域入口固定为 `references/evidence/00_EVIDENCE_INDEX.md` 与 `references/evidence/graph/00_GRAPH_INDEX.md`。
+58.3 graph 命令域固定经由 `python3 scripts/os_graph_cli.py <command> [args...]` 进入，不得与 `mother_doc` / `implementation` 命令串用。
 59. implementation batch 与 deployment checkpoint 都只能在 `evidence` 阶段追加到 `Octopus_OS/Mother_Doc/docs/Mother_Doc/common/development_logs/`。
 60. `evidence` 阶段独占 Git / GitHub 留痕；开发/部署日志只保留摘要，该摘要必须等于同轮 Git 提交 message，具体文件与代码改动由 Git / GitHub 承担追踪。
 60.1 `evidence` 在 graph、日志和 witness 闭环完成后，必须把对应文档/区块状态回写为 `developed`。
