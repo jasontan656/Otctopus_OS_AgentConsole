@@ -156,7 +156,7 @@ description: "未来项目 admin panel 内置的运营AI“章鱼”，负责 mo
   - 文档如未细分多个区块，默认必须至少有一个 `block_id: primary`。
 - `implementation`：
   - 不得脱离 `mother_doc` 当前状态产物单独实施。
-  - 不得跳过域族规则直接只看单个容器文档；必须先读域族 `implementation` 规则，再读容器 `common/implementation_guides` 与其他 `common/` 文档。
+  - 不得跳过域族规则直接只看单个容器文档；必须先读域族 `implementation` 规则，再读容器 `common/code_abstractions`、`common/dev_canon` 与其他 `common/` 文档。
   - 发现 doc-code drift 时，不得忽略；必须显式更新代码、文档或两者以恢复一致。
   - 不得因为本地可修问题而提前写成 `blocked`。
   - 实现完成后，必须把对应文档状态从 `pending_implementation` 回写为 `aligned`。

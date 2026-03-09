@@ -13,6 +13,16 @@
 - `Octopus_OS/<Container_Name>/` 这类实际工作目录容器不承载 `agents.md`。
 - `Octopus_OS/Mother_Doc/graph/` 承载 `OS_graph` 资产，不属于 docs 树。
 - `agents.md` 之外的 markdown 必须带有 `Document Status + Block Registry`。
+- 每个容器的 `common/` 固定承载：
+  - `writing_guides/`
+  - `code_abstractions/`
+  - `dev_canon/`
+- `common/code_abstractions/` 下固定再拆：
+  - `architecture/`
+  - `stack/`
+  - `naming/`
+  - `contracts/`
+  - `operations/`
 
 ## Dynamic Expansion
 

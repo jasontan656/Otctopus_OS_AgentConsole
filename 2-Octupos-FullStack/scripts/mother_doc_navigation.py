@@ -5,13 +5,13 @@ from pathlib import Path
 
 DOMAIN_DESCRIPTIONS = {
     "common": "current container's abstract layer root; choose one abstract domain below",
-    "architecture": "architecture abstraction scope for the current container",
-    "stack": "technology stack abstraction scope for the current container",
-    "naming": "naming rules abstraction scope for the current container",
-    "contracts": "contract rules abstraction scope for the current container",
-    "operations": "operations and maintenance abstraction scope for the current container",
     "writing_guides": "authored-doc update guidance scope for the current container",
-    "implementation_guides": "implementation-stage writeback guidance scope for the current container",
+    "code_abstractions": "code abstraction root for the current container; choose one code-facing abstract domain below",
+    "architecture": "architecture abstraction scope under code abstractions for the current container",
+    "stack": "technology stack abstraction scope under code abstractions for the current container",
+    "naming": "naming rules abstraction scope under code abstractions for the current container",
+    "contracts": "contract rules abstraction scope under code abstractions for the current container",
+    "operations": "operations and maintenance abstraction scope under code abstractions for the current container",
     "dev_canon": "recovered development canon scope for the current container",
     "development_logs": "development and deployment log scope for the Mother_Doc container",
 }

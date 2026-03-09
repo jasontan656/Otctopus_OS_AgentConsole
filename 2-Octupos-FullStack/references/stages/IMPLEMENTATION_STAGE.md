@@ -11,7 +11,7 @@
 ## Required Workflow
 
 1. 显式承接 `mother_doc` 当前状态产物。
-2. 先读取匹配的域族规则，再读取目标容器自己的 `common/` 文档。
+2. 先读取匹配的域族规则，再读取目标容器自己的 `common/code_abstractions/`、`common/dev_canon/` 与必要的 `common/writing_guides/` 文档。
 3. 读取代码库、运行时与当前文档结构，发现 doc-code drift。
 4. 先对齐文档与代码的当前状态，再继续实施。
 5. 在本地可控范围内主动安装依赖、修复环境、运行测试、bring-up、验证行为。
