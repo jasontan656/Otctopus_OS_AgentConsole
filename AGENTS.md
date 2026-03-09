@@ -29,9 +29,7 @@
 - 禁止只改 markdown 不改 machine-readable 合同。
 
 5. GitHub Traceability Rule
-- 如果本仓库在写入回合发生文件变动，则必须进行 GitHub 留痕。
-- commit message 必须依据本轮实际变动内容编写，不允许固定写死。
-- 普通聊天、纯讨论、纯只读回合不触发 GitHub 收尾。
+- 如果本仓库在写入回合发生文件变动，则必须进行 GitHub 留痕；commit message 必须依据本轮实际变动内容编写。
 
 6. Constitution/Lint Rule
 - 只有本仓库与 `Octopus_OS` 承担宪法技能与静态 lint 收口责任。
