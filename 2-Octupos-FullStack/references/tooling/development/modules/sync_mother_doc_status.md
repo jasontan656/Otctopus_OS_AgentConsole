@@ -2,4 +2,4 @@
 
 ## Purpose
 
-- Update `Document Status + Block Registry` for non-`agents.md` Mother_Doc markdown files.
+- Update `Document Status + Block Registry` for non-`AGENTS.md` Mother_Doc markdown files.

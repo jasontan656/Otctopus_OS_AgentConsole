@@ -3,9 +3,12 @@ from __future__ import annotations
 from pathlib import Path
 
 
+AGENTS_FILENAME = "AGENTS.md"
+LEGACY_AGENTS_FILENAME = "agents.md"
+
 DOMAIN_DESCRIPTIONS = {
     "common": "current container's abstract layer root; choose one abstract domain below",
-    "writing_guides": "authored-doc update guidance scope for the current container",
+    "writing_guides": "authored-doc writing rules for the current container",
     "code_abstractions": "code abstraction root for the current container; choose one code-facing abstract domain below",
     "architecture": "architecture abstraction scope under code abstractions for the current container",
     "stack": "technology stack abstraction scope under code abstractions for the current container",
@@ -14,6 +17,8 @@ DOMAIN_DESCRIPTIONS = {
     "operations": "operations and maintenance abstraction scope under code abstractions for the current container",
     "dev_canon": "recovered development canon scope for the current container",
     "development_logs": "development and deployment log scope for the Mother_Doc container",
+    "docs": "authored-document root for the Mother_Doc container itself",
+    "graph": "OS_graph asset root for the Mother_Doc container",
 }
 
 
@@ -31,7 +36,7 @@ def describe_directory(path: Path, document_root: Path) -> str:
     rel = path.relative_to(document_root)
     parts = rel.parts
     if not parts:
-        return "root navigation scope for Mother_Doc; choose the container documentation scope to enter"
+        return "root navigation scope for Mother_Doc docs; choose the container documentation scope to enter"
     if len(parts) == 1:
         if parts[0] == "Mother_Doc":
             return "self-description container scope for the Mother_Doc container itself"
@@ -44,10 +49,9 @@ def describe_directory(path: Path, document_root: Path) -> str:
 
 
 def describe_leaf_file(path: Path, document_root: Path) -> str:
-    rel = path.relative_to(document_root)
     if path.name == "README.md":
         return "peer purpose document for the current scope"
-    if path.name == "agents.md":
+    if path.name == AGENTS_FILENAME:
         return "navigation index for the current scope"
     if path.name == scope_doc_name(path.parent, document_root):
         return "scope-entity document for the current directory itself"
@@ -69,7 +73,7 @@ def build_directory_readme(path: Path, document_root: Path) -> str:
         description + ".",
         "",
         f"- Use `{peer_scope_doc}` in the same directory as the scope-entity document for the current directory itself.",
-        "- Use `agents.md` in the same Mother_Doc directory as the navigation index for the next scope selection.",
+        f"- Use `{AGENTS_FILENAME}` in the same Mother_Doc directory as the navigation index for the next scope selection.",
         "- Keep this file focused on what the current scope is for, not on child-path enumeration.",
         "",
     ]
@@ -100,7 +104,7 @@ def build_scope_entity_doc(path: Path, document_root: Path) -> str:
         f"# {title}",
         "",
         f"This file is the scope-entity document for `{scope_label}`.",
-        f"It describes the directory itself as a module, parent scope, black-box container, or authored documentation carrier.",
+        "It describes the directory itself as a module, parent scope, black-box container, or authored documentation carrier.",
         "Keep the content aligned with the actual code and document structure for the same scope.",
         "",
     ]
@@ -110,50 +114,55 @@ def build_scope_entity_doc(path: Path, document_root: Path) -> str:
 def build_agents_index(path: Path, document_root: Path) -> str:
     rel = path.relative_to(document_root)
     scope_label = str(rel) if rel.parts else "Mother_Doc"
+    peer_scope_doc = scope_doc_name(path, document_root)
     children = sorted(
-        [child for child in path.iterdir() if child.name not in {"README.md", "agents.md", "__pycache__"}],
+        [
+            child
+            for child in path.iterdir()
+            if child.name not in {"README.md", AGENTS_FILENAME, LEGACY_AGENTS_FILENAME, peer_scope_doc, "__pycache__"}
+        ],
         key=lambda item: (item.is_file(), item.name.lower()),
     )
     lines = [
-        "# agents",
+        "# AGENTS",
         "",
-        f"Current scope: `{scope_label}`.",
-        f"Purpose: {describe_directory(path, document_root)}.",
+        "## 1. 目标",
+        f"- 当前层作用：{describe_directory(path, document_root)}。",
+        "- 本文件只承担当前层入口索引与递归选域，不承载正文细节。",
         "",
-        "## Peer",
+        "## 2. 同层入口",
+        "- `README.md`: 当前层用途说明。",
+        f"- `{peer_scope_doc}`: 当前层目录实体说明。",
         "",
-        "- `README.md`",
-        "  - status: present",
-        "  - purpose: peer purpose document for the current scope",
-        "",
-        "## Index",
-        "",
+        "## 3. 下一层入口",
     ]
     if not children:
-        lines.extend(
-            [
-                "- none",
-                "  - status: terminal",
-                "  - purpose: no deeper scope exists under the current directory",
-            ]
-        )
+        lines.append("- `terminal`: 当前层没有更深入口。")
     else:
         for child in children:
             child_rel = child.relative_to(document_root)
-            lines.append(f"- `{child_rel}`")
-            lines.append("  - status: present")
-            if child.is_dir():
-                lines.append(f"  - purpose: {describe_directory(child, document_root)}")
-            else:
-                lines.append(f"  - purpose: {describe_leaf_file(child, document_root)}")
+            description = describe_directory(child, document_root) if child.is_dir() else describe_leaf_file(child, document_root)
+            lines.append(f"- `{child_rel}`: {description}.")
     lines.extend(
         [
             "",
-            "## Selection Rule",
+            "## 4. 选择规则",
+            "- 先读当前层 `README.md`，再读当前层同名实体文档。",
+            f"- 再从当前 `{AGENTS_FILENAME}` 的入口中选择下一层或目标叶子。",
+            "- 选择时只依据强化后的用户意图，不跨到无关域。",
             "",
-            "- Read the current `README.md` first to understand the current scope.",
-            "- Then choose the next path from `## Index` according to the strengthened user intent.",
-            "- Continue recursively until the full impact surface is covered.",
+            "## 5. 更新边界",
+            "- 当前层只负责把下一步入口说清楚，不负责替代下层正文。",
+            "- 当前层不得把别的域的规则、workflow 或实现细节混写进来。",
+            "",
+            "## 6. 索引契约",
+            f"- `{AGENTS_FILENAME}` 只存在于 `Octopus_OS/Mother_Doc/docs/**`。",
+            "- 当前层索引必须同时指向同层用途文档、同层实体文档和下一层入口。",
+            "- 子路径说明必须简短且可判断作用域。",
+            "",
+            "## 7. 递归动作",
+            "- 命中目标后进入下一层，重复当前链路。",
+            "- 直到完整影响面被覆盖，再执行文档覆盖写回或规则读取。",
             "",
         ]
     )
@@ -165,16 +174,20 @@ def sync_navigation_tree(document_root: Path, *, dry_run: bool) -> dict[str, lis
     created_scope_docs: list[str] = []
     updated_agents: list[str] = []
     removed_legacy_indexes: list[str] = []
+    removed_legacy_agents: list[str] = []
 
-    legacy_indexes = sorted(document_root.rglob("00_INDEX.md"))
-    for legacy in legacy_indexes:
+    for legacy in sorted(document_root.rglob("00_INDEX.md")):
         removed_legacy_indexes.append(str(legacy))
         if not dry_run:
             legacy.unlink()
 
+    for legacy_agents in sorted(document_root.rglob(LEGACY_AGENTS_FILENAME)):
+        removed_legacy_agents.append(str(legacy_agents))
+        if not dry_run:
+            legacy_agents.unlink()
+
     dirs = sorted([path for path in document_root.rglob("*") if path.is_dir()], key=lambda item: (len(item.parts), str(item)))
     dirs.insert(0, document_root)
-    # remove duplicate root if present from rglob sequence
     seen: set[Path] = set()
     ordered_dirs: list[Path] = []
     for path in dirs:
@@ -193,7 +206,7 @@ def sync_navigation_tree(document_root: Path, *, dry_run: bool) -> dict[str, lis
             created_scope_docs.append(str(scope_doc_path))
             if not dry_run:
                 scope_doc_path.write_text(build_scope_entity_doc(directory, document_root), encoding="utf-8")
-        agents_path = directory / "agents.md"
+        agents_path = directory / AGENTS_FILENAME
         updated_agents.append(str(agents_path))
         if not dry_run:
             agents_path.write_text(build_agents_index(directory, document_root), encoding="utf-8")
@@ -203,4 +216,5 @@ def sync_navigation_tree(document_root: Path, *, dry_run: bool) -> dict[str, lis
         "created_scope_docs": created_scope_docs,
         "updated_agents": updated_agents,
         "removed_legacy_indexes": removed_legacy_indexes,
+        "removed_legacy_agents": removed_legacy_agents,
     }

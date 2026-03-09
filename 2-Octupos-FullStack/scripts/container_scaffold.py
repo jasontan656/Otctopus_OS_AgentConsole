@@ -114,7 +114,7 @@ def build_document_readme(name: str, workspace_dir: Path, family: str) -> list[s
         "`common/code_abstractions/` carries code abstraction, code-to-doc mapping, and reusable code-facing structure contracts for the current domain family.",
         "`common/dev_canon/` carries the development canon subset that has been recovered into Octopus OS for automation.",
         f"`{name}.md` in this directory describes the container itself as the authored module entity.",
-        "Use the peer `agents.md` in this directory as the recursive navigation index.",
+        "Use the peer `AGENTS.md` in this directory as the recursive navigation index.",
     ]
     if family == "Mother_Doc":
         lines.append("`common/development_logs/` carries append-oriented implementation and deployment checkpoints for document-led delivery.")
@@ -130,12 +130,12 @@ def build_workspace_readme(name: str, document_dir: Path) -> list[str]:
             f"Corresponding container-doc directory: `{document_dir}`.",
             "Use `docs/` to carry the full authored Mother_Doc tree.",
             "Use `graph/` to carry OS_graph runtime assets and evidence-side graph artifacts.",
-            "This container root does not carry `agents.md`; recursive navigation files exist only under `docs/`.",
+            "This container root does not carry `AGENTS.md`; recursive navigation files exist only under `docs/`.",
         ]
     return [
         "Stage-1 container directory.",
         f"Corresponding Mother_Doc path: `{document_dir}`.",
-        "This workspace container does not carry `agents.md`; recursive navigation files exist only under `Mother_Doc/`.",
+        "This workspace container does not carry `AGENTS.md`; recursive navigation files exist only under `Mother_Doc/`.",
     ]
 
 

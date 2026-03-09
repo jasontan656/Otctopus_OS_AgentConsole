@@ -23,10 +23,12 @@
 ## Governance Rules
 - 进入任一阶段前，固定先读 `stage-checklist`、`stage-doc-contract`、`stage-command-contract`、`stage-graph-contract`。
 - 阶段切换时，只保留顶层常驻文档，再重读当前阶段合同。
-- `agents.md` 只允许存在于 `Octopus_OS/Mother_Doc/**`，不得进入实际工作目录容器。
-- `Mother_Doc` 每一层目录都必须具备 `README.md`、`agents.md`、`<folder_name>.md`。
-- `agents.md` 之外的 `Mother_Doc` markdown 必须具备 `Document Status + Block Registry`，供机械探测变动。
-- `mother_doc` 阶段必须先用 `Meta-prompt-write` 强化用户意图，再递归选择作用域。
+- `AGENTS.md` 只允许存在于 `Octopus_OS/Mother_Doc/**`，不得进入实际工作目录容器。
+- `Mother_Doc` 每一层目录都必须具备 `README.md`、`AGENTS.md`、`<folder_name>.md`。
+- `AGENTS.md` 之外的 `Mother_Doc` markdown 必须具备 `Document Status + Block Registry`，供机械探测变动。
+- `mother_doc` 阶段必须先用 `Meta-prompt-write` 强化用户意图，再读取 `mother_doc` 子分支入口判定当前任务链。
+- `mother_doc` 阶段固定先判定 `content_writeback` 或 `AGENTS manager`；不得把两条链混写。
+- `AGENTS manager` 只管理 `Octopus_OS/Mother_Doc/docs/**/AGENTS.md`，并固定采用 `scan / collect / push` 三阶段。
 - `mother_doc` 更新文档后，必须把受影响文档/区块标记为 `pending_implementation`。
 - `mother_doc` 阶段禁止写开发日志、部署日志与 Git / GitHub 留痕。
 - `implementation` 阶段必须像独立开发者一样推进，并主动修复 doc-code drift。

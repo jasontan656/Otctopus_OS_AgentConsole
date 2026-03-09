@@ -19,6 +19,9 @@
 
 - `mother_doc`
   - [阶段说明](../stages/MOTHER_DOC_STAGE.md)
+  - [子分支入口](../mother_doc/00_MOTHER_DOC_BRANCH_INDEX.md)
+  - [content writeback](../mother_doc/CONTENT_WRITEBACK_BRANCH.md)
+  - [AGENTS branch](../mother_doc/agents_branch/00_BRANCH_INDEX.md)
   - [入口规则](../mother_doc/MOTHER_DOC_ENTRY_RULES.md)
   - [回填规则](../mother_doc/MOTHER_DOC_WRITEBACK_RULES.md)
 - `implementation`
@@ -59,6 +62,7 @@
 - [Cli_Toolbox 入口](../../scripts/Cli_Toolbox.py)
 - [容器骨架模块](../../scripts/container_scaffold.py)
 - [Mother_Doc 导航模块](../../scripts/mother_doc_navigation.py)
+- [Mother_Doc AGENTS 管理模块](../../scripts/mother_doc_agents_manager.py)
 - [阶段合同支持模块](../../scripts/stage_contract_support.py)
 
 ## Lookup Hints

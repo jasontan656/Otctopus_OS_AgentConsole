@@ -1,0 +1,16 @@
+{
+  "stage": "scan",
+  "purpose": "discover current AGENTS.md coverage under Mother_Doc docs only",
+  "inputs": [
+    "Mother_Doc docs tree",
+    "existing AGENTS.md files"
+  ],
+  "outputs": [
+    "assets/mother_doc_agents/scan_report.json"
+  ],
+  "prohibited": [
+    "rewrite ordinary docs",
+    "run implementation",
+    "write evidence logs"
+  ]
+}

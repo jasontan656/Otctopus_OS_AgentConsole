@@ -26,6 +26,8 @@ STAGE_SCOPES = {
 STAGE_DOCS = {
     "mother_doc": [
         "references/stages/MOTHER_DOC_STAGE.md",
+        "references/mother_doc/00_MOTHER_DOC_BRANCH_INDEX.md",
+        "references/mother_doc/CONTENT_WRITEBACK_BRANCH.md",
         "references/mother_doc/MOTHER_DOC_ENTRY_RULES.md",
         "references/mother_doc/AGENTS_MD_RULES.md",
         "references/mother_doc/DOC_STATUS_RULES.md",
@@ -33,6 +35,8 @@ STAGE_DOCS = {
         "references/mother_doc/SCOPE_ENTITY_MD_RULES.md",
         "references/mother_doc/MOTHER_DOC_WRITEBACK_RULES.md",
         "references/mother_doc/PHASE1_CONTAINER_NAMING_REFERENCE.md",
+        "references/mother_doc/agents_branch/00_BRANCH_INDEX.md",
+        "references/mother_doc/agents_branch/runtime/AGENTS_BRANCH_CONTRACT.md",
     ],
     "implementation": [
         "references/stages/IMPLEMENTATION_STAGE.md",
@@ -70,11 +74,27 @@ STAGE_COMMANDS = {
             },
             {
                 "command": "python3 scripts/Cli_Toolbox.py sync-mother-doc-navigation --json",
-                "purpose": "refresh README.md, agents.md, and same-name scope markdown files across the Mother_Doc tree only",
+                "purpose": "refresh README.md, AGENTS.md, and same-name scope markdown files across the Mother_Doc tree only",
             },
             {
                 "command": "python3 scripts/Cli_Toolbox.py sync-mother-doc-status --stage mother_doc --path <relative-path> --sync-status pending_implementation --requires-development --json",
                 "purpose": "mark affected Mother_Doc documents and block registries as requiring implementation after a document-side change",
+            },
+            {
+                "command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-directive --stage <scan|collect|push> --json",
+                "purpose": "load the sub-branch directive when the current mother_doc task is specifically about AGENTS.md scaffolding management",
+            },
+            {
+                "command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-scan --json",
+                "purpose": "discover the managed AGENTS.md files under Octopus_OS/Mother_Doc/docs only",
+            },
+            {
+                "command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-collect --json",
+                "purpose": "collect current AGENTS.md files back into the skill-side registry when product-side AGENTS changed first",
+            },
+            {
+                "command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-push --json",
+                "purpose": "push the skill-side AGENTS.md template back across the Mother_Doc docs tree and refresh the registry",
             },
         ],
     },
@@ -139,7 +159,7 @@ STAGE_GRAPH_CONTRACTS = {
         "node_mapping": [
             "directory -> structural scope node",
             "README.md -> scope-purpose node",
-            "agents.md -> navigation-index node",
+            "AGENTS.md -> navigation-index node",
             "<folder_name>.md -> scope-entity node",
             "Document Status + Block Registry -> mechanical change-detection node",
         ],
@@ -183,12 +203,13 @@ STAGE_CHECKLISTS = {
         "entry_requirements": [
             "load top-level resident docs",
             "strengthen the user prompt with Meta-prompt-write",
-            "read root README.md and agents.md inside Mother_Doc before selecting scope",
+            "read root README.md and AGENTS.md inside Mother_Doc before selecting scope",
+            "if the task is about AGENTS scaffolding itself, enter the mother_doc AGENTS sub-branch before editing",
         ],
         "exit_requirements": [
             "updated Mother_Doc current-state content",
-            "updated README.md, agents.md, and <folder_name>.md for affected Mother_Doc scopes only",
-            "affected non-agents Mother_Doc markdown files are marked as pending implementation in their document/block status sections",
+            "updated README.md, AGENTS.md, and <folder_name>.md for affected Mother_Doc scopes only",
+            "affected non-AGENTS Mother_Doc markdown files are marked as pending implementation in their document/block status sections",
             "implementation inputs ready",
         ],
     },

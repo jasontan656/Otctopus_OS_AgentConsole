@@ -8,10 +8,10 @@
 - 项目内部不规划文档版本。
 - 任何受影响目录都必须同步刷新：
   - `README.md`
-  - `agents.md`
+  - `AGENTS.md`
   - `<folder_name>.md`
 - 上述刷新只发生在 `Octopus_OS/Mother_Doc/**` 内，不写入实际工作目录容器。
-- 任何受影响的非 `agents.md` 文档都必须同步刷新 `Document Status + Block Registry`。
+- 任何受影响的非 `AGENTS.md` 文档都必须同步刷新 `Document Status + Block Registry`。
 - 默认回填值固定为：
   - `doc_requires_development: true`
   - `doc_sync_status: pending_implementation`

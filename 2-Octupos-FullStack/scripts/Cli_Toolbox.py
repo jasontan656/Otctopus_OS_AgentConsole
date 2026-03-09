@@ -16,6 +16,12 @@ from toolbox_ops import (
     append_development_log,
     emit_contract,
     materialize_layout,
+    mother_doc_agents_collect,
+    mother_doc_agents_contract,
+    mother_doc_agents_directive,
+    mother_doc_agents_push,
+    mother_doc_agents_registry,
+    mother_doc_agents_scan,
     sync_mother_doc_navigation,
     sync_mother_doc_status,
 )
@@ -38,12 +44,64 @@ def build_parser() -> argparse.ArgumentParser:
 
     navigation = subparsers.add_parser(
         "sync-mother-doc-navigation",
-        help="refresh recursive README.md and agents.md navigation files for Mother_Doc",
+        help="refresh recursive README.md and AGENTS.md navigation files for Mother_Doc",
     )
     navigation.add_argument("--document-root", default=str(DEFAULT_DOCUMENT_ROOT), help="Mother_Doc root")
     navigation.add_argument("--dry-run", action="store_true")
     navigation.add_argument("--json", action="store_true")
     navigation.set_defaults(func=sync_mother_doc_navigation)
+
+    agents_contract = subparsers.add_parser(
+        "mother-doc-agents-contract",
+        help="print the runtime contract for the Mother_Doc AGENTS.md manager branch",
+    )
+    agents_contract.add_argument("--skill-root", default=None, help="override skill root")
+    agents_contract.add_argument("--json", action="store_true")
+    agents_contract.set_defaults(func=mother_doc_agents_contract)
+
+    agents_directive = subparsers.add_parser(
+        "mother-doc-agents-directive",
+        help="print the stage directive for the Mother_Doc AGENTS.md manager branch",
+    )
+    agents_directive.add_argument("--skill-root", default=None, help="override skill root")
+    agents_directive.add_argument("--stage", choices=("scan", "collect", "push"), required=True)
+    agents_directive.add_argument("--json", action="store_true")
+    agents_directive.set_defaults(func=mother_doc_agents_directive)
+
+    agents_registry = subparsers.add_parser(
+        "mother-doc-agents-registry",
+        help="print the collected registry for managed Mother_Doc AGENTS.md files",
+    )
+    agents_registry.add_argument("--skill-root", default=None, help="override skill root")
+    agents_registry.add_argument("--json", action="store_true")
+    agents_registry.set_defaults(func=mother_doc_agents_registry)
+
+    agents_scan = subparsers.add_parser(
+        "mother-doc-agents-scan",
+        help="scan Octopus_OS/Mother_Doc/docs for managed AGENTS.md files only",
+    )
+    agents_scan.add_argument("--skill-root", default=None, help="override skill root")
+    agents_scan.add_argument("--document-root", default=str(DEFAULT_DOCUMENT_ROOT), help="Mother_Doc docs root")
+    agents_scan.add_argument("--json", action="store_true")
+    agents_scan.set_defaults(func=mother_doc_agents_scan)
+
+    agents_collect = subparsers.add_parser(
+        "mother-doc-agents-collect",
+        help="collect current Mother_Doc AGENTS.md files back into the skill-side managed registry",
+    )
+    agents_collect.add_argument("--skill-root", default=None, help="override skill root")
+    agents_collect.add_argument("--json", action="store_true")
+    agents_collect.set_defaults(func=mother_doc_agents_collect)
+
+    agents_push = subparsers.add_parser(
+        "mother-doc-agents-push",
+        help="push the current AGENTS.md template back through the Mother_Doc docs tree and refresh the managed registry",
+    )
+    agents_push.add_argument("--skill-root", default=None, help="override skill root")
+    agents_push.add_argument("--document-root", default=str(DEFAULT_DOCUMENT_ROOT), help="Mother_Doc docs root")
+    agents_push.add_argument("--dry-run", action="store_true")
+    agents_push.add_argument("--json", action="store_true")
+    agents_push.set_defaults(func=mother_doc_agents_push)
 
     status = subparsers.add_parser(
         "sync-mother-doc-status",

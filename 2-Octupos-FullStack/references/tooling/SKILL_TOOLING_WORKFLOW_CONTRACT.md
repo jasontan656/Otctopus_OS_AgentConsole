@@ -34,9 +34,14 @@
 
 ## Mother_Doc Navigation Policy
 
-- `agents.md` 只属于 `Octopus_OS/Mother_Doc/**` 这棵文档树。
-- `sync-mother-doc-navigation` 只刷新 `Mother_Doc` 树内的导航文件，不得把 `agents.md` 写入实际工作目录容器。
-- `sync-mother-doc-status` 负责刷新非 `agents.md` 文档的 `Document Status + Block Registry`。
+- `AGENTS.md` 只属于 `Octopus_OS/Mother_Doc/**` 这棵文档树。
+- `mother_doc` 阶段下固定存在 `AGENTS manager` 子分支，专门处理 `AGENTS.md` 模板管理。
+- `AGENTS manager` 固定采用 `scan / collect / push` 三阶段。
+- `sync-mother-doc-navigation` 只刷新 `Mother_Doc` 树内的导航文件，不得把 `AGENTS.md` 写入实际工作目录容器。
+- `sync-mother-doc-status` 负责刷新非 `AGENTS.md` 文档的 `Document Status + Block Registry`。
+- `mother-doc-agents-scan` 只扫描产品侧 `AGENTS.md` 现状。
+- `mother-doc-agents-collect` 只把产品侧 `AGENTS.md` 回收到技能内 registry。
+- `mother-doc-agents-push` 只把技能侧当前模板反推回产品树，并自动重扫回收。
 
 ## Delivery Log Policy
 

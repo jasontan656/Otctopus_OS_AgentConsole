@@ -6,6 +6,7 @@ from typing import Iterable
 
 STATUS_START = "<!-- octopus:status:start -->"
 STATUS_END = "<!-- octopus:status:end -->"
+AGENTS_FILENAME = "AGENTS.md"
 
 
 def _bool_text(value: bool) -> str:
@@ -113,7 +114,7 @@ def _iter_target_docs(document_root: Path, target_paths: list[Path] | None) -> l
             [
                 path
                 for path in document_root.rglob("*.md")
-                if path.name != "agents.md"
+                if path.name != AGENTS_FILENAME
             ]
         )
 
@@ -121,8 +122,8 @@ def _iter_target_docs(document_root: Path, target_paths: list[Path] | None) -> l
     for raw_path in target_paths:
         path = raw_path if raw_path.is_absolute() else document_root / raw_path
         if path.is_dir():
-            docs.update(p for p in path.rglob("*.md") if p.name != "agents.md")
-        elif path.suffix == ".md" and path.name != "agents.md":
+            docs.update(p for p in path.rglob("*.md") if p.name != AGENTS_FILENAME)
+        elif path.suffix == ".md" and path.name != AGENTS_FILENAME:
             docs.add(path)
     return sorted(docs)
 

@@ -4,13 +4,13 @@
 
 ## Core Rule
 
-- `agents.md` 之外的 `Mother_Doc` markdown 必须带有机械可读的状态块。
+- `AGENTS.md` 之外的 `Mother_Doc` markdown 必须带有机械可读的状态块。
 - 任意文档区块被 `mother_doc` 更新后，必须显式把对应区块标记为 `requires_development: true`。
 - 文档级状态与区块级状态必须同时可读，供后续 `implementation` 与 `evidence` 机械探测。
 
 ## Fixed Shape
 
-- 每个非 `agents.md` 文档都必须包含：
+- 每个非 `AGENTS.md` 文档都必须包含：
   - `## Document Status`
   - `## Block Registry`
 - `Document Status` 至少固定包含：

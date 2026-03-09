@@ -1,0 +1,18 @@
+{
+  "stage": "push",
+  "purpose": "push the current skill-side AGENTS template back through the Mother_Doc docs tree and resync the registry",
+  "inputs": [
+    "current mother_doc navigation template",
+    "Octopus_OS/Mother_Doc/docs"
+  ],
+  "outputs": [
+    "updated AGENTS.md tree",
+    "fresh scan_report.json",
+    "fresh registry.json"
+  ],
+  "prohibited": [
+    "rewrite non-AGENTS docs",
+    "write implementation logs",
+    "write deployment logs"
+  ]
+}

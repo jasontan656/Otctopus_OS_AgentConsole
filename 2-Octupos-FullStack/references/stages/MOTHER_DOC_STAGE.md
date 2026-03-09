@@ -5,20 +5,28 @@
 ## Scope
 
 - 强化当前用户意图。
-- 递归读取 `Mother_Doc` 当前索引树。
-- 仅在 `Mother_Doc` 树内维护 `README.md`、`agents.md`、`<folder_name>.md`、`common/` 与容器骨架。
-- 给受影响的非 `agents.md` 文档回填 `Document Status + Block Registry`，并标记为 `pending_implementation`。
+- 先从 `mother_doc` 分支索引选择子链，再递归读取 `Mother_Doc` 当前索引树。
+- 仅在 `Mother_Doc` 树内维护 `README.md`、`AGENTS.md`、`<folder_name>.md`、`common/` 与容器骨架。
+- 给受影响的非 `AGENTS.md` 文档回填 `Document Status + Block Registry`，并标记为 `pending_implementation`。
 - 禁止写开发日志、部署日志与 Git / GitHub 留痕。
+
+## Branch Entry
+
+- 总入口：[00_MOTHER_DOC_BRANCH_INDEX.md](../mother_doc/00_MOTHER_DOC_BRANCH_INDEX.md)
+- `content_writeback`：普通文档覆盖写回、状态回填、common 文档维护。
+- `agents_manager`：只管理 `AGENTS.md` 模板、扫描、回收与反推。
 
 ## Required Workflow
 
 1. 先用 `Meta-prompt-write` 强化用户意图。
-2. 进入 `Octopus_OS/Mother_Doc/docs/`，读取根层 `README.md`、`agents.md`、`Mother_Doc.md`。
-3. 每进入下一层目录，都先读 `README.md`、再读 `agents.md`、再读同名 `<folder_name>.md`。
-4. 递归选择直到完整影响面被覆盖。
-5. 覆盖写回当前状态，并仅在 `Mother_Doc` 内刷新受影响目录的三类固定文件。
-6. 对受影响的非 `agents.md` 文档同步写入 `Document Status + Block Registry`，把对应区块标记为 `requires_development: true`。
-7. 结束时只保留覆盖后的当前状态，不写日志、不做版本留痕。
+2. 读取 [00_MOTHER_DOC_BRANCH_INDEX.md](../mother_doc/00_MOTHER_DOC_BRANCH_INDEX.md)，先判定当前任务属于 `content_writeback` 还是 `agents_manager`。
+3. 若是普通文档更新，则进入 `content_writeback`；若是 `AGENTS.md` 模板/索引管理，则进入 `agents_manager`。
+4. 进入 `Octopus_OS/Mother_Doc/docs/`，读取根层 `README.md`、`AGENTS.md`、`Mother_Doc.md`。
+5. 每进入下一层目录，都先读 `README.md`、再读 `AGENTS.md`、再读同名 `<folder_name>.md`。
+6. 递归选择直到完整影响面被覆盖。
+7. 覆盖写回当前状态，并仅在 `Mother_Doc` 内刷新受影响目录的三类固定文件。
+8. 对受影响的非 `AGENTS.md` 文档同步写入 `Document Status + Block Registry`，把对应区块标记为 `requires_development: true`。
+9. 结束时只保留覆盖后的当前状态，不写日志、不做版本留痕。
 
 ## Produces
 

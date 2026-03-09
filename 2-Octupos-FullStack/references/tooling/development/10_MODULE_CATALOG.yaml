@@ -23,6 +23,31 @@ modules:
     tool_alias: Cli_Toolbox.sync_mother_doc_navigation
     entrypoint: scripts/Cli_Toolbox.py sync-mother-doc-navigation
     status: active
+  - module_id: mother_doc_agents_contract
+    tool_alias: Cli_Toolbox.mother_doc_agents_contract
+    entrypoint: scripts/Cli_Toolbox.py mother-doc-agents-contract
+    status: active
+    stage_scope: mother_doc
+  - module_id: mother_doc_agents_directive
+    tool_alias: Cli_Toolbox.mother_doc_agents_directive
+    entrypoint: scripts/Cli_Toolbox.py mother-doc-agents-directive
+    status: active
+    stage_scope: mother_doc
+  - module_id: mother_doc_agents_scan
+    tool_alias: Cli_Toolbox.mother_doc_agents_scan
+    entrypoint: scripts/Cli_Toolbox.py mother-doc-agents-scan
+    status: active
+    stage_scope: mother_doc
+  - module_id: mother_doc_agents_collect
+    tool_alias: Cli_Toolbox.mother_doc_agents_collect
+    entrypoint: scripts/Cli_Toolbox.py mother-doc-agents-collect
+    status: active
+    stage_scope: mother_doc
+  - module_id: mother_doc_agents_push
+    tool_alias: Cli_Toolbox.mother_doc_agents_push
+    entrypoint: scripts/Cli_Toolbox.py mother-doc-agents-push
+    status: active
+    stage_scope: mother_doc
   - module_id: sync_mother_doc_status
     tool_alias: Cli_Toolbox.sync_mother_doc_status
     entrypoint: scripts/Cli_Toolbox.py sync-mother-doc-status
