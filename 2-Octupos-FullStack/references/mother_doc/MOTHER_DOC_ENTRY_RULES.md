@@ -4,8 +4,8 @@
 
 ## 入口定位
 
-- 本文档描述 `Mother_Doc` 撰写/维护入口的技能自有规则。
-- 它不定义具体 UI、backend、database、deployment 方案；它只定义 AI 如何判断是否需要新增容器与文档目录，以及这些目录的最低抽象层形态。
+- 本文档定义 `Mother_Doc` 撰写/维护入口的运行规则。
+- 它只定义 AI 如何判断是否需要新增容器与文档目录，以及这些目录的最低抽象层形态。
 - `Mother_Doc` 当前入口形态应以同名容器目录为主，不保留 `01-07` 这类编号治理目录作为主要结构。
 - `Mother_Doc/README.md` 是镜像根说明；`Mother_Doc/Mother_Doc/00_INDEX.md` 是 `Mother_Doc` 容器自己的索引。
 

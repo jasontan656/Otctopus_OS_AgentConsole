@@ -7,9 +7,9 @@
 - `workspace_root`: `/home/jasontan656/AI_Projects/Octopus_OS`
 - `document_root`: `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/`
 - `rule_layers`:
-  - `skill_native_rules`: 本技能如何工作、如何写 `Mother_Doc`、如何落盘、如何回填 evidence
-  - `authored_rules`: 本技能产出的开发运维文档中，对 UI、event、后端、数据库、部署、运维与运行时对象的规则
-- `execution_model`: 文档直达实现；文档骨架直接匹配代码与部署边界，因此不保留独立的中间 `plan` / `construction_plan` 环节；容器集合允许在 `Mother_Doc` 入口按项目描述动态横向扩充。
+  - `skill_native_rules`: 本技能如何工作、如何维护 `Mother_Doc`、如何落盘、如何回填 evidence
+  - `authored_rules`: 各容器文档中定义的架构、技术栈、命名、合同、运维与运行时规则
+- `execution_model`: 文档直接驱动实现；文档骨架直接匹配代码与部署边界；容器集合允许在 `Mother_Doc` 入口按项目描述动态横向扩充。
 
 ## Governance Rules
 - 文档、代码与 evidence 都是项目本体的一部分。
@@ -17,10 +17,6 @@
 - 唯一工作目录固定为 `/home/jasontan656/AI_Projects/Octopus_OS`。
 - 唯一文档承载目录固定为 `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/`。
 - 容器目录参考内容可以静态存在，但真实容器集合是项目驱动的动态集合。
-- `SKILL.md` 门面只描述技能自有规则。
-- UI、event、backend、database、deployment、operations 与运行时细节，必须落入被撰写规则中。
-- 必须显式区分技能自有规则与被撰写规则。
-- 技能写文档与按照文档开发出来的内容是两回事。
 - `Mother_Doc/` 的目录架构既是被撰写文档架构，也是未来 Admin Panel 的可视化架构。
 - `Mother_Doc/README.md` 是镜像根说明；`Mother_Doc/Mother_Doc/00_INDEX.md` 是 `Mother_Doc` 容器自身索引。
 - `Mother_Doc/` 当前入口形态应以同名容器目录为主，不保留 `01-07` 这类编号治理目录作为主要结构。
