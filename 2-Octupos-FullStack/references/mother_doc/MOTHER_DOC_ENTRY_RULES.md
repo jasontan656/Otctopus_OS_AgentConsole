@@ -16,8 +16,12 @@
   - `features/`
   - `shared/`
   - `common/`
-- `AGENTS.md` 只存在于 `Octopus_OS/Mother_Doc/docs/**` 这棵文档树内。
-- `Octopus_OS/<Container_Name>/` 这类实际工作目录容器不承载 `AGENTS.md`。
+- `AGENTS.md` 管理由 3 个路径分支组成：
+  - `Octopus_OS/AGENTS.md`
+  - `Octopus_OS/<Container_Name>/AGENTS.md`
+  - `Octopus_OS/Mother_Doc/docs/**/AGENTS.md`
+- `Octopus_OS/Mother_Doc/docs/**/AGENTS.md` 仍然只负责文档树递归索引。
+- 容器根与总容器根的 `AGENTS.md` 负责入口选域，不替代文档树内部索引。
 - `Octopus_OS/Mother_Doc/graph/` 承载 `OS_graph` 资产，不属于 docs 树。
 - `AGENTS.md` 之外的 markdown 必须带有 `Document Status + Block Registry`。
 - 每个容器的 `common/` 固定承载：
@@ -50,4 +54,7 @@
 - 容器集合不是封闭白名单。
 - AI 必须依据项目描述判断是否新增容器。
 - 新增容器后，必须同步新增工作目录容器与 `Mother_Doc/docs` 同名目录，并补齐三类固定文件与 `common/` 骨架。
-- 若新增目录会进入 `Mother_Doc/docs/**`，则必须同步补齐该目录的 `AGENTS.md`，并纳入 `agents_manager` 分支的 scan / collect / push 管理。
+- 若新增顶层容器，则必须同步补齐：
+  - `Octopus_OS/<Container_Name>/AGENTS.md`
+  - `Octopus_OS/Mother_Doc/docs/<Container_Name>/AGENTS.md`
+- 新增容器后，相关模板也必须同步进入 `assets/mother_doc_agents/templates/` 并纳入统一 index。

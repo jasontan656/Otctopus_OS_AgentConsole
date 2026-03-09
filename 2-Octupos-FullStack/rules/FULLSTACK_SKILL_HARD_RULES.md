@@ -34,7 +34,7 @@
 14. 抽象功能可共享，特定域命令禁止共享、禁止串用。
 15. 文档即代码，代码组织最终应与 `Mother_Doc/docs` 组织对齐。
 16. `Mother_Doc/docs/` 的目录架构既是被撰写文档架构，也是未来 Admin Panel 的可视化架构。
-17. `AGENTS.md` 只允许存在于 `Octopus_OS/Mother_Doc/docs/**`。
+17. `AGENTS.md` 的固定管理范围是 `Octopus_OS/AGENTS.md`、`Octopus_OS/<Container_Name>/AGENTS.md` 与 `Octopus_OS/Mother_Doc/docs/**/AGENTS.md`。
 18. 实际工作目录容器 `Octopus_OS/<Container_Name>/` 与 `Octopus_OS/Mother_Doc/` 容器根都不得创建 `AGENTS.md`。
 19. `Mother_Doc/docs` 每一层目录都必须同时具备：
 - `README.md`
@@ -53,7 +53,7 @@
 27. 强化完成后，必须先读取 `references/mother_doc/00_MOTHER_DOC_BRANCH_INDEX.md`，判定当前任务属于 `direct_writeback`、`question_backfill` 还是 `AGENTS manager`。
 28. `direct_writeback` 只负责把用户已明确描述的内容写入受影响的 `overview / features / shared / common`。
 29. `question_backfill` 只负责把未收口问题整理、追问并回填到原文档，不得代替 implementation。
-30. `AGENTS manager` 是 `mother_doc` 阶段内的独立子分支，只管理 `Octopus_OS/Mother_Doc/docs/**/AGENTS.md`。
+30. `AGENTS manager` 是 `mother_doc` 阶段内的独立子分支，统一管理 `Octopus_OS` 根层、各容器根层与 `Mother_Doc/docs` 文档树的 `AGENTS.md`。
 31. `AGENTS manager` 固定采用 `scan / collect / push` 三阶段；不得与普通文档正文覆盖写回混写。
 32. 完成子分支判定后，必须从 `Octopus_OS/Mother_Doc/docs/` 根层 `README.md + AGENTS.md + Mother_Doc.md` 进入，再逐层读取当前层 `README.md + AGENTS.md + <folder_name>.md`，递归覆盖完整影响面。
 33. `mother_doc` 阶段禁止写开发日志、部署日志与 Git / GitHub 留痕；本阶段只负责覆盖式更新当前文档状态。

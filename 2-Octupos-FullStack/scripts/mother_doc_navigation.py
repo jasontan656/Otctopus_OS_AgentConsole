@@ -159,7 +159,7 @@ def build_agents_index(path: Path, document_root: Path) -> str:
             "- 当前层不得把别的域的规则、workflow 或实现细节混写进来。",
             "",
             "## 6. 索引契约",
-            f"- `{AGENTS_FILENAME}` 只存在于 `Octopus_OS/Mother_Doc/docs/**`。",
+            f"- 当前文件属于 `mother_doc_docs` 分支；总容器根与容器根的 `{AGENTS_FILENAME}` 由同一 AGENTS manager 的其他分支管理。",
             "- 当前层索引必须同时指向同层用途文档、同层实体文档和下一层入口。",
             "- 子路径说明必须简短且可判断作用域。",
             "",

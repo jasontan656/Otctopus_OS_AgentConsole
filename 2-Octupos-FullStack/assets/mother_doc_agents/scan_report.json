@@ -1,1226 +1,1933 @@
 {
   "branch": "mother_doc_agents",
-  "document_root": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs",
-  "managed_filename": "AGENTS.md",
-  "entry_count": 152,
+  "managed_scopes": [
+    "octopus_os_root",
+    "container_roots",
+    "mother_doc_docs"
+  ],
+  "entry_count": 213,
   "entries": [
     {
-      "relative_dir": ".",
-      "relative_path": "AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AGENTS.md",
+      "scope_branch": "octopus_os_root",
+      "registry_key": "octopus_os_root/AGENTS.md",
+      "relative_path": "octopus_os_root/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/AGENTS.md",
+      "template_relative_path": "octopus_os_root/AGENTS.md",
       "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 16
+      "child_entry_count": 15
     },
     {
-      "relative_dir": "AI_Service",
-      "relative_path": "AI_Service/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AI_Service/AGENTS.md",
+      "scope_branch": "container_roots",
+      "registry_key": "container_roots/Account_Service/AGENTS.md",
+      "relative_path": "container_roots/Account_Service/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Account_Service/AGENTS.md",
+      "template_relative_path": "container_roots/Account_Service/AGENTS.md",
       "readme_present": true,
-      "scope_doc_present": true,
+      "child_entry_count": 0
+    },
+    {
+      "scope_branch": "container_roots",
+      "registry_key": "container_roots/Admin_UI/AGENTS.md",
+      "relative_path": "container_roots/Admin_UI/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Admin_UI/AGENTS.md",
+      "template_relative_path": "container_roots/Admin_UI/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 0
+    },
+    {
+      "scope_branch": "container_roots",
+      "registry_key": "container_roots/AI_Service/AGENTS.md",
+      "relative_path": "container_roots/AI_Service/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/AI_Service/AGENTS.md",
+      "template_relative_path": "container_roots/AI_Service/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 0
+    },
+    {
+      "scope_branch": "container_roots",
+      "registry_key": "container_roots/API_Gateway/AGENTS.md",
+      "relative_path": "container_roots/API_Gateway/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/API_Gateway/AGENTS.md",
+      "template_relative_path": "container_roots/API_Gateway/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 0
+    },
+    {
+      "scope_branch": "container_roots",
+      "registry_key": "container_roots/File_Service/AGENTS.md",
+      "relative_path": "container_roots/File_Service/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/File_Service/AGENTS.md",
+      "template_relative_path": "container_roots/File_Service/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 0
+    },
+    {
+      "scope_branch": "container_roots",
+      "registry_key": "container_roots/Identity_Service/AGENTS.md",
+      "relative_path": "container_roots/Identity_Service/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Identity_Service/AGENTS.md",
+      "template_relative_path": "container_roots/Identity_Service/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 0
+    },
+    {
+      "scope_branch": "container_roots",
+      "registry_key": "container_roots/Mother_Doc/AGENTS.md",
+      "relative_path": "container_roots/Mother_Doc/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/AGENTS.md",
+      "template_relative_path": "container_roots/Mother_Doc/AGENTS.md",
+      "readme_present": true,
       "child_entry_count": 2
     },
     {
-      "relative_dir": "AI_Service/common",
-      "relative_path": "AI_Service/common/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AI_Service/common/AGENTS.md",
+      "scope_branch": "container_roots",
+      "registry_key": "container_roots/MQ_Broker/AGENTS.md",
+      "relative_path": "container_roots/MQ_Broker/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/MQ_Broker/AGENTS.md",
+      "template_relative_path": "container_roots/MQ_Broker/AGENTS.md",
       "readme_present": true,
-      "scope_doc_present": true,
+      "child_entry_count": 0
+    },
+    {
+      "scope_branch": "container_roots",
+      "registry_key": "container_roots/Notification_Service/AGENTS.md",
+      "relative_path": "container_roots/Notification_Service/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Notification_Service/AGENTS.md",
+      "template_relative_path": "container_roots/Notification_Service/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 0
+    },
+    {
+      "scope_branch": "container_roots",
+      "registry_key": "container_roots/Object_Storage/AGENTS.md",
+      "relative_path": "container_roots/Object_Storage/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Object_Storage/AGENTS.md",
+      "template_relative_path": "container_roots/Object_Storage/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 0
+    },
+    {
+      "scope_branch": "container_roots",
+      "registry_key": "container_roots/Order_Service/AGENTS.md",
+      "relative_path": "container_roots/Order_Service/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Order_Service/AGENTS.md",
+      "template_relative_path": "container_roots/Order_Service/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 0
+    },
+    {
+      "scope_branch": "container_roots",
+      "registry_key": "container_roots/Payment_Service/AGENTS.md",
+      "relative_path": "container_roots/Payment_Service/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Payment_Service/AGENTS.md",
+      "template_relative_path": "container_roots/Payment_Service/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 0
+    },
+    {
+      "scope_branch": "container_roots",
+      "registry_key": "container_roots/Postgres_DB/AGENTS.md",
+      "relative_path": "container_roots/Postgres_DB/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Postgres_DB/AGENTS.md",
+      "template_relative_path": "container_roots/Postgres_DB/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 0
+    },
+    {
+      "scope_branch": "container_roots",
+      "registry_key": "container_roots/Redis_Cache/AGENTS.md",
+      "relative_path": "container_roots/Redis_Cache/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Redis_Cache/AGENTS.md",
+      "template_relative_path": "container_roots/Redis_Cache/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 0
+    },
+    {
+      "scope_branch": "container_roots",
+      "registry_key": "container_roots/User_UI/AGENTS.md",
+      "relative_path": "container_roots/User_UI/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/User_UI/AGENTS.md",
+      "template_relative_path": "container_roots/User_UI/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 0
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/AGENTS.md",
+      "relative_path": "mother_doc_docs/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 15
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/AI_Service/AGENTS.md",
+      "relative_path": "mother_doc_docs/AI_Service/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AI_Service/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/AI_Service/AGENTS.md",
+      "readme_present": true,
       "child_entry_count": 4
     },
     {
-      "relative_dir": "AI_Service/common/code_abstractions",
-      "relative_path": "AI_Service/common/code_abstractions/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AI_Service/common/code_abstractions/AGENTS.md",
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/AI_Service/common/AGENTS.md",
+      "relative_path": "mother_doc_docs/AI_Service/common/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AI_Service/common/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/AI_Service/common/AGENTS.md",
       "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 6
-    },
-    {
-      "relative_dir": "AI_Service/common/code_abstractions/architecture",
-      "relative_path": "AI_Service/common/code_abstractions/architecture/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AI_Service/common/code_abstractions/architecture/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "AI_Service/common/code_abstractions/contracts",
-      "relative_path": "AI_Service/common/code_abstractions/contracts/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AI_Service/common/code_abstractions/contracts/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 6
-    },
-    {
-      "relative_dir": "AI_Service/common/code_abstractions/naming",
-      "relative_path": "AI_Service/common/code_abstractions/naming/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AI_Service/common/code_abstractions/naming/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "AI_Service/common/code_abstractions/operations",
-      "relative_path": "AI_Service/common/code_abstractions/operations/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AI_Service/common/code_abstractions/operations/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "AI_Service/common/code_abstractions/stack",
-      "relative_path": "AI_Service/common/code_abstractions/stack/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AI_Service/common/code_abstractions/stack/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "AI_Service/common/dev_canon",
-      "relative_path": "AI_Service/common/dev_canon/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AI_Service/common/dev_canon/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 4
-    },
-    {
-      "relative_dir": "AI_Service/common/writing_guides",
-      "relative_path": "AI_Service/common/writing_guides/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AI_Service/common/writing_guides/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
       "child_entry_count": 3
     },
     {
-      "relative_dir": "API_Gateway",
-      "relative_path": "API_Gateway/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/API_Gateway/AGENTS.md",
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/AI_Service/common/code_abstractions/AGENTS.md",
+      "relative_path": "mother_doc_docs/AI_Service/common/code_abstractions/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AI_Service/common/code_abstractions/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/AI_Service/common/code_abstractions/AGENTS.md",
       "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 2
-    },
-    {
-      "relative_dir": "API_Gateway/common",
-      "relative_path": "API_Gateway/common/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/API_Gateway/common/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 4
-    },
-    {
-      "relative_dir": "API_Gateway/common/code_abstractions",
-      "relative_path": "API_Gateway/common/code_abstractions/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/API_Gateway/common/code_abstractions/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 6
-    },
-    {
-      "relative_dir": "API_Gateway/common/code_abstractions/architecture",
-      "relative_path": "API_Gateway/common/code_abstractions/architecture/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/API_Gateway/common/code_abstractions/architecture/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
       "child_entry_count": 5
     },
     {
-      "relative_dir": "API_Gateway/common/code_abstractions/contracts",
-      "relative_path": "API_Gateway/common/code_abstractions/contracts/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/API_Gateway/common/code_abstractions/contracts/AGENTS.md",
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/AI_Service/common/code_abstractions/architecture/AGENTS.md",
+      "relative_path": "mother_doc_docs/AI_Service/common/code_abstractions/architecture/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AI_Service/common/code_abstractions/architecture/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/AI_Service/common/code_abstractions/architecture/AGENTS.md",
       "readme_present": true,
-      "scope_doc_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/AI_Service/common/code_abstractions/contracts/AGENTS.md",
+      "relative_path": "mother_doc_docs/AI_Service/common/code_abstractions/contracts/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AI_Service/common/code_abstractions/contracts/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/AI_Service/common/code_abstractions/contracts/AGENTS.md",
+      "readme_present": true,
       "child_entry_count": 5
     },
     {
-      "relative_dir": "API_Gateway/common/code_abstractions/naming",
-      "relative_path": "API_Gateway/common/code_abstractions/naming/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/API_Gateway/common/code_abstractions/naming/AGENTS.md",
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/AI_Service/common/code_abstractions/naming/AGENTS.md",
+      "relative_path": "mother_doc_docs/AI_Service/common/code_abstractions/naming/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AI_Service/common/code_abstractions/naming/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/AI_Service/common/code_abstractions/naming/AGENTS.md",
       "readme_present": true,
-      "scope_doc_present": true,
       "child_entry_count": 4
     },
     {
-      "relative_dir": "API_Gateway/common/code_abstractions/operations",
-      "relative_path": "API_Gateway/common/code_abstractions/operations/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/API_Gateway/common/code_abstractions/operations/AGENTS.md",
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/AI_Service/common/code_abstractions/operations/AGENTS.md",
+      "relative_path": "mother_doc_docs/AI_Service/common/code_abstractions/operations/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AI_Service/common/code_abstractions/operations/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/AI_Service/common/code_abstractions/operations/AGENTS.md",
       "readme_present": true,
-      "scope_doc_present": true,
       "child_entry_count": 4
     },
     {
-      "relative_dir": "API_Gateway/common/code_abstractions/stack",
-      "relative_path": "API_Gateway/common/code_abstractions/stack/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/API_Gateway/common/code_abstractions/stack/AGENTS.md",
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/AI_Service/common/code_abstractions/stack/AGENTS.md",
+      "relative_path": "mother_doc_docs/AI_Service/common/code_abstractions/stack/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AI_Service/common/code_abstractions/stack/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/AI_Service/common/code_abstractions/stack/AGENTS.md",
       "readme_present": true,
-      "scope_doc_present": true,
       "child_entry_count": 4
     },
     {
-      "relative_dir": "API_Gateway/common/dev_canon",
-      "relative_path": "API_Gateway/common/dev_canon/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/API_Gateway/common/dev_canon/AGENTS.md",
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/AI_Service/common/dev_canon/AGENTS.md",
+      "relative_path": "mother_doc_docs/AI_Service/common/dev_canon/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AI_Service/common/dev_canon/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/AI_Service/common/dev_canon/AGENTS.md",
       "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 4
-    },
-    {
-      "relative_dir": "API_Gateway/common/writing_guides",
-      "relative_path": "API_Gateway/common/writing_guides/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/API_Gateway/common/writing_guides/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
       "child_entry_count": 3
     },
     {
-      "relative_dir": "Account_Service",
-      "relative_path": "Account_Service/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Account_Service/AGENTS.md",
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/AI_Service/common/writing_guides/AGENTS.md",
+      "relative_path": "mother_doc_docs/AI_Service/common/writing_guides/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AI_Service/common/writing_guides/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/AI_Service/common/writing_guides/AGENTS.md",
       "readme_present": true,
-      "scope_doc_present": true,
       "child_entry_count": 2
     },
     {
-      "relative_dir": "Account_Service/common",
-      "relative_path": "Account_Service/common/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Account_Service/common/AGENTS.md",
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/AI_Service/features/AGENTS.md",
+      "relative_path": "mother_doc_docs/AI_Service/features/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AI_Service/features/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/AI_Service/features/AGENTS.md",
       "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 4
-    },
-    {
-      "relative_dir": "Account_Service/common/code_abstractions",
-      "relative_path": "Account_Service/common/code_abstractions/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Account_Service/common/code_abstractions/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 6
-    },
-    {
-      "relative_dir": "Account_Service/common/code_abstractions/architecture",
-      "relative_path": "Account_Service/common/code_abstractions/architecture/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Account_Service/common/code_abstractions/architecture/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "Account_Service/common/code_abstractions/contracts",
-      "relative_path": "Account_Service/common/code_abstractions/contracts/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Account_Service/common/code_abstractions/contracts/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 6
-    },
-    {
-      "relative_dir": "Account_Service/common/code_abstractions/naming",
-      "relative_path": "Account_Service/common/code_abstractions/naming/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Account_Service/common/code_abstractions/naming/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "Account_Service/common/code_abstractions/operations",
-      "relative_path": "Account_Service/common/code_abstractions/operations/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Account_Service/common/code_abstractions/operations/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "Account_Service/common/code_abstractions/stack",
-      "relative_path": "Account_Service/common/code_abstractions/stack/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Account_Service/common/code_abstractions/stack/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "Account_Service/common/dev_canon",
-      "relative_path": "Account_Service/common/dev_canon/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Account_Service/common/dev_canon/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 4
-    },
-    {
-      "relative_dir": "Account_Service/common/writing_guides",
-      "relative_path": "Account_Service/common/writing_guides/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Account_Service/common/writing_guides/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
       "child_entry_count": 3
     },
     {
-      "relative_dir": "Admin_UI",
-      "relative_path": "Admin_UI/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Admin_UI/AGENTS.md",
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/AI_Service/overview/AGENTS.md",
+      "relative_path": "mother_doc_docs/AI_Service/overview/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AI_Service/overview/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/AI_Service/overview/AGENTS.md",
       "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 2
-    },
-    {
-      "relative_dir": "Admin_UI/common",
-      "relative_path": "Admin_UI/common/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Admin_UI/common/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 4
-    },
-    {
-      "relative_dir": "Admin_UI/common/code_abstractions",
-      "relative_path": "Admin_UI/common/code_abstractions/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Admin_UI/common/code_abstractions/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 6
-    },
-    {
-      "relative_dir": "Admin_UI/common/code_abstractions/architecture",
-      "relative_path": "Admin_UI/common/code_abstractions/architecture/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Admin_UI/common/code_abstractions/architecture/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "Admin_UI/common/code_abstractions/contracts",
-      "relative_path": "Admin_UI/common/code_abstractions/contracts/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Admin_UI/common/code_abstractions/contracts/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "Admin_UI/common/code_abstractions/naming",
-      "relative_path": "Admin_UI/common/code_abstractions/naming/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Admin_UI/common/code_abstractions/naming/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "Admin_UI/common/code_abstractions/operations",
-      "relative_path": "Admin_UI/common/code_abstractions/operations/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Admin_UI/common/code_abstractions/operations/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 4
-    },
-    {
-      "relative_dir": "Admin_UI/common/code_abstractions/stack",
-      "relative_path": "Admin_UI/common/code_abstractions/stack/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Admin_UI/common/code_abstractions/stack/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "Admin_UI/common/dev_canon",
-      "relative_path": "Admin_UI/common/dev_canon/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Admin_UI/common/dev_canon/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 4
-    },
-    {
-      "relative_dir": "Admin_UI/common/writing_guides",
-      "relative_path": "Admin_UI/common/writing_guides/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Admin_UI/common/writing_guides/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
       "child_entry_count": 3
     },
     {
-      "relative_dir": "File_Service",
-      "relative_path": "File_Service/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/File_Service/AGENTS.md",
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/AI_Service/shared/AGENTS.md",
+      "relative_path": "mother_doc_docs/AI_Service/shared/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AI_Service/shared/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/AI_Service/shared/AGENTS.md",
       "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 2
+      "child_entry_count": 5
     },
     {
-      "relative_dir": "File_Service/common",
-      "relative_path": "File_Service/common/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/File_Service/common/AGENTS.md",
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/API_Gateway/AGENTS.md",
+      "relative_path": "mother_doc_docs/API_Gateway/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/API_Gateway/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/API_Gateway/AGENTS.md",
       "readme_present": true,
-      "scope_doc_present": true,
       "child_entry_count": 4
     },
     {
-      "relative_dir": "File_Service/common/code_abstractions",
-      "relative_path": "File_Service/common/code_abstractions/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/File_Service/common/code_abstractions/AGENTS.md",
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/API_Gateway/common/AGENTS.md",
+      "relative_path": "mother_doc_docs/API_Gateway/common/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/API_Gateway/common/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/API_Gateway/common/AGENTS.md",
       "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 6
-    },
-    {
-      "relative_dir": "File_Service/common/code_abstractions/architecture",
-      "relative_path": "File_Service/common/code_abstractions/architecture/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/File_Service/common/code_abstractions/architecture/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "File_Service/common/code_abstractions/contracts",
-      "relative_path": "File_Service/common/code_abstractions/contracts/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/File_Service/common/code_abstractions/contracts/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 6
-    },
-    {
-      "relative_dir": "File_Service/common/code_abstractions/naming",
-      "relative_path": "File_Service/common/code_abstractions/naming/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/File_Service/common/code_abstractions/naming/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "File_Service/common/code_abstractions/operations",
-      "relative_path": "File_Service/common/code_abstractions/operations/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/File_Service/common/code_abstractions/operations/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "File_Service/common/code_abstractions/stack",
-      "relative_path": "File_Service/common/code_abstractions/stack/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/File_Service/common/code_abstractions/stack/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "File_Service/common/dev_canon",
-      "relative_path": "File_Service/common/dev_canon/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/File_Service/common/dev_canon/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 4
-    },
-    {
-      "relative_dir": "File_Service/common/writing_guides",
-      "relative_path": "File_Service/common/writing_guides/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/File_Service/common/writing_guides/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
       "child_entry_count": 3
     },
     {
-      "relative_dir": "Identity_Service",
-      "relative_path": "Identity_Service/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Identity_Service/AGENTS.md",
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/API_Gateway/common/code_abstractions/AGENTS.md",
+      "relative_path": "mother_doc_docs/API_Gateway/common/code_abstractions/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/API_Gateway/common/code_abstractions/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/API_Gateway/common/code_abstractions/AGENTS.md",
       "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 2
+      "child_entry_count": 5
     },
     {
-      "relative_dir": "Identity_Service/common",
-      "relative_path": "Identity_Service/common/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Identity_Service/common/AGENTS.md",
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/API_Gateway/common/code_abstractions/architecture/AGENTS.md",
+      "relative_path": "mother_doc_docs/API_Gateway/common/code_abstractions/architecture/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/API_Gateway/common/code_abstractions/architecture/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/API_Gateway/common/code_abstractions/architecture/AGENTS.md",
       "readme_present": true,
-      "scope_doc_present": true,
       "child_entry_count": 4
     },
     {
-      "relative_dir": "Identity_Service/common/code_abstractions",
-      "relative_path": "Identity_Service/common/code_abstractions/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Identity_Service/common/code_abstractions/AGENTS.md",
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/API_Gateway/common/code_abstractions/contracts/AGENTS.md",
+      "relative_path": "mother_doc_docs/API_Gateway/common/code_abstractions/contracts/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/API_Gateway/common/code_abstractions/contracts/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/API_Gateway/common/code_abstractions/contracts/AGENTS.md",
       "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 6
-    },
-    {
-      "relative_dir": "Identity_Service/common/code_abstractions/architecture",
-      "relative_path": "Identity_Service/common/code_abstractions/architecture/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Identity_Service/common/code_abstractions/architecture/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "Identity_Service/common/code_abstractions/contracts",
-      "relative_path": "Identity_Service/common/code_abstractions/contracts/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Identity_Service/common/code_abstractions/contracts/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 6
-    },
-    {
-      "relative_dir": "Identity_Service/common/code_abstractions/naming",
-      "relative_path": "Identity_Service/common/code_abstractions/naming/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Identity_Service/common/code_abstractions/naming/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "Identity_Service/common/code_abstractions/operations",
-      "relative_path": "Identity_Service/common/code_abstractions/operations/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Identity_Service/common/code_abstractions/operations/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "Identity_Service/common/code_abstractions/stack",
-      "relative_path": "Identity_Service/common/code_abstractions/stack/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Identity_Service/common/code_abstractions/stack/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "Identity_Service/common/dev_canon",
-      "relative_path": "Identity_Service/common/dev_canon/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Identity_Service/common/dev_canon/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
       "child_entry_count": 4
     },
     {
-      "relative_dir": "Identity_Service/common/writing_guides",
-      "relative_path": "Identity_Service/common/writing_guides/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Identity_Service/common/writing_guides/AGENTS.md",
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/API_Gateway/common/code_abstractions/naming/AGENTS.md",
+      "relative_path": "mother_doc_docs/API_Gateway/common/code_abstractions/naming/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/API_Gateway/common/code_abstractions/naming/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/API_Gateway/common/code_abstractions/naming/AGENTS.md",
       "readme_present": true,
-      "scope_doc_present": true,
       "child_entry_count": 3
     },
     {
-      "relative_dir": "MQ_Broker",
-      "relative_path": "MQ_Broker/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/MQ_Broker/AGENTS.md",
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/API_Gateway/common/code_abstractions/operations/AGENTS.md",
+      "relative_path": "mother_doc_docs/API_Gateway/common/code_abstractions/operations/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/API_Gateway/common/code_abstractions/operations/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/API_Gateway/common/code_abstractions/operations/AGENTS.md",
       "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 2
-    },
-    {
-      "relative_dir": "MQ_Broker/common",
-      "relative_path": "MQ_Broker/common/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/MQ_Broker/common/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 4
-    },
-    {
-      "relative_dir": "MQ_Broker/common/code_abstractions",
-      "relative_path": "MQ_Broker/common/code_abstractions/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/MQ_Broker/common/code_abstractions/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 6
-    },
-    {
-      "relative_dir": "MQ_Broker/common/code_abstractions/architecture",
-      "relative_path": "MQ_Broker/common/code_abstractions/architecture/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/MQ_Broker/common/code_abstractions/architecture/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "MQ_Broker/common/code_abstractions/contracts",
-      "relative_path": "MQ_Broker/common/code_abstractions/contracts/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/MQ_Broker/common/code_abstractions/contracts/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "MQ_Broker/common/code_abstractions/naming",
-      "relative_path": "MQ_Broker/common/code_abstractions/naming/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/MQ_Broker/common/code_abstractions/naming/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 4
-    },
-    {
-      "relative_dir": "MQ_Broker/common/code_abstractions/operations",
-      "relative_path": "MQ_Broker/common/code_abstractions/operations/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/MQ_Broker/common/code_abstractions/operations/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "MQ_Broker/common/code_abstractions/stack",
-      "relative_path": "MQ_Broker/common/code_abstractions/stack/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/MQ_Broker/common/code_abstractions/stack/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 4
-    },
-    {
-      "relative_dir": "MQ_Broker/common/dev_canon",
-      "relative_path": "MQ_Broker/common/dev_canon/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/MQ_Broker/common/dev_canon/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 4
-    },
-    {
-      "relative_dir": "MQ_Broker/common/writing_guides",
-      "relative_path": "MQ_Broker/common/writing_guides/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/MQ_Broker/common/writing_guides/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
       "child_entry_count": 3
     },
     {
-      "relative_dir": "Mother_Doc",
-      "relative_path": "Mother_Doc/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/AGENTS.md",
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/API_Gateway/common/code_abstractions/stack/AGENTS.md",
+      "relative_path": "mother_doc_docs/API_Gateway/common/code_abstractions/stack/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/API_Gateway/common/code_abstractions/stack/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/API_Gateway/common/code_abstractions/stack/AGENTS.md",
       "readme_present": true,
-      "scope_doc_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/API_Gateway/common/dev_canon/AGENTS.md",
+      "relative_path": "mother_doc_docs/API_Gateway/common/dev_canon/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/API_Gateway/common/dev_canon/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/API_Gateway/common/dev_canon/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/API_Gateway/common/writing_guides/AGENTS.md",
+      "relative_path": "mother_doc_docs/API_Gateway/common/writing_guides/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/API_Gateway/common/writing_guides/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/API_Gateway/common/writing_guides/AGENTS.md",
+      "readme_present": true,
       "child_entry_count": 2
     },
     {
-      "relative_dir": "Mother_Doc/common",
-      "relative_path": "Mother_Doc/common/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/common/AGENTS.md",
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/API_Gateway/features/AGENTS.md",
+      "relative_path": "mother_doc_docs/API_Gateway/features/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/API_Gateway/features/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/API_Gateway/features/AGENTS.md",
       "readme_present": true,
-      "scope_doc_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/API_Gateway/overview/AGENTS.md",
+      "relative_path": "mother_doc_docs/API_Gateway/overview/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/API_Gateway/overview/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/API_Gateway/overview/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/API_Gateway/shared/AGENTS.md",
+      "relative_path": "mother_doc_docs/API_Gateway/shared/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/API_Gateway/shared/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/API_Gateway/shared/AGENTS.md",
+      "readme_present": true,
       "child_entry_count": 5
     },
     {
-      "relative_dir": "Mother_Doc/common/code_abstractions",
-      "relative_path": "Mother_Doc/common/code_abstractions/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/common/code_abstractions/AGENTS.md",
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Account_Service/AGENTS.md",
+      "relative_path": "mother_doc_docs/Account_Service/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Account_Service/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Account_Service/AGENTS.md",
       "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 6
+      "child_entry_count": 4
     },
     {
-      "relative_dir": "Mother_Doc/common/code_abstractions/architecture",
-      "relative_path": "Mother_Doc/common/code_abstractions/architecture/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/common/code_abstractions/architecture/AGENTS.md",
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Account_Service/common/AGENTS.md",
+      "relative_path": "mother_doc_docs/Account_Service/common/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Account_Service/common/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Account_Service/common/AGENTS.md",
       "readme_present": true,
-      "scope_doc_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Account_Service/common/code_abstractions/AGENTS.md",
+      "relative_path": "mother_doc_docs/Account_Service/common/code_abstractions/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Account_Service/common/code_abstractions/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Account_Service/common/code_abstractions/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 5
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Account_Service/common/code_abstractions/architecture/AGENTS.md",
+      "relative_path": "mother_doc_docs/Account_Service/common/code_abstractions/architecture/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Account_Service/common/code_abstractions/architecture/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Account_Service/common/code_abstractions/architecture/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Account_Service/common/code_abstractions/contracts/AGENTS.md",
+      "relative_path": "mother_doc_docs/Account_Service/common/code_abstractions/contracts/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Account_Service/common/code_abstractions/contracts/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Account_Service/common/code_abstractions/contracts/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 5
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Account_Service/common/code_abstractions/naming/AGENTS.md",
+      "relative_path": "mother_doc_docs/Account_Service/common/code_abstractions/naming/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Account_Service/common/code_abstractions/naming/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Account_Service/common/code_abstractions/naming/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Account_Service/common/code_abstractions/operations/AGENTS.md",
+      "relative_path": "mother_doc_docs/Account_Service/common/code_abstractions/operations/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Account_Service/common/code_abstractions/operations/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Account_Service/common/code_abstractions/operations/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Account_Service/common/code_abstractions/stack/AGENTS.md",
+      "relative_path": "mother_doc_docs/Account_Service/common/code_abstractions/stack/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Account_Service/common/code_abstractions/stack/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Account_Service/common/code_abstractions/stack/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Account_Service/common/dev_canon/AGENTS.md",
+      "relative_path": "mother_doc_docs/Account_Service/common/dev_canon/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Account_Service/common/dev_canon/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Account_Service/common/dev_canon/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Account_Service/common/writing_guides/AGENTS.md",
+      "relative_path": "mother_doc_docs/Account_Service/common/writing_guides/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Account_Service/common/writing_guides/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Account_Service/common/writing_guides/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 2
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Account_Service/features/AGENTS.md",
+      "relative_path": "mother_doc_docs/Account_Service/features/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Account_Service/features/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Account_Service/features/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Account_Service/overview/AGENTS.md",
+      "relative_path": "mother_doc_docs/Account_Service/overview/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Account_Service/overview/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Account_Service/overview/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Account_Service/shared/AGENTS.md",
+      "relative_path": "mother_doc_docs/Account_Service/shared/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Account_Service/shared/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Account_Service/shared/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 5
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Admin_UI/AGENTS.md",
+      "relative_path": "mother_doc_docs/Admin_UI/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Admin_UI/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Admin_UI/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Admin_UI/common/AGENTS.md",
+      "relative_path": "mother_doc_docs/Admin_UI/common/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Admin_UI/common/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Admin_UI/common/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Admin_UI/common/code_abstractions/AGENTS.md",
+      "relative_path": "mother_doc_docs/Admin_UI/common/code_abstractions/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Admin_UI/common/code_abstractions/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Admin_UI/common/code_abstractions/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 5
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Admin_UI/common/code_abstractions/architecture/AGENTS.md",
+      "relative_path": "mother_doc_docs/Admin_UI/common/code_abstractions/architecture/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Admin_UI/common/code_abstractions/architecture/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Admin_UI/common/code_abstractions/architecture/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Admin_UI/common/code_abstractions/contracts/AGENTS.md",
+      "relative_path": "mother_doc_docs/Admin_UI/common/code_abstractions/contracts/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Admin_UI/common/code_abstractions/contracts/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Admin_UI/common/code_abstractions/contracts/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Admin_UI/common/code_abstractions/naming/AGENTS.md",
+      "relative_path": "mother_doc_docs/Admin_UI/common/code_abstractions/naming/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Admin_UI/common/code_abstractions/naming/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Admin_UI/common/code_abstractions/naming/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Admin_UI/common/code_abstractions/operations/AGENTS.md",
+      "relative_path": "mother_doc_docs/Admin_UI/common/code_abstractions/operations/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Admin_UI/common/code_abstractions/operations/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Admin_UI/common/code_abstractions/operations/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Admin_UI/common/code_abstractions/stack/AGENTS.md",
+      "relative_path": "mother_doc_docs/Admin_UI/common/code_abstractions/stack/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Admin_UI/common/code_abstractions/stack/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Admin_UI/common/code_abstractions/stack/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Admin_UI/common/dev_canon/AGENTS.md",
+      "relative_path": "mother_doc_docs/Admin_UI/common/dev_canon/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Admin_UI/common/dev_canon/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Admin_UI/common/dev_canon/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Admin_UI/common/writing_guides/AGENTS.md",
+      "relative_path": "mother_doc_docs/Admin_UI/common/writing_guides/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Admin_UI/common/writing_guides/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Admin_UI/common/writing_guides/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 2
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Admin_UI/features/AGENTS.md",
+      "relative_path": "mother_doc_docs/Admin_UI/features/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Admin_UI/features/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Admin_UI/features/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Admin_UI/overview/AGENTS.md",
+      "relative_path": "mother_doc_docs/Admin_UI/overview/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Admin_UI/overview/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Admin_UI/overview/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Admin_UI/shared/AGENTS.md",
+      "relative_path": "mother_doc_docs/Admin_UI/shared/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Admin_UI/shared/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Admin_UI/shared/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 5
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/File_Service/AGENTS.md",
+      "relative_path": "mother_doc_docs/File_Service/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/File_Service/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/File_Service/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/File_Service/common/AGENTS.md",
+      "relative_path": "mother_doc_docs/File_Service/common/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/File_Service/common/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/File_Service/common/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/File_Service/common/code_abstractions/AGENTS.md",
+      "relative_path": "mother_doc_docs/File_Service/common/code_abstractions/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/File_Service/common/code_abstractions/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/File_Service/common/code_abstractions/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 5
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/File_Service/common/code_abstractions/architecture/AGENTS.md",
+      "relative_path": "mother_doc_docs/File_Service/common/code_abstractions/architecture/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/File_Service/common/code_abstractions/architecture/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/File_Service/common/code_abstractions/architecture/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/File_Service/common/code_abstractions/contracts/AGENTS.md",
+      "relative_path": "mother_doc_docs/File_Service/common/code_abstractions/contracts/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/File_Service/common/code_abstractions/contracts/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/File_Service/common/code_abstractions/contracts/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 5
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/File_Service/common/code_abstractions/naming/AGENTS.md",
+      "relative_path": "mother_doc_docs/File_Service/common/code_abstractions/naming/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/File_Service/common/code_abstractions/naming/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/File_Service/common/code_abstractions/naming/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/File_Service/common/code_abstractions/operations/AGENTS.md",
+      "relative_path": "mother_doc_docs/File_Service/common/code_abstractions/operations/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/File_Service/common/code_abstractions/operations/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/File_Service/common/code_abstractions/operations/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/File_Service/common/code_abstractions/stack/AGENTS.md",
+      "relative_path": "mother_doc_docs/File_Service/common/code_abstractions/stack/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/File_Service/common/code_abstractions/stack/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/File_Service/common/code_abstractions/stack/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/File_Service/common/dev_canon/AGENTS.md",
+      "relative_path": "mother_doc_docs/File_Service/common/dev_canon/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/File_Service/common/dev_canon/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/File_Service/common/dev_canon/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/File_Service/common/writing_guides/AGENTS.md",
+      "relative_path": "mother_doc_docs/File_Service/common/writing_guides/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/File_Service/common/writing_guides/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/File_Service/common/writing_guides/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 2
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/File_Service/features/AGENTS.md",
+      "relative_path": "mother_doc_docs/File_Service/features/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/File_Service/features/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/File_Service/features/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/File_Service/overview/AGENTS.md",
+      "relative_path": "mother_doc_docs/File_Service/overview/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/File_Service/overview/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/File_Service/overview/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/File_Service/shared/AGENTS.md",
+      "relative_path": "mother_doc_docs/File_Service/shared/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/File_Service/shared/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/File_Service/shared/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 5
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Identity_Service/AGENTS.md",
+      "relative_path": "mother_doc_docs/Identity_Service/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Identity_Service/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Identity_Service/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Identity_Service/common/AGENTS.md",
+      "relative_path": "mother_doc_docs/Identity_Service/common/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Identity_Service/common/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Identity_Service/common/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Identity_Service/common/code_abstractions/AGENTS.md",
+      "relative_path": "mother_doc_docs/Identity_Service/common/code_abstractions/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Identity_Service/common/code_abstractions/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Identity_Service/common/code_abstractions/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 5
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Identity_Service/common/code_abstractions/architecture/AGENTS.md",
+      "relative_path": "mother_doc_docs/Identity_Service/common/code_abstractions/architecture/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Identity_Service/common/code_abstractions/architecture/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Identity_Service/common/code_abstractions/architecture/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Identity_Service/common/code_abstractions/contracts/AGENTS.md",
+      "relative_path": "mother_doc_docs/Identity_Service/common/code_abstractions/contracts/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Identity_Service/common/code_abstractions/contracts/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Identity_Service/common/code_abstractions/contracts/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 5
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Identity_Service/common/code_abstractions/naming/AGENTS.md",
+      "relative_path": "mother_doc_docs/Identity_Service/common/code_abstractions/naming/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Identity_Service/common/code_abstractions/naming/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Identity_Service/common/code_abstractions/naming/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Identity_Service/common/code_abstractions/operations/AGENTS.md",
+      "relative_path": "mother_doc_docs/Identity_Service/common/code_abstractions/operations/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Identity_Service/common/code_abstractions/operations/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Identity_Service/common/code_abstractions/operations/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Identity_Service/common/code_abstractions/stack/AGENTS.md",
+      "relative_path": "mother_doc_docs/Identity_Service/common/code_abstractions/stack/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Identity_Service/common/code_abstractions/stack/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Identity_Service/common/code_abstractions/stack/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Identity_Service/common/dev_canon/AGENTS.md",
+      "relative_path": "mother_doc_docs/Identity_Service/common/dev_canon/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Identity_Service/common/dev_canon/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Identity_Service/common/dev_canon/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Identity_Service/common/writing_guides/AGENTS.md",
+      "relative_path": "mother_doc_docs/Identity_Service/common/writing_guides/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Identity_Service/common/writing_guides/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Identity_Service/common/writing_guides/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 2
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Identity_Service/features/AGENTS.md",
+      "relative_path": "mother_doc_docs/Identity_Service/features/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Identity_Service/features/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Identity_Service/features/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Identity_Service/overview/AGENTS.md",
+      "relative_path": "mother_doc_docs/Identity_Service/overview/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Identity_Service/overview/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Identity_Service/overview/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Identity_Service/shared/AGENTS.md",
+      "relative_path": "mother_doc_docs/Identity_Service/shared/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Identity_Service/shared/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Identity_Service/shared/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 5
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/MQ_Broker/AGENTS.md",
+      "relative_path": "mother_doc_docs/MQ_Broker/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/MQ_Broker/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/MQ_Broker/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/MQ_Broker/common/AGENTS.md",
+      "relative_path": "mother_doc_docs/MQ_Broker/common/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/MQ_Broker/common/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/MQ_Broker/common/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/MQ_Broker/common/code_abstractions/AGENTS.md",
+      "relative_path": "mother_doc_docs/MQ_Broker/common/code_abstractions/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/MQ_Broker/common/code_abstractions/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/MQ_Broker/common/code_abstractions/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 5
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/MQ_Broker/common/code_abstractions/architecture/AGENTS.md",
+      "relative_path": "mother_doc_docs/MQ_Broker/common/code_abstractions/architecture/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/MQ_Broker/common/code_abstractions/architecture/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/MQ_Broker/common/code_abstractions/architecture/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/MQ_Broker/common/code_abstractions/contracts/AGENTS.md",
+      "relative_path": "mother_doc_docs/MQ_Broker/common/code_abstractions/contracts/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/MQ_Broker/common/code_abstractions/contracts/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/MQ_Broker/common/code_abstractions/contracts/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/MQ_Broker/common/code_abstractions/naming/AGENTS.md",
+      "relative_path": "mother_doc_docs/MQ_Broker/common/code_abstractions/naming/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/MQ_Broker/common/code_abstractions/naming/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/MQ_Broker/common/code_abstractions/naming/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/MQ_Broker/common/code_abstractions/operations/AGENTS.md",
+      "relative_path": "mother_doc_docs/MQ_Broker/common/code_abstractions/operations/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/MQ_Broker/common/code_abstractions/operations/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/MQ_Broker/common/code_abstractions/operations/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/MQ_Broker/common/code_abstractions/stack/AGENTS.md",
+      "relative_path": "mother_doc_docs/MQ_Broker/common/code_abstractions/stack/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/MQ_Broker/common/code_abstractions/stack/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/MQ_Broker/common/code_abstractions/stack/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/MQ_Broker/common/dev_canon/AGENTS.md",
+      "relative_path": "mother_doc_docs/MQ_Broker/common/dev_canon/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/MQ_Broker/common/dev_canon/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/MQ_Broker/common/dev_canon/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/MQ_Broker/common/writing_guides/AGENTS.md",
+      "relative_path": "mother_doc_docs/MQ_Broker/common/writing_guides/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/MQ_Broker/common/writing_guides/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/MQ_Broker/common/writing_guides/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 2
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/MQ_Broker/features/AGENTS.md",
+      "relative_path": "mother_doc_docs/MQ_Broker/features/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/MQ_Broker/features/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/MQ_Broker/features/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/MQ_Broker/overview/AGENTS.md",
+      "relative_path": "mother_doc_docs/MQ_Broker/overview/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/MQ_Broker/overview/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/MQ_Broker/overview/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/MQ_Broker/shared/AGENTS.md",
+      "relative_path": "mother_doc_docs/MQ_Broker/shared/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/MQ_Broker/shared/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/MQ_Broker/shared/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 5
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Mother_Doc/AGENTS.md",
+      "relative_path": "mother_doc_docs/Mother_Doc/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Mother_Doc/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Mother_Doc/common/AGENTS.md",
+      "relative_path": "mother_doc_docs/Mother_Doc/common/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/common/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Mother_Doc/common/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Mother_Doc/common/code_abstractions/AGENTS.md",
+      "relative_path": "mother_doc_docs/Mother_Doc/common/code_abstractions/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/common/code_abstractions/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Mother_Doc/common/code_abstractions/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 5
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Mother_Doc/common/code_abstractions/architecture/AGENTS.md",
+      "relative_path": "mother_doc_docs/Mother_Doc/common/code_abstractions/architecture/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/common/code_abstractions/architecture/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Mother_Doc/common/code_abstractions/architecture/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 11
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Mother_Doc/common/code_abstractions/contracts/AGENTS.md",
+      "relative_path": "mother_doc_docs/Mother_Doc/common/code_abstractions/contracts/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/common/code_abstractions/contracts/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Mother_Doc/common/code_abstractions/contracts/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 8
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Mother_Doc/common/code_abstractions/naming/AGENTS.md",
+      "relative_path": "mother_doc_docs/Mother_Doc/common/code_abstractions/naming/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/common/code_abstractions/naming/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Mother_Doc/common/code_abstractions/naming/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Mother_Doc/common/code_abstractions/operations/AGENTS.md",
+      "relative_path": "mother_doc_docs/Mother_Doc/common/code_abstractions/operations/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/common/code_abstractions/operations/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Mother_Doc/common/code_abstractions/operations/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Mother_Doc/common/code_abstractions/stack/AGENTS.md",
+      "relative_path": "mother_doc_docs/Mother_Doc/common/code_abstractions/stack/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/common/code_abstractions/stack/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Mother_Doc/common/code_abstractions/stack/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Mother_Doc/common/dev_canon/AGENTS.md",
+      "relative_path": "mother_doc_docs/Mother_Doc/common/dev_canon/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/common/dev_canon/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Mother_Doc/common/dev_canon/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Mother_Doc/common/development_logs/AGENTS.md",
+      "relative_path": "mother_doc_docs/Mother_Doc/common/development_logs/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/common/development_logs/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Mother_Doc/common/development_logs/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Mother_Doc/common/writing_guides/AGENTS.md",
+      "relative_path": "mother_doc_docs/Mother_Doc/common/writing_guides/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/common/writing_guides/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Mother_Doc/common/writing_guides/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Mother_Doc/features/AGENTS.md",
+      "relative_path": "mother_doc_docs/Mother_Doc/features/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/features/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Mother_Doc/features/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Mother_Doc/overview/AGENTS.md",
+      "relative_path": "mother_doc_docs/Mother_Doc/overview/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/overview/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Mother_Doc/overview/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Mother_Doc/shared/AGENTS.md",
+      "relative_path": "mother_doc_docs/Mother_Doc/shared/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/shared/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Mother_Doc/shared/AGENTS.md",
+      "readme_present": true,
       "child_entry_count": 10
     },
     {
-      "relative_dir": "Mother_Doc/common/code_abstractions/contracts",
-      "relative_path": "Mother_Doc/common/code_abstractions/contracts/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/common/code_abstractions/contracts/AGENTS.md",
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Notification_Service/AGENTS.md",
+      "relative_path": "mother_doc_docs/Notification_Service/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Notification_Service/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Notification_Service/AGENTS.md",
       "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 7
-    },
-    {
-      "relative_dir": "Mother_Doc/common/code_abstractions/naming",
-      "relative_path": "Mother_Doc/common/code_abstractions/naming/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/common/code_abstractions/naming/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "Mother_Doc/common/code_abstractions/operations",
-      "relative_path": "Mother_Doc/common/code_abstractions/operations/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/common/code_abstractions/operations/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "Mother_Doc/common/code_abstractions/stack",
-      "relative_path": "Mother_Doc/common/code_abstractions/stack/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/common/code_abstractions/stack/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "Mother_Doc/common/dev_canon",
-      "relative_path": "Mother_Doc/common/dev_canon/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/common/dev_canon/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
       "child_entry_count": 4
     },
     {
-      "relative_dir": "Mother_Doc/common/development_logs",
-      "relative_path": "Mother_Doc/common/development_logs/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/common/development_logs/AGENTS.md",
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Notification_Service/common/AGENTS.md",
+      "relative_path": "mother_doc_docs/Notification_Service/common/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Notification_Service/common/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Notification_Service/common/AGENTS.md",
       "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "Mother_Doc/common/writing_guides",
-      "relative_path": "Mother_Doc/common/writing_guides/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/common/writing_guides/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 4
-    },
-    {
-      "relative_dir": "Notification_Service",
-      "relative_path": "Notification_Service/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Notification_Service/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 2
-    },
-    {
-      "relative_dir": "Notification_Service/common",
-      "relative_path": "Notification_Service/common/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Notification_Service/common/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 4
-    },
-    {
-      "relative_dir": "Notification_Service/common/code_abstractions",
-      "relative_path": "Notification_Service/common/code_abstractions/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Notification_Service/common/code_abstractions/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 6
-    },
-    {
-      "relative_dir": "Notification_Service/common/code_abstractions/architecture",
-      "relative_path": "Notification_Service/common/code_abstractions/architecture/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Notification_Service/common/code_abstractions/architecture/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "Notification_Service/common/code_abstractions/contracts",
-      "relative_path": "Notification_Service/common/code_abstractions/contracts/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Notification_Service/common/code_abstractions/contracts/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 6
-    },
-    {
-      "relative_dir": "Notification_Service/common/code_abstractions/naming",
-      "relative_path": "Notification_Service/common/code_abstractions/naming/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Notification_Service/common/code_abstractions/naming/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "Notification_Service/common/code_abstractions/operations",
-      "relative_path": "Notification_Service/common/code_abstractions/operations/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Notification_Service/common/code_abstractions/operations/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "Notification_Service/common/code_abstractions/stack",
-      "relative_path": "Notification_Service/common/code_abstractions/stack/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Notification_Service/common/code_abstractions/stack/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "Notification_Service/common/dev_canon",
-      "relative_path": "Notification_Service/common/dev_canon/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Notification_Service/common/dev_canon/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 4
-    },
-    {
-      "relative_dir": "Notification_Service/common/writing_guides",
-      "relative_path": "Notification_Service/common/writing_guides/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Notification_Service/common/writing_guides/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
       "child_entry_count": 3
     },
     {
-      "relative_dir": "Object_Storage",
-      "relative_path": "Object_Storage/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Object_Storage/AGENTS.md",
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Notification_Service/common/code_abstractions/AGENTS.md",
+      "relative_path": "mother_doc_docs/Notification_Service/common/code_abstractions/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Notification_Service/common/code_abstractions/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Notification_Service/common/code_abstractions/AGENTS.md",
       "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 2
-    },
-    {
-      "relative_dir": "Object_Storage/common",
-      "relative_path": "Object_Storage/common/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Object_Storage/common/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 4
-    },
-    {
-      "relative_dir": "Object_Storage/common/code_abstractions",
-      "relative_path": "Object_Storage/common/code_abstractions/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Object_Storage/common/code_abstractions/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 6
-    },
-    {
-      "relative_dir": "Object_Storage/common/code_abstractions/architecture",
-      "relative_path": "Object_Storage/common/code_abstractions/architecture/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Object_Storage/common/code_abstractions/architecture/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
       "child_entry_count": 5
     },
     {
-      "relative_dir": "Object_Storage/common/code_abstractions/contracts",
-      "relative_path": "Object_Storage/common/code_abstractions/contracts/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Object_Storage/common/code_abstractions/contracts/AGENTS.md",
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Notification_Service/common/code_abstractions/architecture/AGENTS.md",
+      "relative_path": "mother_doc_docs/Notification_Service/common/code_abstractions/architecture/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Notification_Service/common/code_abstractions/architecture/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Notification_Service/common/code_abstractions/architecture/AGENTS.md",
       "readme_present": true,
-      "scope_doc_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Notification_Service/common/code_abstractions/contracts/AGENTS.md",
+      "relative_path": "mother_doc_docs/Notification_Service/common/code_abstractions/contracts/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Notification_Service/common/code_abstractions/contracts/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Notification_Service/common/code_abstractions/contracts/AGENTS.md",
+      "readme_present": true,
       "child_entry_count": 5
     },
     {
-      "relative_dir": "Object_Storage/common/code_abstractions/naming",
-      "relative_path": "Object_Storage/common/code_abstractions/naming/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Object_Storage/common/code_abstractions/naming/AGENTS.md",
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Notification_Service/common/code_abstractions/naming/AGENTS.md",
+      "relative_path": "mother_doc_docs/Notification_Service/common/code_abstractions/naming/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Notification_Service/common/code_abstractions/naming/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Notification_Service/common/code_abstractions/naming/AGENTS.md",
       "readme_present": true,
-      "scope_doc_present": true,
       "child_entry_count": 4
     },
     {
-      "relative_dir": "Object_Storage/common/code_abstractions/operations",
-      "relative_path": "Object_Storage/common/code_abstractions/operations/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Object_Storage/common/code_abstractions/operations/AGENTS.md",
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Notification_Service/common/code_abstractions/operations/AGENTS.md",
+      "relative_path": "mother_doc_docs/Notification_Service/common/code_abstractions/operations/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Notification_Service/common/code_abstractions/operations/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Notification_Service/common/code_abstractions/operations/AGENTS.md",
       "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "Object_Storage/common/code_abstractions/stack",
-      "relative_path": "Object_Storage/common/code_abstractions/stack/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Object_Storage/common/code_abstractions/stack/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
       "child_entry_count": 4
     },
     {
-      "relative_dir": "Object_Storage/common/dev_canon",
-      "relative_path": "Object_Storage/common/dev_canon/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Object_Storage/common/dev_canon/AGENTS.md",
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Notification_Service/common/code_abstractions/stack/AGENTS.md",
+      "relative_path": "mother_doc_docs/Notification_Service/common/code_abstractions/stack/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Notification_Service/common/code_abstractions/stack/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Notification_Service/common/code_abstractions/stack/AGENTS.md",
       "readme_present": true,
-      "scope_doc_present": true,
       "child_entry_count": 4
     },
     {
-      "relative_dir": "Object_Storage/common/writing_guides",
-      "relative_path": "Object_Storage/common/writing_guides/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Object_Storage/common/writing_guides/AGENTS.md",
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Notification_Service/common/dev_canon/AGENTS.md",
+      "relative_path": "mother_doc_docs/Notification_Service/common/dev_canon/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Notification_Service/common/dev_canon/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Notification_Service/common/dev_canon/AGENTS.md",
       "readme_present": true,
-      "scope_doc_present": true,
       "child_entry_count": 3
     },
     {
-      "relative_dir": "Order_Service",
-      "relative_path": "Order_Service/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Order_Service/AGENTS.md",
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Notification_Service/common/writing_guides/AGENTS.md",
+      "relative_path": "mother_doc_docs/Notification_Service/common/writing_guides/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Notification_Service/common/writing_guides/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Notification_Service/common/writing_guides/AGENTS.md",
       "readme_present": true,
-      "scope_doc_present": true,
       "child_entry_count": 2
     },
     {
-      "relative_dir": "Order_Service/common",
-      "relative_path": "Order_Service/common/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Order_Service/common/AGENTS.md",
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Notification_Service/features/AGENTS.md",
+      "relative_path": "mother_doc_docs/Notification_Service/features/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Notification_Service/features/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Notification_Service/features/AGENTS.md",
       "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 4
-    },
-    {
-      "relative_dir": "Order_Service/common/code_abstractions",
-      "relative_path": "Order_Service/common/code_abstractions/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Order_Service/common/code_abstractions/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 6
-    },
-    {
-      "relative_dir": "Order_Service/common/code_abstractions/architecture",
-      "relative_path": "Order_Service/common/code_abstractions/architecture/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Order_Service/common/code_abstractions/architecture/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "Order_Service/common/code_abstractions/contracts",
-      "relative_path": "Order_Service/common/code_abstractions/contracts/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Order_Service/common/code_abstractions/contracts/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 6
-    },
-    {
-      "relative_dir": "Order_Service/common/code_abstractions/naming",
-      "relative_path": "Order_Service/common/code_abstractions/naming/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Order_Service/common/code_abstractions/naming/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "Order_Service/common/code_abstractions/operations",
-      "relative_path": "Order_Service/common/code_abstractions/operations/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Order_Service/common/code_abstractions/operations/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "Order_Service/common/code_abstractions/stack",
-      "relative_path": "Order_Service/common/code_abstractions/stack/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Order_Service/common/code_abstractions/stack/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "Order_Service/common/dev_canon",
-      "relative_path": "Order_Service/common/dev_canon/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Order_Service/common/dev_canon/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 4
-    },
-    {
-      "relative_dir": "Order_Service/common/writing_guides",
-      "relative_path": "Order_Service/common/writing_guides/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Order_Service/common/writing_guides/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
       "child_entry_count": 3
     },
     {
-      "relative_dir": "Payment_Service",
-      "relative_path": "Payment_Service/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Payment_Service/AGENTS.md",
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Notification_Service/overview/AGENTS.md",
+      "relative_path": "mother_doc_docs/Notification_Service/overview/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Notification_Service/overview/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Notification_Service/overview/AGENTS.md",
       "readme_present": true,
-      "scope_doc_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Notification_Service/shared/AGENTS.md",
+      "relative_path": "mother_doc_docs/Notification_Service/shared/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Notification_Service/shared/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Notification_Service/shared/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 5
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Object_Storage/AGENTS.md",
+      "relative_path": "mother_doc_docs/Object_Storage/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Object_Storage/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Object_Storage/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Object_Storage/common/AGENTS.md",
+      "relative_path": "mother_doc_docs/Object_Storage/common/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Object_Storage/common/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Object_Storage/common/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Object_Storage/common/code_abstractions/AGENTS.md",
+      "relative_path": "mother_doc_docs/Object_Storage/common/code_abstractions/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Object_Storage/common/code_abstractions/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Object_Storage/common/code_abstractions/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 5
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Object_Storage/common/code_abstractions/architecture/AGENTS.md",
+      "relative_path": "mother_doc_docs/Object_Storage/common/code_abstractions/architecture/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Object_Storage/common/code_abstractions/architecture/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Object_Storage/common/code_abstractions/architecture/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Object_Storage/common/code_abstractions/contracts/AGENTS.md",
+      "relative_path": "mother_doc_docs/Object_Storage/common/code_abstractions/contracts/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Object_Storage/common/code_abstractions/contracts/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Object_Storage/common/code_abstractions/contracts/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Object_Storage/common/code_abstractions/naming/AGENTS.md",
+      "relative_path": "mother_doc_docs/Object_Storage/common/code_abstractions/naming/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Object_Storage/common/code_abstractions/naming/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Object_Storage/common/code_abstractions/naming/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Object_Storage/common/code_abstractions/operations/AGENTS.md",
+      "relative_path": "mother_doc_docs/Object_Storage/common/code_abstractions/operations/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Object_Storage/common/code_abstractions/operations/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Object_Storage/common/code_abstractions/operations/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Object_Storage/common/code_abstractions/stack/AGENTS.md",
+      "relative_path": "mother_doc_docs/Object_Storage/common/code_abstractions/stack/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Object_Storage/common/code_abstractions/stack/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Object_Storage/common/code_abstractions/stack/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Object_Storage/common/dev_canon/AGENTS.md",
+      "relative_path": "mother_doc_docs/Object_Storage/common/dev_canon/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Object_Storage/common/dev_canon/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Object_Storage/common/dev_canon/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Object_Storage/common/writing_guides/AGENTS.md",
+      "relative_path": "mother_doc_docs/Object_Storage/common/writing_guides/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Object_Storage/common/writing_guides/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Object_Storage/common/writing_guides/AGENTS.md",
+      "readme_present": true,
       "child_entry_count": 2
     },
     {
-      "relative_dir": "Payment_Service/common",
-      "relative_path": "Payment_Service/common/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Payment_Service/common/AGENTS.md",
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Object_Storage/features/AGENTS.md",
+      "relative_path": "mother_doc_docs/Object_Storage/features/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Object_Storage/features/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Object_Storage/features/AGENTS.md",
       "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 4
-    },
-    {
-      "relative_dir": "Payment_Service/common/code_abstractions",
-      "relative_path": "Payment_Service/common/code_abstractions/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Payment_Service/common/code_abstractions/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 6
-    },
-    {
-      "relative_dir": "Payment_Service/common/code_abstractions/architecture",
-      "relative_path": "Payment_Service/common/code_abstractions/architecture/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Payment_Service/common/code_abstractions/architecture/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "Payment_Service/common/code_abstractions/contracts",
-      "relative_path": "Payment_Service/common/code_abstractions/contracts/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Payment_Service/common/code_abstractions/contracts/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 6
-    },
-    {
-      "relative_dir": "Payment_Service/common/code_abstractions/naming",
-      "relative_path": "Payment_Service/common/code_abstractions/naming/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Payment_Service/common/code_abstractions/naming/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "Payment_Service/common/code_abstractions/operations",
-      "relative_path": "Payment_Service/common/code_abstractions/operations/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Payment_Service/common/code_abstractions/operations/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "Payment_Service/common/code_abstractions/stack",
-      "relative_path": "Payment_Service/common/code_abstractions/stack/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Payment_Service/common/code_abstractions/stack/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "Payment_Service/common/dev_canon",
-      "relative_path": "Payment_Service/common/dev_canon/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Payment_Service/common/dev_canon/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 4
-    },
-    {
-      "relative_dir": "Payment_Service/common/writing_guides",
-      "relative_path": "Payment_Service/common/writing_guides/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Payment_Service/common/writing_guides/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
       "child_entry_count": 3
     },
     {
-      "relative_dir": "Postgres_DB",
-      "relative_path": "Postgres_DB/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Postgres_DB/AGENTS.md",
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Object_Storage/overview/AGENTS.md",
+      "relative_path": "mother_doc_docs/Object_Storage/overview/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Object_Storage/overview/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Object_Storage/overview/AGENTS.md",
       "readme_present": true,
-      "scope_doc_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Object_Storage/shared/AGENTS.md",
+      "relative_path": "mother_doc_docs/Object_Storage/shared/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Object_Storage/shared/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Object_Storage/shared/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 5
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Order_Service/AGENTS.md",
+      "relative_path": "mother_doc_docs/Order_Service/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Order_Service/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Order_Service/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Order_Service/common/AGENTS.md",
+      "relative_path": "mother_doc_docs/Order_Service/common/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Order_Service/common/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Order_Service/common/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Order_Service/common/code_abstractions/AGENTS.md",
+      "relative_path": "mother_doc_docs/Order_Service/common/code_abstractions/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Order_Service/common/code_abstractions/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Order_Service/common/code_abstractions/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 5
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Order_Service/common/code_abstractions/architecture/AGENTS.md",
+      "relative_path": "mother_doc_docs/Order_Service/common/code_abstractions/architecture/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Order_Service/common/code_abstractions/architecture/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Order_Service/common/code_abstractions/architecture/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Order_Service/common/code_abstractions/contracts/AGENTS.md",
+      "relative_path": "mother_doc_docs/Order_Service/common/code_abstractions/contracts/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Order_Service/common/code_abstractions/contracts/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Order_Service/common/code_abstractions/contracts/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 5
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Order_Service/common/code_abstractions/naming/AGENTS.md",
+      "relative_path": "mother_doc_docs/Order_Service/common/code_abstractions/naming/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Order_Service/common/code_abstractions/naming/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Order_Service/common/code_abstractions/naming/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Order_Service/common/code_abstractions/operations/AGENTS.md",
+      "relative_path": "mother_doc_docs/Order_Service/common/code_abstractions/operations/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Order_Service/common/code_abstractions/operations/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Order_Service/common/code_abstractions/operations/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Order_Service/common/code_abstractions/stack/AGENTS.md",
+      "relative_path": "mother_doc_docs/Order_Service/common/code_abstractions/stack/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Order_Service/common/code_abstractions/stack/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Order_Service/common/code_abstractions/stack/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Order_Service/common/dev_canon/AGENTS.md",
+      "relative_path": "mother_doc_docs/Order_Service/common/dev_canon/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Order_Service/common/dev_canon/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Order_Service/common/dev_canon/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Order_Service/common/writing_guides/AGENTS.md",
+      "relative_path": "mother_doc_docs/Order_Service/common/writing_guides/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Order_Service/common/writing_guides/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Order_Service/common/writing_guides/AGENTS.md",
+      "readme_present": true,
       "child_entry_count": 2
     },
     {
-      "relative_dir": "Postgres_DB/common",
-      "relative_path": "Postgres_DB/common/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Postgres_DB/common/AGENTS.md",
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Order_Service/features/AGENTS.md",
+      "relative_path": "mother_doc_docs/Order_Service/features/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Order_Service/features/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Order_Service/features/AGENTS.md",
       "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 4
-    },
-    {
-      "relative_dir": "Postgres_DB/common/code_abstractions",
-      "relative_path": "Postgres_DB/common/code_abstractions/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Postgres_DB/common/code_abstractions/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 6
-    },
-    {
-      "relative_dir": "Postgres_DB/common/code_abstractions/architecture",
-      "relative_path": "Postgres_DB/common/code_abstractions/architecture/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Postgres_DB/common/code_abstractions/architecture/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "Postgres_DB/common/code_abstractions/contracts",
-      "relative_path": "Postgres_DB/common/code_abstractions/contracts/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Postgres_DB/common/code_abstractions/contracts/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "Postgres_DB/common/code_abstractions/naming",
-      "relative_path": "Postgres_DB/common/code_abstractions/naming/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Postgres_DB/common/code_abstractions/naming/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 4
-    },
-    {
-      "relative_dir": "Postgres_DB/common/code_abstractions/operations",
-      "relative_path": "Postgres_DB/common/code_abstractions/operations/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Postgres_DB/common/code_abstractions/operations/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "Postgres_DB/common/code_abstractions/stack",
-      "relative_path": "Postgres_DB/common/code_abstractions/stack/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Postgres_DB/common/code_abstractions/stack/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 4
-    },
-    {
-      "relative_dir": "Postgres_DB/common/dev_canon",
-      "relative_path": "Postgres_DB/common/dev_canon/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Postgres_DB/common/dev_canon/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 4
-    },
-    {
-      "relative_dir": "Postgres_DB/common/writing_guides",
-      "relative_path": "Postgres_DB/common/writing_guides/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Postgres_DB/common/writing_guides/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
       "child_entry_count": 3
     },
     {
-      "relative_dir": "Redis_Cache",
-      "relative_path": "Redis_Cache/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Redis_Cache/AGENTS.md",
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Order_Service/overview/AGENTS.md",
+      "relative_path": "mother_doc_docs/Order_Service/overview/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Order_Service/overview/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Order_Service/overview/AGENTS.md",
       "readme_present": true,
-      "scope_doc_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Order_Service/shared/AGENTS.md",
+      "relative_path": "mother_doc_docs/Order_Service/shared/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Order_Service/shared/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Order_Service/shared/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 5
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Payment_Service/AGENTS.md",
+      "relative_path": "mother_doc_docs/Payment_Service/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Payment_Service/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Payment_Service/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Payment_Service/common/AGENTS.md",
+      "relative_path": "mother_doc_docs/Payment_Service/common/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Payment_Service/common/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Payment_Service/common/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Payment_Service/common/code_abstractions/AGENTS.md",
+      "relative_path": "mother_doc_docs/Payment_Service/common/code_abstractions/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Payment_Service/common/code_abstractions/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Payment_Service/common/code_abstractions/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 5
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Payment_Service/common/code_abstractions/architecture/AGENTS.md",
+      "relative_path": "mother_doc_docs/Payment_Service/common/code_abstractions/architecture/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Payment_Service/common/code_abstractions/architecture/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Payment_Service/common/code_abstractions/architecture/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Payment_Service/common/code_abstractions/contracts/AGENTS.md",
+      "relative_path": "mother_doc_docs/Payment_Service/common/code_abstractions/contracts/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Payment_Service/common/code_abstractions/contracts/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Payment_Service/common/code_abstractions/contracts/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 5
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Payment_Service/common/code_abstractions/naming/AGENTS.md",
+      "relative_path": "mother_doc_docs/Payment_Service/common/code_abstractions/naming/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Payment_Service/common/code_abstractions/naming/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Payment_Service/common/code_abstractions/naming/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Payment_Service/common/code_abstractions/operations/AGENTS.md",
+      "relative_path": "mother_doc_docs/Payment_Service/common/code_abstractions/operations/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Payment_Service/common/code_abstractions/operations/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Payment_Service/common/code_abstractions/operations/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Payment_Service/common/code_abstractions/stack/AGENTS.md",
+      "relative_path": "mother_doc_docs/Payment_Service/common/code_abstractions/stack/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Payment_Service/common/code_abstractions/stack/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Payment_Service/common/code_abstractions/stack/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Payment_Service/common/dev_canon/AGENTS.md",
+      "relative_path": "mother_doc_docs/Payment_Service/common/dev_canon/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Payment_Service/common/dev_canon/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Payment_Service/common/dev_canon/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Payment_Service/common/writing_guides/AGENTS.md",
+      "relative_path": "mother_doc_docs/Payment_Service/common/writing_guides/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Payment_Service/common/writing_guides/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Payment_Service/common/writing_guides/AGENTS.md",
+      "readme_present": true,
       "child_entry_count": 2
     },
     {
-      "relative_dir": "Redis_Cache/common",
-      "relative_path": "Redis_Cache/common/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Redis_Cache/common/AGENTS.md",
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Payment_Service/features/AGENTS.md",
+      "relative_path": "mother_doc_docs/Payment_Service/features/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Payment_Service/features/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Payment_Service/features/AGENTS.md",
       "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 4
-    },
-    {
-      "relative_dir": "Redis_Cache/common/code_abstractions",
-      "relative_path": "Redis_Cache/common/code_abstractions/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Redis_Cache/common/code_abstractions/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 6
-    },
-    {
-      "relative_dir": "Redis_Cache/common/code_abstractions/architecture",
-      "relative_path": "Redis_Cache/common/code_abstractions/architecture/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Redis_Cache/common/code_abstractions/architecture/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "Redis_Cache/common/code_abstractions/contracts",
-      "relative_path": "Redis_Cache/common/code_abstractions/contracts/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Redis_Cache/common/code_abstractions/contracts/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "Redis_Cache/common/code_abstractions/naming",
-      "relative_path": "Redis_Cache/common/code_abstractions/naming/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Redis_Cache/common/code_abstractions/naming/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 4
-    },
-    {
-      "relative_dir": "Redis_Cache/common/code_abstractions/operations",
-      "relative_path": "Redis_Cache/common/code_abstractions/operations/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Redis_Cache/common/code_abstractions/operations/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "Redis_Cache/common/code_abstractions/stack",
-      "relative_path": "Redis_Cache/common/code_abstractions/stack/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Redis_Cache/common/code_abstractions/stack/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 4
-    },
-    {
-      "relative_dir": "Redis_Cache/common/dev_canon",
-      "relative_path": "Redis_Cache/common/dev_canon/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Redis_Cache/common/dev_canon/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 4
-    },
-    {
-      "relative_dir": "Redis_Cache/common/writing_guides",
-      "relative_path": "Redis_Cache/common/writing_guides/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Redis_Cache/common/writing_guides/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
       "child_entry_count": 3
     },
     {
-      "relative_dir": "User_UI",
-      "relative_path": "User_UI/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/User_UI/AGENTS.md",
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Payment_Service/overview/AGENTS.md",
+      "relative_path": "mother_doc_docs/Payment_Service/overview/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Payment_Service/overview/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Payment_Service/overview/AGENTS.md",
       "readme_present": true,
-      "scope_doc_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Payment_Service/shared/AGENTS.md",
+      "relative_path": "mother_doc_docs/Payment_Service/shared/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Payment_Service/shared/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Payment_Service/shared/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 5
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Postgres_DB/AGENTS.md",
+      "relative_path": "mother_doc_docs/Postgres_DB/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Postgres_DB/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Postgres_DB/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Postgres_DB/common/AGENTS.md",
+      "relative_path": "mother_doc_docs/Postgres_DB/common/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Postgres_DB/common/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Postgres_DB/common/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Postgres_DB/common/code_abstractions/AGENTS.md",
+      "relative_path": "mother_doc_docs/Postgres_DB/common/code_abstractions/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Postgres_DB/common/code_abstractions/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Postgres_DB/common/code_abstractions/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 5
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Postgres_DB/common/code_abstractions/architecture/AGENTS.md",
+      "relative_path": "mother_doc_docs/Postgres_DB/common/code_abstractions/architecture/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Postgres_DB/common/code_abstractions/architecture/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Postgres_DB/common/code_abstractions/architecture/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Postgres_DB/common/code_abstractions/contracts/AGENTS.md",
+      "relative_path": "mother_doc_docs/Postgres_DB/common/code_abstractions/contracts/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Postgres_DB/common/code_abstractions/contracts/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Postgres_DB/common/code_abstractions/contracts/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Postgres_DB/common/code_abstractions/naming/AGENTS.md",
+      "relative_path": "mother_doc_docs/Postgres_DB/common/code_abstractions/naming/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Postgres_DB/common/code_abstractions/naming/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Postgres_DB/common/code_abstractions/naming/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Postgres_DB/common/code_abstractions/operations/AGENTS.md",
+      "relative_path": "mother_doc_docs/Postgres_DB/common/code_abstractions/operations/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Postgres_DB/common/code_abstractions/operations/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Postgres_DB/common/code_abstractions/operations/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Postgres_DB/common/code_abstractions/stack/AGENTS.md",
+      "relative_path": "mother_doc_docs/Postgres_DB/common/code_abstractions/stack/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Postgres_DB/common/code_abstractions/stack/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Postgres_DB/common/code_abstractions/stack/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Postgres_DB/common/dev_canon/AGENTS.md",
+      "relative_path": "mother_doc_docs/Postgres_DB/common/dev_canon/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Postgres_DB/common/dev_canon/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Postgres_DB/common/dev_canon/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Postgres_DB/common/writing_guides/AGENTS.md",
+      "relative_path": "mother_doc_docs/Postgres_DB/common/writing_guides/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Postgres_DB/common/writing_guides/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Postgres_DB/common/writing_guides/AGENTS.md",
+      "readme_present": true,
       "child_entry_count": 2
     },
     {
-      "relative_dir": "User_UI/common",
-      "relative_path": "User_UI/common/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/User_UI/common/AGENTS.md",
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Postgres_DB/features/AGENTS.md",
+      "relative_path": "mother_doc_docs/Postgres_DB/features/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Postgres_DB/features/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Postgres_DB/features/AGENTS.md",
       "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 4
-    },
-    {
-      "relative_dir": "User_UI/common/code_abstractions",
-      "relative_path": "User_UI/common/code_abstractions/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/User_UI/common/code_abstractions/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 6
-    },
-    {
-      "relative_dir": "User_UI/common/code_abstractions/architecture",
-      "relative_path": "User_UI/common/code_abstractions/architecture/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/User_UI/common/code_abstractions/architecture/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "User_UI/common/code_abstractions/contracts",
-      "relative_path": "User_UI/common/code_abstractions/contracts/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/User_UI/common/code_abstractions/contracts/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "User_UI/common/code_abstractions/naming",
-      "relative_path": "User_UI/common/code_abstractions/naming/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/User_UI/common/code_abstractions/naming/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "User_UI/common/code_abstractions/operations",
-      "relative_path": "User_UI/common/code_abstractions/operations/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/User_UI/common/code_abstractions/operations/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 4
-    },
-    {
-      "relative_dir": "User_UI/common/code_abstractions/stack",
-      "relative_path": "User_UI/common/code_abstractions/stack/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/User_UI/common/code_abstractions/stack/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 5
-    },
-    {
-      "relative_dir": "User_UI/common/dev_canon",
-      "relative_path": "User_UI/common/dev_canon/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/User_UI/common/dev_canon/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
-      "child_entry_count": 4
-    },
-    {
-      "relative_dir": "User_UI/common/writing_guides",
-      "relative_path": "User_UI/common/writing_guides/AGENTS.md",
-      "agents_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/User_UI/common/writing_guides/AGENTS.md",
-      "readme_present": true,
-      "scope_doc_present": true,
       "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Postgres_DB/overview/AGENTS.md",
+      "relative_path": "mother_doc_docs/Postgres_DB/overview/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Postgres_DB/overview/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Postgres_DB/overview/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Postgres_DB/shared/AGENTS.md",
+      "relative_path": "mother_doc_docs/Postgres_DB/shared/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Postgres_DB/shared/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Postgres_DB/shared/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 5
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Redis_Cache/AGENTS.md",
+      "relative_path": "mother_doc_docs/Redis_Cache/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Redis_Cache/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Redis_Cache/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Redis_Cache/common/AGENTS.md",
+      "relative_path": "mother_doc_docs/Redis_Cache/common/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Redis_Cache/common/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Redis_Cache/common/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Redis_Cache/common/code_abstractions/AGENTS.md",
+      "relative_path": "mother_doc_docs/Redis_Cache/common/code_abstractions/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Redis_Cache/common/code_abstractions/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Redis_Cache/common/code_abstractions/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 5
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Redis_Cache/common/code_abstractions/architecture/AGENTS.md",
+      "relative_path": "mother_doc_docs/Redis_Cache/common/code_abstractions/architecture/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Redis_Cache/common/code_abstractions/architecture/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Redis_Cache/common/code_abstractions/architecture/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Redis_Cache/common/code_abstractions/contracts/AGENTS.md",
+      "relative_path": "mother_doc_docs/Redis_Cache/common/code_abstractions/contracts/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Redis_Cache/common/code_abstractions/contracts/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Redis_Cache/common/code_abstractions/contracts/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Redis_Cache/common/code_abstractions/naming/AGENTS.md",
+      "relative_path": "mother_doc_docs/Redis_Cache/common/code_abstractions/naming/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Redis_Cache/common/code_abstractions/naming/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Redis_Cache/common/code_abstractions/naming/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Redis_Cache/common/code_abstractions/operations/AGENTS.md",
+      "relative_path": "mother_doc_docs/Redis_Cache/common/code_abstractions/operations/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Redis_Cache/common/code_abstractions/operations/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Redis_Cache/common/code_abstractions/operations/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Redis_Cache/common/code_abstractions/stack/AGENTS.md",
+      "relative_path": "mother_doc_docs/Redis_Cache/common/code_abstractions/stack/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Redis_Cache/common/code_abstractions/stack/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Redis_Cache/common/code_abstractions/stack/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Redis_Cache/common/dev_canon/AGENTS.md",
+      "relative_path": "mother_doc_docs/Redis_Cache/common/dev_canon/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Redis_Cache/common/dev_canon/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Redis_Cache/common/dev_canon/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Redis_Cache/common/writing_guides/AGENTS.md",
+      "relative_path": "mother_doc_docs/Redis_Cache/common/writing_guides/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Redis_Cache/common/writing_guides/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Redis_Cache/common/writing_guides/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 2
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Redis_Cache/features/AGENTS.md",
+      "relative_path": "mother_doc_docs/Redis_Cache/features/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Redis_Cache/features/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Redis_Cache/features/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Redis_Cache/overview/AGENTS.md",
+      "relative_path": "mother_doc_docs/Redis_Cache/overview/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Redis_Cache/overview/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Redis_Cache/overview/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/Redis_Cache/shared/AGENTS.md",
+      "relative_path": "mother_doc_docs/Redis_Cache/shared/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Redis_Cache/shared/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/Redis_Cache/shared/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 5
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/User_UI/AGENTS.md",
+      "relative_path": "mother_doc_docs/User_UI/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/User_UI/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/User_UI/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/User_UI/common/AGENTS.md",
+      "relative_path": "mother_doc_docs/User_UI/common/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/User_UI/common/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/User_UI/common/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/User_UI/common/code_abstractions/AGENTS.md",
+      "relative_path": "mother_doc_docs/User_UI/common/code_abstractions/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/User_UI/common/code_abstractions/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/User_UI/common/code_abstractions/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 5
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/User_UI/common/code_abstractions/architecture/AGENTS.md",
+      "relative_path": "mother_doc_docs/User_UI/common/code_abstractions/architecture/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/User_UI/common/code_abstractions/architecture/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/User_UI/common/code_abstractions/architecture/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/User_UI/common/code_abstractions/contracts/AGENTS.md",
+      "relative_path": "mother_doc_docs/User_UI/common/code_abstractions/contracts/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/User_UI/common/code_abstractions/contracts/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/User_UI/common/code_abstractions/contracts/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/User_UI/common/code_abstractions/naming/AGENTS.md",
+      "relative_path": "mother_doc_docs/User_UI/common/code_abstractions/naming/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/User_UI/common/code_abstractions/naming/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/User_UI/common/code_abstractions/naming/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/User_UI/common/code_abstractions/operations/AGENTS.md",
+      "relative_path": "mother_doc_docs/User_UI/common/code_abstractions/operations/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/User_UI/common/code_abstractions/operations/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/User_UI/common/code_abstractions/operations/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/User_UI/common/code_abstractions/stack/AGENTS.md",
+      "relative_path": "mother_doc_docs/User_UI/common/code_abstractions/stack/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/User_UI/common/code_abstractions/stack/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/User_UI/common/code_abstractions/stack/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 4
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/User_UI/common/dev_canon/AGENTS.md",
+      "relative_path": "mother_doc_docs/User_UI/common/dev_canon/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/User_UI/common/dev_canon/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/User_UI/common/dev_canon/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/User_UI/common/writing_guides/AGENTS.md",
+      "relative_path": "mother_doc_docs/User_UI/common/writing_guides/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/User_UI/common/writing_guides/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/User_UI/common/writing_guides/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 2
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/User_UI/features/AGENTS.md",
+      "relative_path": "mother_doc_docs/User_UI/features/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/User_UI/features/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/User_UI/features/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/User_UI/overview/AGENTS.md",
+      "relative_path": "mother_doc_docs/User_UI/overview/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/User_UI/overview/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/User_UI/overview/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 3
+    },
+    {
+      "scope_branch": "mother_doc_docs",
+      "registry_key": "mother_doc_docs/User_UI/shared/AGENTS.md",
+      "relative_path": "mother_doc_docs/User_UI/shared/AGENTS.md",
+      "target_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/User_UI/shared/AGENTS.md",
+      "template_relative_path": "mother_doc_docs/User_UI/shared/AGENTS.md",
+      "readme_present": true,
+      "child_entry_count": 5
     }
   ],
-  "missing_agents_dirs": [],
-  "legacy_agents": []
+  "missing_agents": [],
+  "legacy_agents": [],
+  "workspace_root": "/home/jasontan656/AI_Projects/Octopus_OS",
+  "document_root": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs",
+  "managed_filename": "AGENTS.md"
 }

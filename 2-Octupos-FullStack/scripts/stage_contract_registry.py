@@ -100,7 +100,7 @@ STAGE_COMMANDS = {
             },
             {
                 "command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-scan --json",
-                "purpose": "discover the managed AGENTS.md files under Octopus_OS/Mother_Doc/docs only",
+                "purpose": "discover the managed AGENTS.md files across Octopus_OS root, container roots, and Mother_Doc/docs",
             },
             {
                 "command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-collect --json",
@@ -108,7 +108,7 @@ STAGE_COMMANDS = {
             },
             {
                 "command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-push --json",
-                "purpose": "push the skill-side AGENTS.md template back across the Mother_Doc docs tree and refresh the registry",
+                "purpose": "push the skill-side AGENTS.md template tree back across Octopus_OS root, container roots, and Mother_Doc/docs, then refresh the registry",
             },
         ],
     },

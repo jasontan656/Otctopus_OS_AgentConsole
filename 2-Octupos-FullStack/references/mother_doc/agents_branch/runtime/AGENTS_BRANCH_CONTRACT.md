@@ -4,7 +4,10 @@
 
 ## Scope
 
-- 只管理 `Octopus_OS/Mother_Doc/docs/**/AGENTS.md`。
+- 管理 3 类路径：
+  - `Octopus_OS/AGENTS.md`
+  - `Octopus_OS/<Container_Name>/AGENTS.md`
+  - `Octopus_OS/Mother_Doc/docs/**/AGENTS.md`
 - 不管理实际工作目录容器。
 - 不管理普通正文文档。
 
@@ -20,3 +23,4 @@
 - `assets/mother_doc_agents/registry.json`
 - `assets/mother_doc_agents/index.md`
 - `assets/mother_doc_agents/collected_tree/`
+- `assets/mother_doc_agents/templates/`

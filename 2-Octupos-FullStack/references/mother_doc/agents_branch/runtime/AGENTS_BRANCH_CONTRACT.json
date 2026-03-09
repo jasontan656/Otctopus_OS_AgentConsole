@@ -3,7 +3,11 @@
   "contract_version": "v1.0",
   "validation_mode": "static_minimal",
   "branch_name": "mother_doc_agents",
-  "managed_scope": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/**/AGENTS.md",
+  "managed_scopes": [
+    "/home/jasontan656/AI_Projects/Octopus_OS/AGENTS.md",
+    "/home/jasontan656/AI_Projects/Octopus_OS/<Container_Name>/AGENTS.md",
+    "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/**/AGENTS.md"
+  ],
   "managed_filename": "AGENTS.md",
   "stage_order": [
     "scan",
@@ -15,13 +19,14 @@
     "scan_report": "assets/mother_doc_agents/scan_report.json",
     "registry": "assets/mother_doc_agents/registry.json",
     "index": "assets/mother_doc_agents/index.md",
-    "collected_tree": "assets/mother_doc_agents/collected_tree/"
+    "collected_tree": "assets/mother_doc_agents/collected_tree/",
+    "templates": "assets/mother_doc_agents/templates/"
   },
   "rules": [
-    "This branch only manages AGENTS.md under Mother_Doc docs.",
+    "This branch manages Octopus_OS root AGENTS, container-root AGENTS, and Mother_Doc docs AGENTS together.",
     "scan must inspect product-side AGENTS.md state without rewriting content.",
     "collect must consume scan_report.json and copy current AGENTS.md files back into the skill-side registry.",
-    "push must regenerate AGENTS.md from the skill-side template and refresh the registry again.",
+    "push must regenerate AGENTS.md from the skill-side template tree and refresh the registry again.",
     "This branch is still inside mother_doc stage and must not perform implementation or evidence actions."
   ]
 }

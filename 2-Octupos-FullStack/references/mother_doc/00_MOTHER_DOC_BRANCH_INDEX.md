@@ -21,7 +21,7 @@
   - 用途：在初次写回后，把未收口问题整理出来并逐轮向用户追问，再回填到对应文档。
 - `agents_manager`
   - 入口：[AGENTS Branch Index](agents_branch/00_BRANCH_INDEX.md)
-  - 用途：只管理 `Octopus_OS/Mother_Doc/docs/**/AGENTS.md` 的模板、扫描、回收与反推。
+  - 用途：统一管理 `Octopus_OS/AGENTS.md`、`Octopus_OS/<Container>/AGENTS.md` 与 `Octopus_OS/Mother_Doc/docs/**/AGENTS.md` 三类路径的模板、扫描、回收与反推。
 
 ## Selection Rule
 

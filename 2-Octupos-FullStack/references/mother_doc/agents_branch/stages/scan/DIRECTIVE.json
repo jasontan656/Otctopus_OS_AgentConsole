@@ -1,6 +1,6 @@
 {
   "stage": "scan",
-  "purpose": "discover current AGENTS.md coverage under Mother_Doc docs only",
+  "purpose": "discover current AGENTS.md coverage across Octopus_OS root, container roots, and Mother_Doc docs",
   "inputs": [
     "Mother_Doc docs tree",
     "existing AGENTS.md files"

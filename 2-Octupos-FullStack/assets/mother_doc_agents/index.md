@@ -1,161 +1,436 @@
 # Mother_Doc AGENTS Registry
 
-- This asset tree stores collected `AGENTS.md` snapshots from `Octopus_OS/Mother_Doc/docs/**`.
-- Use `scan` to discover managed AGENTS paths.
-- Use `collect` to pull current AGENTS files back into the skill-side managed registry.
-- Use `push` to regenerate AGENTS files from the skill-side template and sync the tree again.
+- This asset tree stores managed AGENTS templates and collected snapshots.
+- Managed branches: `octopus_os_root`, `container_roots`, `mother_doc_docs`.
 
-## Entries
+## Template Targets
 
-- `AGENTS.md`: collected snapshot for `docs`.
-- `AI_Service/AGENTS.md`: collected snapshot for `AI_Service`.
-- `AI_Service/common/AGENTS.md`: collected snapshot for `common`.
-- `AI_Service/common/code_abstractions/AGENTS.md`: collected snapshot for `code_abstractions`.
-- `AI_Service/common/code_abstractions/architecture/AGENTS.md`: collected snapshot for `architecture`.
-- `AI_Service/common/code_abstractions/contracts/AGENTS.md`: collected snapshot for `contracts`.
-- `AI_Service/common/code_abstractions/naming/AGENTS.md`: collected snapshot for `naming`.
-- `AI_Service/common/code_abstractions/operations/AGENTS.md`: collected snapshot for `operations`.
-- `AI_Service/common/code_abstractions/stack/AGENTS.md`: collected snapshot for `stack`.
-- `AI_Service/common/dev_canon/AGENTS.md`: collected snapshot for `dev_canon`.
-- `AI_Service/common/writing_guides/AGENTS.md`: collected snapshot for `writing_guides`.
-- `API_Gateway/AGENTS.md`: collected snapshot for `API_Gateway`.
-- `API_Gateway/common/AGENTS.md`: collected snapshot for `common`.
-- `API_Gateway/common/code_abstractions/AGENTS.md`: collected snapshot for `code_abstractions`.
-- `API_Gateway/common/code_abstractions/architecture/AGENTS.md`: collected snapshot for `architecture`.
-- `API_Gateway/common/code_abstractions/contracts/AGENTS.md`: collected snapshot for `contracts`.
-- `API_Gateway/common/code_abstractions/naming/AGENTS.md`: collected snapshot for `naming`.
-- `API_Gateway/common/code_abstractions/operations/AGENTS.md`: collected snapshot for `operations`.
-- `API_Gateway/common/code_abstractions/stack/AGENTS.md`: collected snapshot for `stack`.
-- `API_Gateway/common/dev_canon/AGENTS.md`: collected snapshot for `dev_canon`.
-- `API_Gateway/common/writing_guides/AGENTS.md`: collected snapshot for `writing_guides`.
-- `Account_Service/AGENTS.md`: collected snapshot for `Account_Service`.
-- `Account_Service/common/AGENTS.md`: collected snapshot for `common`.
-- `Account_Service/common/code_abstractions/AGENTS.md`: collected snapshot for `code_abstractions`.
-- `Account_Service/common/code_abstractions/architecture/AGENTS.md`: collected snapshot for `architecture`.
-- `Account_Service/common/code_abstractions/contracts/AGENTS.md`: collected snapshot for `contracts`.
-- `Account_Service/common/code_abstractions/naming/AGENTS.md`: collected snapshot for `naming`.
-- `Account_Service/common/code_abstractions/operations/AGENTS.md`: collected snapshot for `operations`.
-- `Account_Service/common/code_abstractions/stack/AGENTS.md`: collected snapshot for `stack`.
-- `Account_Service/common/dev_canon/AGENTS.md`: collected snapshot for `dev_canon`.
-- `Account_Service/common/writing_guides/AGENTS.md`: collected snapshot for `writing_guides`.
-- `Admin_UI/AGENTS.md`: collected snapshot for `Admin_UI`.
-- `Admin_UI/common/AGENTS.md`: collected snapshot for `common`.
-- `Admin_UI/common/code_abstractions/AGENTS.md`: collected snapshot for `code_abstractions`.
-- `Admin_UI/common/code_abstractions/architecture/AGENTS.md`: collected snapshot for `architecture`.
-- `Admin_UI/common/code_abstractions/contracts/AGENTS.md`: collected snapshot for `contracts`.
-- `Admin_UI/common/code_abstractions/naming/AGENTS.md`: collected snapshot for `naming`.
-- `Admin_UI/common/code_abstractions/operations/AGENTS.md`: collected snapshot for `operations`.
-- `Admin_UI/common/code_abstractions/stack/AGENTS.md`: collected snapshot for `stack`.
-- `Admin_UI/common/dev_canon/AGENTS.md`: collected snapshot for `dev_canon`.
-- `Admin_UI/common/writing_guides/AGENTS.md`: collected snapshot for `writing_guides`.
-- `File_Service/AGENTS.md`: collected snapshot for `File_Service`.
-- `File_Service/common/AGENTS.md`: collected snapshot for `common`.
-- `File_Service/common/code_abstractions/AGENTS.md`: collected snapshot for `code_abstractions`.
-- `File_Service/common/code_abstractions/architecture/AGENTS.md`: collected snapshot for `architecture`.
-- `File_Service/common/code_abstractions/contracts/AGENTS.md`: collected snapshot for `contracts`.
-- `File_Service/common/code_abstractions/naming/AGENTS.md`: collected snapshot for `naming`.
-- `File_Service/common/code_abstractions/operations/AGENTS.md`: collected snapshot for `operations`.
-- `File_Service/common/code_abstractions/stack/AGENTS.md`: collected snapshot for `stack`.
-- `File_Service/common/dev_canon/AGENTS.md`: collected snapshot for `dev_canon`.
-- `File_Service/common/writing_guides/AGENTS.md`: collected snapshot for `writing_guides`.
-- `Identity_Service/AGENTS.md`: collected snapshot for `Identity_Service`.
-- `Identity_Service/common/AGENTS.md`: collected snapshot for `common`.
-- `Identity_Service/common/code_abstractions/AGENTS.md`: collected snapshot for `code_abstractions`.
-- `Identity_Service/common/code_abstractions/architecture/AGENTS.md`: collected snapshot for `architecture`.
-- `Identity_Service/common/code_abstractions/contracts/AGENTS.md`: collected snapshot for `contracts`.
-- `Identity_Service/common/code_abstractions/naming/AGENTS.md`: collected snapshot for `naming`.
-- `Identity_Service/common/code_abstractions/operations/AGENTS.md`: collected snapshot for `operations`.
-- `Identity_Service/common/code_abstractions/stack/AGENTS.md`: collected snapshot for `stack`.
-- `Identity_Service/common/dev_canon/AGENTS.md`: collected snapshot for `dev_canon`.
-- `Identity_Service/common/writing_guides/AGENTS.md`: collected snapshot for `writing_guides`.
-- `MQ_Broker/AGENTS.md`: collected snapshot for `MQ_Broker`.
-- `MQ_Broker/common/AGENTS.md`: collected snapshot for `common`.
-- `MQ_Broker/common/code_abstractions/AGENTS.md`: collected snapshot for `code_abstractions`.
-- `MQ_Broker/common/code_abstractions/architecture/AGENTS.md`: collected snapshot for `architecture`.
-- `MQ_Broker/common/code_abstractions/contracts/AGENTS.md`: collected snapshot for `contracts`.
-- `MQ_Broker/common/code_abstractions/naming/AGENTS.md`: collected snapshot for `naming`.
-- `MQ_Broker/common/code_abstractions/operations/AGENTS.md`: collected snapshot for `operations`.
-- `MQ_Broker/common/code_abstractions/stack/AGENTS.md`: collected snapshot for `stack`.
-- `MQ_Broker/common/dev_canon/AGENTS.md`: collected snapshot for `dev_canon`.
-- `MQ_Broker/common/writing_guides/AGENTS.md`: collected snapshot for `writing_guides`.
-- `Mother_Doc/AGENTS.md`: collected snapshot for `Mother_Doc`.
-- `Mother_Doc/common/AGENTS.md`: collected snapshot for `common`.
-- `Mother_Doc/common/code_abstractions/AGENTS.md`: collected snapshot for `code_abstractions`.
-- `Mother_Doc/common/code_abstractions/architecture/AGENTS.md`: collected snapshot for `architecture`.
-- `Mother_Doc/common/code_abstractions/contracts/AGENTS.md`: collected snapshot for `contracts`.
-- `Mother_Doc/common/code_abstractions/naming/AGENTS.md`: collected snapshot for `naming`.
-- `Mother_Doc/common/code_abstractions/operations/AGENTS.md`: collected snapshot for `operations`.
-- `Mother_Doc/common/code_abstractions/stack/AGENTS.md`: collected snapshot for `stack`.
-- `Mother_Doc/common/dev_canon/AGENTS.md`: collected snapshot for `dev_canon`.
-- `Mother_Doc/common/development_logs/AGENTS.md`: collected snapshot for `development_logs`.
-- `Mother_Doc/common/writing_guides/AGENTS.md`: collected snapshot for `writing_guides`.
-- `Notification_Service/AGENTS.md`: collected snapshot for `Notification_Service`.
-- `Notification_Service/common/AGENTS.md`: collected snapshot for `common`.
-- `Notification_Service/common/code_abstractions/AGENTS.md`: collected snapshot for `code_abstractions`.
-- `Notification_Service/common/code_abstractions/architecture/AGENTS.md`: collected snapshot for `architecture`.
-- `Notification_Service/common/code_abstractions/contracts/AGENTS.md`: collected snapshot for `contracts`.
-- `Notification_Service/common/code_abstractions/naming/AGENTS.md`: collected snapshot for `naming`.
-- `Notification_Service/common/code_abstractions/operations/AGENTS.md`: collected snapshot for `operations`.
-- `Notification_Service/common/code_abstractions/stack/AGENTS.md`: collected snapshot for `stack`.
-- `Notification_Service/common/dev_canon/AGENTS.md`: collected snapshot for `dev_canon`.
-- `Notification_Service/common/writing_guides/AGENTS.md`: collected snapshot for `writing_guides`.
-- `Object_Storage/AGENTS.md`: collected snapshot for `Object_Storage`.
-- `Object_Storage/common/AGENTS.md`: collected snapshot for `common`.
-- `Object_Storage/common/code_abstractions/AGENTS.md`: collected snapshot for `code_abstractions`.
-- `Object_Storage/common/code_abstractions/architecture/AGENTS.md`: collected snapshot for `architecture`.
-- `Object_Storage/common/code_abstractions/contracts/AGENTS.md`: collected snapshot for `contracts`.
-- `Object_Storage/common/code_abstractions/naming/AGENTS.md`: collected snapshot for `naming`.
-- `Object_Storage/common/code_abstractions/operations/AGENTS.md`: collected snapshot for `operations`.
-- `Object_Storage/common/code_abstractions/stack/AGENTS.md`: collected snapshot for `stack`.
-- `Object_Storage/common/dev_canon/AGENTS.md`: collected snapshot for `dev_canon`.
-- `Object_Storage/common/writing_guides/AGENTS.md`: collected snapshot for `writing_guides`.
-- `Order_Service/AGENTS.md`: collected snapshot for `Order_Service`.
-- `Order_Service/common/AGENTS.md`: collected snapshot for `common`.
-- `Order_Service/common/code_abstractions/AGENTS.md`: collected snapshot for `code_abstractions`.
-- `Order_Service/common/code_abstractions/architecture/AGENTS.md`: collected snapshot for `architecture`.
-- `Order_Service/common/code_abstractions/contracts/AGENTS.md`: collected snapshot for `contracts`.
-- `Order_Service/common/code_abstractions/naming/AGENTS.md`: collected snapshot for `naming`.
-- `Order_Service/common/code_abstractions/operations/AGENTS.md`: collected snapshot for `operations`.
-- `Order_Service/common/code_abstractions/stack/AGENTS.md`: collected snapshot for `stack`.
-- `Order_Service/common/dev_canon/AGENTS.md`: collected snapshot for `dev_canon`.
-- `Order_Service/common/writing_guides/AGENTS.md`: collected snapshot for `writing_guides`.
-- `Payment_Service/AGENTS.md`: collected snapshot for `Payment_Service`.
-- `Payment_Service/common/AGENTS.md`: collected snapshot for `common`.
-- `Payment_Service/common/code_abstractions/AGENTS.md`: collected snapshot for `code_abstractions`.
-- `Payment_Service/common/code_abstractions/architecture/AGENTS.md`: collected snapshot for `architecture`.
-- `Payment_Service/common/code_abstractions/contracts/AGENTS.md`: collected snapshot for `contracts`.
-- `Payment_Service/common/code_abstractions/naming/AGENTS.md`: collected snapshot for `naming`.
-- `Payment_Service/common/code_abstractions/operations/AGENTS.md`: collected snapshot for `operations`.
-- `Payment_Service/common/code_abstractions/stack/AGENTS.md`: collected snapshot for `stack`.
-- `Payment_Service/common/dev_canon/AGENTS.md`: collected snapshot for `dev_canon`.
-- `Payment_Service/common/writing_guides/AGENTS.md`: collected snapshot for `writing_guides`.
-- `Postgres_DB/AGENTS.md`: collected snapshot for `Postgres_DB`.
-- `Postgres_DB/common/AGENTS.md`: collected snapshot for `common`.
-- `Postgres_DB/common/code_abstractions/AGENTS.md`: collected snapshot for `code_abstractions`.
-- `Postgres_DB/common/code_abstractions/architecture/AGENTS.md`: collected snapshot for `architecture`.
-- `Postgres_DB/common/code_abstractions/contracts/AGENTS.md`: collected snapshot for `contracts`.
-- `Postgres_DB/common/code_abstractions/naming/AGENTS.md`: collected snapshot for `naming`.
-- `Postgres_DB/common/code_abstractions/operations/AGENTS.md`: collected snapshot for `operations`.
-- `Postgres_DB/common/code_abstractions/stack/AGENTS.md`: collected snapshot for `stack`.
-- `Postgres_DB/common/dev_canon/AGENTS.md`: collected snapshot for `dev_canon`.
-- `Postgres_DB/common/writing_guides/AGENTS.md`: collected snapshot for `writing_guides`.
-- `Redis_Cache/AGENTS.md`: collected snapshot for `Redis_Cache`.
-- `Redis_Cache/common/AGENTS.md`: collected snapshot for `common`.
-- `Redis_Cache/common/code_abstractions/AGENTS.md`: collected snapshot for `code_abstractions`.
-- `Redis_Cache/common/code_abstractions/architecture/AGENTS.md`: collected snapshot for `architecture`.
-- `Redis_Cache/common/code_abstractions/contracts/AGENTS.md`: collected snapshot for `contracts`.
-- `Redis_Cache/common/code_abstractions/naming/AGENTS.md`: collected snapshot for `naming`.
-- `Redis_Cache/common/code_abstractions/operations/AGENTS.md`: collected snapshot for `operations`.
-- `Redis_Cache/common/code_abstractions/stack/AGENTS.md`: collected snapshot for `stack`.
-- `Redis_Cache/common/dev_canon/AGENTS.md`: collected snapshot for `dev_canon`.
-- `Redis_Cache/common/writing_guides/AGENTS.md`: collected snapshot for `writing_guides`.
-- `User_UI/AGENTS.md`: collected snapshot for `User_UI`.
-- `User_UI/common/AGENTS.md`: collected snapshot for `common`.
-- `User_UI/common/code_abstractions/AGENTS.md`: collected snapshot for `code_abstractions`.
-- `User_UI/common/code_abstractions/architecture/AGENTS.md`: collected snapshot for `architecture`.
-- `User_UI/common/code_abstractions/contracts/AGENTS.md`: collected snapshot for `contracts`.
-- `User_UI/common/code_abstractions/naming/AGENTS.md`: collected snapshot for `naming`.
-- `User_UI/common/code_abstractions/operations/AGENTS.md`: collected snapshot for `operations`.
-- `User_UI/common/code_abstractions/stack/AGENTS.md`: collected snapshot for `stack`.
-- `User_UI/common/dev_canon/AGENTS.md`: collected snapshot for `dev_canon`.
-- `User_UI/common/writing_guides/AGENTS.md`: collected snapshot for `writing_guides`.
+- `octopus_os_root/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/AGENTS.md`
+- `container_roots/Account_Service/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Account_Service/AGENTS.md`
+- `container_roots/Admin_UI/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Admin_UI/AGENTS.md`
+- `container_roots/AI_Service/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/AI_Service/AGENTS.md`
+- `container_roots/API_Gateway/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/API_Gateway/AGENTS.md`
+- `container_roots/File_Service/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/File_Service/AGENTS.md`
+- `container_roots/Identity_Service/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Identity_Service/AGENTS.md`
+- `container_roots/Mother_Doc/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/AGENTS.md`
+- `container_roots/MQ_Broker/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/MQ_Broker/AGENTS.md`
+- `container_roots/Notification_Service/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Notification_Service/AGENTS.md`
+- `container_roots/Object_Storage/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Object_Storage/AGENTS.md`
+- `container_roots/Order_Service/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Order_Service/AGENTS.md`
+- `container_roots/Payment_Service/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Payment_Service/AGENTS.md`
+- `container_roots/Postgres_DB/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Postgres_DB/AGENTS.md`
+- `container_roots/Redis_Cache/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Redis_Cache/AGENTS.md`
+- `container_roots/User_UI/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/User_UI/AGENTS.md`
+- `mother_doc_docs/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AGENTS.md`
+- `mother_doc_docs/AI_Service/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AI_Service/AGENTS.md`
+- `mother_doc_docs/AI_Service/common/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AI_Service/common/AGENTS.md`
+- `mother_doc_docs/AI_Service/common/code_abstractions/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AI_Service/common/code_abstractions/AGENTS.md`
+- `mother_doc_docs/AI_Service/common/code_abstractions/architecture/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AI_Service/common/code_abstractions/architecture/AGENTS.md`
+- `mother_doc_docs/AI_Service/common/code_abstractions/contracts/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AI_Service/common/code_abstractions/contracts/AGENTS.md`
+- `mother_doc_docs/AI_Service/common/code_abstractions/naming/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AI_Service/common/code_abstractions/naming/AGENTS.md`
+- `mother_doc_docs/AI_Service/common/code_abstractions/operations/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AI_Service/common/code_abstractions/operations/AGENTS.md`
+- `mother_doc_docs/AI_Service/common/code_abstractions/stack/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AI_Service/common/code_abstractions/stack/AGENTS.md`
+- `mother_doc_docs/AI_Service/common/dev_canon/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AI_Service/common/dev_canon/AGENTS.md`
+- `mother_doc_docs/AI_Service/common/writing_guides/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AI_Service/common/writing_guides/AGENTS.md`
+- `mother_doc_docs/AI_Service/features/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AI_Service/features/AGENTS.md`
+- `mother_doc_docs/AI_Service/overview/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AI_Service/overview/AGENTS.md`
+- `mother_doc_docs/AI_Service/shared/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AI_Service/shared/AGENTS.md`
+- `mother_doc_docs/API_Gateway/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/API_Gateway/AGENTS.md`
+- `mother_doc_docs/API_Gateway/common/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/API_Gateway/common/AGENTS.md`
+- `mother_doc_docs/API_Gateway/common/code_abstractions/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/API_Gateway/common/code_abstractions/AGENTS.md`
+- `mother_doc_docs/API_Gateway/common/code_abstractions/architecture/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/API_Gateway/common/code_abstractions/architecture/AGENTS.md`
+- `mother_doc_docs/API_Gateway/common/code_abstractions/contracts/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/API_Gateway/common/code_abstractions/contracts/AGENTS.md`
+- `mother_doc_docs/API_Gateway/common/code_abstractions/naming/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/API_Gateway/common/code_abstractions/naming/AGENTS.md`
+- `mother_doc_docs/API_Gateway/common/code_abstractions/operations/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/API_Gateway/common/code_abstractions/operations/AGENTS.md`
+- `mother_doc_docs/API_Gateway/common/code_abstractions/stack/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/API_Gateway/common/code_abstractions/stack/AGENTS.md`
+- `mother_doc_docs/API_Gateway/common/dev_canon/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/API_Gateway/common/dev_canon/AGENTS.md`
+- `mother_doc_docs/API_Gateway/common/writing_guides/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/API_Gateway/common/writing_guides/AGENTS.md`
+- `mother_doc_docs/API_Gateway/features/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/API_Gateway/features/AGENTS.md`
+- `mother_doc_docs/API_Gateway/overview/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/API_Gateway/overview/AGENTS.md`
+- `mother_doc_docs/API_Gateway/shared/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/API_Gateway/shared/AGENTS.md`
+- `mother_doc_docs/Account_Service/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Account_Service/AGENTS.md`
+- `mother_doc_docs/Account_Service/common/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Account_Service/common/AGENTS.md`
+- `mother_doc_docs/Account_Service/common/code_abstractions/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Account_Service/common/code_abstractions/AGENTS.md`
+- `mother_doc_docs/Account_Service/common/code_abstractions/architecture/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Account_Service/common/code_abstractions/architecture/AGENTS.md`
+- `mother_doc_docs/Account_Service/common/code_abstractions/contracts/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Account_Service/common/code_abstractions/contracts/AGENTS.md`
+- `mother_doc_docs/Account_Service/common/code_abstractions/naming/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Account_Service/common/code_abstractions/naming/AGENTS.md`
+- `mother_doc_docs/Account_Service/common/code_abstractions/operations/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Account_Service/common/code_abstractions/operations/AGENTS.md`
+- `mother_doc_docs/Account_Service/common/code_abstractions/stack/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Account_Service/common/code_abstractions/stack/AGENTS.md`
+- `mother_doc_docs/Account_Service/common/dev_canon/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Account_Service/common/dev_canon/AGENTS.md`
+- `mother_doc_docs/Account_Service/common/writing_guides/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Account_Service/common/writing_guides/AGENTS.md`
+- `mother_doc_docs/Account_Service/features/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Account_Service/features/AGENTS.md`
+- `mother_doc_docs/Account_Service/overview/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Account_Service/overview/AGENTS.md`
+- `mother_doc_docs/Account_Service/shared/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Account_Service/shared/AGENTS.md`
+- `mother_doc_docs/Admin_UI/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Admin_UI/AGENTS.md`
+- `mother_doc_docs/Admin_UI/common/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Admin_UI/common/AGENTS.md`
+- `mother_doc_docs/Admin_UI/common/code_abstractions/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Admin_UI/common/code_abstractions/AGENTS.md`
+- `mother_doc_docs/Admin_UI/common/code_abstractions/architecture/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Admin_UI/common/code_abstractions/architecture/AGENTS.md`
+- `mother_doc_docs/Admin_UI/common/code_abstractions/contracts/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Admin_UI/common/code_abstractions/contracts/AGENTS.md`
+- `mother_doc_docs/Admin_UI/common/code_abstractions/naming/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Admin_UI/common/code_abstractions/naming/AGENTS.md`
+- `mother_doc_docs/Admin_UI/common/code_abstractions/operations/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Admin_UI/common/code_abstractions/operations/AGENTS.md`
+- `mother_doc_docs/Admin_UI/common/code_abstractions/stack/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Admin_UI/common/code_abstractions/stack/AGENTS.md`
+- `mother_doc_docs/Admin_UI/common/dev_canon/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Admin_UI/common/dev_canon/AGENTS.md`
+- `mother_doc_docs/Admin_UI/common/writing_guides/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Admin_UI/common/writing_guides/AGENTS.md`
+- `mother_doc_docs/Admin_UI/features/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Admin_UI/features/AGENTS.md`
+- `mother_doc_docs/Admin_UI/overview/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Admin_UI/overview/AGENTS.md`
+- `mother_doc_docs/Admin_UI/shared/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Admin_UI/shared/AGENTS.md`
+- `mother_doc_docs/File_Service/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/File_Service/AGENTS.md`
+- `mother_doc_docs/File_Service/common/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/File_Service/common/AGENTS.md`
+- `mother_doc_docs/File_Service/common/code_abstractions/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/File_Service/common/code_abstractions/AGENTS.md`
+- `mother_doc_docs/File_Service/common/code_abstractions/architecture/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/File_Service/common/code_abstractions/architecture/AGENTS.md`
+- `mother_doc_docs/File_Service/common/code_abstractions/contracts/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/File_Service/common/code_abstractions/contracts/AGENTS.md`
+- `mother_doc_docs/File_Service/common/code_abstractions/naming/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/File_Service/common/code_abstractions/naming/AGENTS.md`
+- `mother_doc_docs/File_Service/common/code_abstractions/operations/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/File_Service/common/code_abstractions/operations/AGENTS.md`
+- `mother_doc_docs/File_Service/common/code_abstractions/stack/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/File_Service/common/code_abstractions/stack/AGENTS.md`
+- `mother_doc_docs/File_Service/common/dev_canon/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/File_Service/common/dev_canon/AGENTS.md`
+- `mother_doc_docs/File_Service/common/writing_guides/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/File_Service/common/writing_guides/AGENTS.md`
+- `mother_doc_docs/File_Service/features/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/File_Service/features/AGENTS.md`
+- `mother_doc_docs/File_Service/overview/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/File_Service/overview/AGENTS.md`
+- `mother_doc_docs/File_Service/shared/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/File_Service/shared/AGENTS.md`
+- `mother_doc_docs/Identity_Service/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Identity_Service/AGENTS.md`
+- `mother_doc_docs/Identity_Service/common/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Identity_Service/common/AGENTS.md`
+- `mother_doc_docs/Identity_Service/common/code_abstractions/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Identity_Service/common/code_abstractions/AGENTS.md`
+- `mother_doc_docs/Identity_Service/common/code_abstractions/architecture/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Identity_Service/common/code_abstractions/architecture/AGENTS.md`
+- `mother_doc_docs/Identity_Service/common/code_abstractions/contracts/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Identity_Service/common/code_abstractions/contracts/AGENTS.md`
+- `mother_doc_docs/Identity_Service/common/code_abstractions/naming/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Identity_Service/common/code_abstractions/naming/AGENTS.md`
+- `mother_doc_docs/Identity_Service/common/code_abstractions/operations/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Identity_Service/common/code_abstractions/operations/AGENTS.md`
+- `mother_doc_docs/Identity_Service/common/code_abstractions/stack/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Identity_Service/common/code_abstractions/stack/AGENTS.md`
+- `mother_doc_docs/Identity_Service/common/dev_canon/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Identity_Service/common/dev_canon/AGENTS.md`
+- `mother_doc_docs/Identity_Service/common/writing_guides/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Identity_Service/common/writing_guides/AGENTS.md`
+- `mother_doc_docs/Identity_Service/features/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Identity_Service/features/AGENTS.md`
+- `mother_doc_docs/Identity_Service/overview/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Identity_Service/overview/AGENTS.md`
+- `mother_doc_docs/Identity_Service/shared/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Identity_Service/shared/AGENTS.md`
+- `mother_doc_docs/MQ_Broker/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/MQ_Broker/AGENTS.md`
+- `mother_doc_docs/MQ_Broker/common/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/MQ_Broker/common/AGENTS.md`
+- `mother_doc_docs/MQ_Broker/common/code_abstractions/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/MQ_Broker/common/code_abstractions/AGENTS.md`
+- `mother_doc_docs/MQ_Broker/common/code_abstractions/architecture/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/MQ_Broker/common/code_abstractions/architecture/AGENTS.md`
+- `mother_doc_docs/MQ_Broker/common/code_abstractions/contracts/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/MQ_Broker/common/code_abstractions/contracts/AGENTS.md`
+- `mother_doc_docs/MQ_Broker/common/code_abstractions/naming/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/MQ_Broker/common/code_abstractions/naming/AGENTS.md`
+- `mother_doc_docs/MQ_Broker/common/code_abstractions/operations/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/MQ_Broker/common/code_abstractions/operations/AGENTS.md`
+- `mother_doc_docs/MQ_Broker/common/code_abstractions/stack/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/MQ_Broker/common/code_abstractions/stack/AGENTS.md`
+- `mother_doc_docs/MQ_Broker/common/dev_canon/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/MQ_Broker/common/dev_canon/AGENTS.md`
+- `mother_doc_docs/MQ_Broker/common/writing_guides/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/MQ_Broker/common/writing_guides/AGENTS.md`
+- `mother_doc_docs/MQ_Broker/features/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/MQ_Broker/features/AGENTS.md`
+- `mother_doc_docs/MQ_Broker/overview/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/MQ_Broker/overview/AGENTS.md`
+- `mother_doc_docs/MQ_Broker/shared/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/MQ_Broker/shared/AGENTS.md`
+- `mother_doc_docs/Mother_Doc/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/AGENTS.md`
+- `mother_doc_docs/Mother_Doc/common/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/common/AGENTS.md`
+- `mother_doc_docs/Mother_Doc/common/code_abstractions/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/common/code_abstractions/AGENTS.md`
+- `mother_doc_docs/Mother_Doc/common/code_abstractions/architecture/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/common/code_abstractions/architecture/AGENTS.md`
+- `mother_doc_docs/Mother_Doc/common/code_abstractions/contracts/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/common/code_abstractions/contracts/AGENTS.md`
+- `mother_doc_docs/Mother_Doc/common/code_abstractions/naming/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/common/code_abstractions/naming/AGENTS.md`
+- `mother_doc_docs/Mother_Doc/common/code_abstractions/operations/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/common/code_abstractions/operations/AGENTS.md`
+- `mother_doc_docs/Mother_Doc/common/code_abstractions/stack/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/common/code_abstractions/stack/AGENTS.md`
+- `mother_doc_docs/Mother_Doc/common/dev_canon/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/common/dev_canon/AGENTS.md`
+- `mother_doc_docs/Mother_Doc/common/development_logs/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/common/development_logs/AGENTS.md`
+- `mother_doc_docs/Mother_Doc/common/writing_guides/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/common/writing_guides/AGENTS.md`
+- `mother_doc_docs/Mother_Doc/features/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/features/AGENTS.md`
+- `mother_doc_docs/Mother_Doc/overview/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/overview/AGENTS.md`
+- `mother_doc_docs/Mother_Doc/shared/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/shared/AGENTS.md`
+- `mother_doc_docs/Notification_Service/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Notification_Service/AGENTS.md`
+- `mother_doc_docs/Notification_Service/common/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Notification_Service/common/AGENTS.md`
+- `mother_doc_docs/Notification_Service/common/code_abstractions/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Notification_Service/common/code_abstractions/AGENTS.md`
+- `mother_doc_docs/Notification_Service/common/code_abstractions/architecture/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Notification_Service/common/code_abstractions/architecture/AGENTS.md`
+- `mother_doc_docs/Notification_Service/common/code_abstractions/contracts/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Notification_Service/common/code_abstractions/contracts/AGENTS.md`
+- `mother_doc_docs/Notification_Service/common/code_abstractions/naming/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Notification_Service/common/code_abstractions/naming/AGENTS.md`
+- `mother_doc_docs/Notification_Service/common/code_abstractions/operations/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Notification_Service/common/code_abstractions/operations/AGENTS.md`
+- `mother_doc_docs/Notification_Service/common/code_abstractions/stack/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Notification_Service/common/code_abstractions/stack/AGENTS.md`
+- `mother_doc_docs/Notification_Service/common/dev_canon/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Notification_Service/common/dev_canon/AGENTS.md`
+- `mother_doc_docs/Notification_Service/common/writing_guides/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Notification_Service/common/writing_guides/AGENTS.md`
+- `mother_doc_docs/Notification_Service/features/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Notification_Service/features/AGENTS.md`
+- `mother_doc_docs/Notification_Service/overview/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Notification_Service/overview/AGENTS.md`
+- `mother_doc_docs/Notification_Service/shared/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Notification_Service/shared/AGENTS.md`
+- `mother_doc_docs/Object_Storage/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Object_Storage/AGENTS.md`
+- `mother_doc_docs/Object_Storage/common/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Object_Storage/common/AGENTS.md`
+- `mother_doc_docs/Object_Storage/common/code_abstractions/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Object_Storage/common/code_abstractions/AGENTS.md`
+- `mother_doc_docs/Object_Storage/common/code_abstractions/architecture/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Object_Storage/common/code_abstractions/architecture/AGENTS.md`
+- `mother_doc_docs/Object_Storage/common/code_abstractions/contracts/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Object_Storage/common/code_abstractions/contracts/AGENTS.md`
+- `mother_doc_docs/Object_Storage/common/code_abstractions/naming/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Object_Storage/common/code_abstractions/naming/AGENTS.md`
+- `mother_doc_docs/Object_Storage/common/code_abstractions/operations/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Object_Storage/common/code_abstractions/operations/AGENTS.md`
+- `mother_doc_docs/Object_Storage/common/code_abstractions/stack/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Object_Storage/common/code_abstractions/stack/AGENTS.md`
+- `mother_doc_docs/Object_Storage/common/dev_canon/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Object_Storage/common/dev_canon/AGENTS.md`
+- `mother_doc_docs/Object_Storage/common/writing_guides/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Object_Storage/common/writing_guides/AGENTS.md`
+- `mother_doc_docs/Object_Storage/features/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Object_Storage/features/AGENTS.md`
+- `mother_doc_docs/Object_Storage/overview/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Object_Storage/overview/AGENTS.md`
+- `mother_doc_docs/Object_Storage/shared/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Object_Storage/shared/AGENTS.md`
+- `mother_doc_docs/Order_Service/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Order_Service/AGENTS.md`
+- `mother_doc_docs/Order_Service/common/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Order_Service/common/AGENTS.md`
+- `mother_doc_docs/Order_Service/common/code_abstractions/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Order_Service/common/code_abstractions/AGENTS.md`
+- `mother_doc_docs/Order_Service/common/code_abstractions/architecture/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Order_Service/common/code_abstractions/architecture/AGENTS.md`
+- `mother_doc_docs/Order_Service/common/code_abstractions/contracts/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Order_Service/common/code_abstractions/contracts/AGENTS.md`
+- `mother_doc_docs/Order_Service/common/code_abstractions/naming/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Order_Service/common/code_abstractions/naming/AGENTS.md`
+- `mother_doc_docs/Order_Service/common/code_abstractions/operations/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Order_Service/common/code_abstractions/operations/AGENTS.md`
+- `mother_doc_docs/Order_Service/common/code_abstractions/stack/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Order_Service/common/code_abstractions/stack/AGENTS.md`
+- `mother_doc_docs/Order_Service/common/dev_canon/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Order_Service/common/dev_canon/AGENTS.md`
+- `mother_doc_docs/Order_Service/common/writing_guides/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Order_Service/common/writing_guides/AGENTS.md`
+- `mother_doc_docs/Order_Service/features/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Order_Service/features/AGENTS.md`
+- `mother_doc_docs/Order_Service/overview/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Order_Service/overview/AGENTS.md`
+- `mother_doc_docs/Order_Service/shared/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Order_Service/shared/AGENTS.md`
+- `mother_doc_docs/Payment_Service/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Payment_Service/AGENTS.md`
+- `mother_doc_docs/Payment_Service/common/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Payment_Service/common/AGENTS.md`
+- `mother_doc_docs/Payment_Service/common/code_abstractions/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Payment_Service/common/code_abstractions/AGENTS.md`
+- `mother_doc_docs/Payment_Service/common/code_abstractions/architecture/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Payment_Service/common/code_abstractions/architecture/AGENTS.md`
+- `mother_doc_docs/Payment_Service/common/code_abstractions/contracts/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Payment_Service/common/code_abstractions/contracts/AGENTS.md`
+- `mother_doc_docs/Payment_Service/common/code_abstractions/naming/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Payment_Service/common/code_abstractions/naming/AGENTS.md`
+- `mother_doc_docs/Payment_Service/common/code_abstractions/operations/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Payment_Service/common/code_abstractions/operations/AGENTS.md`
+- `mother_doc_docs/Payment_Service/common/code_abstractions/stack/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Payment_Service/common/code_abstractions/stack/AGENTS.md`
+- `mother_doc_docs/Payment_Service/common/dev_canon/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Payment_Service/common/dev_canon/AGENTS.md`
+- `mother_doc_docs/Payment_Service/common/writing_guides/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Payment_Service/common/writing_guides/AGENTS.md`
+- `mother_doc_docs/Payment_Service/features/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Payment_Service/features/AGENTS.md`
+- `mother_doc_docs/Payment_Service/overview/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Payment_Service/overview/AGENTS.md`
+- `mother_doc_docs/Payment_Service/shared/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Payment_Service/shared/AGENTS.md`
+- `mother_doc_docs/Postgres_DB/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Postgres_DB/AGENTS.md`
+- `mother_doc_docs/Postgres_DB/common/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Postgres_DB/common/AGENTS.md`
+- `mother_doc_docs/Postgres_DB/common/code_abstractions/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Postgres_DB/common/code_abstractions/AGENTS.md`
+- `mother_doc_docs/Postgres_DB/common/code_abstractions/architecture/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Postgres_DB/common/code_abstractions/architecture/AGENTS.md`
+- `mother_doc_docs/Postgres_DB/common/code_abstractions/contracts/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Postgres_DB/common/code_abstractions/contracts/AGENTS.md`
+- `mother_doc_docs/Postgres_DB/common/code_abstractions/naming/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Postgres_DB/common/code_abstractions/naming/AGENTS.md`
+- `mother_doc_docs/Postgres_DB/common/code_abstractions/operations/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Postgres_DB/common/code_abstractions/operations/AGENTS.md`
+- `mother_doc_docs/Postgres_DB/common/code_abstractions/stack/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Postgres_DB/common/code_abstractions/stack/AGENTS.md`
+- `mother_doc_docs/Postgres_DB/common/dev_canon/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Postgres_DB/common/dev_canon/AGENTS.md`
+- `mother_doc_docs/Postgres_DB/common/writing_guides/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Postgres_DB/common/writing_guides/AGENTS.md`
+- `mother_doc_docs/Postgres_DB/features/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Postgres_DB/features/AGENTS.md`
+- `mother_doc_docs/Postgres_DB/overview/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Postgres_DB/overview/AGENTS.md`
+- `mother_doc_docs/Postgres_DB/shared/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Postgres_DB/shared/AGENTS.md`
+- `mother_doc_docs/Redis_Cache/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Redis_Cache/AGENTS.md`
+- `mother_doc_docs/Redis_Cache/common/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Redis_Cache/common/AGENTS.md`
+- `mother_doc_docs/Redis_Cache/common/code_abstractions/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Redis_Cache/common/code_abstractions/AGENTS.md`
+- `mother_doc_docs/Redis_Cache/common/code_abstractions/architecture/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Redis_Cache/common/code_abstractions/architecture/AGENTS.md`
+- `mother_doc_docs/Redis_Cache/common/code_abstractions/contracts/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Redis_Cache/common/code_abstractions/contracts/AGENTS.md`
+- `mother_doc_docs/Redis_Cache/common/code_abstractions/naming/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Redis_Cache/common/code_abstractions/naming/AGENTS.md`
+- `mother_doc_docs/Redis_Cache/common/code_abstractions/operations/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Redis_Cache/common/code_abstractions/operations/AGENTS.md`
+- `mother_doc_docs/Redis_Cache/common/code_abstractions/stack/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Redis_Cache/common/code_abstractions/stack/AGENTS.md`
+- `mother_doc_docs/Redis_Cache/common/dev_canon/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Redis_Cache/common/dev_canon/AGENTS.md`
+- `mother_doc_docs/Redis_Cache/common/writing_guides/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Redis_Cache/common/writing_guides/AGENTS.md`
+- `mother_doc_docs/Redis_Cache/features/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Redis_Cache/features/AGENTS.md`
+- `mother_doc_docs/Redis_Cache/overview/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Redis_Cache/overview/AGENTS.md`
+- `mother_doc_docs/Redis_Cache/shared/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Redis_Cache/shared/AGENTS.md`
+- `mother_doc_docs/User_UI/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/User_UI/AGENTS.md`
+- `mother_doc_docs/User_UI/common/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/User_UI/common/AGENTS.md`
+- `mother_doc_docs/User_UI/common/code_abstractions/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/User_UI/common/code_abstractions/AGENTS.md`
+- `mother_doc_docs/User_UI/common/code_abstractions/architecture/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/User_UI/common/code_abstractions/architecture/AGENTS.md`
+- `mother_doc_docs/User_UI/common/code_abstractions/contracts/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/User_UI/common/code_abstractions/contracts/AGENTS.md`
+- `mother_doc_docs/User_UI/common/code_abstractions/naming/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/User_UI/common/code_abstractions/naming/AGENTS.md`
+- `mother_doc_docs/User_UI/common/code_abstractions/operations/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/User_UI/common/code_abstractions/operations/AGENTS.md`
+- `mother_doc_docs/User_UI/common/code_abstractions/stack/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/User_UI/common/code_abstractions/stack/AGENTS.md`
+- `mother_doc_docs/User_UI/common/dev_canon/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/User_UI/common/dev_canon/AGENTS.md`
+- `mother_doc_docs/User_UI/common/writing_guides/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/User_UI/common/writing_guides/AGENTS.md`
+- `mother_doc_docs/User_UI/features/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/User_UI/features/AGENTS.md`
+- `mother_doc_docs/User_UI/overview/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/User_UI/overview/AGENTS.md`
+- `mother_doc_docs/User_UI/shared/AGENTS.md` -> `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/User_UI/shared/AGENTS.md`
+
+## Collected Snapshots
+
+- `octopus_os_root/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/AGENTS.md`.
+- `container_roots/Account_Service/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Account_Service/AGENTS.md`.
+- `container_roots/Admin_UI/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Admin_UI/AGENTS.md`.
+- `container_roots/AI_Service/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/AI_Service/AGENTS.md`.
+- `container_roots/API_Gateway/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/API_Gateway/AGENTS.md`.
+- `container_roots/File_Service/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/File_Service/AGENTS.md`.
+- `container_roots/Identity_Service/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Identity_Service/AGENTS.md`.
+- `container_roots/Mother_Doc/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/AGENTS.md`.
+- `container_roots/MQ_Broker/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/MQ_Broker/AGENTS.md`.
+- `container_roots/Notification_Service/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Notification_Service/AGENTS.md`.
+- `container_roots/Object_Storage/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Object_Storage/AGENTS.md`.
+- `container_roots/Order_Service/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Order_Service/AGENTS.md`.
+- `container_roots/Payment_Service/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Payment_Service/AGENTS.md`.
+- `container_roots/Postgres_DB/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Postgres_DB/AGENTS.md`.
+- `container_roots/Redis_Cache/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Redis_Cache/AGENTS.md`.
+- `container_roots/User_UI/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/User_UI/AGENTS.md`.
+- `mother_doc_docs/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AGENTS.md`.
+- `mother_doc_docs/AI_Service/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AI_Service/AGENTS.md`.
+- `mother_doc_docs/AI_Service/common/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AI_Service/common/AGENTS.md`.
+- `mother_doc_docs/AI_Service/common/code_abstractions/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AI_Service/common/code_abstractions/AGENTS.md`.
+- `mother_doc_docs/AI_Service/common/code_abstractions/architecture/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AI_Service/common/code_abstractions/architecture/AGENTS.md`.
+- `mother_doc_docs/AI_Service/common/code_abstractions/contracts/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AI_Service/common/code_abstractions/contracts/AGENTS.md`.
+- `mother_doc_docs/AI_Service/common/code_abstractions/naming/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AI_Service/common/code_abstractions/naming/AGENTS.md`.
+- `mother_doc_docs/AI_Service/common/code_abstractions/operations/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AI_Service/common/code_abstractions/operations/AGENTS.md`.
+- `mother_doc_docs/AI_Service/common/code_abstractions/stack/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AI_Service/common/code_abstractions/stack/AGENTS.md`.
+- `mother_doc_docs/AI_Service/common/dev_canon/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AI_Service/common/dev_canon/AGENTS.md`.
+- `mother_doc_docs/AI_Service/common/writing_guides/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AI_Service/common/writing_guides/AGENTS.md`.
+- `mother_doc_docs/AI_Service/features/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AI_Service/features/AGENTS.md`.
+- `mother_doc_docs/AI_Service/overview/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AI_Service/overview/AGENTS.md`.
+- `mother_doc_docs/AI_Service/shared/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/AI_Service/shared/AGENTS.md`.
+- `mother_doc_docs/API_Gateway/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/API_Gateway/AGENTS.md`.
+- `mother_doc_docs/API_Gateway/common/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/API_Gateway/common/AGENTS.md`.
+- `mother_doc_docs/API_Gateway/common/code_abstractions/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/API_Gateway/common/code_abstractions/AGENTS.md`.
+- `mother_doc_docs/API_Gateway/common/code_abstractions/architecture/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/API_Gateway/common/code_abstractions/architecture/AGENTS.md`.
+- `mother_doc_docs/API_Gateway/common/code_abstractions/contracts/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/API_Gateway/common/code_abstractions/contracts/AGENTS.md`.
+- `mother_doc_docs/API_Gateway/common/code_abstractions/naming/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/API_Gateway/common/code_abstractions/naming/AGENTS.md`.
+- `mother_doc_docs/API_Gateway/common/code_abstractions/operations/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/API_Gateway/common/code_abstractions/operations/AGENTS.md`.
+- `mother_doc_docs/API_Gateway/common/code_abstractions/stack/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/API_Gateway/common/code_abstractions/stack/AGENTS.md`.
+- `mother_doc_docs/API_Gateway/common/dev_canon/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/API_Gateway/common/dev_canon/AGENTS.md`.
+- `mother_doc_docs/API_Gateway/common/writing_guides/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/API_Gateway/common/writing_guides/AGENTS.md`.
+- `mother_doc_docs/API_Gateway/features/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/API_Gateway/features/AGENTS.md`.
+- `mother_doc_docs/API_Gateway/overview/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/API_Gateway/overview/AGENTS.md`.
+- `mother_doc_docs/API_Gateway/shared/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/API_Gateway/shared/AGENTS.md`.
+- `mother_doc_docs/Account_Service/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Account_Service/AGENTS.md`.
+- `mother_doc_docs/Account_Service/common/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Account_Service/common/AGENTS.md`.
+- `mother_doc_docs/Account_Service/common/code_abstractions/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Account_Service/common/code_abstractions/AGENTS.md`.
+- `mother_doc_docs/Account_Service/common/code_abstractions/architecture/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Account_Service/common/code_abstractions/architecture/AGENTS.md`.
+- `mother_doc_docs/Account_Service/common/code_abstractions/contracts/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Account_Service/common/code_abstractions/contracts/AGENTS.md`.
+- `mother_doc_docs/Account_Service/common/code_abstractions/naming/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Account_Service/common/code_abstractions/naming/AGENTS.md`.
+- `mother_doc_docs/Account_Service/common/code_abstractions/operations/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Account_Service/common/code_abstractions/operations/AGENTS.md`.
+- `mother_doc_docs/Account_Service/common/code_abstractions/stack/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Account_Service/common/code_abstractions/stack/AGENTS.md`.
+- `mother_doc_docs/Account_Service/common/dev_canon/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Account_Service/common/dev_canon/AGENTS.md`.
+- `mother_doc_docs/Account_Service/common/writing_guides/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Account_Service/common/writing_guides/AGENTS.md`.
+- `mother_doc_docs/Account_Service/features/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Account_Service/features/AGENTS.md`.
+- `mother_doc_docs/Account_Service/overview/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Account_Service/overview/AGENTS.md`.
+- `mother_doc_docs/Account_Service/shared/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Account_Service/shared/AGENTS.md`.
+- `mother_doc_docs/Admin_UI/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Admin_UI/AGENTS.md`.
+- `mother_doc_docs/Admin_UI/common/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Admin_UI/common/AGENTS.md`.
+- `mother_doc_docs/Admin_UI/common/code_abstractions/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Admin_UI/common/code_abstractions/AGENTS.md`.
+- `mother_doc_docs/Admin_UI/common/code_abstractions/architecture/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Admin_UI/common/code_abstractions/architecture/AGENTS.md`.
+- `mother_doc_docs/Admin_UI/common/code_abstractions/contracts/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Admin_UI/common/code_abstractions/contracts/AGENTS.md`.
+- `mother_doc_docs/Admin_UI/common/code_abstractions/naming/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Admin_UI/common/code_abstractions/naming/AGENTS.md`.
+- `mother_doc_docs/Admin_UI/common/code_abstractions/operations/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Admin_UI/common/code_abstractions/operations/AGENTS.md`.
+- `mother_doc_docs/Admin_UI/common/code_abstractions/stack/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Admin_UI/common/code_abstractions/stack/AGENTS.md`.
+- `mother_doc_docs/Admin_UI/common/dev_canon/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Admin_UI/common/dev_canon/AGENTS.md`.
+- `mother_doc_docs/Admin_UI/common/writing_guides/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Admin_UI/common/writing_guides/AGENTS.md`.
+- `mother_doc_docs/Admin_UI/features/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Admin_UI/features/AGENTS.md`.
+- `mother_doc_docs/Admin_UI/overview/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Admin_UI/overview/AGENTS.md`.
+- `mother_doc_docs/Admin_UI/shared/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Admin_UI/shared/AGENTS.md`.
+- `mother_doc_docs/File_Service/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/File_Service/AGENTS.md`.
+- `mother_doc_docs/File_Service/common/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/File_Service/common/AGENTS.md`.
+- `mother_doc_docs/File_Service/common/code_abstractions/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/File_Service/common/code_abstractions/AGENTS.md`.
+- `mother_doc_docs/File_Service/common/code_abstractions/architecture/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/File_Service/common/code_abstractions/architecture/AGENTS.md`.
+- `mother_doc_docs/File_Service/common/code_abstractions/contracts/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/File_Service/common/code_abstractions/contracts/AGENTS.md`.
+- `mother_doc_docs/File_Service/common/code_abstractions/naming/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/File_Service/common/code_abstractions/naming/AGENTS.md`.
+- `mother_doc_docs/File_Service/common/code_abstractions/operations/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/File_Service/common/code_abstractions/operations/AGENTS.md`.
+- `mother_doc_docs/File_Service/common/code_abstractions/stack/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/File_Service/common/code_abstractions/stack/AGENTS.md`.
+- `mother_doc_docs/File_Service/common/dev_canon/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/File_Service/common/dev_canon/AGENTS.md`.
+- `mother_doc_docs/File_Service/common/writing_guides/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/File_Service/common/writing_guides/AGENTS.md`.
+- `mother_doc_docs/File_Service/features/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/File_Service/features/AGENTS.md`.
+- `mother_doc_docs/File_Service/overview/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/File_Service/overview/AGENTS.md`.
+- `mother_doc_docs/File_Service/shared/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/File_Service/shared/AGENTS.md`.
+- `mother_doc_docs/Identity_Service/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Identity_Service/AGENTS.md`.
+- `mother_doc_docs/Identity_Service/common/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Identity_Service/common/AGENTS.md`.
+- `mother_doc_docs/Identity_Service/common/code_abstractions/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Identity_Service/common/code_abstractions/AGENTS.md`.
+- `mother_doc_docs/Identity_Service/common/code_abstractions/architecture/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Identity_Service/common/code_abstractions/architecture/AGENTS.md`.
+- `mother_doc_docs/Identity_Service/common/code_abstractions/contracts/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Identity_Service/common/code_abstractions/contracts/AGENTS.md`.
+- `mother_doc_docs/Identity_Service/common/code_abstractions/naming/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Identity_Service/common/code_abstractions/naming/AGENTS.md`.
+- `mother_doc_docs/Identity_Service/common/code_abstractions/operations/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Identity_Service/common/code_abstractions/operations/AGENTS.md`.
+- `mother_doc_docs/Identity_Service/common/code_abstractions/stack/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Identity_Service/common/code_abstractions/stack/AGENTS.md`.
+- `mother_doc_docs/Identity_Service/common/dev_canon/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Identity_Service/common/dev_canon/AGENTS.md`.
+- `mother_doc_docs/Identity_Service/common/writing_guides/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Identity_Service/common/writing_guides/AGENTS.md`.
+- `mother_doc_docs/Identity_Service/features/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Identity_Service/features/AGENTS.md`.
+- `mother_doc_docs/Identity_Service/overview/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Identity_Service/overview/AGENTS.md`.
+- `mother_doc_docs/Identity_Service/shared/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Identity_Service/shared/AGENTS.md`.
+- `mother_doc_docs/MQ_Broker/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/MQ_Broker/AGENTS.md`.
+- `mother_doc_docs/MQ_Broker/common/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/MQ_Broker/common/AGENTS.md`.
+- `mother_doc_docs/MQ_Broker/common/code_abstractions/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/MQ_Broker/common/code_abstractions/AGENTS.md`.
+- `mother_doc_docs/MQ_Broker/common/code_abstractions/architecture/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/MQ_Broker/common/code_abstractions/architecture/AGENTS.md`.
+- `mother_doc_docs/MQ_Broker/common/code_abstractions/contracts/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/MQ_Broker/common/code_abstractions/contracts/AGENTS.md`.
+- `mother_doc_docs/MQ_Broker/common/code_abstractions/naming/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/MQ_Broker/common/code_abstractions/naming/AGENTS.md`.
+- `mother_doc_docs/MQ_Broker/common/code_abstractions/operations/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/MQ_Broker/common/code_abstractions/operations/AGENTS.md`.
+- `mother_doc_docs/MQ_Broker/common/code_abstractions/stack/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/MQ_Broker/common/code_abstractions/stack/AGENTS.md`.
+- `mother_doc_docs/MQ_Broker/common/dev_canon/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/MQ_Broker/common/dev_canon/AGENTS.md`.
+- `mother_doc_docs/MQ_Broker/common/writing_guides/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/MQ_Broker/common/writing_guides/AGENTS.md`.
+- `mother_doc_docs/MQ_Broker/features/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/MQ_Broker/features/AGENTS.md`.
+- `mother_doc_docs/MQ_Broker/overview/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/MQ_Broker/overview/AGENTS.md`.
+- `mother_doc_docs/MQ_Broker/shared/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/MQ_Broker/shared/AGENTS.md`.
+- `mother_doc_docs/Mother_Doc/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/AGENTS.md`.
+- `mother_doc_docs/Mother_Doc/common/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/common/AGENTS.md`.
+- `mother_doc_docs/Mother_Doc/common/code_abstractions/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/common/code_abstractions/AGENTS.md`.
+- `mother_doc_docs/Mother_Doc/common/code_abstractions/architecture/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/common/code_abstractions/architecture/AGENTS.md`.
+- `mother_doc_docs/Mother_Doc/common/code_abstractions/contracts/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/common/code_abstractions/contracts/AGENTS.md`.
+- `mother_doc_docs/Mother_Doc/common/code_abstractions/naming/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/common/code_abstractions/naming/AGENTS.md`.
+- `mother_doc_docs/Mother_Doc/common/code_abstractions/operations/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/common/code_abstractions/operations/AGENTS.md`.
+- `mother_doc_docs/Mother_Doc/common/code_abstractions/stack/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/common/code_abstractions/stack/AGENTS.md`.
+- `mother_doc_docs/Mother_Doc/common/dev_canon/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/common/dev_canon/AGENTS.md`.
+- `mother_doc_docs/Mother_Doc/common/development_logs/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/common/development_logs/AGENTS.md`.
+- `mother_doc_docs/Mother_Doc/common/writing_guides/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/common/writing_guides/AGENTS.md`.
+- `mother_doc_docs/Mother_Doc/features/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/features/AGENTS.md`.
+- `mother_doc_docs/Mother_Doc/overview/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/overview/AGENTS.md`.
+- `mother_doc_docs/Mother_Doc/shared/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/shared/AGENTS.md`.
+- `mother_doc_docs/Notification_Service/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Notification_Service/AGENTS.md`.
+- `mother_doc_docs/Notification_Service/common/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Notification_Service/common/AGENTS.md`.
+- `mother_doc_docs/Notification_Service/common/code_abstractions/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Notification_Service/common/code_abstractions/AGENTS.md`.
+- `mother_doc_docs/Notification_Service/common/code_abstractions/architecture/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Notification_Service/common/code_abstractions/architecture/AGENTS.md`.
+- `mother_doc_docs/Notification_Service/common/code_abstractions/contracts/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Notification_Service/common/code_abstractions/contracts/AGENTS.md`.
+- `mother_doc_docs/Notification_Service/common/code_abstractions/naming/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Notification_Service/common/code_abstractions/naming/AGENTS.md`.
+- `mother_doc_docs/Notification_Service/common/code_abstractions/operations/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Notification_Service/common/code_abstractions/operations/AGENTS.md`.
+- `mother_doc_docs/Notification_Service/common/code_abstractions/stack/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Notification_Service/common/code_abstractions/stack/AGENTS.md`.
+- `mother_doc_docs/Notification_Service/common/dev_canon/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Notification_Service/common/dev_canon/AGENTS.md`.
+- `mother_doc_docs/Notification_Service/common/writing_guides/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Notification_Service/common/writing_guides/AGENTS.md`.
+- `mother_doc_docs/Notification_Service/features/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Notification_Service/features/AGENTS.md`.
+- `mother_doc_docs/Notification_Service/overview/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Notification_Service/overview/AGENTS.md`.
+- `mother_doc_docs/Notification_Service/shared/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Notification_Service/shared/AGENTS.md`.
+- `mother_doc_docs/Object_Storage/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Object_Storage/AGENTS.md`.
+- `mother_doc_docs/Object_Storage/common/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Object_Storage/common/AGENTS.md`.
+- `mother_doc_docs/Object_Storage/common/code_abstractions/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Object_Storage/common/code_abstractions/AGENTS.md`.
+- `mother_doc_docs/Object_Storage/common/code_abstractions/architecture/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Object_Storage/common/code_abstractions/architecture/AGENTS.md`.
+- `mother_doc_docs/Object_Storage/common/code_abstractions/contracts/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Object_Storage/common/code_abstractions/contracts/AGENTS.md`.
+- `mother_doc_docs/Object_Storage/common/code_abstractions/naming/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Object_Storage/common/code_abstractions/naming/AGENTS.md`.
+- `mother_doc_docs/Object_Storage/common/code_abstractions/operations/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Object_Storage/common/code_abstractions/operations/AGENTS.md`.
+- `mother_doc_docs/Object_Storage/common/code_abstractions/stack/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Object_Storage/common/code_abstractions/stack/AGENTS.md`.
+- `mother_doc_docs/Object_Storage/common/dev_canon/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Object_Storage/common/dev_canon/AGENTS.md`.
+- `mother_doc_docs/Object_Storage/common/writing_guides/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Object_Storage/common/writing_guides/AGENTS.md`.
+- `mother_doc_docs/Object_Storage/features/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Object_Storage/features/AGENTS.md`.
+- `mother_doc_docs/Object_Storage/overview/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Object_Storage/overview/AGENTS.md`.
+- `mother_doc_docs/Object_Storage/shared/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Object_Storage/shared/AGENTS.md`.
+- `mother_doc_docs/Order_Service/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Order_Service/AGENTS.md`.
+- `mother_doc_docs/Order_Service/common/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Order_Service/common/AGENTS.md`.
+- `mother_doc_docs/Order_Service/common/code_abstractions/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Order_Service/common/code_abstractions/AGENTS.md`.
+- `mother_doc_docs/Order_Service/common/code_abstractions/architecture/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Order_Service/common/code_abstractions/architecture/AGENTS.md`.
+- `mother_doc_docs/Order_Service/common/code_abstractions/contracts/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Order_Service/common/code_abstractions/contracts/AGENTS.md`.
+- `mother_doc_docs/Order_Service/common/code_abstractions/naming/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Order_Service/common/code_abstractions/naming/AGENTS.md`.
+- `mother_doc_docs/Order_Service/common/code_abstractions/operations/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Order_Service/common/code_abstractions/operations/AGENTS.md`.
+- `mother_doc_docs/Order_Service/common/code_abstractions/stack/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Order_Service/common/code_abstractions/stack/AGENTS.md`.
+- `mother_doc_docs/Order_Service/common/dev_canon/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Order_Service/common/dev_canon/AGENTS.md`.
+- `mother_doc_docs/Order_Service/common/writing_guides/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Order_Service/common/writing_guides/AGENTS.md`.
+- `mother_doc_docs/Order_Service/features/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Order_Service/features/AGENTS.md`.
+- `mother_doc_docs/Order_Service/overview/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Order_Service/overview/AGENTS.md`.
+- `mother_doc_docs/Order_Service/shared/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Order_Service/shared/AGENTS.md`.
+- `mother_doc_docs/Payment_Service/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Payment_Service/AGENTS.md`.
+- `mother_doc_docs/Payment_Service/common/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Payment_Service/common/AGENTS.md`.
+- `mother_doc_docs/Payment_Service/common/code_abstractions/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Payment_Service/common/code_abstractions/AGENTS.md`.
+- `mother_doc_docs/Payment_Service/common/code_abstractions/architecture/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Payment_Service/common/code_abstractions/architecture/AGENTS.md`.
+- `mother_doc_docs/Payment_Service/common/code_abstractions/contracts/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Payment_Service/common/code_abstractions/contracts/AGENTS.md`.
+- `mother_doc_docs/Payment_Service/common/code_abstractions/naming/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Payment_Service/common/code_abstractions/naming/AGENTS.md`.
+- `mother_doc_docs/Payment_Service/common/code_abstractions/operations/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Payment_Service/common/code_abstractions/operations/AGENTS.md`.
+- `mother_doc_docs/Payment_Service/common/code_abstractions/stack/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Payment_Service/common/code_abstractions/stack/AGENTS.md`.
+- `mother_doc_docs/Payment_Service/common/dev_canon/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Payment_Service/common/dev_canon/AGENTS.md`.
+- `mother_doc_docs/Payment_Service/common/writing_guides/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Payment_Service/common/writing_guides/AGENTS.md`.
+- `mother_doc_docs/Payment_Service/features/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Payment_Service/features/AGENTS.md`.
+- `mother_doc_docs/Payment_Service/overview/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Payment_Service/overview/AGENTS.md`.
+- `mother_doc_docs/Payment_Service/shared/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Payment_Service/shared/AGENTS.md`.
+- `mother_doc_docs/Postgres_DB/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Postgres_DB/AGENTS.md`.
+- `mother_doc_docs/Postgres_DB/common/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Postgres_DB/common/AGENTS.md`.
+- `mother_doc_docs/Postgres_DB/common/code_abstractions/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Postgres_DB/common/code_abstractions/AGENTS.md`.
+- `mother_doc_docs/Postgres_DB/common/code_abstractions/architecture/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Postgres_DB/common/code_abstractions/architecture/AGENTS.md`.
+- `mother_doc_docs/Postgres_DB/common/code_abstractions/contracts/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Postgres_DB/common/code_abstractions/contracts/AGENTS.md`.
+- `mother_doc_docs/Postgres_DB/common/code_abstractions/naming/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Postgres_DB/common/code_abstractions/naming/AGENTS.md`.
+- `mother_doc_docs/Postgres_DB/common/code_abstractions/operations/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Postgres_DB/common/code_abstractions/operations/AGENTS.md`.
+- `mother_doc_docs/Postgres_DB/common/code_abstractions/stack/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Postgres_DB/common/code_abstractions/stack/AGENTS.md`.
+- `mother_doc_docs/Postgres_DB/common/dev_canon/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Postgres_DB/common/dev_canon/AGENTS.md`.
+- `mother_doc_docs/Postgres_DB/common/writing_guides/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Postgres_DB/common/writing_guides/AGENTS.md`.
+- `mother_doc_docs/Postgres_DB/features/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Postgres_DB/features/AGENTS.md`.
+- `mother_doc_docs/Postgres_DB/overview/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Postgres_DB/overview/AGENTS.md`.
+- `mother_doc_docs/Postgres_DB/shared/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Postgres_DB/shared/AGENTS.md`.
+- `mother_doc_docs/Redis_Cache/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Redis_Cache/AGENTS.md`.
+- `mother_doc_docs/Redis_Cache/common/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Redis_Cache/common/AGENTS.md`.
+- `mother_doc_docs/Redis_Cache/common/code_abstractions/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Redis_Cache/common/code_abstractions/AGENTS.md`.
+- `mother_doc_docs/Redis_Cache/common/code_abstractions/architecture/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Redis_Cache/common/code_abstractions/architecture/AGENTS.md`.
+- `mother_doc_docs/Redis_Cache/common/code_abstractions/contracts/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Redis_Cache/common/code_abstractions/contracts/AGENTS.md`.
+- `mother_doc_docs/Redis_Cache/common/code_abstractions/naming/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Redis_Cache/common/code_abstractions/naming/AGENTS.md`.
+- `mother_doc_docs/Redis_Cache/common/code_abstractions/operations/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Redis_Cache/common/code_abstractions/operations/AGENTS.md`.
+- `mother_doc_docs/Redis_Cache/common/code_abstractions/stack/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Redis_Cache/common/code_abstractions/stack/AGENTS.md`.
+- `mother_doc_docs/Redis_Cache/common/dev_canon/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Redis_Cache/common/dev_canon/AGENTS.md`.
+- `mother_doc_docs/Redis_Cache/common/writing_guides/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Redis_Cache/common/writing_guides/AGENTS.md`.
+- `mother_doc_docs/Redis_Cache/features/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Redis_Cache/features/AGENTS.md`.
+- `mother_doc_docs/Redis_Cache/overview/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Redis_Cache/overview/AGENTS.md`.
+- `mother_doc_docs/Redis_Cache/shared/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Redis_Cache/shared/AGENTS.md`.
+- `mother_doc_docs/User_UI/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/User_UI/AGENTS.md`.
+- `mother_doc_docs/User_UI/common/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/User_UI/common/AGENTS.md`.
+- `mother_doc_docs/User_UI/common/code_abstractions/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/User_UI/common/code_abstractions/AGENTS.md`.
+- `mother_doc_docs/User_UI/common/code_abstractions/architecture/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/User_UI/common/code_abstractions/architecture/AGENTS.md`.
+- `mother_doc_docs/User_UI/common/code_abstractions/contracts/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/User_UI/common/code_abstractions/contracts/AGENTS.md`.
+- `mother_doc_docs/User_UI/common/code_abstractions/naming/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/User_UI/common/code_abstractions/naming/AGENTS.md`.
+- `mother_doc_docs/User_UI/common/code_abstractions/operations/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/User_UI/common/code_abstractions/operations/AGENTS.md`.
+- `mother_doc_docs/User_UI/common/code_abstractions/stack/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/User_UI/common/code_abstractions/stack/AGENTS.md`.
+- `mother_doc_docs/User_UI/common/dev_canon/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/User_UI/common/dev_canon/AGENTS.md`.
+- `mother_doc_docs/User_UI/common/writing_guides/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/User_UI/common/writing_guides/AGENTS.md`.
+- `mother_doc_docs/User_UI/features/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/User_UI/features/AGENTS.md`.
+- `mother_doc_docs/User_UI/overview/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/User_UI/overview/AGENTS.md`.
+- `mother_doc_docs/User_UI/shared/AGENTS.md`: collected snapshot for `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/User_UI/shared/AGENTS.md`.

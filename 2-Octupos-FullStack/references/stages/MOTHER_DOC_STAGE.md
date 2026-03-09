@@ -15,7 +15,7 @@
 - 总入口：[00_MOTHER_DOC_BRANCH_INDEX.md](../mother_doc/00_MOTHER_DOC_BRANCH_INDEX.md)
 - `direct_writeback`：把用户已明确的需求覆盖写回到 `overview / features / shared / common`。
 - `question_backfill`：围绕未收口问题持续问答并回填。
-- `agents_manager`：只管理 `AGENTS.md` 模板、扫描、回收与反推。
+- `agents_manager`：统一管理 `Octopus_OS` 根层、各容器根层与 `Mother_Doc/docs` 文档树中的 `AGENTS.md` 模板、扫描、回收与反推。
 
 ## Required Workflow
 
