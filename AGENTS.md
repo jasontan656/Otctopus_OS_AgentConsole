@@ -9,7 +9,8 @@
 - `python3 /home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/scripts/Cli_Toolbox.py target-contract --source-path "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/AGENTS.md" --json`
 
 2. TURN_START Contract
-- N/A
+- use the returned target contract JSON as the runtime rule source
+- if the turn will write Codex_Skills_Mirror, plan same-turn Constitution lint and Git traceability from the start
 
 3. Peer Document Gate
 - See the returned `peer_doc` object to decide whether the same-level peer file exists and whether it must be read.
@@ -27,4 +28,5 @@
 [TURN END - MANDATORY]
 
 6. TURN_END Contract
-- N/A
+- run Constitution lint on the concrete Codex_Skills_Mirror target root
+- if the turn wrote Codex_Skills_Mirror, complete same-turn commit-and-push before closing the turn

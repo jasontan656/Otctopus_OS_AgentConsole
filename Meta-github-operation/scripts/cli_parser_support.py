@@ -3,13 +3,34 @@ from __future__ import annotations
 import argparse
 
 
-def build_parser(cmd_registry, cmd_status, cmd_remote_info, cmd_fetch, cmd_pull_rebase, cmd_commit, cmd_commit_and_push, cmd_push, cmd_rollback_paths) -> argparse.ArgumentParser:
+def build_parser(
+    cmd_registry,
+    cmd_status,
+    cmd_remote_info,
+    cmd_fetch,
+    cmd_pull_rebase,
+    cmd_commit,
+    cmd_commit_and_push,
+    cmd_push,
+    cmd_push_contract,
+    cmd_rollback_contract,
+    cmd_rollback_paths,
+    cmd_rollback_sync,
+) -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     registry = subparsers.add_parser("registry")
     registry.add_argument("--json", action="store_true")
     registry.set_defaults(func=cmd_registry)
+
+    push_contract = subparsers.add_parser("push-contract")
+    push_contract.add_argument("--json", action="store_true")
+    push_contract.set_defaults(func=cmd_push_contract)
+
+    rollback_contract = subparsers.add_parser("rollback-contract")
+    rollback_contract.add_argument("--json", action="store_true")
+    rollback_contract.set_defaults(func=cmd_rollback_contract)
 
     status = subparsers.add_parser("status")
     status.add_argument("--repo")
@@ -72,4 +93,13 @@ def build_parser(cmd_registry, cmd_status, cmd_remote_info, cmd_fetch, cmd_pull_
     rollback.add_argument("--path", action="append", required=True)
     rollback.add_argument("--json", action="store_true")
     rollback.set_defaults(func=cmd_rollback_paths)
+
+    rollback_sync = subparsers.add_parser("rollback-sync")
+    rollback_sync.add_argument("--repo")
+    rollback_sync.add_argument("--repo-path")
+    rollback_sync.add_argument("--to-ref", required=True)
+    rollback_sync.add_argument("--path", action="append", default=[])
+    rollback_sync.add_argument("--all", action="store_true")
+    rollback_sync.add_argument("--json", action="store_true")
+    rollback_sync.set_defaults(func=cmd_rollback_sync)
     return parser

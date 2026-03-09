@@ -523,7 +523,7 @@
       "readme_template_relative_path": "mother_doc_docs/API_Gateway/common/code_abstractions/operations/README.md",
       "readme_present": true,
       "readme_management_mode": "collect_preserve",
-      "child_entry_count": 3
+      "child_entry_count": 4
     },
     {
       "scope_branch": "mother_doc_docs",
@@ -537,7 +537,7 @@
       "readme_template_relative_path": "mother_doc_docs/API_Gateway/common/code_abstractions/stack/README.md",
       "readme_present": true,
       "readme_management_mode": "collect_preserve",
-      "child_entry_count": 3
+      "child_entry_count": 2
     },
     {
       "scope_branch": "mother_doc_docs",
@@ -887,7 +887,7 @@
       "readme_template_relative_path": "mother_doc_docs/Admin_UI/common/code_abstractions/operations/README.md",
       "readme_present": true,
       "readme_management_mode": "collect_preserve",
-      "child_entry_count": 3
+      "child_entry_count": 4
     },
     {
       "scope_branch": "mother_doc_docs",
@@ -1447,7 +1447,7 @@
       "readme_template_relative_path": "mother_doc_docs/MQ_Broker/common/code_abstractions/stack/README.md",
       "readme_present": true,
       "readme_management_mode": "collect_preserve",
-      "child_entry_count": 3
+      "child_entry_count": 2
     },
     {
       "scope_branch": "mother_doc_docs",
@@ -1615,7 +1615,7 @@
       "readme_template_relative_path": "mother_doc_docs/Mother_Doc/common/code_abstractions/operations/README.md",
       "readme_present": true,
       "readme_management_mode": "collect_preserve",
-      "child_entry_count": 4
+      "child_entry_count": 5
     },
     {
       "scope_branch": "mother_doc_docs",
@@ -2021,7 +2021,7 @@
       "readme_template_relative_path": "mother_doc_docs/Object_Storage/common/code_abstractions/stack/README.md",
       "readme_present": true,
       "readme_management_mode": "collect_preserve",
-      "child_entry_count": 3
+      "child_entry_count": 2
     },
     {
       "scope_branch": "mother_doc_docs",
@@ -2567,7 +2567,7 @@
       "readme_template_relative_path": "mother_doc_docs/Postgres_DB/common/code_abstractions/stack/README.md",
       "readme_present": true,
       "readme_management_mode": "collect_preserve",
-      "child_entry_count": 3
+      "child_entry_count": 2
     },
     {
       "scope_branch": "mother_doc_docs",
@@ -2749,7 +2749,7 @@
       "readme_template_relative_path": "mother_doc_docs/Redis_Cache/common/code_abstractions/stack/README.md",
       "readme_present": true,
       "readme_management_mode": "collect_preserve",
-      "child_entry_count": 3
+      "child_entry_count": 2
     },
     {
       "scope_branch": "mother_doc_docs",
@@ -2917,7 +2917,7 @@
       "readme_template_relative_path": "mother_doc_docs/User_UI/common/code_abstractions/operations/README.md",
       "readme_present": true,
       "readme_management_mode": "collect_preserve",
-      "child_entry_count": 3
+      "child_entry_count": 4
     },
     {
       "scope_branch": "mother_doc_docs",

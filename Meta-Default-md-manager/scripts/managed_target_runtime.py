@@ -77,8 +77,18 @@ def _turn_contract(source_rel: str, target_kind: str) -> dict[str, object]:
             ],
             "turn_end": [
                 "print TURN_END guardrails",
-                "run Constitution lint for each concrete affected repo",
-                "if Octopus_OS or Codex_Skills_Mirror was written, complete same-turn commit-and-push",
+            ],
+        }
+    if source_rel == "Codex_Skills_Mirror/AGENTS.md" and target_kind == "AGENTS.md":
+        return {
+            "status": "enforced",
+            "turn_start": [
+                "use the returned target contract JSON as the runtime rule source",
+                "if the turn will write Codex_Skills_Mirror, plan same-turn Constitution lint and Git traceability from the start",
+            ],
+            "turn_end": [
+                "run Constitution lint on the concrete Codex_Skills_Mirror target root",
+                "if the turn wrote Codex_Skills_Mirror, complete same-turn commit-and-push before closing the turn",
             ],
         }
     return {

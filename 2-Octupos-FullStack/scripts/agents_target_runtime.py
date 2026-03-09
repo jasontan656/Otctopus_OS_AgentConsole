@@ -42,12 +42,11 @@ def _turn_contract(relative_path: str, file_kind: str) -> dict[str, object]:
         return {
             "status": "enforced",
             "turn_start": [
-                "if the turn will write Octopus_OS, plan same-turn Constitution lint and Git traceability from the start",
+                "if the turn will write Octopus_OS, plan same-turn Constitution lint from the start",
                 "use the returned target contract JSON as the runtime rule source",
             ],
             "turn_end": [
                 "if the turn wrote Octopus_OS, run Constitution lint on the concrete target root",
-                "finish same-turn commit-and-push for Octopus_OS before closing the turn",
             ],
         }
     return {

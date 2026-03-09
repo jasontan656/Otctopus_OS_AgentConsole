@@ -17,8 +17,11 @@ description: "受限 GitHub control plane：仅服务 Octopus_OS 与 Codex_Skill
   - repo registry
   - status / remote-info
   - fetch / pull-rebase
+  - push-contract
   - commit / commit-and-push / push
+  - rollback-contract
   - rollback-paths
+  - rollback-sync
 - 不允许：
   - 超出上述两个仓库的 Git / GitHub 自动化调用
   - 仓库删除

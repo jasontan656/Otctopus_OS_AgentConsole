@@ -5,11 +5,12 @@ import json
 from pathlib import Path
 
 from cli_parser_support import build_parser
+from entry_support import push_contract_payload, rollback_contract_payload
 from git_cli_support import commit as git_commit
 from git_cli_support import fetch as git_fetch
 from git_cli_support import pull_rebase as git_pull_rebase
 from git_cli_support import push as git_push
-from git_cli_support import remote_urls, repo_status_payload, resolve_commit_scope, rollback_paths, run_git, stage_paths
+from git_cli_support import remote_urls, repo_status_payload, resolve_commit_scope, rollback_paths, rollback_sync, run_git, stage_paths
 from registry_repo import registry_payload, resolve_repo
 
 
@@ -31,6 +32,14 @@ def resolve_repo_root(args) -> tuple[str, Path]:
 
 def cmd_registry(args) -> int:
     return emit(registry_payload(), as_json=args.json)
+
+
+def cmd_push_contract(args) -> int:
+    return emit(push_contract_payload(), as_json=args.json)
+
+
+def cmd_rollback_contract(args) -> int:
+    return emit(rollback_contract_payload(), as_json=args.json)
 
 
 def cmd_status(args) -> int:
@@ -141,6 +150,21 @@ def cmd_rollback_paths(args) -> int:
     return emit(payload, as_json=args.json)
 
 
+def cmd_rollback_sync(args) -> int:
+    if bool(args.all) == bool(args.path):
+        raise ValueError("pass exactly one of --all or at least one --path")
+    repo_name, repo_root = resolve_repo_root(args)
+    payload = rollback_sync(
+        repo_root,
+        to_ref=args.to_ref,
+        paths=list(args.path or []),
+        use_all=bool(args.all),
+    )
+    payload["repo"] = repo_name
+    payload["repo_root"] = str(repo_root)
+    return emit(payload, as_json=args.json)
+
+
 def main() -> int:
     parser = build_parser(
         cmd_registry=cmd_registry,
@@ -151,7 +175,10 @@ def main() -> int:
         cmd_commit=cmd_commit,
         cmd_commit_and_push=cmd_commit_and_push,
         cmd_push=cmd_push,
+        cmd_push_contract=cmd_push_contract,
+        cmd_rollback_contract=cmd_rollback_contract,
         cmd_rollback_paths=cmd_rollback_paths,
+        cmd_rollback_sync=cmd_rollback_sync,
     )
     args = parser.parse_args()
     return args.func(args)

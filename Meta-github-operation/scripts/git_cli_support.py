@@ -3,7 +3,7 @@ from __future__ import annotations
 import subprocess
 from pathlib import Path
 
-from rollback_support import path_exists_in_ref, prune_empty_path_ancestors, remove_explicit_path
+from rollback_support import normalize_explicit_paths, path_exists_in_ref, prune_empty_path_ancestors, remove_explicit_path
 from thread_claims_support import latest_claims_file, load_claim_paths
 
 
@@ -132,29 +132,47 @@ def pull_rebase(repo_root: Path, *, remote: str = "origin", branch: str | None =
     return {"remote": remote, "branch": branch or current_branch(repo_root)}
 
 
-def rollback_paths(repo_root: Path, *, to_ref: str, paths: list[str]) -> dict[str, object]:
-    if not paths:
-        raise ValueError("at least one --path is required")
+def rollback_sync(repo_root: Path, *, to_ref: str, paths: list[str] | None = None, use_all: bool = False) -> dict[str, object]:
+    if use_all:
+        run_git(repo_root, "restore", "--source", to_ref, "--staged", "--worktree", "--", ".", check=True)
+        run_git(repo_root, "clean", "-fdx", "--", ".", check=True)
+        return {
+            "to_ref": to_ref,
+            "mode": "all",
+            "paths": ["."],
+            "restored_paths": ["."],
+            "removed_paths": [],
+            "pruned_empty_dirs": [],
+        }
+
+    normalized_paths = normalize_explicit_paths(repo_root, list(paths or []))
     restore_paths: list[str] = []
     removed_paths: list[str] = []
-    for raw_path in paths:
+    for raw_path in normalized_paths:
+        remove_explicit_path(repo_root / raw_path)
         if path_exists_in_ref(run_git, repo_root, to_ref, raw_path):
             restore_paths.append(raw_path)
-            continue
-        remove_explicit_path(repo_root / raw_path)
-        removed_paths.append(raw_path)
+        else:
+            removed_paths.append(raw_path)
     if restore_paths:
-        run_git(repo_root, "restore", "--source", to_ref, "--", *restore_paths, check=True)
+        run_git(repo_root, "restore", "--source", to_ref, "--staged", "--worktree", "--", *restore_paths, check=True)
     pruned_dirs: list[str] = []
-    for raw_path in paths:
+    for raw_path in normalized_paths:
         pruned_dirs.extend(prune_empty_path_ancestors(repo_root, raw_path))
     return {
         "to_ref": to_ref,
-        "paths": paths,
+        "mode": "paths",
+        "paths": normalized_paths,
         "restored_paths": restore_paths,
         "removed_paths": removed_paths,
         "pruned_empty_dirs": sorted(set(pruned_dirs)),
     }
+
+
+def rollback_paths(repo_root: Path, *, to_ref: str, paths: list[str]) -> dict[str, object]:
+    payload = rollback_sync(repo_root, to_ref=to_ref, paths=paths, use_all=False)
+    payload["command"] = "rollback-paths"
+    return payload
 
 
 def resolve_commit_scope(

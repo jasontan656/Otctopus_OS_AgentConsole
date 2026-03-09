@@ -219,6 +219,9 @@ class MetaDefaultMdManagerCliTests(unittest.TestCase):
             source_root = Path(tmp) / "src"
             (source_root / "repo-a").mkdir(parents=True)
             (source_root / "repo-a" / "AGENTS.md").write_text("repo agents\n", encoding="utf-8")
+            (source_root / "Codex_Skills_Mirror").mkdir(parents=True)
+            (source_root / "Codex_Skills_Mirror" / "AGENTS.md").write_text("skill agents\n", encoding="utf-8")
+            (source_root / "AGENTS.md").write_text("root agents\n", encoding="utf-8")
 
             self.run_cli(
                 "scan",
@@ -238,6 +241,22 @@ class MetaDefaultMdManagerCliTests(unittest.TestCase):
             self.assertEqual(payload["target"]["target_kind"], "AGENTS.md")
             self.assertEqual(payload["turn_contract"]["status"], "n_a")
             self.assertIn("target-contract", payload["runtime_entry"]["cli"])
+
+            root_payload = self.run_cli(
+                "target-contract",
+                "--skill-root", str(skill_root),
+                "--source-path", str(source_root / "AGENTS.md"),
+            )
+            self.assertEqual(root_payload["turn_contract"]["status"], "enforced")
+            self.assertEqual(root_payload["turn_contract"]["turn_end"], ["print TURN_END guardrails"])
+
+            skills_payload = self.run_cli(
+                "target-contract",
+                "--skill-root", str(skill_root),
+                "--source-path", str(source_root / "Codex_Skills_Mirror" / "AGENTS.md"),
+            )
+            self.assertEqual(skills_payload["turn_contract"]["status"], "enforced")
+            self.assertIn("Constitution lint", " ".join(skills_payload["turn_contract"]["turn_end"]))
 
     def test_collect_fails_when_scan_report_missing(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

@@ -17,8 +17,10 @@
 - read_policy: `not_available`
 
 ## Turn Contract
-- status: `n_a`
+- status: `enforced`
 - turn_start:
-  - N/A
+  - use the returned target contract JSON as the runtime rule source
+  - if the turn will write Codex_Skills_Mirror, plan same-turn Constitution lint and Git traceability from the start
 - turn_end:
-  - N/A
+  - run Constitution lint on the concrete Codex_Skills_Mirror target root
+  - if the turn wrote Codex_Skills_Mirror, complete same-turn commit-and-push before closing the turn

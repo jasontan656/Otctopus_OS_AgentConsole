@@ -9,7 +9,7 @@
 - `python3 /home/jasontan656/AI_Projects/Codex_Skills_Mirror/2-Octupos-FullStack/scripts/Cli_Toolbox.py mother-doc-agents-target-contract --relative-path "octopus_os_root" --file-kind agents --json`
 
 2. TURN_START Contract
-- if the turn will write Octopus_OS, plan same-turn Constitution lint and Git traceability from the start
+- if the turn will write Octopus_OS, plan same-turn Constitution lint from the start
 - use the returned target contract JSON as the runtime rule source
 
 3. Peer Read Gate
@@ -28,4 +28,3 @@
 
 6. TURN_END Contract
 - if the turn wrote Octopus_OS, run Constitution lint on the concrete target root
-- finish same-turn commit-and-push for Octopus_OS before closing the turn

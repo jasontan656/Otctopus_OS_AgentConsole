@@ -25,5 +25,3 @@
   - choose READ_EXEC or WRITE_EXEC by write intent
 - turn_end:
   - print TURN_END guardrails
-  - run Constitution lint for each concrete affected repo
-  - if Octopus_OS or Codex_Skills_Mirror was written, complete same-turn commit-and-push

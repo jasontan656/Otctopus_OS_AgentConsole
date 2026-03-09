@@ -31,5 +31,3 @@
 
 6. TURN_END Contract
 - print TURN_END guardrails
-- run Constitution lint for each concrete affected repo
-- if Octopus_OS or Codex_Skills_Mirror was written, complete same-turn commit-and-push

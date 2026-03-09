@@ -3,6 +3,31 @@ from __future__ import annotations
 from pathlib import Path
 
 
+def normalize_explicit_paths(repo_root: Path, raw_paths: list[str]) -> list[str]:
+    if not raw_paths:
+        raise ValueError("at least one --path is required")
+    repo_resolved = repo_root.resolve()
+    normalized: list[str] = []
+    seen: set[str] = set()
+    for raw_path in raw_paths:
+        candidate = (repo_root / raw_path).resolve()
+        if candidate != repo_resolved and repo_resolved not in candidate.parents:
+            raise ValueError(f"path escapes repo root: {raw_path}")
+        rel_path = candidate.relative_to(repo_root).as_posix() if candidate != repo_resolved else "."
+        if rel_path in seen:
+            continue
+        seen.add(rel_path)
+        normalized.append(rel_path)
+    normalized.sort(key=lambda item: (len(Path(item).parts), item))
+    collapsed: list[str] = []
+    for rel_path in normalized:
+        path_obj = Path(rel_path)
+        if any(path_obj != Path(parent) and Path(parent) in path_obj.parents for parent in collapsed):
+            continue
+        collapsed.append(rel_path)
+    return collapsed
+
+
 def path_exists_in_ref(run_git, repo_root: Path, to_ref: str, raw_path: str) -> bool:
     completed = run_git(repo_root, "cat-file", "-e", f"{to_ref}:{raw_path}", check=False)
     return completed.returncode == 0
