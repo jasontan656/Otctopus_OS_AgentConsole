@@ -21,13 +21,13 @@ def _discover_targets(source_root: Path, skill_root: Path) -> list[Path]:
     results: set[Path] = set()
     for basename in RECURSIVE_TARGET_BASENAMES:
         for candidate in source_root.rglob(basename):
-            if is_excluded_scan_path(candidate, skill_root):
+            if is_excluded_scan_path(candidate, skill_root, source_root):
                 continue
             results.add(candidate.resolve())
     for candidate in explicit_target_paths(source_root):
         if not candidate.exists():
             continue
-        if is_excluded_scan_path(candidate, skill_root):
+        if is_excluded_scan_path(candidate, skill_root, source_root):
             continue
         results.add(candidate.resolve())
     return sorted(results, key=lambda path: path.as_posix())

@@ -1,0 +1,24 @@
+# Node
+node_modules/
+.npm/
+.pnpm-store/
+
+# Build outputs
+dist/
+build/
+.next/
+coverage/
+
+# Env
+.env
+.env.*
+!.env.example
+
+# Editor/OS
+.vscode/
+.idea/
+.DS_Store
+
+# Python cache (if tooling scripts are added)
+__pycache__/
+*.pyc

@@ -2,6 +2,12 @@
   "version": 1,
   "skill_name": "Meta-Default-md-manager",
   "description": "集中管理 workspace 内的常驻默认文档，运行态规则、约束与阶段指引必须通过 CLI 输出，不允许模型直接读取 markdown 获取指引。",
+  "scope_exclusions": {
+    "exclusive_external_manager_roots": [
+      "/home/jasontan656/AI_Projects/Octopus_OS"
+    ],
+    "reason": "Octopus_OS 内部 AGENTS.md/README.md 由 2-Octupos-FullStack 的 AGENTS/README manager 独占管理。"
+  },
   "runtime_access_policy": {
     "guidance_source": "cli_only_machine_contracts",
     "markdown_role": "human_audit_only",

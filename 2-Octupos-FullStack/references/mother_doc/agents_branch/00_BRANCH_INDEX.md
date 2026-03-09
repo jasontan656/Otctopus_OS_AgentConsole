@@ -16,9 +16,11 @@
 - `octopus_os_root`
   - 目标路径：`Octopus_OS/AGENTS.md`
   - 用途：总容器根索引，先引导模型理解章鱼OS技能锚点；如有需要，再读 `Octopus_OS/README.md`。
+  - 附加约束：该模板还承载 `Octopus_OS` 仓库级 GitHub 留痕规则。
 - `container_roots`
   - 目标路径：`Octopus_OS/<Container_Name>/AGENTS.md`
   - 用途：每个容器根自己的开发回写合同入口，并回指同层 `README.md`。
+  - 附加约束：`User_UI` 与 `Admin_UI` 的容器根模板需要额外提醒加载 `Meta-browser-operation`。
 - `mother_doc_docs`
   - 目标路径：`Octopus_OS/Mother_Doc/docs/**/AGENTS.md`
   - 用途：Mother_Doc 文档树的递归索引入口，并回指同层 `README.md`。

@@ -26,9 +26,6 @@
 5. Branch Routing Hook
 - Read-only: objective is only read/retrieve/analyze/audit/explain; no disk writes (no create/modify/delete/move/rename).
 - Non-read-only: any actual/potential write intent (create/modify/delete/move/rename) is Non-read-only.
-- `Meta-browser-operation` load gate:
-- Only read/load `Meta-browser-operation` when the task explicitly involves browser work or explicit frontend/browser operation, or when the user explicitly invokes that skill.
-- For non-browser tasks, and for tasks that do not explicitly involve frontend/browser operation, skip reading `Meta-browser-operation` entirely.
 - ROUTE print command (required):
 - `/home/jasontan656/.codex/skills/Meta-mindchain/scripts/meta_stage_guardrails.sh ROUTE`
 
@@ -57,17 +54,9 @@
 - propose a cleaner replacement path.
 - Do not soften this into a weak reminder and then proceed anyway.
 
-8. GitHub Hook (mandatory for write turns)
-- Use exactly one mapped unified CLI command with a complete commit message:
-- `python3 /home/jasontan656/.codex/skills/Meta-github-operation/scripts/Cli_Toolbox.py commit-and-push --repo Codex_Skills_Mirror --message "<commit message>" --use-latest-claims --auto-scope --allow-empty`
-- `python3 /home/jasontan656/.codex/skills/Meta-github-operation/scripts/Cli_Toolbox.py commit-and-push --repo OctuposOS_RunTime_Frontend --message "<commit message>" --use-latest-claims --auto-scope --allow-empty`
-- `python3 /home/jasontan656/.codex/skills/Meta-github-operation/scripts/Cli_Toolbox.py commit-and-push --repo Octopus_CodeBase_Backend --message "<commit message>" --use-latest-claims --auto-scope --allow-empty`
-- `python3 /home/jasontan656/.codex/skills/Meta-github-operation/scripts/Cli_Toolbox.py commit-and-push --repo OctuposOS_Runtime_Backend --message "<commit message>" --use-latest-claims --auto-scope --allow-empty`
-- `python3 /home/jasontan656/.codex/skills/Meta-github-operation/scripts/Cli_Toolbox.py commit-and-push --repo Octopus_CodeBase_Frontend --message "<commit message>" --use-latest-claims --auto-scope --allow-empty`
-
-9. Tool Failure Immediate-Repair Rules
+8. Tool Failure Immediate-Repair Rules
 - If any tool fails: analyze the cause, apply fix immediately.
-9.1 Deletion Safety Rules (Hard)
+8.1 Deletion Safety Rules (Hard)
 - The model is forbidden to use `rm -rf` under any circumstance.
 - For bulk deletions, use a `python3` command/script with explicit target paths.
 - For small deletions, use `apply_patch` deletion hunks.
@@ -79,10 +68,12 @@
 - Workspace boundary: `~/AI_Projects` is a multi-repo container root and is intentionally **not** a Git repo. Therefore `git -C /home/jasontan656/AI_Projects ...` failing at root is expected; always run Git commands inside a concrete child repository.
 - Repository independence: each project keeps independent Git boundaries (`.git`, `origin`, branches, history).
 - If a task already has explicit concrete source paths or concrete target repositories, discovery scope must stay inside those paths/repos; do not scan unrelated sibling repositories under `~/AI_Projects` just to gather more context.
-- [OctopusOS] Main code artifact directory: `/home/jasontan656/AI_Projects/Octopus_CodeBase_Backend`.
-- [OctopusOS] Main runtime directory: `/home/jasontan656/AI_Projects/OctuposOS_Runtime_Backend`.
-- [OctopusOS] Frontend runtime clone directory: `/home/jasontan656/AI_Projects/OctuposOS_RunTime_Frontend`.
-- [OctopusOS] Companion AGENTS sync rule: whenever `3-Octupos-OS-Backend` workflow/contract changes, review and sync `/home/jasontan656/AI_Projects/Octopus_CodeBase_Backend/AGENTS.md`; root AGENTS only owns workspace/runtime hooks, not chapter-specific backend workflow details.
+- [Repos] Active repository roots in this contract:
+  - `/home/jasontan656/AI_Projects/Octopus_OS`
+  - `/home/jasontan656/AI_Projects/Codex_Skills_Mirror`
+- [Repos] 其余 sibling 目录当前默认视为退役或非主动路由对象；除非用户显式点名，否则不要把它们当作 active repo 扩展扫描。
+- [OctopusOS] Unified workspace root: `/home/jasontan656/AI_Projects/Octopus_OS`.
+- [OctopusOS] Unified Mother_Doc root: `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc`.
 - [Skills] Primary skills directory: `/home/jasontan656/.codex/skills`.
 - [Skills] Runtime temp artifacts directory: `Codex_Skill_Runtime`.
 - [Skills] Final non-log results directory: `Codex_Skills_Result`.
@@ -108,5 +99,7 @@
 - If a `violation` is found, fix it, rerun the lint, and do not close the task until it passes.
 
 14. Closure
-- Ensure branch obligations are complete (read-only: no writes; non-read-only: include commit/push traceability).
+- Ensure branch obligations are complete:
+  - read-only: no writes, no commit/push
+  - non-read-only: follow the concrete child repository `AGENTS.md` if that repository defines its own GitHub traceability contract
 - Then output final result.

@@ -20,6 +20,9 @@ EXCLUDED_DIR_NAMES = {
     ".venv",
     "venv",
 }
+EXCLUDED_TOP_LEVEL_RELATIVE_DIRS = {
+    "Octopus_OS",
+}
 
 
 def resolve_skill_root(raw: str | None) -> Path:
@@ -81,10 +84,18 @@ def target_kind(source_root: Path, source_path: Path) -> str:
     return source_path.name
 
 
-def is_excluded_scan_path(candidate: Path, skill_root: Path) -> bool:
+def is_excluded_scan_path(candidate: Path, skill_root: Path, source_root: Path | None = None) -> bool:
     if ".git" in candidate.parts:
         return True
     if any(part in EXCLUDED_DIR_NAMES for part in candidate.parts):
         return True
     managed = managed_root(skill_root)
-    return candidate.is_relative_to(managed)
+    if candidate.is_relative_to(managed):
+        return True
+    source_root = (source_root or DEFAULT_SOURCE_ROOT).resolve()
+    resolved = candidate.resolve()
+    if resolved.is_relative_to(source_root):
+        relative = resolved.relative_to(source_root)
+        if relative.parts and relative.parts[0] in EXCLUDED_TOP_LEVEL_RELATIVE_DIRS:
+            return True
+    return False

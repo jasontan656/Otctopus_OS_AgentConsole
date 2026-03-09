@@ -10,7 +10,9 @@
   - `Octopus_OS/<Container_Name>/AGENTS.md`
   - `Octopus_OS/Mother_Doc/docs/**/AGENTS.md`
 - `Octopus_OS/AGENTS.md` 是总容器根入口，必须显式指向 `Octopus_OS/README.md` 与章鱼OS技能锚点。
+- `Octopus_OS/AGENTS.md` 还必须承载该仓库自己的 GitHub 留痕规则：仅当本仓库写入回合有文件变动时才触发 GitHub 收尾。
 - `Octopus_OS/<Container_Name>/AGENTS.md` 是容器根的开发回写合同入口，必须指向同级 `README.md`。
+- `Octopus_OS/User_UI/AGENTS.md` 与 `Octopus_OS/Admin_UI/AGENTS.md` 还必须提醒：前端开发、页面联调、浏览器测试、交互验证时加载 `Meta-browser-operation`。
 - `Octopus_OS/Mother_Doc/docs/**/AGENTS.md` 是文档树递归索引入口，必须指向同级 `README.md` 与同级实体文档。
 - `AGENTS.md` 管理是 `mother_doc` 阶段下的独立子分支，必须通过 `scan / collect / push` 明确分离。
 

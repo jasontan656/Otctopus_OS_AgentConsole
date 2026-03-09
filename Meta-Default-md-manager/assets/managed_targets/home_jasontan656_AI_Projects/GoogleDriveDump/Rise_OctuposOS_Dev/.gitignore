@@ -1,0 +1,73 @@
+###############################################
+# Rise_Lab - ignore: envs, deps, caches, logs
+# Keep Temp/tmp folders (no Temp/tmp patterns here)
+###############################################
+
+# --- Secrets ---
+.env
+.env.*
+!.env.example
+!.env.template
+!.env.sample
+
+# --- Logs ---
+log/
+logs/
+Log/
+Logs/
+LOG/
+LOGS/
+*.log
+*.log.*
+
+# --- Python virtual envs ---
+.venv/
+.venv*/
+venv/
+env/
+ENV/
+.venv-wsl/
+
+# --- Python caches ---
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.hypothesis/
+.coverage
+.coverage.*
+*.egg-info/
+
+# --- Node deps & caches ---
+node_modules/
+.pnpm-store/
+.npm/
+.yarn/
+.yarn-cache/
+.vite/
+.turbo/
+.parcel-cache/
+.next/cache/
+.nuxt/cache/
+
+# --- General caches ---
+.cache/
+
+# --- Local helper files (never commit) ---
+.codex_skill_roots/
+Rise/AI_WorkSpace/OpenClaw/
+Rise/AI_WorkSpace/Temp/front.md
+
+# --- Auto-generated promote reports (never commit) ---
+Rise/AI_WorkSpace/Temp/promote_*.md
+
+# --- OctuposOS runtime artifacts (standalone repo, AI-maintained) ---
+Rise/AI_WorkSpace/OctuposOS_Runtime/
+
+# --- Octopus workflow transient artifacts (never commit) ---
+Rise/AI_WorkSpace/Commands/workflows/Octopus_prompts_exec/scripts/tool_logs/
+Rise/AI_WorkSpace/Commands/workflows/Octopus_prompts_exec/scripts/run_artifacts/
+
+# --- Large local notes/artifacts (GitHub rejects >100MB) ---
+Rise/AI_WorkSpace/ChangeLog/Plans/**/baseline_rg_legacy_compat_fallback.txt

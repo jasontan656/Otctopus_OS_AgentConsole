@@ -25,6 +25,8 @@
 - 先看当前任务是否只需要技能锚点即可判断；若不足，再可选读取同层 `README.md`。
 - 再读章鱼OS全栈技能锚点，确认当前任务属于 `mother_doc`、`implementation` 还是 `evidence`。
 - 确认阶段后，再选择进入对应容器路径或 `Mother_Doc` 文档树，不跨到无关容器。
+- 如果本仓库在写入回合发生文件变动，则必须进行 GitHub 留痕；commit message 必须依据本轮实际变动内容编写。
+- 普通聊天、纯讨论、纯只读回合不触发 GitHub 收尾。
 
 ## 6. 索引契约
 - 当前根层 `AGENTS.md` 属于 `octopus_os_root` 分支。

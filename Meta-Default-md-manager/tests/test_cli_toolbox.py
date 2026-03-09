@@ -179,6 +179,9 @@ class MetaDefaultMdManagerCliTests(unittest.TestCase):
             source_root = Path(tmp) / "src"
             (source_root / "repo-a").mkdir(parents=True)
             (source_root / "repo-a" / "AGENTS.md").write_text("keep\n", encoding="utf-8")
+            (source_root / "Octopus_OS" / "User_UI").mkdir(parents=True)
+            (source_root / "Octopus_OS" / "AGENTS.md").write_text("octopus root\n", encoding="utf-8")
+            (source_root / "Octopus_OS" / "User_UI" / "AGENTS.md").write_text("octopus ui\n", encoding="utf-8")
             (source_root / "Human_Work_Zone" / "repo-b").mkdir(parents=True)
             (source_root / "Human_Work_Zone" / "repo-b" / "AGENTS.md").write_text("ignore\n", encoding="utf-8")
             (source_root / "Codex_Skill_Runtime" / "repo-c").mkdir(parents=True)
@@ -199,6 +202,8 @@ class MetaDefaultMdManagerCliTests(unittest.TestCase):
             )
             stale = list((skill_root / "assets" / "managed_targets").rglob("*Human_Work_Zone*"))
             self.assertEqual(stale, [])
+            octopus_stale = list((skill_root / "assets" / "managed_targets").rglob("*Octopus_OS*"))
+            self.assertEqual(octopus_stale, [])
 
     def test_collect_fails_when_scan_report_missing(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

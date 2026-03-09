@@ -7,6 +7,7 @@ description: "集中管理 workspace 内的常驻默认文档。显式分离 sca
 
 ## 1. 目标
 - 提供常驻默认文档的集中管理入口，默认管理 `AGENTS.md`、所有目录的 `.gitignore`、以及 `Octopus_CodeBase_Backend/README.md`、`Octopus_CodeBase_Backend/Deployment_Guide.md`。
+- `Octopus_OS` 是显式排除域；其内部全部 `AGENTS.md` / `README.md` 由 `2-Octupos-FullStack` 自己的 AGENTS/README manager 独占管理。
 - 统一 CLI 入口为 `scripts/Cli_Toolbox.py`。
 - 阶段命令必须显式分离：
   - `scan`

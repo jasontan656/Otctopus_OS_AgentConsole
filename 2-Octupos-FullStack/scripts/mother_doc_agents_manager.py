@@ -167,6 +167,8 @@ def build_octopus_root_agents(workspace_root: Path) -> str:
         "- 先看当前任务是否只需要技能锚点即可判断；若不足，再可选读取同层 `README.md`。",
         "- 再读章鱼OS全栈技能锚点，确认当前任务属于 `mother_doc`、`implementation` 还是 `evidence`。",
         "- 确认阶段后，再选择进入对应容器路径或 `Mother_Doc` 文档树，不跨到无关容器。",
+        "- 如果本仓库在写入回合发生文件变动，则必须进行 GitHub 留痕；commit message 必须依据本轮实际变动内容编写。",
+        "- 普通聊天、纯讨论、纯只读回合不触发 GitHub 收尾。",
         "",
         "## 6. 索引契约",
         "- 当前根层 `AGENTS.md` 属于 `octopus_os_root` 分支。",
@@ -271,6 +273,7 @@ def build_container_root_agents(container_root: Path, document_root: Path) -> st
             "- 如果当前任务需要确认容器用途、维护范围或当前阶段总结，可选读取同层 `README.md`。",
             "- 若任务是文档设计、需求回写或结构浏览，优先转入对应的 `Mother_Doc/docs` 路径。",
             "- 若任务是代码落盘或运行时处理，则留在当前容器路径，并同时回看对应的 `Mother_Doc/docs/<Container_Name>/common/`。",
+            "- 涉及前端开发、页面联调、浏览器测试或交互验证时，`User_UI` 与 `Admin_UI` 必须加载 `Meta-browser-operation`。",
             "",
             "## 5. 更新边界",
             "- 当前层只负责容器根入口与开发回写提醒，不替代容器内部正文。",
@@ -287,6 +290,8 @@ def build_container_root_agents(container_root: Path, document_root: Path) -> st
             "",
         ]
     )
+    if container_name not in {"User_UI", "Admin_UI"}:
+        lines.remove("- 涉及前端开发、页面联调、浏览器测试或交互验证时，`User_UI` 与 `Admin_UI` 必须加载 `Meta-browser-operation`。")
     return "\n".join(lines)
 
 
