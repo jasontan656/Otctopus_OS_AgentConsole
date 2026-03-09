@@ -75,8 +75,6 @@
 - [OctopusOS] Unified workspace root: `/home/jasontan656/AI_Projects/Octopus_OS`.
 - [OctopusOS] Unified Mother_Doc root: `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc`.
 - [Skills] Primary skills directory: `/home/jasontan656/.codex/skills`.
-- [Skills] Runtime temp artifacts directory: `Codex_Skill_Runtime`.
-- [Skills] Final non-log results directory: `Codex_Skills_Result`.
 - [Skills] Mirror directory: `/home/jasontan656/AI_Projects/Codex_Skills_Mirror`.
 - [Skills] Skill create/modify location must be `Codex_Skills_Mirror`.
 
