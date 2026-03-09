@@ -80,26 +80,13 @@
 - [Skills] Mirror directory: `/home/jasontan656/AI_Projects/Codex_Skills_Mirror`.
 - [Skills] Skill create/modify location must be `Codex_Skills_Mirror`.
 
-11. Governance/Constitution Violation Handling
-- If governance/constitution non-compliance is found, explicitly declare `violation`.
-- Fix the `violation` before continuing the original task.
-
 [TURN END - MANDATORY]
 
-12. TURN_END print command (required)
+11. TURN_END print command (required)
 - `/home/jasontan656/.codex/skills/Meta-mindchain/scripts/meta_stage_guardrails.sh TURN_END`
 
-13. Constitution Lint Gate (required)
-- Before final result, run Constitution-knowledge-base static lint:
-- `python3 /home/jasontan656/.codex/skills/Constitution-knowledge-base/scripts/run_constitution_lints.py --target <CONCRETE_TARGET_ROOT>`
-- `<CONCRETE_TARGET_ROOT>` must be the concrete child repository or concrete skill repository actually affected by the task.
-- If multiple repositories were affected, run the lint once per repository.
-- `/home/jasontan656/AI_Projects` itself is not a valid default target; always pick the real affected repository root.
-- Any non-zero exit, or any lint result containing `status=fail`, is a `violation`.
-- If a `violation` is found, fix it, rerun the lint, and do not close the task until it passes.
-
-14. Closure
+12. Closure
 - Ensure branch obligations are complete:
   - read-only: no writes, no commit/push
-  - non-read-only: follow the concrete child repository `AGENTS.md` if that repository defines its own GitHub traceability contract
+  - non-read-only: follow the concrete child repository `AGENTS.md` if that repository defines its own GitHub traceability or constitution/lint contract
 - Then output final result.

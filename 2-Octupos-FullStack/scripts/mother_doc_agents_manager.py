@@ -169,6 +169,8 @@ def build_octopus_root_agents(workspace_root: Path) -> str:
         "- 确认阶段后，再选择进入对应容器路径或 `Mother_Doc` 文档树，不跨到无关容器。",
         "- 如果本仓库在写入回合发生文件变动，则必须进行 GitHub 留痕；commit message 必须依据本轮实际变动内容编写。",
         "- 普通聊天、纯讨论、纯只读回合不触发 GitHub 收尾。",
+        "- 本仓库承担宪法技能与静态 lint 收口责任；写入本仓库时，必须对实际被修改的 concrete target root 运行 `Constitution-knowledge-base` static lint。",
+        "- 禁止把 `/home/jasontan656/AI_Projects` 当作 lint 目标；若出现非零退出或 `status=fail`，必须声明 `violation` 并修复后重跑。",
         "",
         "## 6. 索引契约",
         "- 当前根层 `AGENTS.md` 属于 `octopus_os_root` 分支。",
