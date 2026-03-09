@@ -7,6 +7,8 @@
     "role_definition",
     "workspace_root",
     "document_root",
+    "always_load_rules",
+    "stages",
     "rule_layers",
     "execution_model",
     "governance_rules"
@@ -18,6 +20,15 @@
   "role_definition": "未来项目 admin panel 内置的运营AI“章鱼”，负责持续维护 Mother_Doc、开发代码并回填 evidence。",
   "workspace_root": "/home/jasontan656/AI_Projects/Octopus_OS",
   "document_root": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/",
+  "always_load_rules": [
+    "rules/FULLSTACK_SKILL_HARD_RULES.md",
+    "references/runtime/SKILL_RUNTIME_CONTRACT.md"
+  ],
+  "stages": [
+    "mother_doc",
+    "implementation",
+    "evidence"
+  ],
   "rule_layers": {
     "skill_native_rules": "本技能如何工作、如何维护 Mother_Doc、如何落盘、如何回填 evidence。",
     "authored_rules": "各容器文档中定义的架构、技术栈、命名、合同、运维与运行时规则。"
@@ -26,6 +37,10 @@
   "governance_rules": [
     "文档、代码与 evidence 都是项目本体的一部分。",
     "技能内部规则不得覆盖 workspace/runtime 的外层硬合同。",
+    "任意阶段开始前，必须先加载顶层规则，不得丢弃。",
+    "阶段顺序固定为 mother_doc -> implementation -> evidence。",
+    "implementation 阶段必须显式引用 mother_doc 阶段产物。",
+    "evidence 阶段必须显式引用 mother_doc 与 implementation 阶段产物。",
     "唯一工作目录固定为 /home/jasontan656/AI_Projects/Octopus_OS。",
     "唯一文档承载目录固定为 /home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/。",
     "容器目录参考内容可以静态存在，但真实容器集合是项目驱动的动态集合。",

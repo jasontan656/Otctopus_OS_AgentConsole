@@ -13,6 +13,7 @@ from container_scaffold import (
     scaffold_common_tree,
     validate_container_name,
 )
+from stage_runtime import emit_stage_payload
 
 
 DEFAULT_WORKSPACE_ROOT = Path("/home/jasontan656/AI_Projects/Octopus_OS")
@@ -108,6 +109,27 @@ def build_parser() -> argparse.ArgumentParser:
     materialize.add_argument("--dry-run", action="store_true")
     materialize.add_argument("--json", action="store_true")
     materialize.set_defaults(func=materialize_layout)
+
+    mother_doc = subparsers.add_parser(
+        "mother-doc-stage",
+        help="print scope and carry-forward requirements for the mother_doc stage",
+    )
+    mother_doc.add_argument("--json", action="store_true")
+    mother_doc.set_defaults(func=lambda args: emit_stage_payload("mother_doc", as_json=args.json))
+
+    implementation = subparsers.add_parser(
+        "implementation-stage",
+        help="print scope and carry-forward requirements for the implementation stage",
+    )
+    implementation.add_argument("--json", action="store_true")
+    implementation.set_defaults(func=lambda args: emit_stage_payload("implementation", as_json=args.json))
+
+    evidence = subparsers.add_parser(
+        "evidence-stage",
+        help="print scope and carry-forward requirements for the evidence stage",
+    )
+    evidence.add_argument("--json", action="store_true")
+    evidence.set_defaults(func=lambda args: emit_stage_payload("evidence", as_json=args.json))
     return parser
 
 

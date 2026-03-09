@@ -6,7 +6,10 @@
 - 工具统一命名为 `Cli_Toolbox.<tool_name>`。
 
 ## 工具清单
+- `Cli_Toolbox.mother_doc_stage` -> `scripts/Cli_Toolbox.py mother-doc-stage`
 - `Cli_Toolbox.materialize_container_layout` -> `scripts/Cli_Toolbox.py materialize-container-layout`
+- `Cli_Toolbox.implementation_stage` -> `scripts/Cli_Toolbox.py implementation-stage`
+- `Cli_Toolbox.evidence_stage` -> `scripts/Cli_Toolbox.py evidence-stage`
 
 ## 叙事式使用说明（固定格式）
 
@@ -24,6 +27,33 @@
 - 人类叙事版输出：
   - 返回已创建目录、已存在目录、已创建文档文件与命名告警，便于继续写文档和落代码。
 
+### Cli_Toolbox.mother_doc_stage
+- 人类叙事版输入：
+  - 需要进入 `mother_doc` 阶段并确认其作用域、必须加载的顶层规则、以及它产出什么。
+- 电脑动作发生了什么：
+  - 调用 `scripts/Cli_Toolbox.py mother-doc-stage`。
+  - 输出 `mother_doc` 阶段的 scope、must_load、requires、produces。
+- 人类叙事版输出：
+  - 返回 `mother_doc` 阶段合同，供当前回合约束使用。
+
+### Cli_Toolbox.implementation_stage
+- 人类叙事版输入：
+  - 需要进入 `implementation` 阶段并确认它必须显式承接哪些前序内容。
+- 电脑动作发生了什么：
+  - 调用 `scripts/Cli_Toolbox.py implementation-stage`。
+  - 输出 `implementation` 阶段的 scope、must_load、requires、produces。
+- 人类叙事版输出：
+  - 返回 `implementation` 阶段合同，明确必须承接 `mother_doc` 产物。
+
+### Cli_Toolbox.evidence_stage
+- 人类叙事版输入：
+  - 需要进入 `evidence` 阶段并确认它必须显式承接哪些前序内容。
+- 电脑动作发生了什么：
+  - 调用 `scripts/Cli_Toolbox.py evidence-stage`。
+  - 输出 `evidence` 阶段的 scope、must_load、requires、produces。
+- 人类叙事版输出：
+  - 返回 `evidence` 阶段合同，明确必须承接 `mother_doc` 与 `implementation` 产物。
+
 ## 示例命令（强制）
 - 最小用途描述：
   - 根据 AI 已判定的容器名，创建工作目录、`Mother_Doc` 同名目录，以及对应容器族的 `common/` 抽象层骨架。
@@ -33,7 +63,10 @@
   - 必须包含管道（例如 `| sed -n '1,200p'`）以便快速查看结果。
   - 命令必须能一键直达脚本预期参数并得到可复现输出。
 - 示例：
+  - `cd /home/jasontan656/AI_Projects/Codex_Skills_Mirror/2-Octupos-FullStack && python3 scripts/Cli_Toolbox.py mother-doc-stage --json | sed -n '1,200p'`
   - `cd /home/jasontan656/AI_Projects/Codex_Skills_Mirror/2-Octupos-FullStack && python3 scripts/Cli_Toolbox.py materialize-container-layout --container Mother_Doc --container User_UI --container Mongo_DB --dry-run --json | sed -n '1,220p'`
+  - `cd /home/jasontan656/AI_Projects/Codex_Skills_Mirror/2-Octupos-FullStack && python3 scripts/Cli_Toolbox.py implementation-stage --json | sed -n '1,200p'`
+  - `cd /home/jasontan656/AI_Projects/Codex_Skills_Mirror/2-Octupos-FullStack && python3 scripts/Cli_Toolbox.py evidence-stage --json | sed -n '1,200p'`
 
 ## 参数与结果（供 AI/工程使用）
 - 输入：

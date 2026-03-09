@@ -1,4 +1,11 @@
 modules:
+  - module_id: mother_doc_stage
+    tool_alias: Cli_Toolbox.mother_doc_stage
+    entrypoint: scripts/Cli_Toolbox.py mother-doc-stage
+    status: active
+    docs:
+      usage: references/tooling/Cli_Toolbox_USAGE.md
+      module: references/tooling/development/modules/mother_doc_stage.md
   - module_id: materialize_container_layout
     tool_alias: Cli_Toolbox.materialize_container_layout
     entrypoint: scripts/Cli_Toolbox.py materialize-container-layout
@@ -6,3 +13,17 @@ modules:
     docs:
       usage: references/tooling/Cli_Toolbox_USAGE.md
       module: references/tooling/development/modules/materialize_container_layout.md
+  - module_id: implementation_stage
+    tool_alias: Cli_Toolbox.implementation_stage
+    entrypoint: scripts/Cli_Toolbox.py implementation-stage
+    status: active
+    docs:
+      usage: references/tooling/Cli_Toolbox_USAGE.md
+      module: references/tooling/development/modules/implementation_stage.md
+  - module_id: evidence_stage
+    tool_alias: Cli_Toolbox.evidence_stage
+    entrypoint: scripts/Cli_Toolbox.py evidence-stage
+    status: active
+    docs:
+      usage: references/tooling/Cli_Toolbox_USAGE.md
+      module: references/tooling/development/modules/evidence_stage.md
