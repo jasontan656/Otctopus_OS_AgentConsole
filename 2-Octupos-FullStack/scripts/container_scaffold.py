@@ -123,12 +123,14 @@ def build_common_file_body(name: str, family: str, domain: str, topic: str) -> l
                 "This file records implementation batches after Mother_Doc updates.",
                 "Compare current code first, then compare the updated Mother_Doc state, and log the resulting implementation work.",
                 "When there is no code yet, record the current authored-document state as the initial implementation batch.",
+                "Log entries keep only summary-level traceability; the summary must match the Git commit message for the same write turn.",
             ]
         if topic == "deployment_batches":
             return [
                 "This file records deployment checkpoints once the project reaches a deployable state.",
                 "Each entry acts as an operational release checkpoint without introducing internal document version branches.",
                 "Bind each deployment checkpoint back to the corresponding implementation batch and runtime witness.",
+                "Log entries keep only summary-level traceability; the summary must match the Git commit message for the same write turn.",
             ]
         if topic == "log_entry_contract":
             return [
@@ -148,6 +150,8 @@ def build_common_file_body(name: str, family: str, domain: str, topic: str) -> l
                 "",
                 "This file defines the fixed fields required for implementation and deployment log entries.",
                 "Each log entry must remain append-oriented and mechanically readable.",
+                "The `summary` field is the local log summary and must exactly match the Git commit message for the same write turn.",
+                "Detailed file/code changes stay in Git and GitHub history; the log only keeps the summary-level breadcrumb.",
                 "Keep the contract aligned with the actual logging workflow used by implementation and evidence stages.",
             ]
         if topic == "comparison_basis":

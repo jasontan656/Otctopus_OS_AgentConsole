@@ -64,6 +64,7 @@ def append_log_entry(
         "kind": kind,
         "target": str(target),
         "summary": summary,
+        "traceability_mode": "summary_equals_git_commit_message",
         "doc_paths": doc_paths,
         "code_paths": code_paths,
         "dry_run": dry_run,

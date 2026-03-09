@@ -107,12 +107,12 @@ description: "未来项目 admin panel 内置的运营AI“章鱼”，负责 mo
   - 必须显式承接 `mother_doc` 当前状态产物。
   - 必须像独立人类开发者一样自行发现问题、安装依赖、修复环境、运行测试、启动服务、验证行为、直至达到产品上线级交付标准。
   - 必须主动发现 `Mother_Doc` 与实际代码库/运行时的不一致，并在代码与文档两侧做对齐更新。
-  - 每次批量文档更新进入实现后，必须先读代码、再读更新后的文档，并在完成对齐后追加 implementation batch 日志。
+  - 每次批量文档更新进入实现后，必须先读代码、再读更新后的文档，并在完成对齐后追加 implementation batch 日志；日志 `summary` 必须等于同轮 Git 提交 message。
 - `evidence`：
   - 必须显式承接 `mother_doc + implementation` 当前状态产物。
   - `evidence` 的 graph 主体是 `OS_graph`，不再是单纯 `code graph`。
   - `OS_graph` 同时管理文档结构、代码结构、模块映射与 evidence 绑定关系。
-  - 当系统达到可部署状态或产生真实上线 witness 时，必须追加 deployment checkpoint 日志。
+  - 当系统达到可部署状态或产生真实上线 witness 时，必须追加 deployment checkpoint 日志；日志 `summary` 必须等于同轮 Git 提交 message。
 
 ## 4. 规则约束
 - 抽象总则：
@@ -161,10 +161,10 @@ description: "未来项目 admin panel 内置的运营AI“章鱼”，负责 mo
   - 目录结构就是实现组织的主参照。
   - 每个模块 = 一个文档；每个模块 helper = 一个 helper 文档。
   - 模型默认要像独立开发者一样逐步推进：发现、实现、修复、测试、bring-up、验证、交付。
-  - `Mother_Doc/Mother_Doc/common/development_logs/` 是项目内部开发时间线与版本检查点载体。
+  - `Mother_Doc/Mother_Doc/common/development_logs/` 是项目内部开发时间线与版本检查点载体；日志看摘要，具体改动回到 Git / GitHub。
 - `evidence`：
   - `OS_graph` 是文档图与代码图的统一视图。
-  - evidence 必须能回指到同一层级结构中的模块文档、helper 文档、代码模块、开发日志与运行 witness。
+  - evidence 必须能回指到同一层级结构中的模块文档、helper 文档、代码模块、开发日志、Git 追踪与运行 witness。
 
 ## 6. 内联导航索引
 - 抽象总则：

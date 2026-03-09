@@ -59,4 +59,5 @@
 39. `evidence` 阶段的 graph 主体是 `OS_graph`，它同时管理文档 graph、代码 graph、模块映射、日志节点与 evidence 绑定。
 40. evidence 必须是真实 witness，不得伪造，不得把 `OS_graph` 降级成只解释代码的附属图。
 41. deployment checkpoint 只能在存在真实部署/上线 witness 时追加到 `Octopus_OS/Mother_Doc/Mother_Doc/common/development_logs/deployment_batches.md`。
-42. `mother_doc`、`implementation`、`evidence` 的回填都采用覆盖写入，只维护当前状态；项目内部不规划文档版本，但开发/部署日志承担时间线与检查点语义。
+42. 开发/部署日志只保留摘要；该摘要必须等于同轮 Git 提交 message，具体文件与代码改动由 Git / GitHub 承担追踪。
+43. `mother_doc`、`implementation`、`evidence` 的回填都采用覆盖写入，只维护当前状态；项目内部不规划文档版本，但开发/部署日志承担时间线与检查点语义。
