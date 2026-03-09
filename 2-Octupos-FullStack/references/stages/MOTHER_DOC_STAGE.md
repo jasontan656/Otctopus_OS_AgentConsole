@@ -7,7 +7,7 @@
 - 强化当前用户意图。
 - 先从 `mother_doc` 分支索引选择子链，再递归读取 `Mother_Doc` 当前索引树。
 - 仅在 `Mother_Doc` 树内维护 `README.md`、`AGENTS.md`、`<folder_name>.md`、`common/` 与容器骨架。
-- 给受影响的非 `AGENTS.md` 文档回填 `Document Status + Block Registry`，并标记为 `pending_implementation`。
+- 给受影响的非 `AGENTS.md` 文档回填 `Document Status + Block Registry`，并通过本地 `git` 差异脚本标记为 `modified` / `null` / 保留 `developed`。
 - 禁止写开发日志、部署日志与 Git / GitHub 留痕。
 
 ## Branch Entry
@@ -27,7 +27,7 @@
 6. 递归选择直到完整影响面被覆盖。
 7. 覆盖写回当前状态，并仅在 `Mother_Doc` 内刷新受影响目录的三类固定文件，以及 `overview / features / shared / common` 中实际命中的内容。
 8. 若还有未收口点，则把问题写入受影响容器的 `features/open_questions.md` 或 `shared/open_questions.md`，供后续 `question_backfill` 使用。
-9. 对受影响的非 `AGENTS.md` 文档同步写入 `Document Status + Block Registry`，把对应区块标记为 `requires_development: true`。
+9. 对受影响的非 `AGENTS.md` 文档同步写入 `Document Status + Block Registry`，然后运行基于本地 `git` 差异的状态脚本，统一把被改动文档标为 `modified`。
 10. 结束时只保留覆盖后的当前状态，不写日志、不做版本留痕。
 
 ## Produces
@@ -35,5 +35,5 @@
 - `Mother_Doc/docs` 当前状态目录树
 - 容器级文档
 - 结构级索引
-- 文档级与区块级 `pending_implementation` 状态信号
+- 文档级与区块级 `modified / developed / null` 状态信号
 - `implementation` 阶段输入

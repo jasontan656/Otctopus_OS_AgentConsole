@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 from __future__ import annotations
-
 import argparse
-
 from agents_branch_ops import (
     mother_doc_agents_collect,
     mother_doc_agents_contract,
@@ -26,6 +24,7 @@ from toolbox_ops import (
     materialize_layout,
     sync_mother_doc_navigation,
     sync_mother_doc_status,
+    sync_mother_doc_status_from_git,
 )
 
 
@@ -113,11 +112,23 @@ def build_parser() -> argparse.ArgumentParser:
     status.add_argument("--stage", choices=("mother_doc", "implementation", "evidence"), required=True)
     status.add_argument("--path", action="append", default=[], help="relative Mother_Doc path; repeat for multiple files or directories")
     status.add_argument("--block-id", action="append", default=[], help="block id to write into the registry; repeat for multiple blocks")
-    status.add_argument("--sync-status", default="pending_implementation", help="mechanical sync status string")
-    status.add_argument("--requires-development", action=argparse.BooleanOptionalAction, default=True)
+    status.add_argument("--lifecycle-state", choices=("modified", "developed", "null"), required=True, help="mechanical lifecycle state")
     status.add_argument("--dry-run", action="store_true")
     status.add_argument("--json", action="store_true")
     status.set_defaults(func=sync_mother_doc_status)
+
+    status_from_git = subparsers.add_parser(
+        "sync-mother-doc-status-from-git",
+        help="derive Mother_Doc lifecycle states from local git-backed diff plus existing state carry-forward",
+    )
+    status_from_git.add_argument("--repo-root", default=str(DEFAULT_WORKSPACE_ROOT), help="Octopus_OS repo root")
+    status_from_git.add_argument("--document-root", default=str(DEFAULT_DOCUMENT_ROOT), help="Mother_Doc root")
+    status_from_git.add_argument("--stage", choices=("mother_doc",), default="mother_doc")
+    status_from_git.add_argument("--path", action="append", default=[], help="relative Mother_Doc path; repeat for multiple files or directories")
+    status_from_git.add_argument("--block-id", action="append", default=[], help="block id to write into the registry; repeat for multiple blocks")
+    status_from_git.add_argument("--dry-run", action="store_true")
+    status_from_git.add_argument("--json", action="store_true")
+    status_from_git.set_defaults(func=sync_mother_doc_status_from_git)
 
     implementation_log = subparsers.add_parser(
         "append-implementation-log",
@@ -202,7 +213,5 @@ def main() -> int:
     parser = build_parser()
     args = parser.parse_args()
     return args.func(args)
-
-
 if __name__ == "__main__":
     raise SystemExit(main())

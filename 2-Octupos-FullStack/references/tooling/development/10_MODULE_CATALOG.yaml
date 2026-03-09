@@ -52,6 +52,12 @@ modules:
     tool_alias: Cli_Toolbox.sync_mother_doc_status
     entrypoint: scripts/Cli_Toolbox.py sync-mother-doc-status
     status: active
+    stage_scope: evidence
+  - module_id: sync_mother_doc_status_from_git
+    tool_alias: Cli_Toolbox.sync_mother_doc_status_from_git
+    entrypoint: scripts/Cli_Toolbox.py sync-mother-doc-status-from-git
+    status: active
+    stage_scope: mother_doc
   - module_id: mother_doc_stage
     tool_alias: Cli_Toolbox.mother_doc_stage
     entrypoint: scripts/Cli_Toolbox.py mother-doc-stage

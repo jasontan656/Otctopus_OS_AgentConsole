@@ -17,11 +17,11 @@
   - `common/`
 - 上述刷新只发生在 `Octopus_OS/Mother_Doc/**` 内，不写入实际工作目录容器。
 - 任何受影响的非 `AGENTS.md` 文档都必须同步刷新 `Document Status + Block Registry`。
-- 默认回填值固定为：
-  - `doc_requires_development: true`
-  - `doc_sync_status: pending_implementation`
-  - `requires_development: true`
-  - `sync_status: pending_implementation`
+- `mother_doc` 结束前必须运行本地 `git` 驱动的状态脚本：
+  - 有差异 -> `modified`
+  - 无差异但已是已开发状态 -> 保持 `developed`
+  - 暂不适用或正文为空 -> `null`
+- `mother_doc` 阶段不直接写 `developed`；`developed` 只能由 `evidence` 在闭环完成后回写。
 
 ## Structural Rule
 
@@ -40,4 +40,5 @@
   - `architecture/os_graph_layer_model.md`
   - `contracts/cross_container_contract_baseline.md`
   - `contracts/doc_code_binding_contract.md`
+  - `contracts/document_lifecycle_status_contract.md`
   - `contracts/evidence_minimum_witness.md`

@@ -34,7 +34,8 @@
 - `python3 scripts/Cli_Toolbox.py mother-doc-agents-scan --json`
 - `python3 scripts/Cli_Toolbox.py mother-doc-agents-collect --json`
 - `python3 scripts/Cli_Toolbox.py mother-doc-agents-push --json`
-- `python3 scripts/Cli_Toolbox.py sync-mother-doc-status --stage <mother_doc|implementation|evidence> --path <relative-path> --sync-status <pending_implementation|aligned> [--requires-development|--no-requires-development] --json`
+- `python3 scripts/Cli_Toolbox.py sync-mother-doc-status --stage <mother_doc|implementation|evidence> --path <relative-path> --lifecycle-state <modified|developed|null> --json`
+- `python3 scripts/Cli_Toolbox.py sync-mother-doc-status-from-git --repo-root /home/jasontan656/AI_Projects/Octopus_OS --stage mother_doc --path <relative-path> --json`
 - `python3 scripts/Cli_Toolbox.py append-implementation-log --summary "<git-commit-message>" --doc-path <doc-path> --code-path <code-path> --json`
 - `python3 scripts/Cli_Toolbox.py append-deployment-log --summary "<git-commit-message>" --doc-path <doc-path> --code-path <code-path> --json`
 

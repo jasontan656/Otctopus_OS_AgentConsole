@@ -42,8 +42,9 @@
 - `<folder_name>.md`
 20. `AGENTS.md` 之外的 `Mother_Doc/docs` markdown 必须带有 `Document Status + Block Registry`。
 21. 每次 `mother_doc` 更新非 `AGENTS.md` 文档后，必须把文档级与区块级状态同步标记为：
+- `lifecycle_state: modified`
 - `requires_development: true`
-- `sync_status: pending_implementation`
+- `sync_status: modified`
 22. 文档如未细分多个区块，默认必须至少存在一个 `block_id: primary`。
 23. `README.md` 只承担当前层用途说明。
 24. `AGENTS.md` 只承担当前层递归索引。
@@ -56,6 +57,7 @@
 31. `AGENTS manager` 固定采用 `scan / collect / push` 三阶段；不得与普通文档正文覆盖写回混写。
 32. 完成子分支判定后，必须从 `Octopus_OS/Mother_Doc/docs/` 根层 `README.md + AGENTS.md + Mother_Doc.md` 进入，再逐层读取当前层 `README.md + AGENTS.md + <folder_name>.md`，递归覆盖完整影响面。
 33. `mother_doc` 阶段禁止写开发日志、部署日志与 Git / GitHub 留痕；本阶段只负责覆盖式更新当前文档状态。
+33.1 `mother_doc` 结束前必须运行本地 `git` 驱动的状态脚本；变更文档写成 `modified`，空占位写成 `null`，清洁但已闭环的文档保持 `developed`。
 34. 产物域规则必须分域承载，不得把 UI、Gateway、Service、Data_Infra 全部收敛为统一的 `mother_doc` 文档规则。
 35. 各产物域至少固定包含：
 - 一套 `writing_guides`
@@ -77,7 +79,7 @@
 49. `implementation` 阶段发现 `Mother_Doc/docs` 与代码库/运行时不一致时，必须显式更新代码、文档或两者以恢复一致，不得忽略 drift。
 50. `implementation` 进入具体容器前，必须先读取对应域族的 `implementation` 规则与 `dev_canon`，然后再读取该容器自己的 `common/code_abstractions` 与其他文档层。
 51. `implementation` 规则属于技能运行规则与域族规则，不得下沉到 `Mother_Doc` 产物模板中。
-52. `implementation` 只负责差异识别、代码施工与对齐回写；实现完成后，必须把对应文档/区块状态从 `pending_implementation` 回写为 `aligned`。
+52. `implementation` 只负责差异识别、代码施工与对齐回写；本阶段消费 `modified` 状态，但不得把状态提前改成 `developed`。
 53. `implementation` 阶段禁止写开发日志、部署日志与 Git / GitHub 留痕；这些留痕只能在 `evidence` 或 `implementation -> evidence` 联动中完成。
 54. 首次无代码时，implementation 仍必须按“先读代码、再读更新后文档”的比较顺序施工；空代码基线也是有效比较对象。
 55. 只有在本地可控范围内的依赖修复、环境修复、配置补齐、服务拉起、测试执行都已穷尽后，才允许进入真实 blocked 状态。
@@ -86,4 +88,5 @@
 58. evidence 必须是真实 witness，不得伪造，不得把 `OS_graph` 降级成只解释代码的附属图。
 59. implementation batch 与 deployment checkpoint 都只能在 `evidence` 阶段追加到 `Octopus_OS/Mother_Doc/docs/Mother_Doc/common/development_logs/`。
 60. `evidence` 阶段独占 Git / GitHub 留痕；开发/部署日志只保留摘要，该摘要必须等于同轮 Git 提交 message，具体文件与代码改动由 Git / GitHub 承担追踪。
+60.1 `evidence` 在 graph、日志和 witness 闭环完成后，必须把对应文档/区块状态回写为 `developed`。
 61. `mother_doc`、`implementation`、`evidence` 的回填都采用覆盖写入，只维护当前状态；项目内部不规划文档版本，但开发/部署日志承担时间线与检查点语义。

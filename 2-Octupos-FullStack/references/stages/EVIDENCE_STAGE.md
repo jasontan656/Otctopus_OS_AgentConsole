@@ -15,7 +15,7 @@
 2. 以 `OS_graph` 的四层模型组织总览文档、共享合同、代码模块、helper、父级目录与 witness。
 3. 把 graph 运行产物写回 `Octopus_OS/Mother_Doc/graph/`。
 4. 先把 implementation 的对齐结果写成 implementation batch。
-5. 把真实 evidence 回填到对应的文档节点与代码节点。
+5. 把真实 evidence 回填到对应的文档节点与代码节点，并把已闭环范围的文档/区块状态回写为 `developed`。
 6. 如已形成真实部署/上线 witness，则追加 deployment checkpoint。
 7. 在同轮留痕中统一写入 Git / GitHub 摘要追踪。
 8. 覆盖写回当前状态，不保留项目内部版本分支。

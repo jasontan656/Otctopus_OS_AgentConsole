@@ -87,8 +87,8 @@ STAGE_COMMANDS = {
                 "purpose": "refresh README.md, AGENTS.md, and same-name scope markdown files across the Mother_Doc tree only",
             },
             {
-                "command": "python3 scripts/Cli_Toolbox.py sync-mother-doc-status --stage mother_doc --path <relative-path> --sync-status pending_implementation --requires-development --json",
-                "purpose": "mark affected Mother_Doc documents and block registries as requiring implementation after a document-side change",
+                "command": "python3 scripts/Cli_Toolbox.py sync-mother-doc-status-from-git --repo-root /home/jasontan656/AI_Projects/Octopus_OS --stage mother_doc --path <relative-path> --json",
+                "purpose": "derive modified / developed / null lifecycle states from local git-backed diff after mother_doc writeback",
             },
             {
                 "command": "direct_writeback -> update overview/features/shared/common for the affected container scopes only",
@@ -137,8 +137,8 @@ STAGE_COMMANDS = {
                 "purpose": "act like an independent human developer: install dependencies, repair runtime, run tests, bring up services, and verify real behavior",
             },
             {
-                "command": "python3 scripts/Cli_Toolbox.py sync-mother-doc-status --stage implementation --path <relative-path> --sync-status aligned --no-requires-development --json",
-                "purpose": "flip affected Mother_Doc documents from pending implementation to aligned after code and docs match again",
+                "command": "collect aligned code/doc scope and hand it to evidence without flipping lifecycle state inside implementation",
+                "purpose": "implementation consumes modified documents but does not close the traceability lifecycle on its own",
             },
         ],
     },
@@ -157,6 +157,10 @@ STAGE_COMMANDS = {
             {
                 "command": "project-native validation / smoke / test / health-check commands chosen from the actual codebase",
                 "purpose": "collect real delivery witnesses after implementation bring-up instead of fabricating completion status",
+            },
+            {
+                "command": "python3 scripts/Cli_Toolbox.py sync-mother-doc-status --stage evidence --path <relative-path> --lifecycle-state developed --json",
+                "purpose": "flip affected Mother_Doc documents and block registries to developed once evidence closes the loop",
             },
             {
                 "command": "python3 scripts/Cli_Toolbox.py append-implementation-log --summary \"<summary>\" --doc-path <doc-path> --code-path <code-path> --json",
@@ -182,7 +186,7 @@ STAGE_GRAPH_CONTRACTS = {
             "Document Status + Block Registry -> mechanical change-detection node",
         ],
         "tooling_mode": "contract_first",
-        "action_rule": "keep the Mother_Doc tree structurally complete and mark changed document blocks as pending implementation so later code and evidence can map onto the same graph",
+        "action_rule": "keep the Mother_Doc tree structurally complete and mark changed document blocks as modified so later code and evidence can map onto the same graph",
     },
     "implementation": {
         "graph_name": "OS_graph",
@@ -194,7 +198,7 @@ STAGE_GRAPH_CONTRACTS = {
             "code file / package / runtime artifact -> implementation node",
         ],
         "tooling_mode": "contract_first",
-        "action_rule": "detect doc-code drift, align code and Mother_Doc to the same current-state structure, and flip block statuses before handing the aligned scope to evidence for traceability",
+        "action_rule": "detect doc-code drift, align code and Mother_Doc to the same current-state structure, and hand the aligned scope to evidence without prematurely closing the lifecycle state",
     },
     "evidence": {
         "graph_name": "OS_graph",
@@ -229,7 +233,7 @@ STAGE_CHECKLISTS = {
             "updated README.md, AGENTS.md, and <folder_name>.md for affected Mother_Doc scopes only",
             "affected overview/features/shared/common docs are aligned with the current explicit user intent",
             "unresolved scope is written into the correct open-question docs when question_backfill is still pending",
-            "affected non-AGENTS Mother_Doc markdown files are marked as pending implementation in their document/block status sections",
+            "affected non-AGENTS Mother_Doc markdown files are marked as modified/null/developed according to the git-backed lifecycle status rules",
             "implementation inputs ready",
         ],
     },
@@ -247,7 +251,7 @@ STAGE_CHECKLISTS = {
         ],
         "exit_requirements": [
             "code and Mother_Doc are aligned to the same current-state structure",
-            "affected document/block statuses are flipped away from pending implementation where implementation actually landed",
+            "aligned implementation scope is ready for evidence to flip lifecycle states to developed",
             "dependencies, runtime, and tests are handled to product-delivery standard within local control",
             "the aligned implementation scope is ready for evidence-stage traceability",
             "evidence inputs are ready",

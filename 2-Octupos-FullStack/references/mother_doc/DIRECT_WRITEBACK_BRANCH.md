@@ -24,5 +24,5 @@
 ## Output
 
 - 更新后的当前状态文档
-- `pending_implementation` 状态块
+- `modified / developed / null` 生命周期状态块
 - 供后续 `question_backfill` 或 `implementation` 使用的明确缺口

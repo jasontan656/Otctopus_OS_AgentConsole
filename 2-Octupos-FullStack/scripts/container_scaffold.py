@@ -22,7 +22,7 @@ FAMILY_FILE_MAP: dict[str, dict[str, tuple[str, ...]]] = {
         "code_abstractions/architecture": ("role", "boundary", "container_mapping", "visualization_mapping", "writeback_model", "authored_doc_layer_model", "question_backfill_model"),
         "code_abstractions/stack": ("storage_model", "access_model", "graph_model", "indexing_model"),
         "code_abstractions/naming": ("directory_naming", "file_naming", "node_naming", "container_naming"),
-        "code_abstractions/contracts": ("read_api", "writeback_api", "evidence_contract", "sync_contract", "doc_code_binding_contract"),
+        "code_abstractions/contracts": ("read_api", "writeback_api", "evidence_contract", "sync_contract", "doc_code_binding_contract", "document_lifecycle_status_contract"),
         "code_abstractions/operations": ("maintenance_entry", "query_commands", "change_policy", "recovery_entry"),
         "dev_canon": ("stack_selection_canon", "architecture_selection_canon", "automation_scope"),
         "development_logs": ("implementation_batches", "deployment_batches", "log_entry_contract", "comparison_basis"),
@@ -176,6 +176,26 @@ def build_common_file_body(name: str, family: str, domain: str, topic: str) -> l
             f"Container family: `{family}`.",
             "Use it to define how semantic documentation units bind to implementation slices and later evidence/graph nodes.",
             "This file is part of the authored Mother_Doc template and is not the implementation-stage execution rule itself.",
+        ]
+    if domain == "code_abstractions/contracts" and topic == "document_lifecycle_status_contract":
+        return [
+            "## Contract Markers",
+            "",
+            "contract_name: document_lifecycle_status_contract",
+            "contract_version: v0",
+            "validation_mode: placeholder",
+            "required_fields:",
+            "- lifecycle_state",
+            "- doc_requires_development",
+            "- sync_status",
+            "optional_fields:",
+            "- transition_rule",
+            "- stage_owner",
+            "",
+            f"This file defines `{topic}` for the `{name}` container's code abstraction layer.",
+            f"Container family: `{family}`.",
+            "Use it to define the three-state lifecycle model: modified, developed, and null.",
+            "mother_doc derives modified/null from local git-backed diff, implementation consumes modified, and evidence closes the loop by writing developed.",
         ]
     if domain == "code_abstractions/architecture" and topic == "authored_doc_layer_model":
         return [

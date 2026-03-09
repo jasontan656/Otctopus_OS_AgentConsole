@@ -15,14 +15,14 @@
 3. 读取代码库、运行时与当前文档结构，发现 doc-code drift。
 4. 先对齐文档与代码的当前状态，再继续实施。
 5. 在本地可控范围内主动安装依赖、修复环境、运行测试、bring-up、验证行为。
-6. 把已实现范围对应的文档/区块状态从 `pending_implementation` 回写为 `aligned`。
-7. 把本轮完成的对齐范围、文档路径、代码路径整理成后续 `evidence` 可直接追加日志的输入。
+6. `implementation` 消费 `modified` 状态范围，但不在本阶段把它改成 `developed`。
+7. 把本轮完成的对齐范围、文档路径、代码路径整理成后续 `evidence` 可直接追加日志与回写 `developed` 的输入。
 8. 只有本地可解动作全部穷尽后，才允许进入真实 blocked。
 
 ## Produces
 
 - 代码改动
 - 运行时改动
-- 修复后的 doc-code 对齐状态
+- 修复后的 doc-code 对齐范围
 - evidence 可消费的 implementation diff 范围
 - `evidence` 阶段输入

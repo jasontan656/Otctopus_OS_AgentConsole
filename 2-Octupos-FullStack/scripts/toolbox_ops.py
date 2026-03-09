@@ -16,7 +16,7 @@ from container_scaffold import (
 )
 from development_log import append_log_entry
 from mother_doc_navigation import sync_navigation_tree
-from mother_doc_status import sync_status_tree
+from mother_doc_status import sync_status_tree, sync_status_tree_from_git
 
 
 DEFAULT_WORKSPACE_ROOT = Path("/home/jasontan656/AI_Projects/Octopus_OS")
@@ -112,12 +112,11 @@ def materialize_layout(args: argparse.Namespace) -> int:
         "existing_document_dirs": existing_document_dirs,
         "created_document_files": created_document_files,
         "navigation_sync": sync_navigation_tree(document_root, dry_run=args.dry_run),
-        "status_sync": sync_status_tree(
+        "status_sync": sync_status_tree_from_git(
             document_root,
+            repo_root=workspace_root,
             stage="mother_doc",
-            requires_development=True,
-            sync_status="pending_implementation",
-            block_ids=["primary"],
+            block_ids=None,
             target_paths=[document_root / name for name in containers],
             dry_run=args.dry_run,
         ),
@@ -134,12 +133,11 @@ def sync_mother_doc_navigation(args: argparse.Namespace) -> int:
     payload = {
         "document_root": str(document_root),
         **navigation_sync,
-        "status_sync": sync_status_tree(
+        "status_sync": sync_status_tree_from_git(
             document_root,
+            repo_root=DEFAULT_WORKSPACE_ROOT,
             stage="mother_doc",
-            requires_development=True,
-            sync_status="pending_implementation",
-            block_ids=["primary"],
+            block_ids=None,
             target_paths=touched_paths or None,
             dry_run=args.dry_run,
         ),
@@ -156,9 +154,26 @@ def sync_mother_doc_status(args: argparse.Namespace) -> int:
         **sync_status_tree(
             document_root,
             stage=args.stage,
-            requires_development=args.requires_development,
-            sync_status=args.sync_status,
-            block_ids=args.block_id or ["primary"],
+            lifecycle_state=args.lifecycle_state,
+            block_ids=args.block_id or None,
+            target_paths=target_paths,
+            dry_run=args.dry_run,
+        ),
+    }
+    return emit_contract(payload, as_json=args.json)
+
+
+def sync_mother_doc_status_from_git(args: argparse.Namespace) -> int:
+    document_root = Path(args.document_root).resolve()
+    repo_root = Path(args.repo_root).resolve()
+    target_paths = [Path(path) for path in args.path] if args.path else None
+    payload = {
+        "document_root": str(document_root),
+        **sync_status_tree_from_git(
+            document_root,
+            repo_root=repo_root,
+            stage=args.stage,
+            block_ids=args.block_id or None,
             target_paths=target_paths,
             dry_run=args.dry_run,
         ),

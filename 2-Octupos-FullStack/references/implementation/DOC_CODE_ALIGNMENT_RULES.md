@@ -21,5 +21,6 @@
 
 ## Status Rule
 
-- `mother_doc` 领先于代码时，对应文档/区块必须保持 `pending_implementation`。
-- 对齐完成后，implementation 必须显式把对应文档/区块改回 `aligned`。
+- `mother_doc` 领先于代码时，对应文档/区块必须保持 `modified`。
+- `implementation` 负责消费 `modified` 状态，但不在本阶段写回 `developed`。
+- 只有 `evidence` 在代码、文档、graph 与留痕闭环完成后，才把对应文档/区块改回 `developed`。
