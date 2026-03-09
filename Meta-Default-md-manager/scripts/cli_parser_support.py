@@ -10,6 +10,7 @@ def build_parser(
     cmd_push,
     cmd_contract,
     cmd_directive,
+    cmd_target_contract,
     cmd_render_audit_docs,
 ) -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
@@ -30,6 +31,12 @@ def build_parser(
     directive.add_argument("--stage", choices=["scan", "collect", "push"], required=True)
     directive.add_argument("--json", action="store_true")
     directive.set_defaults(func=cmd_directive)
+
+    target_contract = subparsers.add_parser("target-contract")
+    target_contract.add_argument("--skill-root")
+    target_contract.add_argument("--source-path", required=True)
+    target_contract.add_argument("--json", action="store_true")
+    target_contract.set_defaults(func=cmd_target_contract)
 
     render_audit_docs = subparsers.add_parser("render-audit-docs")
     render_audit_docs.add_argument("--skill-root")

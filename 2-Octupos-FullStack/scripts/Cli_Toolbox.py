@@ -8,6 +8,7 @@ from agents_branch_ops import (
     mother_doc_agents_push,
     mother_doc_agents_registry,
     mother_doc_agents_scan,
+    mother_doc_agents_target_contract,
 )
 from stage_contract_support import (
     get_stage_checklist,
@@ -76,6 +77,16 @@ def build_parser() -> argparse.ArgumentParser:
     agents_registry.add_argument("--skill-root", default=None, help="override skill root")
     agents_registry.add_argument("--json", action="store_true")
     agents_registry.set_defaults(func=mother_doc_agents_registry)
+
+    agents_target_contract = subparsers.add_parser(
+        "mother-doc-agents-target-contract",
+        help="print the runtime contract for one managed AGENTS/README target path",
+    )
+    agents_target_contract.add_argument("--skill-root", default=None, help="override skill root")
+    agents_target_contract.add_argument("--relative-path", required=True)
+    agents_target_contract.add_argument("--file-kind", choices=("agents", "readme"), required=True)
+    agents_target_contract.add_argument("--json", action="store_true")
+    agents_target_contract.set_defaults(func=mother_doc_agents_target_contract)
 
     agents_scan = subparsers.add_parser(
         "mother-doc-agents-scan",

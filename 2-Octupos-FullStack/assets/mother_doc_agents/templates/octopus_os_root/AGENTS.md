@@ -1,63 +1,31 @@
-# AGENTS
+[AGENT RUNTIME HOOK - ABSOLUTE ENFORCEMENT]
 
-## 1. 目标
-- 当前层作用：`Octopus_OS` 总容器根，是 AI 进入项目开发与维护链路的第一站。
-- 项目相关介绍看同层 `README.md`；本文件不展开项目正文。
-- 本文件只负责把章鱼OS全栈技能锚点、代码去处、文档去处、graph 去处和工具入口说清楚。
+`HOOK_LOAD`: Apply this AGENTS contract. This file is a thin runtime entry that points to the skill-managed CLI/JSON rule source.
 
-## 2. 同层入口
-- `README.md`: 当前总容器层的浓缩总结说明；可选阅读，但如果本层容器布局或维护入口发生变化，必须同步维护对应章节总结。
+[TURN START - MANDATORY]
 
-## 3. 章鱼OS技能锚点
-- `/home/jasontan656/.codex/skills/2-Octupos-FullStack/SKILL.md`: 技能总门面。
-- `/home/jasontan656/.codex/skills/2-Octupos-FullStack/references/skill_native/01_FACADE_LOAD_MAP.md`: 技能总入口图与规则分流。
-- `/home/jasontan656/.codex/skills/2-Octupos-FullStack/references/skill_native/10_PROJECT_BASELINE_INDEX.md`: 项目统一目标基线入口。
-- `/home/jasontan656/.codex/skills/2-Octupos-FullStack/references/stages/MOTHER_DOC_STAGE.md`: `mother_doc` 阶段入口。
-- `/home/jasontan656/.codex/skills/2-Octupos-FullStack/references/stages/IMPLEMENTATION_STAGE.md`: `implementation` 阶段入口。
-- `/home/jasontan656/.codex/skills/2-Octupos-FullStack/references/stages/EVIDENCE_STAGE.md`: `evidence` 阶段入口。
-- `/home/jasontan656/.codex/skills/2-Octupos-FullStack/scripts/Cli_Toolbox.py`: 统一 CLI 工具入口。
+1. Load Target Contract
+- Must run this command before following any path-specific rule:
+- `python3 /home/jasontan656/AI_Projects/Codex_Skills_Mirror/2-Octupos-FullStack/scripts/Cli_Toolbox.py mother-doc-agents-target-contract --relative-path "octopus_os_root" --file-kind agents --json`
 
-## 4. 项目资产去处
-- `Octopus_OS/<Container_Name>/`: 各独立容器的代码与运行时根路径。
-- `Octopus_OS/Mother_Doc/docs/`: 所有容器的 authored-doc 文档树。
-- `Octopus_OS/Mother_Doc/docs/Mother_Doc/project_baseline/`: 项目统一目标基线与当前开发说明。
-- `Octopus_OS/Mother_Doc/graph/`: OS_graph 资产与 evidence graph runtime 根。
+2. TURN_START Contract
+- if the turn will write Octopus_OS, plan same-turn Constitution lint and Git traceability from the start
+- use the returned target contract JSON as the runtime rule source
 
-## 5. 选择规则
-- 先看当前任务是否只需要技能锚点即可判断；若不足，再可选读取同层 `README.md`。
-- 再读章鱼OS全栈技能锚点与项目统一目标基线，确认当前任务属于 `mother_doc`、`implementation` 还是 `evidence`。
-- 确认阶段后，再选择进入对应容器路径或 `Mother_Doc` 文档树，不跨到无关容器。
-- 仅当本回合是 Non-read-only 且本仓库实际发生写入时，才启用 GitHub 留痕。
-- Read-only 回合不启用。
-- 这是同回合硬合同：不得把本回合写入延后到后续回合再补留痕。
-- 必须使用以下命令完成收尾：
-  - `python3 /home/jasontan656/.codex/skills/Meta-github-operation/scripts/Cli_Toolbox.py commit-and-push --repo Octopus_OS --message "<commit message>" --use-latest-claims --auto-scope --allow-empty`
-- `commit message` 必须依据本轮实际变动内容编写。
-- 若命令失败、被跳过、或与实际写入不一致，属于 `violation`，必须修复后才能结束回合。
-- 本仓库承担宪法技能与静态 lint 收口责任；写入本仓库时，必须对实际被修改的 concrete target root 运行 `Constitution-knowledge-base` static lint。
-- 禁止把 `/home/jasontan656/AI_Projects` 当作 lint 目标；若出现非零退出或 `status=fail`，必须声明 `violation` 并修复后重跑。
+3. Peer Read Gate
+- See the returned `peer_doc` object to decide whether the same-level peer file must be read.
 
-## 6. 索引契约
-- 当前根层 `AGENTS.md` 属于 `octopus_os_root` 分支。
-- 它必须固定指向 `README.md` 和章鱼OS全栈技能锚点。
-- 它不负责展开具体文档正文或具体实现细节。
-- 当本层内容发生变更时，必须同时检查同层 `README.md` 是否需要更新总结。
+[EXECUTION - MANDATORY]
 
-## 7. 递归动作
-- 进入 `Account_Service/`：account and profile domain container。
-- 进入 `Admin_UI/`：admin-facing client container and future operator surface。
-- 进入 `AI_Service/`：AI domain container。
-- 进入 `API_Gateway/`：unified ingress container for routing, auth forwarding, and traffic control。
-- 进入 `File_Service/`：file domain container。
-- 进入 `Identity_Service/`：identity and auth domain container。
-- 进入 `Mother_Doc/`：authoritative authored-document, project-baseline, and OS_graph container。
-- 进入 `MQ_Broker/`：message broker container。
-- 进入 `Notification_Service/`：notification domain container。
-- 进入 `Object_Storage/`：object storage container。
-- 进入 `Order_Service/`：order domain container。
-- 进入 `Payment_Service/`：payment domain container。
-- 进入 `Postgres_DB/`：relational database container。
-- 进入 `Redis_Cache/`：cache container。
-- 进入 `User_UI/`：user-facing client container。
-- 若目标属于文档树，则转入 `Mother_Doc/docs/**` 的递归索引链。
-- 若目标属于 graph 或 evidence，则转入 `Mother_Doc/graph/` 与技能 `evidence` 锚点继续处理。
+4. Runtime Rule Source
+- The returned JSON is the runtime rule source for this path.
+- Skill-internal markdown audit files are for human audit only; models must not treat them as runtime guidance.
+
+5. Routing
+- Use the returned `routing` and `update_boundary` fields instead of reading extra markdown for runtime rules.
+
+[TURN END - MANDATORY]
+
+6. TURN_END Contract
+- if the turn wrote Octopus_OS, run Constitution lint on the concrete target root
+- finish same-turn commit-and-push for Octopus_OS before closing the turn

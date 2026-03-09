@@ -5,6 +5,7 @@ import shutil
 from contextlib import contextmanager
 from pathlib import Path
 
+from agents_target_runtime import render_external_agents, write_target_contract_assets
 from mother_doc_navigation import AGENTS_FILENAME, LEGACY_AGENTS_FILENAME, sync_navigation_tree
 
 README_FILENAME = "README.md"
@@ -139,58 +140,7 @@ def _docs_template_relative(target_path: Path, document_root: Path) -> Path:
 
 
 def build_octopus_root_agents(workspace_root: Path) -> str:
-    lines = [
-        "# AGENTS",
-        "",
-        "## 1. 目标",
-        "- 当前层作用：`Octopus_OS` 总容器根，是 AI 进入项目开发与维护链路的第一站。",
-        "- 项目相关介绍看同层 `README.md`；本文件不展开项目正文。",
-        "- 本文件只负责把章鱼OS全栈技能锚点、代码去处、文档去处、graph 去处和工具入口说清楚。",
-        "",
-        "## 2. 同层入口",
-        "- `README.md`: 当前总容器层的浓缩总结说明；可选阅读，但如果本层容器布局或维护入口发生变化，必须同步维护对应章节总结。",
-        "",
-        "## 3. 章鱼OS技能锚点",
-        "- `/home/jasontan656/.codex/skills/2-Octupos-FullStack/SKILL.md`: 技能总门面。",
-        "- `/home/jasontan656/.codex/skills/2-Octupos-FullStack/references/skill_native/01_FACADE_LOAD_MAP.md`: 技能总入口图与规则分流。",
-        "- `/home/jasontan656/.codex/skills/2-Octupos-FullStack/references/skill_native/10_PROJECT_BASELINE_INDEX.md`: 项目统一目标基线入口。",
-        "- `/home/jasontan656/.codex/skills/2-Octupos-FullStack/references/stages/MOTHER_DOC_STAGE.md`: `mother_doc` 阶段入口。",
-        "- `/home/jasontan656/.codex/skills/2-Octupos-FullStack/references/stages/IMPLEMENTATION_STAGE.md`: `implementation` 阶段入口。",
-        "- `/home/jasontan656/.codex/skills/2-Octupos-FullStack/references/stages/EVIDENCE_STAGE.md`: `evidence` 阶段入口。",
-        "- `/home/jasontan656/.codex/skills/2-Octupos-FullStack/scripts/Cli_Toolbox.py`: 统一 CLI 工具入口。",
-        "",
-        "## 4. 项目资产去处",
-        "- `Octopus_OS/<Container_Name>/`: 各独立容器的代码与运行时根路径。",
-        "- `Octopus_OS/Mother_Doc/docs/`: 所有容器的 authored-doc 文档树。",
-        "- `Octopus_OS/Mother_Doc/docs/Mother_Doc/project_baseline/`: 项目统一目标基线与当前开发说明。",
-        "- `Octopus_OS/Mother_Doc/graph/`: OS_graph 资产与 evidence graph runtime 根。",
-        "",
-        "## 5. 选择规则",
-        "- 先看当前任务是否只需要技能锚点即可判断；若不足，再可选读取同层 `README.md`。",
-        "- 再读章鱼OS全栈技能锚点与项目统一目标基线，确认当前任务属于 `mother_doc`、`implementation` 还是 `evidence`。",
-        "- 确认阶段后，再选择进入对应容器路径或 `Mother_Doc` 文档树，不跨到无关容器。",
-        "- 如果本仓库在写入回合发生文件变动，则必须进行 GitHub 留痕；commit message 必须依据本轮实际变动内容编写。",
-        "- 本仓库承担宪法技能与静态 lint 收口责任；写入本仓库时，必须对实际被修改的 concrete target root 运行 `Constitution-knowledge-base` static lint。",
-        "- 禁止把 `/home/jasontan656/AI_Projects` 当作 lint 目标；若出现非零退出或 `status=fail`，必须声明 `violation` 并修复后重跑。",
-        "",
-        "## 6. 索引契约",
-        "- 当前根层 `AGENTS.md` 属于 `octopus_os_root` 分支。",
-        "- 它必须固定指向 `README.md` 和章鱼OS全栈技能锚点。",
-        "- 它不负责展开具体文档正文或具体实现细节。",
-        "- 当本层内容发生变更时，必须同时检查同层 `README.md` 是否需要更新总结。",
-        "",
-        "## 7. 递归动作",
-    ]
-    for container in _container_dirs(workspace_root):
-        lines.append(f"- 进入 `{container.name}/`：{_container_description(container.name)}。")
-    lines.extend(
-        [
-            "- 若目标属于文档树，则转入 `Mother_Doc/docs/**` 的递归索引链。",
-            "- 若目标属于 graph 或 evidence，则转入 `Mother_Doc/graph/` 与技能 `evidence` 锚点继续处理。",
-            "",
-        ]
-    )
-    return "\n".join(lines)
+    return render_external_agents(ROOT_BRANCH)
 
 
 def build_octopus_root_readme(workspace_root: Path) -> str:
@@ -230,74 +180,7 @@ def build_octopus_root_readme(workspace_root: Path) -> str:
 
 
 def build_container_root_agents(container_root: Path, document_root: Path) -> str:
-    container_name = container_root.name
-    doc_scope = document_root / container_name
-    lines = [
-        "# AGENTS",
-        "",
-        "## 1. 目标",
-        f"- 当前层作用：`{container_name}` 容器根的开发回写合同入口。",
-        "- 本文件提醒模型遵守当前容器的抽象层通用规则、文档回写入口和 evidence 闭环要求。",
-        "",
-        "## 2. 同层入口",
-        "- `README.md`: 当前容器项目的 AI-facing summary；可选阅读，但如果本容器发生了代码、文档或 evidence 相关落盘，必须考虑维护本文件。",
-    ]
-    if doc_scope.exists():
-        lines.append(f"- `../Mother_Doc/docs/{container_name}/README.md`: 当前容器对应的 authored-doc 根说明。")
-    lines.extend(
-        [
-            "",
-            "## 3. 下一层入口",
-        ]
-    )
-    children = sorted(
-        [
-            child
-            for child in container_root.iterdir()
-            if child.name not in {"README.md", AGENTS_FILENAME, LEGACY_AGENTS_FILENAME, "__pycache__"} and not child.name.startswith(".")
-        ],
-        key=lambda item: (item.is_file(), item.name.lower()),
-    )
-    if container_name == "Mother_Doc":
-        lines.append("- `docs/`: Mother_Doc authored-doc 树根。")
-        lines.append("- `docs/Mother_Doc/project_baseline/`: 项目统一目标基线与当前开发说明。")
-        lines.append("- `graph/`: OS_graph 资产根。")
-    elif doc_scope.exists():
-        lines.append(f"- `../Mother_Doc/docs/{container_name}/`: 当前容器对应的文档树入口。")
-    if children:
-        for child in children:
-            suffix = "/" if child.is_dir() else ""
-            lines.append(f"- `{child.name}{suffix}`: 当前容器下的直接子路径。")
-    if not children and container_name != "Mother_Doc" and not doc_scope.exists():
-        lines.append("- `terminal`: 当前容器根尚无更深入口。")
-    lines.extend(
-        [
-            "",
-            "## 4. 选择规则",
-            "- 如果当前任务需要确认容器用途、维护范围或当前阶段总结，可选读取同层 `README.md`。",
-            "- 如果当前任务是新需求的项目级目标、作用面或当前试点范围判定，`Mother_Doc` 容器先进入 `docs/Mother_Doc/project_baseline/`。",
-            "- 若任务是文档设计、需求回写或结构浏览，优先转入对应的 `Mother_Doc/docs` 路径。",
-            "- 若任务是代码落盘或运行时处理，则留在当前容器路径，并同时回看对应的 `Mother_Doc/docs/<Container_Name>/common/`。",
-            "- 涉及前端开发、页面联调、浏览器测试或交互验证时，`User_UI` 与 `Admin_UI` 必须加载 `Meta-browser-operation`。",
-            "",
-            "## 5. 更新边界",
-            "- 当前层只负责容器根入口与开发回写提醒，不替代容器内部正文。",
-            "- 文档正文仍由 `Mother_Doc/docs` 承载，graph 资产由 `Mother_Doc/graph` 承载。",
-            "- 若当前容器内容被修改，必须检查同层 `README.md` 是否需要更新总结。",
-            "",
-            "## 6. 索引契约",
-            "- 当前文件属于 `container_roots` 分支。",
-            "- 每个顶层容器都必须有自己的容器根 `AGENTS.md` 与 `README.md` 模板与推送路径。",
-            "",
-            "## 7. 递归动作",
-            "- 命中文档域时，进入对应 `Mother_Doc/docs` 容器路径。",
-            "- 命中当前容器实际子路径时，继续进入对应子目录处理。",
-            "",
-        ]
-    )
-    if container_name not in {"User_UI", "Admin_UI"}:
-        lines.remove("- 涉及前端开发、页面联调、浏览器测试或交互验证时，`User_UI` 与 `Admin_UI` 必须加载 `Meta-browser-operation`。")
-    return "\n".join(lines)
+    return render_external_agents(f"{CONTAINER_BRANCH}/{container_root.name}")
 
 
 def build_container_root_readme(container_root: Path, document_root: Path) -> str:
@@ -504,7 +387,8 @@ def _sync_template_tree(skill_root: Path, workspace_root: Path, document_root: P
         agents_path = directory / AGENTS_FILENAME
         if agents_path.exists():
             template_path = template_root / _docs_template_relative(agents_path, document_root)
-            _write_text(template_path, agents_path.read_text(encoding="utf-8"))
+            relative_path = str(Path(DOCS_BRANCH) / directory.relative_to(document_root))
+            _write_text(template_path, render_external_agents(relative_path))
             created.append(str(template_path))
         readme_path = directory / README_FILENAME
         if readme_path.exists():
@@ -608,6 +492,7 @@ def collect_from_scan(skill_root: Path) -> dict[str, object]:
         "entries": collected_entries,
     }
     _write_json(paths["registry_path"], registry_payload)
+    write_target_contract_assets(skill_root, collected_entries)
     _write_text(paths["index_path"], "\n".join(index_lines) + "\n")
     return {
         "registry_path": str(paths["registry_path"]),

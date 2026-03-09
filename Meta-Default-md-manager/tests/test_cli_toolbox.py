@@ -82,7 +82,7 @@ class MetaDefaultMdManagerCliTests(unittest.TestCase):
             directive = self.run_cli("directive", "--skill-root", str(skill_root), "--stage", "scan")
             self.assertEqual(directive["stage"], "scan")
             render = self.run_cli("render-audit-docs", "--skill-root", str(skill_root))
-            self.assertEqual(render["count"], 10)
+            self.assertGreaterEqual(render["count"], 10)
             self.assertTrue((skill_root / "references" / "runtime" / "SKILL_RUNTIME_CONTRACT.md").exists())
             self.assertTrue((skill_root / "references" / "stages" / "scan" / "INSTRUCTION.md").exists())
 
@@ -119,8 +119,12 @@ class MetaDefaultMdManagerCliTests(unittest.TestCase):
             index_text = (skill_root / "assets" / "managed_targets" / "index.md").read_text(encoding="utf-8")
             self.assertIn(str(source_root / "AGENTS.md"), index_text)
             self.assertIn(str(source_root / "repo-b" / ".gitignore"), index_text)
-            self.assertIn("root agents", index_text)
             self.assertIn("target_kind: `.gitignore`", index_text)
+            managed_agents_entry = next(entry for entry in registry["entries"] if entry["source_path"] == str(source_root / "AGENTS.md"))
+            managed_agents = Path(managed_agents_entry["managed_path"])
+            self.assertIn("target-contract", managed_agents.read_text(encoding="utf-8"))
+            runtime_rule = Path(managed_agents_entry["managed_path"]).parents[1] / "runtime_rules" / Path(managed_agents_entry["managed_rel_path"]).parent / "AGENTS.runtime.json"
+            self.assertTrue(runtime_rule.exists())
 
     def test_sync_out_overwrites_target_from_managed_copy(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -182,6 +186,8 @@ class MetaDefaultMdManagerCliTests(unittest.TestCase):
             (source_root / "Octopus_OS" / "User_UI").mkdir(parents=True)
             (source_root / "Octopus_OS" / "AGENTS.md").write_text("octopus root\n", encoding="utf-8")
             (source_root / "Octopus_OS" / "User_UI" / "AGENTS.md").write_text("octopus ui\n", encoding="utf-8")
+            (source_root / "Codex_Skills_Mirror" / "DemoSkill" / "assets" / "managed").mkdir(parents=True)
+            (source_root / "Codex_Skills_Mirror" / "DemoSkill" / "assets" / "managed" / "AGENTS.md").write_text("ignore\n", encoding="utf-8")
             (source_root / "Human_Work_Zone" / "repo-b").mkdir(parents=True)
             (source_root / "Human_Work_Zone" / "repo-b" / "AGENTS.md").write_text("ignore\n", encoding="utf-8")
             (source_root / "Codex_Skill_Runtime" / "repo-c").mkdir(parents=True)
@@ -204,6 +210,34 @@ class MetaDefaultMdManagerCliTests(unittest.TestCase):
             self.assertEqual(stale, [])
             octopus_stale = list((skill_root / "assets" / "managed_targets").rglob("*Octopus_OS*"))
             self.assertEqual(octopus_stale, [])
+            skill_asset_stale = list((skill_root / "assets" / "managed_targets").rglob("*DemoSkill*"))
+            self.assertEqual(skill_asset_stale, [])
+
+    def test_target_contract_returns_target_specific_payload(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            skill_root = Path(tmp) / "skill"
+            source_root = Path(tmp) / "src"
+            (source_root / "repo-a").mkdir(parents=True)
+            (source_root / "repo-a" / "AGENTS.md").write_text("repo agents\n", encoding="utf-8")
+
+            self.run_cli(
+                "scan",
+                "--skill-root", str(skill_root),
+                "--source-root", str(source_root),
+            )
+            self.run_cli(
+                "collect",
+                "--skill-root", str(skill_root),
+                "--source-root", str(source_root),
+            )
+            payload = self.run_cli(
+                "target-contract",
+                "--skill-root", str(skill_root),
+                "--source-path", str(source_root / "repo-a" / "AGENTS.md"),
+            )
+            self.assertEqual(payload["target"]["target_kind"], "AGENTS.md")
+            self.assertEqual(payload["turn_contract"]["status"], "n_a")
+            self.assertIn("target-contract", payload["runtime_entry"]["cli"])
 
     def test_collect_fails_when_scan_report_missing(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

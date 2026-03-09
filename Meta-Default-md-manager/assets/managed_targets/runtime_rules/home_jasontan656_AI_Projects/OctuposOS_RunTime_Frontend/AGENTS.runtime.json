@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "owner_skill": "Meta-Default-md-manager",
+  "managed_branch": "default_docs",
+  "rule_source_policy": {
+    "runtime_rule_source": "CLI_JSON",
+    "human_audit_source": "audit_markdown_only",
+    "model_must_not_read_markdown_for_runtime_guidance": true
+  },
+  "target": {
+    "source_root": "/home/jasontan656/AI_Projects",
+    "source_path": "/home/jasontan656/AI_Projects/OctuposOS_RunTime_Frontend/AGENTS.md",
+    "source_relative_path": "OctuposOS_RunTime_Frontend/AGENTS.md",
+    "file_kind": "agents",
+    "target_kind": "AGENTS.md",
+    "peer_path": "/home/jasontan656/AI_Projects/OctuposOS_RunTime_Frontend/README.md",
+    "managed_rel_path": "home_jasontan656_AI_Projects/OctuposOS_RunTime_Frontend/AGENTS.md",
+    "managed_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/home_jasontan656_AI_Projects/OctuposOS_RunTime_Frontend/AGENTS.md"
+  },
+  "peer_doc": {
+    "path": "/home/jasontan656/AI_Projects/OctuposOS_RunTime_Frontend/README.md",
+    "relation": "same_level_summary",
+    "read_policy": "not_available"
+  },
+  "runtime_entry": {
+    "cli": "python3 /home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/scripts/Cli_Toolbox.py target-contract --source-path \"/home/jasontan656/AI_Projects/OctuposOS_RunTime_Frontend/AGENTS.md\" --json",
+    "audit_md_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/runtime_rules/home_jasontan656_AI_Projects/OctuposOS_RunTime_Frontend/AGENT_AUDIT.md",
+    "runtime_json_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/runtime_rules/home_jasontan656_AI_Projects/OctuposOS_RunTime_Frontend/AGENTS.runtime.json"
+  },
+  "turn_contract": {
+    "status": "n_a",
+    "turn_start": [
+      "N/A"
+    ],
+    "turn_end": [
+      "N/A"
+    ]
+  },
+  "routing": {
+    "document_role": "runtime_entry",
+    "default_next_hop": "use the target-contract JSON to decide peer reads and manager commands",
+    "rules": [
+      "use Meta-Default-md-manager CLI JSON as the runtime rule source",
+      "README-like files remain human summaries unless a peer AGENTS contract says otherwise",
+      "machine-readable runtime rules must stay in skill-managed JSON and CLI output"
+    ]
+  },
+  "update_boundary": [
+    "managed targets are owned by Meta-Default-md-manager",
+    "external AGENTS.md should remain a thin runtime entry",
+    "skill-managed JSON and CLI output are the runtime source of truth"
+  ]
+}

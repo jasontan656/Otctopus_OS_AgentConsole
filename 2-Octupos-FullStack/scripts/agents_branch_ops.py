@@ -13,6 +13,7 @@ from mother_doc_agents_manager import (
     resolve_skill_root as resolve_agents_skill_root,
     scan_agents_tree,
 )
+from agents_target_runtime import load_target_contract as load_agents_target_contract
 from toolbox_ops import emit_contract
 
 
@@ -30,6 +31,12 @@ def mother_doc_agents_registry(args: argparse.Namespace) -> int:
     skill_root = resolve_agents_skill_root(getattr(args, "skill_root", None))
     payload = load_agents_registry(skill_root)
     payload["skill_root"] = str(skill_root)
+    return emit_contract(payload, as_json=args.json)
+
+
+def mother_doc_agents_target_contract(args: argparse.Namespace) -> int:
+    skill_root = resolve_agents_skill_root(getattr(args, "skill_root", None))
+    payload = load_agents_target_contract(skill_root, args.relative_path, args.file_kind)
     return emit_contract(payload, as_json=args.json)
 
 

@@ -98,4 +98,6 @@ def is_excluded_scan_path(candidate: Path, skill_root: Path, source_root: Path |
         relative = resolved.relative_to(source_root)
         if relative.parts and relative.parts[0] in EXCLUDED_TOP_LEVEL_RELATIVE_DIRS:
             return True
+        if len(relative.parts) >= 3 and relative.parts[0] == "Codex_Skills_Mirror" and relative.parts[2] == "assets":
+            return True
     return False

@@ -3,6 +3,9 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from managed_registry import load_registry
+from managed_target_runtime import write_target_contract_assets
+
 
 STAGES = ("scan", "collect", "push")
 
@@ -132,6 +135,9 @@ def render_audit_docs(skill_root: Path) -> dict[str, object]:
         ):
             path.write_text(text, encoding="utf-8")
             written_files.append(str(path))
+
+    registry = load_registry(skill_root)
+    written_files.extend(write_target_contract_assets(skill_root, registry.get("entries", [])))
 
     return {
         "status": "ok",

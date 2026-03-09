@@ -20,6 +20,7 @@ description: "集中管理 workspace 内的常驻默认文档。显式分离 sca
 - 命令清单：
   - `Cli_Toolbox.contract`
   - `Cli_Toolbox.directive`
+  - `Cli_Toolbox.target-contract`
   - `Cli_Toolbox.render_audit_docs`
   - `Cli_Toolbox.registry`
   - `Cli_Toolbox.scan`
@@ -35,6 +36,10 @@ description: "集中管理 workspace 内的常驻默认文档。显式分离 sca
   - machine: `references/runtime/SKILL_RUNTIME_CONTRACT.json`
   - CLI: `python3 scripts/Cli_Toolbox.py contract --json`
   - audit: `references/runtime/SKILL_RUNTIME_CONTRACT.md`
+- 目标级运行合同入口：
+  - CLI: `python3 scripts/Cli_Toolbox.py target-contract --source-path "<ABS_SOURCE_PATH>" --json`
+  - machine cache: `assets/managed_targets/runtime_rules/**/**/*.runtime.json`
+  - audit: `assets/managed_targets/runtime_rules/**/AGENT_AUDIT.md` / `README_AUDIT.md`
 - `scan` 阶段入口：
   - machine: `references/stages/scan/DIRECTIVE.json`
   - CLI: `python3 scripts/Cli_Toolbox.py directive --stage scan --json`
@@ -57,13 +62,18 @@ description: "集中管理 workspace 内的常驻默认文档。显式分离 sca
 - `collect` 消费的 `scan_report.json` 不存在、为空或无条目时，必须显式报错。
 - `push` 消费的 `registry.json` 不存在、为空或无条目时，必须显式报错。
 - 除 `push` 对外回写源文件外，技能所有产物必须留在技能内部 `assets/managed_targets/`。
+- 外部受管 `AGENTS.md` 必须保持为 thin runtime entry；路径级具体规则只允许存在于 `target-contract` JSON/CLI 输出。
 - 运行合同与阶段指引必须同时存在两份：
   - markdown 审计版
   - machine-readable JSON 版
+- 目标级合同也必须同时存在两份：
+  - machine-readable JSON 版
+  - 不命名为 `AGENTS.md` 的 markdown 审计版
 - 约束更新时必须先更新 JSON，再运行 `render-audit-docs` 刷新 markdown 审计版。
 
 ## 5. 方法论约束
 - 先 `contract`，再 `directive`，最后执行 `scan / collect / push`。
+- 对单个外部 `AGENTS.md` / `README.md` 做运行判断时，先执行 `target-contract`，不要直接从 skill markdown 取运行规则。
 - 先 `scan`，再 `collect`，最后 `push`。
 - 如果用户只要求某一阶段，只读取该阶段对应的 CLI 指引输出。
 - 如果用户未显式要求审计 markdown，不读取 `references/**/*.md` 作为运行依据。

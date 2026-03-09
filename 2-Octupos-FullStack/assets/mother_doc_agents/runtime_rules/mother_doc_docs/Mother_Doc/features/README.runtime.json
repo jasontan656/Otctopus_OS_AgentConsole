@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "owner_skill": "2-Octupos-FullStack",
+  "managed_branch": "mother_doc_agents_readme",
+  "rule_source_policy": {
+    "runtime_rule_source": "CLI_JSON",
+    "human_audit_source": "audit_markdown_only",
+    "model_must_not_read_markdown_for_runtime_guidance": true
+  },
+  "target": {
+    "scope_branch": "mother_doc_docs",
+    "relative_path": "mother_doc_docs/Mother_Doc/features",
+    "scope_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/features",
+    "file_kind": "readme",
+    "source_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/features/README.md",
+    "peer_path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/features/AGENTS.md",
+    "readme_management_mode": "collect_preserve"
+  },
+  "peer_doc": {
+    "path": "/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/Mother_Doc/features/AGENTS.md",
+    "relation": "same_level_runtime_entry",
+    "read_policy": "required_first_if_exists"
+  },
+  "runtime_entry": {
+    "cli": "python3 /home/jasontan656/AI_Projects/Codex_Skills_Mirror/2-Octupos-FullStack/scripts/Cli_Toolbox.py mother-doc-agents-target-contract --relative-path \"mother_doc_docs/Mother_Doc/features\" --file-kind readme --json",
+    "runtime_json_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/2-Octupos-FullStack/assets/mother_doc_agents/runtime_rules/mother_doc_docs/Mother_Doc/features/README.runtime.json",
+    "audit_md_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/2-Octupos-FullStack/assets/mother_doc_agents/runtime_rules/mother_doc_docs/Mother_Doc/features/README_AUDIT.md"
+  },
+  "turn_contract": {
+    "status": "n_a",
+    "turn_start": [
+      "N/A"
+    ],
+    "turn_end": [
+      "N/A"
+    ]
+  },
+  "routing": {
+    "document_role": "human_summary",
+    "default_next_hop": "use the current scope to choose the next child scope or leaf",
+    "rules": [
+      "stay inside the affected Mother_Doc/docs subtree",
+      "AGENTS only points to the next hop; runtime rules live in the returned JSON"
+    ]
+  },
+  "update_boundary": [
+    "mother_doc_docs AGENTS is a recursive runtime entry",
+    "README remains current-scope human summary; peer scope doc remains explicit scope description"
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "owner_skill": "2-Octupos-FullStack",
+  "managed_branch": "mother_doc_agents_readme",
+  "rule_source_policy": {
+    "runtime_rule_source": "CLI_JSON",
+    "human_audit_source": "audit_markdown_only",
+    "model_must_not_read_markdown_for_runtime_guidance": true
+  },
+  "target": {
+    "scope_branch": "container_roots",
+    "relative_path": "container_roots/Admin_UI",
+    "scope_path": "/home/jasontan656/AI_Projects/Octopus_OS/Admin_UI",
+    "file_kind": "agents",
+    "source_path": "/home/jasontan656/AI_Projects/Octopus_OS/Admin_UI/AGENTS.md",
+    "peer_path": "/home/jasontan656/AI_Projects/Octopus_OS/Admin_UI/README.md",
+    "readme_management_mode": "template_managed"
+  },
+  "peer_doc": {
+    "path": "/home/jasontan656/AI_Projects/Octopus_OS/Admin_UI/README.md",
+    "relation": "same_level_summary",
+    "read_policy": "optional_then_required_on_write_if_exists"
+  },
+  "runtime_entry": {
+    "cli": "python3 /home/jasontan656/AI_Projects/Codex_Skills_Mirror/2-Octupos-FullStack/scripts/Cli_Toolbox.py mother-doc-agents-target-contract --relative-path \"container_roots/Admin_UI\" --file-kind agents --json",
+    "runtime_json_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/2-Octupos-FullStack/assets/mother_doc_agents/runtime_rules/container_roots/Admin_UI/AGENTS.runtime.json",
+    "audit_md_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/2-Octupos-FullStack/assets/mother_doc_agents/runtime_rules/container_roots/Admin_UI/AGENT_AUDIT.md"
+  },
+  "turn_contract": {
+    "status": "n_a",
+    "turn_start": [
+      "N/A"
+    ],
+    "turn_end": [
+      "N/A"
+    ]
+  },
+  "routing": {
+    "document_role": "runtime_entry",
+    "default_next_hop": "decide between current container code path and the matching Mother_Doc/docs path",
+    "rules": [
+      "for doc design or scope browsing, prefer the matching Mother_Doc/docs path",
+      "for code/runtime work, stay in the container path and pair it with Mother_Doc/docs/<Container>/common",
+      "for User_UI/Admin_UI browser tasks, load Meta-browser-operation"
+    ]
+  },
+  "update_boundary": [
+    "container-root AGENTS only governs root entry and paired document navigation",
+    "README remains a human summary and must be checked on writes"
+  ]
+}

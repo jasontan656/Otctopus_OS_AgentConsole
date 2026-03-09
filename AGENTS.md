@@ -1,44 +1,30 @@
-# AGENTS.md - Skills Governance Reminder
+[AGENT RUNTIME HOOK - ABSOLUTE ENFORCEMENT]
 
-[SKILLS_GOVERNANCE_CONTRACT - HARD ENFORCEMENT]
+`HOOK_LOAD`: Apply this AGENTS contract. This file is a thin runtime entry that points to the skill-managed CLI/JSON rule source.
 
-0. Scope
-- 本文件只承载技能规范治理合同。
-- 本文件中的核心条款必须与 `Meta-Skill-Template` 并行存在并保持一致。
+[TURN START - MANDATORY]
 
-1. CLI Tooling Rule
-- 技能内工具统一使用前缀 `Cli_Toolbox`。
-- 若技能存在运行态规则、约束、指引，必须提供对应 CLI 输出入口。
+1. Load Target Contract
+- Must run this command before following any path-specific rule:
+- `python3 /home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/scripts/Cli_Toolbox.py target-contract --source-path "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/AGENTS.md" --json`
 
-2. Runtime Guidance Rule
-- 模型禁止直接阅读 markdown 获取技能运行态规则、约束、指引。
-- 运行态规则、约束、指引只能通过 CLI 输出的 machine-readable 合同获取。
-- `SKILL.md` 只允许保留入口、描述、边界与导航；不得替代运行合同。
+2. TURN_START Contract
+- N/A
 
-3. Dual-Format Rule
-- 规则向、约束向、指引向内容必须同时存在两份：
-  - machine-readable：`json` 或 `yaml`
-  - 人类审计版：markdown
-- markdown 只供人类审计，不是模型运行规则源。
+3. Peer Document Gate
+- See the returned `peer_doc` object to decide whether the same-level peer file exists and whether it must be read.
 
-4. Sync Rule
-- 运行合同更新时，必须同步更新 machine-readable 版本与 markdown 审计版。
-- 建议顺序：
-  - 先更新 machine-readable 合同
-  - 再通过确定性脚本或流程刷新 markdown 审计版
-- 禁止只改 markdown 不改 machine-readable 合同。
+[EXECUTION - MANDATORY]
 
-5. GitHub Hook Rule
-- 仅当本回合是 Non-read-only 且本仓库实际发生写入时，才启用 GitHub 留痕。
-- Read-only 回合不启用。
-- 这是同回合硬合同：不得把本回合写入延后到后续回合再补留痕。
-- 必须使用以下命令完成收尾：
-  - `python3 /home/jasontan656/.codex/skills/Meta-github-operation/scripts/Cli_Toolbox.py commit-and-push --repo Codex_Skills_Mirror --message "<commit message>" --use-latest-claims --auto-scope --allow-empty`
-- `commit message` 必须依据本轮实际变动内容编写。
-- 若命令失败、被跳过、或与实际写入不一致，属于 `violation`，必须修复后才能结束回合。
+4. Runtime Rule Source
+- The CLI JSON output is the runtime rule source for this path.
+- Skill-internal markdown audit files are for human audit only; models must not treat them as runtime guidance.
 
-6. Constitution/Lint Rule
-- 只有本仓库与 `Octopus_OS` 承担宪法技能与静态 lint 收口责任。
-- 当本仓库发生写入时，必须对实际被修改的具体 skill root 或具体仓库根运行 `Constitution-knowledge-base` static lint。
-- 禁止把 `/home/jasontan656/AI_Projects` 当作 lint 目标；必须使用真实被影响的 concrete target root。
-- 若 lint 非零退出或出现 `status=fail`，必须显式声明 `violation`，修复后重跑。
+5. Managed Boundary
+- Current target kind: `AGENTS.md`.
+- `AGENTS.md` should remain a thin runtime entry; concrete routing/update rules live in the returned JSON contract.
+
+[TURN END - MANDATORY]
+
+6. TURN_END Contract
+- N/A

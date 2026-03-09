@@ -17,6 +17,7 @@ from managed_paths import resolve_skill_root, resolve_source_root
 from managed_push import push_out
 from managed_registry import load_registry
 from managed_scan import resolve_scan_source_root, write_scan_report
+from managed_target_runtime import load_target_contract
 
 
 def print_payload(payload: dict[str, object], as_json: bool) -> int:
@@ -44,6 +45,12 @@ def cmd_contract(args) -> int:
 def cmd_directive(args) -> int:
     skill_root = resolve_skill_root(args.skill_root)
     payload = load_stage_directive(skill_root, args.stage)
+    return print_payload(payload, args.json)
+
+
+def cmd_target_contract(args) -> int:
+    skill_root = resolve_skill_root(args.skill_root)
+    payload = load_target_contract(skill_root, args.source_path)
     return print_payload(payload, args.json)
 
 
@@ -90,6 +97,7 @@ def main() -> int:
         cmd_push,
         cmd_contract,
         cmd_directive,
+        cmd_target_contract,
         cmd_render_audit_docs,
     )
     args = parser.parse_args()

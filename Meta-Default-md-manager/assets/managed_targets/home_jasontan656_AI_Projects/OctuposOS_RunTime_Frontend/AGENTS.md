@@ -1,15 +1,30 @@
-# AGENTS.md - OctuposOS_RunTime_Frontend (Frontend Runtime Docs)
+[AGENT RUNTIME HOOK - ABSOLUTE ENFORCEMENT]
 
-## 目录用途
-- 本目录用于存放章鱼OS前端 runtime 任务包文档与证据。
-- 允许内容：`plan.md`、`spec_3l.md`、`machine/*`、`task_evidence/*`、`trace_log.jsonl`、测试说明文档。
-- 禁止内容：业务源码与可执行测试源码。
+`HOOK_LOAD`: Apply this AGENTS contract. This file is a thin runtime entry that points to the skill-managed CLI/JSON rule source.
 
-## 落盘边界（强制）
-- 本目录内开发文档所描述的可执行前端代码，必须落盘到：`/home/jasontan656/AI_Projects/Octopus_CodeBase_Frontend`。
-- 禁止将业务源码或可执行测试代码写入本 runtime 目录。
+[TURN START - MANDATORY]
 
-## 依赖与环境（强制）
-- 目标 codebase 运行环境：`Node.js LTS`（非 Python venv）。
-- 包管理器选择顺序：`pnpm-lock.yaml -> pnpm`，`yarn.lock -> yarn`，`package-lock.json -> npm`，无 lockfile 时默认 `npm`。
-- 代码实现、依赖安装、测试执行必须在上述 Node.js 工具链环境下进行。
+1. Load Target Contract
+- Must run this command before following any path-specific rule:
+- `python3 /home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/scripts/Cli_Toolbox.py target-contract --source-path "/home/jasontan656/AI_Projects/OctuposOS_RunTime_Frontend/AGENTS.md" --json`
+
+2. TURN_START Contract
+- N/A
+
+3. Peer Document Gate
+- See the returned `peer_doc` object to decide whether the same-level peer file exists and whether it must be read.
+
+[EXECUTION - MANDATORY]
+
+4. Runtime Rule Source
+- The CLI JSON output is the runtime rule source for this path.
+- Skill-internal markdown audit files are for human audit only; models must not treat them as runtime guidance.
+
+5. Managed Boundary
+- Current target kind: `AGENTS.md`.
+- `AGENTS.md` should remain a thin runtime entry; concrete routing/update rules live in the returned JSON contract.
+
+[TURN END - MANDATORY]
+
+6. TURN_END Contract
+- N/A

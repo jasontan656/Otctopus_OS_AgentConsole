@@ -6,6 +6,7 @@ from managed_index import write_index
 from managed_paths import managed_root, root_slug
 from managed_registry import build_entry, load_registry, sha256_text, write_registry
 from managed_scan import load_scan_report
+from managed_target_runtime import render_external_agents, write_target_contract_assets
 
 
 def _prune_missing(skill_root: Path, source_root: Path, live_rel_paths: set[str]) -> None:
@@ -70,6 +71,15 @@ def collect_from_scan(skill_root: Path, source_root: str | None = None) -> dict[
     _prune_missing(skill_root, source_root_path, live_rel_paths)
     merged = sorted(other_entries + new_entries, key=lambda item: item["source_path"])
     write_registry(skill_root, {"version": 2, "entries": merged})
+    for entry in merged:
+        if entry["source_root"] != report_source_root or entry["target_kind"] != "AGENTS.md":
+            continue
+        managed_path = Path(entry["managed_path"])
+        rendered = render_external_agents(entry)
+        managed_path.write_text(rendered, encoding="utf-8")
+        entry["sha256"] = sha256_text(rendered)
+    write_registry(skill_root, {"version": 2, "entries": merged})
+    write_target_contract_assets(skill_root, merged)
     write_index(skill_root, merged)
     return {
         "status": "ok",
