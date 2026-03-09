@@ -4,7 +4,7 @@
 
 ## Scope
 
-- 从 implementation 产物中提取执行证据、验收 witness 与回写记录，并绑定回 `Mother_Doc`。
+- 从 `implementation` 当前状态产物中提取执行证据、验收 witness 与回写记录，并绑定回 `Mother_Doc`。
 
 ## Must Load
 

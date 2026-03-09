@@ -6,6 +6,7 @@
 - `Cli_Toolbox.implementation_stage`
 - `Cli_Toolbox.evidence_stage`
 
-## stage1_scaffolding
+## mother_doc_structure
 
 - `Cli_Toolbox.materialize_container_layout`
+- `Cli_Toolbox.sync_mother_doc_navigation`

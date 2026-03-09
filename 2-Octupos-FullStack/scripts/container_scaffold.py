@@ -99,6 +99,7 @@ def build_document_readme(name: str, workspace_dir: Path, family: str) -> list[s
         f"Corresponding workspace path: `{workspace_dir}`.",
         "This directory carries authored development and operations docs for the same-named container.",
         "Stable abstracted knowledge lives under `common/`.",
+        "Use the peer `agents.md` in this directory as the recursive navigation index.",
     ]
 
 
@@ -131,18 +132,4 @@ def scaffold_common_tree(*, container_name: str, document_dir: Path, family: str
             )
             if created:
                 created_files.append(str(target))
-    if container_name == "Mother_Doc":
-        index_path = document_dir / "00_INDEX.md"
-        created = ensure_markdown(
-            index_path,
-            title="Mother_Doc Index",
-            body_lines=[
-                "Index entry for the `Mother_Doc` container itself.",
-                "Use this file as the self-description navigation root for the Mother_Doc container.",
-                "The repository-level `Mother_Doc/README.md` remains the mirror-root explanation.",
-            ],
-            dry_run=dry_run,
-        )
-        if created:
-            created_files.append(str(index_path))
     return created_files

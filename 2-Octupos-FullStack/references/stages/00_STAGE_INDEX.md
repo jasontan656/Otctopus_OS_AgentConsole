@@ -17,8 +17,12 @@
 
 ## Carry-Forward Rules
 
-- `implementation` 必须显式引用 `mother_doc` 阶段产物。
-- `evidence` 必须显式引用 `mother_doc` 与 `implementation` 阶段产物。
+- `mother_doc`：
+  - 先强化用户意图，再递归读取 `Mother_Doc` 当前索引树。
+- `implementation`：
+  - 必须显式引用 `mother_doc` 当前状态产物。
+- `evidence`：
+  - 必须显式引用 `mother_doc` 与 `implementation` 当前状态产物。
 - 任一后续阶段如果缺失前序阶段输入，必须停止并回到前序阶段补齐。
 
 ## Stage Documents

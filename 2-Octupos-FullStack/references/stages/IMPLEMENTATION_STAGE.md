@@ -4,7 +4,7 @@
 
 ## Scope
 
-- 严格依据 `mother_doc` 阶段产物执行代码与运行时落盘。
+- 严格依据 `mother_doc` 当前状态产物执行代码与运行时落盘。
 
 ## Must Load
 
@@ -20,7 +20,7 @@
 
 - 代码改动
 - 运行时改动
-- evidence 阶段输入
+- `evidence` 阶段输入
 
 ## CLI Scope
 

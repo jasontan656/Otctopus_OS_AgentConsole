@@ -10,8 +10,3 @@
 - must-load rules
 - required previous-stage inputs
 - produced outputs
-
-## Boundary
-
-- Does not infer implementation details.
-- Requires explicit carry-forward from the `mother_doc` stage.

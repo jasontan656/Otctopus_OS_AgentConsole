@@ -10,8 +10,3 @@
 - must-load rules
 - required previous-stage inputs
 - produced outputs
-
-## Boundary
-
-- Does not fabricate evidence.
-- Requires explicit carry-forward from both `mother_doc` and `implementation`.

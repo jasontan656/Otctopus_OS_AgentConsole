@@ -8,10 +8,11 @@
 
 - stage name
 - must-load rules
-- required previous-stage inputs
+- prompt strengthening entry
+- recursive navigation entry
 - produced outputs
 
 ## Boundary
 
 - Does not create files by itself.
-- Use together with `materialize-container-layout` when the `mother_doc` stage needs new container structure.
+- Use together with `materialize-container-layout` and `sync-mother-doc-navigation`.

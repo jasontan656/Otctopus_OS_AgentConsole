@@ -13,6 +13,7 @@ from container_scaffold import (
     scaffold_common_tree,
     validate_container_name,
 )
+from mother_doc_navigation import sync_navigation_tree
 from stage_runtime import emit_stage_payload
 
 
@@ -75,6 +76,8 @@ def materialize_layout(args: argparse.Namespace) -> int:
             )
         )
 
+    navigation_sync = sync_navigation_tree(document_root, dry_run=args.dry_run)
+
     payload = {
         "workspace_root": str(workspace_root),
         "document_root": str(document_root),
@@ -84,7 +87,23 @@ def materialize_layout(args: argparse.Namespace) -> int:
         "existing_workspace_dirs": existing_workspace_dirs,
         "existing_document_dirs": existing_document_dirs,
         "created_document_files": created_document_files,
+        "navigation_sync": navigation_sync,
         "warnings": warnings,
+        "dry_run": bool(args.dry_run),
+    }
+    if args.json:
+        print(json.dumps(payload, ensure_ascii=False, indent=2))
+    else:
+        for key, value in payload.items():
+            print(f"{key}: {value}")
+    return 0
+
+
+def sync_mother_doc_navigation(args: argparse.Namespace) -> int:
+    document_root = Path(args.document_root).resolve()
+    payload = {
+        "document_root": str(document_root),
+        **sync_navigation_tree(document_root, dry_run=args.dry_run),
         "dry_run": bool(args.dry_run),
     }
     if args.json:
@@ -109,6 +128,15 @@ def build_parser() -> argparse.ArgumentParser:
     materialize.add_argument("--dry-run", action="store_true")
     materialize.add_argument("--json", action="store_true")
     materialize.set_defaults(func=materialize_layout)
+
+    navigation = subparsers.add_parser(
+        "sync-mother-doc-navigation",
+        help="refresh recursive README.md and agents.md navigation files for Mother_Doc",
+    )
+    navigation.add_argument("--document-root", default=str(DEFAULT_DOCUMENT_ROOT), help="Mother_Doc root")
+    navigation.add_argument("--dry-run", action="store_true")
+    navigation.add_argument("--json", action="store_true")
+    navigation.set_defaults(func=sync_mother_doc_navigation)
 
     mother_doc = subparsers.add_parser(
         "mother-doc-stage",

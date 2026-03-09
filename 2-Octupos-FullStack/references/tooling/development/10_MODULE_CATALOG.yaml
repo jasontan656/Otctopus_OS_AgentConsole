@@ -13,6 +13,13 @@ modules:
     docs:
       usage: references/tooling/Cli_Toolbox_USAGE.md
       module: references/tooling/development/modules/materialize_container_layout.md
+  - module_id: sync_mother_doc_navigation
+    tool_alias: Cli_Toolbox.sync_mother_doc_navigation
+    entrypoint: scripts/Cli_Toolbox.py sync-mother-doc-navigation
+    status: active
+    docs:
+      usage: references/tooling/Cli_Toolbox_USAGE.md
+      module: references/tooling/development/modules/sync_mother_doc_navigation.md
   - module_id: implementation_stage
     tool_alias: Cli_Toolbox.implementation_stage
     entrypoint: scripts/Cli_Toolbox.py implementation-stage
