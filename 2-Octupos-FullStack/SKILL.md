@@ -35,60 +35,91 @@ description: "未来项目 admin panel 内置的运营AI“章鱼”，负责 mo
 - 详细工具说明下沉到 `references/tooling/`。
 
 ## 3. 工作流约束
-- 进入技能后，任何阶段都必须先加载顶层规则，不得丢弃：
-  - `rules/FULLSTACK_SKILL_HARD_RULES.md`
-  - `references/runtime/SKILL_RUNTIME_CONTRACT.md`
-- 阶段顺序固定为：
-  1. `mother_doc`
-  2. `implementation`
-  3. `evidence`
-- 后续阶段必须显式引用前序阶段内容：
-  - `implementation` 必须显式引用 `mother_doc` 产物
-  - `evidence` 必须显式引用 `mother_doc` 与 `implementation` 产物
-- 需要查看阶段作用域与输入输出时，读取：
-  - `references/stages/00_STAGE_INDEX.md`
-  - `references/stages/MOTHER_DOC_STAGE.md`
-  - `references/stages/IMPLEMENTATION_STAGE.md`
-  - `references/stages/EVIDENCE_STAGE.md`
-- 涉及 `Mother_Doc` 结构、动态扩容、容器命名时，读取：
-  - `references/mother_doc/MOTHER_DOC_ENTRY_RULES.md`
-  - `references/mother_doc/PHASE1_CONTAINER_NAMING_REFERENCE.md`
+- 抽象总则：
+  - 任意阶段开始前，必须先加载顶层规则，不得丢弃：
+    - `rules/FULLSTACK_SKILL_HARD_RULES.md`
+    - `references/runtime/SKILL_RUNTIME_CONTRACT.md`
+  - 阶段顺序固定为：`mother_doc -> implementation -> evidence`
+  - 需要查看阶段作用域与输入输出时，读取 `references/stages/`
+- `mother_doc`：
+  - 先读取：
+    - `references/stages/MOTHER_DOC_STAGE.md`
+    - `references/mother_doc/MOTHER_DOC_ENTRY_RULES.md`
+    - `references/mother_doc/PHASE1_CONTAINER_NAMING_REFERENCE.md`
+  - 本阶段负责维护 `Mother_Doc` 结构、动态扩容、容器命名与容器文档骨架。
+  - 本阶段产物是 `implementation` 的显式输入。
+- `implementation`：
+  - 先读取：
+    - `references/stages/IMPLEMENTATION_STAGE.md`
+    - `references/stages/MOTHER_DOC_STAGE.md`
+  - 本阶段必须显式引用 `mother_doc` 产物后再执行代码与运行时落盘。
+  - 本阶段产物是 `evidence` 的显式输入。
+- `evidence`：
+  - 先读取：
+    - `references/stages/EVIDENCE_STAGE.md`
+    - `references/stages/MOTHER_DOC_STAGE.md`
+    - `references/stages/IMPLEMENTATION_STAGE.md`
+  - 本阶段必须显式引用 `mother_doc` 与 `implementation` 产物后再回填 evidence。
 
 ## 4. 规则约束
-- 本页禁止继续承载堆积式治理细节。
-- 顶层规则属于 always-load 规则；进入任一阶段都必须先加载。
-- 详细运行规则统一下沉到：
-  - `rules/`
-  - `references/runtime/`
-  - `references/stages/`
-  - `references/mother_doc/`
-  - `references/tooling/`
-- 若阶段边界、carry-forward 规则或 tooling 行为发生变化，必须同步更新本页入口、runtime contract、stages 文档、tooling 文档与安装目录。
+- 抽象总则：
+  - 本页禁止继续承载堆积式治理细节。
+  - 顶层规则属于 always-load 规则；进入任一阶段都必须先加载。
+  - 详细运行规则统一下沉到：
+    - `rules/`
+    - `references/runtime/`
+    - `references/stages/`
+    - `references/mother_doc/`
+    - `references/tooling/`
+- `mother_doc`：
+  - 不得跳过 `Mother_Doc` 入口规则直接创建任意容器结构。
+  - 不得脱离容器命名规则与 `common/` 抽象层协议单独写文档树。
+- `implementation`：
+  - 不得脱离 `mother_doc` 产物单独实施。
+  - 不得把实现阶段规则回写成顶层门面文本。
+- `evidence`：
+  - 不得跳过 `implementation` 产物直接伪造 evidence。
+  - 不得把 evidence 阶段要求和前两阶段混写成一个无边界块。
+- 变更约束：
+  - 若阶段边界、carry-forward 规则或 tooling 行为发生变化，必须同步更新本页入口、runtime contract、stages 文档、tooling 文档与安装目录。
 
 ## 5. 方法论约束
-- 文档直接驱动实现。
-- 顶层容器目录与 `Mother_Doc` 同名目录保持 1:1 映射。
-- 容器集合允许按项目描述动态横向扩充。
-- 每个容器文档目录先固定 `README.md + common/`，再继续展开具体内容。
-- `implementation` 与 `evidence` 不得脱离前序阶段单独执行。
+- 抽象总则：
+  - 文档直接驱动实现。
+  - 顶层容器目录与 `Mother_Doc` 同名目录保持 1:1 映射。
+  - 任意部分都采用“抽象层 + 三阶段显式拆分”的写法，不混写作用域。
+- `mother_doc`：
+  - 先定结构，再定容器，再写容器文档。
+  - 每个容器文档目录先固定 `README.md + common/`，再继续展开具体内容。
+- `implementation`：
+  - 只消费 `mother_doc` 已明确产物。
+  - 不把未定义的文档意图自行脑补成实现边界。
+- `evidence`：
+  - 只消费前两阶段的显式产物。
+  - 证据必须与对应实现和文档节点可回指。
 
 ## 6. 内联导航索引
-- [Cli_Toolbox 工具入口] -> [scripts/Cli_Toolbox.py]
-- [容器骨架模块] -> [scripts/container_scaffold.py]
-- [阶段运行模块] -> [scripts/stage_runtime.py]
-- [顶层规则] -> [rules/FULLSTACK_SKILL_HARD_RULES.md]
-- [运行合同 JSON] -> [references/runtime/SKILL_RUNTIME_CONTRACT.json]
-- [运行合同审计版] -> [references/runtime/SKILL_RUNTIME_CONTRACT.md]
-- [阶段索引] -> [references/stages/00_STAGE_INDEX.md]
-- [mother_doc 阶段] -> [references/stages/MOTHER_DOC_STAGE.md]
-- [implementation 阶段] -> [references/stages/IMPLEMENTATION_STAGE.md]
-- [evidence 阶段] -> [references/stages/EVIDENCE_STAGE.md]
-- [Mother_Doc 入口规则] -> [references/mother_doc/MOTHER_DOC_ENTRY_RULES.md]
-- [第一阶段命名参考] -> [references/mother_doc/PHASE1_CONTAINER_NAMING_REFERENCE.md]
-- [Cli_Toolbox 使用文档] -> [references/tooling/Cli_Toolbox_USAGE.md]
-- [Cli_Toolbox 开发文档] -> [references/tooling/Cli_Toolbox_DEVELOPMENT.md]
-- [工作目录] -> [/home/jasontan656/AI_Projects/Octopus_OS]
-- [文档目录] -> [/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc]
+- 抽象总则：
+  - [Cli_Toolbox 工具入口] -> [scripts/Cli_Toolbox.py]
+  - [容器骨架模块] -> [scripts/container_scaffold.py]
+  - [阶段运行模块] -> [scripts/stage_runtime.py]
+  - [顶层规则] -> [rules/FULLSTACK_SKILL_HARD_RULES.md]
+  - [运行合同 JSON] -> [references/runtime/SKILL_RUNTIME_CONTRACT.json]
+  - [运行合同审计版] -> [references/runtime/SKILL_RUNTIME_CONTRACT.md]
+  - [阶段索引] -> [references/stages/00_STAGE_INDEX.md]
+- `mother_doc`：
+  - [mother_doc 阶段] -> [references/stages/MOTHER_DOC_STAGE.md]
+  - [Mother_Doc 入口规则] -> [references/mother_doc/MOTHER_DOC_ENTRY_RULES.md]
+  - [第一阶段命名参考] -> [references/mother_doc/PHASE1_CONTAINER_NAMING_REFERENCE.md]
+- `implementation`：
+  - [implementation 阶段] -> [references/stages/IMPLEMENTATION_STAGE.md]
+- `evidence`：
+  - [evidence 阶段] -> [references/stages/EVIDENCE_STAGE.md]
+- 运行位置：
+  - [Cli_Toolbox 使用文档] -> [references/tooling/Cli_Toolbox_USAGE.md]
+  - [Cli_Toolbox 开发文档] -> [references/tooling/Cli_Toolbox_DEVELOPMENT.md]
+  - [工作目录] -> [/home/jasontan656/AI_Projects/Octopus_OS]
+  - [文档目录] -> [/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc]
 
 ## 7. 架构契约
 ```text
