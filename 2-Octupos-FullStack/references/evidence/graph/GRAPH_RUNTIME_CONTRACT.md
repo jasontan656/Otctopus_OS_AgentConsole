@@ -21,5 +21,5 @@
 ## Bridge Rule
 
 - 当前 CLI 与 runtime 已内生到章鱼OS evidence。
-- 底层 engine 在本阶段通过 `Meta-code-graph-base/assets/gitnexus_core` 做 bridge source，直到后续 vendoring 独立完成。
+- 底层 engine 固定内置于 `2-Octupos-FullStack/assets/os_graph_engine/gitnexus_core`，由 evidence 阶段统一安装、构建与调用。
 - 对模型而言，运行入口已经是章鱼OS evidence 子域 CLI，而不是外部 skill。

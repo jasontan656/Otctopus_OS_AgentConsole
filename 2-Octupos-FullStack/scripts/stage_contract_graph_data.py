@@ -23,7 +23,7 @@ EVIDENCE_GRAPH_DOCS = [
 EVIDENCE_GRAPH_COMMANDS = [
     {
         "command": "python3 scripts/os_graph_cli.py status",
-        "purpose": "verify OS_graph runtime readiness and current bridge-engine availability before graph writeback",
+        "purpose": "verify OS_graph runtime readiness and vendored engine availability before graph writeback",
     },
     {
         "command": "python3 scripts/os_graph_cli.py sync-doc-bindings",

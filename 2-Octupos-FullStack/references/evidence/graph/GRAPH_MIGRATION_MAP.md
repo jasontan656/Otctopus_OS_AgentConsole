@@ -23,4 +23,4 @@
 ## Migration Rule
 
 - graph command surface 已迁入章鱼OS evidence。
-- engine 仍暂时 bridge 到来源资产路径；这不是长期终态，后续再做 vendoring。
+- engine 已内迁到 `2-Octupos-FullStack/assets/os_graph_engine/gitnexus_core`；来源技能仅保留为历史来源，不再承担运行依赖。

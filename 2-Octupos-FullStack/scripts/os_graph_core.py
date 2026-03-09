@@ -1,14 +1,16 @@
 from __future__ import annotations
 
+import hashlib
+import html
 import json
 import os
 import subprocess
 from pathlib import Path
+from datetime import datetime, timezone
 
 
 SKILL_ROOT = Path("/home/jasontan656/AI_Projects/Codex_Skills_Mirror/2-Octupos-FullStack")
-BRIDGE_SKILL_ROOT = Path("/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-code-graph-base")
-ENGINE_ROOT = BRIDGE_SKILL_ROOT / "assets" / "gitnexus_core"
+ENGINE_ROOT = SKILL_ROOT / "assets" / "os_graph_engine" / "gitnexus_core"
 DIST_ENTRY = ENGINE_ROOT / "dist" / "cli" / "index.js"
 GRAPH_ROOT = Path("/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/graph")
 RUNTIME_ROOT = GRAPH_ROOT / "runtime"
@@ -34,8 +36,6 @@ ENGINE_COMMANDS = {
     "rename",
     "augment",
     "resource",
-    "map",
-    "wiki",
     "cypher",
 }
 
@@ -49,22 +49,31 @@ def ensure_runtime_layout() -> list[str]:
     return created
 
 
+def _run(command: list[str], cwd: Path) -> None:
+    subprocess.run(command, cwd=str(cwd), check=True)
+
+
+def ensure_engine() -> None:
+    node_modules = ENGINE_ROOT / "node_modules"
+    if not node_modules.exists():
+        _run(["npm", "install"], ENGINE_ROOT)
+    if not DIST_ENTRY.exists():
+        _run(["npm", "run", "build"], ENGINE_ROOT)
+
+
 def engine_ready_payload() -> dict[str, object]:
     return {
-        "bridge_skill_root": str(BRIDGE_SKILL_ROOT),
+        "engine_asset_root": str(ENGINE_ROOT),
         "engine_root": str(ENGINE_ROOT),
         "dist_entry": str(DIST_ENTRY),
+        "node_modules_ready": (ENGINE_ROOT / "node_modules").exists(),
         "dist_ready": DIST_ENTRY.exists(),
         "runtime_root": str(RUNTIME_ROOT),
     }
 
 
 def engine_run(command: list[str], *, cwd: Path | None = None, capture_output: bool = False) -> subprocess.CompletedProcess[str]:
-    if not DIST_ENTRY.exists():
-        raise SystemExit(
-            "OS_graph bridge engine is unavailable. Expected dist entry at "
-            f"{DIST_ENTRY}. Keep Meta-code-graph-base assets available until vendoring lands."
-        )
+    ensure_engine()
     ensure_runtime_layout()
     env = os.environ.copy()
     env["META_CODE_GRAPH_RUNTIME_ROOT"] = str(RUNTIME_ROOT)
@@ -83,6 +92,61 @@ def emit_subprocess(result: subprocess.CompletedProcess[str]) -> int:
     if payload:
         print(payload, end="" if payload.endswith("\n") else "\n")
     return result.returncode
+
+
+def load_registry() -> list[dict[str, object]]:
+    registry_path = RUNTIME_ROOT / "registry" / "registry.json"
+    if not registry_path.exists():
+        return []
+    return json.loads(registry_path.read_text(encoding="utf-8"))
+
+
+def repo_key(repo_path: str) -> str:
+    resolved = str(Path(repo_path).resolve())
+    base = "".join(ch if ch.isalnum() or ch in "._-" else "_" for ch in Path(resolved).name) or "repo"
+    if not base.endswith("_repo"):
+        base = f"{base}_repo"
+    digest = hashlib.sha1(resolved.encode("utf-8")).hexdigest()[:12]
+    return f"{base}-{digest}"
+
+
+def _contract_marked_markdown(*, contract_name: str, body: str) -> str:
+    return (
+        "## Contract Markers\n\n"
+        f"contract_name: {contract_name}\n"
+        "contract_version: v1\n"
+        "validation_mode: placeholder\n"
+        "required_fields:\n"
+        "- runtime_source\n"
+        "optional_fields:\n"
+        "- graph_layer\n\n"
+        f"{body.rstrip()}\n"
+    )
+
+
+def resolve_repo(user_value: str | None) -> dict[str, object]:
+    registry = load_registry()
+    if not registry:
+        raise SystemExit("OS_graph: no indexed repositories found. Run analyze first.")
+
+    if user_value:
+        candidate_path = Path(user_value).resolve()
+        for entry in registry:
+            if Path(str(entry["path"])).resolve() == candidate_path or entry["name"] == user_value:
+                return entry
+        raise SystemExit(f'OS_graph: repository "{user_value}" not found in registry.')
+
+    cwd = Path.cwd().resolve()
+    best: dict[str, object] | None = None
+    for entry in registry:
+        repo_path = Path(str(entry["path"])).resolve()
+        if cwd == repo_path or repo_path in cwd.parents:
+            if best is None or len(str(repo_path)) > len(str(Path(str(best["path"])).resolve())):
+                best = entry
+    if best:
+        return best
+
+    raise SystemExit("OS_graph: current directory is not inside an indexed repository.")
 
 
 def _layer_for(rel_path: Path) -> str:
@@ -152,6 +216,137 @@ def _write_json(relative: str, payload: object) -> str:
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
     return str(target)
+
+
+def write_map(repo_value: str | None, *, emit: bool = True) -> dict[str, object]:
+    repo = resolve_repo(repo_value)
+    key = repo_key(str(repo["path"]))
+    map_dir = RUNTIME_ROOT / "maps" / key
+    map_dir.mkdir(parents=True, exist_ok=True)
+
+    resources = {
+        "graph_context.md": f'codegraph://repo/{repo["name"]}/context',
+        "clusters.md": f'codegraph://repo/{repo["name"]}/clusters',
+        "processes.md": f'codegraph://repo/{repo["name"]}/processes',
+        "schema.md": f'codegraph://repo/{repo["name"]}/schema',
+    }
+
+    written: list[str] = []
+    for filename, uri in resources.items():
+        result = engine_run(["resource", uri], cwd=Path(str(repo["path"])), capture_output=True)
+        target = map_dir / filename
+        payload = result.stdout if result.stdout.strip() else result.stderr
+        contract_name = f"os_graph_map_{Path(filename).stem}"
+        target.write_text(_contract_marked_markdown(contract_name=contract_name, body=payload), encoding="utf-8")
+        written.append(str(target))
+
+    manifest = {
+        "repo_name": repo["name"],
+        "repo_path": str(Path(str(repo["path"])).resolve()),
+        "repo_key": key,
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "files": [Path(path).name for path in written],
+    }
+    manifest_path = map_dir / "manifest.json"
+    manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+    payload = {"status": "success", "map_dir": str(map_dir), "files": written + [str(manifest_path)]}
+    if emit:
+        print(json.dumps(payload, indent=2))
+    return payload
+
+
+def write_wiki(repo_value: str | None, *, emit: bool = True) -> dict[str, object]:
+    repo = resolve_repo(repo_value)
+    key = repo_key(str(repo["path"]))
+    map_dir = RUNTIME_ROOT / "maps" / key
+    if not map_dir.exists():
+        write_map(str(repo["name"]), emit=False)
+
+    wiki_dir = RUNTIME_ROOT / "wiki" / key
+    wiki_dir.mkdir(parents=True, exist_ok=True)
+
+    source_files = {
+        "overview.md": map_dir / "graph_context.md",
+        "clusters.md": map_dir / "clusters.md",
+        "processes.md": map_dir / "processes.md",
+        "schema.md": map_dir / "schema.md",
+    }
+
+    copied: list[str] = []
+    for target_name, source_path in source_files.items():
+        content = source_path.read_text(encoding="utf-8")
+        target_path = wiki_dir / target_name
+        if target_name == "overview.md":
+            overview = (
+                f"# {repo['name']} Local Wiki\n\n"
+                "This wiki bundle is generated from local graph resources only.\n\n"
+                "## Pages\n"
+                "- [Overview](./overview.md)\n"
+                "- [Clusters](./clusters.md)\n"
+                "- [Processes](./processes.md)\n"
+                "- [Schema](./schema.md)\n\n"
+                "## Resource Snapshot\n\n"
+                f"```\n{content.strip()}\n```\n"
+            )
+            target_path.write_text(overview, encoding="utf-8")
+        else:
+            target_path.write_text(content, encoding="utf-8")
+        copied.append(str(target_path))
+
+    meta = {
+        "repo_name": repo["name"],
+        "repo_path": str(Path(str(repo["path"])).resolve()),
+        "repo_key": key,
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "source": "local-graph-resources",
+        "pages": [Path(path).name for path in copied],
+    }
+    (wiki_dir / "meta.json").write_text(json.dumps(meta, indent=2), encoding="utf-8")
+    (wiki_dir / "module_tree.json").write_text(
+        json.dumps(
+            [
+                {"name": "Overview", "slug": "overview", "files": ["overview.md"]},
+                {"name": "Clusters", "slug": "clusters", "files": ["clusters.md"]},
+                {"name": "Processes", "slug": "processes", "files": ["processes.md"]},
+                {"name": "Schema", "slug": "schema", "files": ["schema.md"]},
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+
+    index_html = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{html.escape(str(repo["name"]))} Local Wiki</title>
+  <style>
+    body {{ font-family: system-ui, sans-serif; margin: 32px; color: #1f2937; }}
+    a {{ color: #2563eb; text-decoration: none; }}
+    a:hover {{ text-decoration: underline; }}
+    code, pre {{ background: #f3f4f6; }}
+    pre {{ padding: 16px; border-radius: 8px; overflow-x: auto; }}
+  </style>
+</head>
+<body>
+  <h1>{html.escape(str(repo["name"]))} Local Wiki</h1>
+  <p>Generated from local graph resources only.</p>
+  <ul>
+    <li><a href="./overview.md">Overview</a></li>
+    <li><a href="./clusters.md">Clusters</a></li>
+    <li><a href="./processes.md">Processes</a></li>
+    <li><a href="./schema.md">Schema</a></li>
+  </ul>
+</body>
+</html>
+"""
+    (wiki_dir / "index.html").write_text(index_html, encoding="utf-8")
+
+    payload = {"status": "success", "wiki_dir": str(wiki_dir), "pages": copied + [str(wiki_dir / "index.html")]}
+    if emit:
+        print(json.dumps(payload, indent=2))
+    return payload
 
 
 def sync_doc_bindings() -> dict[str, object]:

@@ -95,8 +95,8 @@ modules:
     entrypoint: scripts/os_graph_cli.py sync-evidence
     status: active
     stage_scope: evidence
-  - module_id: os_graph_engine_bridge
-    tool_alias: OS_Graph_Cli.engine_bridge
+  - module_id: os_graph_engine_commands
+    tool_alias: OS_Graph_Cli.engine_commands
     entrypoint: scripts/os_graph_cli.py <analyze|query|context|impact|detect-changes|resource|map|wiki|cypher>
     status: active
     stage_scope: evidence
