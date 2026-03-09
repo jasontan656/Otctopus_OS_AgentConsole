@@ -1,0 +1,4 @@
+interface:
+  display_name: "Meta-Agent-Browser"
+  short_description: "Manual-invoke skill for Vercel agent-browser"
+  default_prompt: "Use Meta-Agent-Browser only when the user explicitly requests this skill or explicitly asks for agent-browser-based browser automation."
