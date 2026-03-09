@@ -1,16 +1,15 @@
-# Cli_Toolbox 开发文档架构总览
+# Cli_Toolbox Architecture Overview
 
 适用技能：`2-Octupos-FullStack`
 
+## 当前范围
+
+- 当前只提供一个第一阶段工具：
+  - `Cli_Toolbox.materialize_container_layout`
+
 ## 目标
-- 用结构化文档支撑复杂 Toolbox，而不是依赖单一开发文档。
 
-## 分层结构
-1. 入口层：`references/tooling/Cli_Toolbox_DEVELOPMENT.md`
-2. 索引层：`10_MODULE_CATALOG.yaml`、`20_CATEGORY_INDEX.md`
-3. 模块层：`references/tooling/development/modules/`
-4. 变更层：`90_CHANGELOG.md`
-
-## 额外要求
-- 若技能存在运行态规则、约束、指引，开发架构必须明确 machine-readable 合同、CLI 输出入口与 markdown 审计版的关系。
-- 若技能属于 staged CLI-first 复杂 profile，开发架构还必须明确 resident docs、阶段目录与阶段合同。
+- 接收 AI 已判定好的容器名
+- 在工作目录创建同名容器目录
+- 在 `Mother_Doc` 下创建同名文档目录
+- 保持幂等

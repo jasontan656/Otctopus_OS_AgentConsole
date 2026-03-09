@@ -1,5 +1,3 @@
-# Cli_Toolbox 开发文档变更记录
+# Changelog
 
-- [日期]
-  - [变更摘要]
-  - [若涉及 profile/runtime/stages，也在此显式记录]
+- 2026-03-09: added `Cli_Toolbox.materialize_container_layout` for stage-1 container and Mother_Doc directory materialization.

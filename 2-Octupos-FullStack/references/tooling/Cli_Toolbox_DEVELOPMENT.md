@@ -28,3 +28,4 @@
 
 ## 版本变更记录
 - [日期] [变更摘要]
+- 2026-03-09 新增 `Cli_Toolbox.materialize_container_layout`，用于第一阶段创建工作目录与 `Mother_Doc` 同名目录结构。

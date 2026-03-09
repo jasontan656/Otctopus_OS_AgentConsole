@@ -1,13 +1,8 @@
-catalog_version: v1
-toolbox_name: Cli_Toolbox
-maintain_rules:
-  naming: "Cli_Toolbox.<tool_name>"
-  docs_sync_required: true
-  required_docs:
-    - references/tooling/Cli_Toolbox_USAGE.md
-    - references/tooling/Cli_Toolbox_DEVELOPMENT.md
-    - references/tooling/development/20_CATEGORY_INDEX.md
-profile_support:
-  - basic
-  - staged_cli_first
-modules: []
+modules:
+  - module_id: materialize_container_layout
+    tool_alias: Cli_Toolbox.materialize_container_layout
+    entrypoint: scripts/Cli_Toolbox.py materialize-container-layout
+    status: active
+    docs:
+      usage: references/tooling/Cli_Toolbox_USAGE.md
+      module: references/tooling/development/modules/materialize_container_layout.md
