@@ -3,46 +3,20 @@ from __future__ import annotations
 
 import argparse
 import json
-import re
 from pathlib import Path
+
+from container_scaffold import (
+    build_document_readme,
+    build_workspace_readme,
+    detect_family,
+    ensure_markdown,
+    scaffold_common_tree,
+    validate_container_name,
+)
 
 
 DEFAULT_WORKSPACE_ROOT = Path("/home/jasontan656/AI_Projects/Octopus_OS")
 DEFAULT_DOCUMENT_ROOT = DEFAULT_WORKSPACE_ROOT / "Mother_Doc"
-VALID_NAME_RE = re.compile(r"^[A-Za-z][A-Za-z0-9_]*$")
-DISCOURAGED_PREFIXES = ("Shared_", "Business_", "Runtime_")
-PREFERRED_SUFFIXES = (
-    "_UI",
-    "_Gateway",
-    "_Service",
-    "_DB",
-    "_Cache",
-    "_Broker",
-    "_Storage",
-)
-
-
-def validate_container_name(name: str) -> list[str]:
-    warnings: list[str] = []
-    if not VALID_NAME_RE.fullmatch(name):
-        raise ValueError(f"invalid container name: {name}")
-    if name == "Mother_Doc":
-        return warnings
-    if any(name.startswith(prefix) for prefix in DISCOURAGED_PREFIXES):
-        warnings.append(f"discouraged bucket-style name: {name}")
-    if not any(name.endswith(suffix) for suffix in PREFERRED_SUFFIXES):
-        warnings.append(f"name does not use a preferred stage-1 suffix: {name}")
-    return warnings
-
-
-def ensure_readme(path: Path, *, title: str, body_lines: list[str], dry_run: bool) -> bool:
-    if path.exists():
-        return False
-    if dry_run:
-        return True
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text("\n".join([f"# {title}", "", *body_lines, ""]) , encoding="utf-8")
-    return True
 
 
 def materialize_layout(args: argparse.Namespace) -> int:
@@ -57,17 +31,13 @@ def materialize_layout(args: argparse.Namespace) -> int:
     created_document_dirs: list[str] = []
     existing_workspace_dirs: list[str] = []
     existing_document_dirs: list[str] = []
+    created_document_files: list[str] = []
 
     for name in containers:
         warnings.extend(validate_container_name(name))
-
-        workspace_dir = workspace_root / name
+        family = detect_family(name)
+        workspace_dir = document_root if name == "Mother_Doc" else workspace_root / name
         document_dir = document_root / name
-
-        # Mother_Doc is a self-reference case: the workspace container already exists
-        # at document_root, while its authored entry lives under document_root/Mother_Doc.
-        if name == "Mother_Doc":
-            workspace_dir = document_root
 
         if workspace_dir.exists():
             existing_workspace_dirs.append(str(workspace_dir))
@@ -83,23 +53,25 @@ def materialize_layout(args: argparse.Namespace) -> int:
             if not args.dry_run:
                 document_dir.mkdir(parents=True, exist_ok=True)
 
-        ensure_readme(
+        ensure_markdown(
             workspace_dir / "README.md",
             title=name,
-            body_lines=[
-                "Stage-1 container directory.",
-                f"Corresponding Mother_Doc path: {document_dir}",
-            ],
+            body_lines=build_workspace_readme(name, document_dir),
             dry_run=args.dry_run,
         )
-        ensure_readme(
+        ensure_markdown(
             document_dir / "README.md",
             title=name,
-            body_lines=[
-                "Mother_Doc entry for the same-named container.",
-                f"Corresponding workspace path: {workspace_dir}",
-            ],
+            body_lines=build_document_readme(name, workspace_dir, family),
             dry_run=args.dry_run,
+        )
+        created_document_files.extend(
+            scaffold_common_tree(
+                container_name=name,
+                document_dir=document_dir,
+                family=family,
+                dry_run=args.dry_run,
+            )
         )
 
     payload = {
@@ -110,10 +82,10 @@ def materialize_layout(args: argparse.Namespace) -> int:
         "created_document_dirs": created_document_dirs,
         "existing_workspace_dirs": existing_workspace_dirs,
         "existing_document_dirs": existing_document_dirs,
+        "created_document_files": created_document_files,
         "warnings": warnings,
         "dry_run": bool(args.dry_run),
     }
-
     if args.json:
         print(json.dumps(payload, ensure_ascii=False, indent=2))
     else:
@@ -130,22 +102,9 @@ def build_parser() -> argparse.ArgumentParser:
         "materialize-container-layout",
         help="create workspace and Mother_Doc directories for already-decided containers",
     )
-    materialize.add_argument(
-        "--workspace-root",
-        default=str(DEFAULT_WORKSPACE_ROOT),
-        help="Octopus_OS workspace root",
-    )
-    materialize.add_argument(
-        "--document-root",
-        default=str(DEFAULT_DOCUMENT_ROOT),
-        help="Mother_Doc root",
-    )
-    materialize.add_argument(
-        "--container",
-        action="append",
-        default=[],
-        help="container name; repeat for multiple containers",
-    )
+    materialize.add_argument("--workspace-root", default=str(DEFAULT_WORKSPACE_ROOT), help="Octopus_OS workspace root")
+    materialize.add_argument("--document-root", default=str(DEFAULT_DOCUMENT_ROOT), help="Mother_Doc root")
+    materialize.add_argument("--container", action="append", default=[], help="container name; repeat for multiple containers")
     materialize.add_argument("--dry-run", action="store_true")
     materialize.add_argument("--json", action="store_true")
     materialize.set_defaults(func=materialize_layout)

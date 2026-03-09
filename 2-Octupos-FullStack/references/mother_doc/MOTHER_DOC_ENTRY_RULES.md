@@ -5,8 +5,9 @@
 ## 入口定位
 
 - 本文档描述 `Mother_Doc` 撰写/维护入口的技能自有规则。
-- 它不定义具体 UI、backend、database、deployment 方案；它只定义 AI 如何判断是否需要新增容器与文档目录。
+- 它不定义具体 UI、backend、database、deployment 方案；它只定义 AI 如何判断是否需要新增容器与文档目录，以及这些目录的最低抽象层形态。
 - `Mother_Doc` 当前入口形态应以同名容器目录为主，不保留 `01-07` 这类编号治理目录作为主要结构。
+- `Mother_Doc/README.md` 是镜像根说明；`Mother_Doc/Mother_Doc/00_INDEX.md` 是 `Mother_Doc` 容器自己的索引。
 
 ## 动态扩充原则
 
@@ -31,6 +32,53 @@
 
 - 工作目录容器本身就是 `Octopus_OS/Mother_Doc/`
 - 其自描述文档目录应为 `Octopus_OS/Mother_Doc/Mother_Doc/`
+
+## 抽象层协议
+
+- 每个容器文档目录必须先固定为：
+  - `README.md`
+  - `common/`
+- `common/` 当前固定 5 个一级域：
+  - `architecture/`
+  - `stack/`
+  - `naming/`
+  - `contracts/`
+  - `operations/`
+- 每个最小知识点单独一个 `*.md`。
+- 新增容器后，必须同步生成其容器族对应的 `common/` 抽象层骨架。
+
+## 容器族模板
+
+- `Mother_Doc`:
+  - `common/architecture/{role,boundary,container_mapping,visualization_mapping,writeback_model}.md`
+  - `common/stack/{storage_model,access_model,graph_model,indexing_model}.md`
+  - `common/naming/{directory_naming,file_naming,node_naming,container_naming}.md`
+  - `common/contracts/{read_api,writeback_api,evidence_contract,sync_contract}.md`
+  - `common/operations/{maintenance_entry,query_commands,change_policy,recovery_entry}.md`
+- `UI`:
+  - `common/architecture/{screen_map,component_layers,state_boundary,interaction_boundary}.md`
+  - `common/stack/{framework_stack,styling_stack,build_stack,runtime_stack}.md`
+  - `common/naming/{route_naming,component_naming,state_naming,event_naming}.md`
+  - `common/contracts/{backend_api_usage,event_contract,permission_contract,error_feedback_contract}.md`
+  - `common/operations/{release_entry,debug_commands,environment_notes}.md`
+- `Gateway`:
+  - `common/architecture/{routing_boundary,upstream_map,auth_forwarding,traffic_boundary}.md`
+  - `common/stack/{gateway_stack,deployment_mode,runtime_profile}.md`
+  - `common/naming/{route_prefixes,upstream_aliases,header_naming}.md`
+  - `common/contracts/{inbound_contract,upstream_contract,auth_contract,error_contract}.md`
+  - `common/operations/{rate_limit_policy,debug_commands,rollback_entry}.md`
+- `Service`:
+  - `common/architecture/{bounded_context,component_map,dependency_boundary,async_boundary}.md`
+  - `common/stack/{runtime_stack,storage_stack,transport_stack,async_stack}.md`
+  - `common/naming/{entity_naming,api_naming,event_naming,job_naming}.md`
+  - `common/contracts/{inbound_api,outbound_api,event_contract,error_contract,healthcheck_contract}.md`
+  - `common/operations/{deploy_entry,healthcheck,query_commands,recovery_entry}.md`
+- `Data_Infra`:
+  - `common/architecture/{role,ownership_boundary,client_boundary,data_boundary}.md`
+  - `common/stack/{engine_profile,deployment_mode,persistence_profile}.md`
+  - `common/naming/{resource_naming,namespace_naming,key_or_schema_naming}.md`
+  - `common/contracts/{access_policy,client_contract,backup_restore_contract,retention_contract}.md`
+  - `common/operations/{query_commands,maintenance_commands,recovery_entry,monitoring_entry}.md`
 
 ## 判定示例
 
