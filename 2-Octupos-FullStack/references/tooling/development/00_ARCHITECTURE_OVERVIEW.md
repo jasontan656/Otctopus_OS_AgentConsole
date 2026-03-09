@@ -9,6 +9,9 @@
   - doc contract
   - command contract
   - graph contract
+- `Cli_Toolbox.py` 保持薄入口，只负责 parser 根装配与命令分发。
+- `cli_parser_blocks.py` 负责成组注册 parser，避免入口脚本继续膨胀。
+- `skill_runtime_entry.py` 负责输出 skill 级 runtime/facade JSON 合同，供模型先读 CLI 再下钻阶段或子分支。
 
 ## Mother_Doc Structure
 

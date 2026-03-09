@@ -9,41 +9,39 @@ description: "未来项目 admin panel 内置的运营AI“章鱼”，负责 mo
 - 本技能用于 `Octopus_OS` 的全栈文档驱动开发与落盘维护。
 - 本技能是 `Octopus_OS` 的开发操作手册门面，运行对象是内置运营AI“章鱼”。
 - 阶段固定为：`mother_doc`、`implementation`、`evidence`。
-- 长规则不在门面展开；门面只负责给出入口与最小说明。
+- 长规则不在门面展开；门面只负责给出中文说明、人类导航与 CLI 入口。
 
-## 2. 可用工具
+## 2. 运行入口
 - 统一入口：[Cli_Toolbox.py](scripts/Cli_Toolbox.py)
-- 工具分阶段使用，不在门面展开全部命令清单。
-- `AGENTS/README manager` 目标级运行合同统一从 CLI 读取，不直接从 markdown 读取。
-- 具体命令、作用和调用方式统一从 [Facade Load Map](references/skill_native/01_FACADE_LOAD_MAP.md) 进入。
+- 模型进入本技能后，先读取 skill 级 CLI 运行合同：
+  - `python3 scripts/Cli_Toolbox.py skill-runtime-contract --json`
+  - `python3 scripts/Cli_Toolbox.py skill-facade-contract --json`
+- CLI JSON 是运行态唯一优先来源；技能内 markdown 不作为模型运行规则主来源。
+- `AGENTS/README manager`、阶段合同、阶段命令、目标级合同都继续从 CLI JSON 下钻。
 
-## 3. 工作流约束
-- 统一工作流入口：[Facade Load Map](references/skill_native/01_FACADE_LOAD_MAP.md)
-- 顶层常驻文档、项目统一目标基线、阶段进入顺序、阶段切换方式都从该入口继续读取。
-- `mother_doc` 进入后先读子分支入口，再选择 `direct_writeback`、`question_backfill` 或 `AGENTS/README manager`。
-- 若目标是受管外部 `AGENTS.md` / `README.md`，先执行 `mother-doc-agents-target-contract --relative-path "<PATH>" --file-kind <agents|readme> --json`。
-- `mother_doc`、`implementation`、`evidence` 的细则不在门面展开。
+## 3. 中文门面说明
+- 本技能保留中文说明，便于人类审计和理解阶段语义。
+- 下沉到 CLI 的规则允许使用英文输出，只要运行态表达更稳定、更适合模型消费。
+- `mother_doc` 负责当前态文档结构与容器语义。
+- `implementation` 负责按当前文档结构实现并对齐代码。
+- `evidence` 负责收集真实证据、日志与 graph 绑定。
 
 ## 4. 规则约束
 - 顶层规则入口：[FULLSTACK_SKILL_HARD_RULES.md](rules/FULLSTACK_SKILL_HARD_RULES.md)
-- 技能级运行合同入口：
+- skill 级运行合同入口：
+  - CLI: `python3 scripts/Cli_Toolbox.py skill-runtime-contract --json`
+  - CLI: `python3 scripts/Cli_Toolbox.py skill-facade-contract --json`
+  - machine audit source: `references/runtime/SKILL_RUNTIME_CONTRACT.json`
+  - human audit source: `references/runtime/SKILL_RUNTIME_CONTRACT.md`
+- `AGENTS/README manager` 分支运行合同入口：
   - CLI: `python3 scripts/Cli_Toolbox.py mother-doc-agents-contract --json`
-  - machine: `references/mother_doc/agents_branch/runtime/AGENTS_BRANCH_CONTRACT.json`
-  - audit: `references/mother_doc/agents_branch/runtime/AGENTS_BRANCH_CONTRACT.md`
-- 目标级运行合同入口：
+  - CLI: `python3 scripts/Cli_Toolbox.py mother-doc-agents-directive --stage <scan|collect|push> --json`
   - CLI: `python3 scripts/Cli_Toolbox.py mother-doc-agents-target-contract --relative-path "<PATH>" --file-kind <agents|readme> --json`
   - machine cache: `assets/mother_doc_agents/runtime_rules/**/**/*.runtime.json`
-  - audit: `assets/mother_doc_agents/runtime_rules/**/AGENT_AUDIT.md` / `README_AUDIT.md`
-- 门面不复述规则正文；运行时优先 CLI JSON，markdown 只供人类审计。
+  - human audit source: `assets/mother_doc_agents/runtime_rules/**/AGENT_AUDIT.md` / `README_AUDIT.md`
+- 规则正文不在本门面重复抄写。
 
-## 5. 方法论约束
-- 方法论入口：[Facade Load Map](references/skill_native/01_FACADE_LOAD_MAP.md)
-- 具体方法论分别落在 `mother_doc`、`implementation`、`evidence` 的阶段文档与对齐文档中。
-- 门面只声明两件事：
-  - 文档即代码，规则分层读取，禁止在门面混写。
-  - 对受管外部 `AGENTS.md` 的运行判断，只能使用 CLI JSON，不直接依赖技能内 markdown。
-
-## 6. 内联导航索引
+## 5. 人类审计导航
 - [总入口图](references/skill_native/01_FACADE_LOAD_MAP.md)
 - [skill native 索引](references/skill_native/00_SKILL_NATIVE_INDEX.md)
 - [项目统一目标基线](references/skill_native/10_PROJECT_BASELINE_INDEX.md)
@@ -52,7 +50,10 @@ description: "未来项目 admin panel 内置的运营AI“章鱼”，负责 mo
 - [authored domains 索引](references/authored_domains/00_DOMAIN_INDEX.md)
 - [工具入口](scripts/Cli_Toolbox.py)
 
-## 7. 架构契约
-- 架构契约入口：[Facade Load Map](references/skill_native/01_FACADE_LOAD_MAP.md)
-- 运行边界入口：[SKILL_RUNTIME_CONTRACT.md](references/runtime/SKILL_RUNTIME_CONTRACT.md)
-- 目录细节不在门面展开；需要结构时从上述入口继续进入具体目录与规则文件。
+## 6. 运行边界
+- 模型默认先跑 CLI，再决定是否查看 markdown 审计版。
+- markdown 保留的内容限于：
+  - 技能中文简介
+  - 人类审计导航
+  - 结构索引
+- 任何会影响模型执行判断的规则，优先维护在脚本输出或其 JSON 源中，而不是维护在门面 markdown 中。

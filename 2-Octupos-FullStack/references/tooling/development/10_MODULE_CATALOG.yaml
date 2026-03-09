@@ -1,4 +1,12 @@
 modules:
+  - module_id: skill_runtime_contract
+    tool_alias: Cli_Toolbox.skill_runtime_contract
+    entrypoint: scripts/Cli_Toolbox.py skill-runtime-contract
+    status: active
+  - module_id: skill_facade_contract
+    tool_alias: Cli_Toolbox.skill_facade_contract
+    entrypoint: scripts/Cli_Toolbox.py skill-facade-contract
+    status: active
   - module_id: stage_checklist
     tool_alias: Cli_Toolbox.stage_checklist
     entrypoint: scripts/Cli_Toolbox.py stage-checklist
@@ -100,3 +108,11 @@ modules:
     entrypoint: scripts/os_graph_cli.py <analyze|query|context|impact|detect-changes|resource|map|wiki|cypher>
     status: active
     stage_scope: evidence
+  - module_id: cli_parser_blocks
+    tool_alias: internal.cli_parser_blocks
+    entrypoint: scripts/cli_parser_blocks.py
+    status: active
+  - module_id: skill_runtime_entry
+    tool_alias: internal.skill_runtime_entry
+    entrypoint: scripts/skill_runtime_entry.py
+    status: active

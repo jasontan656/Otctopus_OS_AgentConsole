@@ -4,10 +4,19 @@
 
 ## Purpose
 
-- This file is the single routing entry behind the lightweight `SKILL.md` facade.
-- Use it when the facade points you here and you need to know which rule file, stage file, domain file, or tool file to load next.
+- This file is a human audit and navigation map behind the lightweight `SKILL.md` facade.
+- Runtime models must not treat this markdown file as the primary rule source.
+- Runtime routing must come from:
+  - `python3 scripts/Cli_Toolbox.py skill-runtime-contract --json`
+  - `python3 scripts/Cli_Toolbox.py skill-facade-contract --json`
 
-## Always Load
+## Runtime First
+
+- Load the CLI JSON contracts first.
+- Use this file only when a human or an audit flow needs a readable path map.
+- If markdown and CLI JSON appear to differ, CLI JSON wins for runtime execution.
+
+## Audit Navigation
 
 - [顶层规则](../../rules/FULLSTACK_SKILL_HARD_RULES.md)
 - [运行合同审计版](../runtime/SKILL_RUNTIME_CONTRACT.md)
@@ -80,7 +89,10 @@
 
 ## Lookup Hints
 
-- If you need phase-specific commands, first load the stage contract commands from `Cli_Toolbox.py`.
-- If you need phase-specific rules, first load the matching stage doc under `references/stages/`.
-- If you need container-family behavior, first load the matching domain family under `references/authored_domains/`.
+- Runtime model path:
+  - first load `skill-runtime-contract`
+  - then load `skill-facade-contract`
+  - then descend into stage-level CLI contracts
+- Human audit path:
+  - use the indexes and links below to inspect the authored markdown structure
 - If you need actual product-side authored content, move from the skill into `Octopus_OS/Mother_Doc/docs/<Container_Name>/`.

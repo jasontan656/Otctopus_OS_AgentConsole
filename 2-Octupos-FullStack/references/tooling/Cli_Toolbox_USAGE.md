@@ -3,6 +3,8 @@
 适用技能：`2-Octupos-FullStack`
 
 ## 工具清单
+- `Cli_Toolbox.skill_runtime_contract`
+- `Cli_Toolbox.skill_facade_contract`
 - `Cli_Toolbox.stage_checklist`
 - `Cli_Toolbox.stage_doc_contract`
 - `Cli_Toolbox.stage_command_contract`
@@ -25,6 +27,8 @@
 
 ## 核心命令
 
+- `python3 scripts/Cli_Toolbox.py skill-runtime-contract --json`
+- `python3 scripts/Cli_Toolbox.py skill-facade-contract --json`
 - `python3 scripts/Cli_Toolbox.py stage-checklist --stage <mother_doc|implementation|evidence> --json`
 - `python3 scripts/Cli_Toolbox.py stage-doc-contract --stage <mother_doc|implementation|evidence> --json`
 - `python3 scripts/Cli_Toolbox.py stage-command-contract --stage <mother_doc|implementation|evidence> --json`
@@ -46,6 +50,8 @@
 
 ## 结构结果
 
+- `skill-runtime-contract` 会返回 skill 级运行合同，并显式声明 `CLI_JSON` 是运行态优先来源。
+- `skill-facade-contract` 会返回 skill 级路由图，包括顶层常驻文档、阶段顺序、阶段 summary command 与专用子分支入口。
 - `sync-mother-doc-navigation` 会返回：
   - `created_readmes`
   - `created_scope_docs`
