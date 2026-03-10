@@ -7,13 +7,16 @@ IGNORE_DIRS = {".git", ".venv", ".venv-wsl", "node_modules", "dist", "build", "c
 TEXT_EXTS = {".py", ".ts", ".tsx", ".js", ".jsx", ".vue", ".json", ".yaml", ".yml", ".md", ".sql", ".toml"}
 SOURCE_EXTS = {".py", ".ts", ".tsx", ".js", ".jsx", ".vue", ".sql", ".yaml", ".yml", ".json", ".md"}
 SKIP_PREFIXES = {("references",), ("assets",), ("tests",), ("scripts", "constitution_lint_rules")}
+NESTED_SKIP_DIRS = {"references", "assets", "tests"}
 IO_PATTERNS = ("requests.", "httpx.", "fetch(", "axios(", "sqlalchemy", "psycopg", "redis.", "pymongo", "subprocess", "socket", "aiohttp", "requests.get(", "httpx.get(")
 RAW_PAYLOAD_PATTERNS = ("telegram_update", "callback_query", "webapp_data", "raw_payload", "raw_update", "incoming_update")
 
 
 def should_skip(path: Path, root: Path) -> bool:
     parts = path.relative_to(root).parts
-    return any(parts[:len(prefix)] == prefix for prefix in SKIP_PREFIXES)
+    if any(parts[:len(prefix)] == prefix for prefix in SKIP_PREFIXES):
+        return True
+    return any(part in NESTED_SKIP_DIRS for part in parts[:-1])
 
 
 def iter_files(root: Path, exts: Iterable[str] | None = None) -> Iterator[Path]:

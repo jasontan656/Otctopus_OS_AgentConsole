@@ -295,16 +295,22 @@ class ConstitutionToolingTests(unittest.TestCase):
             self.assertNotIn("scripts/workflow_stage_contract.py", violations, result.stdout + result.stderr)
             self.assertEqual(violations.get("scripts/run_cli.py"), "cli_or_task_script>420", result.stdout + result.stderr)
 
-    def test_enhanced_report_clusters_scope_and_vendor_noise(self) -> None:
+    def test_nested_assets_and_tests_are_skipped_but_real_files_still_lint(self) -> None:
         with tempfile.TemporaryDirectory(prefix="ctest_", dir=str(ROOT.parent)) as tmp:
             root = Path(tmp) / "Codex_Skills_Mirror"
             vendored = root / "Meta-code-graph-base" / "assets" / "gitnexus_core" / "test" / "unit"
             agents = root / "3-Octupos-OS-Backend" / "agents"
+            nested_tests = root / "Meta-Default-md-manager" / "tests"
             vendored.mkdir(parents=True)
             agents.mkdir(parents=True)
+            nested_tests.mkdir(parents=True)
 
             (vendored / "repo-manager.test.ts").write_text(
                 'const HOME = "/home/jasontan656/tmp/repo";\n',
+                encoding="utf-8",
+            )
+            (nested_tests / "test_case.py").write_text(
+                'SECRET = "/home/jasontan656/.ssh/id_rsa"\n',
                 encoding="utf-8",
             )
             (agents / "openai.yaml").write_text(
@@ -322,19 +328,25 @@ class ConstitutionToolingTests(unittest.TestCase):
             report = json.loads(result.stdout)
 
             summary = report["summary_enhanced"]
-            self.assertGreaterEqual(summary["deduped_issue_count"], 2, result.stdout + result.stderr)
-            self.assertGreaterEqual(summary["likely_duplicated_vendor_issues"], 1, result.stdout + result.stderr)
+            self.assertGreaterEqual(summary["deduped_issue_count"], 1, result.stdout + result.stderr)
+            self.assertEqual(summary["likely_rule_scope_issues"], 0, result.stdout + result.stderr)
+            self.assertEqual(summary["likely_duplicated_vendor_issues"], 0, result.stdout + result.stderr)
             self.assertGreaterEqual(summary["likely_real_code_issues"], 1, result.stdout + result.stderr)
 
-            vendor_detail = next(v for v in report["violation_details"] if "gitnexus_core" in v["path"])
-            self.assertEqual(vendor_detail["issue_kind"], "duplicated_vendor_issue")
-            self.assertEqual(vendor_detail["cluster_key"], "absolute_path:vendored_gitnexus_tests")
+            self.assertFalse(
+                any("gitnexus_core" in v["path"] for v in report["violation_details"]),
+                result.stdout + result.stderr,
+            )
+            self.assertFalse(
+                any(v["path"] == "Meta-Default-md-manager/tests/test_case.py" for v in report["violation_details"]),
+                result.stdout + result.stderr,
+            )
 
             real_detail = next(v for v in report["violation_details"] if v["path"] == "3-Octupos-OS-Backend/agents/openai.yaml")
             self.assertEqual(real_detail["issue_kind"], "real_content_issue")
 
             absolute_diag = next(g for g in report["gate_diagnostics"] if g["gate"] == "absolute_path_gate")
-            self.assertGreaterEqual(absolute_diag["deduped_cluster_count"], 2, result.stdout + result.stderr)
+            self.assertEqual(absolute_diag["deduped_cluster_count"], 1, result.stdout + result.stderr)
 
 
 if __name__ == "__main__":
