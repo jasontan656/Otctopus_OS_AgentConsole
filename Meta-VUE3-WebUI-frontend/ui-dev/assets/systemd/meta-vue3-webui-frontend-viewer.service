@@ -1,0 +1,15 @@
+[Unit]
+Description=Meta-VUE3-WebUI-frontend live showroom
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=__UI_DEV_ROOT__
+Environment=PORT=__PORT__
+Environment=TARGET_SKILL_ROOT=__TARGET_SKILL_ROOT__
+ExecStart=/usr/bin/env npm run start
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=default.target

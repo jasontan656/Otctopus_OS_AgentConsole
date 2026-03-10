@@ -3,8 +3,8 @@
   "graph_version": "v2",
   "source_skill": "Meta-Skill-DocStructure",
   "summary": {
-    "nodeCount": 17,
-    "edgeCount": 33,
+    "nodeCount": 9,
+    "edgeCount": 18,
     "errorCount": 0,
     "warningCount": 0
   },
@@ -13,7 +13,7 @@
       "path": "SKILL.md",
       "docId": "skill.entry.facade",
       "docType": "skill_facade",
-      "topic": "Meta-Skill-DocStructure entry facade and routing contract",
+      "topic": "Entry facade for the document-structure governance skill",
       "title": "Meta-Skill-DocStructure",
       "anchorCount": 2,
       "depth": 0
@@ -31,7 +31,7 @@
       "path": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md",
       "docId": "runtime.contract.audit",
       "docType": "runtime_contract",
-      "topic": "Audit version of the Meta-Skill-DocStructure runtime contract",
+      "topic": "Audit version of the document-structure runtime contract",
       "title": "Runtime Contract",
       "anchorCount": 2,
       "depth": 2
@@ -40,8 +40,8 @@
       "path": "references/tooling/Cli_Toolbox_DEVELOPMENT.md",
       "docId": "tooling.development.entry",
       "docType": "tooling_development",
-      "topic": "Development navigation for the TypeScript CLI and the embedded UI tool boundary",
-      "title": "Cli_Toolbox 开发文档",
+      "topic": "Development guidance for the document-structure CLI and graph core",
+      "title": "Cli_Toolbox Development",
       "anchorCount": 2,
       "depth": 2
     },
@@ -49,8 +49,8 @@
       "path": "references/tooling/Cli_Toolbox_USAGE.md",
       "docId": "tooling.usage.cli",
       "docType": "tooling_usage",
-      "topic": "TypeScript CLI operations for Meta-Skill-DocStructure",
-      "title": "Cli_Toolbox 使用文档",
+      "topic": "CLI usage for document-structure graph building and self-graph rebuild",
+      "title": "Cli_Toolbox Usage",
       "anchorCount": 2,
       "depth": 2
     },
@@ -58,8 +58,8 @@
       "path": "references/tooling/development/00_ARCHITECTURE_OVERVIEW.md",
       "docId": "tooling.architecture.overview",
       "docType": "tooling_architecture",
-      "topic": "Architecture overview of the TS CLI core and the embedded UI tool split",
-      "title": "架构总览",
+      "topic": "Architecture overview of the TS CLI and markdown graph core",
+      "title": "Architecture Overview",
       "anchorCount": 2,
       "depth": 3
     },
@@ -67,8 +67,8 @@
       "path": "references/tooling/development/20_CATEGORY_INDEX.md",
       "docId": "tooling.category.index",
       "docType": "tooling_index",
-      "topic": "Category index for TS tooling and viewer docs",
-      "title": "分类索引",
+      "topic": "Category index for document-structure runtime and tooling docs",
+      "title": "Category Index",
       "anchorCount": 2,
       "depth": 3
     },
@@ -77,8 +77,8 @@
       "docId": "tooling.changelog",
       "docType": "changelog",
       "topic": "Change log for Meta-Skill-DocStructure",
-      "title": "变更记录",
-      "anchorCount": 1,
+      "title": "Change Log",
+      "anchorCount": 2,
       "depth": 3
     },
     {
@@ -89,78 +89,6 @@
       "title": "docstructure_core 模块",
       "anchorCount": 2,
       "depth": 4
-    },
-    {
-      "path": "references/tooling/development/modules/mod_viewer_runtime.md",
-      "docId": "tooling.module.viewer_runtime",
-      "docType": "module_doc",
-      "topic": "Viewer runtime module that binds watcher server, Vite, and Vue Flow",
-      "title": "viewer_runtime 模块",
-      "anchorCount": 2,
-      "depth": 4
-    },
-    {
-      "path": "ui-dev/UI_DEV_ENTRY.md",
-      "docId": "ui.dev.entry",
-      "docType": "ui_dev_entry",
-      "topic": "UI development root for the Meta-Skill-DocStructure viewer",
-      "title": "UI Dev Entry",
-      "anchorCount": 2,
-      "depth": 1
-    },
-    {
-      "path": "ui-dev/docs/00_UI_DEVELOPMENT_INDEX.md",
-      "docId": "ui.dev.docs.index",
-      "docType": "ui_dev_index",
-      "topic": "Index of UI development docs for the interactive viewer",
-      "title": "UI Development Index",
-      "anchorCount": 2,
-      "depth": 2
-    },
-    {
-      "path": "ui-dev/docs/UI_FILE_ORGANIZATION.md",
-      "docId": "ui.tool.file_organization",
-      "docType": "ui_dev_guide",
-      "topic": "File organization rules for the embedded UI tool",
-      "title": "UI File Organization",
-      "anchorCount": 2,
-      "depth": 2
-    },
-    {
-      "path": "ui-dev/docs/UI_TOOL_POSITIONING.md",
-      "docId": "ui.tool.positioning",
-      "docType": "ui_dev_guide",
-      "topic": "Positioning of the embedded UI tool inside Meta-Skill-DocStructure",
-      "title": "UI Tool Positioning",
-      "anchorCount": 2,
-      "depth": 2
-    },
-    {
-      "path": "ui-dev/docs/VIEWER_SERVICE_WORKFLOW.md",
-      "docId": "ui.viewer.service_workflow",
-      "docType": "tooling_usage",
-      "topic": "Dev, build, and systemd workflow for the Meta-Skill-DocStructure viewer",
-      "title": "Viewer Service Workflow",
-      "anchorCount": 2,
-      "depth": 2
-    },
-    {
-      "path": "ui-dev/docs/VIEWER_STACK_AND_REUSE.md",
-      "docId": "ui.viewer.stack",
-      "docType": "tooling_architecture",
-      "topic": "Viewer stack, layout rules, and reuse contract for skill-local graph pages",
-      "title": "Viewer Stack Reuse Contract",
-      "anchorCount": 2,
-      "depth": 2
-    },
-    {
-      "path": "ui-dev/docs/rules/UI_LAYOUT_ADJUSTMENT_RULES.md",
-      "docId": "ui.viewer.layout_adjustment",
-      "docType": "ui_dev_guide",
-      "topic": "Layout adjustment rules for the interactive skill viewer",
-      "title": "UI Layout Adjustment Rules",
-      "anchorCount": 2,
-      "depth": 3
     }
   ],
   "edges": [
@@ -169,14 +97,14 @@
       "target": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md",
       "relation": "governed_by",
       "direction": "downstream",
-      "reason": "Detailed document-structure runtime rules live in the runtime contract."
+      "reason": "The runtime contract defines the document-structure rules and graph constraints."
     },
     {
       "source": "SKILL.md",
-      "target": "ui-dev/UI_DEV_ENTRY.md",
+      "target": "references/tooling/Cli_Toolbox_USAGE.md",
       "relation": "routes_to",
       "direction": "downstream",
-      "reason": "The embedded UI tool has its own entry and must be read separately."
+      "reason": "The CLI usage doc explains how to apply the document-structure contracts."
     },
     {
       "source": "assets/templates/ATOMIC_DOC_TEMPLATE.md",
@@ -195,79 +123,86 @@
     {
       "source": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md",
       "target": "SKILL.md",
-      "relation": "expands",
+      "relation": "implements",
       "direction": "upstream",
-      "reason": "This document expands the facade-level rules in SKILL.md."
+      "reason": "This runtime contract is the concrete rule source behind the skill facade."
     },
     {
       "source": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md",
       "target": "references/tooling/Cli_Toolbox_USAGE.md",
-      "relation": "executed_via",
+      "relation": "routes_to",
       "direction": "downstream",
-      "reason": "Tooling usage turns the runtime contract into actions."
+      "reason": "The CLI usage doc explains how to consume the runtime contract."
     },
     {
       "source": "references/tooling/Cli_Toolbox_DEVELOPMENT.md",
       "target": "references/tooling/development/00_ARCHITECTURE_OVERVIEW.md",
       "relation": "routes_to",
       "direction": "downstream",
-      "reason": "Architecture overview is the first development read."
+      "reason": "Architecture overview expands the CLI and core-library split."
     },
     {
       "source": "references/tooling/Cli_Toolbox_DEVELOPMENT.md",
-      "target": "ui-dev/UI_DEV_ENTRY.md",
-      "relation": "pairs_with",
-      "direction": "cross",
-      "reason": "The UI dev root explains where viewer files and docs now live."
+      "target": "references/tooling/development/modules/mod_docstructure_core.md",
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "The core module doc explains the graph-building engine."
     },
     {
       "source": "references/tooling/Cli_Toolbox_USAGE.md",
       "target": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md",
       "relation": "implements",
       "direction": "upstream",
-      "reason": "The CLI commands operationalize the runtime contract."
+      "reason": "The CLI is the machine-readable execution surface of the runtime contract."
     },
     {
       "source": "references/tooling/Cli_Toolbox_USAGE.md",
-      "target": "ui-dev/UI_DEV_ENTRY.md",
+      "target": "references/tooling/development/20_CATEGORY_INDEX.md",
       "relation": "routes_to",
       "direction": "downstream",
-      "reason": "The embedded UI tool has its own dedicated entry."
+      "reason": "The category index expands the tooling development reading path."
     },
     {
       "source": "references/tooling/development/00_ARCHITECTURE_OVERVIEW.md",
-      "target": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md",
-      "relation": "implements",
-      "direction": "upstream",
-      "reason": "Architecture exists to implement the runtime contract."
-    },
-    {
-      "source": "references/tooling/development/00_ARCHITECTURE_OVERVIEW.md",
-      "target": "references/tooling/development/modules/mod_viewer_runtime.md",
-      "relation": "decomposes_into",
+      "target": "references/tooling/development/modules/mod_docstructure_core.md",
+      "relation": "indexes",
       "direction": "downstream",
-      "reason": "The viewer runtime module explains the frontend/server split."
+      "reason": "The core module doc explains the doc graph engine."
+    },
+    {
+      "source": "references/tooling/development/00_ARCHITECTURE_OVERVIEW.md",
+      "target": "references/tooling/Cli_Toolbox_DEVELOPMENT.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "This overview belongs to the CLI development entry."
     },
     {
       "source": "references/tooling/development/20_CATEGORY_INDEX.md",
       "target": "references/tooling/development/00_ARCHITECTURE_OVERVIEW.md",
       "relation": "indexes",
       "direction": "downstream",
-      "reason": "Architecture overview is the primary branch under this index."
+      "reason": "Architecture overview is the top-level entry for tooling docs."
     },
     {
       "source": "references/tooling/development/20_CATEGORY_INDEX.md",
-      "target": "ui-dev/docs/VIEWER_STACK_AND_REUSE.md",
-      "relation": "pairs_with",
-      "direction": "cross",
-      "reason": "The UI stack doc is a sibling branch for this index."
+      "target": "references/tooling/development/modules/mod_docstructure_core.md",
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "The core module doc is a primary tooling branch."
     },
     {
       "source": "references/tooling/development/90_CHANGELOG.md",
       "target": "references/tooling/development/00_ARCHITECTURE_OVERVIEW.md",
       "relation": "tracks_changes_to",
       "direction": "upstream",
-      "reason": "Architecture is the main thing this changelog evolves with."
+      "reason": "The changelog records architecture shifts against the overview."
+    },
+    {
+      "source": "references/tooling/development/90_CHANGELOG.md",
+      "target": "references/tooling/development/modules/mod_docstructure_core.md",
+      "relation": "tracks_changes_to",
+      "direction": "upstream",
+      "reason": "The changelog also records core engine changes."
     },
     {
       "source": "references/tooling/development/modules/mod_docstructure_core.md",
@@ -282,120 +217,8 @@
       "relation": "belongs_to",
       "direction": "upstream",
       "reason": "This module doc belongs to the tooling development tree."
-    },
-    {
-      "source": "references/tooling/development/modules/mod_viewer_runtime.md",
-      "target": "ui-dev/docs/VIEWER_STACK_AND_REUSE.md",
-      "relation": "explained_by",
-      "direction": "upstream",
-      "reason": "The UI stack doc explains this module's stack choices."
-    },
-    {
-      "source": "references/tooling/development/modules/mod_viewer_runtime.md",
-      "target": "references/tooling/Cli_Toolbox_DEVELOPMENT.md",
-      "relation": "belongs_to",
-      "direction": "upstream",
-      "reason": "This module doc belongs to the tooling development tree."
-    },
-    {
-      "source": "ui-dev/UI_DEV_ENTRY.md",
-      "target": "SKILL.md",
-      "relation": "implements",
-      "direction": "upstream",
-      "reason": "This UI dev root fulfills the facade promise of a dedicated embedded UI tool."
-    },
-    {
-      "source": "ui-dev/UI_DEV_ENTRY.md",
-      "target": "ui-dev/docs/00_UI_DEVELOPMENT_INDEX.md",
-      "relation": "routes_to",
-      "direction": "downstream",
-      "reason": "The UI docs index organizes architecture, workflow, and layout guidance."
-    },
-    {
-      "source": "ui-dev/docs/00_UI_DEVELOPMENT_INDEX.md",
-      "target": "ui-dev/UI_DEV_ENTRY.md",
-      "relation": "belongs_to",
-      "direction": "upstream",
-      "reason": "This index belongs to the dedicated UI dev root."
-    },
-    {
-      "source": "ui-dev/docs/00_UI_DEVELOPMENT_INDEX.md",
-      "target": "ui-dev/docs/UI_TOOL_POSITIONING.md",
-      "relation": "indexes",
-      "direction": "downstream",
-      "reason": "Tool positioning is part of the core UI dev reading path."
-    },
-    {
-      "source": "ui-dev/docs/UI_FILE_ORGANIZATION.md",
-      "target": "ui-dev/docs/UI_TOOL_POSITIONING.md",
-      "relation": "pairs_with",
-      "direction": "cross",
-      "reason": "Positioning and file organization should be read together."
-    },
-    {
-      "source": "ui-dev/docs/UI_FILE_ORGANIZATION.md",
-      "target": "ui-dev/UI_DEV_ENTRY.md",
-      "relation": "belongs_to",
-      "direction": "upstream",
-      "reason": "This file organization guide belongs to the UI tool root."
-    },
-    {
-      "source": "ui-dev/docs/UI_TOOL_POSITIONING.md",
-      "target": "ui-dev/UI_DEV_ENTRY.md",
-      "relation": "belongs_to",
-      "direction": "upstream",
-      "reason": "This positioning guide belongs to the UI tool root."
-    },
-    {
-      "source": "ui-dev/docs/UI_TOOL_POSITIONING.md",
-      "target": "ui-dev/docs/UI_FILE_ORGANIZATION.md",
-      "relation": "pairs_with",
-      "direction": "cross",
-      "reason": "Positioning and file organization should be read together."
-    },
-    {
-      "source": "ui-dev/docs/VIEWER_SERVICE_WORKFLOW.md",
-      "target": "ui-dev/docs/VIEWER_STACK_AND_REUSE.md",
-      "relation": "operates",
-      "direction": "upstream",
-      "reason": "This workflow doc operates the stack defined there."
-    },
-    {
-      "source": "ui-dev/docs/VIEWER_SERVICE_WORKFLOW.md",
-      "target": "ui-dev/UI_DEV_ENTRY.md",
-      "relation": "belongs_to",
-      "direction": "upstream",
-      "reason": "This workflow belongs to the dedicated UI dev root."
-    },
-    {
-      "source": "ui-dev/docs/VIEWER_STACK_AND_REUSE.md",
-      "target": "ui-dev/UI_DEV_ENTRY.md",
-      "relation": "implements",
-      "direction": "upstream",
-      "reason": "This doc implements the dedicated UI dev entry."
-    },
-    {
-      "source": "ui-dev/docs/VIEWER_STACK_AND_REUSE.md",
-      "target": "ui-dev/docs/rules/UI_LAYOUT_ADJUSTMENT_RULES.md",
-      "relation": "pairs_with",
-      "direction": "cross",
-      "reason": "Layout adjustment rules complement the stack design."
-    },
-    {
-      "source": "ui-dev/docs/rules/UI_LAYOUT_ADJUSTMENT_RULES.md",
-      "target": "ui-dev/docs/VIEWER_STACK_AND_REUSE.md",
-      "relation": "extends",
-      "direction": "upstream",
-      "reason": "Layout adjustments must extend the viewer stack contract."
-    },
-    {
-      "source": "ui-dev/docs/rules/UI_LAYOUT_ADJUSTMENT_RULES.md",
-      "target": "ui-dev/docs/00_UI_DEVELOPMENT_INDEX.md",
-      "relation": "belongs_to",
-      "direction": "upstream",
-      "reason": "This guide belongs to the UI development doc set."
     }
   ],
   "warnings": [],
-  "updated_at": "2026-03-10T22:42:40.522Z"
+  "updated_at": "2026-03-10T23:18:57.974Z"
 }

@@ -1,0 +1,27 @@
+{
+  "stage": "<stage_slug>",
+  "graph_role": {
+    "read_policy": "replace_me",
+    "update_policy": "replace_me"
+  },
+  "recommended_commands": [
+    "replace_me"
+  ],
+  "forbidden_reads": [
+    "replace_me"
+  ],
+  "contract_name": "meta_skill_template_assets_skill_template_stages_stage_template_graph_contract",
+  "contract_version": "2.0.0",
+  "validation_mode": "strict",
+  "required_fields": [
+    "contract_name",
+    "contract_version",
+    "validation_mode",
+    "graph_role"
+  ],
+  "optional_fields": [
+    "recommended_commands",
+    "forbidden_reads",
+    "notes"
+  ]
+}

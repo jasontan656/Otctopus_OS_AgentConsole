@@ -1,0 +1,24 @@
+catalog_version: v1
+toolbox_name: Cli_Toolbox
+maintain_rules:
+  naming: "Cli_Toolbox.<tool_name>"
+  docs_sync_required: true
+  required_docs:
+    - references/tooling/Cli_Toolbox_USAGE.md
+    - references/tooling/Cli_Toolbox_DEVELOPMENT.md
+    - references/tooling/development/20_CATEGORY_INDEX.md
+modules:
+  - module_id: stage_contract_runtime
+    entrypoint: scripts/Cli_Toolbox.ts
+    doc: references/tooling/development/modules/mod_stage_contract_runtime.md
+    responsibilities:
+      - emit runtime contract
+      - emit stage contracts
+      - rebuild self graph
+  - module_id: showroom_runtime
+    entrypoint: ui-dev/server/viewer-server.ts
+    doc: references/tooling/development/modules/mod_showroom_runtime.md
+    responsibilities:
+      - serve the runnable showroom
+      - watch skill docs and push live payloads
+      - expose the graph as a human-readable frontend surface

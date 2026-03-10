@@ -1,0 +1,30 @@
+{
+  "stage": "<stage_slug>",
+  "entry_commands": [
+    "replace_me"
+  ],
+  "gate_commands": [
+    "replace_me"
+  ],
+  "optional_commands": [
+    "replace_me"
+  ],
+  "required_actions": [
+    "replace_me"
+  ],
+  "contract_name": "meta_skill_template_assets_skill_template_stages_stage_template_command_contract",
+  "contract_version": "2.0.0",
+  "validation_mode": "strict",
+  "required_fields": [
+    "contract_name",
+    "contract_version",
+    "validation_mode",
+    "entry_commands",
+    "gate_commands"
+  ],
+  "optional_fields": [
+    "optional_commands",
+    "required_actions",
+    "notes"
+  ]
+}

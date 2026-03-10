@@ -1,0 +1,77 @@
+{
+  "contract_name": "META_VUE3_WEBUI_FRONTEND_RUNTIME_CONTRACT",
+  "contract_version": "v1",
+  "validation_mode": "cli_first_strict",
+  "skill_name": "Meta-VUE3-WebUI-frontend",
+  "skill_profile": "staged_cli_first",
+  "facade_contract": {
+    "skill_md_role": "entry_only",
+    "required_sections": [
+      "定位",
+      "必读顺序",
+      "分类入口",
+      "适用域",
+      "执行入口",
+      "读取原则",
+      "结构索引"
+    ]
+  },
+  "routing_protocol": {
+    "first_command": "npm run cli -- runtime-contract --json",
+    "stage_contract_sequence": [
+      "stage-checklist",
+      "stage-doc-contract",
+      "stage-command-contract",
+      "stage-graph-contract"
+    ],
+    "markdown_role": "human_audit_and_narrow_navigation",
+    "machine_rule_source": "Cli_Toolbox JSON outputs"
+  },
+  "resident_doc_policy": {
+    "top_level_resident_docs": [
+      "SKILL.md",
+      "references/runtime/SKILL_RUNTIME_CONTRACT.md",
+      "references/stages/00_STAGE_INDEX.md",
+      "references/stages/01_RESIDENT_FRONTEND_NORTH_STAR.md"
+    ],
+    "stage_switch_rule": "Keep only resident docs across stage switches; drop prior stage docs and temporary focus."
+  },
+  "stage_contract_policy": {
+    "stage_order": [
+      "foundation_north_star",
+      "responsive_surface_system",
+      "motion_component_architecture",
+      "showroom_runtime_delivery"
+    ],
+    "required_contracts": [
+      "stage-checklist",
+      "stage-doc-contract",
+      "stage-command-contract",
+      "stage-graph-contract"
+    ]
+  },
+  "tool_contracts": {
+    "Cli_Toolbox.runtime-contract": "Emit the staged runtime contract for the skill facade.",
+    "Cli_Toolbox.stage-checklist": "Emit stage objective, required outputs, resident docs, stage docs, entry actions, exit gates, and discard policy.",
+    "Cli_Toolbox.stage-doc-contract": "Emit the current stage document boundary.",
+    "Cli_Toolbox.stage-command-contract": "Emit entry commands, gate commands, stage actions, and forbidden actions.",
+    "Cli_Toolbox.stage-graph-contract": "Emit graph-reading and graph-update policy for the current stage.",
+    "Cli_Toolbox.build-anchor-graph": "Emit the current markdown graph workspace for the skill.",
+    "Cli_Toolbox.rebuild-self-graph": "Rebuild self_anchor_graph.json for the current skill root."
+  },
+  "governance_rules": [
+    "SKILL.md must stay entry-only.",
+    "The skill doubles as a frontend standards system and a human-readable live showroom.",
+    "Runtime rules must be consumed from machine-readable contracts instead of markdown.",
+    "The graph display remains a first-class narrative surface across desktop and mobile variants.",
+    "Reusable component, motion, architecture, and runtime rules must stay document-first before code changes."
+  ],
+  "validation_closure": [
+    "npm run typecheck",
+    "npm test",
+    "cd ui-dev && npm run typecheck",
+    "cd ui-dev && npm test",
+    "cd ui-dev && npm run build",
+    "npm run cli -- rebuild-self-graph --json"
+  ]
+}

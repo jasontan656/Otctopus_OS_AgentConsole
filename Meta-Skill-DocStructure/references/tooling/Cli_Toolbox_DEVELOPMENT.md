@@ -1,32 +1,25 @@
 ---
 doc_id: "tooling.development.entry"
 doc_type: "tooling_development"
-topic: "Development navigation for the TypeScript CLI and the embedded UI tool boundary"
+topic: "Development guidance for the document-structure CLI and graph core"
 anchors:
   - target: "development/00_ARCHITECTURE_OVERVIEW.md"
     relation: "routes_to"
     direction: "downstream"
-    reason: "Architecture overview is the first development read."
-  - target: "../../ui-dev/UI_DEV_ENTRY.md"
-    relation: "pairs_with"
-    direction: "cross"
-    reason: "The UI dev root explains where viewer files and docs now live."
+    reason: "Architecture overview expands the CLI and core-library split."
+  - target: "development/modules/mod_docstructure_core.md"
+    relation: "indexes"
+    direction: "downstream"
+    reason: "The core module doc explains the graph-building engine."
 ---
 
-# Cli_Toolbox 开发文档
+# Cli_Toolbox Development
 
-## 阅读顺序
-1. `references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md`
-2. `ui-dev/UI_DEV_ENTRY.md`
-3. `references/tooling/development/00_ARCHITECTURE_OVERVIEW.md`
-4. `references/tooling/development/20_CATEGORY_INDEX.md`
+## 当前职责
+- 输出 runtime contract。
+- 输出 markdown graph workspace。
+- 输出 self graph rebuild。
 
-## 同步维护要求
-- 任何 CLI 或文档治理核心改动都必须同步更新：
-  - `references/tooling/Cli_Toolbox_USAGE.md`
-  - `references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.json`
-  - `assets/runtime/anchor_query_matrix.json`
-- 任何 UI 子工具改动都必须同步更新：
-  - `ui-dev/docs/*`
-  - `ui-dev/assets/systemd/meta-skill-docstructure-viewer.service`
-  - `ui-dev/tests/*`
+## 开发原则
+- 若 CLI 命令或 graph core 变更，必须同步更新 runtime contract、tooling docs 与测试。
+- 本技能不再维护任何 UI 相关 runtime 文档。

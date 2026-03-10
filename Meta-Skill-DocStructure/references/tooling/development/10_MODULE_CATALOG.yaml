@@ -1,4 +1,4 @@
-catalog_version: v2
+catalog_version: v3
 toolbox_name: Cli_Toolbox
 maintain_rules:
   naming: "Cli_Toolbox.<tool_name>"
@@ -7,10 +7,6 @@ maintain_rules:
     - references/tooling/Cli_Toolbox_USAGE.md
     - references/tooling/Cli_Toolbox_DEVELOPMENT.md
     - references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.json
-    - ui-dev/UI_DEV_ENTRY.md
-    - ui-dev/docs/UI_TOOL_POSITIONING.md
-    - ui-dev/docs/UI_FILE_ORGANIZATION.md
-    - ui-dev/docs/VIEWER_STACK_AND_REUSE.md
 modules:
   - module_id: docstructure_core
     tool_alias:
@@ -21,11 +17,3 @@ modules:
     entrypoint: scripts/Cli_Toolbox.ts
     status: active
     doc: references/tooling/development/modules/mod_docstructure_core.md
-  - module_id: viewer_runtime
-    tool_alias:
-      - viewer.dev
-      - viewer.start
-      - viewer.service_install
-    entrypoint: ui-dev/server/viewer-server.ts
-    status: active
-    doc: references/tooling/development/modules/mod_viewer_runtime.md
