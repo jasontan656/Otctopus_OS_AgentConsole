@@ -26,6 +26,8 @@ class MetaGithubOperationCliTests(unittest.TestCase):
 
     def test_contract_commands_are_exposed(self) -> None:
         completed = self.run_cli("--help")
+        self.assertIn("baseline-contract", completed.stdout)
+        self.assertIn("baseline-create", completed.stdout)
         self.assertIn("push-contract", completed.stdout)
         self.assertIn("rollback-contract", completed.stdout)
         self.assertIn("rollback-sync", completed.stdout)
@@ -33,10 +35,165 @@ class MetaGithubOperationCliTests(unittest.TestCase):
         push_payload = json.loads(self.run_cli("push-contract", "--json").stdout)
         self.assertEqual(push_payload["entry"], "push")
         self.assertTrue(any(command["name"] == "commit-and-push" for command in push_payload["commands"]))
+        self.assertFalse(any(command["name"] == "baseline-create" for command in push_payload["commands"]))
+
+        baseline_payload = json.loads(self.run_cli("baseline-contract", "--json").stdout)
+        self.assertEqual(baseline_payload["entry"], "baseline")
+        self.assertEqual([command["name"] for command in baseline_payload["commands"]], ["baseline-create"])
 
         rollback_payload = json.loads(self.run_cli("rollback-contract", "--json").stdout)
         self.assertEqual(rollback_payload["entry"], "rollback")
         self.assertTrue(any(command["name"] == "rollback-sync" for command in rollback_payload["commands"]))
+        self.assertFalse(any(command["name"] == "baseline-create" for command in rollback_payload["commands"]))
+
+    def test_baseline_create_clean_repo_creates_tag_only_anchor(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            repo_root = Path(tmp) / "repo"
+            repo_root.mkdir()
+            self.init_repo(repo_root)
+
+            (repo_root / "tracked.txt").write_text("base\n", encoding="utf-8")
+            subprocess.run(["git", "-C", str(repo_root), "add", "."], check=True)
+            subprocess.run(["git", "-C", str(repo_root), "commit", "-qm", "base"], check=True)
+            head_before = subprocess.run(
+                ["git", "-C", str(repo_root), "rev-parse", "HEAD"],
+                check=True,
+                capture_output=True,
+                text=True,
+            ).stdout.strip()
+
+            payload = json.loads(
+                self.run_cli(
+                    "baseline-create",
+                    "--repo-path",
+                    str(repo_root),
+                    "--name",
+                    "before fullstack",
+                    "--publish",
+                    "local",
+                    "--json",
+                ).stdout
+            )
+
+            head_after = subprocess.run(
+                ["git", "-C", str(repo_root), "rev-parse", "HEAD"],
+                check=True,
+                capture_output=True,
+                text=True,
+            ).stdout.strip()
+            tag_target = subprocess.run(
+                ["git", "-C", str(repo_root), "rev-list", "-n", "1", "baseline/before-fullstack"],
+                check=True,
+                capture_output=True,
+                text=True,
+            ).stdout.strip()
+
+            self.assertFalse(payload["dirty_before"])
+            self.assertEqual(payload["baseline_mode"], "tag_only")
+            self.assertNotIn("commit", payload)
+            self.assertEqual(payload["tag"], "baseline/before-fullstack")
+            self.assertEqual(head_before, head_after)
+            self.assertEqual(tag_target, head_before)
+
+    def test_baseline_create_dirty_repo_creates_commit_plus_tag(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            repo_root = Path(tmp) / "repo"
+            repo_root.mkdir()
+            self.init_repo(repo_root)
+
+            (repo_root / "tracked.txt").write_text("base\n", encoding="utf-8")
+            subprocess.run(["git", "-C", str(repo_root), "add", "."], check=True)
+            subprocess.run(["git", "-C", str(repo_root), "commit", "-qm", "base"], check=True)
+
+            (repo_root / "tracked.txt").write_text("changed\n", encoding="utf-8")
+            (repo_root / "extra.txt").write_text("extra\n", encoding="utf-8")
+
+            payload = json.loads(
+                self.run_cli(
+                    "baseline-create",
+                    "--repo-path",
+                    str(repo_root),
+                    "--name",
+                    "dirty snapshot",
+                    "--publish",
+                    "local",
+                    "--all",
+                    "--json",
+                ).stdout
+            )
+
+            head_after = subprocess.run(
+                ["git", "-C", str(repo_root), "rev-parse", "HEAD"],
+                check=True,
+                capture_output=True,
+                text=True,
+            ).stdout.strip()
+            tag_target = subprocess.run(
+                ["git", "-C", str(repo_root), "rev-list", "-n", "1", "baseline/dirty-snapshot"],
+                check=True,
+                capture_output=True,
+                text=True,
+            ).stdout.strip()
+            status = subprocess.run(
+                ["git", "-C", str(repo_root), "status", "--short"],
+                check=True,
+                capture_output=True,
+                text=True,
+            ).stdout.strip()
+
+            self.assertTrue(payload["dirty_before"])
+            self.assertEqual(payload["baseline_mode"], "commit_plus_tag")
+            self.assertEqual(payload["commit"], head_after[:7])
+            self.assertEqual(payload["scope"]["mode"], "all")
+            self.assertEqual(payload["tag"], "baseline/dirty-snapshot")
+            self.assertEqual(tag_target, head_after)
+            self.assertEqual(status, "")
+
+    def test_baseline_create_clean_repo_remote_publish_pushes_only_tag(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            remote_root = Path(tmp) / "remote.git"
+            repo_root = Path(tmp) / "repo"
+            subprocess.run(["git", "init", "--bare", "-q", str(remote_root)], check=True)
+            repo_root.mkdir()
+            self.init_repo(repo_root)
+
+            (repo_root / "tracked.txt").write_text("base\n", encoding="utf-8")
+            subprocess.run(["git", "-C", str(repo_root), "add", "."], check=True)
+            subprocess.run(["git", "-C", str(repo_root), "commit", "-qm", "base"], check=True)
+            subprocess.run(["git", "-C", str(repo_root), "remote", "add", "origin", str(remote_root)], check=True)
+
+            payload = json.loads(
+                self.run_cli(
+                    "baseline-create",
+                    "--repo-path",
+                    str(repo_root),
+                    "--name",
+                    "release candidate",
+                    "--publish",
+                    "remote",
+                    "--json",
+                ).stdout
+            )
+
+            remote_tag = subprocess.run(
+                ["git", "-C", str(remote_root), "rev-parse", "--verify", "refs/tags/baseline/release-candidate"],
+                check=True,
+                capture_output=True,
+                text=True,
+            ).stdout.strip()
+            remote_heads = subprocess.run(
+                ["git", "-C", str(remote_root), "show-ref", "--heads"],
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+
+            self.assertEqual(payload["baseline_mode"], "tag_only")
+            self.assertIn("publish_result", payload)
+            self.assertNotIn("branch", payload["publish_result"])
+            self.assertTrue(remote_tag)
+            self.assertEqual(remote_heads.returncode, 1)
+            self.assertEqual(remote_heads.stdout.strip(), "")
 
     def test_rollback_paths_strongly_restores_and_deletes_extra_files(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

@@ -89,3 +89,28 @@ def rollback_contract_payload() -> dict[str, object]:
             "Do not perform workspace-root Git automation.",
         ],
     }
+
+
+def baseline_contract_payload() -> dict[str, object]:
+    return {
+        "contract_name": "meta_github_operation_baseline_contract",
+        "contract_version": "v1",
+        "validation_mode": "static_minimal",
+        "required_fields": ["entry", "purpose", "allowed_repos", "commands", "rules"],
+        "optional_fields": [],
+        "entry": "baseline",
+        "purpose": "Create a named rollback anchor without overloading push semantics.",
+        "allowed_repos": ["Octopus_OS", "Codex_Skills_Mirror"],
+        "commands": [
+            {
+                "name": "baseline-create",
+                "role": "create a local or remote rollback baseline as a tag-only anchor for clean repos or a commit-plus-tag anchor for dirty repos",
+            },
+        ],
+        "rules": [
+            "Baseline is a separate runtime entry from push.",
+            "Clean repos should prefer tag-only baselines instead of empty traceability commits.",
+            "Dirty repos may create a scoped baseline commit before tagging.",
+            "Remote baseline publication must remain within the registered repos.",
+        ],
+    }

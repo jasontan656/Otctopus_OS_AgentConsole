@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 import subprocess
 from pathlib import Path
 
@@ -130,6 +131,33 @@ def pull_rebase(repo_root: Path, *, remote: str = "origin", branch: str | None =
         args.append(branch)
     run_git(repo_root, *args, check=True)
     return {"remote": remote, "branch": branch or current_branch(repo_root)}
+
+
+def normalize_baseline_tag(raw_name: str) -> str:
+    candidate = raw_name.strip().replace(" ", "-")
+    candidate = re.sub(r"[^A-Za-z0-9._/-]+", "-", candidate)
+    candidate = re.sub(r"-{2,}", "-", candidate).strip("./-")
+    if not candidate:
+        raise ValueError("baseline name must contain at least one visible character")
+    return f"baseline/{candidate}"
+
+
+def tag_exists(repo_root: Path, tag_name: str) -> bool:
+    completed = run_git(repo_root, "rev-parse", "--verify", "--quiet", f"refs/tags/{tag_name}", check=False)
+    return completed.returncode == 0
+
+
+def create_annotated_tag(repo_root: Path, *, tag_name: str, message: str) -> dict[str, str]:
+    if tag_exists(repo_root, tag_name):
+        raise RuntimeError(f"baseline tag already exists: {tag_name}")
+    run_git(repo_root, "tag", "-a", tag_name, "-m", message, check=True)
+    sha = run_git(repo_root, "rev-list", "-n", "1", tag_name, check=True).stdout.strip()
+    return {"tag": tag_name, "target_commit": sha}
+
+
+def push_tag(repo_root: Path, *, remote: str, tag_name: str) -> dict[str, str]:
+    run_git(repo_root, "push", remote, f"refs/tags/{tag_name}", check=True)
+    return {"remote": remote, "tag": tag_name}
 
 
 def rollback_sync(repo_root: Path, *, to_ref: str, paths: list[str] | None = None, use_all: bool = False) -> dict[str, object]:

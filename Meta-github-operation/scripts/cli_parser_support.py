@@ -13,6 +13,8 @@ def build_parser(
     cmd_commit_and_push,
     cmd_push,
     cmd_push_contract,
+    cmd_baseline_contract,
+    cmd_baseline_create,
     cmd_rollback_contract,
     cmd_rollback_paths,
     cmd_rollback_sync,
@@ -27,6 +29,10 @@ def build_parser(
     push_contract = subparsers.add_parser("push-contract")
     push_contract.add_argument("--json", action="store_true")
     push_contract.set_defaults(func=cmd_push_contract)
+
+    baseline_contract = subparsers.add_parser("baseline-contract")
+    baseline_contract.add_argument("--json", action="store_true")
+    baseline_contract.set_defaults(func=cmd_baseline_contract)
 
     rollback_contract = subparsers.add_parser("rollback-contract")
     rollback_contract.add_argument("--json", action="store_true")
@@ -85,6 +91,22 @@ def build_parser(
     push_parser.add_argument("--force-with-lease", action="store_true")
     push_parser.add_argument("--json", action="store_true")
     push_parser.set_defaults(func=cmd_push)
+
+    baseline_create = subparsers.add_parser("baseline-create")
+    baseline_create.add_argument("--repo")
+    baseline_create.add_argument("--repo-path")
+    baseline_create.add_argument("--name", required=True)
+    baseline_create.add_argument("--message")
+    baseline_create.add_argument("--publish", choices=("local", "remote"), default="local")
+    baseline_create.add_argument("--path", action="append", default=[])
+    baseline_create.add_argument("--claims-file")
+    baseline_create.add_argument("--use-latest-claims", action="store_true")
+    baseline_create.add_argument("--auto-scope", action="store_true")
+    baseline_create.add_argument("--all", action="store_true")
+    baseline_create.add_argument("--remote", default="origin")
+    baseline_create.add_argument("--branch")
+    baseline_create.add_argument("--json", action="store_true")
+    baseline_create.set_defaults(func=cmd_baseline_create)
 
     rollback = subparsers.add_parser("rollback-paths")
     rollback.add_argument("--repo")

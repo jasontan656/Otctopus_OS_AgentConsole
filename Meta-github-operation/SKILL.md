@@ -18,7 +18,9 @@ description: "受限 GitHub control plane：仅服务 Octopus_OS 与 Codex_Skill
   - status / remote-info
   - fetch / pull-rebase
   - push-contract
+  - baseline-contract
   - commit / commit-and-push / push
+  - baseline-create
   - rollback-contract
   - rollback-paths
   - rollback-sync

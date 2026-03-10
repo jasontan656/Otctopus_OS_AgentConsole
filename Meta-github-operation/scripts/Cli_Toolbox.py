@@ -5,11 +5,14 @@ import json
 from pathlib import Path
 
 from cli_parser_support import build_parser
-from entry_support import push_contract_payload, rollback_contract_payload
+from entry_support import baseline_contract_payload, push_contract_payload, rollback_contract_payload
 from git_cli_support import commit as git_commit
+from git_cli_support import create_annotated_tag
 from git_cli_support import fetch as git_fetch
+from git_cli_support import normalize_baseline_tag
 from git_cli_support import pull_rebase as git_pull_rebase
 from git_cli_support import push as git_push
+from git_cli_support import push_tag
 from git_cli_support import remote_urls, repo_status_payload, resolve_commit_scope, rollback_paths, rollback_sync, run_git, stage_paths
 from registry_repo import registry_payload, resolve_repo
 
@@ -36,6 +39,10 @@ def cmd_registry(args) -> int:
 
 def cmd_push_contract(args) -> int:
     return emit(push_contract_payload(), as_json=args.json)
+
+
+def cmd_baseline_contract(args) -> int:
+    return emit(baseline_contract_payload(), as_json=args.json)
 
 
 def cmd_rollback_contract(args) -> int:
@@ -142,6 +149,53 @@ def cmd_push(args) -> int:
     return emit(payload, as_json=args.json)
 
 
+def cmd_baseline_create(args) -> int:
+    repo_name, repo_root = resolve_repo_root(args)
+    status_payload = repo_status_payload(repo_root)
+    dirty = bool(status_payload["dirty"])
+    tag_name = normalize_baseline_tag(args.name)
+    message = args.message or f"baseline: {args.name}"
+
+    payload: dict[str, object] = {
+        "repo": repo_name,
+        "repo_root": str(repo_root),
+        "baseline_name": args.name,
+        "tag": tag_name,
+        "publish": args.publish,
+        "dirty_before": dirty,
+    }
+
+    if dirty:
+        scope = resolve_commit_scope(
+            repo_root,
+            explicit_paths=list(args.path or []),
+            repo_name=repo_name,
+            claims_file=args.claims_file,
+            use_latest_claims=bool(args.use_latest_claims),
+            auto_scope=bool(args.auto_scope),
+            use_all=bool(args.all),
+        )
+        apply_scope(repo_root, scope)
+        payload["scope"] = scope
+        payload.update(git_commit(repo_root, message, allow_empty=False))
+        payload["baseline_mode"] = "commit_plus_tag"
+    else:
+        payload["baseline_mode"] = "tag_only"
+
+    payload["tag_result"] = create_annotated_tag(repo_root, tag_name=tag_name, message=message)
+    if args.publish == "remote":
+        published: dict[str, object] = {"tag": push_tag(repo_root, remote=args.remote, tag_name=tag_name)}
+        if dirty:
+            published["branch"] = git_push(
+                repo_root,
+                remote=args.remote,
+                branch=args.branch,
+                force_with_lease=False,
+            )
+        payload["publish_result"] = published
+    return emit(payload, as_json=args.json)
+
+
 def cmd_rollback_paths(args) -> int:
     repo_name, repo_root = resolve_repo_root(args)
     payload = rollback_paths(repo_root, to_ref=args.to_ref, paths=list(args.path))
@@ -176,6 +230,8 @@ def main() -> int:
         cmd_commit_and_push=cmd_commit_and_push,
         cmd_push=cmd_push,
         cmd_push_contract=cmd_push_contract,
+        cmd_baseline_contract=cmd_baseline_contract,
+        cmd_baseline_create=cmd_baseline_create,
         cmd_rollback_contract=cmd_rollback_contract,
         cmd_rollback_paths=cmd_rollback_paths,
         cmd_rollback_sync=cmd_rollback_sync,
