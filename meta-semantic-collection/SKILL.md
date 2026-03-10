@@ -11,71 +11,30 @@ description: "runtime 必须维护的语义词池。用于让模型在每个 tur
 - 当用户在多轮交互中补充澄清语义、纠正 AI 误解、停止当前动作并重新解释真实意图时，自动触发本技能。
 
 ## 2. 集合（json payload structure）
-```json
-{
-  "collection": [
-    "清理掉",
-    "删掉",
-    "去掉"
-  ],
-  "action_semantic_description": "删除目标对象及其直接残留，不做备份，不做注释保留，不保留兼容层或占位空壳。"
-}
-```
-
-- 集合中的每个条目至少包含：
-  - `collection`
-  - `action_semantic_description`
-- `collection` 是用户原词集合，用于持续扩写同一语义下的不同说法。
-- `action_semantic_description` 是该集合统一指向的动作语义描述，默认保持稳定，不轻易拆分。
-- 多个词可以指向 1 个 `action_semantic_description`。
-- 1 个词不能同时指向多个 `action_semantic_description`。
-- 若当前 prompt 命中已有集合中的任一用户原词，优先使用该集合对应的动作语义描述覆盖模型默认理解。
-
-当前词池样例：
-
-```json
-[
-  {
-    "collection": [
-      "清理掉",
-      "删掉",
-      "去掉"
-    ],
-    "action_semantic_description": "删除目标对象及其直接残留，不做备份，不做注释保留，不保留兼容层或占位空壳。"
-  },
-  {
-    "collection": [
-      "照抄",
-      "完整抄袭",
-      "抄过来"
-    ],
-    "action_semantic_description": "先把目标项目从头到尾分析清楚，完整提炼其核心设计思路，再把这些已经验证过的设计决策迁移到当前项目。这里的重点是直接复用对方已经设计好的整体方案，省掉重新设计的过程。必须优先继承其数据流转路径、防护措施、中间件选型、模块协作方式、边界处理和关键约束；代码实现可以按本地环境改写，也可以在合适时借鉴原实现，但不能只抄表面写法而丢掉底层设计逻辑。"
-  },
-  {
-    "collection": [
-      "完整阅读",
-      "仔细阅读",
-      "朱行阅读"
-    ],
-    "action_semantic_description": "对用户指定的目标内容执行顺序化、完整化阅读：从开头按顺序读到结尾，不跳段、不抽样、不只看命中片段、不提前开始局部执行。必须先完成一字不差的整体阅读和整体理解，再进入总结、分析、改写、编码、评审或其他后续动作。若对象是文件，则按文件的自然顺序完整读完；若对象是其他明确范围内容，也必须按其完整边界一次性读完。"
-  },
-  {
-    "collection": [
-      "更新文档",
-      "更新代码",
-      "更新一下",
-      "改一下",
-      "改一改"
-    ],
-    "action_semantic_description": "先完整理解被修改目标的当前内容、整体结构、既有语义和上下文边界，再把本轮要求融入现有对象。默认语义不是整段覆盖，也不是无脑追加，而是以融入式修改为主：优先删除已经与新意图冲突或重复的旧语义，其次做最小必要的关键词替换与结构内改写，只有当现有对象中确实不存在承载位置、且删除或替换都不足以完成目标时，才允许新增内容。若用户未显式要求新增、重写或覆盖，则默认按 $Meta-keyword-first-edit 执行，避免补丁式堆叠、重复表达和与现有内容脱节的新段落。"
-  }
-]
-```
+- 词池 payload 不直接写在 `SKILL.md` 里，真实内容固定存放在：
+  - `assets/runtime/semantic_pool_payload.json`
+- 模型在正常执行中不得直接阅读 payload 文件本体；必须通过 CLI 打印 runtime contract 到 console 后再遵守。
+- 统一 CLI 入口：
+  - `python3 scripts/Cli_Toolbox.py runtime-contract --json`
+- 该命令会把 payload 包进 runtime contract 外壳，输出“本 turn 必须遵守的翻译合同”。
+- payload entry schema 固定为：
+  - `collection: list[str]`
+  - `action_semantic_description: str`
+- 硬约束：
+  - 多个词可以指向一个 `action_semantic_description`
+  - 一个词不能同时指向多个 `action_semantic_description`
+  - prompt 命中词池后，词池语义优先覆盖模型默认理解
+- 维护入口：
+  - `python3 scripts/Cli_Toolbox.py upsert-payload --term "<term>" --term "<term>" --description "<semantic>" --dry-run --json`
+  - `python3 scripts/Cli_Toolbox.py upsert-payload --term "<term>" --term "<term>" --description "<semantic>" --json`
+- `dry-run` 只预览 diff 与 runtime contract 结果，不实际回写 JSON。
+- 非 `dry-run` 模式才真正写回 payload 文件，并由脚本保证 JSON 结构合法。
 
 ## 3. 维护规则
-- 所有语义集合内容只写在 `SKILL.md`，不向后延伸文档。
 - `turn start`：默认加载当前语义词池。
 - `turn end`：若本轮出现新的有效澄清语义，可选更新词池。
+- 词池本体只落在 `assets/runtime/semantic_pool_payload.json`。
+- `SKILL.md` 只保留入口、规则与 CLI 用法，不再承载完整 payload。
 - 当用户澄清“不是这个意思”“我的意思是……”“这里应该理解成……”这类内容时，提取：
   - 用户原词
   - 争议内容
