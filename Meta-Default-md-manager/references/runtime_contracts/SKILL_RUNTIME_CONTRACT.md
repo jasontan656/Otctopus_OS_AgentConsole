@@ -18,6 +18,7 @@
 
 ## Current Rule
 - Active commands:
+- `scripts/Cli_Toolbox.py scaffold`
 - `scripts/Cli_Toolbox.py scan`
 - `scripts/Cli_Toolbox.py lint`
 - `scripts/Cli_Toolbox.py collect`
@@ -28,6 +29,8 @@
 - External `AGENTS.md` is `Part A only`.
 - Internal `AGENTS_human.md` is `Part A + Part B`.
 - Internal `AGENTS_machine.json` is `Part B only`.
+- `scaffold` creates governed directory skeletons and matching internal mappings.
+- `new-file` is the stage for adding a new governed file type into the skill's support surface.
 - `collect` treats external files as truth and syncs mirror plus installed skill assets.
 - `push` treats internal managed templates as truth and overwrites external targets.
 

@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "stage": "scaffold",
+  "tool_state": "active",
+  "purpose": "Create governed directory skeletons and the matching internal managed mapping.",
+  "instruction": [
+    "scaffold creates external skeleton files under a user-specified directory",
+    "scaffold creates the matching internal managed files automatically",
+    "scaffold keeps external and internal path mapping one-to-one"
+  ],
+  "workflow": [
+    "receive the external target directory",
+    "choose one governed file kind or all supported kinds",
+    "create the external skeleton files",
+    "create the matching internal managed files",
+    "update the scan rule asset and sync the installed skill"
+  ],
+  "rules": [
+    "scaffold must support dry-run before any real write",
+    "scaffold creates skeletons only; user governance still decides final content"
+  ]
+}

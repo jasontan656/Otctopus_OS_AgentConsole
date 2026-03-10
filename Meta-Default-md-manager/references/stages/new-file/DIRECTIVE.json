@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "stage": "new-file",
+  "tool_state": "documentation_first",
+  "purpose": "Add a new governed filename or file type into the manager's supported governance surface.",
+  "instruction": [
+    "new-file defines support for a new governed file kind",
+    "new-file must add the matching structure template and lint coverage",
+    "new-file must update tool behavior and rule assets together"
+  ],
+  "workflow": [
+    "define the new governed filename or file type",
+    "add the structure template",
+    "update scan rules, lint coverage, and supporting tool behavior",
+    "validate dry-run behavior against the user's expectation",
+    "sync mirror and installed skill assets"
+  ],
+  "rules": [
+    "new-file is not scaffold; it does not create user directory instances by itself",
+    "new-file must complete governance support before the new file kind becomes active"
+  ]
+}

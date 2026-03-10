@@ -7,6 +7,7 @@ description: "集中管理 workspace 内的常驻默认文档。当前提供 sca
 
 ## 1. 工具入口
 - 本技能提供可执行 CLI：
+  - `scaffold`
   - `scan`
   - `lint`
   - `collect`
@@ -32,21 +33,32 @@ description: "集中管理 workspace 内的常驻默认文档。当前提供 sca
 - machine JSON 只承载 `Part B` 的结构化内容。
 
 ## 4. 阶段阅读入口
+- `scaffold`
+  - 说明：在用户指定目录直接落下被治理文件骨架，并同步创建技能内一对一映射。
+  - 阅读入口：`references/runtime_contracts/SCAFFOLD_STAGE_CONTRACT.md`
+- `new-file`
+  - 说明：把新的被治理文件类型正式纳入本技能支持范围。
+  - 阅读入口：`references/runtime_contracts/NEW_FILE_STAGE_CONTRACT.md`
 - `scan`
+  - 说明：发现当前已经处于治理范围内的外部目标。
   - 阅读入口：`references/runtime_contracts/SCAN_STAGE_CONTRACT.md`
 - `collect`
+  - 说明：把外部真源内容回收覆盖到技能内部映射。
   - 阅读入口：`references/runtime_contracts/COLLECT_STAGE_CONTRACT.md`
 - `push`
+  - 说明：把技能内部映射内容直接覆盖推送到外部目标。
   - 阅读入口：`references/runtime_contracts/PUSH_STAGE_CONTRACT.md`
 
 ## 5. 维护入口
-- 本入口用于新增受管文件，而不是在门面内展开完整维护流程。
-- 当用户要求让新文件进入治理范围时，先从这里进入，再按独立维护文档执行后续动作。
-- 新增受管文件的详细工作流、联动修改面与验证要求，见 `references/tooling/GOVERNED_FILE_ONBOARDING.md`。
+- 本入口只描述技能自身维护，不承载新增被治理目标的具体阶段流程。
+- 当用户要求修改脚本、架构或通用约束时，从这里进入。
+- 当用户要求新增被治理目录或新增被治理文件类型时，分别转到 `scaffold` 或 `new-file` 阶段文档。
 
 ## 6. 参考入口
 - [AGENTS 资产治理模型] -> [references/runtime_contracts/AGENTS_ASSET_GOVERNANCE.md]
 - [AGENTS 结构模版] -> [references/runtime_contracts/AGENTS_content_structure.md]
+- [Scaffold 阶段合同] -> [references/runtime_contracts/SCAFFOLD_STAGE_CONTRACT.md]
+- [New-File 阶段合同] -> [references/runtime_contracts/NEW_FILE_STAGE_CONTRACT.md]
 - [Scan 规则合同] -> [references/runtime_contracts/SCAN_RULESET_CONTRACT.json]
 - [Scan 阶段合同] -> [references/runtime_contracts/SCAN_STAGE_CONTRACT.md]
 - [Collect 阶段合同] -> [references/runtime_contracts/COLLECT_STAGE_CONTRACT.md]
@@ -54,7 +66,7 @@ description: "集中管理 workspace 内的常驻默认文档。当前提供 sca
 - [Payload 归档 JSON] -> [references/runtime_contracts/AGENTS_PAYLOAD_ARCHIVE.json]
 - [技能运行状态] -> [references/runtime_contracts/SKILL_RUNTIME_CONTRACT.json]
 - [当前受管资产根目录] -> [assets/managed_targets/AI_Projects]
-- [新增受管文件维护流程] -> [references/tooling/GOVERNED_FILE_ONBOARDING.md]
+- [新增被治理文件类型流程] -> [references/runtime_contracts/NEW_FILE_STAGE_CONTRACT.md]
 
 ## 7. 约束
 - 工具实现必须以本技能当前保留的静态治理文档为准，不得回滚到旧的隐式分段或旧 CLI 结构。

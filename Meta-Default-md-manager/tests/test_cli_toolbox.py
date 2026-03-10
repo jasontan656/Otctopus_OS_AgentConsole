@@ -143,6 +143,29 @@ class CliToolboxTests(unittest.TestCase):
         payload = json.loads(result.stdout)
         self.assertEqual([item["relative_path"] for item in payload["entries"]], ["Codex_Skills_Mirror/AGENTS.md"])
 
+    def test_scaffold_creates_external_and_internal_agents_skeletons(self) -> None:
+        target_dir = self.workspace / "New_Module"
+        result = self.run_cli(
+            "scaffold",
+            "--json",
+            "--target-dir",
+            str(target_dir),
+            "--all-governed",
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        external = target_dir / "AGENTS.md"
+        human = self.mirror / "assets" / "managed_targets" / "AI_Projects" / "New_Module" / "AGENTS_human.md"
+        machine = self.mirror / "assets" / "managed_targets" / "AI_Projects" / "New_Module" / "AGENTS_machine.json"
+        self.assertTrue(external.exists())
+        self.assertTrue(human.exists())
+        self.assertTrue(machine.exists())
+        self.assertIn("<part_A>", external.read_text(encoding="utf-8"))
+        self.assertNotIn("<part_B>", external.read_text(encoding="utf-8"))
+        self.assertIn("<part_B>", human.read_text(encoding="utf-8"))
+        self.assertEqual(json.loads(machine.read_text(encoding="utf-8")), {})
+        updated_rules = json.loads((self.mirror / "rules" / "scan_rules.json").read_text(encoding="utf-8"))
+        self.assertIn("New_Module/AGENTS.md", updated_rules["governed_source_paths"])
+
 
 if __name__ == "__main__":
     unittest.main()

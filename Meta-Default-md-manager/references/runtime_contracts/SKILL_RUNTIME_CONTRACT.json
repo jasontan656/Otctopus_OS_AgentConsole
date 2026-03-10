@@ -10,6 +10,7 @@
     "model_must_not_treat_legacy_tooling_docs_as_active_runtime": true
   },
   "command_map": {
+    "scaffold": "scripts/Cli_Toolbox.py scaffold",
     "scan": "scripts/Cli_Toolbox.py scan",
     "lint": "scripts/Cli_Toolbox.py lint",
     "collect": "scripts/Cli_Toolbox.py collect",
@@ -25,6 +26,8 @@
     "root_agents_and_root_internal_assets_excluded_from_this_cleanup_round": true
   },
   "scan_collect_push_state": {
+    "scaffold": "active_cli_for_governed_directory_skeleton_creation",
+    "new-file": "documentation_first_stage",
     "scan": "active_cli_with_external_rule_assets",
     "collect": "active_cli_with_external_source_as_truth_and_dual_sync",
     "push": "active_cli_with_internal_template_as_truth"

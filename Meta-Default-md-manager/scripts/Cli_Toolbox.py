@@ -6,7 +6,9 @@ import sys
 from pathlib import Path
 
 from mdm_runtime import (
+    add_governed_source_path,
     detect_paths,
+    ensure_within_workspace,
     extract_external_agents_part_a,
     extract_internal_part_a,
     lint_discovered_entry,
@@ -15,10 +17,13 @@ from mdm_runtime import (
     read_json,
     render_internal_agents_human,
     report_path,
+    scaffold_external_agents,
+    scaffold_internal_agents_human,
     sync_file_to_installed,
     validate_internal_human_agents,
     validate_machine_json,
     write_stage_report,
+    write_json,
     write_text,
 )
 
@@ -233,6 +238,72 @@ def cmd_target_contract(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_scaffold(args: argparse.Namespace) -> int:
+    paths = detect_paths(__file__)
+    target_dirs = [ensure_within_workspace(paths, Path(item)) for item in args.target_dir]
+    selected_kinds = sorted(set(args.file_kind or ([] if not args.all_governed else ["AGENTS.md"])))
+    if not selected_kinds:
+        selected_kinds = ["AGENTS.md"]
+
+    operations = []
+    failures = []
+    for target_dir in target_dirs:
+        for file_kind in selected_kinds:
+            if file_kind != "AGENTS.md":
+                failures.append({"target_dir": str(target_dir), "file_kind": file_kind, "errors": ["unsupported_file_kind"]})
+                continue
+            external_path = (target_dir / file_kind).resolve()
+            managed_dir = paths.managed_targets_root / external_path.relative_to(paths.workspace_root).parent
+            human_path = managed_dir / "AGENTS_human.md"
+            machine_path = managed_dir / "AGENTS_machine.json"
+            if not args.allow_existing:
+                collisions = []
+                for path in (external_path, human_path, machine_path):
+                    if path.exists():
+                        collisions.append(str(path))
+                if collisions:
+                    failures.append(
+                        {
+                            "target_dir": str(target_dir),
+                            "file_kind": file_kind,
+                            "errors": ["target_already_exists"],
+                            "collisions": collisions,
+                        }
+                    )
+                    continue
+
+            write_text(external_path, scaffold_external_agents(external_path), args.dry_run)
+            write_text(human_path, scaffold_internal_agents_human(external_path), args.dry_run)
+            write_json(machine_path, {}, args.dry_run)
+            add_governed_source_path(paths, external_path, args.dry_run)
+            sync_file_to_installed(paths, human_path, args.dry_run)
+            sync_file_to_installed(paths, machine_path, args.dry_run)
+            operations.append(
+                {
+                    "target_dir": str(target_dir),
+                    "file_kind": file_kind,
+                    "external_path": str(external_path),
+                    "managed_human_path": str(human_path),
+                    "managed_machine_path": str(machine_path),
+                }
+            )
+
+    payload = {
+        "stage": "scaffold",
+        "dry_run": args.dry_run,
+        "operation_count": len(operations),
+        "operations": operations,
+        "failures": failures,
+        "summary": f"scaffold prepared {len(operations)} governed file(s)",
+        "details": [f"- {item['external_path']} -> {item['managed_human_path']}" for item in operations],
+    }
+    if args.json or args.write_runtime_report or args.report_path:
+        runtime_path = write_stage_report(paths, "scaffold", payload, args.dry_run, args.report_path)
+        payload["runtime_report_path"] = str(runtime_path)
+    emit(payload, args.json)
+    return 1 if failures else 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="Cli_Toolbox.py")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -254,6 +325,14 @@ def build_parser() -> argparse.ArgumentParser:
     add_common_report_args(push)
     push.add_argument("--allow-invalid-internal", action="store_true")
     push.set_defaults(func=cmd_push)
+
+    scaffold = subparsers.add_parser("scaffold")
+    add_common_report_args(scaffold)
+    scaffold.add_argument("--target-dir", action="append", required=True, help="External directory to place governed file skeletons into. Repeatable.")
+    scaffold.add_argument("--file-kind", action="append", default=[], help="Governed filename to scaffold. Repeatable.")
+    scaffold.add_argument("--all-governed", action="store_true", help="Scaffold all currently governed file kinds.")
+    scaffold.add_argument("--allow-existing", action="store_true", help="Allow overwriting existing scaffold targets.")
+    scaffold.set_defaults(func=cmd_scaffold)
 
     target_contract = subparsers.add_parser("target-contract")
     target_contract.add_argument("--source-path", required=True)

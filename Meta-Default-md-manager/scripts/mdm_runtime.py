@@ -159,6 +159,12 @@ def derive_managed_dir(paths: RuntimePaths, source_path: Path) -> Path:
     return paths.managed_targets_root / parent
 
 
+def ensure_within_workspace(paths: RuntimePaths, target_path: Path) -> Path:
+    resolved = target_path.expanduser().resolve()
+    resolved.relative_to(paths.workspace_root)
+    return resolved
+
+
 def _extract_tag_block(text: str, open_tag: str, close_tag: str) -> str | None:
     if open_tag not in text or close_tag not in text:
         return None
@@ -237,6 +243,42 @@ def load_machine_payload(machine_path: Path) -> Any:
     if machine_path.exists():
         return read_json(machine_path)
     return {}
+
+
+def add_governed_source_path(paths: RuntimePaths, source_path: Path, dry_run: bool) -> None:
+    rules = load_scan_rules(paths)
+    relative = str(source_path.resolve().relative_to(paths.workspace_root))
+    governed = list(rules.get("governed_source_paths", []))
+    if relative not in governed:
+        governed.append(relative)
+        governed.sort()
+        rules["governed_source_paths"] = governed
+        write_json(paths.scan_rules_path, rules, dry_run)
+        sync_file_to_installed(paths, paths.scan_rules_path, dry_run)
+
+
+def scaffold_external_agents(external_path: Path) -> str:
+    command = (
+        "python3 /home/jasontan656/AI_Projects/Codex_Skills_Mirror/"
+        "Meta-Default-md-manager/scripts/Cli_Toolbox.py "
+        f'target-contract --source-path "{external_path}" --json'
+    )
+    return (
+        f"{HOOK_HEADER}\n\n"
+        "`HOOK_LOAD`: Apply this AGENTS contract.\n\n"
+        f"{PART_A_OPEN}\n"
+        "1. 根入口命令\n"
+        "- 在处理当前目录路径规则之前，必须先运行：\n"
+        f"- `{command}`\n\n"
+        "2. 待治理骨架\n"
+        "- 该目录已进入治理范围。\n"
+        "- 用户后续应补全该目录所需的具体治理内容。\n"
+        f"{PART_A_CLOSE}\n"
+    )
+
+
+def scaffold_internal_agents_human(external_path: Path) -> str:
+    return render_internal_agents_human(scaffold_external_agents(external_path), {})
 
 
 def validate_external_agents(text: str) -> list[str]:
