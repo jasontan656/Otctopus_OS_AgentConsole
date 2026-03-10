@@ -1,9 +1,9 @@
 ---
-name: "Meta-Skill-Mirror"
+name: "skill-mirror-to-codex"
 description: 将 codex skill mirror 导入 codex skills 安装目录，并在 `Push` / `Install` 双模式之间自动导航。使用场景：需要把 mirror 中的技能落到安装目录、判断目标技能是否已安装、对已存在技能执行覆盖同步，或对尚未存在的技能先校验格式再走外部安装链路。
 ---
 
-# Meta-Skill-Mirror
+# Skill-Mirror-to-Codex
 
 ## 1. 抽象层
 
@@ -115,7 +115,7 @@ description: 将 codex skill mirror 导入 codex skills 安装目录，并在 `P
 
 ## 6. 架构契约
 ```text
-Meta-Skill-Mirror/
+skill-mirror-to-codex/
 ├── SKILL.md
 ├── agents/
 │   └── openai.yaml

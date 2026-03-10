@@ -191,7 +191,7 @@ class ConstitutionToolingTests(unittest.TestCase):
             manager_root = Path(tmp) / "Codex_Skills_Mirror"
             manager_root.mkdir()
             (manager_root / "sync.py").write_text(
-                'MIRROR = "AI_Projects/Codex_Skills_Mirror/Meta-Skill-Mirror"\n',
+                'MIRROR = "AI_Projects/Codex_Skills_Mirror/skill-mirror-to-codex"\n',
                 encoding="utf-8",
             )
             result = subprocess.run(

@@ -19,7 +19,8 @@
 - `family`
   - 某 prefix 下的语义簇。
   - 用于表达“一组承担相近职责的技能”。
-  - 例：`governance`、`template`、`browser`
+  - 可使用稳定 family code。
+  - 例：`governance`、`template`、`browser`、`[SKILL-GOV]`
 - `role_tag`
   - 更细粒度的职责标签。
   - 例：`manager`、`router`、`template`、`installer`
@@ -53,3 +54,4 @@
 - 同一技能在不同地方使用多个 `canonical_id`。
 - 只修改显示名，不同步确认 prefix/family 是否仍成立。
 - 把“Meta-xxx”这种展示风格误当成真正的 canonical 规则来源。
+- 想表达治理族群时只在文案里写“这一类技能”，但不在 registry 中落下像 `[SKILL-GOV]` 这样的稳定 family code。

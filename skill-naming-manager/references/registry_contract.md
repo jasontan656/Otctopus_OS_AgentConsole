@@ -3,6 +3,10 @@
 ## 目标
 - 为所有技能提供统一注册模型，让“这个技能属于哪个 prefix/family、能否被某句自然语言一次性调度”有稳定依据。
 
+## 当前 registry 文件
+- 当前静态主表路径：`references/skill_registry.yaml`
+- 在没有本地 CLI 的前提下，这份 YAML 就是当前回合可直接消费的 registry 锚点。
+
 ## 每个技能最少应登记的字段
 - `canonical_id`
 - `display_name`
@@ -18,6 +22,9 @@
 - `companion_skills`
   - 可选
   - 记录常见协作技能，而不是复制对方正文
+- `migrated_from`
+  - 可选
+  - 用于记录重命名治理前的旧 canonical 名称或旧展示名
 
 ## registry 的使用方式
 - registry 是逻辑主表，不一定要求某个固定文件立刻存在。
@@ -28,6 +35,7 @@
 - prefix 是第一层聚类。
 - family 是 prefix 下的语义分组。
 - 一个技能默认只应有一个主 prefix 和一个主 family，避免同时归属多个主族导致路由歧义。
+- 若某个 family 需要被自然语言稳定点名，可使用明确的 family code，例如 `[SKILL-GOV]`。
 
 ## 状态治理
 - `active`
@@ -48,3 +56,4 @@
 - 模型能明确回答一个技能属于哪个 prefix 和 family。
 - 模型能判断一句自然语言是否在请求单技能、family 技能集还是 prefix 全族。
 - 改命名规范时，有清楚的注册字段作为迁移锚点。
+- `[SKILL-GOV]` 这类治理族群能在 registry 中被直接枚举，而不是靠目录名猜测。

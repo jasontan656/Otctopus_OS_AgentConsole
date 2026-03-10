@@ -1,0 +1,26 @@
+registry_version: v1
+families:
+  - family: "[SKILL-GOV]"
+    description: "治理技能命名、注册、模板、镜像同步与同类治理动作的技能族。"
+    members:
+      - canonical_id: "skill-naming-manager"
+        display_name: "Skill-Naming-Manager"
+        prefix: "skill"
+        family: "[SKILL-GOV]"
+        role_tag: "manager"
+        status: "active"
+        trigger_summary: "当需要统一治理技能命名、prefix/family 归类、registry 注册与自然语言调用语义时使用。"
+        companion_skills:
+          - "skill-mirror-to-codex"
+      - canonical_id: "skill-mirror-to-codex"
+        display_name: "Skill-Mirror-to-Codex"
+        prefix: "skill"
+        family: "[SKILL-GOV]"
+        role_tag: "mirror-sync"
+        status: "active"
+        trigger_summary: "当需要把 mirror 中的技能同步或安装到 codex skills 目录时使用。"
+        companion_skills:
+          - "skill-naming-manager"
+          - "Meta-Skill-Template"
+        migrated_from:
+          - "Meta-Skill-Mirror"

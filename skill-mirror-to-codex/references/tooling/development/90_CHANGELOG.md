@@ -14,3 +14,7 @@
 - 新增单入口 `scripts/Cli_Toolbox.py`。
 - 定义双向同步能力（full/single）。
 - 约束 mirror 根目录为可见路径 `Codex_Skills_Mirror`。
+
+## 2026-03-11
+- canonical id 重命名为 `skill-mirror-to-codex`。
+- 纳入 `skill-naming-manager` 的 `[SKILL-GOV]` registry。

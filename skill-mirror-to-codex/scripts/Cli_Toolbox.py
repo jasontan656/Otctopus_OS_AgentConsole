@@ -177,7 +177,7 @@ def _rsync(src: Path, dst: Path, dry_run: bool) -> List[str]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Meta-Skill-Mirror toolbox (one-way: mirror -> codex)"
+        description="Skill-Mirror-to-Codex toolbox (one-way: mirror -> codex)"
     )
     parser.add_argument("--scope", choices=["all", "skill"], default="all")
     parser.add_argument("--skill-name")

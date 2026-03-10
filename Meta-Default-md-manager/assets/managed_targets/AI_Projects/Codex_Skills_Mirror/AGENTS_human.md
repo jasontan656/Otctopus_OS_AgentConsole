@@ -20,7 +20,7 @@
 4. 同回合要求
 - 如果本回合写入 `Codex_Skills_Mirror`，必须从一开始就纳入 Constitution lint 与 Git traceability。
 - 如果本回合编辑 skill，必须先在 `Codex_Skills_Mirror` 中的 mirror 副本完成编辑，禁止直接编辑 codex 安装目录下的对应 skill。
-- skill 编辑完成后，若目标 skill 已存在于 codex 安装目录，必须同回合执行 `$Meta-Skill-Mirror` 的 `Push`；若目标 skill 是新建且 codex 安装目录中尚不存在，必须同回合执行 `$Meta-Skill-Mirror` 的 `Install`。
+- skill 编辑完成后，若目标 skill 已存在于 codex 安装目录，必须同回合执行 `$skill-mirror-to-codex` 的 `Push`；若目标 skill 是新建且 codex 安装目录中尚不存在，必须同回合执行 `$skill-mirror-to-codex` 的 `Install`。
 - 结束前必须完成 concrete repo 的 Constitution lint。
 - 如果本回合写入了 `Codex_Skills_Mirror`，必须同回合 commit-and-push。
 </part_A>
@@ -37,7 +37,7 @@
   },
   "default_meta_skill_order": [
     "$meta-github-operation (after any write to Codex_Skills_Mirror, commit-and-push the mirror repo for Git traceability; Git push is not a substitute for syncing the codex installation directory)",
-    "$Meta-Skill-Mirror (edit skills only in Codex_Skills_Mirror mirror paths, never directly in the codex installation directory; after editing, use Push for already-installed skills and Install for newly created skills)",
+    "$skill-mirror-to-codex (edit skills only in Codex_Skills_Mirror mirror paths, never directly in the codex installation directory; after editing, use Push for already-installed skills and Install for newly created skills)",
     "$Meta-Skill-Template ( should be considered to imply if there is no specific user request on how skill should be created (prioritize user request than template) )",
     "$skill-creator (for skill standard formatter to ensure codex reads it properly, do not use its template for skill creation)",
     "$Constitution-knowledge-base (for skill CLI tool lints )"
@@ -61,7 +61,7 @@
     "choose READ_EXEC or WRITE_EXEC by actual write intent, not by file type alone",
     "when this repo is written, keep same-turn Constitution lint and Git traceability in scope",
     "for skill changes, edit the mirror copy under Codex_Skills_Mirror and never directly edit the codex installation directory",
-    "after skill edits, use Meta-Skill-Mirror Push for already-installed skills or Install for newly created skills before closing the turn"
+    "after skill edits, use skill-mirror-to-codex Push for already-installed skills or Install for newly created skills before closing the turn"
   ],
   "execution_modes": {
     "READ_EXEC": {
@@ -78,7 +78,7 @@
         "state the intended write scope before editing",
         "edit the minimal correct scope that matches the user intent",
         "for skill edits, write only the mirror copy under Codex_Skills_Mirror and do not directly edit the codex installed copy",
-        "after skill edits, run Meta-Skill-Mirror Push for existing installed skills or Install for newly created skills",
+        "after skill edits, run skill-mirror-to-codex Push for existing installed skills or Install for newly created skills",
         "run Constitution lint on Codex_Skills_Mirror before closing the turn",
         "complete same-turn commit-and-push when Codex_Skills_Mirror files are written"
       ]
@@ -91,7 +91,7 @@
   ],
   "turn_end_actions": [
     "run Constitution lint on the concrete Codex_Skills_Mirror target root",
-    "if the turn edited a skill, complete Meta-Skill-Mirror Push or Install before closing the turn",
+    "if the turn edited a skill, complete skill-mirror-to-codex Push or Install before closing the turn",
     "if the turn wrote Codex_Skills_Mirror, complete same-turn commit-and-push before closing the turn"
   ],
   "repo_name": "Codex_Skills_Mirror"
