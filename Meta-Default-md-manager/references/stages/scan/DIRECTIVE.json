@@ -1,20 +1,25 @@
 {
-  "version": 2,
+  "version": 3,
   "stage": "scan",
   "tool_state": "inactive",
-  "purpose": "Archive the intended scan semantics while no executable tooling exists.",
+  "purpose": "Archive the intended scan semantics and future lint boundary while no executable tooling exists.",
   "instruction": [
-    "scan only discovers which files are currently governed by this skill",
-    "scan keeps the existing filename-based match boundary",
-    "scan does not write managed copies"
+    "scan discovers all files that match the governed filename rules and runtime scan assets",
+    "scan applies a disallowed list to exclude blacklisted domains such as Octopus_OS",
+    "scan supports both stdout output and json output",
+    "when json output is requested, the result file must be written under the corresponding Codex_Skill_Runtime folder"
   ],
   "workflow": [
-    "walk the workspace using the established managed filename rules",
-    "exclude Octopus_OS and all existing exclusion domains",
-    "produce a managed target list for human review"
+    "load filename rules and keyword rules from external scan rule assets",
+    "walk the workspace using those managed match rules",
+    "exclude all paths that match the disallowed list",
+    "produce a managed target list for human review",
+    "run structure lint against every discovered managed file"
   ],
   "rules": [
     "do not invent an executable scan command during the no-tool phase",
-    "scan semantics remain archival until new tooling is rebuilt"
+    "scan semantics remain archival until new tooling is rebuilt",
+    "if a discovered managed filename has no matching structure template, future tooling must stop with an error",
+    "AGENTS.md currently requires AGENTS_content_structure.md as its governing structure template"
   ]
 }

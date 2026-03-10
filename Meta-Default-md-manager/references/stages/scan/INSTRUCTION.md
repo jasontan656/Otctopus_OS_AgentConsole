@@ -3,5 +3,8 @@
 > Archived stage semantics. No executable scan tool currently exists.
 
 - Discover which files are under this skill's managed boundary.
-- Keep the current filename-based match rule.
-- Do not write managed copies during scan.
+- Load scan match rules from future external runtime assets instead of hardcoding all rules in code.
+- Apply the disallowed list and exclude blacklisted domains such as `Octopus_OS`.
+- Support both stdout output and json output.
+- When json output is requested, future tooling must write the result file into the corresponding `Codex_Skill_Runtime` folder.
+- Run structure lint for every discovered managed file before declaring the scan successful.
