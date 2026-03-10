@@ -1,0 +1,8 @@
+doc_id: "<skill.area.topic>"
+doc_type: "<skill_facade|runtime_contract|tooling_usage|tooling_development|tooling_architecture|module_doc|template_doc|changelog>"
+topic: "<one stable topic statement>"
+anchors:
+  - target: "<relative/path/to/another/doc.md>"
+    relation: "<governed_by|implements|details|expands|pairs_with|tracks_changes_to>"
+    direction: "<upstream|downstream|lateral|cross>"
+    reason: "<why this relation exists>"

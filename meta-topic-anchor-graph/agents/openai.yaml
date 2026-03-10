@@ -1,4 +1,0 @@
-interface:
-  display_name: "Meta Topic Anchor Graph"
-  short_description: "把文档拆成单 topic 树节点，并用锚点组成可导航图"
-  default_prompt: "Use meta-topic-anchor-graph to create or refactor documentation into a rooted topic tree with anchor edges. Keep each node single-topic, push detail downward, and prefer smaller atoms with clearer paths over larger mixed documents."

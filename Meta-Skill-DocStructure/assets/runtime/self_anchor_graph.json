@@ -1,0 +1,229 @@
+{
+  "graph_name": "META_SKILL_DOCSTRUCTURE_SELF_ANCHOR_GRAPH",
+  "graph_version": "v1",
+  "source_skill": "Meta-Skill-DocStructure",
+  "summary": {
+    "node_count": 10,
+    "edge_count": 19,
+    "error_count": 0,
+    "warning_count": 0
+  },
+  "nodes": [
+    {
+      "path": "SKILL.md",
+      "doc_id": "skill.entry.facade",
+      "doc_type": "skill_facade",
+      "topic": "Meta-Skill-DocStructure entry facade and routing contract",
+      "title": "Meta-Skill-DocStructure",
+      "anchor_count": 2
+    },
+    {
+      "path": "assets/templates/ATOMIC_DOC_TEMPLATE.md",
+      "doc_id": "templates.atomic_doc",
+      "doc_type": "template_doc",
+      "topic": "Template for a single-topic markdown doc inside a skill folder",
+      "title": "Atomic Doc Template",
+      "anchor_count": 2
+    },
+    {
+      "path": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md",
+      "doc_id": "runtime.contract.audit",
+      "doc_type": "runtime_contract",
+      "topic": "Audit version of the Meta-Skill-DocStructure runtime contract",
+      "title": "Runtime Contract",
+      "anchor_count": 2
+    },
+    {
+      "path": "references/tooling/Cli_Toolbox_DEVELOPMENT.md",
+      "doc_id": "tooling.development.entry",
+      "doc_type": "tooling_development",
+      "topic": "Cli_Toolbox development navigation for Meta-Skill-DocStructure",
+      "title": "Cli_Toolbox 开发文档",
+      "anchor_count": 2
+    },
+    {
+      "path": "references/tooling/Cli_Toolbox_USAGE.md",
+      "doc_id": "tooling.usage.cli",
+      "doc_type": "tooling_usage",
+      "topic": "Cli_Toolbox operational usage for Meta-Skill-DocStructure",
+      "title": "Cli_Toolbox 使用文档",
+      "anchor_count": 2
+    },
+    {
+      "path": "references/tooling/development/00_ARCHITECTURE_OVERVIEW.md",
+      "doc_id": "tooling.architecture.overview",
+      "doc_type": "tooling_architecture",
+      "topic": "Architecture overview of Meta-Skill-DocStructure tooling",
+      "title": "架构总览",
+      "anchor_count": 2
+    },
+    {
+      "path": "references/tooling/development/20_CATEGORY_INDEX.md",
+      "doc_id": "tooling.category.index",
+      "doc_type": "tooling_index",
+      "topic": "Category index for Meta-Skill-DocStructure tooling docs",
+      "title": "分类索引",
+      "anchor_count": 2
+    },
+    {
+      "path": "references/tooling/development/90_CHANGELOG.md",
+      "doc_id": "tooling.changelog",
+      "doc_type": "changelog",
+      "topic": "Change log for Meta-Skill-DocStructure",
+      "title": "变更记录",
+      "anchor_count": 1
+    },
+    {
+      "path": "references/tooling/development/modules/mod_anchor_graph_lint.md",
+      "doc_id": "tooling.module.anchor_graph_lint",
+      "doc_type": "module_doc",
+      "topic": "Anchor graph build and lint module behavior in Meta-Skill-DocStructure",
+      "title": "anchor_graph_lint 模块",
+      "anchor_count": 2
+    },
+    {
+      "path": "references/tooling/development/modules/mod_runtime_contract.md",
+      "doc_id": "tooling.module.runtime_contract",
+      "doc_type": "module_doc",
+      "topic": "Runtime contract module behavior in Meta-Skill-DocStructure",
+      "title": "runtime_contract 模块",
+      "anchor_count": 2
+    }
+  ],
+  "edges": [
+    {
+      "source": "SKILL.md",
+      "target": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md",
+      "relation": "governed_by",
+      "direction": "downstream",
+      "reason": "Detailed runtime rules and workflow live in the runtime contract."
+    },
+    {
+      "source": "SKILL.md",
+      "target": "references/tooling/Cli_Toolbox_USAGE.md",
+      "relation": "executed_via",
+      "direction": "downstream",
+      "reason": "Operational commands are documented in the usage guide."
+    },
+    {
+      "source": "assets/templates/ATOMIC_DOC_TEMPLATE.md",
+      "target": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md",
+      "relation": "conforms_to",
+      "direction": "upstream",
+      "reason": "This template is defined by the runtime contract."
+    },
+    {
+      "source": "assets/templates/ATOMIC_DOC_TEMPLATE.md",
+      "target": "SKILL.md",
+      "relation": "used_by",
+      "direction": "upstream",
+      "reason": "The skill facade routes readers to this template."
+    },
+    {
+      "source": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md",
+      "target": "SKILL.md",
+      "relation": "expands",
+      "direction": "upstream",
+      "reason": "This document expands the facade-level rules in SKILL.md."
+    },
+    {
+      "source": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md",
+      "target": "references/tooling/Cli_Toolbox_USAGE.md",
+      "relation": "executed_via",
+      "direction": "downstream",
+      "reason": "Tooling usage turns the contract into actions."
+    },
+    {
+      "source": "references/tooling/Cli_Toolbox_DEVELOPMENT.md",
+      "target": "references/tooling/development/00_ARCHITECTURE_OVERVIEW.md",
+      "relation": "routes_to",
+      "direction": "downstream",
+      "reason": "Architecture overview is the first development read."
+    },
+    {
+      "source": "references/tooling/Cli_Toolbox_DEVELOPMENT.md",
+      "target": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md",
+      "relation": "grounded_in",
+      "direction": "upstream",
+      "reason": "Development details must stay aligned with the runtime contract."
+    },
+    {
+      "source": "references/tooling/Cli_Toolbox_USAGE.md",
+      "target": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md",
+      "relation": "implements",
+      "direction": "upstream",
+      "reason": "The toolbox commands operationalize the runtime contract."
+    },
+    {
+      "source": "references/tooling/Cli_Toolbox_USAGE.md",
+      "target": "references/tooling/development/modules/mod_anchor_graph_lint.md",
+      "relation": "details",
+      "direction": "downstream",
+      "reason": "The lint and graph module doc explains implementation behavior."
+    },
+    {
+      "source": "references/tooling/development/00_ARCHITECTURE_OVERVIEW.md",
+      "target": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md",
+      "relation": "implements",
+      "direction": "upstream",
+      "reason": "Architecture exists to implement the runtime contract."
+    },
+    {
+      "source": "references/tooling/development/00_ARCHITECTURE_OVERVIEW.md",
+      "target": "references/tooling/development/modules/mod_anchor_graph_lint.md",
+      "relation": "decomposes_into",
+      "direction": "downstream",
+      "reason": "The lint module doc explains the main execution path."
+    },
+    {
+      "source": "references/tooling/development/20_CATEGORY_INDEX.md",
+      "target": "references/tooling/development/00_ARCHITECTURE_OVERVIEW.md",
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "Architecture overview is the primary branch under this index."
+    },
+    {
+      "source": "references/tooling/development/20_CATEGORY_INDEX.md",
+      "target": "references/tooling/Cli_Toolbox_USAGE.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "Readers often jump between category index and usage."
+    },
+    {
+      "source": "references/tooling/development/90_CHANGELOG.md",
+      "target": "references/tooling/development/00_ARCHITECTURE_OVERVIEW.md",
+      "relation": "tracks_changes_to",
+      "direction": "upstream",
+      "reason": "Architecture is the main thing this changelog evolves with."
+    },
+    {
+      "source": "references/tooling/development/modules/mod_anchor_graph_lint.md",
+      "target": "references/tooling/Cli_Toolbox_USAGE.md",
+      "relation": "explains_commands_for",
+      "direction": "upstream",
+      "reason": "Usage doc is the primary human-facing surface for these commands."
+    },
+    {
+      "source": "references/tooling/development/modules/mod_anchor_graph_lint.md",
+      "target": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md",
+      "relation": "implements",
+      "direction": "upstream",
+      "reason": "This module enforces the runtime contract rules."
+    },
+    {
+      "source": "references/tooling/development/modules/mod_runtime_contract.md",
+      "target": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md",
+      "relation": "documents",
+      "direction": "upstream",
+      "reason": "This module exists to expose the runtime contract."
+    },
+    {
+      "source": "references/tooling/development/modules/mod_runtime_contract.md",
+      "target": "references/tooling/Cli_Toolbox_DEVELOPMENT.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "This module doc is part of the development tree."
+    }
+  ],
+  "warnings": []
+}

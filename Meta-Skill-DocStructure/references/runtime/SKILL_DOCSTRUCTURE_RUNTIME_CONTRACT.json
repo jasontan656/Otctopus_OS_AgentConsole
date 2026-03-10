@@ -1,0 +1,38 @@
+{
+  "contract_name": "META_SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT",
+  "contract_version": "v1",
+  "skill_name": "meta-skill-docstructure",
+  "scope": "skill_internal_docs_only",
+  "primary_goal": "Govern markdown document organization inside a skill folder with anchors, graph JSON, and lintable frontmatter.",
+  "thinking_chain": [
+    "scope_check",
+    "doc_inventory",
+    "frontmatter_contract_check",
+    "anchor_graph_check",
+    "atomicity_signal_check",
+    "rewrite_or_split",
+    "graph_emit"
+  ],
+  "commands": {
+    "runtime_contract": "python3 scripts/Cli_Toolbox.py runtime-contract --json",
+    "lint_doc_anchors": "python3 scripts/Cli_Toolbox.py lint-doc-anchors --target <skill_root> --json",
+    "build_anchor_graph": "python3 scripts/Cli_Toolbox.py build-anchor-graph --target <skill_root> --json",
+    "rebuild_self_graph": "python3 scripts/Cli_Toolbox.py rebuild-self-graph --json"
+  },
+  "frontmatter_contract": {
+    "template_path": "assets/templates/DOC_FRONTMATTER_TEMPLATE.yaml",
+    "required_fields": [
+      "doc_id",
+      "doc_type",
+      "topic",
+      "anchors"
+    ],
+    "skill_md_metadata_path": "metadata.doc_structure"
+  },
+  "graph_contract": {
+    "matrix_path": "assets/runtime/anchor_query_matrix.json",
+    "self_graph_path": "assets/runtime/self_anchor_graph.json",
+    "min_anchor_count_per_doc": 1,
+    "target_must_be_markdown": true
+  }
+}

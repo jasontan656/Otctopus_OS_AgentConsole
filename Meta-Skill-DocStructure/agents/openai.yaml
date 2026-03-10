@@ -1,0 +1,4 @@
+interface:
+  display_name: "Meta-Skill-DocStructure"
+  short_description: "规范 skills 内部文档组织、锚点图、frontmatter 与 lint"
+  default_prompt: "Use Meta-Skill-DocStructure only for documentation inside a skill folder. Enforce single-topic markdown docs, frontmatter anchors, anchor graph JSON, split-signal matrix checks, and the CLI lint/build workflow."
