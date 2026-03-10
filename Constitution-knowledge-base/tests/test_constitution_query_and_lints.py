@@ -10,6 +10,18 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class ConstitutionToolingTests(unittest.TestCase):
+    def _assert_enhanced_report_shape(self, report: dict[str, object]) -> None:
+        self.assertIn("summary_enhanced", report)
+        self.assertIn("gate_diagnostics", report)
+        self.assertIn("violation_details", report)
+        self.assertIn("clusters", report)
+        summary = report["summary_enhanced"]
+        self.assertIn("failed_gate_count", summary)
+        self.assertIn("total_violation_count", summary)
+        self.assertIn("deduped_issue_count", summary)
+        self.assertIn("likely_rule_scope_issues", summary)
+        self.assertIn("likely_real_code_issues", summary)
+
     def test_frontend_governance_artifacts_are_removed(self) -> None:
         registry = (ROOT / "references/anchor_docs/ANCHOR_DOC_REGISTRY.yaml").read_text(encoding="utf-8")
         graph = (ROOT / "references/knowledge_graph/MOL_TECH_STACK_KEYWORD_ANCHOR_GRAPH_v1.md").read_text(encoding="utf-8")
@@ -57,6 +69,7 @@ class ConstitutionToolingTests(unittest.TestCase):
             )
             self.assertEqual(bad_result.returncode, 1)
             bad_report = json.loads(bad_result.stdout)
+            self._assert_enhanced_report_shape(bad_report)
             self.assertTrue(any(g["gate"] == "modularity_gate" and g["status"] == "fail" for g in bad_report["gates"]))
 
             good = root / "good"
@@ -81,6 +94,7 @@ class ConstitutionToolingTests(unittest.TestCase):
                 check=False,
             )
             self.assertEqual(good_result.returncode, 0, good_result.stdout + good_result.stderr)
+            self._assert_enhanced_report_shape(json.loads(good_result.stdout))
 
     def test_hardcoded_asset_gate_detects_inline_prompt_and_allows_external_asset(self) -> None:
         with tempfile.TemporaryDirectory(prefix="ctest_", dir=str(ROOT.parent)) as tmp:
@@ -109,8 +123,16 @@ class ConstitutionToolingTests(unittest.TestCase):
             )
             self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
             report = json.loads(result.stdout)
+            self._assert_enhanced_report_shape(report)
             gate = next(g for g in report["gates"] if g["gate"] == "hardcoded_asset_gate")
             self.assertTrue(any(v["path"] == "bad_prompt.py" for v in gate["violations"]), result.stdout + result.stderr)
+            detail = next(v for v in report["violation_details"] if v["gate"] == "hardcoded_asset_gate" and v["path"] == "bad_prompt.py")
+            self.assertEqual(detail["category"], "embedded_markdown_template")
+            self.assertTrue(detail["line_hits"], result.stdout + result.stderr)
+            self.assertIn("workflow", detail["matched_text_preview"], result.stdout + result.stderr)
+            self.assertTrue(detail["cluster_key"].startswith("hardcoded_asset:"), result.stdout + result.stderr)
+            self.assertTrue(detail["suggested_fix"], result.stdout + result.stderr)
+            self.assertTrue(any(cluster["cluster_key"] == detail["cluster_key"] for cluster in report["clusters"]), result.stdout + result.stderr)
 
             good = root / "loader.py"
             (root / "assets").mkdir(exist_ok=True)
@@ -148,11 +170,21 @@ class ConstitutionToolingTests(unittest.TestCase):
             )
             self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
             report = json.loads(result.stdout)
+            self._assert_enhanced_report_shape(report)
             gate = next(g for g in report["gates"] if g["gate"] == "absolute_path_gate")
             reasons = {v["reason"] for v in gate["violations"]}
             self.assertIn("octopus_os_forbids_unix_absolute_paths", reasons, result.stdout + result.stderr)
             self.assertIn("octopus_os_forbids_ai_projects_prefix", reasons, result.stdout + result.stderr)
             self.assertIn("octopus_os_forbids_repo_escape_relative_paths", reasons, result.stdout + result.stderr)
+            detail = next(
+                v
+                for v in report["violation_details"]
+                if v["gate"] == "absolute_path_gate" and v["reason"] == "octopus_os_forbids_unix_absolute_paths"
+            )
+            self.assertEqual(detail["category"], "user_absolute_path_literal")
+            self.assertTrue(detail["line_hits"], result.stdout + result.stderr)
+            self.assertIn("/home/jasontan656/AI_Projects/Octopus_OS", detail["matched_text_preview"], result.stdout + result.stderr)
+            self.assertTrue(detail["suggested_fix"], result.stdout + result.stderr)
 
     def test_absolute_path_gate_allows_ai_projects_prefix_for_workspace_manager_repo(self) -> None:
         with tempfile.TemporaryDirectory(prefix="ctest_", dir=str(ROOT.parent)) as tmp:
@@ -187,6 +219,15 @@ class ConstitutionToolingTests(unittest.TestCase):
                 any(v["reason"] == "non_octopus_repo_forbids_user_absolute_paths" for v in gate["violations"]),
                 result.stdout + result.stderr,
             )
+            detail = next(
+                v
+                for v in report["violation_details"]
+                if v["gate"] == "absolute_path_gate" and v["path"] == "bad_home.py"
+            )
+            self.assertEqual(detail["issue_kind"], "real_content_issue")
+            gate_diag = next(g for g in report["gate_diagnostics"] if g["gate"] == "absolute_path_gate")
+            self.assertIn("rule_file", gate_diag)
+            self.assertIn("recommended_first_action", gate_diag)
 
     def test_file_structure_repo_token_does_not_misfire_on_report(self) -> None:
         with tempfile.TemporaryDirectory(prefix="ctest_", dir=str(ROOT.parent)) as tmp:
@@ -253,6 +294,47 @@ class ConstitutionToolingTests(unittest.TestCase):
             violations = {v["path"]: v["reason"] for v in fat_gate["violations"]}
             self.assertNotIn("scripts/workflow_stage_contract.py", violations, result.stdout + result.stderr)
             self.assertEqual(violations.get("scripts/run_cli.py"), "cli_or_task_script>420", result.stdout + result.stderr)
+
+    def test_enhanced_report_clusters_scope_and_vendor_noise(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="ctest_", dir=str(ROOT.parent)) as tmp:
+            root = Path(tmp) / "Codex_Skills_Mirror"
+            vendored = root / "Meta-code-graph-base" / "assets" / "gitnexus_core" / "test" / "unit"
+            agents = root / "3-Octupos-OS-Backend" / "agents"
+            vendored.mkdir(parents=True)
+            agents.mkdir(parents=True)
+
+            (vendored / "repo-manager.test.ts").write_text(
+                'const HOME = "/home/jasontan656/tmp/repo";\n',
+                encoding="utf-8",
+            )
+            (agents / "openai.yaml").write_text(
+                'default_prompt: "/home/jasontan656/.cache/codex/runtime.txt"\n',
+                encoding="utf-8",
+            )
+
+            result = subprocess.run(
+                ["python3", str(ROOT / "scripts/run_constitution_lints.py"), "--target", str(root)],
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+            self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+            report = json.loads(result.stdout)
+
+            summary = report["summary_enhanced"]
+            self.assertGreaterEqual(summary["deduped_issue_count"], 2, result.stdout + result.stderr)
+            self.assertGreaterEqual(summary["likely_duplicated_vendor_issues"], 1, result.stdout + result.stderr)
+            self.assertGreaterEqual(summary["likely_real_code_issues"], 1, result.stdout + result.stderr)
+
+            vendor_detail = next(v for v in report["violation_details"] if "gitnexus_core" in v["path"])
+            self.assertEqual(vendor_detail["issue_kind"], "duplicated_vendor_issue")
+            self.assertEqual(vendor_detail["cluster_key"], "absolute_path:vendored_gitnexus_tests")
+
+            real_detail = next(v for v in report["violation_details"] if v["path"] == "3-Octupos-OS-Backend/agents/openai.yaml")
+            self.assertEqual(real_detail["issue_kind"], "real_content_issue")
+
+            absolute_diag = next(g for g in report["gate_diagnostics"] if g["gate"] == "absolute_path_gate")
+            self.assertGreaterEqual(absolute_diag["deduped_cluster_count"], 2, result.stdout + result.stderr)
 
 
 if __name__ == "__main__":

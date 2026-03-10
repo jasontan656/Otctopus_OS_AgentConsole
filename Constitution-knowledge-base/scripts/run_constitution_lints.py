@@ -7,10 +7,12 @@ import sys
 from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).resolve().parent
+WORKSPACE_ROOT = SCRIPT_DIR.parent.parent
 if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
 
 from constitution_lint_rules.modules import absolute_path, code_governance, fat_file, file_structure, folder_structure, hardcoded_asset, modularity, payload_normalize, permission_boundary, typed_contract
+from constitution_lint_rules.reporting import build_report
 
 MODULES = [
     code_governance,
@@ -34,12 +36,12 @@ def main() -> int:
     if not root.exists() or not root.is_dir():
         parser.error("--target 必须是存在的目录。")
     gates = [module.lint(root) for module in MODULES]
-    failed = [gate for gate in gates if gate["status"] != "pass"]
-    report = {
-        "target": str(root),
-        "gates": gates,
-        "summary": {"total": len(gates), "failed": len(failed), "passed": len(gates) - len(failed)},
+    rule_files = {
+        f"{module.__name__.rsplit('.', 1)[-1]}_gate": str(Path(module.__file__).resolve().relative_to(WORKSPACE_ROOT))
+        for module in MODULES
     }
+    report = build_report(root, gates, rule_files)
+    failed = [gate for gate in report["gates"] if gate["status"] != "pass"]
     print(json.dumps(report, ensure_ascii=False, separators=(",", ":")))
     return 1 if failed else 0
 
