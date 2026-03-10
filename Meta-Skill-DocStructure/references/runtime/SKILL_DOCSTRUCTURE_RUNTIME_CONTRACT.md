@@ -18,12 +18,14 @@ anchors:
 ## 范围
 - 只允许在 skill root 内组织和校验内部 markdown 文档。
 - target 必须是带 `SKILL.md` 的 skill 目录。
+- 默认 viewer target 就是当前 skill 自身；后续复用时可通过 `TARGET_SKILL_ROOT` 切换。
 
 ## 强制工作流
 1. 先取 runtime contract。
 2. 再运行 anchor lint。
-3. 若要对外给模型或脚本消费，再构建 graph JSON。
-4. 若修改本技能自身文档，最后重建 `assets/runtime/self_anchor_graph.json`。
+3. 若要给页面与脚本消费，再产出 preview payload。
+4. 修改本技能自身文档后，最后重建 `assets/runtime/self_anchor_graph.json`。
+5. dev 模式通过 watcher server 热加载；常驻模式通过 systemd user service 运行。
 
 ## 强制思考链
 1. `scope_check`
@@ -32,7 +34,7 @@ anchors:
 4. `anchor_graph_check`
 5. `atomicity_signal_check`
 6. `rewrite_or_split`
-7. `graph_emit`
+7. `preview_emit`
 
 ## Frontmatter 约束
 - 普通 markdown 文档必须在 top-level frontmatter 提供：
@@ -47,15 +49,10 @@ anchors:
 
 ## Anchor 约束
 - 每个 markdown 文档至少一个 anchor。
-- anchor 必须具备：
-  - `target`
-  - `relation`
-  - `direction`
-  - `reason`
 - `target` 必须解析到 skill root 内另一个真实 markdown 文档。
-- anchor 可以跨层、跨分支、跨阶段，但不能是死链接。
+- anchor 允许跨层、跨分支与跳读，但不能是死链接。
 
-## Atomicity 约束
-- split 信号来自 `assets/runtime/anchor_query_matrix.json`。
-- 命中 split signal 默认产生 warning，不直接 fail。
-- 缺失 anchor、非法 target、缺字段属于 hard fail。
+## Viewer 约束
+- `Vue3 + Vue Flow` 页面必须默认落到 `SKILL.md`。
+- 页面必须显示正文、出入边、anchor 挂钩方式与 graph 节点关系。
+- 页面必须消费实时 payload，而不是静态快照。

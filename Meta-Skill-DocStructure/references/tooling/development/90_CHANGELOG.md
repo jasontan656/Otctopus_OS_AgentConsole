@@ -12,5 +12,6 @@ anchors:
 # 变更记录
 
 - 2026-03-11
-  - 将原来的通用文档 graph 技能重构为只服务 skills 内部文档组织的技能。
-  - 新增 runtime contract、anchor matrix、frontmatter template、graph/lint CLI 与测试。
+  - 将原来的 Python CLI 全量迁到 TypeScript。
+  - 新增 `Vue3 + Vue Flow + watcher server + systemd` viewer 运行栈。
+  - 将 `SKILL.md` 变成页面默认入口正文。

@@ -1,16 +1,16 @@
 ---
 doc_id: "tooling.category.index"
 doc_type: "tooling_index"
-topic: "Category index for Meta-Skill-DocStructure tooling docs"
+topic: "Category index for TS tooling and viewer docs"
 anchors:
   - target: "00_ARCHITECTURE_OVERVIEW.md"
     relation: "indexes"
     direction: "downstream"
     reason: "Architecture overview is the primary branch under this index."
-  - target: "../Cli_Toolbox_USAGE.md"
+  - target: "../../ui/VIEWER_STACK_AND_REUSE.md"
     relation: "pairs_with"
     direction: "cross"
-    reason: "Readers often jump between category index and usage."
+    reason: "The UI stack doc is a sibling branch for this index."
 ---
 
 # 分类索引
@@ -19,9 +19,8 @@ anchors:
 - 架构：`00_ARCHITECTURE_OVERVIEW.md`
 - 模块目录：`10_MODULE_CATALOG.yaml`
 - 使用文档：`../Cli_Toolbox_USAGE.md`
-- 开发入口：`../Cli_Toolbox_DEVELOPMENT.md`
-- 运行合同：`../../runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md`
+- Viewer 文档：`../../ui/VIEWER_STACK_AND_REUSE.md`
 
 ## 模块分支
-- `modules/mod_runtime_contract.md`
-- `modules/mod_anchor_graph_lint.md`
+- `modules/mod_docstructure_core.md`
+- `modules/mod_viewer_runtime.md`

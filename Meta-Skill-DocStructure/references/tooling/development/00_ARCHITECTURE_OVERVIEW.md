@@ -1,37 +1,31 @@
 ---
 doc_id: "tooling.architecture.overview"
 doc_type: "tooling_architecture"
-topic: "Architecture overview of Meta-Skill-DocStructure tooling"
+topic: "Architecture overview of the TS CLI, watcher server, and Vue viewer"
 anchors:
   - target: "../../runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md"
     relation: "implements"
     direction: "upstream"
     reason: "Architecture exists to implement the runtime contract."
-  - target: "modules/mod_anchor_graph_lint.md"
+  - target: "modules/mod_viewer_runtime.md"
     relation: "decomposes_into"
     direction: "downstream"
-    reason: "The lint module doc explains the main execution path."
+    reason: "The viewer runtime module explains the frontend/server split."
 ---
 
 # 架构总览
 
 ## 组件
-- `scripts/Cli_Toolbox.py`
-  - 统一 CLI 入口。
-- `references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.json`
-  - machine-readable 合同。
-- `assets/runtime/anchor_query_matrix.json`
-  - keyword-based split signals 与 anchor query semantics。
-- `assets/runtime/self_anchor_graph.json`
-  - 本技能自身文档图谱快照。
+- `scripts/Cli_Toolbox.ts`
+  - TS CLI 入口。
+- `src/lib/docstructure.ts`
+  - graph、lint、preview payload 的共享核心。
+- `server/viewer-server.ts`
+  - watcher server、API、websocket 与 Vite middleware。
+- `ui/*`
+  - Vue3 + Vue Flow 门面页面。
 
-## 执行面
-- `runtime-contract`
-- `lint-doc-anchors`
-- `build-anchor-graph`
-- `rebuild-self-graph`
-
-## 设计取向
-- 把 skill 内部 markdown 文档视为 graph nodes。
-- 把 frontmatter anchors 视为 graph edges。
-- 把 atomicity keyword matrix 作为“是否继续拆分”的机械辅助，而非最终裁决者。
+## 设计主张
+- 不再保留 Python 双轨。
+- CLI、server、viewer 共用一套 TS graph 逻辑。
+- viewer 读取真实 markdown，而不是复制一份静态结构。

@@ -1,93 +1,121 @@
 {
   "graph_name": "META_SKILL_DOCSTRUCTURE_SELF_ANCHOR_GRAPH",
-  "graph_version": "v1",
+  "graph_version": "v2",
   "source_skill": "Meta-Skill-DocStructure",
   "summary": {
-    "node_count": 10,
-    "edge_count": 19,
-    "error_count": 0,
-    "warning_count": 0
+    "nodeCount": 12,
+    "edgeCount": 23,
+    "errorCount": 0,
+    "warningCount": 0
   },
   "nodes": [
     {
       "path": "SKILL.md",
-      "doc_id": "skill.entry.facade",
-      "doc_type": "skill_facade",
+      "docId": "skill.entry.facade",
+      "docType": "skill_facade",
       "topic": "Meta-Skill-DocStructure entry facade and routing contract",
       "title": "Meta-Skill-DocStructure",
-      "anchor_count": 2
+      "anchorCount": 2,
+      "depth": 0
     },
     {
       "path": "assets/templates/ATOMIC_DOC_TEMPLATE.md",
-      "doc_id": "templates.atomic_doc",
-      "doc_type": "template_doc",
+      "docId": "templates.atomic_doc",
+      "docType": "template_doc",
       "topic": "Template for a single-topic markdown doc inside a skill folder",
       "title": "Atomic Doc Template",
-      "anchor_count": 2
+      "anchorCount": 2,
+      "depth": 2
     },
     {
       "path": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md",
-      "doc_id": "runtime.contract.audit",
-      "doc_type": "runtime_contract",
+      "docId": "runtime.contract.audit",
+      "docType": "runtime_contract",
       "topic": "Audit version of the Meta-Skill-DocStructure runtime contract",
       "title": "Runtime Contract",
-      "anchor_count": 2
+      "anchorCount": 2,
+      "depth": 2
     },
     {
       "path": "references/tooling/Cli_Toolbox_DEVELOPMENT.md",
-      "doc_id": "tooling.development.entry",
-      "doc_type": "tooling_development",
-      "topic": "Cli_Toolbox development navigation for Meta-Skill-DocStructure",
+      "docId": "tooling.development.entry",
+      "docType": "tooling_development",
+      "topic": "Development navigation for the TypeScript CLI and viewer runtime",
       "title": "Cli_Toolbox 开发文档",
-      "anchor_count": 2
+      "anchorCount": 2,
+      "depth": 2
     },
     {
       "path": "references/tooling/Cli_Toolbox_USAGE.md",
-      "doc_id": "tooling.usage.cli",
-      "doc_type": "tooling_usage",
-      "topic": "Cli_Toolbox operational usage for Meta-Skill-DocStructure",
+      "docId": "tooling.usage.cli",
+      "docType": "tooling_usage",
+      "topic": "TypeScript CLI and viewer operations for Meta-Skill-DocStructure",
       "title": "Cli_Toolbox 使用文档",
-      "anchor_count": 2
+      "anchorCount": 2,
+      "depth": 2
     },
     {
       "path": "references/tooling/development/00_ARCHITECTURE_OVERVIEW.md",
-      "doc_id": "tooling.architecture.overview",
-      "doc_type": "tooling_architecture",
-      "topic": "Architecture overview of Meta-Skill-DocStructure tooling",
+      "docId": "tooling.architecture.overview",
+      "docType": "tooling_architecture",
+      "topic": "Architecture overview of the TS CLI, watcher server, and Vue viewer",
       "title": "架构总览",
-      "anchor_count": 2
+      "anchorCount": 2,
+      "depth": 3
     },
     {
       "path": "references/tooling/development/20_CATEGORY_INDEX.md",
-      "doc_id": "tooling.category.index",
-      "doc_type": "tooling_index",
-      "topic": "Category index for Meta-Skill-DocStructure tooling docs",
+      "docId": "tooling.category.index",
+      "docType": "tooling_index",
+      "topic": "Category index for TS tooling and viewer docs",
       "title": "分类索引",
-      "anchor_count": 2
+      "anchorCount": 2,
+      "depth": 3
     },
     {
       "path": "references/tooling/development/90_CHANGELOG.md",
-      "doc_id": "tooling.changelog",
-      "doc_type": "changelog",
+      "docId": "tooling.changelog",
+      "docType": "changelog",
       "topic": "Change log for Meta-Skill-DocStructure",
       "title": "变更记录",
-      "anchor_count": 1
+      "anchorCount": 1,
+      "depth": 3
     },
     {
-      "path": "references/tooling/development/modules/mod_anchor_graph_lint.md",
-      "doc_id": "tooling.module.anchor_graph_lint",
-      "doc_type": "module_doc",
-      "topic": "Anchor graph build and lint module behavior in Meta-Skill-DocStructure",
-      "title": "anchor_graph_lint 模块",
-      "anchor_count": 2
+      "path": "references/tooling/development/modules/mod_docstructure_core.md",
+      "docId": "tooling.module.docstructure_core",
+      "docType": "module_doc",
+      "topic": "Core TS docstructure engine behind graph, lint, and preview payload",
+      "title": "docstructure_core 模块",
+      "anchorCount": 2,
+      "depth": 4
     },
     {
-      "path": "references/tooling/development/modules/mod_runtime_contract.md",
-      "doc_id": "tooling.module.runtime_contract",
-      "doc_type": "module_doc",
-      "topic": "Runtime contract module behavior in Meta-Skill-DocStructure",
-      "title": "runtime_contract 模块",
-      "anchor_count": 2
+      "path": "references/tooling/development/modules/mod_viewer_runtime.md",
+      "docId": "tooling.module.viewer_runtime",
+      "docType": "module_doc",
+      "topic": "Viewer runtime module that binds watcher server, Vite, and Vue Flow",
+      "title": "viewer_runtime 模块",
+      "anchorCount": 2,
+      "depth": 4
+    },
+    {
+      "path": "references/ui/VIEWER_SERVICE_WORKFLOW.md",
+      "docId": "ui.viewer.service_workflow",
+      "docType": "tooling_usage",
+      "topic": "Dev, build, and systemd workflow for the Meta-Skill-DocStructure viewer",
+      "title": "Viewer Service Workflow",
+      "anchorCount": 2,
+      "depth": 2
+    },
+    {
+      "path": "references/ui/VIEWER_STACK_AND_REUSE.md",
+      "docId": "ui.viewer.stack",
+      "docType": "tooling_architecture",
+      "topic": "Viewer stack, layout rules, and reuse contract for skill-local graph pages",
+      "title": "Viewer Stack Reuse Contract",
+      "anchorCount": 2,
+      "depth": 2
     }
   ],
   "edges": [
@@ -96,14 +124,14 @@
       "target": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md",
       "relation": "governed_by",
       "direction": "downstream",
-      "reason": "Detailed runtime rules and workflow live in the runtime contract."
+      "reason": "Detailed runtime rules live in the runtime contract."
     },
     {
       "source": "SKILL.md",
-      "target": "references/tooling/Cli_Toolbox_USAGE.md",
-      "relation": "executed_via",
+      "target": "references/ui/VIEWER_STACK_AND_REUSE.md",
+      "relation": "front_doored_by",
       "direction": "downstream",
-      "reason": "Operational commands are documented in the usage guide."
+      "reason": "The viewer stack doc explains the page architecture and reuse path."
     },
     {
       "source": "assets/templates/ATOMIC_DOC_TEMPLATE.md",
@@ -142,24 +170,24 @@
     },
     {
       "source": "references/tooling/Cli_Toolbox_DEVELOPMENT.md",
-      "target": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md",
-      "relation": "grounded_in",
-      "direction": "upstream",
-      "reason": "Development details must stay aligned with the runtime contract."
+      "target": "references/ui/VIEWER_STACK_AND_REUSE.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "The viewer stack doc explains the frontend runtime."
     },
     {
       "source": "references/tooling/Cli_Toolbox_USAGE.md",
       "target": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md",
       "relation": "implements",
       "direction": "upstream",
-      "reason": "The toolbox commands operationalize the runtime contract."
+      "reason": "The CLI and viewer commands operationalize the runtime contract."
     },
     {
       "source": "references/tooling/Cli_Toolbox_USAGE.md",
-      "target": "references/tooling/development/modules/mod_anchor_graph_lint.md",
-      "relation": "details",
+      "target": "references/ui/VIEWER_SERVICE_WORKFLOW.md",
+      "relation": "pairs_with",
       "direction": "downstream",
-      "reason": "The lint and graph module doc explains implementation behavior."
+      "reason": "Service workflow complements the CLI commands."
     },
     {
       "source": "references/tooling/development/00_ARCHITECTURE_OVERVIEW.md",
@@ -170,10 +198,10 @@
     },
     {
       "source": "references/tooling/development/00_ARCHITECTURE_OVERVIEW.md",
-      "target": "references/tooling/development/modules/mod_anchor_graph_lint.md",
+      "target": "references/tooling/development/modules/mod_viewer_runtime.md",
       "relation": "decomposes_into",
       "direction": "downstream",
-      "reason": "The lint module doc explains the main execution path."
+      "reason": "The viewer runtime module explains the frontend/server split."
     },
     {
       "source": "references/tooling/development/20_CATEGORY_INDEX.md",
@@ -184,10 +212,10 @@
     },
     {
       "source": "references/tooling/development/20_CATEGORY_INDEX.md",
-      "target": "references/tooling/Cli_Toolbox_USAGE.md",
+      "target": "references/ui/VIEWER_STACK_AND_REUSE.md",
       "relation": "pairs_with",
       "direction": "cross",
-      "reason": "Readers often jump between category index and usage."
+      "reason": "The UI stack doc is a sibling branch for this index."
     },
     {
       "source": "references/tooling/development/90_CHANGELOG.md",
@@ -197,33 +225,62 @@
       "reason": "Architecture is the main thing this changelog evolves with."
     },
     {
-      "source": "references/tooling/development/modules/mod_anchor_graph_lint.md",
-      "target": "references/tooling/Cli_Toolbox_USAGE.md",
-      "relation": "explains_commands_for",
-      "direction": "upstream",
-      "reason": "Usage doc is the primary human-facing surface for these commands."
-    },
-    {
-      "source": "references/tooling/development/modules/mod_anchor_graph_lint.md",
+      "source": "references/tooling/development/modules/mod_docstructure_core.md",
       "target": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md",
       "relation": "implements",
       "direction": "upstream",
-      "reason": "This module enforces the runtime contract rules."
+      "reason": "This module enforces the runtime contract."
     },
     {
-      "source": "references/tooling/development/modules/mod_runtime_contract.md",
-      "target": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md",
-      "relation": "documents",
-      "direction": "upstream",
-      "reason": "This module exists to expose the runtime contract."
-    },
-    {
-      "source": "references/tooling/development/modules/mod_runtime_contract.md",
+      "source": "references/tooling/development/modules/mod_docstructure_core.md",
       "target": "references/tooling/Cli_Toolbox_DEVELOPMENT.md",
       "relation": "belongs_to",
       "direction": "upstream",
-      "reason": "This module doc is part of the development tree."
+      "reason": "This module doc belongs to the tooling development tree."
+    },
+    {
+      "source": "references/tooling/development/modules/mod_viewer_runtime.md",
+      "target": "references/ui/VIEWER_STACK_AND_REUSE.md",
+      "relation": "explained_by",
+      "direction": "upstream",
+      "reason": "The UI stack doc explains this module's stack choices."
+    },
+    {
+      "source": "references/tooling/development/modules/mod_viewer_runtime.md",
+      "target": "references/tooling/Cli_Toolbox_DEVELOPMENT.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "This module doc belongs to the tooling development tree."
+    },
+    {
+      "source": "references/ui/VIEWER_SERVICE_WORKFLOW.md",
+      "target": "references/ui/VIEWER_STACK_AND_REUSE.md",
+      "relation": "operates",
+      "direction": "upstream",
+      "reason": "This workflow doc operates the stack defined there."
+    },
+    {
+      "source": "references/ui/VIEWER_SERVICE_WORKFLOW.md",
+      "target": "references/tooling/Cli_Toolbox_USAGE.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "CLI usage and viewer operations should be read together."
+    },
+    {
+      "source": "references/ui/VIEWER_STACK_AND_REUSE.md",
+      "target": "SKILL.md",
+      "relation": "implements",
+      "direction": "upstream",
+      "reason": "This doc implements the facade promise of a live viewer."
+    },
+    {
+      "source": "references/ui/VIEWER_STACK_AND_REUSE.md",
+      "target": "references/ui/VIEWER_SERVICE_WORKFLOW.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "Service workflow complements the stack design."
     }
   ],
-  "warnings": []
+  "warnings": [],
+  "updated_at": "2026-03-10T16:59:15.180Z"
 }

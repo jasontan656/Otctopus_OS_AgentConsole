@@ -1,0 +1,286 @@
+:root {
+  color-scheme: light;
+  font-family: "IBM Plex Sans", "Avenir Next", "Segoe UI", sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(221, 103, 66, 0.22), transparent 28%),
+    radial-gradient(circle at top right, rgba(14, 165, 233, 0.18), transparent 26%),
+    linear-gradient(180deg, #f7efe7 0%, #f2f5f7 100%);
+  color: #12202d;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+code {
+  font-family: "IBM Plex Mono", "SFMono-Regular", monospace;
+}
+
+#app {
+  min-height: 100vh;
+}
+
+.page-shell {
+  padding: 24px;
+}
+
+.page-hero {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: 1.8fr 1fr;
+  padding: 28px 32px;
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(18, 32, 45, 0.08);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 18px 48px rgba(18, 32, 45, 0.1);
+}
+
+.eyebrow {
+  margin: 0 0 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.72rem;
+  color: #cc5f38;
+}
+
+.page-hero h1 {
+  margin: 0 0 12px;
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  line-height: 0.95;
+}
+
+.hero-copy {
+  margin: 0;
+  max-width: 72ch;
+  line-height: 1.6;
+}
+
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  align-content: start;
+}
+
+.stat-card {
+  padding: 18px;
+  border-radius: 22px;
+  background: #112131;
+  color: #f7efe7;
+}
+
+.stat-card span {
+  display: block;
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+.stat-card strong {
+  display: block;
+  margin-top: 10px;
+  font-size: 1.35rem;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1.2fr) minmax(340px, 0.9fr);
+  gap: 18px;
+  margin-top: 18px;
+  min-height: calc(100vh - 220px);
+}
+
+.panel {
+  min-height: 0;
+  border-radius: 26px;
+  background: rgba(255, 255, 255, 0.86);
+  border: 1px solid rgba(18, 32, 45, 0.08);
+  box-shadow: 0 14px 40px rgba(18, 32, 45, 0.08);
+  overflow: hidden;
+}
+
+.panel-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 22px 14px;
+  border-bottom: 1px solid rgba(18, 32, 45, 0.08);
+}
+
+.panel-head h2 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.panel-head p,
+.timestamp {
+  margin: 6px 0 0;
+  font-size: 0.85rem;
+  color: #52606d;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+}
+
+.search-box {
+  width: 100%;
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(18, 32, 45, 0.1);
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.doc-list {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  overflow: auto;
+}
+
+.doc-item {
+  padding: 14px;
+  text-align: left;
+  border: 1px solid rgba(18, 32, 45, 0.08);
+  background: #fff;
+  border-radius: 18px;
+  cursor: pointer;
+}
+
+.doc-item.active {
+  border-color: #cc5f38;
+  background: linear-gradient(135deg, rgba(221, 103, 66, 0.12), rgba(255, 255, 255, 0.92));
+}
+
+.doc-title {
+  display: block;
+  font-weight: 700;
+}
+
+.doc-meta,
+.doc-path {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.82rem;
+  color: #52606d;
+}
+
+.graph-panel {
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
+.graph-shell,
+.doc-graph {
+  min-height: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.detail-panel {
+  overflow: auto;
+}
+
+.detail-stack {
+  display: grid;
+  gap: 18px;
+  padding: 20px 22px 24px;
+}
+
+.detail-hero h2 {
+  margin: 4px 0 8px;
+  font-size: 1.8rem;
+}
+
+.detail-topic,
+.detail-path {
+  margin: 0;
+  color: #52606d;
+  line-height: 1.5;
+}
+
+.anchor-section {
+  display: grid;
+  gap: 14px;
+}
+
+.anchor-section h3,
+.warning-box h3 {
+  margin: 0 0 10px;
+  font-size: 1rem;
+}
+
+.anchor-chip {
+  display: block;
+  width: 100%;
+  margin-bottom: 8px;
+  padding: 12px 14px;
+  border: 0;
+  border-radius: 14px;
+  background: #14253a;
+  color: #f8fafc;
+  text-align: left;
+  cursor: pointer;
+}
+
+.anchor-chip.secondary {
+  background: #334155;
+}
+
+.warning-box {
+  padding: 16px;
+  border-radius: 18px;
+  background: rgba(250, 204, 21, 0.14);
+  border: 1px solid rgba(250, 204, 21, 0.35);
+}
+
+.warning-box p {
+  margin: 8px 0 0;
+}
+
+.markdown-body {
+  line-height: 1.72;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3 {
+  color: #0f172a;
+}
+
+.markdown-body pre {
+  overflow: auto;
+  padding: 14px;
+  border-radius: 16px;
+  background: #0f172a;
+  color: #f8fafc;
+}
+
+.markdown-body code {
+  background: rgba(15, 23, 42, 0.06);
+  padding: 0.16rem 0.3rem;
+  border-radius: 6px;
+}
+
+@media (max-width: 1200px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  .page-hero {
+    grid-template-columns: 1fr;
+  }
+}

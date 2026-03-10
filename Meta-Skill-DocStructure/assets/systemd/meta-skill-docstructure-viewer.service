@@ -1,0 +1,15 @@
+[Unit]
+Description=Meta-Skill-DocStructure live viewer
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=__SKILL_ROOT__
+Environment=PORT=__PORT__
+Environment=TARGET_SKILL_ROOT=__TARGET_SKILL_ROOT__
+ExecStart=/usr/bin/env npm run start
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=default.target

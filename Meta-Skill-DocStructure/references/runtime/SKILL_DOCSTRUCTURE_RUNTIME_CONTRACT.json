@@ -1,9 +1,9 @@
 {
   "contract_name": "META_SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT",
-  "contract_version": "v1",
+  "contract_version": "v2",
   "skill_name": "meta-skill-docstructure",
   "scope": "skill_internal_docs_only",
-  "primary_goal": "Govern markdown document organization inside a skill folder with anchors, graph JSON, and lintable frontmatter.",
+  "primary_goal": "Govern markdown document organization inside a skill folder with anchors, graph JSON, a TypeScript CLI, and a live Vue viewer.",
   "thinking_chain": [
     "scope_check",
     "doc_inventory",
@@ -11,13 +11,18 @@
     "anchor_graph_check",
     "atomicity_signal_check",
     "rewrite_or_split",
-    "graph_emit"
+    "preview_emit"
   ],
   "commands": {
-    "runtime_contract": "python3 scripts/Cli_Toolbox.py runtime-contract --json",
-    "lint_doc_anchors": "python3 scripts/Cli_Toolbox.py lint-doc-anchors --target <skill_root> --json",
-    "build_anchor_graph": "python3 scripts/Cli_Toolbox.py build-anchor-graph --target <skill_root> --json",
-    "rebuild_self_graph": "python3 scripts/Cli_Toolbox.py rebuild-self-graph --json"
+    "runtime_contract": "npm run cli -- runtime-contract --json",
+    "lint_doc_anchors": "npm run cli -- lint-doc-anchors --target <skill_root> --json",
+    "build_anchor_graph": "npm run cli -- build-anchor-graph --target <skill_root> --json",
+    "preview_payload": "npm run cli -- preview-payload --target <skill_root> --json",
+    "rebuild_self_graph": "npm run cli -- rebuild-self-graph --json",
+    "viewer_dev": "npm run dev",
+    "viewer_build": "npm run build",
+    "viewer_start": "npm run start",
+    "viewer_service_install": "npm run service:install"
   },
   "frontmatter_contract": {
     "template_path": "assets/templates/DOC_FRONTMATTER_TEMPLATE.yaml",
@@ -34,5 +39,11 @@
     "self_graph_path": "assets/runtime/self_anchor_graph.json",
     "min_anchor_count_per_doc": 1,
     "target_must_be_markdown": true
+  },
+  "viewer_contract": {
+    "host_env": "HOST",
+    "port_env": "PORT",
+    "api_path": "/api/preview",
+    "ws_path": "/live"
   }
 }
