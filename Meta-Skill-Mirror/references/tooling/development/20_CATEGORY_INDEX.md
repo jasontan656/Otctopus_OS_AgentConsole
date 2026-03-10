@@ -1,12 +1,15 @@
 # 分类索引
 
-## SYNC_DIRECTION
-- `mirror_to_codex`: 从 mirror 推送到 codex 安装目录。
-
 ## SYNC_SCOPE
 - `all`: 全量同步 skills 根目录。
 - `skill`: 单技能目录同步。
 
+## MODE_ROUTING
+- `auto`: 先检查目标是否已存在，再在 `push/install` 之间自动导航。
+- `push`: 目标已存在时执行覆盖同步。
+- `install`: 目标不存在时返回外部技能链路。
+
 ## SAFETY
 - `skill-name` 字符白名单校验。
 - 固定根目录下路径拼接，拒绝越界。
+- 目标缺失时禁止把首次安装伪装成覆盖同步。

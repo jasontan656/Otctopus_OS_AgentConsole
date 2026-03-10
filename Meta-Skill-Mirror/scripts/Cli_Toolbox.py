@@ -84,6 +84,12 @@ def _build_paths(codex_root: Path, mirror_root: Path, scope: str, skill_name: st
     return mirror_root, codex_root
 
 
+def _destination_exists(dst: Path, scope: str) -> bool:
+    if scope == "all":
+        return True
+    return dst.exists()
+
+
 def _rsync(src: Path, dst: Path, dry_run: bool) -> List[str]:
     if not src.exists():
         raise FileNotFoundError(f"source does not exist: {src}")
@@ -108,6 +114,7 @@ def main() -> int:
     )
     parser.add_argument("--scope", choices=["all", "skill"], default="all")
     parser.add_argument("--skill-name")
+    parser.add_argument("--mode", choices=["auto", "push", "install"], default="auto")
     parser.add_argument("--codex-root")
     parser.add_argument("--mirror-root")
     parser.add_argument("--dry-run", action="store_true")
@@ -125,6 +132,44 @@ def main() -> int:
         scope=args.scope,
         skill_name=args.skill_name,
     )
+    if not src.exists():
+        raise FileNotFoundError(f"source does not exist: {src}")
+
+    if args.mode == "install" and args.scope != "skill":
+        raise ValueError("--mode=install only supports --scope=skill")
+
+    destination_exists = _destination_exists(dst=dst, scope=args.scope)
+    if args.mode == "push":
+        resolved_mode = "push"
+    elif args.mode == "install":
+        resolved_mode = "install"
+    else:
+        resolved_mode = "push" if destination_exists else "install"
+
+    if resolved_mode == "install":
+        payload = {
+            "status": "route_required",
+            "action": "install_via_external_skills",
+            "scope": args.scope,
+            "skill_name": args.skill_name,
+            "resolved_mode": "install",
+            "source": str(src),
+            "destination": str(dst),
+            "mirror_root": str(mirror_root),
+            "codex_root": str(codex_root),
+            "dry_run": bool(args.dry_run),
+            "destination_exists": destination_exists,
+            "next_skills": [
+                "Skill-creator",
+                "Skill-installer",
+            ],
+            "next_steps": [
+                "Use Skill-creator to validate the skill folder format and fix issues if needed.",
+                "Use Skill-installer to install the skill into the codex skills directory.",
+            ],
+        }
+        print(json.dumps(payload, ensure_ascii=False, indent=2))
+        return 0
 
     command = _rsync(src=src, dst=dst, dry_run=args.dry_run)
     payload = {
@@ -132,11 +177,13 @@ def main() -> int:
         "action": "mirror_to_codex",
         "scope": args.scope,
         "skill_name": args.skill_name,
+        "resolved_mode": "push",
         "source": str(src),
         "destination": str(dst),
         "mirror_root": str(mirror_root),
         "codex_root": str(codex_root),
         "dry_run": bool(args.dry_run),
+        "destination_exists": destination_exists,
         "command": command,
     }
     print(json.dumps(payload, ensure_ascii=False, indent=2))

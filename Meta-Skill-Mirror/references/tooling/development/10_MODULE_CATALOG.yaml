@@ -5,11 +5,13 @@ modules:
     capabilities:
       - Cli_Toolbox.sync_mirror_to_codex
     scope:
-      directions:
-        - mirror_to_codex
       range:
         - all
         - skill
+      modes:
+        - auto
+        - push
+        - install
     docs:
       usage: references/tooling/Cli_Toolbox_USAGE.md
       development: references/tooling/Cli_Toolbox_DEVELOPMENT.md
