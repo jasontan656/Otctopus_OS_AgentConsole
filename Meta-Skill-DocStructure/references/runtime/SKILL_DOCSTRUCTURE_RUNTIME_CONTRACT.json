@@ -1,6 +1,6 @@
 {
   "contract_name": "META_SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT",
-  "contract_version": "v2",
+  "contract_version": "v3",
   "skill_name": "meta-skill-docstructure",
   "scope": "skill_internal_docs_only",
   "primary_goal": "Govern markdown document organization inside a skill folder with anchors, graph JSON, a TypeScript CLI, and a live Vue viewer.",
@@ -19,10 +19,10 @@
     "build_anchor_graph": "npm run cli -- build-anchor-graph --target <skill_root> --json",
     "preview_payload": "npm run cli -- preview-payload --target <skill_root> --json",
     "rebuild_self_graph": "npm run cli -- rebuild-self-graph --json",
-    "viewer_dev": "npm run dev",
-    "viewer_build": "npm run build",
-    "viewer_start": "npm run start",
-    "viewer_service_install": "npm run service:install"
+    "viewer_dev": "cd <skill_root>/ui-dev && npm run dev",
+    "viewer_build": "cd <skill_root>/ui-dev && npm run build",
+    "viewer_start": "cd <skill_root>/ui-dev && npm run start",
+    "viewer_service_install": "cd <skill_root>/ui-dev && npm run service:install"
   },
   "frontmatter_contract": {
     "template_path": "assets/templates/DOC_FRONTMATTER_TEMPLATE.yaml",
@@ -41,6 +41,7 @@
     "target_must_be_markdown": true
   },
   "viewer_contract": {
+    "ui_dev_root": "ui-dev",
     "host_env": "HOST",
     "port_env": "PORT",
     "api_path": "/api/preview",

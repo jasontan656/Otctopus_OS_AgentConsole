@@ -11,12 +11,17 @@
     "types": [
       "node"
     ],
-    "baseUrl": "."
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "client/src/*"
+      ]
+    }
   },
   "include": [
-    "scripts/**/*.ts",
-    "src/**/*.ts",
-    "tests/**/*.ts",
-    "vitest.config.ts"
+    "client/src/**/*.ts",
+    "client/src/**/*.vue",
+    "server/**/*.ts",
+    "vite.config.ts"
   ]
 }

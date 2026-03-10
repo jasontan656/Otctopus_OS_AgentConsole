@@ -19,6 +19,7 @@ anchors:
 - 只允许在 skill root 内组织和校验内部 markdown 文档。
 - target 必须是带 `SKILL.md` 的 skill 目录。
 - 默认 viewer target 就是当前 skill 自身；后续复用时可通过 `TARGET_SKILL_ROOT` 切换。
+- UI 运行根目录固定为 `ui-dev/`，相关代码、脚本、systemd 与 UI 开发文档都应收敛在这里。
 
 ## 强制工作流
 1. 先取 runtime contract。
@@ -26,6 +27,7 @@ anchors:
 3. 若要给页面与脚本消费，再产出 preview payload。
 4. 修改本技能自身文档后，最后重建 `assets/runtime/self_anchor_graph.json`。
 5. dev 模式通过 watcher server 热加载；常驻模式通过 systemd user service 运行。
+6. 启动 viewer 时，应以 `ui-dev/` 作为工作目录，而不是 skill root。
 
 ## 强制思考链
 1. `scope_check`
@@ -56,3 +58,4 @@ anchors:
 - `Vue3 + Vue Flow` 页面必须默认落到 `SKILL.md`。
 - 页面必须显示正文、出入边、anchor 挂钩方式与 graph 节点关系。
 - 页面必须消费实时 payload，而不是静态快照。
+- UI 开发文档必须写入 `ui-dev/docs/`，以便后续对布局和交互继续迭代。

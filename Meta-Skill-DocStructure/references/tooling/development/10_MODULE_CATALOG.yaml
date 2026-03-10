@@ -7,7 +7,8 @@ maintain_rules:
     - references/tooling/Cli_Toolbox_USAGE.md
     - references/tooling/Cli_Toolbox_DEVELOPMENT.md
     - references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.json
-    - references/ui/VIEWER_STACK_AND_REUSE.md
+    - ui-dev/UI_DEV_ENTRY.md
+    - ui-dev/docs/VIEWER_STACK_AND_REUSE.md
 modules:
   - module_id: docstructure_core
     tool_alias:
@@ -24,6 +25,6 @@ modules:
       - viewer.dev
       - viewer.start
       - viewer.service_install
-    entrypoint: server/viewer-server.ts
+    entrypoint: ui-dev/server/viewer-server.ts
     status: active
     doc: references/tooling/development/modules/mod_viewer_runtime.md

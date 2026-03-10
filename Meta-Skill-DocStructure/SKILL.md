@@ -12,10 +12,10 @@ metadata:
         relation: "governed_by"
         direction: "downstream"
         reason: "Detailed runtime rules live in the runtime contract."
-      - target: "references/ui/VIEWER_STACK_AND_REUSE.md"
+      - target: "ui-dev/UI_DEV_ENTRY.md"
         relation: "front_doored_by"
         direction: "downstream"
-        reason: "The viewer stack doc explains the page architecture and reuse path."
+        reason: "The dedicated UI dev root explains how the viewer is organized and adjusted."
 ---
 
 # Meta-Skill-DocStructure
@@ -30,6 +30,7 @@ metadata:
 - 要求每份 markdown 文档至少声明一个 anchor，但不要求全连接。
 - 用 `TypeScript CLI + JSON graph + Vue3 + Vue Flow + watcher server` 把文档结构实时投影到一个可交互页面。
 - 默认第一页就是 `SKILL.md` 的正文；再通过点击 graph、anchor 与文档列表深入查看。
+- UI 相关代码、脚本、systemd 与开发文档统一收敛到 `ui-dev/`，并把它作为 UI 启动根目录。
 
 ## 3. 内部思考链
 1. 锁定目标 skill root。
@@ -45,30 +46,35 @@ metadata:
 2. 先 lint，再改文档：
    - `npm run cli -- lint-doc-anchors --target <skill_root> --json`
 3. 看门面页面时启动 dev server：
-   - `npm run dev`
+   - `cd ui-dev && npm run dev`
 4. 修改本技能自身文档后，必须回写：
    - `npm run cli -- rebuild-self-graph --json`
 5. 需要常驻服务时：
-   - `npm run build`
-   - `npm run service:install`
+   - `cd ui-dev && npm run build`
+   - `cd ui-dev && npm run service:install`
 
 ## 5. 工具与资产
 - TS CLI：`scripts/Cli_Toolbox.ts`
 - 共享逻辑：`src/lib/docstructure.ts`
-- 实时服务：`server/viewer-server.ts`
-- viewer 前端：`ui/*`
+- UI dev 根目录：`ui-dev/`
+- 实时服务：`ui-dev/server/viewer-server.ts`
+- viewer 前端：`ui-dev/client/*`
+- UI 开发文档：`ui-dev/docs/*`
 - runtime contract：
   - `references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.json`
   - `references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md`
-- viewer 规范：
-  - `references/ui/VIEWER_STACK_AND_REUSE.md`
-  - `references/ui/VIEWER_SERVICE_WORKFLOW.md`
-- systemd 模板：`assets/systemd/meta-skill-docstructure-viewer.service`
+- UI dev 入口：
+  - `ui-dev/UI_DEV_ENTRY.md`
+- UI viewer 规范：
+  - `ui-dev/docs/VIEWER_STACK_AND_REUSE.md`
+  - `ui-dev/docs/VIEWER_SERVICE_WORKFLOW.md`
+  - `ui-dev/docs/rules/UI_LAYOUT_ADJUSTMENT_RULES.md`
+- systemd 模板：`ui-dev/assets/systemd/meta-skill-docstructure-viewer.service`
 
 ## 6. 读取顺序
 1. `SKILL.md`
 2. `references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md`
-3. `references/ui/VIEWER_STACK_AND_REUSE.md`
+3. `ui-dev/UI_DEV_ENTRY.md`
 4. `references/tooling/Cli_Toolbox_USAGE.md`
 5. 需要实现细节时，再读 `references/tooling/development/*`
 
@@ -77,3 +83,4 @@ metadata:
 - viewer 必须实时读取 skill 内文档变化；文档消失，页面对应节点也必须消失。
 - viewer 不是手写静态 mock；它必须消费真实 graph 与真实正文。
 - 原有 CLI 统一迁到 TS；不得继续保留 Python 版本。
+- UI 视觉调整的文档、代码、运行脚本必须优先收敛在 `ui-dev/`，不要把 UI 设计知识散落回根目录。

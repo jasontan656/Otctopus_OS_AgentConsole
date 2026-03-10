@@ -1,4 +1,4 @@
 interface:
   display_name: "Meta-Skill-DocStructure"
-  short_description: "规范 skill 内部文档结构，并提供 TS CLI + Vue Flow 实时可视化门面"
-  default_prompt: "Use Meta-Skill-DocStructure only inside a skill folder. Enforce single-topic markdown atoms, frontmatter anchors, anchor graph JSON, TypeScript CLI validation, and the Vue3 + Vue Flow live viewer/server workflow that defaults to SKILL.md."
+  short_description: "规范 skill 内部文档结构，并通过 ui-dev 根目录承载 TS viewer 开发与运行"
+  default_prompt: "Use Meta-Skill-DocStructure only inside a skill folder. Enforce single-topic markdown atoms, frontmatter anchors, anchor graph JSON, TypeScript CLI validation, and the ui-dev-rooted Vue3 + Vue Flow live viewer workflow that defaults to SKILL.md."

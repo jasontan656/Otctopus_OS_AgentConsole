@@ -7,10 +7,10 @@ anchors:
     relation: "operates"
     direction: "upstream"
     reason: "This workflow doc operates the stack defined there."
-  - target: "../tooling/Cli_Toolbox_USAGE.md"
-    relation: "pairs_with"
-    direction: "cross"
-    reason: "CLI usage and viewer operations should be read together."
+  - target: "../UI_DEV_ENTRY.md"
+    relation: "belongs_to"
+    direction: "upstream"
+    reason: "This workflow belongs to the dedicated UI dev root."
 ---
 
 # Viewer Service Workflow

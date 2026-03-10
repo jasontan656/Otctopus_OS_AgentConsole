@@ -2,10 +2,10 @@ import path from 'node:path'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
-const uiRoot = path.resolve(__dirname, 'ui')
+const clientRoot = path.resolve(__dirname, 'client')
 
 export default defineConfig({
-  root: uiRoot,
+  root: clientRoot,
   plugins: [vue()],
   server: {
     host: '0.0.0.0',
@@ -13,7 +13,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@': path.resolve(uiRoot, 'src'),
+      '@': path.resolve(clientRoot, 'src'),
     },
   },
   build: {

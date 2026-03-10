@@ -5,12 +5,13 @@ import express from 'express'
 import chokidar from 'chokidar'
 import WebSocket, { WebSocketServer } from 'ws'
 import type { IncomingMessage } from 'node:http'
-import type { PreviewPayload } from '../src/lib/types.js'
-import { buildPreviewPayload, defaultSkillRoot, rebuildSelfGraph } from '../src/lib/docstructure.js'
+import type { PreviewPayload } from '../../src/lib/types.js'
+import { buildPreviewPayload, defaultSkillRoot, rebuildSelfGraph } from '../../src/lib/docstructure.js'
 
 const SKILL_ROOT = defaultSkillRoot()
-const UI_ROOT = path.resolve(SKILL_ROOT, 'ui')
-const DIST_ROOT = path.resolve(SKILL_ROOT, 'dist/client')
+const UI_DEV_ROOT = path.resolve(SKILL_ROOT, 'ui-dev')
+const UI_ROOT = path.resolve(UI_DEV_ROOT, 'client')
+const DIST_ROOT = path.resolve(UI_DEV_ROOT, 'dist/client')
 const PORT = Number(process.env.PORT ?? '4178')
 const HOST = process.env.HOST ?? '0.0.0.0'
 const TARGET_SKILL_ROOT = path.resolve(process.env.TARGET_SKILL_ROOT ?? SKILL_ROOT)
@@ -122,7 +123,7 @@ async function createApplication() {
       root: UI_ROOT,
       server: { middlewareMode: true },
       appType: 'custom',
-      configFile: path.resolve(SKILL_ROOT, 'vite.config.ts'),
+      configFile: path.resolve(UI_DEV_ROOT, 'vite.config.ts'),
     })
 
     app.use(vite.middlewares)

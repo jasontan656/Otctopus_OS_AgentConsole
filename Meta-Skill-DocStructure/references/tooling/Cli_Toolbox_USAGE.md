@@ -7,7 +7,7 @@ anchors:
     relation: "implements"
     direction: "upstream"
     reason: "The CLI and viewer commands operationalize the runtime contract."
-  - target: "../ui/VIEWER_SERVICE_WORKFLOW.md"
+  - target: "../../ui-dev/docs/VIEWER_SERVICE_WORKFLOW.md"
     relation: "pairs_with"
     direction: "downstream"
     reason: "Service workflow complements the CLI commands."
@@ -30,18 +30,18 @@ anchors:
   - `npm run cli -- rebuild-self-graph --json`
 
 ## Viewer 命令
-- `npm run dev`
+- `cd ui-dev && npm run dev`
   - 开发态实时页面，文档变化后自动刷新 payload。
-- `npm run build`
+- `cd ui-dev && npm run build`
   - 构建 production client。
-- `npm run start`
+- `cd ui-dev && npm run start`
   - 以 production 模式启动 viewer server。
-- `npm run service:install`
+- `cd ui-dev && npm run service:install`
   - 安装 user-level systemd service。
 
 ## 快速示例
 ```bash
 cd /home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Skill-DocStructure && npm run cli -- preview-payload --target /home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Skill-DocStructure --json | sed -n '1,240p'
-cd /home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Skill-DocStructure && npm run dev | sed -n '1,40p'
-cd /home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Skill-DocStructure && npm run service:install | sed -n '1,80p'
+cd /home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Skill-DocStructure/ui-dev && npm run dev | sed -n '1,40p'
+cd /home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Skill-DocStructure/ui-dev && npm run service:install | sed -n '1,80p'
 ```

@@ -3,8 +3,8 @@
   "graph_version": "v2",
   "source_skill": "Meta-Skill-DocStructure",
   "summary": {
-    "nodeCount": 12,
-    "edgeCount": 23,
+    "nodeCount": 15,
+    "edgeCount": 29,
     "errorCount": 0,
     "warningCount": 0
   },
@@ -100,7 +100,25 @@
       "depth": 4
     },
     {
-      "path": "references/ui/VIEWER_SERVICE_WORKFLOW.md",
+      "path": "ui-dev/UI_DEV_ENTRY.md",
+      "docId": "ui.dev.entry",
+      "docType": "ui_dev_entry",
+      "topic": "UI development root for the Meta-Skill-DocStructure viewer",
+      "title": "UI Dev Entry",
+      "anchorCount": 2,
+      "depth": 1
+    },
+    {
+      "path": "ui-dev/docs/00_UI_DEVELOPMENT_INDEX.md",
+      "docId": "ui.dev.docs.index",
+      "docType": "ui_dev_index",
+      "topic": "Index of UI development docs for the interactive viewer",
+      "title": "UI Development Index",
+      "anchorCount": 2,
+      "depth": 2
+    },
+    {
+      "path": "ui-dev/docs/VIEWER_SERVICE_WORKFLOW.md",
       "docId": "ui.viewer.service_workflow",
       "docType": "tooling_usage",
       "topic": "Dev, build, and systemd workflow for the Meta-Skill-DocStructure viewer",
@@ -109,13 +127,22 @@
       "depth": 2
     },
     {
-      "path": "references/ui/VIEWER_STACK_AND_REUSE.md",
+      "path": "ui-dev/docs/VIEWER_STACK_AND_REUSE.md",
       "docId": "ui.viewer.stack",
       "docType": "tooling_architecture",
       "topic": "Viewer stack, layout rules, and reuse contract for skill-local graph pages",
       "title": "Viewer Stack Reuse Contract",
       "anchorCount": 2,
       "depth": 2
+    },
+    {
+      "path": "ui-dev/docs/rules/UI_LAYOUT_ADJUSTMENT_RULES.md",
+      "docId": "ui.viewer.layout_adjustment",
+      "docType": "ui_dev_guide",
+      "topic": "Layout adjustment rules for the interactive skill viewer",
+      "title": "UI Layout Adjustment Rules",
+      "anchorCount": 2,
+      "depth": 3
     }
   ],
   "edges": [
@@ -128,10 +155,10 @@
     },
     {
       "source": "SKILL.md",
-      "target": "references/ui/VIEWER_STACK_AND_REUSE.md",
+      "target": "ui-dev/UI_DEV_ENTRY.md",
       "relation": "front_doored_by",
       "direction": "downstream",
-      "reason": "The viewer stack doc explains the page architecture and reuse path."
+      "reason": "The dedicated UI dev root explains how the viewer is organized and adjusted."
     },
     {
       "source": "assets/templates/ATOMIC_DOC_TEMPLATE.md",
@@ -170,10 +197,10 @@
     },
     {
       "source": "references/tooling/Cli_Toolbox_DEVELOPMENT.md",
-      "target": "references/ui/VIEWER_STACK_AND_REUSE.md",
+      "target": "ui-dev/UI_DEV_ENTRY.md",
       "relation": "pairs_with",
       "direction": "cross",
-      "reason": "The viewer stack doc explains the frontend runtime."
+      "reason": "The UI dev root explains where viewer files and docs now live."
     },
     {
       "source": "references/tooling/Cli_Toolbox_USAGE.md",
@@ -184,7 +211,7 @@
     },
     {
       "source": "references/tooling/Cli_Toolbox_USAGE.md",
-      "target": "references/ui/VIEWER_SERVICE_WORKFLOW.md",
+      "target": "ui-dev/docs/VIEWER_SERVICE_WORKFLOW.md",
       "relation": "pairs_with",
       "direction": "downstream",
       "reason": "Service workflow complements the CLI commands."
@@ -212,7 +239,7 @@
     },
     {
       "source": "references/tooling/development/20_CATEGORY_INDEX.md",
-      "target": "references/ui/VIEWER_STACK_AND_REUSE.md",
+      "target": "ui-dev/docs/VIEWER_STACK_AND_REUSE.md",
       "relation": "pairs_with",
       "direction": "cross",
       "reason": "The UI stack doc is a sibling branch for this index."
@@ -240,7 +267,7 @@
     },
     {
       "source": "references/tooling/development/modules/mod_viewer_runtime.md",
-      "target": "references/ui/VIEWER_STACK_AND_REUSE.md",
+      "target": "ui-dev/docs/VIEWER_STACK_AND_REUSE.md",
       "relation": "explained_by",
       "direction": "upstream",
       "reason": "The UI stack doc explains this module's stack choices."
@@ -253,34 +280,76 @@
       "reason": "This module doc belongs to the tooling development tree."
     },
     {
-      "source": "references/ui/VIEWER_SERVICE_WORKFLOW.md",
-      "target": "references/ui/VIEWER_STACK_AND_REUSE.md",
+      "source": "ui-dev/UI_DEV_ENTRY.md",
+      "target": "SKILL.md",
+      "relation": "implements",
+      "direction": "upstream",
+      "reason": "This UI dev root fulfills the facade promise of a dedicated viewer workspace."
+    },
+    {
+      "source": "ui-dev/UI_DEV_ENTRY.md",
+      "target": "ui-dev/docs/00_UI_DEVELOPMENT_INDEX.md",
+      "relation": "routes_to",
+      "direction": "downstream",
+      "reason": "The UI docs index organizes architecture, workflow, and layout guidance."
+    },
+    {
+      "source": "ui-dev/docs/00_UI_DEVELOPMENT_INDEX.md",
+      "target": "ui-dev/UI_DEV_ENTRY.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "This index belongs to the dedicated UI dev root."
+    },
+    {
+      "source": "ui-dev/docs/00_UI_DEVELOPMENT_INDEX.md",
+      "target": "ui-dev/docs/rules/UI_LAYOUT_ADJUSTMENT_RULES.md",
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "Layout adjustment rules are part of the core UI dev reading path."
+    },
+    {
+      "source": "ui-dev/docs/VIEWER_SERVICE_WORKFLOW.md",
+      "target": "ui-dev/docs/VIEWER_STACK_AND_REUSE.md",
       "relation": "operates",
       "direction": "upstream",
       "reason": "This workflow doc operates the stack defined there."
     },
     {
-      "source": "references/ui/VIEWER_SERVICE_WORKFLOW.md",
-      "target": "references/tooling/Cli_Toolbox_USAGE.md",
-      "relation": "pairs_with",
-      "direction": "cross",
-      "reason": "CLI usage and viewer operations should be read together."
+      "source": "ui-dev/docs/VIEWER_SERVICE_WORKFLOW.md",
+      "target": "ui-dev/UI_DEV_ENTRY.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "This workflow belongs to the dedicated UI dev root."
     },
     {
-      "source": "references/ui/VIEWER_STACK_AND_REUSE.md",
-      "target": "SKILL.md",
+      "source": "ui-dev/docs/VIEWER_STACK_AND_REUSE.md",
+      "target": "ui-dev/UI_DEV_ENTRY.md",
       "relation": "implements",
       "direction": "upstream",
-      "reason": "This doc implements the facade promise of a live viewer."
+      "reason": "This doc implements the dedicated UI dev entry."
     },
     {
-      "source": "references/ui/VIEWER_STACK_AND_REUSE.md",
-      "target": "references/ui/VIEWER_SERVICE_WORKFLOW.md",
+      "source": "ui-dev/docs/VIEWER_STACK_AND_REUSE.md",
+      "target": "ui-dev/docs/rules/UI_LAYOUT_ADJUSTMENT_RULES.md",
       "relation": "pairs_with",
       "direction": "cross",
-      "reason": "Service workflow complements the stack design."
+      "reason": "Layout adjustment rules complement the stack design."
+    },
+    {
+      "source": "ui-dev/docs/rules/UI_LAYOUT_ADJUSTMENT_RULES.md",
+      "target": "ui-dev/docs/VIEWER_STACK_AND_REUSE.md",
+      "relation": "extends",
+      "direction": "upstream",
+      "reason": "Layout adjustments must extend the viewer stack contract."
+    },
+    {
+      "source": "ui-dev/docs/rules/UI_LAYOUT_ADJUSTMENT_RULES.md",
+      "target": "ui-dev/docs/00_UI_DEVELOPMENT_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "This guide belongs to the UI development doc set."
     }
   ],
   "warnings": [],
-  "updated_at": "2026-03-10T16:59:15.180Z"
+  "updated_at": "2026-03-10T22:19:29.448Z"
 }
