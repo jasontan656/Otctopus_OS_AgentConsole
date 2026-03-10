@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 
 from managed_agents_text import is_agents_target_kind
-from managed_paths import managed_root
+from managed_paths import legacy_root_slugs, managed_root
 from managed_registry import load_registry
 
 AGENT_AUDIT_FILENAME = "AGENT_AUDIT.md"
@@ -255,6 +255,38 @@ def render_audit_markdown(contract: dict[str, object]) -> str:
     return "\n".join(lines)
 
 
+def _prune_runtime_rules(skill_root: Path, entries: list[dict[str, str]]) -> None:
+    runtime_root = target_contract_root(skill_root)
+    if not runtime_root.exists():
+        return
+
+    live_rel_paths: set[str] = set()
+    source_roots: set[Path] = set()
+    for entry in entries:
+        source_roots.add(Path(entry["source_root"]))
+        for target in (runtime_json_path(skill_root, entry), audit_md_path(skill_root, entry)):
+            if target.is_relative_to(runtime_root):
+                live_rel_paths.add(target.relative_to(runtime_root).as_posix())
+
+    for source_root in source_roots:
+        for slug in legacy_root_slugs(source_root):
+            namespace_root = runtime_root / slug
+            if not namespace_root.exists():
+                continue
+            for target in sorted(namespace_root.rglob("*")):
+                if not target.is_file():
+                    continue
+                rel_path = target.relative_to(runtime_root).as_posix()
+                if rel_path in live_rel_paths:
+                    continue
+                target.unlink()
+            for candidate in sorted(namespace_root.rglob("*"), reverse=True):
+                if candidate.is_dir() and not any(candidate.iterdir()):
+                    candidate.rmdir()
+            if namespace_root.exists() and not any(namespace_root.iterdir()):
+                namespace_root.rmdir()
+
+
 def write_target_contract_assets(skill_root: Path, entries: list[dict[str, str]]) -> list[str]:
     written: list[str] = []
     for entry in entries:
@@ -272,6 +304,7 @@ def write_target_contract_assets(skill_root: Path, entries: list[dict[str, str]]
                 if legacy.exists():
                     legacy.unlink()
         written.extend([str(json_path), str(md_path)])
+    _prune_runtime_rules(skill_root, entries)
     return written
 
 

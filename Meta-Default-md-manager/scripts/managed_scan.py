@@ -72,6 +72,24 @@ def load_scan_report(skill_root: Path) -> dict[str, object]:
     entries = payload.get("entries", [])
     if not entries:
         raise ValueError(f"scan report has no entries: {path}")
+    normalized_entries: list[dict[str, str]] = []
+    report_source_root = Path(str(payload["source_root"])).resolve()
+    for entry in entries:
+        source_path = Path(str(entry["source_path"])).resolve()
+        resolved_target_kind = target_kind(report_source_root, source_path)
+        normalized_entries.append(
+            {
+                "source_root": str(report_source_root),
+                "source_path": str(source_path),
+                "target_kind": resolved_target_kind,
+                **asset_descriptor(skill_root, report_source_root, source_path, resolved_target_kind),
+            }
+        )
+    payload["source_root"] = str(report_source_root)
+    payload["root_slug"] = root_slug(report_source_root)
+    payload["managed_root"] = str(managed_root(skill_root))
+    payload["count"] = len(normalized_entries)
+    payload["entries"] = normalized_entries
     return payload
 
 

@@ -4,30 +4,31 @@ from pathlib import Path
 
 from managed_agents_text import extract_part_a, is_agents_target_kind
 from managed_index import write_index
-from managed_paths import managed_root, root_slug
+from managed_paths import legacy_root_slugs, managed_root
 from managed_registry import build_entry, load_registry, sha256_text, write_registry
 from managed_scan import load_scan_report
 from managed_target_runtime import write_target_contract_assets
 
 
 def _prune_missing(skill_root: Path, source_root: Path, live_rel_paths: set[str]) -> None:
-    namespace_root = managed_root(skill_root) / root_slug(source_root)
-    if not namespace_root.exists():
-        return
-
-    for target in sorted(namespace_root.rglob("*")):
-        if not target.is_file():
+    for slug in legacy_root_slugs(source_root):
+        namespace_root = managed_root(skill_root) / slug
+        if not namespace_root.exists():
             continue
-        rel_path = target.relative_to(managed_root(skill_root)).as_posix()
-        if rel_path in live_rel_paths:
-            continue
-        target.unlink()
 
-    for candidate in sorted(namespace_root.rglob("*"), reverse=True):
-        if candidate.is_dir() and not any(candidate.iterdir()):
-            candidate.rmdir()
-    if namespace_root.exists() and not any(namespace_root.iterdir()):
-        namespace_root.rmdir()
+        for target in sorted(namespace_root.rglob("*")):
+            if not target.is_file():
+                continue
+            rel_path = target.relative_to(managed_root(skill_root)).as_posix()
+            if rel_path in live_rel_paths:
+                continue
+            target.unlink()
+
+        for candidate in sorted(namespace_root.rglob("*"), reverse=True):
+            if candidate.is_dir() and not any(candidate.iterdir()):
+                candidate.rmdir()
+        if namespace_root.exists() and not any(namespace_root.iterdir()):
+            namespace_root.rmdir()
 
 
 def collect_from_scan(skill_root: Path, source_root: str | None = None) -> dict[str, object]:

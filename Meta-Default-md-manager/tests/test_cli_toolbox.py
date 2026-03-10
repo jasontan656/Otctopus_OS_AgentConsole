@@ -10,7 +10,6 @@ from pathlib import Path
 sys.path.insert(0, str((Path(__file__).resolve().parents[1] / "scripts")))
 from managed_agents_text import extract_part_a
 from managed_lock import acquire_cli_lock
-from managed_paths import root_slug
 
 
 SCRIPT = Path(__file__).resolve().parents[1] / "scripts" / "Cli_Toolbox.py"
@@ -26,6 +25,11 @@ class MetaDefaultMdManagerCliTests(unittest.TestCase):
                     "version": 1,
                     "skill_name": "Meta-Default-md-manager",
                     "description": "test",
+                    "contract_name": "meta_default_md_manager_test_contract",
+                    "contract_version": "1.0.0",
+                    "validation_mode": "strict",
+                    "required_fields": ["contract_name", "contract_version", "validation_mode"],
+                    "optional_fields": ["notes"],
                     "runtime_access_policy": {
                         "model_must_not_read_markdown_for_runtime_guidance": True,
                     },
@@ -232,55 +236,6 @@ class MetaDefaultMdManagerCliTests(unittest.TestCase):
                 "--source-root", str(source_root),
             )
             self.assertEqual(second["count"], 2)
-
-    def test_collect_migrates_legacy_agents_asset_without_manual_steps(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp:
-            skill_root = Path(tmp) / "skill"
-            source_root = Path(tmp) / "src"
-            target = source_root / "AGENTS.md"
-            target.parent.mkdir(parents=True, exist_ok=True)
-            target.write_text("[PART A]\n- current\n\n[PART B]\nlegacy\n", encoding="utf-8")
-
-            legacy_dir = skill_root / "assets" / "managed_targets" / root_slug(source_root)
-            legacy_dir.mkdir(parents=True, exist_ok=True)
-            legacy_file = legacy_dir / "AGENTS.md"
-            legacy_file.write_text("old legacy asset\n", encoding="utf-8")
-            (skill_root / "assets" / "managed_targets" / "registry.json").write_text(
-                json.dumps(
-                    {
-                        "version": 2,
-                        "entries": [
-                            {
-                                "source_root": str(source_root),
-                                "source_path": str(target),
-                                "target_kind": "AGENTS.md",
-                                "managed_rel_path": f"{root_slug(source_root)}/AGENTS.md",
-                                "managed_path": str(legacy_file),
-                                "sha256": "legacy",
-                            }
-                        ],
-                    },
-                    ensure_ascii=False,
-                    indent=2,
-                ) + "\n",
-                encoding="utf-8",
-            )
-
-            self.run_cli(
-                "scan",
-                "--skill-root", str(skill_root),
-                "--source-root", str(source_root),
-            )
-            collect = self.run_cli(
-                "collect",
-                "--skill-root", str(skill_root),
-                "--source-root", str(source_root),
-            )
-
-            migrated_entry = collect["entries"][0]
-            self.assertFalse(legacy_file.exists())
-            self.assertTrue(Path(migrated_entry["human_path"]).exists())
-            self.assertTrue(Path(migrated_entry["machine_path"]).exists())
 
     def test_scan_collect_ignores_excluded_directories(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

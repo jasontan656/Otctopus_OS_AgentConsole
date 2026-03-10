@@ -62,11 +62,30 @@ def lock_path(skill_root: Path) -> Path:
     return managed_root(skill_root) / ".cli.lock"
 
 
-def root_slug(source_root: Path) -> str:
-    text = source_root.as_posix().strip("/")
-    if not text:
-        return "root"
+def _slugify(text: str) -> str:
     return re.sub(r"[^A-Za-z0-9._-]+", "_", text)
+
+
+def root_slug(source_root: Path) -> str:
+    name = source_root.name.strip()
+    if not name:
+        return "root"
+    return _slugify(name)
+
+
+def legacy_root_slugs(source_root: Path) -> list[str]:
+    slugs = [root_slug(source_root)]
+    full_text = source_root.as_posix().strip("/")
+    if full_text:
+        full_slug = _slugify(full_text)
+        if full_slug not in slugs:
+            slugs.append(full_slug)
+    return slugs
+
+
+def legacy_managed_rel_paths(source_root: Path, source_path: Path) -> list[Path]:
+    relative = source_path.relative_to(source_root)
+    return [Path(slug) / relative for slug in legacy_root_slugs(source_root)]
 
 
 def managed_rel_path(source_root: Path, source_path: Path) -> Path:
