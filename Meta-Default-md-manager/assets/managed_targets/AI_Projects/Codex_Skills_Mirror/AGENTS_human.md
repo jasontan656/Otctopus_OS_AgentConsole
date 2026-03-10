@@ -34,12 +34,11 @@
     "path_metadata_is_not_action_guidance": true
   },
   "default_meta_skill_order": [
-    "$Meta-prompt-write (strengthen user intent and understand the real need)",
-    "$Meta-mindchain (think from the architecture level and reject one-sided thinking)",
-    "$Meta-reasoningchain (project the future shape to align the target state)",
-    "$Meta-keyword-first-edit (prefer delete > replace > add when editing)",
-    "$Meta-refactor-behavior (applicable only when refactor is needed)",
-    "$Meta-Agent-Browser (applicable only when the task is frontend or browser-related)"
+    "$meta-github-operation ( applicable on every write_exec turn. Automatically push everything done to github for tracability )",
+    "$Meta-Skill-Mirror (all skill edit must happen first in Codex_Skills_Mirror folder and then use the skill to push/install to codex installation folder )",
+    "$Meta-Skill-Template ( should be considered to imply if there is no specific user request on how skill should be created (prioritize user request than template) )",
+    "$skill-creator (for skill standard formatter to ensure codex reads it properly, do not use its template for skill creation)",
+    "$Constitution-knowledge-base (for skill CLI tool lints )"
   ],
   "peer_summary_policy": {
     "available": false,

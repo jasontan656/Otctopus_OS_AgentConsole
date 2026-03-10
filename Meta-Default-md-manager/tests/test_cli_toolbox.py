@@ -50,9 +50,11 @@ def root_payload() -> dict:
             "path_metadata_is_not_action_guidance": True,
         },
         "default_meta_skill_order": [
-            "meta_prompt",
-            "meta_mindchain",
-            "meta_reasoningchain",
+            "$meta-github-operation ( applicable on every write_exec turn. Automatically push everything done to github for tracability )",
+            "$Meta-Skill-Mirror (all skill edit must happen first in Codex_Skills_Mirror folder and then use the skill to push/install to codex installation folder )",
+            "$Meta-Skill-Template ( should be considered to imply if there is no specific user request on how skill should be created (prioritize user request than template) )",
+            "$skill-creator (for skill standard formatter to ensure codex reads it properly, do not use its template for skill creation)",
+            "$Constitution-knowledge-base (for skill CLI tool lints )",
         ],
         "turn_start_actions": [
             "validate root AGENTS exists",
