@@ -77,12 +77,28 @@ def _render_runtime_contract_md(payload: dict[str, object]) -> str:
         "> Audit copy generated from `references/runtime/SKILL_RUNTIME_CONTRACT.json`.",
         "> Runtime models must call `python3 scripts/Cli_Toolbox.py contract --json` instead of reading this markdown for guidance.",
         "",
+        f"- contract_name: `{payload['contract_name']}`",
+        f"- contract_version: `{payload['contract_version']}`",
+        f"- validation_mode: `{payload['validation_mode']}`",
+        "- required_fields:",
+    ]
+    lines.extend(_render_bullets([f"`{item}`" for item in payload.get("required_fields", [])]))
+    lines.extend(
+        [
+            "- optional_fields:",
+        ]
+    )
+    lines.extend(_render_bullets([f"`{item}`" for item in payload.get("optional_fields", [])]))
+    lines.extend(
+        [
+            "",
         f"- skill_name: `{payload['skill_name']}`",
         f"- version: `{payload['version']}`",
         f"- description: {payload['description']}",
         "",
         "## Runtime Access Policy",
-    ]
+        ]
+    )
     access_policy = payload.get("runtime_access_policy", {})
     lines.extend(_render_bullets([f"{key}: `{value}`" for key, value in access_policy.items()]))
     lines.extend(["", "## Command Map"])

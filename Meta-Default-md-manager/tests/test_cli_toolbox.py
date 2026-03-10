@@ -8,7 +8,9 @@ import unittest
 from pathlib import Path
 
 sys.path.insert(0, str((Path(__file__).resolve().parents[1] / "scripts")))
+from managed_agents_text import extract_part_a
 from managed_lock import acquire_cli_lock
+from managed_paths import root_slug
 
 
 SCRIPT = Path(__file__).resolve().parents[1] / "scripts" / "Cli_Toolbox.py"
@@ -121,19 +123,19 @@ class MetaDefaultMdManagerCliTests(unittest.TestCase):
             self.assertIn(str(source_root / "repo-b" / ".gitignore"), index_text)
             self.assertIn("target_kind: `.gitignore`", index_text)
             managed_agents_entry = next(entry for entry in registry["entries"] if entry["source_path"] == str(source_root / "AGENTS.md"))
-            managed_agents = Path(managed_agents_entry["managed_path"])
+            managed_agents = Path(managed_agents_entry["human_path"])
             self.assertEqual(managed_agents.read_text(encoding="utf-8"), "root agents\n")
-            runtime_rule = Path(managed_agents_entry["managed_path"]).parents[1] / "runtime_rules" / Path(managed_agents_entry["managed_rel_path"]).parent / "AGENTS.runtime.json"
+            runtime_rule = Path(managed_agents_entry["machine_path"])
             self.assertTrue(runtime_rule.exists())
 
-    def test_collect_preserves_external_agents_content_in_managed_copy(self) -> None:
+    def test_collect_stores_only_agents_part_a_in_human_asset(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             skill_root = Path(tmp) / "skill"
             source_root = Path(tmp) / "src"
             external_agents = source_root / "AGENTS.md"
             external_agents.parent.mkdir(parents=True, exist_ok=True)
             external_agents.write_text(
-                "[GLOBAL LANGUAGE - MANDATORY]\n- Chinese-first\n",
+                "[AGENT RUNTIME HOOK - ABSOLUTE ENFORCEMENT]\n\n[PART A]\n- keep me\n\n[PART B]\n```json\n{\"drop\": true}\n```\n",
                 encoding="utf-8",
             )
 
@@ -149,8 +151,8 @@ class MetaDefaultMdManagerCliTests(unittest.TestCase):
             )
 
             managed_agents_entry = next(entry for entry in collect["entries"] if entry["source_path"] == str(external_agents))
-            managed_agents = Path(managed_agents_entry["managed_path"])
-            self.assertEqual(managed_agents.read_text(encoding="utf-8"), external_agents.read_text(encoding="utf-8"))
+            managed_agents = Path(managed_agents_entry["human_path"])
+            self.assertEqual(managed_agents.read_text(encoding="utf-8"), extract_part_a(external_agents.read_text(encoding="utf-8")))
 
     def test_sync_out_overwrites_target_from_managed_copy(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -180,6 +182,34 @@ class MetaDefaultMdManagerCliTests(unittest.TestCase):
             )
             self.assertEqual(target.read_text(encoding="utf-8"), "new managed\n")
 
+    def test_push_writes_only_agents_part_a_back_to_external_target(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            skill_root = Path(tmp) / "skill"
+            source_root = Path(tmp) / "src"
+            target = source_root / "AGENTS.md"
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text("[PART A]\n- old\n\n[PART B]\nlegacy\n", encoding="utf-8")
+
+            self.run_cli(
+                "scan",
+                "--skill-root", str(skill_root),
+                "--source-root", str(source_root),
+            )
+            collect = self.run_cli(
+                "collect",
+                "--skill-root", str(skill_root),
+                "--source-root", str(source_root),
+            )
+            managed_entry = next(entry for entry in collect["entries"] if entry["source_path"] == str(target))
+            Path(managed_entry["human_path"]).write_text("[PART A]\n- new only\n", encoding="utf-8")
+
+            self.run_cli(
+                "push",
+                "--skill-root", str(skill_root),
+                "--target-source-path", str(target),
+            )
+            self.assertEqual(target.read_text(encoding="utf-8"), "[PART A]\n- new only\n")
+
     def test_rescan_picks_up_new_default_doc(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             skill_root = Path(tmp) / "skill"
@@ -202,6 +232,55 @@ class MetaDefaultMdManagerCliTests(unittest.TestCase):
                 "--source-root", str(source_root),
             )
             self.assertEqual(second["count"], 2)
+
+    def test_collect_migrates_legacy_agents_asset_without_manual_steps(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            skill_root = Path(tmp) / "skill"
+            source_root = Path(tmp) / "src"
+            target = source_root / "AGENTS.md"
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text("[PART A]\n- current\n\n[PART B]\nlegacy\n", encoding="utf-8")
+
+            legacy_dir = skill_root / "assets" / "managed_targets" / root_slug(source_root)
+            legacy_dir.mkdir(parents=True, exist_ok=True)
+            legacy_file = legacy_dir / "AGENTS.md"
+            legacy_file.write_text("old legacy asset\n", encoding="utf-8")
+            (skill_root / "assets" / "managed_targets" / "registry.json").write_text(
+                json.dumps(
+                    {
+                        "version": 2,
+                        "entries": [
+                            {
+                                "source_root": str(source_root),
+                                "source_path": str(target),
+                                "target_kind": "AGENTS.md",
+                                "managed_rel_path": f"{root_slug(source_root)}/AGENTS.md",
+                                "managed_path": str(legacy_file),
+                                "sha256": "legacy",
+                            }
+                        ],
+                    },
+                    ensure_ascii=False,
+                    indent=2,
+                ) + "\n",
+                encoding="utf-8",
+            )
+
+            self.run_cli(
+                "scan",
+                "--skill-root", str(skill_root),
+                "--source-root", str(source_root),
+            )
+            collect = self.run_cli(
+                "collect",
+                "--skill-root", str(skill_root),
+                "--source-root", str(source_root),
+            )
+
+            migrated_entry = collect["entries"][0]
+            self.assertFalse(legacy_file.exists())
+            self.assertTrue(Path(migrated_entry["human_path"]).exists())
+            self.assertTrue(Path(migrated_entry["machine_path"]).exists())
 
     def test_scan_collect_ignores_excluded_directories(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -267,6 +346,7 @@ class MetaDefaultMdManagerCliTests(unittest.TestCase):
             self.assertEqual(payload["target"]["target_kind"], "AGENTS.md")
             self.assertEqual(payload["turn_contract"]["status"], "n_a")
             self.assertIn("target-contract", payload["runtime_entry"]["cli"])
+            self.assertEqual(Path(payload["runtime_entry"]["runtime_json_path"]).name, "AGENTS_machine.json")
 
             root_payload = self.run_cli(
                 "target-contract",
@@ -275,6 +355,7 @@ class MetaDefaultMdManagerCliTests(unittest.TestCase):
             )
             self.assertEqual(root_payload["turn_contract"]["status"], "enforced")
             self.assertEqual(root_payload["turn_contract"]["turn_end"], ["print TURN_END guardrails"])
+            self.assertEqual(Path(root_payload["runtime_entry"]["runtime_json_path"]).name, "AGENTS_machine.json")
 
             skills_payload = self.run_cli(
                 "target-contract",

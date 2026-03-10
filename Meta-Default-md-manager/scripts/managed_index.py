@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from managed_agents_text import is_agents_target_kind
 from managed_paths import index_path
 
 
@@ -43,16 +44,25 @@ def write_index(skill_root: Path, entries: list[dict[str, str]]) -> None:
     ]
 
     for entry in entries:
-        managed = Path(entry["managed_path"])
+        managed = Path(entry["human_path"]) if is_agents_target_kind(entry["target_kind"]) else Path(entry["managed_path"])
         text = managed.read_text(encoding="utf-8") if managed.exists() else ""
         preview = build_preview(text)
+        detail_lines = (
+            [
+                f"- human_path: `{entry['human_path']}`",
+                f"- machine_path: `{entry['machine_path']}`",
+            ]
+            if is_agents_target_kind(entry["target_kind"])
+            else [f"- managed_path: `{entry['managed_path']}`"]
+        )
         lines.extend(
             [
                 f"## {entry['source_path']}",
                 f"- target_kind: `{entry['target_kind']}`",
                 f"- source_path: `{entry['source_path']}`",
-                f"- managed_path: `{entry['managed_path']}`",
+                f"- managed_dir: `{entry['managed_dir']}`",
                 f"- managed_rel_path: `{entry['managed_rel_path']}`",
+                *detail_lines,
                 f"- preview: {preview}",
                 "",
             ]

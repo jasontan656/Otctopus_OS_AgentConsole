@@ -4,11 +4,25 @@ import json
 import hashlib
 from pathlib import Path
 
-from managed_paths import registry_path
+from managed_paths import asset_descriptor, registry_path
 
 
 def sha256_text(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
+def normalize_entry(skill_root: Path, entry: dict[str, object]) -> dict[str, str]:
+    source_root = Path(str(entry["source_root"]))
+    source_path = Path(str(entry["source_path"]))
+    target_kind = str(entry["target_kind"])
+    normalized = {
+        "source_root": str(source_root),
+        "source_path": str(source_path),
+        "target_kind": target_kind,
+        "sha256": str(entry.get("sha256", "")),
+    }
+    normalized.update(asset_descriptor(skill_root, source_root, source_path, target_kind))
+    return normalized
 
 
 def load_registry(
@@ -26,10 +40,10 @@ def load_registry(
     if not raw.strip():
         raise ValueError(f"registry file is empty: {path}")
     payload = json.loads(raw)
-    entries = payload.get("entries", [])
+    entries = [normalize_entry(skill_root, entry) for entry in payload.get("entries", [])]
     if require_entries and not entries:
         raise ValueError(f"registry has no entries: {path}")
-    return payload
+    return {"version": 3, "entries": entries}
 
 
 def write_registry(skill_root: Path, payload: dict[str, object]) -> None:
@@ -43,18 +57,17 @@ def write_registry(skill_root: Path, payload: dict[str, object]) -> None:
 
 def build_entry(
     *,
+    skill_root: Path,
     source_root: Path,
     source_path: Path,
-    managed_path: Path,
-    managed_rel_path: Path,
     target_kind: str,
     sha256: str,
 ) -> dict[str, str]:
-    return {
+    entry = {
         "source_root": str(source_root),
         "source_path": str(source_path),
         "target_kind": target_kind,
-        "managed_rel_path": managed_rel_path.as_posix(),
-        "managed_path": str(managed_path),
         "sha256": sha256,
     }
+    entry.update(asset_descriptor(skill_root, source_root, source_path, target_kind))
+    return entry

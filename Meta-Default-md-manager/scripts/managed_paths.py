@@ -3,6 +3,8 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
+from managed_agents_text import is_agents_target_kind
+
 
 DEFAULT_SOURCE_ROOT = Path("/home/jasontan656/AI_Projects")
 RECURSIVE_TARGET_BASENAMES = ("AGENTS.md", ".gitignore")
@@ -23,6 +25,9 @@ EXCLUDED_DIR_NAMES = {
 EXCLUDED_TOP_LEVEL_RELATIVE_DIRS = {
     "Octopus_OS",
 }
+AGENTS_HUMAN_FILENAME = "AGENTS_human.md"
+AGENTS_MACHINE_FILENAME = "AGENTS_machine.json"
+AGENT_AUDIT_FILENAME = "AGENT_AUDIT.md"
 
 
 def resolve_skill_root(raw: str | None) -> Path:
@@ -68,8 +73,52 @@ def managed_rel_path(source_root: Path, source_path: Path) -> Path:
     return Path(root_slug(source_root)) / source_path.relative_to(source_root)
 
 
+def managed_rel_dir(source_root: Path, source_path: Path) -> Path:
+    return managed_rel_path(source_root, source_path).parent
+
+
+def managed_dir_path(skill_root: Path, source_root: Path, source_path: Path) -> Path:
+    return managed_root(skill_root) / managed_rel_dir(source_root, source_path)
+
+
 def managed_file_path(skill_root: Path, source_root: Path, source_path: Path) -> Path:
     return managed_root(skill_root) / managed_rel_path(source_root, source_path)
+
+
+def agents_human_path(skill_root: Path, source_root: Path, source_path: Path) -> Path:
+    return managed_dir_path(skill_root, source_root, source_path) / AGENTS_HUMAN_FILENAME
+
+
+def agents_machine_path(skill_root: Path, source_root: Path, source_path: Path) -> Path:
+    return managed_dir_path(skill_root, source_root, source_path) / AGENTS_MACHINE_FILENAME
+
+
+def agents_audit_path(skill_root: Path, source_root: Path, source_path: Path) -> Path:
+    return managed_dir_path(skill_root, source_root, source_path) / AGENT_AUDIT_FILENAME
+
+
+def asset_descriptor(
+    skill_root: Path,
+    source_root: Path,
+    source_path: Path,
+    target_kind: str,
+) -> dict[str, str]:
+    descriptor = {
+        "managed_rel_path": managed_rel_path(source_root, source_path).as_posix(),
+        "managed_rel_dir": managed_rel_dir(source_root, source_path).as_posix(),
+        "managed_dir": str(managed_dir_path(skill_root, source_root, source_path)),
+    }
+    if is_agents_target_kind(target_kind):
+        descriptor.update(
+            {
+                "human_path": str(agents_human_path(skill_root, source_root, source_path)),
+                "machine_path": str(agents_machine_path(skill_root, source_root, source_path)),
+                "audit_md_path": str(agents_audit_path(skill_root, source_root, source_path)),
+            }
+        )
+    else:
+        descriptor["managed_path"] = str(managed_file_path(skill_root, source_root, source_path))
+    return descriptor
 
 
 def explicit_target_paths(source_root: Path) -> list[Path]:

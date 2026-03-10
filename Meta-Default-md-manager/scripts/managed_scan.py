@@ -3,12 +3,11 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from managed_paths import asset_descriptor
 from managed_paths import (
     RECURSIVE_TARGET_BASENAMES,
     explicit_target_paths,
     is_excluded_scan_path,
-    managed_file_path,
-    managed_rel_path,
     managed_root,
     resolve_source_root,
     root_slug,
@@ -37,18 +36,18 @@ def write_scan_report(skill_root: Path, source_root: Path) -> dict[str, object]:
     discovered = _discover_targets(source_root, skill_root)
     entries: list[dict[str, str]] = []
     for source_path in discovered:
+        resolved_target_kind = target_kind(source_root, source_path)
         entries.append(
             {
                 "source_root": str(source_root),
                 "source_path": str(source_path),
-                "target_kind": target_kind(source_root, source_path),
-                "managed_rel_path": managed_rel_path(source_root, source_path).as_posix(),
-                "managed_path": str(managed_file_path(skill_root, source_root, source_path)),
+                "target_kind": resolved_target_kind,
+                **asset_descriptor(skill_root, source_root, source_path, resolved_target_kind),
             }
         )
 
     payload = {
-        "version": 2,
+        "version": 3,
         "action": "scan",
         "source_root": str(source_root),
         "root_slug": root_slug(source_root),

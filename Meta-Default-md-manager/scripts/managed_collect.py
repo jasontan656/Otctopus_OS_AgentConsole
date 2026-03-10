@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from managed_agents_text import extract_part_a, is_agents_target_kind
 from managed_index import write_index
 from managed_paths import managed_root, root_slug
 from managed_registry import build_entry, load_registry, sha256_text, write_registry
@@ -52,25 +53,32 @@ def collect_from_scan(skill_root: Path, source_root: str | None = None) -> dict[
         source_path = Path(scanned["source_path"])
         if not source_path.exists():
             raise FileNotFoundError(f"scanned source file missing: {source_path}")
-        managed_path = Path(scanned["managed_path"])
-        text = source_path.read_text(encoding="utf-8")
-        managed_path.parent.mkdir(parents=True, exist_ok=True)
-        managed_path.write_text(text, encoding="utf-8")
-        live_rel_paths.add(scanned["managed_rel_path"])
+        raw_text = source_path.read_text(encoding="utf-8")
+        target_kind = str(scanned["target_kind"])
+        text = extract_part_a(raw_text) if is_agents_target_kind(target_kind) else raw_text
+        if is_agents_target_kind(target_kind):
+            human_path = Path(scanned["human_path"])
+            human_path.parent.mkdir(parents=True, exist_ok=True)
+            human_path.write_text(text, encoding="utf-8")
+            live_rel_paths.add(human_path.relative_to(managed_root(skill_root)).as_posix())
+        else:
+            managed_path = Path(scanned["managed_path"])
+            managed_path.parent.mkdir(parents=True, exist_ok=True)
+            managed_path.write_text(text, encoding="utf-8")
+            live_rel_paths.add(scanned["managed_rel_path"])
         new_entries.append(
             build_entry(
+                skill_root=skill_root,
                 source_root=source_root_path,
                 source_path=source_path,
-                managed_path=managed_path,
-                managed_rel_path=Path(scanned["managed_rel_path"]),
-                target_kind=str(scanned["target_kind"]),
+                target_kind=target_kind,
                 sha256=sha256_text(text),
             )
         )
 
     _prune_missing(skill_root, source_root_path, live_rel_paths)
     merged = sorted(other_entries + new_entries, key=lambda item: item["source_path"])
-    write_registry(skill_root, {"version": 2, "entries": merged})
+    write_registry(skill_root, {"version": 3, "entries": merged})
     write_target_contract_assets(skill_root, merged)
     write_index(skill_root, merged)
     return {

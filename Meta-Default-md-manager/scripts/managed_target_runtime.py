@@ -3,7 +3,9 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from managed_agents_text import is_agents_target_kind
 from managed_paths import managed_root
+from managed_registry import load_registry
 
 AGENT_AUDIT_FILENAME = "AGENT_AUDIT.md"
 README_AUDIT_FILENAME = "README_AUDIT.md"
@@ -28,12 +30,24 @@ def _audit_filename(target_kind: str) -> str:
     return f"{stem}_AUDIT.md"
 
 
-def runtime_json_path(skill_root: Path, managed_rel_path: str, target_kind: str) -> Path:
+def legacy_runtime_json_path(skill_root: Path, managed_rel_path: str, target_kind: str) -> Path:
     return target_contract_root(skill_root) / Path(managed_rel_path).parent / _runtime_json_filename(target_kind)
 
 
-def audit_md_path(skill_root: Path, managed_rel_path: str, target_kind: str) -> Path:
+def legacy_audit_md_path(skill_root: Path, managed_rel_path: str, target_kind: str) -> Path:
     return target_contract_root(skill_root) / Path(managed_rel_path).parent / _audit_filename(target_kind)
+
+
+def runtime_json_path(skill_root: Path, entry: dict[str, str]) -> Path:
+    if is_agents_target_kind(entry["target_kind"]):
+        return Path(entry["machine_path"])
+    return legacy_runtime_json_path(skill_root, entry["managed_rel_path"], entry["target_kind"])
+
+
+def audit_md_path(skill_root: Path, entry: dict[str, str]) -> Path:
+    if is_agents_target_kind(entry["target_kind"]):
+        return Path(entry["audit_md_path"])
+    return legacy_audit_md_path(skill_root, entry["managed_rel_path"], entry["target_kind"])
 
 
 def _source_rel(entry: dict[str, str]) -> str:
@@ -124,13 +138,13 @@ def build_target_contract(entry: dict[str, str], *, skill_root: Path) -> dict[st
             "target_kind": target_kind,
             "peer_path": _peer_doc(entry)["path"],
             "managed_rel_path": entry["managed_rel_path"],
-            "managed_path": entry["managed_path"],
+            "managed_dir": entry["managed_dir"],
         },
         "peer_doc": _peer_doc(entry),
         "runtime_entry": {
             "cli": command,
-            "audit_md_path": str(audit_md_path(skill_root, entry["managed_rel_path"], entry["target_kind"])),
-            "runtime_json_path": str(runtime_json_path(skill_root, entry["managed_rel_path"], entry["target_kind"])),
+            "audit_md_path": str(audit_md_path(skill_root, entry)),
+            "runtime_json_path": str(runtime_json_path(skill_root, entry)),
         },
         "turn_contract": _turn_contract(source_rel, target_kind),
         "routing": {
@@ -148,6 +162,11 @@ def build_target_contract(entry: dict[str, str], *, skill_root: Path) -> dict[st
             "skill-managed JSON and CLI output are the runtime source of truth",
         ],
     }
+    if is_agents_target_kind(target_kind):
+        contract["target"]["human_path"] = entry["human_path"]
+        contract["target"]["machine_path"] = entry["machine_path"]
+    else:
+        contract["target"]["managed_path"] = entry["managed_path"]
     if source_path.name != "AGENTS.md":
         contract["update_boundary"][1] = "external README-like files remain human-readable summaries"
     return contract
@@ -240,21 +259,29 @@ def write_target_contract_assets(skill_root: Path, entries: list[dict[str, str]]
     written: list[str] = []
     for entry in entries:
         contract = build_target_contract(entry, skill_root=skill_root)
-        json_path = runtime_json_path(skill_root, entry["managed_rel_path"], entry["target_kind"])
-        md_path = audit_md_path(skill_root, entry["managed_rel_path"], entry["target_kind"])
+        json_path = runtime_json_path(skill_root, entry)
+        md_path = audit_md_path(skill_root, entry)
         json_path.parent.mkdir(parents=True, exist_ok=True)
         json_path.write_text(json.dumps(contract, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         md_path.write_text(render_audit_markdown(contract), encoding="utf-8")
+        if is_agents_target_kind(entry["target_kind"]):
+            for legacy in (
+                legacy_runtime_json_path(skill_root, entry["managed_rel_path"], entry["target_kind"]),
+                legacy_audit_md_path(skill_root, entry["managed_rel_path"], entry["target_kind"]),
+            ):
+                if legacy.exists():
+                    legacy.unlink()
         written.extend([str(json_path), str(md_path)])
     return written
 
 
 def load_target_contract(skill_root: Path, source_path: str) -> dict[str, object]:
-    registry_path = managed_root(skill_root) / "registry.json"
-    if not registry_path.exists():
-        raise FileNotFoundError(f"registry missing: {registry_path}")
-    payload = json.loads(registry_path.read_text(encoding="utf-8"))
+    payload = load_registry(skill_root, require_existing=True)
     for entry in payload.get("entries", []):
         if entry["source_path"] == str(Path(source_path).expanduser().resolve()):
+            if is_agents_target_kind(entry["target_kind"]):
+                machine_path = Path(entry.get("machine_path", ""))
+                if machine_path.exists():
+                    return json.loads(machine_path.read_text(encoding="utf-8"))
             return build_target_contract(entry, skill_root=skill_root)
     raise ValueError(f"target not found in registry: {source_path}")

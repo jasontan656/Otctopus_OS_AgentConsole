@@ -15,7 +15,9 @@
     "target_kind": "AGENTS.md",
     "peer_path": "/home/jasontan656/AI_Projects/Octopus_CodeBase_Backend/README.md",
     "managed_rel_path": "home_jasontan656_AI_Projects/Octopus_CodeBase_Backend/AGENTS.md",
-    "managed_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/home_jasontan656_AI_Projects/Octopus_CodeBase_Backend/AGENTS.md"
+    "managed_dir": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/home_jasontan656_AI_Projects/Octopus_CodeBase_Backend",
+    "human_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/home_jasontan656_AI_Projects/Octopus_CodeBase_Backend/AGENTS_human.md",
+    "machine_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/home_jasontan656_AI_Projects/Octopus_CodeBase_Backend/AGENTS_machine.json"
   },
   "peer_doc": {
     "path": "/home/jasontan656/AI_Projects/Octopus_CodeBase_Backend/README.md",
@@ -24,8 +26,8 @@
   },
   "runtime_entry": {
     "cli": "python3 /home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/scripts/Cli_Toolbox.py target-contract --source-path \"/home/jasontan656/AI_Projects/Octopus_CodeBase_Backend/AGENTS.md\" --json",
-    "audit_md_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/runtime_rules/home_jasontan656_AI_Projects/Octopus_CodeBase_Backend/AGENT_AUDIT.md",
-    "runtime_json_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/runtime_rules/home_jasontan656_AI_Projects/Octopus_CodeBase_Backend/AGENTS.runtime.json"
+    "audit_md_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/home_jasontan656_AI_Projects/Octopus_CodeBase_Backend/AGENT_AUDIT.md",
+    "runtime_json_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/home_jasontan656_AI_Projects/Octopus_CodeBase_Backend/AGENTS_machine.json"
   },
   "turn_contract": {
     "status": "n_a",
