@@ -17,13 +17,13 @@
 - It does not redefine AGENTS asset governance beyond the collect boundary.
 
 ## Purpose
-- Based on scan results, create or refresh the matching skill-internal directory structure and recover governed external content into the skill-managed template layer.
+- Based on scan results, create or refresh the matching skill-internal directory structure and recover governed external content into the `治理映射模版` layer.
 
 ## AGENTS Rule
 - `collect` reads external managed `AGENTS.md`.
 - External managed files are the truth source for `collect`.
 - `collect` extracts only external `Part A`.
-- `collect` creates the corresponding internal managed directory and file shape when missing.
+- `collect` creates the corresponding internal `治理映射模版` directory and file shape when missing.
 - `collect` updates only internal `AGENTS_human.md` `Part A`.
 - `collect` must not overwrite internal `Part B`.
 - `collect` must preserve the existing internal `AGENTS_machine.json`.
@@ -32,4 +32,5 @@
 ## Boundary
 - `collect` does not push content outward.
 - `collect` does not rebuild machine payloads by itself.
+- `collect` does not read from or redefine the `骨架生成模版`; it only refreshes the concrete `治理映射模版`.
 - `collect` must stop if the target file shape does not satisfy the governed structure contract.

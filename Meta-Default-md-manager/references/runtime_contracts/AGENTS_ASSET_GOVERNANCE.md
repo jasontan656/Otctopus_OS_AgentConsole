@@ -6,13 +6,20 @@
 
 ## Canonical Surfaces
 
+### 0. Template Semantic Boundary
+- In this skill, `治理映射模版` means the long-lived skill-internal mapping for a concrete governed target.
+- In this skill, `骨架生成模版` means the initialization-only template surface used by `scaffold`.
+- `AGENTS_human.md` plus `AGENTS_machine.json` belong to the `治理映射模版` side.
+- The scaffold defaults that create first-time AGENTS files belong to the `骨架生成模版` side.
+- Structure contracts such as `AGENTS_content_structure.md` are not either template type; they only constrain shape.
+
 ### 1. External `AGENTS.md`
 - External managed `AGENTS.md` files must contain `Part A only`.
 - External files are the human-readable runtime entry layer.
 - External files must not carry the machine payload from `Part B`.
 
 ### 2. Internal `AGENTS_human.md`
-- Internal managed `AGENTS_human.md` is the canonical human audit surface.
+- Internal managed `AGENTS_human.md` is the canonical human audit surface inside the `治理映射模版`.
 - It must contain both explicit blocks:
 
 ~~~html
@@ -36,6 +43,7 @@
 - Internal managed `AGENTS_machine.json` must contain `Part B only`.
 - It is the machine-readable payload source for CLI output.
 - It must not duplicate `Part A`.
+- It belongs to the same `治理映射模版` instance as the paired `AGENTS_human.md`.
 
 ## Part Boundary Contract
 
@@ -73,6 +81,7 @@
 - Any AGENTS governance change must be reviewed against both `Part A` and `Part B`.
 - Do not update only one side unless the user explicitly scopes the change and the other side is proven unaffected.
 - If payload shape or field structure changes, update `AGENTS_human.md`, `AGENTS_machine.json`, and CLI behavior together.
+- Do not confuse changes to the long-lived `治理映射模版` with changes to the `骨架生成模版`; the former changes concrete governed content, while the latter changes only initialization defaults.
 
 ## Scope Note
 - External root `AGENTS.md` and its corresponding internal root managed assets were excluded from the earlier cleanup round.

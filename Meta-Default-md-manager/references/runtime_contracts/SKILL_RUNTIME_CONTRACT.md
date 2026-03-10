@@ -27,12 +27,12 @@
 - shared helper flags include `--dry-run`, `--json`, `--only`, `--source-path`, and `--report-path`
 - When maintaining AGENTS governance, review `Part A` and `Part B` together.
 - External `AGENTS.md` is `Part A only`.
-- Internal `AGENTS_human.md` is `Part A + Part B`.
-- Internal `AGENTS_machine.json` is `Part B only`.
-- `scaffold` creates governed directory skeletons and matching internal mappings.
+- Internal `AGENTS_human.md` is `Part A + Part B` and belongs to the `治理映射模版`.
+- Internal `AGENTS_machine.json` is `Part B only` and belongs to that same `治理映射模版`.
+- `scaffold` consumes the `骨架生成模版` and creates governed directory skeletons plus the first version of the matching `治理映射模版`.
 - `new-file` is the stage for adding a new governed file type into the skill's support surface.
-- `collect` treats external files as truth and syncs mirror plus installed skill assets.
-- `push` treats internal managed templates as truth and overwrites external targets.
+- `collect` treats external files as truth and syncs mirror plus installed skill assets by updating the `治理映射模版`.
+- `push` treats the `治理映射模版` as truth and overwrites external targets.
 
 ## Current References
 - `references/runtime_contracts/AGENTS_ASSET_GOVERNANCE.md`

@@ -3,6 +3,7 @@
 ## Purpose
 - This file defines the governed content structure for `AGENTS.md`.
 - It is a structure template only. It does not carry target-specific content.
+- It is neither the `治理映射模版` nor the `骨架生成模版`; it only defines the allowed shape that both surfaces must satisfy where applicable.
 - Scan lint must use this file to validate whether a discovered `AGENTS.md` matches the required shape.
 
 ## External `AGENTS.md` Structure

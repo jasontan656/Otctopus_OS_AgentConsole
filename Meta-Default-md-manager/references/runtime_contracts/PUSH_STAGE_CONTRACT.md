@@ -17,10 +17,10 @@
 - It does not redefine AGENTS asset governance beyond the push boundary.
 
 ## Purpose
-- Export governed internal content from the skill-managed human template back to the external target.
+- Export governed internal content from the `治理映射模版` back to the external target.
 
 ## AGENTS Rule
-- Internal managed files are the truth source for `push`.
+- Internal `治理映射模版` files are the truth source for `push`.
 - `push` reads internal `AGENTS_human.md`.
 - `push` extracts only internal `Part A`.
 - `push` writes only that `Part A` block back to the external `AGENTS.md`.
@@ -30,4 +30,5 @@
 ## Boundary
 - `push` does not collect external content inward.
 - `push` does not export machine json.
-- `push` must stop if the internal human template shape does not satisfy the governed structure contract.
+- `push` does not use the `骨架生成模版` as an export source.
+- `push` must stop if the internal `治理映射模版` human surface shape does not satisfy the governed structure contract.

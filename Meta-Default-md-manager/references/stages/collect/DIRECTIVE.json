@@ -2,22 +2,22 @@
   "version": 2,
   "stage": "collect",
   "tool_state": "active",
-  "purpose": "Based on scan results, recover governed external content into the managed templates, create any missing managed directories, and sync mirror plus installed skill assets.",
+  "purpose": "Based on scan results, recover governed external content into the 治理映射模版, create any missing managed directories, and sync mirror plus installed skill assets.",
   "instruction": [
     "collect recovers only Part A from external AGENTS targets",
     "collect may create missing managed directory structure from the scan result",
-    "collect updates only the internal human template Part A",
+    "collect updates only the internal 治理映射模版 human surface Part A",
     "collect must not overwrite the internal Part B"
   ],
   "workflow": [
     "open an external managed AGENTS file",
     "extract the <part_A>...</part_A> block",
-    "replace only the internal human template Part A block",
+    "replace only the internal 治理映射模版 human surface Part A block",
     "leave Part B unchanged"
   ],
   "rules": [
     "machine json is not collected from external files",
     "Part B stays skill-internal during collect",
-    "collect must sync the same managed result into mirror and installed skill directories"
+    "collect must sync the same 治理映射模版 result into mirror and installed skill directories"
   ]
 }

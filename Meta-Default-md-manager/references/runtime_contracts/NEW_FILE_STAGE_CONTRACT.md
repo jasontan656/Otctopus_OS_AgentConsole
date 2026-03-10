@@ -18,6 +18,8 @@
 - Add a new governed filename or file type into this skill's supported governance set.
 
 ## Workflow Role
+- Define the file-type-level `治理映射模版` semantics for the new governed file.
+- Define the file-type-level `骨架生成模版` semantics for the new governed file.
 - Create the matching structure template for the new governed file.
 - Update scan rules, lint requirements, and any tool behavior required to support that file type.
 - Validate that dry-run behavior matches the user's governance expectation before real overwrite flows are accepted.
@@ -25,4 +27,5 @@
 
 ## Boundary
 - `new-file` changes the skill's supported governance surface.
+- `new-file` defines the two template semantics for a file type, but it is not the stage that instantiates a concrete governed directory target.
 - `new-file` is not the stage that creates governed directory instances for a user path; that is `scaffold`.
