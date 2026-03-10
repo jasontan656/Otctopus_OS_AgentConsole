@@ -13,7 +13,7 @@
 - if the turn will write Codex_Skills_Mirror, plan same-turn Constitution lint and Git traceability from the start
 
 3. Peer Document Gate
-- See the returned `peer_doc` object to decide whether the same-level peer file exists and whether it must be read.
+- If the returned payload includes `peer_summary_policy`, use it to decide whether the same-level README summary exists and whether it should be read.
 
 [EXECUTION - MANDATORY]
 
@@ -31,63 +31,47 @@
 - run Constitution lint on the concrete Codex_Skills_Mirror target root
 - if the turn wrote Codex_Skills_Mirror, complete same-turn commit-and-push before closing the turn
 
+7. Peer Summary Policy
+- same-level README.md is not available for this target
+
 [PART B]
+
 ```json
 {
-  "schema_version": 1,
-  "owner_skill": "Meta-Default-md-manager",
-  "managed_branch": "default_docs",
-  "rule_source_policy": {
+  "entry_role": "repo_runtime_entry",
+  "runtime_source_policy": {
     "runtime_rule_source": "CLI_JSON",
-    "human_audit_source": "audit_markdown_only",
-    "model_must_not_read_markdown_for_runtime_guidance": true
+    "audit_fields_are_not_primary_runtime_instructions": true,
+    "path_metadata_is_not_action_guidance": true
   },
-  "target": {
-    "source_root": "/home/jasontan656/AI_Projects",
-    "source_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/AGENTS.md",
-    "source_relative_path": "Codex_Skills_Mirror/AGENTS.md",
-    "file_kind": "agents",
-    "target_kind": "AGENTS.md",
-    "peer_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/README.md",
-    "managed_rel_path": "AI_Projects/Codex_Skills_Mirror/AGENTS.md",
-    "managed_dir": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/AI_Projects/Codex_Skills_Mirror",
-    "human_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/AI_Projects/Codex_Skills_Mirror/AGENTS_human.md",
-    "machine_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/AI_Projects/Codex_Skills_Mirror/AGENTS_machine.json"
-  },
-  "peer_doc": {
-    "path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/README.md",
+  "default_meta_skill_order": [
+    "$Meta-prompt-write (strengthen user intent and understand the real need)",
+    "$Meta-mindchain (think from the architecture level and reject one-sided thinking)",
+    "$Meta-reasoningchain (project the future shape to align the target state)",
+    "$Meta-keyword-first-edit (prefer delete > replace > add when editing)",
+    "$Meta-refactor-behavior-preserving (applicable only when refactor is needed)",
+    "$Meta-Agent-Browser (applicable only when the task is frontend or browser-related)"
+  ],
+  "peer_summary_policy": {
+    "available": false,
     "relation": "same_level_summary",
-    "read_policy": "not_available"
+    "read_policy": "not_available",
+    "guidance": "same-level README.md is not available for this target"
   },
-  "runtime_entry": {
-    "cli": "python3 /home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/scripts/Cli_Toolbox.py target-contract --source-path \"/home/jasontan656/AI_Projects/Codex_Skills_Mirror/AGENTS.md\" --json",
-    "audit_md_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/AI_Projects/Codex_Skills_Mirror/AGENTS_human.md",
-    "runtime_json_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/AI_Projects/Codex_Skills_Mirror/AGENTS_machine.json"
-  },
-  "turn_contract": {
-    "status": "enforced",
-    "turn_start": [
-      "use the returned target contract JSON as the runtime rule source",
-      "if the turn will write Codex_Skills_Mirror, plan same-turn Constitution lint and Git traceability from the start"
-    ],
-    "turn_end": [
-      "run Constitution lint on the concrete Codex_Skills_Mirror target root",
-      "if the turn wrote Codex_Skills_Mirror, complete same-turn commit-and-push before closing the turn"
-    ]
-  },
-  "routing": {
-    "document_role": "runtime_entry",
-    "default_next_hop": "use the target-contract JSON to decide peer reads and manager commands",
-    "rules": [
-      "use Meta-Default-md-manager CLI JSON as the runtime rule source",
-      "README-like files remain human summaries unless a peer AGENTS contract says otherwise",
-      "machine-readable runtime rules must stay in skill-managed JSON and CLI output"
-    ]
-  },
-  "update_boundary": [
-    "managed targets are owned by Meta-Default-md-manager",
-    "external AGENTS.md should remain a thin runtime entry",
-    "skill-managed JSON and CLI output are the runtime source of truth"
-  ]
+  "turn_start_actions": [
+    "use the returned target contract JSON as the runtime rule source",
+    "if the turn will write Codex_Skills_Mirror, plan same-turn Constitution lint and Git traceability from the start"
+  ],
+  "runtime_constraints": [
+    "treat CLI JSON as the primary runtime rule source",
+    "do not use audit markdown as the primary execution guide",
+    "stay within the concrete repo-local boundary defined by this payload",
+    "when this repo is written, keep same-turn Constitution lint and Git traceability in scope"
+  ],
+  "turn_end_actions": [
+    "run Constitution lint on the concrete Codex_Skills_Mirror target root",
+    "if the turn wrote Codex_Skills_Mirror, complete same-turn commit-and-push before closing the turn"
+  ],
+  "repo_name": "Codex_Skills_Mirror"
 }
 ```

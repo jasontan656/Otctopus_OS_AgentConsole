@@ -13,7 +13,7 @@
 - if the turn will write Codex_Skills_Mirror, plan same-turn Constitution lint and Git traceability from the start
 
 3. Peer Document Gate
-- See the returned `peer_doc` object to decide whether the same-level peer file exists and whether it must be read.
+- If the returned payload includes `peer_summary_policy`, use it to decide whether the same-level README summary exists and whether it should be read.
 
 [EXECUTION - MANDATORY]
 
@@ -30,3 +30,6 @@
 6. TURN_END Contract
 - run Constitution lint on the concrete Codex_Skills_Mirror target root
 - if the turn wrote Codex_Skills_Mirror, complete same-turn commit-and-push before closing the turn
+
+7. Peer Summary Policy
+- same-level README.md is not available for this target

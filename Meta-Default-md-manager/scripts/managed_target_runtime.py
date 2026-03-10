@@ -11,6 +11,70 @@ AGENT_AUDIT_FILENAME = "AGENT_AUDIT.md"
 README_AUDIT_FILENAME = "README_AUDIT.md"
 MIRROR_CLI = "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/scripts/Cli_Toolbox.py"
 
+BASE_RUNTIME_SOURCE_POLICY = {
+    "runtime_rule_source": "CLI_JSON",
+    "audit_fields_are_not_primary_runtime_instructions": True,
+    "path_metadata_is_not_action_guidance": True,
+}
+
+DEFAULT_META_SKILL_ORDER = [
+    "$Meta-prompt-write (strengthen user intent and understand the real need)",
+    "$Meta-mindchain (think from the architecture level and reject one-sided thinking)",
+    "$Meta-reasoningchain (project the future shape to align the target state)",
+    "$Meta-keyword-first-edit (prefer delete > replace > add when editing)",
+    "$Meta-refactor-behavior-preserving (applicable only when refactor is needed)",
+    "$Meta-Agent-Browser (applicable only when the task is frontend or browser-related)",
+]
+
+ROOT_AGENTS_PAYLOAD = {
+    "entry_role": "workspace_root_runtime_entry",
+    "runtime_source_policy": BASE_RUNTIME_SOURCE_POLICY,
+    "default_meta_skill_order": DEFAULT_META_SKILL_ORDER,
+    "turn_start_actions": [
+        "validate root AGENTS exists",
+        "classify the turn as READ_EXEC or WRITE_EXEC",
+        "apply the default meta sequence before concrete execution",
+    ],
+    "runtime_constraints": [
+        "treat CLI JSON as the primary runtime rule source",
+        "do not use audit markdown as the primary execution guide",
+        "choose READ_EXEC or WRITE_EXEC by actual write intent, not by file type alone",
+        "when a concrete repo path becomes active, load that repo-local contract before repo-specific write, lint, or Git actions",
+    ],
+    "execution_modes": {
+        "READ_EXEC": {
+            "goal": "answer, inspect, classify, or route without changing files",
+            "default_actions": [
+                "prefer direct CLI contract output over opening markdown rule files",
+                "open extra files only when the direct contract still leaves a real gap",
+            ],
+        },
+        "WRITE_EXEC": {
+            "goal": "edit files or trigger manager-owned write flows",
+            "default_actions": [
+                "apply the default meta sequence before editing",
+                "state the intended write scope before editing",
+                "edit the minimal correct scope that matches the user intent",
+                "do not trigger Git automation unless the active repo-local contract or the user explicitly requires it",
+            ],
+        },
+    },
+    "repo_local_contract_handoff": [
+        "if work enters a repo with its own AGENTS runtime entry, load that repo-local target-contract before following repo-specific rules",
+        "repo-local contract may add stricter lint, delivery, or Git rules for that repo only",
+        "when repo-local and workspace-root rules overlap, keep the workspace-root boundary and add the repo-local concrete duties",
+    ],
+    "forbidden_primary_runtime_pattern": [
+        "Do not treat audit markdown paths as the main runtime instructions.",
+        "Do not require the model to open a chain of markdown files just to learn the next skill to use.",
+        "Do not emit only path metadata when the real need is direct action guidance.",
+    ],
+    "turn_end_actions": [
+        "print TURN_END guardrails",
+        "defer repo-specific lint or Git duties to the concrete repo-local contract when applicable",
+    ],
+}
+
 
 def target_contract_root(skill_root: Path) -> Path:
     return managed_root(skill_root) / "runtime_rules"
@@ -112,7 +176,75 @@ def _turn_contract(source_rel: str, target_kind: str) -> dict[str, object]:
     }
 
 
+def _deep_copy_json(payload: dict[str, object]) -> dict[str, object]:
+    return json.loads(json.dumps(payload, ensure_ascii=False))
+
+
+def _peer_summary_policy(entry: dict[str, str]) -> dict[str, object]:
+    peer_doc = _peer_doc(entry)
+    available = peer_doc["read_policy"] != "not_available"
+    if available:
+        guidance = "same-level README.md is a human summary; read it only when the current task needs that summary"
+    else:
+        guidance = "same-level README.md is not available for this target"
+    return {
+        "available": available,
+        "relation": peer_doc["relation"],
+        "read_policy": peer_doc["read_policy"],
+        "guidance": guidance,
+    }
+
+
+def build_agents_payload(entry: dict[str, str]) -> dict[str, object]:
+    source_rel = _source_rel(entry)
+    if source_rel == "AGENTS.md":
+        return _deep_copy_json(ROOT_AGENTS_PAYLOAD)
+
+    payload: dict[str, object] = {
+        "entry_role": "repo_runtime_entry",
+        "runtime_source_policy": _deep_copy_json(BASE_RUNTIME_SOURCE_POLICY),
+        "default_meta_skill_order": list(DEFAULT_META_SKILL_ORDER),
+        "peer_summary_policy": _peer_summary_policy(entry),
+        "turn_start_actions": [
+            "use the returned target contract JSON as the runtime rule source",
+        ],
+        "runtime_constraints": [
+            "treat CLI JSON as the primary runtime rule source",
+            "do not use audit markdown as the primary execution guide",
+            "stay within the concrete repo-local boundary defined by this payload",
+        ],
+        "turn_end_actions": [
+            "follow repo-specific lint or Git duties only when they are explicitly listed in this payload",
+        ],
+    }
+
+    if payload["peer_summary_policy"]["available"]:
+        payload["runtime_constraints"].append(
+            "same-level README.md remains a human summary; read it only when the current task needs that extra context"
+        )
+
+    if source_rel == "Codex_Skills_Mirror/AGENTS.md":
+        payload["repo_name"] = "Codex_Skills_Mirror"
+        payload["turn_start_actions"].append(
+            "if the turn will write Codex_Skills_Mirror, plan same-turn Constitution lint and Git traceability from the start"
+        )
+        payload["runtime_constraints"].append(
+            "when this repo is written, keep same-turn Constitution lint and Git traceability in scope"
+        )
+        payload["turn_end_actions"] = [
+            "run Constitution lint on the concrete Codex_Skills_Mirror target root",
+            "if the turn wrote Codex_Skills_Mirror, complete same-turn commit-and-push before closing the turn",
+        ]
+        return payload
+
+    payload["repo_name"] = Path(entry["source_path"]).parent.name
+    return payload
+
+
 def build_target_contract(entry: dict[str, str], *, skill_root: Path) -> dict[str, object]:
+    if is_agents_target_kind(entry["target_kind"]):
+        return build_agents_payload(entry)
+
     source_rel = _source_rel(entry)
     source_path = Path(entry["source_path"])
     command = (
@@ -177,6 +309,7 @@ def render_external_agents(entry: dict[str, str]) -> str:
         f"python3 {MIRROR_CLI} "
         f'target-contract --source-path "{entry["source_path"]}" --json'
     )
+    payload = build_agents_payload(entry)
     turn_contract = _turn_contract(_source_rel(entry), entry["target_kind"])
     turn_start = turn_contract["turn_start"]
     turn_end = turn_contract["turn_end"]
@@ -198,7 +331,7 @@ def render_external_agents(entry: dict[str, str]) -> str:
         [
         "",
         "3. Peer Document Gate",
-        "- See the returned `peer_doc` object to decide whether the same-level peer file exists and whether it must be read.",
+        "- If the returned payload includes `peer_summary_policy`, use it to decide whether the same-level README summary exists and whether it should be read.",
         "",
         "[EXECUTION - MANDATORY]",
         "",
@@ -216,6 +349,14 @@ def render_external_agents(entry: dict[str, str]) -> str:
         ]
     )
     lines.extend([f"- {item}" for item in turn_end])
+    if "peer_summary_policy" in payload:
+        lines.extend(
+            [
+                "",
+                "7. Peer Summary Policy",
+                f"- {payload['peer_summary_policy']['guidance']}",
+            ]
+        )
     lines.append("")
     return "\n".join(lines)
 
@@ -256,10 +397,12 @@ def render_audit_markdown(contract: dict[str, object]) -> str:
 
 
 def _load_agents_part_a(entry: dict[str, str]) -> str:
-    human_path = Path(entry["human_path"])
-    if not human_path.exists():
+    source_path = Path(entry["source_path"])
+    if _source_rel(entry) != "AGENTS.md":
+        return render_external_agents(entry)
+    if not source_path.exists():
         return ""
-    return extract_part_a(human_path.read_text(encoding="utf-8"))
+    return extract_part_a(source_path.read_text(encoding="utf-8"))
 
 
 def _prune_runtime_rules(skill_root: Path, entries: list[dict[str, str]]) -> None:

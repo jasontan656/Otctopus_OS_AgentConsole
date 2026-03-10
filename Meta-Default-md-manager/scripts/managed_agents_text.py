@@ -26,7 +26,7 @@ def extract_part_a(text: str) -> str:
 
 def render_part_b_markdown(payload: dict[str, object]) -> str:
     rendered = json.dumps(payload, ensure_ascii=False, indent=2)
-    return "\n".join([PART_B_MARKER, JSON_FENCE, rendered, CODE_FENCE_END]) + "\n"
+    return "\n".join([PART_B_MARKER, "", JSON_FENCE, rendered, CODE_FENCE_END]) + "\n"
 
 
 def compose_managed_agents(part_a_text: str, payload: dict[str, object]) -> str:

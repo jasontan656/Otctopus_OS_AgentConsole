@@ -14,7 +14,7 @@ from managed_lock import acquire_cli_lock
 
 SCRIPT = Path(__file__).resolve().parents[1] / "scripts" / "Cli_Toolbox.py"
 FENCE = chr(96) * 3
-PART_B_JSON_START = "[PART B]\n" + FENCE + "json\n"
+PART_B_JSON_START = "[PART B]\n\n" + FENCE + "json\n"
 PART_B_JSON_END = "\n" + FENCE + "\n"
 
 
@@ -142,6 +142,8 @@ class MetaDefaultMdManagerCliTests(unittest.TestCase):
             self.assertIn(PART_B_JSON_START, managed_text)
             runtime_rule = Path(managed_agents_entry["machine_path"])
             self.assertTrue(runtime_rule.exists())
+            self.assertIn("entry_role", json.loads(runtime_rule.read_text(encoding="utf-8")))
+            self.assertNotIn("schema_version", json.loads(runtime_rule.read_text(encoding="utf-8")))
             self.assertEqual(extract_part_b_payload_from_human(managed_text), json.loads(runtime_rule.read_text(encoding="utf-8")))
             self.assertEqual(list(Path(managed_agents_entry["managed_dir"]).glob("*_" + "AU" + "DIT.md")), [])
 
@@ -289,7 +291,7 @@ class MetaDefaultMdManagerCliTests(unittest.TestCase):
 
             self.assertEqual(payload["count"], 1)
             self.assertEqual(payload["entries"][0]["source_path"], str(source_root / "repo-a" / "AGENTS.md"))
-            self.run_cli(
+            collect = self.run_cli(
                 "collect",
                 "--skill-root", str(skill_root),
                 "--source-root", str(source_root),
@@ -316,7 +318,7 @@ class MetaDefaultMdManagerCliTests(unittest.TestCase):
                 "--skill-root", str(skill_root),
                 "--source-root", str(source_root),
             )
-            self.run_cli(
+            collect = self.run_cli(
                 "collect",
                 "--skill-root", str(skill_root),
                 "--source-root", str(source_root),
@@ -326,30 +328,41 @@ class MetaDefaultMdManagerCliTests(unittest.TestCase):
                 "--skill-root", str(skill_root),
                 "--source-path", str(source_root / "repo-a" / "AGENTS.md"),
             )
-            human_md_field = "au" + "dit_md_path"
-            self.assertEqual(payload["target"]["target_kind"], "AGENTS.md")
-            self.assertEqual(payload["turn_contract"]["status"], "n_a")
-            self.assertIn("target-contract", payload["runtime_entry"]["cli"])
-            self.assertEqual(Path(payload["runtime_entry"]["runtime_json_path"]).name, "AGENTS_machine.json")
-            self.assertEqual(Path(payload["runtime_entry"][human_md_field]).name, "AGENTS_human.md")
+            repo_a_entry = next(
+                entry for entry in collect["entries"]
+                if entry["source_path"] == str(source_root / "repo-a" / "AGENTS.md")
+            )
+            self.assertEqual(payload["entry_role"], "repo_runtime_entry")
+            self.assertNotIn("runtime_entry", payload)
+            self.assertEqual(
+                payload,
+                json.loads(Path(repo_a_entry["machine_path"]).read_text(encoding="utf-8")),
+            )
+            repo_a_human = Path(repo_a_entry["human_path"]).read_text(encoding="utf-8")
+            self.assertIn("peer_summary_policy", repo_a_human)
+            self.assertNotIn("`peer_doc`", repo_a_human)
 
             root_payload = self.run_cli(
                 "target-contract",
                 "--skill-root", str(skill_root),
                 "--source-path", str(source_root / "AGENTS.md"),
             )
-            self.assertEqual(root_payload["turn_contract"]["status"], "enforced")
-            self.assertEqual(root_payload["turn_contract"]["turn_end"], ["print TURN_END guardrails"])
-            self.assertEqual(Path(root_payload["runtime_entry"]["runtime_json_path"]).name, "AGENTS_machine.json")
-            self.assertEqual(Path(root_payload["runtime_entry"][human_md_field]).name, "AGENTS_human.md")
+            self.assertEqual(root_payload["entry_role"], "workspace_root_runtime_entry")
+            self.assertEqual(
+                root_payload["turn_end_actions"],
+                [
+                    "print TURN_END guardrails",
+                    "defer repo-specific lint or Git duties to the concrete repo-local contract when applicable",
+                ],
+            )
 
             skills_payload = self.run_cli(
                 "target-contract",
                 "--skill-root", str(skill_root),
                 "--source-path", str(source_root / "Codex_Skills_Mirror" / "AGENTS.md"),
             )
-            self.assertEqual(skills_payload["turn_contract"]["status"], "enforced")
-            self.assertIn("Constitution lint", " ".join(skills_payload["turn_contract"]["turn_end"]))
+            self.assertEqual(skills_payload["repo_name"], "Codex_Skills_Mirror")
+            self.assertIn("Constitution lint", " ".join(skills_payload["turn_end_actions"]))
 
     def test_collect_fails_when_scan_report_missing(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
