@@ -1,7 +1,26 @@
 {
-  "status": "archived_after_cli_removal",
+  "status": "archived_payload_and_contract_seed",
   "archived_on": "2026-03-10",
-  "purpose": "Preserve hardcoded payload content from removed scripts so future tooling can rebuild from static assets instead of deleted code.",
+  "purpose": "Preserve payload history and current contract seeds so future tooling can rebuild from static assets instead of deleted code.",
+  "canonical_governance_contract": {
+    "external_agents_shape": "part_a_only",
+    "internal_agents_human_shape": "part_a_plus_part_b",
+    "internal_agents_machine_shape": "part_b_only",
+    "part_a_allows": [
+      "human-readable entry commands",
+      "language rules",
+      "managed boundary notes",
+      "multi-agent handling notes"
+    ],
+    "part_b_allows": [
+      "structured runtime payload fields",
+      "execution mode objects",
+      "must-use rules",
+      "forbidden patterns",
+      "turn contracts"
+    ],
+    "governance_priority": "AGENTS_ASSET_GOVERNANCE.md overrides archived historical snapshots when they conflict"
+  },
   "runtime_source_policy": {
     "runtime_rule_source": "CLI_JSON",
     "audit_fields_are_not_primary_runtime_instructions": true,
@@ -147,3 +166,4 @@
       "repo_name": "Codex_Skills_Mirror"
     }
   }
+}

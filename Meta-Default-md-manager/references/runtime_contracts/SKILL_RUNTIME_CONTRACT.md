@@ -21,7 +21,10 @@
 - Do not invoke legacy `Cli_Toolbox.py` commands.
 - Use this directory only as a governance archive until new tooling is rebuilt.
 - When maintaining AGENTS governance, review `Part A` and `Part B` together.
+- External `AGENTS.md` is `Part A only`.
+- Internal `AGENTS_human.md` is `Part A + Part B`.
+- Internal `AGENTS_machine.json` is `Part B only`.
 
 ## Current References
-- `references/runtime/AGENTS_ASSET_GOVERNANCE.md`
-- `references/runtime/AGENTS_PAYLOAD_ARCHIVE.json`
+- `references/runtime_contracts/AGENTS_ASSET_GOVERNANCE.md`
+- `references/runtime_contracts/AGENTS_PAYLOAD_ARCHIVE.json`
