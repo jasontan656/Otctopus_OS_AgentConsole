@@ -50,7 +50,7 @@
 - `sync-mother-doc-status-from-git` 负责在 `mother_doc` 阶段基于本地 `git` 差异刷新文档生命周期状态。
 - `sync-mother-doc-status` 负责在显式阶段回写时把目标文档状态覆盖成指定生命周期值，主要用于 `evidence -> developed`。
 - `mother-doc-agents-scan` 只扫描根 `AGENTS.md` 与非法额外 `AGENTS.md`。
-- `mother-doc-agents-collect` 只把根 `AGENTS.md` 回收到技能内 managed human/machine pair 与 registry。
+- `mother-doc-agents-collect` 只把根 `AGENTS.md` 回收到技能内 managed human/machine pair。
 - `mother-doc-agents-push` 只把技能侧当前 payload 反推回根 `AGENTS.md`，并自动清理非法额外 `AGENTS.md` 与旧 legacy assets。
 
 ## Delivery Log Policy

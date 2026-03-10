@@ -1,5 +1,5 @@
 # Collect Rules
 
 - 只能消费 `assets/mother_doc_agents/scan_report.json`。
-- 当前 `AGENTS.md + README.md` 文件按原相对路径复制到 `assets/mother_doc_agents/collected_tree/`。
-- 必须同步刷新 `registry.json` 与 `index.md`。
+- 当前只同步根 `AGENTS.md` 到 `assets/managed_targets/Octopus_OS/AGENTS_human.md` 与 `assets/managed_targets/Octopus_OS/AGENTS_machine.json`。
+- collect 过程中必须顺带清理遗留分支资产。

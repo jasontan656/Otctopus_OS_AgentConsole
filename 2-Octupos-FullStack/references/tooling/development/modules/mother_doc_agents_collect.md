@@ -2,5 +2,5 @@
 
 ## Purpose
 
-- Consume `scan_report.json` and pull current managed AGENTS/README files back into the skill-side registry.
-- Refresh `assets/mother_doc_agents/index.md`, `registry.json`, `collected_tree/`, and the path-mirrored template index.
+- Consume `scan_report.json` and pull the current root `AGENTS.md` back into the skill-side managed human/machine pair.
+- Remove any obsolete AGENTS branch assets while collecting.

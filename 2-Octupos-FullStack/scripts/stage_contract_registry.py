@@ -1,35 +1,37 @@
 from __future__ import annotations
 # contract_name: 2_octupos_fullstack_stage_contract_registry
-# contract_version: 1.0.0
+# contract_version: 2.0.0
 # validation_mode: static_minimal
-# required_fields: top_level_resident_docs,stage_order,stage_scopes,stage_docs,stage_commands,stage_graph_contracts,stage_checklists | optional_fields: none
+# required_fields: top_level_resident_docs,stage_order,stage_scopes,stage_docs,stage_commands,stage_graph_contracts,stage_checklists
 
 from stage_contract_graph_data import EVIDENCE_GRAPH_COMMANDS, EVIDENCE_GRAPH_DOCS
-TOP_LEVEL_RESIDENT_DOCS = ["rules/FULLSTACK_SKILL_HARD_RULES.md", "references/runtime/SKILL_RUNTIME_CONTRACT.md", "references/skill_native/00_SKILL_NATIVE_INDEX.md", "references/skill_native/10_PROJECT_BASELINE_INDEX.md", "references/authored_domains/00_DOMAIN_INDEX.md", "references/tooling/SKILL_TOOLING_WORKFLOW_CONTRACT.md", "${AI_PROJECTS_ROOT:-$HOME/AI_Projects}/AGENTS.md"]
+
+TOP_LEVEL_RESIDENT_DOCS = [
+    "rules/FULLSTACK_SKILL_HARD_RULES.md",
+    "references/runtime/SKILL_RUNTIME_CONTRACT.md",
+    "references/skill_native/00_SKILL_NATIVE_INDEX.md",
+    "references/skill_native/10_PROJECT_BASELINE_INDEX.md",
+    "references/authored_domains/00_DOMAIN_INDEX.md",
+    "references/tooling/SKILL_TOOLING_WORKFLOW_CONTRACT.md",
+    "${AI_PROJECTS_ROOT:-$HOME/AI_Projects}/AGENTS.md",
+]
+
 STAGE_ORDER = ["mother_doc", "implementation", "evidence"]
+
 STAGE_SCOPES = {
-    "mother_doc": "strengthen user intent, maintain Mother_Doc current-state structure, and centrally govern the single Octopus_OS root AGENTS target when needed",
+    "mother_doc": "strengthen user intent, maintain Mother_Doc current-state structure, and govern the single Octopus_OS root AGENTS target when needed",
     "implementation": "act as an independent delivery-grade developer and reconcile Mother_Doc with the actual codebase while implementing changes",
     "evidence": "collect real witnesses, append logs, and bind them back through the unified OS_graph contract",
 }
+
 STAGE_DOCS = {
     "mother_doc": [
         "references/stages/MOTHER_DOC_STAGE.md",
-        "references/mother_doc/00_MOTHER_DOC_BRANCH_INDEX.md",
-        "references/mother_doc/PROJECT_BASELINE_ROUTING_RULES.md",
-        "references/mother_doc/DIRECT_WRITEBACK_BRANCH.md",
-        "references/mother_doc/QUESTION_BACKFILL_BRANCH.md",
-        "references/mother_doc/MOTHER_DOC_ENTRY_RULES.md",
         "references/mother_doc/AGENTS_MD_RULES.md",
         "references/mother_doc/DOC_STATUS_RULES.md",
-        "references/mother_doc/README_MD_RULES.md",
         "references/mother_doc/SCOPE_ENTITY_MD_RULES.md",
         "references/mother_doc/MOTHER_DOC_WRITEBACK_RULES.md",
-        "references/mother_doc/OVERVIEW_LAYER_RULES.md",
-        "references/mother_doc/FEATURE_LAYER_RULES.md",
-        "references/mother_doc/SHARED_LAYER_RULES.md",
         "references/mother_doc/PHASE1_CONTAINER_NAMING_REFERENCE.md",
-        "references/mother_doc/agents_branch/00_BRANCH_INDEX.md",
         "references/mother_doc/agents_branch/runtime/AGENTS_BRANCH_CONTRACT.md",
     ],
     "implementation": [
@@ -37,7 +39,6 @@ STAGE_DOCS = {
         "references/authored_domains/00_DOMAIN_INDEX.md",
         "references/implementation/IMPLEMENTATION_DELIVERY_RULES.md",
         "references/implementation/DOC_CODE_ALIGNMENT_RULES.md",
-        "references/stages/MOTHER_DOC_STAGE.md",
     ],
     "evidence": [
         "references/stages/EVIDENCE_STAGE.md",
@@ -47,10 +48,9 @@ STAGE_DOCS = {
         "references/evidence/IMPLEMENTATION_LOG_RULES.md",
         "references/evidence/OS_GRAPH_RULES.md",
         "references/evidence/DEPLOYMENT_LOG_RULES.md",
-        "references/stages/MOTHER_DOC_STAGE.md",
-        "references/stages/IMPLEMENTATION_STAGE.md",
     ],
 }
+
 STAGE_COMMANDS = {
     "mother_doc": {
         "required_contract_reads": [
@@ -66,23 +66,7 @@ STAGE_COMMANDS = {
             },
             {
                 "command": "read references/skill_native/10_PROJECT_BASELINE_INDEX.md",
-                "purpose": "load the project-wide operating model, impact selection rule, and dynamic authored-doc growth baseline before choosing concrete container scope",
-            },
-            {
-                "command": "read references/mother_doc/00_MOTHER_DOC_BRANCH_INDEX.md",
-                "purpose": "choose the correct mother_doc sub-branch before writing anything: direct_writeback, question_backfill, or the root-only AGENTS manager",
-            },
-            {
-                "command": "python3 scripts/Cli_Toolbox.py materialize-container-layout --container <Name> --json",
-                "purpose": "materialize new container directories and initial authored-document skeletons once the semantic decision is made",
-            },
-            {
-                "command": "python3 scripts/Cli_Toolbox.py sync-mother-doc-navigation --json",
-                "purpose": "refresh README.md and same-name scope markdown files across the Mother_Doc tree, and remove legacy docs-tree AGENTS.md files",
-            },
-            {
-                "command": "python3 scripts/Cli_Toolbox.py sync-mother-doc-status-from-git --repo-root ${AI_PROJECTS_ROOT:-$HOME/AI_Projects}/Octopus_OS --stage mother_doc --path <relative-path> --json",
-                "purpose": "derive modified / developed / null lifecycle states from local git-backed diff after mother_doc writeback",
+                "purpose": "load the project-wide operating model and impact pruning baseline before choosing concrete container scope",
             },
             {
                 "command": "direct_writeback -> update overview/features/shared/common for the affected container scopes only",
@@ -94,11 +78,7 @@ STAGE_COMMANDS = {
             },
             {
                 "command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-directive --stage <scan|collect|push> --json",
-                "purpose": "load the sub-branch directive when the current mother_doc task is specifically about AGENTS/README governance mapping management",
-            },
-            {
-                "command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-registry --json",
-                "purpose": "use the machine-readable branch index instead of the human audit index.md when you need the current root AGENTS managed target mapping",
+                "purpose": "load the AGENTS manager directive when the current task is specifically about the single governed root AGENTS target",
             },
             {
                 "command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-scan --json",
@@ -106,11 +86,15 @@ STAGE_COMMANDS = {
             },
             {
                 "command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-collect --json",
-                "purpose": "collect the current Octopus_OS root AGENTS file back into the skill-side managed human/machine pair when product-side content changed first",
+                "purpose": "collect the current Octopus_OS root AGENTS file back into the skill-side managed human/machine pair",
             },
             {
                 "command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-push --json",
-                "purpose": "push the managed root AGENTS payload back to Octopus_OS, delete forbidden extra AGENTS.md files, and refresh the registry",
+                "purpose": "push the managed root AGENTS payload back to Octopus_OS and delete forbidden extra AGENTS.md files",
+            },
+            {
+                "command": "python3 scripts/Cli_Toolbox.py sync-mother-doc-status-from-git --repo-root ${AI_PROJECTS_ROOT:-$HOME/AI_Projects}/Octopus_OS --stage mother_doc --path <relative-path> --json",
+                "purpose": "derive modified / developed / null lifecycle states from local git-backed diff after mother_doc writeback",
             },
         ],
     },
@@ -133,10 +117,6 @@ STAGE_COMMANDS = {
             {
                 "command": "project-native install / repair / test / bring-up commands chosen from the actual codebase",
                 "purpose": "act like an independent human developer: install dependencies, repair runtime, run tests, bring up services, and verify real behavior",
-            },
-            {
-                "command": "collect aligned code/doc scope and hand it to evidence without flipping lifecycle state inside implementation",
-                "purpose": "implementation consumes modified documents but does not close the traceability lifecycle on its own",
             },
         ],
     },
@@ -161,24 +141,16 @@ STAGE_COMMANDS = {
                 "command": "python3 scripts/Cli_Toolbox.py sync-mother-doc-status --stage evidence --path <relative-path> --lifecycle-state developed --json",
                 "purpose": "flip affected Mother_Doc documents and block registries to developed once evidence closes the loop",
             },
-            {
-                "command": "python3 scripts/Cli_Toolbox.py append-implementation-log --summary \"<summary>\" --doc-path <doc-path> --code-path <code-path> --json",
-                "purpose": "append an implementation batch log after implementation has already aligned code and docs and evidence is closing the traceability loop",
-            },
-            {
-                "command": "python3 scripts/Cli_Toolbox.py append-deployment-log --summary \"<summary>\" --doc-path <doc-path> --code-path <code-path> --json",
-                "purpose": "append a deployment checkpoint once implementation becomes deployable or has been deployed with a real witness set",
-            },
         ],
     },
 }
+
 STAGE_GRAPH_CONTRACTS = {
     "mother_doc": {
         "graph_name": "OS_graph",
         "stage_role": "author the documentation-side structural topology that later becomes part of the unified OS graph",
         "node_mapping": [
             "directory -> structural scope node",
-            "README.md -> scope-purpose node",
             "<folder_name>.md -> scope-entity node",
             "Document Status + Block Registry -> mechanical change-detection node",
         ],
@@ -191,11 +163,10 @@ STAGE_GRAPH_CONTRACTS = {
         "node_mapping": [
             "module directory -> module node",
             "module markdown -> module contract node",
-            "helper markdown -> helper contract node",
             "code file / package / runtime artifact -> implementation node",
         ],
         "tooling_mode": "contract_first",
-        "action_rule": "detect doc-code drift, align code and Mother_Doc to the same current-state structure, and hand the aligned scope to evidence without prematurely closing the lifecycle state",
+        "action_rule": "detect doc-code drift, align code and Mother_Doc to the same current-state structure, and hand the aligned scope to evidence",
     },
     "evidence": {
         "graph_name": "OS_graph",
@@ -205,12 +176,12 @@ STAGE_GRAPH_CONTRACTS = {
             "features/*.md and shared/*.md -> contract_layer nodes",
             "code modules, helpers, and runtime artifacts -> implementation_layer nodes",
             "implementation/deployment logs and witnesses -> evidence_layer nodes",
-            "Document Status + Block Registry -> graph change-detection metadata nodes",
         ],
         "tooling_mode": "contract_first_with_os_graph_runtime",
-        "action_rule": "treat OS_graph as the combined doc+code graph contract, sync authored-doc nodes into graph/runtime, bind semantic doc units to implementation slices, record evidence on the same hierarchy, and keep the four graph layers readable to humans and machines",
+        "action_rule": "treat OS_graph as the combined doc+code graph contract and keep the four graph layers readable to humans and machines",
     },
 }
+
 STAGE_CHECKLISTS = {
     "mother_doc": {
         "stage": "mother_doc",
@@ -221,16 +192,12 @@ STAGE_CHECKLISTS = {
             "load top-level resident docs",
             "load the project baseline before selecting container scope",
             "strengthen the user prompt with Meta-prompt-write",
-            "read references/mother_doc/00_MOTHER_DOC_BRANCH_INDEX.md before choosing any mother_doc action",
-            "choose direct_writeback, question_backfill, or the root-only AGENTS manager before reading deeper scope docs",
-            "read root README.md inside Mother_Doc before selecting scope",
+            "choose direct_writeback, question_backfill, or the root-only AGENTS manager by actual task intent",
         ],
         "exit_requirements": [
             "updated Mother_Doc current-state content",
-            "updated README.md and <folder_name>.md for affected Mother_Doc scopes only",
             "affected overview/features/shared/common docs are aligned with the current explicit user intent",
-            "unresolved scope is written into the correct open-question docs when question_backfill is still pending",
-            "affected non-AGENTS Mother_Doc markdown files are marked as modified/null/developed according to the git-backed lifecycle status rules",
+            "affected Mother_Doc markdown files are marked as modified/null/developed according to the git-backed lifecycle status rules",
             "implementation inputs ready",
         ],
     },
@@ -243,15 +210,11 @@ STAGE_CHECKLISTS = {
             "load top-level resident docs",
             "retain the project baseline before selecting implementation scope",
             "read implementation-specific stage contracts",
-            "carry forward current-state outputs from mother_doc",
-            "load the matching authored domain family rules before entering a specific container",
             "inspect codebase and runtime to locate doc-code drift before editing",
         ],
         "exit_requirements": [
             "code and Mother_Doc are aligned to the same current-state structure",
-            "aligned implementation scope is ready for evidence to flip lifecycle states to developed",
             "dependencies, runtime, and tests are handled to product-delivery standard within local control",
-            "the aligned implementation scope is ready for evidence-stage traceability",
             "evidence inputs are ready",
         ],
     },
@@ -262,18 +225,12 @@ STAGE_CHECKLISTS = {
         "stage_docs": STAGE_DOCS["evidence"],
         "entry_requirements": [
             "load top-level resident docs",
-            "retain the project baseline before selecting evidence scope",
             "read evidence-specific stage contracts",
             "carry forward current-state outputs from mother_doc and implementation",
-            "enter references/evidence/00_EVIDENCE_INDEX.md before choosing graph/log/binding focus",
         ],
         "exit_requirements": [
             "real witnesses are bound back to the same Mother_Doc hierarchy",
             "OS_graph contract is updated at the contract level for the current delivery state",
-            "OS_graph uses narrative_layer, contract_layer, implementation_layer, and evidence_layer consistently",
-            "graph runtime assets exist under Mother_Doc/graph/runtime with document nodes, evidence nodes, indexes, and frontend bundles",
-            "implementation batch logs are appended under Mother_Doc/docs/Mother_Doc/common/development_logs",
-            "deployment checkpoints are appended under Mother_Doc/docs/Mother_Doc/common/development_logs when deployment-level evidence exists",
             "writeback is complete without introducing internal version branches",
         ],
     },

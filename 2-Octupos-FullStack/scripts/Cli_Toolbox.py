@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 from __future__ import annotations
+
 import argparse
+
 from agents_branch_ops import (
     mother_doc_agents_collect,
     mother_doc_agents_contract,
     mother_doc_agents_directive,
     mother_doc_agents_push,
-    mother_doc_agents_registry,
     mother_doc_agents_scan,
     mother_doc_agents_target_contract,
 )
@@ -45,7 +46,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     navigation = subparsers.add_parser(
         "sync-mother-doc-navigation",
-        help="refresh recursive README.md and same-name scope markdown files for Mother_Doc while removing legacy AGENTS.md in docs",
+        help="refresh Mother_Doc scope documents while removing legacy docs-tree AGENTS.md files",
     )
     navigation.add_argument("--document-root", default=str(DEFAULT_DOCUMENT_ROOT), help="Mother_Doc root")
     navigation.add_argument("--dry-run", action="store_true")
@@ -69,17 +70,9 @@ def build_parser() -> argparse.ArgumentParser:
     agents_directive.add_argument("--json", action="store_true")
     agents_directive.set_defaults(func=mother_doc_agents_directive)
 
-    agents_registry = subparsers.add_parser(
-        "mother-doc-agents-registry",
-        help="print the collected registry for the managed Octopus_OS root AGENTS target",
-    )
-    agents_registry.add_argument("--skill-root", default=None, help="override skill root")
-    agents_registry.add_argument("--json", action="store_true")
-    agents_registry.set_defaults(func=mother_doc_agents_registry)
-
     agents_target_contract = subparsers.add_parser(
         "mother-doc-agents-target-contract",
-        help="print the runtime contract for the managed Octopus_OS root AGENTS target",
+        help="print the runtime contract for the single governed Octopus_OS root AGENTS target",
     )
     agents_target_contract.add_argument("--skill-root", default=None, help="override skill root")
     agents_target_contract.add_argument("--relative-path", required=True)
@@ -98,7 +91,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     agents_collect = subparsers.add_parser(
         "mother-doc-agents-collect",
-        help="collect the Octopus_OS root AGENTS target back into the skill-side managed human/machine pair",
+        help="collect the Octopus_OS root AGENTS target into the managed human/machine pair",
     )
     agents_collect.add_argument("--skill-root", default=None, help="override skill root")
     agents_collect.add_argument("--json", action="store_true")

@@ -1,19 +1,16 @@
 {
-  "schema_version": "2.0",
+  "schema_version": "3.0",
   "stage": "push",
-  "goal": "write the managed root AGENTS back to Octopus_OS and delete forbidden extra AGENTS.md files plus legacy audit/template assets",
+  "goal": "write the managed root AGENTS back to Octopus_OS and delete forbidden extra AGENTS.md files plus obsolete governance assets",
   "primary_outputs": [
     "${AI_PROJECTS_ROOT:-$HOME/AI_Projects}/Octopus_OS/AGENTS.md"
   ],
   "must_cleanup": [
     "all extra Octopus_OS/**/AGENTS.md except the root target",
+    "assets/mother_doc_agents/index.md",
+    "assets/mother_doc_agents/registry.json",
     "assets/mother_doc_agents/runtime_rules",
     "assets/mother_doc_agents/templates",
     "assets/mother_doc_agents/collected_tree"
-  ],
-  "post_actions": [
-    "refresh scan_report.json",
-    "refresh registry.json",
-    "refresh managed human/machine pair"
   ]
 }

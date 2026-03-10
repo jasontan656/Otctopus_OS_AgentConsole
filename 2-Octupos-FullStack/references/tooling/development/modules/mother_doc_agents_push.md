@@ -4,4 +4,4 @@
 
 - Push the current skill-side root AGENTS payload back to `Octopus_OS/AGENTS.md`.
 - Delete all extra `Octopus_OS/**/AGENTS.md` except the root target.
-- Refresh the registry again via scan + collect after push.
+- Refresh the managed payload again via scan + collect after push.

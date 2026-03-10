@@ -15,7 +15,6 @@ from agents_target_runtime import (
     load_target_contract,
     managed_human_path,
     managed_machine_path,
-    registry_path,
     render_internal_agents_human,
 )
 from mother_doc_agents_manager import (
@@ -31,7 +30,10 @@ class AgentsTargetRuntimeTests(unittest.TestCase):
         skill_root = Path(tmp) / "skill"
         workspace_root = Path(tmp) / "Octopus_OS"
         (workspace_root / "Mother_Doc" / "docs").mkdir(parents=True, exist_ok=True)
-        (workspace_root / "AGENTS.md").write_text("[AGENT RUNTIME HOOK - ABSOLUTE ENFORCEMENT]\n\n<part_A>\nroot rule\n</part_A>\n", encoding="utf-8")
+        (workspace_root / "AGENTS.md").write_text(
+            "[AGENT RUNTIME HOOK - ABSOLUTE ENFORCEMENT]\n\n<part_A>\nroot rule\n</part_A>\n",
+            encoding="utf-8",
+        )
         return skill_root, workspace_root
 
     def test_target_contract_returns_managed_pair_and_payload(self) -> None:
@@ -42,7 +44,7 @@ class AgentsTargetRuntimeTests(unittest.TestCase):
             self.assertEqual(payload["source_path"], str(workspace_root / "AGENTS.md"))
             self.assertEqual(payload["managed_human_path"], str(managed_human_path(skill_root)))
             self.assertEqual(payload["managed_machine_path"], str(managed_machine_path(skill_root)))
-            self.assertEqual(payload["payload"]["active_scope_policy"]["current_phase"], "root_only_bootstrap")
+            self.assertNotIn("branch_registry_cli", payload["payload_navigation"])
 
     def test_scan_reports_forbidden_extra_agents(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -51,35 +53,38 @@ class AgentsTargetRuntimeTests(unittest.TestCase):
             extra.parent.mkdir(parents=True, exist_ok=True)
             extra.write_text("legacy", encoding="utf-8")
             payload = scan_agents_tree(skill_root, workspace_root / "Mother_Doc" / "docs")
-            self.assertEqual(payload["managed_external_targets"], [str(workspace_root / "AGENTS.md")])
+            self.assertEqual(payload["managed_external_target"], str(workspace_root / "AGENTS.md"))
             self.assertEqual(payload["extra_agents"], [str(extra)])
 
-    def test_collect_writes_single_registry_entry(self) -> None:
+    def test_collect_removes_registry_and_index_governance_assets(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             skill_root, workspace_root = self._prepare_workspace(tmp)
+            obsolete_dir = skill_root / "assets" / "mother_doc_agents"
+            obsolete_dir.mkdir(parents=True, exist_ok=True)
+            (obsolete_dir / "registry.json").write_text("{}", encoding="utf-8")
+            (obsolete_dir / "index.md").write_text("legacy", encoding="utf-8")
             payload = collect_from_scan(skill_root)
-            registry = json.loads(registry_path(skill_root).read_text(encoding="utf-8"))
-            self.assertEqual(len(registry["entries"]), 1)
-            self.assertEqual(registry["entries"][0]["relative_path"], ROOT_RELATIVE_PATH)
+            self.assertFalse((obsolete_dir / "registry.json").exists())
+            self.assertFalse((obsolete_dir / "index.md").exists())
             self.assertEqual(payload["source_path"], str(workspace_root / "AGENTS.md"))
 
-    def test_branch_contract_declares_registry_as_machine_index(self) -> None:
+    def test_branch_contract_no_longer_declares_registry_or_index(self) -> None:
         skill_root = Path(__file__).resolve().parents[1]
         payload = load_branch_runtime_contract(skill_root)
-        self.assertEqual(payload["runtime_source_policy"]["machine_branch_index"], "registry_json")
-        self.assertIn("mother-doc-agents-registry --json", payload["runtime_entry_commands"]["branch_registry_command"])
-        self.assertIn("governance_mapping_template", payload["template_semantics"])
+        self.assertNotIn("machine_branch_index", payload["runtime_source_policy"])
+        self.assertNotIn("branch_registry_command", payload["runtime_entry_commands"])
+        self.assertEqual(payload["managed_asset_model"]["managed_human_path"], "assets/managed_targets/Octopus_OS/AGENTS_human.md")
 
-    def test_push_deletes_extra_agents_and_legacy_assets(self) -> None:
+    def test_push_deletes_extra_agents_and_obsolete_branch_assets(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             skill_root, workspace_root = self._prepare_workspace(tmp)
             legacy_extra = workspace_root / "Admin_UI" / "AGENTS.md"
             legacy_extra.parent.mkdir(parents=True, exist_ok=True)
             legacy_extra.write_text("legacy", encoding="utf-8")
 
-            runtime_rules = skill_root / "assets" / "mother_doc_agents" / "runtime_rules"
-            runtime_rules.mkdir(parents=True, exist_ok=True)
-            (runtime_rules / "AGENT_AUDIT.md").write_text("legacy", encoding="utf-8")
+            obsolete_dir = skill_root / "assets" / "mother_doc_agents"
+            obsolete_dir.mkdir(parents=True, exist_ok=True)
+            (obsolete_dir / "registry.json").write_text("{}", encoding="utf-8")
 
             machine_payload = build_default_machine_payload()
             managed_machine_path(skill_root).parent.mkdir(parents=True, exist_ok=True)
@@ -94,7 +99,7 @@ class AgentsTargetRuntimeTests(unittest.TestCase):
 
             payload = push_agents_tree(skill_root, workspace_root / "Mother_Doc" / "docs", dry_run=False)
             self.assertFalse(legacy_extra.exists())
-            self.assertFalse(runtime_rules.exists())
+            self.assertFalse((obsolete_dir / "registry.json").exists())
             self.assertEqual(payload["pushed_root_agents"], str(workspace_root / "AGENTS.md"))
 
 

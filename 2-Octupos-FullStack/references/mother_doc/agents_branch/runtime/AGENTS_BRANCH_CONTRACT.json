@@ -1,17 +1,13 @@
 {
-  "schema_version": "2.0",
+  "schema_version": "3.0",
   "branch_name": "mother_doc_agents_manager",
   "runtime_source_policy": {
     "primary_runtime_source": "branch_contract_json",
-    "machine_branch_index": "registry_json",
-    "index_markdown_role": "human_audit_only",
     "target_runtime_source": "target_contract_json"
   },
   "scope_policy": {
-    "managed_external_targets": [
-      "${AI_PROJECTS_ROOT:-$HOME/AI_Projects}/Octopus_OS/AGENTS.md"
-    ],
-    "external_target_mode": "single_root_only",
+    "managed_external_target": "${AI_PROJECTS_ROOT:-$HOME/AI_Projects}/Octopus_OS/AGENTS.md",
+    "managed_target_count": 1,
     "forbidden_extra_agents": true
   },
   "managed_asset_model": {
@@ -19,17 +15,12 @@
     "internal_human_shape": "part_a_plus_part_b",
     "internal_machine_shape": "part_b_only",
     "managed_human_path": "assets/managed_targets/Octopus_OS/AGENTS_human.md",
-    "managed_machine_path": "assets/managed_targets/Octopus_OS/AGENTS_machine.json"
+    "managed_machine_path": "assets/managed_targets/Octopus_OS/AGENTS_machine.json",
+    "scan_report_path": "assets/mother_doc_agents/scan_report.json"
   },
-  "template_semantics": [
-    "governance_mapping_template",
-    "single_target_payload_managed",
-    "index_content_moves_into_registry_json_payload"
-  ],
   "runtime_entry_commands": {
     "branch_contract_command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-contract --json",
     "stage_directive_command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-directive --stage <scan|collect|push> --json",
-    "branch_registry_command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-registry --json",
     "target_contract_command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-target-contract --relative-path \"octopus_os_root\" --file-kind agents --json"
   },
   "stage_order": [

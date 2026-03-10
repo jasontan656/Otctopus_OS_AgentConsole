@@ -14,7 +14,6 @@
 - `Cli_Toolbox.sync_mother_doc_navigation`
 - `Cli_Toolbox.mother_doc_agents_contract`
 - `Cli_Toolbox.mother_doc_agents_directive`
-- `Cli_Toolbox.mother_doc_agents_registry`
 - `Cli_Toolbox.mother_doc_agents_scan`
 - `Cli_Toolbox.mother_doc_agents_collect`
 - `Cli_Toolbox.mother_doc_agents_push`
@@ -57,14 +56,11 @@
   - `created_scope_docs`
   - `updated_agents`
   - `removed_legacy_indexes`
-- `mother-doc-agents-scan` 会返回当前 `AGENTS.md + README.md` 覆盖面、缺失目录和遗留小写文件。
+- `mother-doc-agents-scan` 会返回根 `AGENTS.md`、非法额外 `AGENTS.md` 和旧治理资产的扫描结果。
 - `mother-doc-agents-collect` 会刷新：
-  - `assets/mother_doc_agents/registry.json`
-  - `assets/mother_doc_agents/index.md`
-  - `assets/mother_doc_agents/collected_tree/`
+  - `assets/managed_targets/Octopus_OS/AGENTS_human.md`
+  - `assets/managed_targets/Octopus_OS/AGENTS_machine.json`
 - `mother-doc-agents-push` 会返回组合结果：
-  - `navigation_sync`
-  - `root_and_container_sync`
   - `scan`
   - `collect`
 - `updated_agents` 只对应 `Octopus_OS/Mother_Doc/**` 内的导航文件，不会写入实际工作目录容器。

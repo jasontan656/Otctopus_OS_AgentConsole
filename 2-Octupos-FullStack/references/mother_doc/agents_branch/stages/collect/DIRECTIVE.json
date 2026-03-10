@@ -1,14 +1,9 @@
 {
-  "schema_version": "2.0",
+  "schema_version": "3.0",
   "stage": "collect",
-  "goal": "collect Octopus_OS/AGENTS.md into the managed human/machine pair and refresh the single-target registry",
+  "goal": "collect Octopus_OS/AGENTS.md into the managed human/machine pair and remove obsolete governance assets",
   "primary_outputs": [
     "assets/managed_targets/Octopus_OS/AGENTS_human.md",
-    "assets/managed_targets/Octopus_OS/AGENTS_machine.json",
-    "assets/mother_doc_agents/registry.json",
-    "assets/mother_doc_agents/index.md"
-  ],
-  "must_preserve": [
-    "existing machine payload when present"
+    "assets/managed_targets/Octopus_OS/AGENTS_machine.json"
   ]
 }
