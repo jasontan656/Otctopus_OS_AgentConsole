@@ -22,6 +22,7 @@ describe('Meta-Skill-DocStructure TS runtime', () => {
   it('loads the runtime contract', async () => {
     const contract = await loadRuntimeContract(path.resolve(__dirname, '..'))
     expect(contract.contract_name).toBe('META_SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT')
+    expect(contract.semantic_split_contract.navigation_model).toBe('tree_first_graph_second')
   })
 
   it('builds a doc graph workspace for the current skill', async () => {

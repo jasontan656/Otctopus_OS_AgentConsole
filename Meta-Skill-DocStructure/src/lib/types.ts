@@ -57,6 +57,14 @@ export interface RuntimeContractPayload {
     min_anchor_count_per_doc: number
     target_must_be_markdown: boolean
   }
+  semantic_split_contract: {
+    navigation_model: string
+    node_roles: string[]
+    role_rules: Record<string, string>
+    split_triggers: string[]
+    stop_split_conditions: string[]
+    routing_principles: string[]
+  }
 }
 
 export interface AnchorMatrix {

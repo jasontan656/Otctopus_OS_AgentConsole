@@ -3,8 +3,8 @@
   "graph_version": "v2",
   "source_skill": "Meta-Skill-DocStructure",
   "summary": {
-    "nodeCount": 9,
-    "edgeCount": 18,
+    "nodeCount": 10,
+    "edgeCount": 20,
     "errorCount": 0,
     "warningCount": 0
   },
@@ -24,6 +24,15 @@
       "docType": "template_doc",
       "topic": "Template for a single-topic markdown doc inside a skill folder",
       "title": "Atomic Doc Template",
+      "anchorCount": 2,
+      "depth": 2
+    },
+    {
+      "path": "references/methodology/SEMANTIC_ROUTING_TREE.md",
+      "docId": "methodology.semantic_routing_tree",
+      "docType": "methodology_doc",
+      "topic": "Semantic routing tree methodology for splitting skill docs into facade, branch, and atomic nodes",
+      "title": "Semantic Routing Tree",
       "anchorCount": 2,
       "depth": 2
     },
@@ -101,10 +110,10 @@
     },
     {
       "source": "SKILL.md",
-      "target": "references/tooling/Cli_Toolbox_USAGE.md",
+      "target": "references/methodology/SEMANTIC_ROUTING_TREE.md",
       "relation": "routes_to",
       "direction": "downstream",
-      "reason": "The CLI usage doc explains how to apply the document-structure contracts."
+      "reason": "The semantic routing tree doc explains how to split docs into facade, branch, and atomic nodes."
     },
     {
       "source": "assets/templates/ATOMIC_DOC_TEMPLATE.md",
@@ -115,10 +124,24 @@
     },
     {
       "source": "assets/templates/ATOMIC_DOC_TEMPLATE.md",
-      "target": "SKILL.md",
+      "target": "references/methodology/SEMANTIC_ROUTING_TREE.md",
       "relation": "used_by",
       "direction": "upstream",
-      "reason": "The skill facade routes readers to this template."
+      "reason": "The semantic routing tree explains when this template should become a facade, routing, or atomic doc."
+    },
+    {
+      "source": "references/methodology/SEMANTIC_ROUTING_TREE.md",
+      "target": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md",
+      "relation": "expands",
+      "direction": "upstream",
+      "reason": "This methodology expands the runtime contract with concrete semantic split rules."
+    },
+    {
+      "source": "references/methodology/SEMANTIC_ROUTING_TREE.md",
+      "target": "assets/templates/ATOMIC_DOC_TEMPLATE.md",
+      "relation": "governs",
+      "direction": "downstream",
+      "reason": "The atomic template should be used according to this semantic routing tree."
     },
     {
       "source": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md",
@@ -129,10 +152,10 @@
     },
     {
       "source": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md",
-      "target": "references/tooling/Cli_Toolbox_USAGE.md",
+      "target": "references/methodology/SEMANTIC_ROUTING_TREE.md",
       "relation": "routes_to",
       "direction": "downstream",
-      "reason": "The CLI usage doc explains how to consume the runtime contract."
+      "reason": "The semantic routing tree doc expands how docs should be split before anchors are written."
     },
     {
       "source": "references/tooling/Cli_Toolbox_DEVELOPMENT.md",
@@ -157,10 +180,10 @@
     },
     {
       "source": "references/tooling/Cli_Toolbox_USAGE.md",
-      "target": "references/tooling/development/20_CATEGORY_INDEX.md",
+      "target": "references/methodology/SEMANTIC_ROUTING_TREE.md",
       "relation": "routes_to",
       "direction": "downstream",
-      "reason": "The category index expands the tooling development reading path."
+      "reason": "The semantic routing tree should be read before using CLI results to restructure docs."
     },
     {
       "source": "references/tooling/development/00_ARCHITECTURE_OVERVIEW.md",
@@ -220,5 +243,5 @@
     }
   ],
   "warnings": [],
-  "updated_at": "2026-03-10T23:18:57.974Z"
+  "updated_at": "2026-03-10T23:33:12.824Z"
 }

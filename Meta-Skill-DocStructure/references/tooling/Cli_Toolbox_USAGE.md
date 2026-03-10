@@ -7,10 +7,10 @@ anchors:
     relation: "implements"
     direction: "upstream"
     reason: "The CLI is the machine-readable execution surface of the runtime contract."
-  - target: "development/20_CATEGORY_INDEX.md"
+  - target: "../methodology/SEMANTIC_ROUTING_TREE.md"
     relation: "routes_to"
     direction: "downstream"
-    reason: "The category index expands the tooling development reading path."
+    reason: "The semantic routing tree should be read before using CLI results to restructure docs."
 ---
 
 # Cli_Toolbox Usage
@@ -21,5 +21,6 @@ anchors:
 - `npm run cli -- rebuild-self-graph --json`
 
 ## 使用原则
+- 设计或改写文档树时，先读 `references/methodology/SEMANTIC_ROUTING_TREE.md`，再跑 CLI JSON。
 - graph 相关结论优先来自 CLI JSON，不直接从 markdown 规则推断。
 - `rebuild-self-graph` 负责把当前 skill 的 graph 回写到 `assets/runtime/self_anchor_graph.json`。
