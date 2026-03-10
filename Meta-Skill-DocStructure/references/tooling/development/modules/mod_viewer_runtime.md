@@ -22,3 +22,5 @@ anchors:
 - prod 模式托管构建后的 client。
 - 将 graph、正文、warning 实时推到页面。
 - 所有运行文件都从 `ui-dev/` 子根目录启动与维护。
+- UI payload 组装逻辑位于 `ui-dev/lib/viewer-payload.ts`。
+- UI 相关测试位于 `ui-dev/tests/*`。

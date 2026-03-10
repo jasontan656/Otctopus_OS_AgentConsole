@@ -57,12 +57,6 @@ export interface RuntimeContractPayload {
     min_anchor_count_per_doc: number
     target_must_be_markdown: boolean
   }
-  viewer_contract?: {
-    host_env: string
-    port_env: string
-    api_path: string
-    ws_path: string
-  }
 }
 
 export interface AnchorMatrix {
@@ -89,15 +83,12 @@ export interface AnchorMatrix {
   }>
 }
 
-export interface PreviewDocumentRecord extends GraphNodeRecord {
+export interface SkillDocRecord extends GraphNodeRecord {
   body: string
   anchors: AnchorDefinition[]
-  outgoing: GraphEdgeRecord[]
-  incoming: GraphEdgeRecord[]
-  warnings: ScanWarning[]
 }
 
-export interface PreviewPayload {
+export interface DocGraphWorkspace {
   status: 'pass' | 'pass_with_warnings' | 'fail'
   targetRoot: string
   updatedAt: string
@@ -109,15 +100,11 @@ export interface PreviewPayload {
     errorCount: number
     warningCount: number
   }
-  view: {
-    entryPath: string
-    targetSkillName: string
-  }
   graph: {
     nodes: GraphNodeRecord[]
     edges: GraphEdgeRecord[]
   }
-  docs: PreviewDocumentRecord[]
+  docs: SkillDocRecord[]
   warnings: ScanWarning[]
   errors: ScanError[]
 }

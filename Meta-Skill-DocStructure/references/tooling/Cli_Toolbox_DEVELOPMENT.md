@@ -1,7 +1,7 @@
 ---
 doc_id: "tooling.development.entry"
 doc_type: "tooling_development"
-topic: "Development navigation for the TypeScript CLI and viewer runtime"
+topic: "Development navigation for the TypeScript CLI and the embedded UI tool boundary"
 anchors:
   - target: "development/00_ARCHITECTURE_OVERVIEW.md"
     relation: "routes_to"
@@ -22,9 +22,11 @@ anchors:
 4. `references/tooling/development/20_CATEGORY_INDEX.md`
 
 ## 同步维护要求
-- 任何 CLI、server、viewer 改动都必须同步更新：
+- 任何 CLI 或文档治理核心改动都必须同步更新：
   - `references/tooling/Cli_Toolbox_USAGE.md`
   - `references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.json`
-  - `ui-dev/docs/*`
   - `assets/runtime/anchor_query_matrix.json`
+- 任何 UI 子工具改动都必须同步更新：
+  - `ui-dev/docs/*`
   - `ui-dev/assets/systemd/meta-skill-docstructure-viewer.service`
+  - `ui-dev/tests/*`

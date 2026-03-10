@@ -8,6 +8,8 @@ maintain_rules:
     - references/tooling/Cli_Toolbox_DEVELOPMENT.md
     - references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.json
     - ui-dev/UI_DEV_ENTRY.md
+    - ui-dev/docs/UI_TOOL_POSITIONING.md
+    - ui-dev/docs/UI_FILE_ORGANIZATION.md
     - ui-dev/docs/VIEWER_STACK_AND_REUSE.md
 modules:
   - module_id: docstructure_core
@@ -15,7 +17,6 @@ modules:
       - Cli_Toolbox.runtime_contract
       - Cli_Toolbox.lint_doc_anchors
       - Cli_Toolbox.build_anchor_graph
-      - Cli_Toolbox.preview_payload
       - Cli_Toolbox.rebuild_self_graph
     entrypoint: scripts/Cli_Toolbox.ts
     status: active

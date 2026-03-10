@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import process from 'node:process'
 import {
-  buildPreviewPayload,
+  buildDocGraphWorkspace,
   defaultSkillRoot,
   loadRuntimeContract,
   rebuildSelfGraph,
@@ -29,7 +29,6 @@ function usage(): never {
     '  npm run cli -- runtime-contract --json',
     '  npm run cli -- lint-doc-anchors --target <skill_root> --json',
     '  npm run cli -- build-anchor-graph --target <skill_root> --json',
-    '  npm run cli -- preview-payload --target <skill_root> --json',
     '  npm run cli -- rebuild-self-graph --json',
   ].join('\n'))
   process.exit(2)
@@ -51,14 +50,8 @@ async function main(): Promise<void> {
       return
     }
 
-    if (command === 'preview-payload') {
-      const payload = await buildPreviewPayload(target)
-      printJson(payload)
-      process.exit(payload.status === 'fail' ? 1 : 0)
-    }
-
     if (command === 'build-anchor-graph') {
-      const payload = await buildPreviewPayload(target)
+      const payload = await buildDocGraphWorkspace(target)
       printJson({
         status: payload.status,
         targetRoot: payload.targetRoot,
@@ -71,7 +64,7 @@ async function main(): Promise<void> {
     }
 
     if (command === 'lint-doc-anchors') {
-      const payload = await buildPreviewPayload(target)
+      const payload = await buildDocGraphWorkspace(target)
       printJson({
         status: payload.status,
         targetRoot: payload.targetRoot,
@@ -83,15 +76,15 @@ async function main(): Promise<void> {
     }
 
     if (command === 'rebuild-self-graph') {
-      const { graphPath, payload } = await rebuildSelfGraph(target)
+      const { graphPath, workspace } = await rebuildSelfGraph(target)
       printJson({
-        status: payload.status === 'fail' ? 'error' : 'written',
+        status: workspace.status === 'fail' ? 'error' : 'written',
         graphPath,
-        summary: payload.summary,
-        warnings: payload.warnings,
-        errors: payload.errors,
+        summary: workspace.summary,
+        warnings: workspace.warnings,
+        errors: workspace.errors,
       })
-      process.exit(payload.status === 'fail' ? 1 : 0)
+      process.exit(workspace.status === 'fail' ? 1 : 0)
     }
 
     usage()

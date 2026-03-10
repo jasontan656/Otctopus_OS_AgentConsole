@@ -5,8 +5,9 @@ import express from 'express'
 import chokidar from 'chokidar'
 import WebSocket, { WebSocketServer } from 'ws'
 import type { IncomingMessage } from 'node:http'
-import type { PreviewPayload } from '../../src/lib/types.js'
-import { buildPreviewPayload, defaultSkillRoot, rebuildSelfGraph } from '../../src/lib/docstructure.js'
+import type { PreviewPayload } from '../lib/viewer-types.js'
+import { buildViewerPayload } from '../lib/viewer-payload.js'
+import { defaultSkillRoot, rebuildSelfGraph } from '../../src/lib/docstructure.js'
 
 const SKILL_ROOT = defaultSkillRoot()
 const UI_DEV_ROOT = path.resolve(SKILL_ROOT, 'ui-dev')
@@ -29,7 +30,7 @@ function shouldWatch(filePath: string): boolean {
 }
 
 async function loadPayload(): Promise<PreviewPayload> {
-  const payload = await buildPreviewPayload(TARGET_SKILL_ROOT)
+  const payload = await buildViewerPayload(TARGET_SKILL_ROOT)
   payloadCache = payload
   errorCache = null
 

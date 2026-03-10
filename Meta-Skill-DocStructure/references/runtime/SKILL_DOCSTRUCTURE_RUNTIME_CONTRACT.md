@@ -10,7 +10,7 @@ anchors:
   - target: "../tooling/Cli_Toolbox_USAGE.md"
     relation: "executed_via"
     direction: "downstream"
-    reason: "Tooling usage turns the contract into actions."
+    reason: "Tooling usage turns the runtime contract into actions."
 ---
 
 # Runtime Contract
@@ -18,16 +18,13 @@ anchors:
 ## 范围
 - 只允许在 skill root 内组织和校验内部 markdown 文档。
 - target 必须是带 `SKILL.md` 的 skill 目录。
-- 默认 viewer target 就是当前 skill 自身；后续复用时可通过 `TARGET_SKILL_ROOT` 切换。
-- UI 运行根目录固定为 `ui-dev/`，相关代码、脚本、systemd 与 UI 开发文档都应收敛在这里。
+- 本合同只覆盖文档治理本体，不覆盖 `ui-dev/` 内的 UI 工具运行细节。
 
 ## 强制工作流
 1. 先取 runtime contract。
 2. 再运行 anchor lint。
-3. 若要给页面与脚本消费，再产出 preview payload。
+3. 若要产出机器消费的 graph，运行 `build-anchor-graph`。
 4. 修改本技能自身文档后，最后重建 `assets/runtime/self_anchor_graph.json`。
-5. dev 模式通过 watcher server 热加载；常驻模式通过 systemd user service 运行。
-6. 启动 viewer 时，应以 `ui-dev/` 作为工作目录，而不是 skill root。
 
 ## 强制思考链
 1. `scope_check`
@@ -36,7 +33,7 @@ anchors:
 4. `anchor_graph_check`
 5. `atomicity_signal_check`
 6. `rewrite_or_split`
-7. `preview_emit`
+7. `graph_emit`
 
 ## Frontmatter 约束
 - 普通 markdown 文档必须在 top-level frontmatter 提供：
@@ -46,7 +43,7 @@ anchors:
   - `anchors`
 - `SKILL.md` 因为受 skill frontmatter 限制，必须把文档结构合同写在：
   - `metadata.doc_structure`
-- frontmatter 模板固定在：
+- frontmatter asset 固定在：
   - `assets/templates/DOC_FRONTMATTER_TEMPLATE.yaml`
 
 ## Anchor 约束
@@ -54,8 +51,6 @@ anchors:
 - `target` 必须解析到 skill root 内另一个真实 markdown 文档。
 - anchor 允许跨层、跨分支与跳读，但不能是死链接。
 
-## Viewer 约束
-- `Vue3 + Vue Flow` 页面必须默认落到 `SKILL.md`。
-- 页面必须显示正文、出入边、anchor 挂钩方式与 graph 节点关系。
-- 页面必须消费实时 payload，而不是静态快照。
-- UI 开发文档必须写入 `ui-dev/docs/`，以便后续对布局和交互继续迭代。
+## UI 边界
+- UI 是内置子工具，入口在 `ui-dev/UI_DEV_ENTRY.md`。
+- UI 相关代码、依赖、回归用例、tooling 与开发文档不得回流到根技能运行合同层。

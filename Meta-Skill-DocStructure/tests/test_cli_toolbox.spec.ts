@@ -2,7 +2,7 @@ import { mkdtemp, mkdir, readFile, rm, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import os from 'node:os'
 import { afterEach, describe, expect, it } from 'vitest'
-import { buildPreviewPayload, loadRuntimeContract, rebuildSelfGraph } from '../src/lib/docstructure.js'
+import { buildDocGraphWorkspace, loadRuntimeContract, rebuildSelfGraph } from '../src/lib/docstructure.js'
 
 const tempDirs: string[] = []
 
@@ -24,10 +24,10 @@ describe('Meta-Skill-DocStructure TS runtime', () => {
     expect(contract.contract_name).toBe('META_SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT')
   })
 
-  it('builds a preview payload for the current skill', async () => {
-    const payload = await buildPreviewPayload(path.resolve(__dirname, '..'))
-    expect(['pass', 'pass_with_warnings']).toContain(payload.status)
-    expect(payload.view.entryPath).toBe('SKILL.md')
+  it('builds a doc graph workspace for the current skill', async () => {
+    const workspace = await buildDocGraphWorkspace(path.resolve(__dirname, '..'))
+    expect(['pass', 'pass_with_warnings']).toContain(workspace.status)
+    expect(workspace.graph.nodes.length).toBeGreaterThan(0)
   })
 
   it('fails when a document loses its anchors', async () => {
@@ -44,9 +44,9 @@ describe('Meta-Skill-DocStructure TS runtime', () => {
       'utf8',
     )
 
-    const payload = await buildPreviewPayload(skillRoot)
-    expect(payload.status).toBe('fail')
-    expect(payload.errors.length).toBeGreaterThan(0)
+    const workspace = await buildDocGraphWorkspace(skillRoot)
+    expect(workspace.status).toBe('fail')
+    expect(workspace.errors.length).toBeGreaterThan(0)
   })
 
   it('rewrites self graph snapshot', async () => {

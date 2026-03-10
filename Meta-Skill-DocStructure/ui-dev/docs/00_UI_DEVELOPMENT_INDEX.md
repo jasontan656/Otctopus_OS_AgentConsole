@@ -7,10 +7,10 @@ anchors:
     relation: "belongs_to"
     direction: "upstream"
     reason: "This index belongs to the dedicated UI dev root."
-  - target: "rules/UI_LAYOUT_ADJUSTMENT_RULES.md"
+  - target: "UI_TOOL_POSITIONING.md"
     relation: "indexes"
     direction: "downstream"
-    reason: "Layout adjustment rules are part of the core UI dev reading path."
+    reason: "Tool positioning is part of the core UI dev reading path."
 ---
 
 # UI Development Index
@@ -19,6 +19,8 @@ anchors:
 - `../UI_DEV_ENTRY.md`
 
 ## 文档导航
+- `UI_TOOL_POSITIONING.md`
+- `UI_FILE_ORGANIZATION.md`
 - `VIEWER_STACK_AND_REUSE.md`
 - `VIEWER_SERVICE_WORKFLOW.md`
 - `rules/UI_LAYOUT_ADJUSTMENT_RULES.md`

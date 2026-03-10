@@ -3,8 +3,8 @@
   "graph_version": "v2",
   "source_skill": "Meta-Skill-DocStructure",
   "summary": {
-    "nodeCount": 15,
-    "edgeCount": 29,
+    "nodeCount": 17,
+    "edgeCount": 33,
     "errorCount": 0,
     "warningCount": 0
   },
@@ -40,7 +40,7 @@
       "path": "references/tooling/Cli_Toolbox_DEVELOPMENT.md",
       "docId": "tooling.development.entry",
       "docType": "tooling_development",
-      "topic": "Development navigation for the TypeScript CLI and viewer runtime",
+      "topic": "Development navigation for the TypeScript CLI and the embedded UI tool boundary",
       "title": "Cli_Toolbox 开发文档",
       "anchorCount": 2,
       "depth": 2
@@ -49,7 +49,7 @@
       "path": "references/tooling/Cli_Toolbox_USAGE.md",
       "docId": "tooling.usage.cli",
       "docType": "tooling_usage",
-      "topic": "TypeScript CLI and viewer operations for Meta-Skill-DocStructure",
+      "topic": "TypeScript CLI operations for Meta-Skill-DocStructure",
       "title": "Cli_Toolbox 使用文档",
       "anchorCount": 2,
       "depth": 2
@@ -58,7 +58,7 @@
       "path": "references/tooling/development/00_ARCHITECTURE_OVERVIEW.md",
       "docId": "tooling.architecture.overview",
       "docType": "tooling_architecture",
-      "topic": "Architecture overview of the TS CLI, watcher server, and Vue viewer",
+      "topic": "Architecture overview of the TS CLI core and the embedded UI tool split",
       "title": "架构总览",
       "anchorCount": 2,
       "depth": 3
@@ -85,7 +85,7 @@
       "path": "references/tooling/development/modules/mod_docstructure_core.md",
       "docId": "tooling.module.docstructure_core",
       "docType": "module_doc",
-      "topic": "Core TS docstructure engine behind graph, lint, and preview payload",
+      "topic": "Core TS docstructure engine behind lint and graph workspace building",
       "title": "docstructure_core 模块",
       "anchorCount": 2,
       "depth": 4
@@ -114,6 +114,24 @@
       "docType": "ui_dev_index",
       "topic": "Index of UI development docs for the interactive viewer",
       "title": "UI Development Index",
+      "anchorCount": 2,
+      "depth": 2
+    },
+    {
+      "path": "ui-dev/docs/UI_FILE_ORGANIZATION.md",
+      "docId": "ui.tool.file_organization",
+      "docType": "ui_dev_guide",
+      "topic": "File organization rules for the embedded UI tool",
+      "title": "UI File Organization",
+      "anchorCount": 2,
+      "depth": 2
+    },
+    {
+      "path": "ui-dev/docs/UI_TOOL_POSITIONING.md",
+      "docId": "ui.tool.positioning",
+      "docType": "ui_dev_guide",
+      "topic": "Positioning of the embedded UI tool inside Meta-Skill-DocStructure",
+      "title": "UI Tool Positioning",
       "anchorCount": 2,
       "depth": 2
     },
@@ -151,14 +169,14 @@
       "target": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md",
       "relation": "governed_by",
       "direction": "downstream",
-      "reason": "Detailed runtime rules live in the runtime contract."
+      "reason": "Detailed document-structure runtime rules live in the runtime contract."
     },
     {
       "source": "SKILL.md",
       "target": "ui-dev/UI_DEV_ENTRY.md",
-      "relation": "front_doored_by",
+      "relation": "routes_to",
       "direction": "downstream",
-      "reason": "The dedicated UI dev root explains how the viewer is organized and adjusted."
+      "reason": "The embedded UI tool has its own entry and must be read separately."
     },
     {
       "source": "assets/templates/ATOMIC_DOC_TEMPLATE.md",
@@ -186,7 +204,7 @@
       "target": "references/tooling/Cli_Toolbox_USAGE.md",
       "relation": "executed_via",
       "direction": "downstream",
-      "reason": "Tooling usage turns the contract into actions."
+      "reason": "Tooling usage turns the runtime contract into actions."
     },
     {
       "source": "references/tooling/Cli_Toolbox_DEVELOPMENT.md",
@@ -207,14 +225,14 @@
       "target": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md",
       "relation": "implements",
       "direction": "upstream",
-      "reason": "The CLI and viewer commands operationalize the runtime contract."
+      "reason": "The CLI commands operationalize the runtime contract."
     },
     {
       "source": "references/tooling/Cli_Toolbox_USAGE.md",
-      "target": "ui-dev/docs/VIEWER_SERVICE_WORKFLOW.md",
-      "relation": "pairs_with",
+      "target": "ui-dev/UI_DEV_ENTRY.md",
+      "relation": "routes_to",
       "direction": "downstream",
-      "reason": "Service workflow complements the CLI commands."
+      "reason": "The embedded UI tool has its own dedicated entry."
     },
     {
       "source": "references/tooling/development/00_ARCHITECTURE_OVERVIEW.md",
@@ -284,7 +302,7 @@
       "target": "SKILL.md",
       "relation": "implements",
       "direction": "upstream",
-      "reason": "This UI dev root fulfills the facade promise of a dedicated viewer workspace."
+      "reason": "This UI dev root fulfills the facade promise of a dedicated embedded UI tool."
     },
     {
       "source": "ui-dev/UI_DEV_ENTRY.md",
@@ -302,10 +320,38 @@
     },
     {
       "source": "ui-dev/docs/00_UI_DEVELOPMENT_INDEX.md",
-      "target": "ui-dev/docs/rules/UI_LAYOUT_ADJUSTMENT_RULES.md",
+      "target": "ui-dev/docs/UI_TOOL_POSITIONING.md",
       "relation": "indexes",
       "direction": "downstream",
-      "reason": "Layout adjustment rules are part of the core UI dev reading path."
+      "reason": "Tool positioning is part of the core UI dev reading path."
+    },
+    {
+      "source": "ui-dev/docs/UI_FILE_ORGANIZATION.md",
+      "target": "ui-dev/docs/UI_TOOL_POSITIONING.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "Positioning and file organization should be read together."
+    },
+    {
+      "source": "ui-dev/docs/UI_FILE_ORGANIZATION.md",
+      "target": "ui-dev/UI_DEV_ENTRY.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "This file organization guide belongs to the UI tool root."
+    },
+    {
+      "source": "ui-dev/docs/UI_TOOL_POSITIONING.md",
+      "target": "ui-dev/UI_DEV_ENTRY.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "This positioning guide belongs to the UI tool root."
+    },
+    {
+      "source": "ui-dev/docs/UI_TOOL_POSITIONING.md",
+      "target": "ui-dev/docs/UI_FILE_ORGANIZATION.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "Positioning and file organization should be read together."
     },
     {
       "source": "ui-dev/docs/VIEWER_SERVICE_WORKFLOW.md",
@@ -351,5 +397,5 @@
     }
   ],
   "warnings": [],
-  "updated_at": "2026-03-10T22:19:29.448Z"
+  "updated_at": "2026-03-10T22:41:24.188Z"
 }

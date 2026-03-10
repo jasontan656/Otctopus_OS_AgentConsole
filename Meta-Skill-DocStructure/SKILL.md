@@ -1,8 +1,8 @@
 ---
 name: "meta-skill-docstructure"
-description: "规范 skills 内部文档组织与前端可视化门面的治理技能。用于在 skill folder 内建立单 topic 原子文档、frontmatter 锚点规范、anchor graph JSON、TypeScript CLI、Vue3 + Vue Flow 实时 viewer、热更新服务与 systemd 常驻方案。仅在组织或校验 skill 内部文档时使用。"
+description: "治理 skills 内部文档组织、单 topic 原子文档与锚点图谱的技能。UI 视图工具作为内置子工具收敛在 ui-dev/。"
 metadata:
-  short-description: "治理 skills 内部文档组织、TS 工具链、viewer 与热更新工作流"
+  short-description: "治理 skills 内部文档结构与锚点图谱，内置 ui-dev 视图工具入口"
   doc_structure:
     doc_id: "skill.entry.facade"
     doc_type: "skill_facade"
@@ -11,76 +11,100 @@ metadata:
       - target: "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md"
         relation: "governed_by"
         direction: "downstream"
-        reason: "Detailed runtime rules live in the runtime contract."
+        reason: "Detailed document-structure runtime rules live in the runtime contract."
       - target: "ui-dev/UI_DEV_ENTRY.md"
-        relation: "front_doored_by"
+        relation: "routes_to"
         direction: "downstream"
-        reason: "The dedicated UI dev root explains how the viewer is organized and adjusted."
+        reason: "The embedded UI tool has its own entry and must be read separately."
 ---
 
 # Meta-Skill-DocStructure
 
-## 1. 应用域
-- 只服务 `skills` 内部文档组织与其可视化门面。
-- 目标对象是 skill folder 内的 `SKILL.md`、runtime 文档、tooling 文档、viewer 文档、模板文档与相关资产。
-- 不处理普通 repo 文档，不替代代码图谱技能，不把 viewer 做成与 skill 语义脱钩的独立产品。
+## 1. 定位
+- 本文件只做技能门面入口，不承载 UI 工具正文。
+- 本技能的唯一主轴是：`skill_facade -> runtime_contract -> doc_graph_assets -> optional_ui_tool`。
+- 本技能负责治理 skill folder 内的单 topic 文档、frontmatter anchors、anchor graph 与 anchor-check workflow。
+- UI 不是技能主体，而是技能内置的一个视图工具；其代码、依赖、回归用例、tooling 与开发文档必须全部收敛到 `ui-dev/`。
 
-## 2. 核心目标
-- 让 skill 内部文档尽可能原子化，每份 markdown 只承载一个稳定 topic。
-- 要求每份 markdown 文档至少声明一个 anchor，但不要求全连接。
-- 用 `TypeScript CLI + JSON graph + Vue3 + Vue Flow + watcher server` 把文档结构实时投影到一个可交互页面。
-- 默认第一页就是 `SKILL.md` 的正文；再通过点击 graph、anchor 与文档列表深入查看。
-- UI 相关代码、脚本、systemd 与开发文档统一收敛到 `ui-dev/`，并把它作为 UI 启动根目录。
-
-## 3. 内部思考链
-1. 锁定目标 skill root。
-2. 清点全部 markdown 文档，读取 frontmatter anchor 合同。
-3. 判断 single-topic 是否成立；若 topic 漂移，优先拆分。
-4. 用 `anchor_query_matrix.json` 检查是否命中拆分信号。
-5. 运行 TS CLI，产出 lint、graph 与 preview payload。
-6. 由 watcher server 热加载 payload，推动页面实时更新。
-
-## 4. 工作流
-1. 先读取 runtime contract：
+## 2. 必读顺序
+1. 进入本技能后，先读取：
    - `npm run cli -- runtime-contract --json`
-2. 先 lint，再改文档：
-   - `npm run cli -- lint-doc-anchors --target <skill_root> --json`
-3. 看门面页面时启动 dev server：
-   - `cd ui-dev && npm run dev`
-4. 修改本技能自身文档后，必须回写：
-   - `npm run cli -- rebuild-self-graph --json`
-5. 需要常驻服务时：
-   - `cd ui-dev && npm run build`
-   - `cd ui-dev && npm run service:install`
+2. 若目标是文档结构治理，继续读取：
+   - `references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md`
+   - `references/tooling/Cli_Toolbox_USAGE.md`
+3. 若目标是 UI 视图工具开发或调界面，转入：
+   - `ui-dev/UI_DEV_ENTRY.md`
+4. 若修改了 tooling、contracts、asset 或图谱规则，必须同步更新相关文档与回归。
 
-## 5. 工具与资产
-- TS CLI：`scripts/Cli_Toolbox.ts`
-- 共享逻辑：`src/lib/docstructure.ts`
-- UI dev 根目录：`ui-dev/`
-- 实时服务：`ui-dev/server/viewer-server.ts`
-- viewer 前端：`ui-dev/client/*`
-- UI 开发文档：`ui-dev/docs/*`
-- runtime contract：
+## 3. 分类入口
+- 运行合同层：
   - `references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.json`
   - `references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md`
-- UI dev 入口：
+- 文档治理资产层：
+  - `assets/templates/DOC_FRONTMATTER_TEMPLATE.yaml`
+  - `assets/templates/ATOMIC_DOC_TEMPLATE.md`
+  - `assets/runtime/anchor_query_matrix.json`
+  - `assets/runtime/self_anchor_graph.json`
+- 工具层：
+  - `scripts/Cli_Toolbox.ts`
+  - `src/lib/docstructure.ts`
+  - `src/lib/types.ts`
+- 校验层：
+  - `tests/test_cli_toolbox.spec.ts`
+- 内置 UI 工具层：
   - `ui-dev/UI_DEV_ENTRY.md`
-- UI viewer 规范：
-  - `ui-dev/docs/VIEWER_STACK_AND_REUSE.md`
-  - `ui-dev/docs/VIEWER_SERVICE_WORKFLOW.md`
-  - `ui-dev/docs/rules/UI_LAYOUT_ADJUSTMENT_RULES.md`
-- systemd 模板：`ui-dev/assets/systemd/meta-skill-docstructure-viewer.service`
 
-## 6. 读取顺序
-1. `SKILL.md`
-2. `references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md`
-3. `ui-dev/UI_DEV_ENTRY.md`
-4. `references/tooling/Cli_Toolbox_USAGE.md`
-5. 需要实现细节时，再读 `references/tooling/development/*`
+## 4. 适用域
+- 适用于：skills 内部文档拆分、frontmatter anchor 校验、graph 构建、自身 graph 回写、将文档结构治理收敛为稳定合同。
+- 不适用于：普通 repo 文档治理、替代代码图谱技能、把 UI 本身当成技能主体。
+- 若任务目标是 UI 视图、交互、布局或视觉层级调整，应转到 `ui-dev/` 处理，而不是把 UI 逻辑散回根技能。
 
-## 7. Guardrails
-- 任何 markdown 文档都不得做成零锚点孤岛。
-- viewer 必须实时读取 skill 内文档变化；文档消失，页面对应节点也必须消失。
-- viewer 不是手写静态 mock；它必须消费真实 graph 与真实正文。
-- 原有 CLI 统一迁到 TS；不得继续保留 Python 版本。
-- UI 视觉调整的文档、代码、运行脚本必须优先收敛在 `ui-dev/`，不要把 UI 设计知识散落回根目录。
+## 5. 执行入口
+- 运行合同：
+  - `npm run cli -- runtime-contract --json`
+- 锚点 lint：
+  - `npm run cli -- lint-doc-anchors --target <skill_root> --json`
+- 图谱构建：
+  - `npm run cli -- build-anchor-graph --target <skill_root> --json`
+- 自身 graph 回写：
+  - `npm run cli -- rebuild-self-graph --json`
+- UI 工具入口：
+  - `ui-dev/UI_DEV_ENTRY.md`
+
+## 6. 读取原则
+- `SKILL.md` 只负责门面路由；运行时细节以下沉 contracts、tooling 文档与模板资产为准。
+- 根技能只表达文档治理本体，不直接承载 UI payload 逻辑或 UI 回归用例。
+- 所有 UI 相关代码、依赖、回归用例、tooling 与开发文档都必须留在 `ui-dev/`。
+- 若技能存在执行态规则，模型不得直接读 markdown 当规则源；必须优先读取 machine-readable 合同。
+
+## 7. 结构索引
+```text
+Meta-Skill-DocStructure/
+├── SKILL.md
+├── agents/
+│   └── openai.yaml
+├── scripts/
+│   └── Cli_Toolbox.ts
+├── src/
+│   └── lib/
+│       ├── docstructure.ts
+│       └── types.ts
+├── assets/
+│   ├── runtime/
+│   └── templates/
+├── references/
+│   ├── runtime/
+│   └── tooling/
+├── tests/
+│   └── test_cli_toolbox.spec.ts
+└── ui-dev/
+    ├── UI_DEV_ENTRY.md
+    ├── package.json
+    ├── client/
+    ├── server/
+    ├── lib/
+    ├── scripts/
+    ├── assets/
+    ├── docs/
+    └── tests/
+```

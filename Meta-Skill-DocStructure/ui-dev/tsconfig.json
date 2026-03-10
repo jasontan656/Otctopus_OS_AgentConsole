@@ -19,9 +19,12 @@
     }
   },
   "include": [
+    "lib/**/*.ts",
     "client/src/**/*.ts",
     "client/src/**/*.vue",
     "server/**/*.ts",
+    "tests/**/*.ts",
+    "vitest.config.ts",
     "vite.config.ts"
   ]
 }

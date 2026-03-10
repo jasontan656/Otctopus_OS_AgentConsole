@@ -4,13 +4,13 @@ import matter from 'gray-matter'
 import type {
   AnchorDefinition,
   AnchorMatrix,
+  DocGraphWorkspace,
   GraphEdgeRecord,
   GraphNodeRecord,
-  PreviewDocumentRecord,
-  PreviewPayload,
   RuntimeContractPayload,
   ScanError,
   ScanWarning,
+  SkillDocRecord,
 } from './types.js'
 
 const DEFAULT_SKILL_ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..', '..')
@@ -25,34 +25,12 @@ interface ResolvedContext {
   selfGraphPath: string
 }
 
-interface ScanRecord {
-  path: string
-  title: string
-  body: string
-  docId: string
-  docType: string
-  topic: string
-  anchors: AnchorDefinition[]
-  depth: number
-}
-
 function normalizeFileUrlPath(rawPath: string): string {
   return decodeURIComponent(rawPath)
 }
 
 function currentSkillRoot(): string {
   return normalizeFileUrlPath(DEFAULT_SKILL_ROOT)
-}
-
-function firstExisting(paths: string[]): string {
-  for (const candidate of paths) {
-    try {
-      return path.resolve(candidate)
-    } catch {
-      continue
-    }
-  }
-  return path.resolve(paths[0] ?? '')
 }
 
 async function fileExists(candidate: string): Promise<boolean> {
@@ -125,7 +103,11 @@ function normalizeDirection(raw: unknown): AnchorDefinition['direction'] {
   return value
 }
 
-function extractContract(absolutePath: string, data: Record<string, unknown>, requiredFields: string[]): {
+function extractContract(
+  absolutePath: string,
+  data: Record<string, unknown>,
+  requiredFields: string[],
+): {
   docId: string
   docType: string
   topic: string
@@ -169,7 +151,7 @@ function extractContract(absolutePath: string, data: Record<string, unknown>, re
 }
 
 function applySplitWarnings(
-  record: Pick<ScanRecord, 'path' | 'title' | 'body'>,
+  record: Pick<SkillDocRecord, 'path' | 'title' | 'body'>,
   matrix: AnchorMatrix,
 ): ScanWarning[] {
   const warnings: ScanWarning[] = []
@@ -209,7 +191,7 @@ function normalizeTarget(sourceAbsolutePath: string, targetRawPath: string, targ
 async function scanDocuments(context: ResolvedContext): Promise<{
   matrix: AnchorMatrix
   runtimeContract: RuntimeContractPayload
-  docs: ScanRecord[]
+  docs: SkillDocRecord[]
   edges: GraphEdgeRecord[]
   errors: ScanError[]
   warnings: ScanWarning[]
@@ -217,7 +199,7 @@ async function scanDocuments(context: ResolvedContext): Promise<{
   const matrix = await readJsonFile<AnchorMatrix>(context.matrixPath)
   const runtimeContract = await readJsonFile<RuntimeContractPayload>(context.runtimeContractPath)
   const markdownDocs = await collectMarkdownDocs(context.targetRoot)
-  const docs: ScanRecord[] = []
+  const docs: SkillDocRecord[] = []
   const edges: GraphEdgeRecord[] = []
   const errors: ScanError[] = []
   const warnings: ScanWarning[] = []
@@ -228,7 +210,7 @@ async function scanDocuments(context: ResolvedContext): Promise<{
       const raw = await fs.readFile(absolutePath, 'utf8')
       const parsed = matter(raw)
       const contract = extractContract(absolutePath, parsed.data as Record<string, unknown>, matrix.required_frontmatter_fields)
-      const record: ScanRecord = {
+      const record: SkillDocRecord = {
         path: relativePath,
         title: extractTitle(parsed.content, absolutePath),
         body: parsed.content.trim(),
@@ -236,6 +218,7 @@ async function scanDocuments(context: ResolvedContext): Promise<{
         docType: contract.docType,
         topic: contract.topic,
         anchors: contract.anchors,
+        anchorCount: contract.anchors.length,
         depth: relativePath.split('/').length - 1,
       }
       docs.push(record)
@@ -308,33 +291,11 @@ async function scanDocuments(context: ResolvedContext): Promise<{
   }
 }
 
-export async function buildPreviewPayload(targetRootInput: string): Promise<PreviewPayload> {
+export async function buildDocGraphWorkspace(targetRootInput: string): Promise<DocGraphWorkspace> {
   const context = await resolveContext(targetRootInput)
   const { matrix, runtimeContract, docs, edges, errors, warnings } = await scanDocuments(context)
-  const incomingByTarget = new Map<string, GraphEdgeRecord[]>()
-  const outgoingBySource = new Map<string, GraphEdgeRecord[]>()
 
-  for (const edge of edges) {
-    outgoingBySource.set(edge.source, [...(outgoingBySource.get(edge.source) ?? []), edge])
-    incomingByTarget.set(edge.target, [...(incomingByTarget.get(edge.target) ?? []), edge])
-  }
-
-  const previewDocs: PreviewDocumentRecord[] = docs.map((doc) => ({
-    path: doc.path,
-    docId: doc.docId,
-    docType: doc.docType,
-    topic: doc.topic,
-    title: doc.title,
-    anchorCount: doc.anchors.length,
-    depth: doc.depth,
-    body: doc.body,
-    anchors: doc.anchors,
-    outgoing: outgoingBySource.get(doc.path) ?? [],
-    incoming: incomingByTarget.get(doc.path) ?? [],
-    warnings: warnings.filter((warning) => warning.doc === doc.path),
-  }))
-
-  const graphNodes: GraphNodeRecord[] = previewDocs.map((doc) => ({
+  const graphNodes: GraphNodeRecord[] = docs.map((doc) => ({
     path: doc.path,
     docId: doc.docId,
     docType: doc.docType,
@@ -358,15 +319,11 @@ export async function buildPreviewPayload(targetRootInput: string): Promise<Prev
       errorCount: errors.length,
       warningCount: warnings.length,
     },
-    view: {
-      entryPath: previewDocs.some((doc) => doc.path === 'SKILL.md') ? 'SKILL.md' : (previewDocs[0]?.path ?? ''),
-      targetSkillName: path.basename(context.targetRoot),
-    },
     graph: {
       nodes: graphNodes,
       edges,
     },
-    docs: previewDocs,
+    docs,
     warnings,
     errors,
   }
@@ -377,24 +334,24 @@ export async function loadRuntimeContract(targetRootInput: string): Promise<Runt
   return readJsonFile<RuntimeContractPayload>(context.runtimeContractPath)
 }
 
-export async function rebuildSelfGraph(targetRootInput: string): Promise<{ graphPath: string; payload: PreviewPayload }> {
+export async function rebuildSelfGraph(targetRootInput: string): Promise<{ graphPath: string; workspace: DocGraphWorkspace }> {
   const context = await resolveContext(targetRootInput)
-  const payload = await buildPreviewPayload(context.targetRoot)
+  const workspace = await buildDocGraphWorkspace(context.targetRoot)
   const snapshot = {
     graph_name: 'META_SKILL_DOCSTRUCTURE_SELF_ANCHOR_GRAPH',
     graph_version: 'v2',
     source_skill: path.basename(context.targetRoot),
-    summary: payload.summary,
-    nodes: payload.graph.nodes,
-    edges: payload.graph.edges,
-    warnings: payload.warnings,
-    updated_at: payload.updatedAt,
+    summary: workspace.summary,
+    nodes: workspace.graph.nodes,
+    edges: workspace.graph.edges,
+    warnings: workspace.warnings,
+    updated_at: workspace.updatedAt,
   }
   await fs.mkdir(path.dirname(context.selfGraphPath), { recursive: true })
   await fs.writeFile(context.selfGraphPath, `${JSON.stringify(snapshot, null, 2)}\n`, 'utf8')
   return {
     graphPath: context.selfGraphPath,
-    payload,
+    workspace,
   }
 }
 

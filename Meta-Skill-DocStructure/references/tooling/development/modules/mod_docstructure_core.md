@@ -1,7 +1,7 @@
 ---
 doc_id: "tooling.module.docstructure_core"
 doc_type: "module_doc"
-topic: "Core TS docstructure engine behind graph, lint, and preview payload"
+topic: "Core TS docstructure engine behind lint and graph workspace building"
 anchors:
   - target: "../../../runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md"
     relation: "implements"
@@ -18,5 +18,5 @@ anchors:
 ## 职责
 - 扫描 markdown 文档。
 - 解析 frontmatter anchor 合同。
-- 产出 lint 结果、graph JSON 与 preview payload。
+- 产出 lint 结果、graph JSON 与 doc graph workspace。
 - 在当前 skill 模式下回写 `self_anchor_graph.json`。

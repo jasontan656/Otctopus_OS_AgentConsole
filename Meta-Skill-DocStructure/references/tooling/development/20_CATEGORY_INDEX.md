@@ -20,6 +20,8 @@ anchors:
 - 模块目录：`10_MODULE_CATALOG.yaml`
 - 使用文档：`../Cli_Toolbox_USAGE.md`
 - UI dev 入口：`../../../ui-dev/UI_DEV_ENTRY.md`
+- UI 定位：`../../../ui-dev/docs/UI_TOOL_POSITIONING.md`
+- UI 组织：`../../../ui-dev/docs/UI_FILE_ORGANIZATION.md`
 - Viewer 文档：`../../../ui-dev/docs/VIEWER_STACK_AND_REUSE.md`
 
 ## 模块分支
