@@ -34,21 +34,13 @@ description: "集中管理 workspace 内的常驻默认文档。当前提供 sca
 - `Part B` 仅保留在 skill 内部 `human` 模版与对应 machine JSON 中，不直接推送到外部。
 - machine JSON 只承载 `Part B` 的结构化内容。
 
-## 4. 阶段定义
+## 4. 阶段阅读入口
 - `scan`
-  - 负责发现当前哪些文件处于本技能的受管范围，并输出清单。
-  - 必须从外置 scan 规则资产读取文件名规则、关键字规则与 disallowed list。
-  - 必须支持 stdout 与 json 两种输出；json 输出必须落盘到对应的 `Codex_Skill_Runtime` 文件夹。
-  - 必须对扫描结果执行结构 lint。
+  - 阅读入口：`references/runtime_contracts/SCAN_STAGE_CONTRACT.md`
 - `collect`
-  - 依据 scan 结果，在技能目录内创建或刷新对应的目录结构与受管文件。
-  - 只从外部受管 `AGENTS.md` 中回收 `<part_A> ... </part_A>` 到 skill 内部 `human` 模版。
-  - 必须以外部源为真源覆盖 skill mirror 与安装目录中的对应受管资产。
-  - `Part B` 必须保留 skill 内部既有内容，不得被外部文件覆盖。
+  - 阅读入口：`references/runtime_contracts/COLLECT_STAGE_CONTRACT.md`
 - `push`
-  - 只从 skill 内部 `human` 模版中提取 `<part_A> ... </part_A>` 回写到外部 `AGENTS.md`。
-  - 必须以技能内受管模版为真源，直接覆盖对应外部文件。
-  - `Part B` 必须留在 skill 内部，不参与外推。
+  - 阅读入口：`references/runtime_contracts/PUSH_STAGE_CONTRACT.md`
 
 ## 5. 维护入口
 - 当用户要求修改本技能自身的规范、模版、stage 合同、运行逻辑或静态资产时，必须把所有隐式相关面一起纳入审查。
@@ -74,6 +66,8 @@ description: "集中管理 workspace 内的常驻默认文档。当前提供 sca
 
 ## 7. 约束
 - 工具实现必须以本技能当前保留的静态治理文档为准，不得回滚到旧的隐式分段或旧 CLI 结构。
+- 各阶段文档必须独立加载。
+- 除非用户显式要求完整流程，否则模型仅允许按需加载当前所需阶段内容，禁止默认通读全部阶段文档。
 - `scan` 规则资产必须外置，不得把 disallowed list 或 keyword 规则重新硬编码进 CLI。
 - `collect` 必须以外部源为真源覆盖技能内模版。
 - `push` 必须以技能内模版为真源覆盖外部目标。
