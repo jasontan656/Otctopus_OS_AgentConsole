@@ -64,22 +64,11 @@
 - duplicated copies of the direct human entry instructions unless they are intentionally normalized into payload fields
 - content that should only exist as a shell command or a plain-language entry note
 
-## Scan
-- `scan` only discovers which files are managed by this skill.
-- It keeps the existing filename-driven discovery boundary.
-- It does not write managed copies.
-
-## Collect
-- `collect` reads external managed `AGENTS.md` files.
-- It extracts only the `<part_A> ... </part_A>` block from the governed external shape.
-- It updates only the internal human template's `Part A`.
-- It must not overwrite the internal `Part B`.
-
-## Push
-- `push` reads the internal human template.
-- It extracts only the `<part_A> ... </part_A>` block.
-- It writes only that block back to the external `AGENTS.md`.
-- `Part B` remains internal only.
+## Adjacent Contract References
+- `scan` semantics are defined in `references/runtime_contracts/SCAN_STAGE_CONTRACT.md`.
+- `collect` semantics are defined in `references/runtime_contracts/COLLECT_STAGE_CONTRACT.md`.
+- `push` semantics are defined in `references/runtime_contracts/PUSH_STAGE_CONTRACT.md`.
+- This document does not expand stage behavior. It only defines how `AGENTS.md` itself is governed.
 
 ## Maintenance Rule
 - Any AGENTS governance change must be reviewed against both `Part A` and `Part B`.
