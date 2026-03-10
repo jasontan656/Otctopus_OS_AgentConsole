@@ -20,6 +20,7 @@ anchors:
 - `npm run dev`
 - 修改 skill 内 markdown、json、yaml 后，watcher 会推送新 payload。
 - 删除文档或新增文档后，viewer 的节点列表与 graph 会同步增减。
+- viewer 运行时只读 skill 内容，不负责写回 `assets/runtime/self_anchor_graph.json`。
 
 ## Prod 模式
 - `npm run build`
