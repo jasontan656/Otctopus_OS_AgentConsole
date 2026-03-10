@@ -5,14 +5,13 @@
     "audit_fields_are_not_primary_runtime_instructions": true,
     "path_metadata_is_not_action_guidance": true
   },
-  "document_semantic_standard": [
-    "single document, single semantic theme",
-    "one theme must preserve one responsibility, one boundary, one consumer, and one runtime layer",
-    "document body may explain only its own rules, structure, constraints, inputs, and outputs",
-    "adjacent themes may be referenced only by pointer, not expanded inline",
-    "split action semantics away from object semantics",
-    "split content structure semantics away from stage semantics",
-    "split governance rules away from tool definitions"
+  "default_meta_skill_order": [
+    "$Meta-prompt-write (strengthen user intent and understand the real need)",
+    "$Meta-mindchain (think from the architecture level and reject one-sided thinking)",
+    "$Meta-reasoningchain (project the future shape to align the target state)",
+    "$Meta-keyword-first-edit (prefer delete > replace > add when editing)",
+    "$Meta-refactor-behavior-preserving (applicable only when refactor is needed)",
+    "$Meta-Agent-Browser (applicable only when the task is frontend or browser-related)"
   ],
   "peer_summary_policy": {
     "available": false,
@@ -23,12 +22,12 @@
   "turn_start_actions": [
     "use the returned target contract JSON as the runtime rule source",
     "classify the turn as READ_EXEC or WRITE_EXEC",
-    "when this repo will be written, keep same-turn Constitution lint and Git traceability in scope from the start"
+    "if the turn will write Codex_Skills_Mirror, plan same-turn Constitution lint and Git traceability from the start"
   ],
   "runtime_constraints": [
     "treat CLI JSON as the primary runtime rule source",
     "do not use audit markdown as the primary execution guide",
-    "stay within the concrete Codex_Skills_Mirror repo boundary defined by this payload",
+    "stay within the concrete repo-local boundary defined by this payload",
     "choose READ_EXEC or WRITE_EXEC by actual write intent, not by file type alone",
     "when this repo is written, keep same-turn Constitution lint and Git traceability in scope"
   ],
@@ -42,10 +41,8 @@
     },
     "WRITE_EXEC": {
       "goal": "edit files or trigger manager-owned write flows",
-      "default_must_use": [
-        "$Meta-github-operation (Any file write must leave trace in github by pushing changes to main)"
-      ],
       "default_actions": [
+        "apply the default meta sequence before editing",
         "state the intended write scope before editing",
         "edit the minimal correct scope that matches the user intent",
         "run Constitution lint on Codex_Skills_Mirror before closing the turn",
