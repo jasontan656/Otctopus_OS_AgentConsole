@@ -1,0 +1,4 @@
+interface:
+  display_name: "Meta-Impact-Investigation"
+  short_description: "调查 repo 影响面、潜在关联与漏改风险"
+  default_prompt: "Use Meta-Impact-Investigation before concluding or editing. Build the affected scope from direct anchors, indirect dependencies, and latent related files without explicit anchors. For read-only tasks, do not conclude without enough evidence. For write-intent tasks, do not edit until the full impact surface, must-update set, must-check set, and regression surface are explicit."
