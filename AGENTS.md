@@ -1,6 +1,6 @@
 [AGENT RUNTIME HOOK - ABSOLUTE ENFORCEMENT]
 
-`HOOK_LOAD`: Apply this AGENTS contract. This file is a thin runtime entry that points to the skill-managed CLI/JSON rule source.
+`HOOK_LOAD`: Apply this AGENTS contract.
 
 <part_A>
 [TURN START - MANDATORY]

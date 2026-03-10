@@ -2,8 +2,7 @@
 
 `HOOK_LOAD`: Apply this AGENTS contract.
 
-[PART A]
-
+<part_A>
 1. 根入口命令
 - 在处理 workspace root 路径规则之前，必须先运行：
 - `python3 /home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/scripts/Cli_Toolbox.py target-contract --source-path "/home/jasontan656/AI_Projects/AGENTS.md" --json`
@@ -21,8 +20,9 @@
 4. Multi-AGENT 工作模式
 - Multi-AGENT work mode 下，同一文件夹在工作过程中可能出现未预期的并行改动。
 - 当出现与当前任务无关的并行变更时，应忽略这些无关变更，只关注与当前任务直接相关的文件。
+</part_A>
 
-[PART B]
+<part_B>
 
 ```json
 {
@@ -85,3 +85,4 @@
   ]
 }
 ```
+</part_B>
