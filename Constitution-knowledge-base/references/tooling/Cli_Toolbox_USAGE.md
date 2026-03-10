@@ -28,7 +28,7 @@
 - 人类叙事版输入：
   - 我想对目标仓库执行宪法静态 gate，只关心可被 lint 的结构、契约和边界条款。
 - 电脑动作发生了什么：
-  - 脚本扫描目标目录，执行 `code_governance/fat_file/file_structure/folder_structure/modularity/typed_contract/payload_normalize/permission_boundary` 模块。
+  - 脚本扫描目标目录，执行 `code_governance/fat_file/file_structure/folder_structure/modularity/typed_contract/payload_normalize/permission_boundary/hardcoded_asset/absolute_path` 模块。
   - 对每个 gate 输出 `status/pass|fail`、违规文件与简短摘要。
   - 任一 gate 失败时，以非零退出码阻断。
 - 人类叙事版输出：

@@ -10,7 +10,7 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
 
-from constitution_lint_rules.modules import code_governance, fat_file, file_structure, folder_structure, modularity, payload_normalize, permission_boundary, typed_contract
+from constitution_lint_rules.modules import absolute_path, code_governance, fat_file, file_structure, folder_structure, hardcoded_asset, modularity, payload_normalize, permission_boundary, typed_contract
 
 MODULES = [
     code_governance,
@@ -21,6 +21,8 @@ MODULES = [
     typed_contract,
     payload_normalize,
     permission_boundary,
+    hardcoded_asset,
+    absolute_path,
 ]
 
 

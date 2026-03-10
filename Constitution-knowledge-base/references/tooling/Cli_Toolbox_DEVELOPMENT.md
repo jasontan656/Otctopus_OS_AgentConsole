@@ -45,6 +45,8 @@
    - `typed_contract_gate`
    - `payload_normalize_gate`
    - `permission_boundary_gate`
+   - `hardcoded_asset_gate`
+   - `absolute_path_gate`
 3. 无法稳定静态验证的条款不再进入 registry 与 gate。
 
 ## 示例命令（强制：一行可复制）

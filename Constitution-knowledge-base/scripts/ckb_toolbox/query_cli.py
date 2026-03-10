@@ -113,6 +113,8 @@ def main() -> int:
                 "typed_contract",
                 "payload_normalize",
                 "permission_boundary",
+                "hardcoded_asset",
+                "absolute_path",
                 "rule_traceability",
             ],
             "non_goal": ["dependency_selection", "framework_selection", "runtime_dependency_binding", "runtime_evidence"],

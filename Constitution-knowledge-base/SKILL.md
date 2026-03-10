@@ -21,7 +21,7 @@ description: 宪法库技能用于让大模型使用关键字查询,相关规范
   - 输出：仅打印到 console，且仅允许 `JSONL` 机械输出（含 `id/cat/domain/src/must/forbid/gate`）；禁止 markdown 人类文本输出与落盘参数。
 - `Cli_Toolbox.run_constitution_lints`
   - 入口：`scripts/run_constitution_lints.py`
-  - 职责：对目标代码库执行静态 lint gate，覆盖 `code_governance/fat_file/file_structure/folder_structure/modularity/typed_contract/payload_normalize/permission_boundary`。
+  - 职责：对目标代码库执行静态 lint gate，覆盖 `code_governance/fat_file/file_structure/folder_structure/modularity/typed_contract/payload_normalize/permission_boundary/hardcoded_asset/absolute_path`。
   - 输出：仅打印 JSON，失败返回非零退出码。
 
 ## 3. 工作流约束

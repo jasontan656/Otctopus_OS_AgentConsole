@@ -36,6 +36,8 @@ class ConstitutionToolingTests(unittest.TestCase):
         self.assertIn("typed_contract_gate", contract["required_gates"])
         self.assertIn("payload_normalize_gate", contract["required_gates"])
         self.assertIn("permission_boundary_gate", contract["required_gates"])
+        self.assertIn("hardcoded_asset_gate", contract["required_gates"])
+        self.assertIn("absolute_path_gate", contract["required_gates"])
         self.assertTrue(all("common_observability" not in json.dumps(row, ensure_ascii=False) for row in rows))
 
     def test_static_lints_detect_and_pass(self) -> None:
@@ -79,6 +81,112 @@ class ConstitutionToolingTests(unittest.TestCase):
                 check=False,
             )
             self.assertEqual(good_result.returncode, 0, good_result.stdout + good_result.stderr)
+
+    def test_hardcoded_asset_gate_detects_inline_prompt_and_allows_external_asset(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="ctest_", dir=str(ROOT.parent)) as tmp:
+            root = Path(tmp) / "skill_repo"
+            root.mkdir()
+            bad = root / "bad_prompt.py"
+            bad.write_text(
+                'PROMPT = """\n'
+                "You are an audit assistant.\n"
+                "## 1. Goal\n"
+                "- 你是审计助手\n"
+                "- 必须读取规则\n"
+                "- 禁止跳过验证\n"
+                "- 输出契约固定\n"
+                "- workflow 需要完整\n"
+                "- name: inline\n"
+                "- description: inline\n"
+                '"""\n',
+                encoding="utf-8",
+            )
+            result = subprocess.run(
+                ["python3", str(ROOT / "scripts/run_constitution_lints.py"), "--target", str(root)],
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+            self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+            report = json.loads(result.stdout)
+            gate = next(g for g in report["gates"] if g["gate"] == "hardcoded_asset_gate")
+            self.assertTrue(any(v["path"] == "bad_prompt.py" for v in gate["violations"]), result.stdout + result.stderr)
+
+            good = root / "loader.py"
+            (root / "assets").mkdir(exist_ok=True)
+            (root / "assets" / "prompt.txt").write_text("You are an audit assistant.\n", encoding="utf-8")
+            good.write_text(
+                "from pathlib import Path\n"
+                "PROMPT_PATH = Path(__file__).parent / 'assets' / 'prompt.txt'\n"
+                "PROMPT = PROMPT_PATH.read_text(encoding='utf-8')\n",
+                encoding="utf-8",
+            )
+            result = subprocess.run(
+                ["python3", str(ROOT / "scripts/run_constitution_lints.py"), "--target", str(root)],
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+            report = json.loads(result.stdout)
+            gate = next(g for g in report["gates"] if g["gate"] == "hardcoded_asset_gate")
+            self.assertFalse(any(v["path"] == "loader.py" for v in gate["violations"]), result.stdout + result.stderr)
+
+    def test_absolute_path_gate_respects_octopus_boundary(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="ctest_", dir=str(ROOT.parent)) as tmp:
+            octopus_root = Path(tmp) / "Octopus_OS"
+            octopus_root.mkdir()
+            (octopus_root / "deploy.py").write_text(
+                'CONFIG = "/home/jasontan656/AI_Projects/Octopus_OS/config/settings.yaml"\n'
+                'ESCAPE = "../../shared/runtime.json"\n',
+                encoding="utf-8",
+            )
+            result = subprocess.run(
+                ["python3", str(ROOT / "scripts/run_constitution_lints.py"), "--target", str(octopus_root)],
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+            self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+            report = json.loads(result.stdout)
+            gate = next(g for g in report["gates"] if g["gate"] == "absolute_path_gate")
+            reasons = {v["reason"] for v in gate["violations"]}
+            self.assertIn("octopus_os_forbids_unix_absolute_paths", reasons, result.stdout + result.stderr)
+            self.assertIn("octopus_os_forbids_ai_projects_prefix", reasons, result.stdout + result.stderr)
+            self.assertIn("octopus_os_forbids_repo_escape_relative_paths", reasons, result.stdout + result.stderr)
+
+    def test_absolute_path_gate_allows_ai_projects_prefix_for_workspace_manager_repo(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="ctest_", dir=str(ROOT.parent)) as tmp:
+            manager_root = Path(tmp) / "Codex_Skills_Mirror"
+            manager_root.mkdir()
+            (manager_root / "sync.py").write_text(
+                'MIRROR = "AI_Projects/Codex_Skills_Mirror/Meta-Skill-Mirror"\n',
+                encoding="utf-8",
+            )
+            result = subprocess.run(
+                ["python3", str(ROOT / "scripts/run_constitution_lints.py"), "--target", str(manager_root)],
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+            (manager_root / "bad_home.py").write_text(
+                'SECRET = "/home/jasontan656/.ssh/id_rsa"\n',
+                encoding="utf-8",
+            )
+            result = subprocess.run(
+                ["python3", str(ROOT / "scripts/run_constitution_lints.py"), "--target", str(manager_root)],
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+            self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+            report = json.loads(result.stdout)
+            gate = next(g for g in report["gates"] if g["gate"] == "absolute_path_gate")
+            self.assertTrue(
+                any(v["reason"] == "non_octopus_repo_forbids_user_absolute_paths" for v in gate["violations"]),
+                result.stdout + result.stderr,
+            )
 
     def test_file_structure_repo_token_does_not_misfire_on_report(self) -> None:
         with tempfile.TemporaryDirectory(prefix="ctest_", dir=str(ROOT.parent)) as tmp:
@@ -129,7 +237,7 @@ class ConstitutionToolingTests(unittest.TestCase):
                 "import argparse\n"
                 "parser = argparse.ArgumentParser()\n"
                 "parser.add_argument('--x')\n"
-                + ("print('x')\n" * 221),
+                + ("print('x')\n" * 421),
                 encoding="utf-8",
             )
 
@@ -144,7 +252,7 @@ class ConstitutionToolingTests(unittest.TestCase):
             fat_gate = next(g for g in report["gates"] if g["gate"] == "fat_file_gate")
             violations = {v["path"]: v["reason"] for v in fat_gate["violations"]}
             self.assertNotIn("scripts/workflow_stage_contract.py", violations, result.stdout + result.stderr)
-            self.assertEqual(violations.get("scripts/run_cli.py"), "cli_or_task_script>220", result.stdout + result.stderr)
+            self.assertEqual(violations.get("scripts/run_cli.py"), "cli_or_task_script>420", result.stdout + result.stderr)
 
 
 if __name__ == "__main__":

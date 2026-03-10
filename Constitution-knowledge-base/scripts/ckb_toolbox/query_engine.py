@@ -24,6 +24,8 @@ REQUIRED_GATES = [
     "typed_contract_gate",
     "payload_normalize_gate",
     "permission_boundary_gate",
+    "hardcoded_asset_gate",
+    "absolute_path_gate",
 ]
 MINIMUM_KEYWORD_CONTRACT = {
     "bilingual_required": True,
