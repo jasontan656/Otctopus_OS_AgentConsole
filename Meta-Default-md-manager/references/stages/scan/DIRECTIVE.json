@@ -4,13 +4,13 @@
   "tool_state": "active",
   "purpose": "Discover governed files from external rule assets and run structure lint on the discovered result set.",
   "instruction": [
-    "scan discovers all files that match the governed filename rules and runtime scan assets",
+    "scan discovers only files that belong to the declared governed source paths and also match the scan rule asset",
     "scan applies a disallowed list to exclude blacklisted domains such as Octopus_OS",
     "scan supports both stdout output and json output",
     "when json output is requested, the result file must be written under the corresponding Codex_Skill_Runtime folder"
   ],
   "workflow": [
-    "load filename rules and keyword rules from external scan rule assets",
+    "load governed source paths, filename rules, and keyword rules from external scan rule assets",
     "walk the workspace using those managed match rules",
     "exclude all paths that match the disallowed list",
     "produce a managed target list for human review",

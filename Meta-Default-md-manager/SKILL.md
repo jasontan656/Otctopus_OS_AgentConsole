@@ -16,13 +16,10 @@ description: "集中管理 workspace 内的常驻默认文档。当前提供 sca
 - 工具行为必须服从 `references/runtime_contracts/` 下的静态治理合同。
 
 ## 2. 受管范围
-- 默认治理 workspace 中非 `Octopus_OS/` 域的常驻默认文档。
-- 当前扫描规则仍以既定文件名匹配为准，核心对象包括：
-  - `AGENTS.md`
-  - `.gitignore`
-  - `Octopus_CodeBase_Backend/README.md`
-  - `Octopus_CodeBase_Backend/Deployment_Guide.md`
-- `Octopus_OS/` 仍然是显式排除域，其内部默认文档由 `2-Octupos-FullStack` 独占治理。
+- 当前仅治理 `AI_Projects` 下两份 `AGENTS.md`：
+  - `/home/jasontan656/AI_Projects/AGENTS.md`
+  - `/home/jasontan656/AI_Projects/Codex_Skills_Mirror/AGENTS.md`
+- 当前 CLI 的 scan 结果也必须严格限制在这两份受管目标内。
 
 ## 3. AGENTS 资产治理模型
 - 外部 `AGENTS.md` 的规范形态是 `Part A only`。

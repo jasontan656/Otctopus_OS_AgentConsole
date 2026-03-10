@@ -30,6 +30,10 @@ class CliToolboxTests(unittest.TestCase):
             json.dumps(
                 {
                     "version": 1,
+                    "governed_source_paths": [
+                        "AGENTS.md",
+                        "Codex_Skills_Mirror/AGENTS.md",
+                    ],
                     "exact_filename_rules": ["AGENTS.md"],
                     "keyword_rules": [],
                     "disallowed_path_keywords": ["Octopus_OS"],
@@ -85,6 +89,7 @@ class CliToolboxTests(unittest.TestCase):
         self.assertIn("AGENTS.md", paths)
         self.assertIn("Codex_Skills_Mirror/AGENTS.md", paths)
         self.assertNotIn("Octopus_OS/AGENTS.md", paths)
+        self.assertEqual(sorted(paths), ["AGENTS.md", "Codex_Skills_Mirror/AGENTS.md"])
         self.assertTrue((self.runtime / "scan" / "latest.json").exists())
 
     def test_collect_creates_internal_human_and_syncs_installed(self) -> None:

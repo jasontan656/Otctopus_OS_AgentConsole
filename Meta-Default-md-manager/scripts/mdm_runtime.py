@@ -316,6 +316,10 @@ def match_scan_rules(
     disallowed = rules.get("disallowed_path_keywords", [])
     exact_names = set(rules.get("exact_filename_rules", []))
     keyword_rules = rules.get("keyword_rules", [])
+    governed_source_paths = {
+        str((paths.workspace_root / item).resolve())
+        for item in rules.get("governed_source_paths", [])
+    }
     only_filters = only_filters or []
     source_paths = source_paths or []
     normalized_source_paths = {str(Path(item).expanduser().resolve()) for item in source_paths}
@@ -323,6 +327,8 @@ def match_scan_rules(
     results: list[dict[str, Any]] = []
     for file_path in iter_workspace_files(paths):
         text_path = str(file_path)
+        if governed_source_paths and text_path not in governed_source_paths:
+            continue
         if any(keyword in text_path for keyword in disallowed):
             continue
         if only_filters and not any(token in text_path for token in only_filters):
