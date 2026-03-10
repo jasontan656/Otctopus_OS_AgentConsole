@@ -1,0 +1,4 @@
+interface:
+  display_name: "Meta Semantic"
+  short_description: "把用户口语表达稳定翻译为精确执行语义并持续收敛误解。"
+  default_prompt: "使用 $meta-semantic 先把这段 prompt 翻译成精确执行语义，再继续执行。"
