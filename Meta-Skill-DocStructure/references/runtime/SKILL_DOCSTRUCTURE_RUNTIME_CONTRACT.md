@@ -18,7 +18,7 @@ anchors:
 ## 合同目标
 - 规范 skill 内部 markdown 文档的语义树拆分与 frontmatter anchors。
 - 输出可被模型和机械系统消费的 anchor graph JSON。
-- 通过 TS CLI 提供 lint 与 self graph rebuild。
+- 通过 TS CLI 提供 lint、split 决策注册与 self graph rebuild。
 
 ## 最小要求
 - 每个 skill 必须先有门面文档。
@@ -37,3 +37,11 @@ anchors:
 - 先拆 `facade`，再拆 `routing`，最后下沉到 `topic_atom`。
 - 一个文档若同时出现多个独立语义轴线，应继续拆分。
 - 横向或跨层关系只能作为 graph 补充，不能替代主路径。
+
+## split lint 规则
+- split 候选点一旦出现，不再只作为 warning，而是默认进入阻断态。
+- 阻断态意味着：当前文档必须二选一：
+  - 当场拆分解决。
+  - 由用户显式决策后写入 `assets/runtime/split_decision_registry.json`。
+- 已登记为 `accepted` 的候选点，在同一内容 fingerprint 下不再重复阻断。
+- 已登记为 `split_required` 的候选点，会持续阻断直到文档被真正拆分或重写。

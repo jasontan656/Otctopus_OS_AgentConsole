@@ -6,7 +6,9 @@
     "nodeCount": 10,
     "edgeCount": 20,
     "errorCount": 0,
-    "warningCount": 0
+    "warningCount": 0,
+    "splitCandidateCount": 0,
+    "blockingSplitCandidateCount": 0
   },
   "nodes": [
     {
@@ -242,6 +244,7 @@
       "reason": "This module doc belongs to the tooling development tree."
     }
   ],
+  "split_candidates": [],
   "warnings": [],
-  "updated_at": "2026-03-10T23:33:12.824Z"
+  "updated_at": "2026-03-10T23:43:52.645Z"
 }

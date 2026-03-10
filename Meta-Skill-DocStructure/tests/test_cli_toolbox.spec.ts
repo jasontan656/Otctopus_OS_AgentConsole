@@ -2,7 +2,12 @@ import { mkdtemp, mkdir, readFile, rm, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import os from 'node:os'
 import { afterEach, describe, expect, it } from 'vitest'
-import { buildDocGraphWorkspace, loadRuntimeContract, rebuildSelfGraph } from '../src/lib/docstructure.js'
+import {
+  buildDocGraphWorkspace,
+  loadRuntimeContract,
+  rebuildSelfGraph,
+  registerSplitDecision,
+} from '../src/lib/docstructure.js'
 
 const tempDirs: string[] = []
 
@@ -10,6 +15,32 @@ async function createTempSkill(): Promise<string> {
   const tempRoot = await mkdtemp(path.join(os.tmpdir(), 'docstructure-'))
   tempDirs.push(tempRoot)
   return tempRoot
+}
+
+async function createSplitCandidateSkill(): Promise<string> {
+  const skillRoot = await createTempSkill()
+  await mkdir(path.join(skillRoot, 'docs'), { recursive: true })
+  await mkdir(path.join(skillRoot, 'assets', 'runtime'), { recursive: true })
+  await writeFile(
+    path.join(skillRoot, 'assets', 'runtime', 'split_decision_registry.json'),
+    JSON.stringify({
+      registry_name: 'META_SKILL_DOCSTRUCTURE_SPLIT_DECISION_REGISTRY',
+      registry_version: 'v1',
+      entries: [],
+    }, null, 2),
+    'utf8',
+  )
+  await writeFile(
+    path.join(skillRoot, 'SKILL.md'),
+    `---\nname: "temp-skill"\ndescription: "temporary skill"\nmetadata:\n  doc_structure:\n    doc_id: "skill.entry"\n    doc_type: "skill_facade"\n    topic: "temp facade"\n    anchors:\n      - target: "docs/guide.md"\n        relation: "details"\n        direction: "downstream"\n        reason: "guide expands facade"\n---\n\n# Temp Skill\n`,
+    'utf8',
+  )
+  await writeFile(
+    path.join(skillRoot, 'docs', 'guide.md'),
+    `---\ndoc_id: "docs.guide"\ndoc_type: "topic_atom"\ntopic: "guide"\nanchors:\n  - target: "../SKILL.md"\n    relation: "belongs_to"\n    direction: "upstream"\n    reason: "guide belongs to the facade"\n---\n\n# Read 和 Write\n\n## 定义\n说明。\n`,
+    'utf8',
+  )
+  return skillRoot
 }
 
 afterEach(async () => {
@@ -27,7 +58,7 @@ describe('Meta-Skill-DocStructure TS runtime', () => {
 
   it('builds a doc graph workspace for the current skill', async () => {
     const workspace = await buildDocGraphWorkspace(path.resolve(__dirname, '..'))
-    expect(['pass', 'pass_with_warnings']).toContain(workspace.status)
+    expect(workspace.status).toBe('pass')
     expect(workspace.graph.nodes.length).toBeGreaterThan(0)
   })
 
@@ -54,5 +85,22 @@ describe('Meta-Skill-DocStructure TS runtime', () => {
     const { graphPath } = await rebuildSelfGraph(path.resolve(__dirname, '..'))
     const snapshot = JSON.parse(await readFile(graphPath, 'utf8')) as { graph_version: string }
     expect(snapshot.graph_version).toBe('v2')
+  })
+
+  it('fails when a split candidate requires user decision', async () => {
+    const skillRoot = await createSplitCandidateSkill()
+    const workspace = await buildDocGraphWorkspace(skillRoot)
+    expect(workspace.status).toBe('fail')
+    expect(workspace.summary.blockingSplitCandidateCount).toBeGreaterThan(0)
+    expect(workspace.splitCandidates[0]?.decisionStatus).toBe('requires_decision')
+  })
+
+  it('accepts a split candidate after writing a registry decision', async () => {
+    const skillRoot = await createSplitCandidateSkill()
+    await registerSplitDecision(skillRoot, 'docs/guide.md', 'title_conjunction_zh', 'accepted', 'user keeps this bundled title')
+    const workspace = await buildDocGraphWorkspace(skillRoot)
+    expect(workspace.status).toBe('pass')
+    expect(workspace.summary.blockingSplitCandidateCount).toBe(0)
+    expect(workspace.splitCandidates[0]?.decisionStatus).toBe('accepted')
   })
 })

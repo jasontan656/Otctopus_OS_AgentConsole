@@ -38,6 +38,39 @@ export interface ScanError {
   error: string
 }
 
+export type SplitDecision = 'accepted' | 'split_required'
+export type SplitDecisionStatus = 'requires_decision' | 'accepted' | 'split_required'
+
+export interface SplitDecisionRegistryEntry {
+  doc_path: string
+  doc_id: string
+  rule_id: string
+  fingerprint: string
+  decision: SplitDecision
+  note: string
+  decided_at: string
+}
+
+export interface SplitDecisionRegistry {
+  registry_name: string
+  registry_version: string
+  entries: SplitDecisionRegistryEntry[]
+}
+
+export interface SplitCandidate {
+  doc: string
+  docId: string
+  title: string
+  ruleId: string
+  severity: string
+  message: string
+  hits: number
+  fingerprint: string
+  decisionStatus: SplitDecisionStatus
+  blocking: boolean
+  note?: string
+}
+
 export interface RuntimeContractPayload {
   contract_name: string
   contract_version: string
@@ -64,6 +97,7 @@ export interface RuntimeContractPayload {
     split_triggers: string[]
     stop_split_conditions: string[]
     routing_principles: string[]
+    split_decision_registry_path: string
   }
 }
 
@@ -107,12 +141,15 @@ export interface DocGraphWorkspace {
     edgeCount: number
     errorCount: number
     warningCount: number
+    splitCandidateCount: number
+    blockingSplitCandidateCount: number
   }
   graph: {
     nodes: GraphNodeRecord[]
     edges: GraphEdgeRecord[]
   }
   docs: SkillDocRecord[]
+  splitCandidates: SplitCandidate[]
   warnings: ScanWarning[]
   errors: ScanError[]
 }

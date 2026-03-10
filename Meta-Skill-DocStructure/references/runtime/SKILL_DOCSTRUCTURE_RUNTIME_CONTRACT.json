@@ -16,6 +16,8 @@
   "commands": {
     "runtime_contract": "npm run cli -- runtime-contract --json",
     "lint_doc_anchors": "npm run cli -- lint-doc-anchors --target <skill_root> --json",
+    "lint_split_points": "npm run cli -- lint-split-points --target <skill_root> --json",
+    "register_split_decision": "npm run cli -- register-split-decision --target <skill_root> --doc <doc_path> --rule <rule_id> --decision <accepted|split_required> --note <text> --json",
     "build_anchor_graph": "npm run cli -- build-anchor-graph --target <skill_root> --json",
     "rebuild_self_graph": "npm run cli -- rebuild-self-graph --json"
   },
@@ -64,6 +66,7 @@
       "always expose a facade before deep rules",
       "prefer branch docs before dumping many leaf docs",
       "use graph cross-links only after the primary tree path is clear"
-    ]
+    ],
+    "split_decision_registry_path": "assets/runtime/split_decision_registry.json"
   }
 }

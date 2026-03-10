@@ -1,5 +1,6 @@
 import path from 'node:path'
 import { promises as fs } from 'node:fs'
+import { createHash } from 'node:crypto'
 import matter from 'gray-matter'
 import type {
   AnchorDefinition,
@@ -11,6 +12,10 @@ import type {
   ScanError,
   ScanWarning,
   SkillDocRecord,
+  SplitCandidate,
+  SplitDecision,
+  SplitDecisionRegistry,
+  SplitDecisionRegistryEntry,
 } from './types.js'
 
 const DEFAULT_SKILL_ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..', '..')
@@ -23,6 +28,13 @@ interface ResolvedContext {
   matrixPath: string
   runtimeContractPath: string
   selfGraphPath: string
+  splitDecisionRegistryPath: string
+}
+
+const DEFAULT_SPLIT_DECISION_REGISTRY: SplitDecisionRegistry = {
+  registry_name: 'META_SKILL_DOCSTRUCTURE_SPLIT_DECISION_REGISTRY',
+  registry_version: 'v1',
+  entries: [],
 }
 
 function normalizeFileUrlPath(rawPath: string): string {
@@ -64,6 +76,7 @@ async function resolveContext(targetRootInput: string): Promise<ResolvedContext>
     matrixPath,
     runtimeContractPath,
     selfGraphPath: path.join(targetRoot, 'assets', 'runtime', 'self_anchor_graph.json'),
+    splitDecisionRegistryPath: path.join(targetRoot, 'assets', 'runtime', 'split_decision_registry.json'),
   }
 }
 
@@ -150,11 +163,18 @@ function extractContract(
   }
 }
 
-function applySplitWarnings(
-  record: Pick<SkillDocRecord, 'path' | 'title' | 'body'>,
+function fingerprintRecord(record: Pick<SkillDocRecord, 'title' | 'body'>): string {
+  return createHash('sha1')
+    .update(`${record.title}\n${record.body}`.trim())
+    .digest('hex')
+}
+
+function collectSplitCandidates(
+  record: Pick<SkillDocRecord, 'path' | 'docId' | 'title' | 'body'>,
   matrix: AnchorMatrix,
-): ScanWarning[] {
-  const warnings: ScanWarning[] = []
+): SplitCandidate[] {
+  const candidates: SplitCandidate[] = []
+  const fingerprint = fingerprintRecord(record)
   for (const rule of matrix.split_keyword_rules) {
     const haystack = (rule.scope === 'title' ? record.title : record.body).toLowerCase()
     let hits = 0
@@ -164,16 +184,76 @@ function applySplitWarnings(
       }
     }
     if (hits >= rule.threshold) {
-      warnings.push({
+      candidates.push({
         doc: record.path,
+        docId: record.docId,
+        title: record.title,
         ruleId: rule.rule_id,
         severity: rule.severity,
         message: rule.message,
         hits,
+        fingerprint,
+        decisionStatus: 'requires_decision',
+        blocking: true,
       })
     }
   }
-  return warnings
+  return candidates
+}
+
+async function loadSplitDecisionRegistry(registryPath: string): Promise<SplitDecisionRegistry> {
+  if (!(await fileExists(registryPath))) {
+    return { ...DEFAULT_SPLIT_DECISION_REGISTRY, entries: [] }
+  }
+  const registry = await readJsonFile<SplitDecisionRegistry>(registryPath)
+  return {
+    ...DEFAULT_SPLIT_DECISION_REGISTRY,
+    ...registry,
+    entries: Array.isArray(registry.entries) ? registry.entries : [],
+  }
+}
+
+function resolveSplitCandidates(
+  candidates: SplitCandidate[],
+  registry: SplitDecisionRegistry,
+): SplitCandidate[] {
+  return candidates.map((candidate) => {
+    const matched = registry.entries.find((entry) =>
+      entry.doc_path === candidate.doc
+      && entry.rule_id === candidate.ruleId
+      && entry.fingerprint === candidate.fingerprint)
+
+    if (!matched) {
+      return candidate
+    }
+
+    if (matched.decision === 'accepted') {
+      return {
+        ...candidate,
+        decisionStatus: 'accepted',
+        blocking: false,
+        note: matched.note,
+      }
+    }
+
+    return {
+      ...candidate,
+      decisionStatus: 'split_required',
+      blocking: true,
+      note: matched.note,
+    }
+  })
+}
+
+function buildSplitDecisionErrors(candidates: SplitCandidate[]): ScanError[] {
+  return candidates
+    .filter((candidate) => candidate.blocking)
+    .map((candidate) => ({
+      doc: candidate.doc,
+      error: candidate.decisionStatus === 'split_required'
+        ? `split required by registry: ${candidate.ruleId} (${candidate.message})`
+        : `split decision required: ${candidate.ruleId} (${candidate.message})`,
+    }))
 }
 
 function normalizeTarget(sourceAbsolutePath: string, targetRawPath: string, targetRoot: string): string {
@@ -193,16 +273,19 @@ async function scanDocuments(context: ResolvedContext): Promise<{
   runtimeContract: RuntimeContractPayload
   docs: SkillDocRecord[]
   edges: GraphEdgeRecord[]
+  splitCandidates: SplitCandidate[]
   errors: ScanError[]
   warnings: ScanWarning[]
 }> {
   const matrix = await readJsonFile<AnchorMatrix>(context.matrixPath)
   const runtimeContract = await readJsonFile<RuntimeContractPayload>(context.runtimeContractPath)
+  const splitDecisionRegistry = await loadSplitDecisionRegistry(context.splitDecisionRegistryPath)
   const markdownDocs = await collectMarkdownDocs(context.targetRoot)
   const docs: SkillDocRecord[] = []
   const edges: GraphEdgeRecord[] = []
   const errors: ScanError[] = []
   const warnings: ScanWarning[] = []
+  const splitCandidates: SplitCandidate[] = []
 
   for (const absolutePath of markdownDocs) {
     const relativePath = path.relative(context.targetRoot, absolutePath).split(path.sep).join('/')
@@ -222,7 +305,7 @@ async function scanDocuments(context: ResolvedContext): Promise<{
         depth: relativePath.split('/').length - 1,
       }
       docs.push(record)
-      warnings.push(...applySplitWarnings(record, matrix))
+      splitCandidates.push(...collectSplitCandidates(record, matrix))
     } catch (error) {
       errors.push({
         doc: relativePath,
@@ -281,11 +364,15 @@ async function scanDocuments(context: ResolvedContext): Promise<{
     }
   }
 
+  const resolvedSplitCandidates = resolveSplitCandidates(splitCandidates, splitDecisionRegistry)
+  errors.push(...buildSplitDecisionErrors(resolvedSplitCandidates))
+
   return {
     matrix,
     runtimeContract,
     docs,
     edges,
+    splitCandidates: resolvedSplitCandidates,
     errors,
     warnings,
   }
@@ -293,7 +380,7 @@ async function scanDocuments(context: ResolvedContext): Promise<{
 
 export async function buildDocGraphWorkspace(targetRootInput: string): Promise<DocGraphWorkspace> {
   const context = await resolveContext(targetRootInput)
-  const { matrix, runtimeContract, docs, edges, errors, warnings } = await scanDocuments(context)
+  const { matrix, runtimeContract, docs, edges, splitCandidates, errors, warnings } = await scanDocuments(context)
 
   const graphNodes: GraphNodeRecord[] = docs.map((doc) => ({
     path: doc.path,
@@ -305,7 +392,12 @@ export async function buildDocGraphWorkspace(targetRootInput: string): Promise<D
     depth: doc.depth,
   }))
 
-  const status = errors.length > 0 ? 'fail' : warnings.length > 0 ? 'pass_with_warnings' : 'pass'
+  const blockingSplitCandidateCount = splitCandidates.filter((candidate) => candidate.blocking).length
+  const status = errors.length > 0
+    ? 'fail'
+    : warnings.length > 0
+      ? 'pass_with_warnings'
+      : 'pass'
 
   return {
     status,
@@ -318,12 +410,15 @@ export async function buildDocGraphWorkspace(targetRootInput: string): Promise<D
       edgeCount: edges.length,
       errorCount: errors.length,
       warningCount: warnings.length,
+      splitCandidateCount: splitCandidates.length,
+      blockingSplitCandidateCount,
     },
     graph: {
       nodes: graphNodes,
       edges,
     },
     docs,
+    splitCandidates,
     warnings,
     errors,
   }
@@ -344,6 +439,7 @@ export async function rebuildSelfGraph(targetRootInput: string): Promise<{ graph
     summary: workspace.summary,
     nodes: workspace.graph.nodes,
     edges: workspace.graph.edges,
+    split_candidates: workspace.splitCandidates,
     warnings: workspace.warnings,
     updated_at: workspace.updatedAt,
   }
@@ -357,4 +453,50 @@ export async function rebuildSelfGraph(targetRootInput: string): Promise<{ graph
 
 export function defaultSkillRoot(): string {
   return currentSkillRoot()
+}
+
+export async function registerSplitDecision(
+  targetRootInput: string,
+  docPath: string,
+  ruleId: string,
+  decision: SplitDecision,
+  note: string,
+): Promise<{
+  registryPath: string
+  entry: SplitDecisionRegistryEntry
+}> {
+  const context = await resolveContext(targetRootInput)
+  const workspace = await buildDocGraphWorkspace(context.targetRoot)
+  const candidate = workspace.splitCandidates.find((item) => item.doc === docPath && item.ruleId === ruleId)
+
+  if (!candidate) {
+    throw new DocStructureError(`split candidate not found: ${docPath} [${ruleId}]`)
+  }
+
+  const registry = await loadSplitDecisionRegistry(context.splitDecisionRegistryPath)
+  const entry: SplitDecisionRegistryEntry = {
+    doc_path: candidate.doc,
+    doc_id: candidate.docId,
+    rule_id: candidate.ruleId,
+    fingerprint: candidate.fingerprint,
+    decision,
+    note,
+    decided_at: new Date().toISOString(),
+  }
+
+  const nextRegistry: SplitDecisionRegistry = {
+    ...registry,
+    entries: [
+      ...registry.entries.filter((item) => !(item.doc_path === docPath && item.rule_id === ruleId)),
+      entry,
+    ],
+  }
+
+  await fs.mkdir(path.dirname(context.splitDecisionRegistryPath), { recursive: true })
+  await fs.writeFile(context.splitDecisionRegistryPath, `${JSON.stringify(nextRegistry, null, 2)}\n`, 'utf8')
+
+  return {
+    registryPath: context.splitDecisionRegistryPath,
+    entry,
+  }
 }

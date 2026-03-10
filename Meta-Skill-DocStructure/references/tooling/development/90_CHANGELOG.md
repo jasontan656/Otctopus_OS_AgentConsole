@@ -19,3 +19,4 @@ anchors:
 - 已移除非文档结构内容。
 - 本技能重新收敛为纯文档结构方法论与 TS graph core。
 - 新增语义树拆分方法论，明确门面、分叉节点与主题原子节点的拆分规则。
+- 新增 split lint 阻断机制与 split decision registry。

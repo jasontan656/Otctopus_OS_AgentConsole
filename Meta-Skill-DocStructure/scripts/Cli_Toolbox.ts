@@ -4,6 +4,7 @@ import {
   buildDocGraphWorkspace,
   defaultSkillRoot,
   loadRuntimeContract,
+  registerSplitDecision,
   rebuildSelfGraph,
 } from '../src/lib/docstructure.js'
 
@@ -28,6 +29,8 @@ function usage(): never {
     'Usage:',
     '  npm run cli -- runtime-contract --json',
     '  npm run cli -- lint-doc-anchors --target <skill_root> --json',
+    '  npm run cli -- lint-split-points --target <skill_root> --json',
+    '  npm run cli -- register-split-decision --target <skill_root> --doc <doc_path> --rule <rule_id> --decision <accepted|split_required> [--note <text>] --json',
     '  npm run cli -- build-anchor-graph --target <skill_root> --json',
     '  npm run cli -- rebuild-self-graph --json',
   ].join('\n'))
@@ -56,6 +59,7 @@ async function main(): Promise<void> {
         status: payload.status,
         targetRoot: payload.targetRoot,
         summary: payload.summary,
+        splitCandidates: payload.splitCandidates,
         graph: payload.graph,
         warnings: payload.warnings,
         errors: payload.errors,
@@ -69,10 +73,41 @@ async function main(): Promise<void> {
         status: payload.status,
         targetRoot: payload.targetRoot,
         summary: payload.summary,
+        splitCandidates: payload.splitCandidates,
         warnings: payload.warnings,
         errors: payload.errors,
       })
       process.exit(payload.status === 'fail' ? 1 : 0)
+    }
+
+    if (command === 'lint-split-points') {
+      const payload = await buildDocGraphWorkspace(target)
+      printJson({
+        status: payload.status,
+        targetRoot: payload.targetRoot,
+        summary: payload.summary,
+        splitCandidates: payload.splitCandidates,
+      })
+      process.exit(payload.summary.blockingSplitCandidateCount > 0 ? 1 : 0)
+    }
+
+    if (command === 'register-split-decision') {
+      const docPath = readFlag(rest, '--doc')
+      const ruleId = readFlag(rest, '--rule')
+      const decision = readFlag(rest, '--decision')
+      const note = readFlag(rest, '--note') ?? ''
+
+      if (!docPath || !ruleId || (decision !== 'accepted' && decision !== 'split_required')) {
+        usage()
+      }
+
+      const payload = await registerSplitDecision(target, docPath, ruleId, decision, note)
+      printJson({
+        status: 'written',
+        registryPath: payload.registryPath,
+        entry: payload.entry,
+      })
+      return
     }
 
     if (command === 'rebuild-self-graph') {
@@ -81,6 +116,7 @@ async function main(): Promise<void> {
         status: workspace.status === 'fail' ? 'error' : 'written',
         graphPath,
         summary: workspace.summary,
+        splitCandidates: workspace.splitCandidates,
         warnings: workspace.warnings,
         errors: workspace.errors,
       })

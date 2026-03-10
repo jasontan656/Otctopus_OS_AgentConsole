@@ -53,6 +53,8 @@ metadata:
 
 ## 5. 执行入口
 - `npm run cli -- runtime-contract --json`
+- `npm run cli -- lint-split-points --json`
+- `npm run cli -- register-split-decision --target <skill_root> --doc <doc_path> --rule <rule_id> --decision <accepted|split_required> --note <text> --json`
 - `npm run cli -- build-anchor-graph --json`
 - `npm run cli -- rebuild-self-graph --json`
 
