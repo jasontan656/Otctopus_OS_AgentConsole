@@ -122,9 +122,35 @@ class MetaDefaultMdManagerCliTests(unittest.TestCase):
             self.assertIn("target_kind: `.gitignore`", index_text)
             managed_agents_entry = next(entry for entry in registry["entries"] if entry["source_path"] == str(source_root / "AGENTS.md"))
             managed_agents = Path(managed_agents_entry["managed_path"])
-            self.assertIn("target-contract", managed_agents.read_text(encoding="utf-8"))
+            self.assertEqual(managed_agents.read_text(encoding="utf-8"), "root agents\n")
             runtime_rule = Path(managed_agents_entry["managed_path"]).parents[1] / "runtime_rules" / Path(managed_agents_entry["managed_rel_path"]).parent / "AGENTS.runtime.json"
             self.assertTrue(runtime_rule.exists())
+
+    def test_collect_preserves_external_agents_content_in_managed_copy(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            skill_root = Path(tmp) / "skill"
+            source_root = Path(tmp) / "src"
+            external_agents = source_root / "AGENTS.md"
+            external_agents.parent.mkdir(parents=True, exist_ok=True)
+            external_agents.write_text(
+                "[GLOBAL LANGUAGE - MANDATORY]\n- Chinese-first\n",
+                encoding="utf-8",
+            )
+
+            self.run_cli(
+                "scan",
+                "--skill-root", str(skill_root),
+                "--source-root", str(source_root),
+            )
+            collect = self.run_cli(
+                "collect",
+                "--skill-root", str(skill_root),
+                "--source-root", str(source_root),
+            )
+
+            managed_agents_entry = next(entry for entry in collect["entries"] if entry["source_path"] == str(external_agents))
+            managed_agents = Path(managed_agents_entry["managed_path"])
+            self.assertEqual(managed_agents.read_text(encoding="utf-8"), external_agents.read_text(encoding="utf-8"))
 
     def test_sync_out_overwrites_target_from_managed_copy(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

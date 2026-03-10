@@ -27,7 +27,14 @@
 - Current target kind: `AGENTS.md`.
 - `AGENTS.md` should remain a thin runtime entry; concrete routing/update rules live in the returned JSON contract.
 
+[GLOBAL LANGUAGE - MANDATORY]
+
+6. Language Constraint
+- Unless the user explicitly asks for a pure translation task, replies and writeback content must be Chinese-first.
+- English is secondary and should be limited to engineering-facing content such as tech stacks, file paths, commands, environment variables, API names, function names, class names, schema keys, and other code-native identifiers.
+- Do not switch the main narrative language away from Chinese just because the user mixes in English.
+
 [TURN END - MANDATORY]
 
-6. TURN_END Contract
+7. TURN_END Contract
 - print TURN_END guardrails
