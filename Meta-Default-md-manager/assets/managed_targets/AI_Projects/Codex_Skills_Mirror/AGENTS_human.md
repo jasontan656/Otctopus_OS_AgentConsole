@@ -38,6 +38,9 @@
     },
     "WRITE_EXEC": {
       "goal": "edit files or trigger manager-owned write flows",
+      "default_must_use": [
+        "$Meta-github-operation (Any file write must leave trace in github by pushing changes to main)"
+      ],
       "default_actions": [
         "state the intended write scope before editing",
         "edit the minimal correct scope that matches the user intent",
