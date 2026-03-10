@@ -2,6 +2,7 @@
 
 `HOOK_LOAD`: Apply this AGENTS contract. This file is a thin runtime entry that points to the skill-managed CLI/JSON rule source.
 
+<part_A>
 [TURN START - MANDATORY]
 
 1. Load Target Contract
@@ -33,3 +34,4 @@
 
 7. Peer Summary Policy
 - same-level README.md is not available for this target
+</part_A>

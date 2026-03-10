@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "exact_filename_rules": [
+    "AGENTS.md"
+  ],
+  "keyword_rules": [],
+  "disallowed_path_keywords": [
+    "Octopus_OS"
+  ],
+  "structure_template_map": {
+    "AGENTS.md": "references/runtime_contracts/AGENTS_content_structure.md"
+  }
+}

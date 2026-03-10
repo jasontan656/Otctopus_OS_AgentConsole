@@ -3,7 +3,7 @@
   "contract_name": "meta_default_md_manager_scan_ruleset_contract",
   "contract_version": "1.0.0",
   "validation_mode": "archival",
-  "tool_state": "inactive",
+  "tool_state": "active",
   "required_fields": [
     "contract_name",
     "contract_version",
@@ -12,10 +12,10 @@
   "optional_fields": [
     "notes"
   ],
-  "future_cli_rule_assets": {
+  "scan_rule_assets": {
     "disallowed_list": {
       "required": true,
-      "source_type": "external_runtime_asset",
+      "source_type": "external_rule_asset",
       "description": "Blacklist-driven path exclusion for governed scan results."
     },
     "exact_filename_rules": {

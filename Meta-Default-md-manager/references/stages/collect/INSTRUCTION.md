@@ -1,7 +1,10 @@
 # Collect Instruction
 
-> Archived stage semantics. No executable collect tool currently exists.
+> Active stage semantics. Executable collect tooling exists.
 
-- Read only `Part A` from external AGENTS targets.
+- Read governed content from external targets.
+- Build or refresh the matching internal managed directory structure from the scan result.
+- For `AGENTS.md`, read only external `Part A`.
 - Update only the internal human template `Part A`.
 - Keep internal `Part B` unchanged.
+- Sync the same collected result into both mirror and installed skill directories.

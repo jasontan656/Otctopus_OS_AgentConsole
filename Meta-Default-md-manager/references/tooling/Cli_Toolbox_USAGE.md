@@ -1,7 +1,22 @@
-# Legacy CLI Usage Archive
+# Cli_Toolbox Usage
 
-The previous `Cli_Toolbox` surface has been removed.
+## Commands
+- `python3 scripts/Cli_Toolbox.py scan`
+- `python3 scripts/Cli_Toolbox.py lint`
+- `python3 scripts/Cli_Toolbox.py collect`
+- `python3 scripts/Cli_Toolbox.py push`
+- `python3 scripts/Cli_Toolbox.py target-contract --source-path "<external AGENTS path>"`
 
-- Do not treat any historical CLI command in this skill as active.
-- Use the runtime and stage archive files only as governance references.
-- New tooling will be rebuilt later against the current asset model.
+## Shared Flags
+- `--dry-run`
+- `--json`
+- `--write-runtime-report`
+- `--only <substring>`
+- `--source-path <absolute external path>`
+- `--report-path <custom json path>`
+
+## Stage Notes
+- `scan` reads external rule assets and discovers governed files.
+- `lint` validates discovered files against the governed structure contracts.
+- `collect` treats external files as the source of truth, creates or refreshes matching managed structure, and syncs mirror plus installed skill assets.
+- `push` treats internal managed templates as the source of truth and overwrites external targets.

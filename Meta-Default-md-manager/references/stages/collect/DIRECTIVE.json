@@ -1,10 +1,11 @@
 {
   "version": 2,
   "stage": "collect",
-  "tool_state": "inactive",
-  "purpose": "Archive the intended collect semantics while no executable tooling exists.",
+  "tool_state": "active",
+  "purpose": "Based on scan results, recover governed external content into the managed templates, create any missing managed directories, and sync mirror plus installed skill assets.",
   "instruction": [
     "collect recovers only Part A from external AGENTS targets",
+    "collect may create missing managed directory structure from the scan result",
     "collect updates only the internal human template Part A",
     "collect must not overwrite the internal Part B"
   ],
@@ -17,6 +18,6 @@
   "rules": [
     "machine json is not collected from external files",
     "Part B stays skill-internal during collect",
-    "do not invent an executable collect command during the no-tool phase"
+    "collect must sync the same managed result into mirror and installed skill directories"
   ]
 }

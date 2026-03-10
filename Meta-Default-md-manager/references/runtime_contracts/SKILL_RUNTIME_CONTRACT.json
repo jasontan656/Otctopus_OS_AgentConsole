@@ -1,15 +1,21 @@
 {
   "version": 2,
   "skill_name": "Meta-Default-md-manager",
-  "description": "Meta-Default-md-manager is currently in a no-tool convergence state. It preserves governance assets and archives but exposes no executable CLI surface.",
-  "skill_state": "no_active_tools",
+  "description": "Meta-Default-md-manager exposes scan, lint, collect, push, and target-contract CLI commands governed by static runtime contracts.",
+  "skill_state": "active_tools",
   "runtime_access_policy": {
-    "guidance_source": "static_archival_documents_only",
+    "guidance_source": "static_runtime_contracts_plus_cli",
     "markdown_role": "human_governance_and_archive",
     "model_must_not_invent_removed_cli_commands": true,
     "model_must_not_treat_legacy_tooling_docs_as_active_runtime": true
   },
-  "command_map": {},
+  "command_map": {
+    "scan": "scripts/Cli_Toolbox.py scan",
+    "lint": "scripts/Cli_Toolbox.py lint",
+    "collect": "scripts/Cli_Toolbox.py collect",
+    "push": "scripts/Cli_Toolbox.py push",
+    "target-contract": "scripts/Cli_Toolbox.py target-contract"
+  },
   "asset_maintenance_policy": {
     "agents_human_template_must_use_explicit_part_tags": true,
     "external_agents_md_contains_part_a_only": true,
@@ -19,13 +25,18 @@
     "root_agents_and_root_internal_assets_excluded_from_this_cleanup_round": true
   },
   "scan_collect_push_state": {
-    "scan": "inactive_tooling_but_semantics_preserved_in_stage_directive_archive",
-    "collect": "inactive_tooling_but_semantics_preserved_in_stage_directive_archive",
-    "push": "inactive_tooling_but_semantics_preserved_in_stage_directive_archive"
+    "scan": "active_cli_with_external_rule_assets",
+    "collect": "active_cli_with_external_source_as_truth_and_dual_sync",
+    "push": "active_cli_with_internal_template_as_truth"
   },
-  "contract_name": "meta_default_md_manager_no_tool_runtime_contract",
-  "contract_version": "2.0.0",
-  "validation_mode": "archival",
+  "tool_capabilities": {
+    "dry_run_supported_for_all_write_stages": true,
+    "exact_source_path_filter_supported": true,
+    "runtime_report_override_supported": true
+  },
+  "contract_name": "meta_default_md_manager_runtime_contract",
+  "contract_version": "3.0.0",
+  "validation_mode": "active",
   "required_fields": [
     "contract_name",
     "contract_version",

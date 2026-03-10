@@ -19,6 +19,7 @@
 - Discover all files that match the governed scan rules.
 - Apply the disallowed list and exclude blacklisted domains such as `Octopus_OS`.
 - Produce either stdout output or json output.
+- Produce the authoritative candidate list that later `collect` and `lint` consume.
 
 ## Rule Source
 - Future scan tooling must read exact filename rules, keyword rules, and disallowed lists from external runtime assets.
@@ -28,6 +29,7 @@
 - stdout output is allowed.
 - json output is allowed.
 - When json output is selected, the result file must be written under the corresponding `Codex_Skill_Runtime` folder.
+- Dry-run output is allowed and should be the default safety path before any later overwrite stage is executed.
 
 ## Lint Hook
 - Scan must run structure lint after discovery.

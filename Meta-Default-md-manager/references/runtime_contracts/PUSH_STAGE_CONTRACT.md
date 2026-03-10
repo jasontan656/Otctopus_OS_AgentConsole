@@ -20,10 +20,12 @@
 - Export governed internal content from the skill-managed human template back to the external target.
 
 ## AGENTS Rule
+- Internal managed files are the truth source for `push`.
 - `push` reads internal `AGENTS_human.md`.
 - `push` extracts only internal `Part A`.
 - `push` writes only that `Part A` block back to the external `AGENTS.md`.
 - `push` must not export internal `Part B`.
+- `push` must overwrite the governed external target directly instead of merging by heuristic.
 
 ## Boundary
 - `push` does not collect external content inward.

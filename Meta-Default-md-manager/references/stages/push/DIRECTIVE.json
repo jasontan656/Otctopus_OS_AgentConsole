@@ -1,8 +1,8 @@
 {
   "version": 2,
   "stage": "push",
-  "tool_state": "inactive",
-  "purpose": "Archive the intended push semantics while no executable tooling exists.",
+  "tool_state": "active",
+  "purpose": "Export managed internal templates outward and overwrite the governed external targets.",
   "instruction": [
     "push exports only Part A from the internal human template",
     "push must not export Part B to external AGENTS files",
@@ -16,6 +16,7 @@
   "rules": [
     "Part B is internal-only",
     "machine json is not pushed externally",
-    "do not invent an executable push command during the no-tool phase"
+    "push must use the managed human template as the source of truth",
+    "push must overwrite the governed external target directly"
   ]
 }

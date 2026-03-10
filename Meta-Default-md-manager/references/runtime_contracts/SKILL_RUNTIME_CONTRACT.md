@@ -1,11 +1,10 @@
 # Skill Runtime Contract
 
-> This skill is currently in a no-tool convergence state.
-> The previous CLI surface has been removed.
+> This skill currently exposes an active CLI surface.
 
-- contract_name: `meta_default_md_manager_no_tool_runtime_contract`
-- contract_version: `2.0.0`
-- validation_mode: `archival`
+- contract_name: `meta_default_md_manager_runtime_contract`
+- contract_version: `3.0.0`
+- validation_mode: `active`
 - required_fields:
 - `contract_name`
 - `contract_version`
@@ -14,16 +13,23 @@
 - `notes`
 
 - skill_name: `Meta-Default-md-manager`
-- skill_state: `no_active_tools`
-- runtime_guidance: use static governance documents only; do not assume removed scripts still exist
+- skill_state: `active_tools`
+- runtime_guidance: use static runtime contracts plus the active CLI
 
 ## Current Rule
-- Do not invoke legacy `Cli_Toolbox.py` commands.
-- Use this directory only as a governance archive until new tooling is rebuilt.
+- Active commands:
+- `scripts/Cli_Toolbox.py scan`
+- `scripts/Cli_Toolbox.py lint`
+- `scripts/Cli_Toolbox.py collect`
+- `scripts/Cli_Toolbox.py push`
+- `scripts/Cli_Toolbox.py target-contract`
+- shared helper flags include `--dry-run`, `--json`, `--only`, `--source-path`, and `--report-path`
 - When maintaining AGENTS governance, review `Part A` and `Part B` together.
 - External `AGENTS.md` is `Part A only`.
 - Internal `AGENTS_human.md` is `Part A + Part B`.
 - Internal `AGENTS_machine.json` is `Part B only`.
+- `collect` treats external files as truth and syncs mirror plus installed skill assets.
+- `push` treats internal managed templates as truth and overwrites external targets.
 
 ## Current References
 - `references/runtime_contracts/AGENTS_ASSET_GOVERNANCE.md`
