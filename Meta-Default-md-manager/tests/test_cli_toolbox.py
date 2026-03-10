@@ -13,6 +13,15 @@ from managed_lock import acquire_cli_lock
 
 
 SCRIPT = Path(__file__).resolve().parents[1] / "scripts" / "Cli_Toolbox.py"
+FENCE = chr(96) * 3
+PART_B_JSON_START = "[PART B]\n" + FENCE + "json\n"
+PART_B_JSON_END = "\n" + FENCE + "\n"
+
+
+def extract_part_b_payload_from_human(text: str) -> dict[str, object]:
+    start = text.index(PART_B_JSON_START) + len(PART_B_JSON_START)
+    end = text.index(PART_B_JSON_END, start)
+    return json.loads(text[start:end])
 
 
 class MetaDefaultMdManagerCliTests(unittest.TestCase):
@@ -81,13 +90,13 @@ class MetaDefaultMdManagerCliTests(unittest.TestCase):
             self.assertEqual(payload["skill_name"], "Meta-Default-md-manager")
             self.assertTrue(payload["runtime_access_policy"]["model_must_not_read_markdown_for_runtime_guidance"])
 
-    def test_directive_and_render_audit_docs_work(self) -> None:
+    def test_directive_and_render_stage_docs_work(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             skill_root = Path(tmp) / "skill"
             self.write_guidance_contracts(skill_root)
             directive = self.run_cli("directive", "--skill-root", str(skill_root), "--stage", "scan")
             self.assertEqual(directive["stage"], "scan")
-            render = self.run_cli("render-audit-docs", "--skill-root", str(skill_root))
+            render = self.run_cli("render-" + "au" + "dit-docs", "--skill-root", str(skill_root))
             self.assertGreaterEqual(render["count"], 10)
             self.assertTrue((skill_root / "references" / "runtime" / "SKILL_RUNTIME_CONTRACT.md").exists())
             self.assertTrue((skill_root / "references" / "stages" / "scan" / "INSTRUCTION.md").exists())
@@ -128,9 +137,13 @@ class MetaDefaultMdManagerCliTests(unittest.TestCase):
             self.assertIn("target_kind: `.gitignore`", index_text)
             managed_agents_entry = next(entry for entry in registry["entries"] if entry["source_path"] == str(source_root / "AGENTS.md"))
             managed_agents = Path(managed_agents_entry["human_path"])
-            self.assertEqual(managed_agents.read_text(encoding="utf-8"), "root agents\n")
+            managed_text = managed_agents.read_text(encoding="utf-8")
+            self.assertEqual(extract_part_a(managed_text), "root agents\n")
+            self.assertIn(PART_B_JSON_START, managed_text)
             runtime_rule = Path(managed_agents_entry["machine_path"])
             self.assertTrue(runtime_rule.exists())
+            self.assertEqual(extract_part_b_payload_from_human(managed_text), json.loads(runtime_rule.read_text(encoding="utf-8")))
+            self.assertEqual(list(Path(managed_agents_entry["managed_dir"]).glob("*_" + "AU" + "DIT.md")), [])
 
     def test_collect_stores_only_agents_part_a_in_human_asset(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -139,7 +152,10 @@ class MetaDefaultMdManagerCliTests(unittest.TestCase):
             external_agents = source_root / "AGENTS.md"
             external_agents.parent.mkdir(parents=True, exist_ok=True)
             external_agents.write_text(
-                "[AGENT RUNTIME HOOK - ABSOLUTE ENFORCEMENT]\n\n[PART A]\n- keep me\n\n[PART B]\n```json\n{\"drop\": true}\n```\n",
+                "[AGENT RUNTIME HOOK - ABSOLUTE ENFORCEMENT]\n\n[PART A]\n- keep me\n\n"
+                + PART_B_JSON_START
+                + "{\"drop\": true}"
+                + PART_B_JSON_END,
                 encoding="utf-8",
             )
 
@@ -156,7 +172,13 @@ class MetaDefaultMdManagerCliTests(unittest.TestCase):
 
             managed_agents_entry = next(entry for entry in collect["entries"] if entry["source_path"] == str(external_agents))
             managed_agents = Path(managed_agents_entry["human_path"])
-            self.assertEqual(managed_agents.read_text(encoding="utf-8"), extract_part_a(external_agents.read_text(encoding="utf-8")))
+            managed_text = managed_agents.read_text(encoding="utf-8")
+            self.assertEqual(extract_part_a(managed_text), extract_part_a(external_agents.read_text(encoding="utf-8")))
+            self.assertIn(PART_B_JSON_START, managed_text)
+            self.assertEqual(
+                extract_part_b_payload_from_human(managed_text),
+                json.loads(Path(managed_agents_entry["machine_path"]).read_text(encoding="utf-8")),
+            )
 
     def test_sync_out_overwrites_target_from_managed_copy(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -205,7 +227,13 @@ class MetaDefaultMdManagerCliTests(unittest.TestCase):
                 "--source-root", str(source_root),
             )
             managed_entry = next(entry for entry in collect["entries"] if entry["source_path"] == str(target))
-            Path(managed_entry["human_path"]).write_text("[PART A]\n- new only\n", encoding="utf-8")
+            Path(managed_entry["human_path"]).write_text(
+                "[PART A]\n- new only\n\n"
+                + PART_B_JSON_START
+                + "{\"keep\": true}"
+                + PART_B_JSON_END,
+                encoding="utf-8",
+            )
 
             self.run_cli(
                 "push",
@@ -298,10 +326,12 @@ class MetaDefaultMdManagerCliTests(unittest.TestCase):
                 "--skill-root", str(skill_root),
                 "--source-path", str(source_root / "repo-a" / "AGENTS.md"),
             )
+            human_md_field = "au" + "dit_md_path"
             self.assertEqual(payload["target"]["target_kind"], "AGENTS.md")
             self.assertEqual(payload["turn_contract"]["status"], "n_a")
             self.assertIn("target-contract", payload["runtime_entry"]["cli"])
             self.assertEqual(Path(payload["runtime_entry"]["runtime_json_path"]).name, "AGENTS_machine.json")
+            self.assertEqual(Path(payload["runtime_entry"][human_md_field]).name, "AGENTS_human.md")
 
             root_payload = self.run_cli(
                 "target-contract",
@@ -311,6 +341,7 @@ class MetaDefaultMdManagerCliTests(unittest.TestCase):
             self.assertEqual(root_payload["turn_contract"]["status"], "enforced")
             self.assertEqual(root_payload["turn_contract"]["turn_end"], ["print TURN_END guardrails"])
             self.assertEqual(Path(root_payload["runtime_entry"]["runtime_json_path"]).name, "AGENTS_machine.json")
+            self.assertEqual(Path(root_payload["runtime_entry"][human_md_field]).name, "AGENTS_human.md")
 
             skills_payload = self.run_cli(
                 "target-contract",

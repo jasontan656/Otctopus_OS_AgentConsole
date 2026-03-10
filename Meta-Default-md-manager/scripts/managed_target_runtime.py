@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from managed_agents_text import is_agents_target_kind
+from managed_agents_text import compose_managed_agents, extract_part_a, is_agents_target_kind
 from managed_paths import legacy_root_slugs, managed_root
 from managed_registry import load_registry
 
@@ -46,7 +46,7 @@ def runtime_json_path(skill_root: Path, entry: dict[str, str]) -> Path:
 
 def audit_md_path(skill_root: Path, entry: dict[str, str]) -> Path:
     if is_agents_target_kind(entry["target_kind"]):
-        return Path(entry["audit_md_path"])
+        return Path(entry["human_path"])
     return legacy_audit_md_path(skill_root, entry["managed_rel_path"], entry["target_kind"])
 
 
@@ -255,6 +255,13 @@ def render_audit_markdown(contract: dict[str, object]) -> str:
     return "\n".join(lines)
 
 
+def _load_agents_part_a(entry: dict[str, str]) -> str:
+    human_path = Path(entry["human_path"])
+    if not human_path.exists():
+        return ""
+    return extract_part_a(human_path.read_text(encoding="utf-8"))
+
+
 def _prune_runtime_rules(skill_root: Path, entries: list[dict[str, str]]) -> None:
     runtime_root = target_contract_root(skill_root)
     if not runtime_root.exists():
@@ -292,17 +299,25 @@ def write_target_contract_assets(skill_root: Path, entries: list[dict[str, str]]
     for entry in entries:
         contract = build_target_contract(entry, skill_root=skill_root)
         json_path = runtime_json_path(skill_root, entry)
-        md_path = audit_md_path(skill_root, entry)
         json_path.parent.mkdir(parents=True, exist_ok=True)
         json_path.write_text(json.dumps(contract, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-        md_path.write_text(render_audit_markdown(contract), encoding="utf-8")
         if is_agents_target_kind(entry["target_kind"]):
+            human_path = Path(entry["human_path"])
+            human_path.parent.mkdir(parents=True, exist_ok=True)
+            human_path.write_text(
+                compose_managed_agents(_load_agents_part_a(entry), contract),
+                encoding="utf-8",
+            )
             for legacy in (
                 legacy_runtime_json_path(skill_root, entry["managed_rel_path"], entry["target_kind"]),
                 legacy_audit_md_path(skill_root, entry["managed_rel_path"], entry["target_kind"]),
             ):
                 if legacy.exists():
                     legacy.unlink()
+            written.extend([str(json_path), str(human_path)])
+            continue
+        md_path = audit_md_path(skill_root, entry)
+        md_path.write_text(render_audit_markdown(contract), encoding="utf-8")
         written.extend([str(json_path), str(md_path)])
     _prune_runtime_rules(skill_root, entries)
     return written

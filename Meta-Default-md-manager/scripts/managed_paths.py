@@ -27,7 +27,6 @@ EXCLUDED_TOP_LEVEL_RELATIVE_DIRS = {
 }
 AGENTS_HUMAN_FILENAME = "AGENTS_human.md"
 AGENTS_MACHINE_FILENAME = "AGENTS_machine.json"
-AGENT_AUDIT_FILENAME = "AGENT_AUDIT.md"
 
 
 def resolve_skill_root(raw: str | None) -> Path:
@@ -112,10 +111,6 @@ def agents_machine_path(skill_root: Path, source_root: Path, source_path: Path) 
     return managed_dir_path(skill_root, source_root, source_path) / AGENTS_MACHINE_FILENAME
 
 
-def agents_audit_path(skill_root: Path, source_root: Path, source_path: Path) -> Path:
-    return managed_dir_path(skill_root, source_root, source_path) / AGENT_AUDIT_FILENAME
-
-
 def asset_descriptor(
     skill_root: Path,
     source_root: Path,
@@ -132,7 +127,6 @@ def asset_descriptor(
             {
                 "human_path": str(agents_human_path(skill_root, source_root, source_path)),
                 "machine_path": str(agents_machine_path(skill_root, source_root, source_path)),
-                "audit_md_path": str(agents_audit_path(skill_root, source_root, source_path)),
             }
         )
     else:

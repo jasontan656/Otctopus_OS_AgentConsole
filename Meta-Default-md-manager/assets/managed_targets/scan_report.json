@@ -14,8 +14,7 @@
       "managed_rel_dir": "AI_Projects",
       "managed_dir": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/AI_Projects",
       "human_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/AI_Projects/AGENTS_human.md",
-      "machine_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/AI_Projects/AGENTS_machine.json",
-      "audit_md_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/AI_Projects/AGENT_AUDIT.md"
+      "machine_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/AI_Projects/AGENTS_machine.json"
     },
     {
       "source_root": "/home/jasontan656/AI_Projects",
@@ -34,8 +33,7 @@
       "managed_rel_dir": "AI_Projects/Codex_Skills_Mirror",
       "managed_dir": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/AI_Projects/Codex_Skills_Mirror",
       "human_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/AI_Projects/Codex_Skills_Mirror/AGENTS_human.md",
-      "machine_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/AI_Projects/Codex_Skills_Mirror/AGENTS_machine.json",
-      "audit_md_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/AI_Projects/Codex_Skills_Mirror/AGENT_AUDIT.md"
+      "machine_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/AI_Projects/Codex_Skills_Mirror/AGENTS_machine.json"
     },
     {
       "source_root": "/home/jasontan656/AI_Projects",
@@ -72,8 +70,7 @@
       "managed_rel_dir": "AI_Projects/Octopus_CodeBase_Backend",
       "managed_dir": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/AI_Projects/Octopus_CodeBase_Backend",
       "human_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/AI_Projects/Octopus_CodeBase_Backend/AGENTS_human.md",
-      "machine_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/AI_Projects/Octopus_CodeBase_Backend/AGENTS_machine.json",
-      "audit_md_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/AI_Projects/Octopus_CodeBase_Backend/AGENT_AUDIT.md"
+      "machine_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/AI_Projects/Octopus_CodeBase_Backend/AGENTS_machine.json"
     },
     {
       "source_root": "/home/jasontan656/AI_Projects",
@@ -110,8 +107,7 @@
       "managed_rel_dir": "AI_Projects/Octopus_CodeBase_Frontend",
       "managed_dir": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/AI_Projects/Octopus_CodeBase_Frontend",
       "human_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/AI_Projects/Octopus_CodeBase_Frontend/AGENTS_human.md",
-      "machine_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/AI_Projects/Octopus_CodeBase_Frontend/AGENTS_machine.json",
-      "audit_md_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/AI_Projects/Octopus_CodeBase_Frontend/AGENT_AUDIT.md"
+      "machine_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/AI_Projects/Octopus_CodeBase_Frontend/AGENTS_machine.json"
     },
     {
       "source_root": "/home/jasontan656/AI_Projects",
@@ -121,8 +117,7 @@
       "managed_rel_dir": "AI_Projects/OctuposOS_RunTime_Frontend",
       "managed_dir": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/AI_Projects/OctuposOS_RunTime_Frontend",
       "human_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/AI_Projects/OctuposOS_RunTime_Frontend/AGENTS_human.md",
-      "machine_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/AI_Projects/OctuposOS_RunTime_Frontend/AGENTS_machine.json",
-      "audit_md_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/AI_Projects/OctuposOS_RunTime_Frontend/AGENT_AUDIT.md"
+      "machine_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/AI_Projects/OctuposOS_RunTime_Frontend/AGENTS_machine.json"
     },
     {
       "source_root": "/home/jasontan656/AI_Projects",
@@ -141,8 +136,7 @@
       "managed_rel_dir": "AI_Projects/OctuposOS_Runtime_Backend",
       "managed_dir": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/AI_Projects/OctuposOS_Runtime_Backend",
       "human_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/AI_Projects/OctuposOS_Runtime_Backend/AGENTS_human.md",
-      "machine_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/AI_Projects/OctuposOS_Runtime_Backend/AGENTS_machine.json",
-      "audit_md_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/AI_Projects/OctuposOS_Runtime_Backend/AGENT_AUDIT.md"
+      "machine_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/AI_Projects/OctuposOS_Runtime_Backend/AGENTS_machine.json"
     }
   ]
 }

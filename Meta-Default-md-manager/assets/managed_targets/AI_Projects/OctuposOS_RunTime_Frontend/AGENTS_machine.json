@@ -26,7 +26,7 @@
   },
   "runtime_entry": {
     "cli": "python3 /home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/scripts/Cli_Toolbox.py target-contract --source-path \"/home/jasontan656/AI_Projects/OctuposOS_RunTime_Frontend/AGENTS.md\" --json",
-    "audit_md_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/AI_Projects/OctuposOS_RunTime_Frontend/AGENT_AUDIT.md",
+    "audit_md_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/AI_Projects/OctuposOS_RunTime_Frontend/AGENTS_human.md",
     "runtime_json_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/AI_Projects/OctuposOS_RunTime_Frontend/AGENTS_machine.json"
   },
   "turn_contract": {

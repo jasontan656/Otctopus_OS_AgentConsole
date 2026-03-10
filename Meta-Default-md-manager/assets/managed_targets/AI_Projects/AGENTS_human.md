@@ -24,3 +24,65 @@
 5. AGENTS 协同更新约束
 - 当更新 `AGENTS.md` 的内容时，必须一同检查并同步对应的 `md + json + cli`。
 - 如果字段 shape 或 payload 结构发生变化，必须一同更新 CLI 输出与相关 machine-readable JSON。
+
+[PART B]
+```json
+{
+  "schema_version": 1,
+  "owner_skill": "Meta-Default-md-manager",
+  "managed_branch": "default_docs",
+  "rule_source_policy": {
+    "runtime_rule_source": "CLI_JSON",
+    "human_audit_source": "audit_markdown_only",
+    "model_must_not_read_markdown_for_runtime_guidance": true
+  },
+  "target": {
+    "source_root": "/home/jasontan656/AI_Projects",
+    "source_path": "/home/jasontan656/AI_Projects/AGENTS.md",
+    "source_relative_path": "AGENTS.md",
+    "file_kind": "agents",
+    "target_kind": "AGENTS.md",
+    "peer_path": "/home/jasontan656/AI_Projects/README.md",
+    "managed_rel_path": "AI_Projects/AGENTS.md",
+    "managed_dir": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/AI_Projects",
+    "human_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/AI_Projects/AGENTS_human.md",
+    "machine_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/AI_Projects/AGENTS_machine.json"
+  },
+  "peer_doc": {
+    "path": "/home/jasontan656/AI_Projects/README.md",
+    "relation": "same_level_summary",
+    "read_policy": "not_available"
+  },
+  "runtime_entry": {
+    "cli": "python3 /home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/scripts/Cli_Toolbox.py target-contract --source-path \"/home/jasontan656/AI_Projects/AGENTS.md\" --json",
+    "audit_md_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/AI_Projects/AGENTS_human.md",
+    "runtime_json_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/AI_Projects/AGENTS_machine.json"
+  },
+  "turn_contract": {
+    "status": "enforced",
+    "turn_start": [
+      "validate /home/jasontan656/AI_Projects/AGENTS.md exists",
+      "print TURN_START guardrails",
+      "print ROUTE guardrails",
+      "choose READ_EXEC or WRITE_EXEC by write intent"
+    ],
+    "turn_end": [
+      "print TURN_END guardrails"
+    ]
+  },
+  "routing": {
+    "document_role": "runtime_entry",
+    "default_next_hop": "use the target-contract JSON to decide peer reads and manager commands",
+    "rules": [
+      "use Meta-Default-md-manager CLI JSON as the runtime rule source",
+      "README-like files remain human summaries unless a peer AGENTS contract says otherwise",
+      "machine-readable runtime rules must stay in skill-managed JSON and CLI output"
+    ]
+  },
+  "update_boundary": [
+    "managed targets are owned by Meta-Default-md-manager",
+    "external AGENTS.md should remain a thin runtime entry",
+    "skill-managed JSON and CLI output are the runtime source of truth"
+  ]
+}
+```

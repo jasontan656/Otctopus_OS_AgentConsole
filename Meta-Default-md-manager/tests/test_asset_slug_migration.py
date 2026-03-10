@@ -71,8 +71,11 @@ class MetaDefaultMdManagerAssetSlugMigrationTests(unittest.TestCase):
 
             migrated_entry = collect["entries"][0]
             self.assertFalse(legacy_file.exists())
-            self.assertTrue(Path(migrated_entry["human_path"]).exists())
+            migrated_human = Path(migrated_entry["human_path"])
+            self.assertTrue(migrated_human.exists())
             self.assertTrue(Path(migrated_entry["machine_path"]).exists())
+            self.assertIn("[PART B]\n```json\n", migrated_human.read_text(encoding="utf-8"))
+            self.assertFalse((Path(migrated_entry["managed_dir"]) / "AGENT_AUDIT.md").exists())
 
     def test_collect_prunes_legacy_full_path_namespace_when_slug_contract_changes(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
