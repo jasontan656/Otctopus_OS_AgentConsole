@@ -213,7 +213,7 @@ def render_internal_agents_human(part_a_text: str, machine_payload: Any) -> str:
     payload = json.dumps(machine_payload, indent=2, ensure_ascii=False)
     return (
         f"{part_a}\n\n"
-        f"{PART_B_OPEN}\n"
+        f"{PART_B_OPEN}\n\n"
         f"```json\n{payload}\n```\n"
         f"{PART_B_CLOSE}\n"
     )

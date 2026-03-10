@@ -33,7 +33,7 @@ def render_internal_human(part_a_body: str, payload: dict) -> str:
         "<part_A>\n"
         f"{part_a_body}\n"
         "</part_A>\n\n"
-        "<part_B>\n"
+        "<part_B>\n\n"
         "```json\n"
         f"{json.dumps(payload, ensure_ascii=False, indent=2)}\n"
         "```\n"
