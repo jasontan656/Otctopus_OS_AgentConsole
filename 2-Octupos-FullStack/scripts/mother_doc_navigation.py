@@ -2,10 +2,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from agents_target_runtime import render_external_agents
-
-
-AGENTS_FILENAME = "AGENTS.md"
 LEGACY_AGENTS_FILENAME = "agents.md"
 
 DOMAIN_DESCRIPTIONS = {
@@ -57,8 +53,6 @@ def describe_directory(path: Path, document_root: Path) -> str:
 def describe_leaf_file(path: Path, document_root: Path) -> str:
     if path.name == "README.md":
         return "peer purpose document for the current scope"
-    if path.name == AGENTS_FILENAME:
-        return "navigation index for the current scope"
     if path.name == scope_doc_name(path.parent, document_root):
         return "scope-entity document for the current directory itself"
     stem = path.stem
@@ -83,7 +77,7 @@ def build_directory_readme(path: Path, document_root: Path) -> str:
         "- 本文件负责当前层的总结说明，不承担递归索引职责。",
         "",
         "## 2. 阅读关系",
-        f"- 同层 `{AGENTS_FILENAME}` 是当前层索引入口；当索引足够判断时，可不先读本文件。",
+        "- 同层 `README.md` 只负责当前层总结，不再承担 AGENTS 索引职责。",
         f"- 同层 `{peer_scope_doc}` 是当前目录自身的实体说明。",
         "- 如果本目录或其子路径的内容发生变化，必须考虑维护本文件。",
         "",
@@ -93,7 +87,7 @@ def build_directory_readme(path: Path, document_root: Path) -> str:
         "",
         "## 4. 边界",
         "- 保持本文件聚焦当前层的用途与范围，不在这里展开完整子路径索引。",
-        "- 需要下一步入口时，回到同层 `AGENTS.md`。",
+        "- 需要继续下钻时，直接查看子目录或同层 scope 文档。",
         "",
     ]
     return "\n".join(lines)
@@ -130,15 +124,9 @@ def build_scope_entity_doc(path: Path, document_root: Path) -> str:
     return "\n".join(lines)
 
 
-def build_agents_index(path: Path, document_root: Path) -> str:
-    relative_path = str(Path("mother_doc_docs") / path.relative_to(document_root))
-    return render_external_agents(relative_path)
-
-
 def sync_navigation_tree(document_root: Path, *, dry_run: bool) -> dict[str, list[str]]:
     created_readmes: list[str] = []
     created_scope_docs: list[str] = []
-    updated_agents: list[str] = []
     removed_legacy_indexes: list[str] = []
     removed_legacy_agents: list[str] = []
 
@@ -148,6 +136,11 @@ def sync_navigation_tree(document_root: Path, *, dry_run: bool) -> dict[str, lis
             legacy.unlink()
 
     for legacy_agents in sorted(document_root.rglob(LEGACY_AGENTS_FILENAME)):
+        removed_legacy_agents.append(str(legacy_agents))
+        if not dry_run:
+            legacy_agents.unlink()
+
+    for legacy_agents in sorted(document_root.rglob("AGENTS.md")):
         removed_legacy_agents.append(str(legacy_agents))
         if not dry_run:
             legacy_agents.unlink()
@@ -172,15 +165,9 @@ def sync_navigation_tree(document_root: Path, *, dry_run: bool) -> dict[str, lis
             created_scope_docs.append(str(scope_doc_path))
             if not dry_run:
                 scope_doc_path.write_text(build_scope_entity_doc(directory, document_root), encoding="utf-8")
-        agents_path = directory / AGENTS_FILENAME
-        updated_agents.append(str(agents_path))
-        if not dry_run:
-            agents_path.write_text(build_agents_index(directory, document_root), encoding="utf-8")
-
     return {
         "created_readmes": created_readmes,
         "created_scope_docs": created_scope_docs,
-        "updated_agents": updated_agents,
         "removed_legacy_indexes": removed_legacy_indexes,
         "removed_legacy_agents": removed_legacy_agents,
     }

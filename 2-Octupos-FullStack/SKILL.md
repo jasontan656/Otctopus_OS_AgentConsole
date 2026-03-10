@@ -17,7 +17,7 @@ description: "未来项目 admin panel 内置的运营AI“章鱼”，负责 mo
   - `python3 scripts/Cli_Toolbox.py skill-runtime-contract --json`
   - `python3 scripts/Cli_Toolbox.py skill-facade-contract --json`
 - CLI JSON 是运行态唯一优先来源；技能内 markdown 不作为模型运行规则主来源。
-- `AGENTS/README manager`、阶段合同、阶段命令、目标级合同都继续从 CLI JSON 下钻。
+- root-only `AGENTS manager`、阶段合同、阶段命令、目标级合同都继续从 CLI JSON 下钻。
 
 ## 3. 中文门面说明
 - 本技能保留中文说明，便于人类审计和理解阶段语义。
@@ -33,13 +33,13 @@ description: "未来项目 admin panel 内置的运营AI“章鱼”，负责 mo
   - CLI: `python3 scripts/Cli_Toolbox.py skill-facade-contract --json`
   - machine audit source: `references/runtime/SKILL_RUNTIME_CONTRACT.json`
   - human audit source: `references/runtime/SKILL_RUNTIME_CONTRACT.md`
-- `AGENTS/README manager` 分支运行合同入口：
+- root-only `AGENTS manager` 分支运行合同入口：
   - CLI: `python3 scripts/Cli_Toolbox.py mother-doc-agents-contract --json`
   - CLI: `python3 scripts/Cli_Toolbox.py mother-doc-agents-directive --stage <scan|collect|push> --json`
   - CLI: `python3 scripts/Cli_Toolbox.py mother-doc-agents-registry --json`
-  - CLI: `python3 scripts/Cli_Toolbox.py mother-doc-agents-target-contract --relative-path "<PATH>" --file-kind <agents|readme> --json`
-  - machine cache: `assets/mother_doc_agents/runtime_rules/**/**/*.runtime.json`
-  - human audit source: `assets/mother_doc_agents/runtime_rules/**/AGENT_AUDIT.md` / `README_AUDIT.md`
+  - CLI: `python3 scripts/Cli_Toolbox.py mother-doc-agents-target-contract --relative-path "octopus_os_root" --file-kind agents --json`
+  - managed human source: `assets/managed_targets/Octopus_OS/AGENTS_human.md`
+  - managed machine source: `assets/managed_targets/Octopus_OS/AGENTS_machine.json`
 - 规则正文不在本门面重复抄写。
 
 ## 5. 人类审计导航
@@ -54,6 +54,8 @@ description: "未来项目 admin panel 内置的运营AI“章鱼”，负责 mo
 ## 6. 运行边界
 - 模型默认先跑 CLI，再决定是否查看 markdown 审计版。
 - `mother_doc_agents` 分支默认走 `branch contract JSON -> stage directive JSON -> registry/target contract JSON`，并把 branch index 的关键信息下沉到 CLI JSON payload。
+- `Octopus_OS` 当前只允许一个外部 AGENTS 目标：`Octopus_OS/AGENTS.md`。
+- `Mother_Doc/docs` 树不再维护递归 `AGENTS.md`。
 - markdown 保留的内容限于：
   - 技能中文简介
   - 人类审计导航

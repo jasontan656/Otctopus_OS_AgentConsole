@@ -149,12 +149,12 @@ def build_workspace_readme(name: str, document_dir: Path) -> list[str]:
             f"Corresponding container-doc directory: `{document_dir}`.",
             "Use `docs/` to carry the full authored Mother_Doc tree.",
             "Use `graph/` to carry OS_graph runtime assets and evidence-side graph artifacts.",
-            "This container root now carries its own root-level `AGENTS.md`, managed by the AGENTS/README manager container-roots branch.",
+            "This container root no longer carries its own root-level `AGENTS.md`; the only external AGENTS target is `Octopus_OS/AGENTS.md`.",
         ]
     return [
         "Stage-1 container directory.",
         f"Corresponding Mother_Doc path: `{document_dir}`.",
-        "This container root carries a root-level `AGENTS.md`, managed by the AGENTS/README manager container-roots branch.",
+        "This container root does not carry its own `AGENTS.md`; root runtime governance is centralized at `Octopus_OS/AGENTS.md`.",
     ]
 
 

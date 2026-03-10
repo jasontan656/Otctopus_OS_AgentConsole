@@ -1,34 +1,14 @@
 {
+  "schema_version": "2.0",
   "stage": "scan",
-  "runtime_source_policy": {
-    "runtime_rule_source": "CLI_JSON",
-    "model_must_prefer_this_payload": true,
-    "audit_markdown_role": "human_only"
-  },
-  "purpose": "discover current AGENTS.md and README.md coverage across Octopus_OS root, container roots, and Mother_Doc docs",
-  "entry_sequence": [
-    "python3 scripts/Cli_Toolbox.py mother-doc-agents-contract --json",
-    "python3 scripts/Cli_Toolbox.py mother-doc-agents-directive --stage scan --json"
-  ],
-  "inputs": [
-    "Mother_Doc docs tree",
-    "existing AGENTS.md and README.md files"
-  ],
-  "outputs": [
+  "goal": "discover the single managed Octopus_OS root AGENTS target and report all forbidden extra AGENTS.md files",
+  "primary_outputs": [
     "assets/mother_doc_agents/scan_report.json"
   ],
-  "machine_follow_up": [
-    "use mother-doc-agents-registry --json only after collect has refreshed registry.json",
-    "use mother-doc-agents-target-contract for path-specific runtime guidance"
-  ],
-  "stage_runtime_rules": [
-    "scan only detects current managed coverage and missing files; it does not rewrite ordinary docs",
-    "scan is allowed to report missing AGENTS.md, missing README.md, and legacy agents.md paths",
-    "scan output is an operational report, not the long-lived runtime contract"
-  ],
-  "prohibited": [
-    "rewrite ordinary docs",
-    "run implementation",
-    "write evidence logs"
+  "must_report": [
+    "root_agents_exists",
+    "managed_external_targets",
+    "extra_agents",
+    "legacy_asset_paths"
   ]
 }

@@ -9,73 +9,59 @@ import sys
 
 sys.path.insert(0, str((Path(__file__).resolve().parents[1] / "scripts")))
 
-from agents_target_runtime import load_target_contract
-from mother_doc_agents_manager import load_runtime_contract as load_branch_runtime_contract
+from agents_target_runtime import (
+    ROOT_RELATIVE_PATH,
+    build_default_machine_payload,
+    load_target_contract,
+    managed_human_path,
+    managed_machine_path,
+    registry_path,
+    render_internal_agents_human,
+)
+from mother_doc_agents_manager import (
+    collect_from_scan,
+    load_runtime_contract as load_branch_runtime_contract,
+    push_agents_tree,
+    scan_agents_tree,
+)
 
 
 class AgentsTargetRuntimeTests(unittest.TestCase):
-    def write_registry(self, skill_root: Path, workspace_root: Path) -> None:
-        registry_path = skill_root / "assets" / "mother_doc_agents" / "registry.json"
-        registry_path.parent.mkdir(parents=True, exist_ok=True)
-        payload = {
-            "entries": [
-                {
-                    "scope_branch": "octopus_os_root",
-                    "relative_path": "octopus_os_root",
-                    "scope_path": str(workspace_root),
-                    "agents_source_path": str(workspace_root / "AGENTS.md"),
-                    "readme_source_path": str(workspace_root / "README.md"),
-                    "readme_management_mode": "template_managed",
-                },
-                {
-                    "scope_branch": "container_roots",
-                    "relative_path": "container_roots/Admin_UI",
-                    "scope_path": str(workspace_root / "Admin_UI"),
-                    "agents_source_path": str(workspace_root / "Admin_UI" / "AGENTS.md"),
-                    "readme_source_path": str(workspace_root / "Admin_UI" / "README.md"),
-                    "readme_management_mode": "template_managed",
-                },
-            ]
-        }
-        registry_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    def _prepare_workspace(self, tmp: str) -> tuple[Path, Path]:
+        skill_root = Path(tmp) / "skill"
+        workspace_root = Path(tmp) / "Octopus_OS"
+        (workspace_root / "Mother_Doc" / "docs").mkdir(parents=True, exist_ok=True)
+        (workspace_root / "AGENTS.md").write_text("[AGENT RUNTIME HOOK - ABSOLUTE ENFORCEMENT]\n\n<part_A>\nroot rule\n</part_A>\n", encoding="utf-8")
+        return skill_root, workspace_root
 
-    def test_octopus_root_keeps_only_constitution_lint_turn_contract(self) -> None:
+    def test_target_contract_returns_managed_pair_and_payload(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
-            skill_root = Path(tmp) / "skill"
-            workspace_root = Path(tmp) / "Octopus_OS"
-            (workspace_root / "Admin_UI").mkdir(parents=True)
-            self.write_registry(skill_root, workspace_root)
+            skill_root, workspace_root = self._prepare_workspace(tmp)
+            collect_from_scan(skill_root)
+            payload = load_target_contract(skill_root, ROOT_RELATIVE_PATH, "agents")
+            self.assertEqual(payload["source_path"], str(workspace_root / "AGENTS.md"))
+            self.assertEqual(payload["managed_human_path"], str(managed_human_path(skill_root)))
+            self.assertEqual(payload["managed_machine_path"], str(managed_machine_path(skill_root)))
+            self.assertEqual(payload["payload"]["active_scope_policy"]["current_phase"], "root_only_bootstrap")
 
-            payload = load_target_contract(skill_root, "octopus_os_root", "agents")
-            self.assertEqual(payload["turn_contract"]["status"], "enforced")
-            self.assertIn("Constitution lint", " ".join(payload["turn_contract"]["turn_end"]))
-            self.assertNotIn("commit-and-push", " ".join(payload["turn_contract"]["turn_end"]))
-            self.assertNotIn("Git traceability", " ".join(payload["turn_contract"]["turn_start"]))
-
-    def test_container_root_stays_na(self) -> None:
+    def test_scan_reports_forbidden_extra_agents(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
-            skill_root = Path(tmp) / "skill"
-            workspace_root = Path(tmp) / "Octopus_OS"
-            (workspace_root / "Admin_UI").mkdir(parents=True)
-            self.write_registry(skill_root, workspace_root)
+            skill_root, workspace_root = self._prepare_workspace(tmp)
+            extra = workspace_root / "Admin_UI" / "AGENTS.md"
+            extra.parent.mkdir(parents=True, exist_ok=True)
+            extra.write_text("legacy", encoding="utf-8")
+            payload = scan_agents_tree(skill_root, workspace_root / "Mother_Doc" / "docs")
+            self.assertEqual(payload["managed_external_targets"], [str(workspace_root / "AGENTS.md")])
+            self.assertEqual(payload["extra_agents"], [str(extra)])
 
-            payload = load_target_contract(skill_root, "container_roots/Admin_UI", "agents")
-            self.assertEqual(payload["turn_contract"]["status"], "n_a")
-            self.assertEqual(payload["turn_contract"]["turn_end"], ["N/A"])
-
-    def test_target_contract_exposes_machine_navigation_and_asset_model(self) -> None:
+    def test_collect_writes_single_registry_entry(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
-            skill_root = Path(tmp) / "skill"
-            workspace_root = Path(tmp) / "Octopus_OS"
-            (workspace_root / "Admin_UI").mkdir(parents=True)
-            self.write_registry(skill_root, workspace_root)
-
-            payload = load_target_contract(skill_root, "container_roots/Admin_UI", "agents")
-            self.assertEqual(payload["managed_asset_model"]["document_shape"]["external_shape"], "thin_runtime_entry_only")
-            self.assertIn("branch_registry_cli", payload["payload_navigation"])
-            self.assertTrue(payload["rule_source_policy"]["audit_fields_are_not_primary_runtime_instructions"])
-            self.assertTrue(payload["managed_asset_model"]["governance_assets"]["runtime_json_path"].endswith("AGENTS.runtime.json"))
-            self.assertTrue(payload["managed_asset_model"]["governance_assets"]["template_path"].endswith("templates/container_roots/Admin_UI/AGENTS.md"))
+            skill_root, workspace_root = self._prepare_workspace(tmp)
+            payload = collect_from_scan(skill_root)
+            registry = json.loads(registry_path(skill_root).read_text(encoding="utf-8"))
+            self.assertEqual(len(registry["entries"]), 1)
+            self.assertEqual(registry["entries"][0]["relative_path"], ROOT_RELATIVE_PATH)
+            self.assertEqual(payload["source_path"], str(workspace_root / "AGENTS.md"))
 
     def test_branch_contract_declares_registry_as_machine_index(self) -> None:
         skill_root = Path(__file__).resolve().parents[1]
@@ -83,6 +69,33 @@ class AgentsTargetRuntimeTests(unittest.TestCase):
         self.assertEqual(payload["runtime_source_policy"]["machine_branch_index"], "registry_json")
         self.assertIn("mother-doc-agents-registry --json", payload["runtime_entry_commands"]["branch_registry_command"])
         self.assertIn("governance_mapping_template", payload["template_semantics"])
+
+    def test_push_deletes_extra_agents_and_legacy_assets(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            skill_root, workspace_root = self._prepare_workspace(tmp)
+            legacy_extra = workspace_root / "Admin_UI" / "AGENTS.md"
+            legacy_extra.parent.mkdir(parents=True, exist_ok=True)
+            legacy_extra.write_text("legacy", encoding="utf-8")
+
+            runtime_rules = skill_root / "assets" / "mother_doc_agents" / "runtime_rules"
+            runtime_rules.mkdir(parents=True, exist_ok=True)
+            (runtime_rules / "AGENT_AUDIT.md").write_text("legacy", encoding="utf-8")
+
+            machine_payload = build_default_machine_payload()
+            managed_machine_path(skill_root).parent.mkdir(parents=True, exist_ok=True)
+            managed_machine_path(skill_root).write_text(
+                json.dumps(machine_payload, ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8",
+            )
+            managed_human_path(skill_root).write_text(
+                render_internal_agents_human("root rule", machine_payload),
+                encoding="utf-8",
+            )
+
+            payload = push_agents_tree(skill_root, workspace_root / "Mother_Doc" / "docs", dry_run=False)
+            self.assertFalse(legacy_extra.exists())
+            self.assertFalse(runtime_rules.exists())
+            self.assertEqual(payload["pushed_root_agents"], str(workspace_root / "AGENTS.md"))
 
 
 if __name__ == "__main__":

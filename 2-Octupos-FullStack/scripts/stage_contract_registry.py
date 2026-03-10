@@ -8,7 +8,7 @@ from stage_contract_graph_data import EVIDENCE_GRAPH_COMMANDS, EVIDENCE_GRAPH_DO
 TOP_LEVEL_RESIDENT_DOCS = ["rules/FULLSTACK_SKILL_HARD_RULES.md", "references/runtime/SKILL_RUNTIME_CONTRACT.md", "references/skill_native/00_SKILL_NATIVE_INDEX.md", "references/skill_native/10_PROJECT_BASELINE_INDEX.md", "references/authored_domains/00_DOMAIN_INDEX.md", "references/tooling/SKILL_TOOLING_WORKFLOW_CONTRACT.md", "${AI_PROJECTS_ROOT:-$HOME/AI_Projects}/AGENTS.md"]
 STAGE_ORDER = ["mother_doc", "implementation", "evidence"]
 STAGE_SCOPES = {
-    "mother_doc": "strengthen user intent, recursively navigate Mother_Doc, and write back current-state document structure",
+    "mother_doc": "strengthen user intent, maintain Mother_Doc current-state structure, and centrally govern the single Octopus_OS root AGENTS target when needed",
     "implementation": "act as an independent delivery-grade developer and reconcile Mother_Doc with the actual codebase while implementing changes",
     "evidence": "collect real witnesses, append logs, and bind them back through the unified OS_graph contract",
 }
@@ -70,7 +70,7 @@ STAGE_COMMANDS = {
             },
             {
                 "command": "read references/mother_doc/00_MOTHER_DOC_BRANCH_INDEX.md",
-                "purpose": "choose the correct mother_doc sub-branch before writing anything: direct_writeback, question_backfill, or AGENTS/README manager",
+                "purpose": "choose the correct mother_doc sub-branch before writing anything: direct_writeback, question_backfill, or the root-only AGENTS manager",
             },
             {
                 "command": "python3 scripts/Cli_Toolbox.py materialize-container-layout --container <Name> --json",
@@ -78,7 +78,7 @@ STAGE_COMMANDS = {
             },
             {
                 "command": "python3 scripts/Cli_Toolbox.py sync-mother-doc-navigation --json",
-                "purpose": "refresh README.md, AGENTS.md, and same-name scope markdown files across the Mother_Doc tree only",
+                "purpose": "refresh README.md and same-name scope markdown files across the Mother_Doc tree, and remove legacy docs-tree AGENTS.md files",
             },
             {
                 "command": "python3 scripts/Cli_Toolbox.py sync-mother-doc-status-from-git --repo-root ${AI_PROJECTS_ROOT:-$HOME/AI_Projects}/Octopus_OS --stage mother_doc --path <relative-path> --json",
@@ -98,19 +98,19 @@ STAGE_COMMANDS = {
             },
             {
                 "command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-registry --json",
-                "purpose": "use the machine-readable branch index instead of the human audit index.md when you need current managed target mappings",
+                "purpose": "use the machine-readable branch index instead of the human audit index.md when you need the current root AGENTS managed target mapping",
             },
             {
                 "command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-scan --json",
-                "purpose": "discover the managed AGENTS/README scopes across Octopus_OS root, container roots, and Mother_Doc/docs",
+                "purpose": "discover the single managed Octopus_OS root AGENTS target and report forbidden extra AGENTS.md files under Octopus_OS",
             },
             {
                 "command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-collect --json",
-                "purpose": "collect current AGENTS/README files back into the skill-side registry when product-side content changed first",
+                "purpose": "collect the current Octopus_OS root AGENTS file back into the skill-side managed human/machine pair when product-side content changed first",
             },
             {
                 "command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-push --json",
-                "purpose": "push the skill-side AGENTS/README template tree back across Octopus_OS root, container roots, and Mother_Doc/docs, then refresh the registry",
+                "purpose": "push the managed root AGENTS payload back to Octopus_OS, delete forbidden extra AGENTS.md files, and refresh the registry",
             },
         ],
     },
@@ -179,7 +179,6 @@ STAGE_GRAPH_CONTRACTS = {
         "node_mapping": [
             "directory -> structural scope node",
             "README.md -> scope-purpose node",
-            "AGENTS.md -> navigation-index node",
             "<folder_name>.md -> scope-entity node",
             "Document Status + Block Registry -> mechanical change-detection node",
         ],
@@ -223,12 +222,12 @@ STAGE_CHECKLISTS = {
             "load the project baseline before selecting container scope",
             "strengthen the user prompt with Meta-prompt-write",
             "read references/mother_doc/00_MOTHER_DOC_BRANCH_INDEX.md before choosing any mother_doc action",
-            "choose direct_writeback, question_backfill, or AGENTS/README manager before reading deeper scope docs",
-            "read root README.md and AGENTS.md inside Mother_Doc before selecting scope",
+            "choose direct_writeback, question_backfill, or the root-only AGENTS manager before reading deeper scope docs",
+            "read root README.md inside Mother_Doc before selecting scope",
         ],
         "exit_requirements": [
             "updated Mother_Doc current-state content",
-            "updated README.md, AGENTS.md, and <folder_name>.md for affected Mother_Doc scopes only",
+            "updated README.md and <folder_name>.md for affected Mother_Doc scopes only",
             "affected overview/features/shared/common docs are aligned with the current explicit user intent",
             "unresolved scope is written into the correct open-question docs when question_backfill is still pending",
             "affected non-AGENTS Mother_Doc markdown files are marked as modified/null/developed according to the git-backed lifecycle status rules",

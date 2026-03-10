@@ -23,15 +23,15 @@ EXECUTION_MODEL_EN = (
 GOVERNANCE_RULES_EN = [
     "Before entering any stage, always load stage-checklist, stage-doc-contract, stage-command-contract, and stage-graph-contract.",
     "When switching stages, retain only the top-level resident documents and then reload the current stage contracts.",
-    "AGENTS.md is allowed at the Octopus_OS root, each container root, and across the Octopus_OS/Mother_Doc/docs tree.",
-    "Every Mother_Doc directory layer must contain README.md, AGENTS.md, and <folder_name>.md.",
+    "Octopus_OS currently allows exactly one external AGENTS runtime entry: Octopus_OS/AGENTS.md.",
+    "Mother_Doc directory layers keep README.md and <folder_name>.md, but no longer keep recursive AGENTS.md files.",
     "Every container document directory must contain overview/, features/, shared/, and common/.",
     "All Mother_Doc markdown other than AGENTS.md must contain Document Status + Block Registry for mechanical change detection.",
     "Project baseline belongs to the always-load layer and must be read before entering any concrete container or domain.",
     "The mother_doc stage must first strengthen user intent with Meta-prompt-write, then read the mother_doc branch entry before choosing a task chain.",
-    "The mother_doc stage must first choose direct_writeback, question_backfill, or AGENTS/README manager; do not mix branches.",
+    "The mother_doc stage must first choose direct_writeback, question_backfill, or the root-only AGENTS manager branch; do not mix branches.",
     "Impact selection in mother_doc is fixed as: default all-relevant, then subtract high-probability-irrelevant scopes.",
-    "The AGENTS/README manager centrally governs AGENTS.md + README.md across the Octopus_OS root, container roots, and Mother_Doc/docs using scan / collect / push.",
+    "The AGENTS manager centrally governs only Octopus_OS/AGENTS.md using scan / collect / push plus a managed human/machine payload pair.",
     "direct_writeback writes only explicit content; question_backfill closes only unresolved design gaps.",
     "After mother_doc updates documents, the local git-backed status script must run; changed docs become modified and empty placeholders become null.",
     "The mother_doc stage must not write implementation logs, deployment logs, or Git / GitHub traceability records.",
@@ -124,11 +124,14 @@ def load_skill_facade_contract(skill_root: Path) -> dict[str, object]:
                 "branch_contract_command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-contract --json",
                 "stage_directive_command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-directive --stage <scan|collect|push> --json",
                 "branch_registry_command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-registry --json",
-                "target_contract_command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-target-contract --relative-path \"<PATH>\" --file-kind <agents|readme> --json",
+                "target_contract_command": (
+                    "python3 scripts/Cli_Toolbox.py mother-doc-agents-target-contract "
+                    '--relative-path "octopus_os_root" --file-kind agents --json'
+                ),
                 "runtime_model": [
                     "branch contract JSON is the primary runtime source for branch-level governance",
                     "registry JSON is the machine-readable branch index and carries the branch index content in payload form; index.md is human audit only",
-                    "target contract JSON is the primary runtime source for any concrete AGENTS.md or README.md path",
+                    "target contract JSON is the primary runtime source for the single governed path Octopus_OS/AGENTS.md",
                 ],
             }
         },

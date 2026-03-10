@@ -1,36 +1,14 @@
 {
+  "schema_version": "2.0",
   "stage": "collect",
-  "runtime_source_policy": {
-    "runtime_rule_source": "CLI_JSON",
-    "model_must_prefer_this_payload": true,
-    "audit_markdown_role": "human_only"
-  },
-  "purpose": "pull current AGENTS.md and README.md files back into the skill-side registry after product-side changes",
-  "entry_sequence": [
-    "python3 scripts/Cli_Toolbox.py mother-doc-agents-contract --json",
-    "python3 scripts/Cli_Toolbox.py mother-doc-agents-directive --stage collect --json"
-  ],
-  "inputs": [
-    "assets/mother_doc_agents/scan_report.json"
-  ],
-  "outputs": [
+  "goal": "collect Octopus_OS/AGENTS.md into the managed human/machine pair and refresh the single-target registry",
+  "primary_outputs": [
+    "assets/managed_targets/Octopus_OS/AGENTS_human.md",
+    "assets/managed_targets/Octopus_OS/AGENTS_machine.json",
     "assets/mother_doc_agents/registry.json",
-    "assets/mother_doc_agents/index.md",
-    "assets/mother_doc_agents/collected_tree/"
+    "assets/mother_doc_agents/index.md"
   ],
-  "stage_runtime_rules": [
-    "collect treats external current state as the source for collected snapshots",
-    "collect must refresh registry.json so registry becomes the machine-readable branch index",
-    "index.md may be refreshed for human audit, but it is not the primary runtime source"
-  ],
-  "source_of_truth": {
-    "agents_runtime": "target-contract runtime JSON remains the runtime source of truth",
-    "external_snapshots": "current external AGENTS.md and README.md files",
-    "registry_role": "machine_readable_branch_index_after_collect"
-  },
-  "prohibited": [
-    "rescan unrelated repos",
-    "push product-side files",
-    "write evidence logs"
+  "must_preserve": [
+    "existing machine payload when present"
   ]
 }

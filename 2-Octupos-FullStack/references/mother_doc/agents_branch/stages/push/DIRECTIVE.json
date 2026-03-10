@@ -1,37 +1,19 @@
 {
+  "schema_version": "2.0",
   "stage": "push",
-  "runtime_source_policy": {
-    "runtime_rule_source": "CLI_JSON",
-    "model_must_prefer_this_payload": true,
-    "audit_markdown_role": "human_only"
-  },
-  "purpose": "push the current skill-side AGENTS/README templates back through Octopus_OS root, container roots, and the Mother_Doc docs tree, then resync the registry",
-  "entry_sequence": [
-    "python3 scripts/Cli_Toolbox.py mother-doc-agents-contract --json",
-    "python3 scripts/Cli_Toolbox.py mother-doc-agents-directive --stage push --json"
+  "goal": "write the managed root AGENTS back to Octopus_OS and delete forbidden extra AGENTS.md files plus legacy audit/template assets",
+  "primary_outputs": [
+    "${AI_PROJECTS_ROOT:-$HOME/AI_Projects}/Octopus_OS/AGENTS.md"
   ],
-  "inputs": [
-    "current AGENTS/README template tree",
-    "Octopus_OS"
+  "must_cleanup": [
+    "all extra Octopus_OS/**/AGENTS.md except the root target",
+    "assets/mother_doc_agents/runtime_rules",
+    "assets/mother_doc_agents/templates",
+    "assets/mother_doc_agents/collected_tree"
   ],
-  "outputs": [
-    "updated AGENTS.md and README.md tree",
-    "fresh scan_report.json",
-    "fresh registry.json"
-  ],
-  "stage_runtime_rules": [
-    "push regenerates root/container AGENTS.md and README.md from the skill-managed generation model",
-    "push refreshes Mother_Doc docs AGENTS.md navigation and preserves docs README current state except missing-file initialization",
-    "push must rescan and recollect so registry.json stays aligned with the current external tree"
-  ],
-  "source_of_truth": {
-    "agents_runtime": "skill-managed routing plus target-contract payload",
-    "root_and_container_readme": "skill-side templates",
-    "mother_doc_docs_readme": "current external state unless navigation initializes a missing file"
-  },
-  "prohibited": [
-    "rewrite unrelated ordinary docs",
-    "write implementation logs",
-    "write deployment logs"
+  "post_actions": [
+    "refresh scan_report.json",
+    "refresh registry.json",
+    "refresh managed human/machine pair"
   ]
 }

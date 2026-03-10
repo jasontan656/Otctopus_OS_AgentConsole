@@ -40,24 +40,23 @@
 18. 实际工作目录容器 `Octopus_OS/<Container_Name>/` 与 `Octopus_OS/Mother_Doc/` 容器根都不得创建 `AGENTS.md`。
 19. `Mother_Doc/docs` 每一层目录都必须同时具备：
 - `README.md`
-- `AGENTS.md`
 - `<folder_name>.md`
-20. `AGENTS.md` 之外的 `Mother_Doc/docs` markdown 必须带有 `Document Status + Block Registry`。
+20. `Mother_Doc/docs` markdown 必须带有 `Document Status + Block Registry`。
 21. 每次 `mother_doc` 更新非 `AGENTS.md` 文档后，必须把文档级与区块级状态同步标记为：
 - `lifecycle_state: modified`
 - `requires_development: true`
 - `sync_status: modified`
 22. 文档如未细分多个区块，默认必须至少存在一个 `block_id: primary`。
 23. `README.md` 只承担当前层用途说明。
-24. `AGENTS.md` 只承担当前层递归索引。
-25. `<folder_name>.md` 只承担当前目录自身这个模块、父级域、黑盒容器或文档承载体的实体说明。
+24. `<folder_name>.md` 只承担当前目录自身这个模块、父级域、黑盒容器或文档承载体的实体说明。
+25. `Octopus_OS/AGENTS.md` 是当前唯一允许存在的外部 AGENTS runtime entry。
 26. `mother_doc` 阶段每次撰写前，必须先结合上下文使用 `Meta-prompt-write` 强化用户意图。
-27. 强化完成后，必须先读取 `references/mother_doc/00_MOTHER_DOC_BRANCH_INDEX.md`，判定当前任务属于 `direct_writeback`、`question_backfill` 还是 `AGENTS/README manager`。
+27. 强化完成后，必须先读取 `references/mother_doc/00_MOTHER_DOC_BRANCH_INDEX.md`，判定当前任务属于 `direct_writeback`、`question_backfill` 还是 root-only `AGENTS manager`。
 28. `direct_writeback` 只负责把用户已明确描述的内容写入受影响的 `overview / features / shared / common`。
 29. `question_backfill` 只负责把未收口问题整理、追问并回填到原文档，不得代替 implementation。
-30. `AGENTS/README manager` 是 `mother_doc` 阶段内的独立子分支，统一管理 `Octopus_OS` 根层、各容器根层与 `Mother_Doc/docs` 文档树的 `AGENTS.md + README.md`。
-31. `AGENTS/README manager` 固定采用 `scan / collect / push` 三阶段；不得与普通文档正文覆盖写回混写。
-32. 完成子分支判定后，必须从 `Octopus_OS/Mother_Doc/docs/` 根层 `README.md + AGENTS.md + Mother_Doc.md` 进入，再逐层读取当前层 `README.md + AGENTS.md + <folder_name>.md`，递归覆盖完整影响面。
+30. root-only `AGENTS manager` 是 `mother_doc` 阶段内的独立子分支，只治理 `Octopus_OS/AGENTS.md` 与 mirror 内的 managed human/machine pair。
+31. root-only `AGENTS manager` 固定采用 `scan / collect / push` 三阶段；不得与普通文档正文覆盖写回混写。
+32. 完成子分支判定后，普通 `mother_doc` 文档工作必须从 `Octopus_OS/Mother_Doc/docs/` 根层 `README.md + Mother_Doc.md` 进入，再逐层读取当前层 `README.md + <folder_name>.md`，递归覆盖完整影响面。
 32.1 `mother_doc` 在进入任何具体容器前，必须先读取项目统一目标基线，并使用“默认全相关 -> 排除高概率不相关项”的影响面收缩规则。
 33. `mother_doc` 阶段禁止写开发日志、部署日志与 Git / GitHub 留痕；本阶段只负责覆盖式更新当前文档状态。
 33.1 `mother_doc` 结束前必须运行本地 `git` 驱动的状态脚本；变更文档写成 `modified`，空占位写成 `null`，清洁但已闭环的文档保持 `developed`。
@@ -68,7 +67,7 @@
 - 一套 `dev_canon`
 36. 容器目录参考内容可以静态存在，但真实容器集合是项目驱动的动态集合，不是封闭白名单。
 37. 若需求引入可独立部署、可独立演进或可独立承载职责的模块，AI 必须同步新增工作目录容器与 `Mother_Doc/docs` 同名目录。
-38. 每个容器文档目录必须先固定为 `README.md + AGENTS.md + <folder_name>.md + overview/ + features/ + shared/ + common/`。
+38. 每个容器文档目录必须先固定为 `README.md + <folder_name>.md + overview/ + features/ + shared/ + common/`。
 38.1 `Mother_Doc` 容器是特例，除 `overview / features / shared / common` 外，还固定拥有 `project_baseline/`，承载项目级总目标、当前开发说明和动态扩张原则。
 39. `overview/` 承载人类可观测总览层。
 40. `features/` 承载功能层，单个文档可以覆盖单文件或多文件的语义等价单元。
