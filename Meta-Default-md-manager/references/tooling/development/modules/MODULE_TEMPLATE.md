@@ -1,7 +1,3 @@
-# Module Template
+# Module Template Archive
 
-- 模块名：
-- 职责：
-- 输入：
-- 输出：
-- 不变量：
+No active module template exists while this skill has no executable code.

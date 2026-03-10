@@ -1,152 +1,67 @@
 ---
 name: "Meta-Default-md-manager"
-description: "集中管理 workspace 内的常驻默认文档。显式分离 scan、collect、push 三阶段；运行态规则与阶段指引必须通过 CLI 输出，markdown 仅供人类审计。"
+description: "集中管理 workspace 内的常驻默认文档。当前处于无工具收敛期：不提供可执行 CLI，仅保留治理模型、资产文档与后续重建所需的静态归档。"
 ---
 
 # Meta-Default-md-manager
 
-## 1. 目标
-- 提供常驻默认文档的集中管理入口，默认管理 `AGENTS.md`、所有目录的 `.gitignore`、以及 `Octopus_CodeBase_Backend/README.md`、`Octopus_CodeBase_Backend/Deployment_Guide.md`。
-- `Octopus_OS` 是显式排除域；其内部全部 `AGENTS.md` / `README.md` 由 `2-Octupos-FullStack` 自己的 AGENTS/README manager 独占管理。
-- 统一 CLI 入口为 `scripts/Cli_Toolbox.py`。
-- 阶段命令必须显式分离：
-  - `scan`
-  - `collect`
-  - `push`
-- 运行态规则、约束、指引必须通过 CLI 输出；模型禁止直接阅读 markdown 获取运行指引。
+## 1. 当前状态
+- 本技能当前**不提供任何可执行工具入口**。
+- `scripts/` 与 `tests/` 的代码文件已被整体移除，后续会在治理模型稳定后重建新的工具面。
+- 模型不得自行假设 `Cli_Toolbox.py` 或其他历史脚本仍可运行。
 
-## 2. 可用工具
-- 工具入口：`scripts/Cli_Toolbox.py`
-- 命令清单：
-  - `Cli_Toolbox.contract`
-  - `Cli_Toolbox.directive`
-  - `Cli_Toolbox.target-contract`
-  - `Cli_Toolbox.render_audit_docs`
-  - `Cli_Toolbox.registry`
-  - `Cli_Toolbox.scan`
-  - `Cli_Toolbox.collect`
-  - `Cli_Toolbox.push`
-- 运行态读取约束：
-  - 先执行 `contract` 获取技能级合同。
-  - 再执行 `directive --stage <scan|collect|push>` 获取阶段指引。
-  - `references/**/*.md` 只供人类审计，不是模型运行时规则源。
+## 2. 当前保留价值
+- 保留 skill 内部的受管资产与审计文档。
+- 保留 `references/runtime/` 下的静态治理模型与 payload 归档。
+- 保留 `references/stages/` 下对 `scan / collect / push` 目标语义的非执行性说明。
 
-## 3. 工作流约束
-- 技能级运行合同入口：
-  - machine: `references/runtime/SKILL_RUNTIME_CONTRACT.json`
-  - CLI: `python3 scripts/Cli_Toolbox.py contract --json`
-  - audit: `references/runtime/SKILL_RUNTIME_CONTRACT.md`
-- 目标级运行合同入口：
-  - CLI: `python3 scripts/Cli_Toolbox.py target-contract --source-path "<ABS_SOURCE_PATH>" --json`
-  - machine cache: `assets/managed_targets/runtime_rules/**/**/*.runtime.json`
-  - audit: `assets/managed_targets/runtime_rules/**/AGENT_AUDIT.md` / `README_AUDIT.md`
-- `scan` 阶段入口：
-  - machine: `references/stages/scan/DIRECTIVE.json`
-  - CLI: `python3 scripts/Cli_Toolbox.py directive --stage scan --json`
-  - audit: `references/stages/scan/INSTRUCTION.md` / `WORKFLOW.md` / `RULES.md`
-- `collect` 阶段入口：
-  - machine: `references/stages/collect/DIRECTIVE.json`
-  - CLI: `python3 scripts/Cli_Toolbox.py directive --stage collect --json`
-  - audit: `references/stages/collect/INSTRUCTION.md` / `WORKFLOW.md` / `RULES.md`
-- `push` 阶段入口：
-  - machine: `references/stages/push/DIRECTIVE.json`
-  - CLI: `python3 scripts/Cli_Toolbox.py directive --stage push --json`
-  - audit: `references/stages/push/INSTRUCTION.md` / `WORKFLOW.md` / `RULES.md`
+## 3. 受管范围
+- 默认治理 workspace 中非 `Octopus_OS/` 域的常驻默认文档。
+- 当前扫描规则仍以既定文件名匹配为准，核心对象包括：
+  - `AGENTS.md`
+  - `.gitignore`
+  - `Octopus_CodeBase_Backend/README.md`
+  - `Octopus_CodeBase_Backend/Deployment_Guide.md`
+- `Octopus_OS/` 仍然是显式排除域，其内部默认文档由 `2-Octupos-FullStack` 独占治理。
 
-## 4. 规则约束
-- `SKILL.md` 只保留入口、边界和导航，不承载可直接执行的阶段细节。
-- 受管文档默认采用中文为主、英文为辅的语言规范；英文只用于技术栈、路径、命令、环境变量、API 名、函数名、类名与其他工程向标识符。
-- `scan / collect / push` 必须通过技能内互斥锁串行运行，禁止并行。
-- `scan` 不允许写托管副本。
-- `collect` 不允许重新扫描文件系统，只允许消费 `scan_report.json`。
-- `push` 不允许绕过 `registry.json` 直接推断目标。
-- `collect` 消费的 `scan_report.json` 不存在、为空或无条目时，必须显式报错。
-- `push` 消费的 `registry.json` 不存在、为空或无条目时，必须显式报错。
-- 除 `push` 对外回写源文件外，技能所有产物必须留在技能内部 `assets/managed_targets/`。
-- 外部受管 `AGENTS.md` 必须保持为 thin runtime entry；路径级具体规则只允许存在于 `target-contract` JSON/CLI 输出。
-- 运行合同与阶段指引必须同时存在两份：
-  - markdown 审计版
-  - machine-readable JSON 版
-- 目标级合同也必须同时存在两份：
-  - machine-readable JSON 版
-  - 不命名为 `AGENTS.md` 的 markdown 审计版
-- 约束更新时必须先更新 JSON，再运行 `render-audit-docs` 刷新 markdown 审计版。
+## 4. AGENTS 资产治理模型
+- AGENTS 的 skill 内部 `human` 模版必须显式分成两段：
+  - `<part_A> ... </part_A>`
+  - `<part_B> ... </part_B>`
+- `Part A` 用于外部 `AGENTS.md` 的真实回写内容。
+- `Part B` 仅保留在 skill 内部 `human` 模版与对应 machine JSON 中，不直接推送到外部。
+- machine JSON 只承载 `Part B` 的结构化内容。
 
-## 5. 方法论约束
-- 先 `contract`，再 `directive`，最后执行 `scan / collect / push`。
-- 对单个外部 `AGENTS.md` / `README.md` 做运行判断时，先执行 `target-contract`，不要直接从 skill markdown 取运行规则。
-- 先 `scan`，再 `collect`，最后 `push`。
-- 如果用户只要求某一阶段，只读取该阶段对应的 CLI 指引输出。
-- 如果用户未显式要求审计 markdown，不读取 `references/**/*.md` 作为运行依据。
+## 5. 阶段目标定义
+- `scan`
+  - 只负责发现当前哪些文件处于本技能的受管范围，并输出清单。
+  - 不负责写托管副本，不负责回写外部文件。
+- `collect`
+  - 只从外部受管 `AGENTS.md` 中回收 `<part_A> ... </part_A>` 到 skill 内部 `human` 模版。
+  - `Part B` 必须保留 skill 内部既有内容，不得被外部文件覆盖。
+- `push`
+  - 只从 skill 内部 `human` 模版中提取 `<part_A> ... </part_A>` 回写到外部 `AGENTS.md`。
+  - `Part B` 必须留在 skill 内部，不参与外推。
 
-## 6. 内联导航索引
-- [Cli_Toolbox 工具入口] -> [scripts/Cli_Toolbox.py]
-- [运行合同 JSON] -> [references/runtime/SKILL_RUNTIME_CONTRACT.json]
-- [运行合同审计版] -> [references/runtime/SKILL_RUNTIME_CONTRACT.md]
-- [Scan Directive JSON] -> [references/stages/scan/DIRECTIVE.json]
-- [Collect Directive JSON] -> [references/stages/collect/DIRECTIVE.json]
-- [Push Directive JSON] -> [references/stages/push/DIRECTIVE.json]
-- [托管 registry] -> [assets/managed_targets/registry.json]
-- [托管索引] -> [assets/managed_targets/index.md]
-- [扫描报告] -> [assets/managed_targets/scan_report.json]
+## 6. 维护入口
+- 当用户要求修改 `AGENTS.md` 治理内容时，必须同时判断需求对 `Part A` 和 `Part B` 的影响。
+- 默认必须把 `Part A` 与 `Part B` 视为一个联动对象审查，禁止只改其中一半然后假设另一半自动正确。
+- 如果字段结构、payload shape 或分段标记发生变化，必须同步修改：
+  - `human` 模版
+  - machine JSON
+  - 后续重建的新工具设计
+- 本轮治理明确**不包含** external root `AGENTS.md` 与其对应的 skill 内部 root 模版资产。
 
-## 7. 架构契约
-```text
-Meta-Default-md-manager/
-├── SKILL.md
-├── agents/
-│   └── openai.yaml
-├── assets/
-│   └── managed_targets/
-│       ├── .cli.lock
-│       ├── index.md
-│       ├── registry.json
-│       └── scan_report.json
-├── scripts/
-│   ├── Cli_Toolbox.py
-│   ├── cli_parser_support.py
-│   ├── managed_collect.py
-│   ├── managed_guidance.py
-│   ├── managed_index.py
-│   ├── managed_lock.py
-│   ├── managed_paths.py
-│   ├── managed_push.py
-│   ├── managed_registry.py
-│   └── managed_scan.py
-├── references/
-│   ├── runtime/
-│   │   ├── SKILL_RUNTIME_CONTRACT.json
-│   │   └── SKILL_RUNTIME_CONTRACT.md
-│   ├── stages/
-│   │   ├── scan/
-│   │   │   ├── DIRECTIVE.json
-│   │   │   ├── INSTRUCTION.md
-│   │   │   ├── RULES.md
-│   │   │   └── WORKFLOW.md
-│   │   ├── collect/
-│   │   │   ├── DIRECTIVE.json
-│   │   │   ├── INSTRUCTION.md
-│   │   │   ├── RULES.md
-│   │   │   └── WORKFLOW.md
-│   │   └── push/
-│   │       ├── DIRECTIVE.json
-│   │       ├── INSTRUCTION.md
-│   │       ├── RULES.md
-│   │       └── WORKFLOW.md
-│   └── tooling/
-│       ├── Cli_Toolbox_USAGE.md
-│       ├── Cli_Toolbox_DEVELOPMENT.md
-│       └── development/
-│           ├── 00_ARCHITECTURE_OVERVIEW.md
-│           ├── 10_MODULE_CATALOG.yaml
-│           ├── 20_CATEGORY_INDEX.md
-│           ├── 90_CHANGELOG.md
-│           └── modules/
-│               ├── MODULE_TEMPLATE.md
-│               ├── mod_collect.md
-│               ├── mod_guidance.md
-│               ├── mod_push.md
-│               └── mod_scan.md
-└── tests/
-    └── test_cli_toolbox.py
-```
+## 7. 当前参考入口
+- [AGENTS 资产治理模型] -> [references/runtime/AGENTS_ASSET_GOVERNANCE.md]
+- [Payload 归档 JSON] -> [references/runtime/AGENTS_PAYLOAD_ARCHIVE.json]
+- [技能运行状态] -> [references/runtime/SKILL_RUNTIME_CONTRACT.json]
+- [阶段静态说明] -> [references/stages/scan/DIRECTIVE.json]
+- [受管资产 registry] -> [assets/managed_targets/registry.json]
+- [受管资产 index] -> [assets/managed_targets/index.md]
+- [受管资产 scan_report] -> [assets/managed_targets/scan_report.json]
+
+## 8. 约束
+- 当前阶段不得把 `references/**/*.md` 或 `references/**/*.json` 误当成“已有工具可执行”的证明。
+- 当前阶段的目标是先收敛治理模型，再重建工具；不要在 skill 内新增临时脚本替代旧 CLI。
+- 后续重建工具时，必须以本技能当前保留的静态治理文档为准，不得回滚到旧的隐式分段或旧 CLI 结构。

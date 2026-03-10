@@ -1,6 +1,5 @@
 # Push Workflow
 
-1. 读取 registry.json。
-2. 选择 --all 或指定 --target-source-path。
-3. 将托管副本回写到源路径。
-4. 刷新 registry 内哈希。
+1. Open the internal AGENTS human template.
+2. Extract `<part_A> ... </part_A>`.
+3. Write only that block to the external AGENTS target.
