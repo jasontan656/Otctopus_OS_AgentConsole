@@ -10,7 +10,7 @@
     "$Meta-mindchain (think from the architecture level and reject one-sided thinking)",
     "$Meta-reasoningchain (project the future shape to align the target state)",
     "$Meta-keyword-first-edit (prefer delete > replace > add when editing)",
-    "$Meta-refactor-behavior-preserving (applicable only when refactor is needed)",
+    "$Meta-refactor-behavior (applicable only when refactor is needed)",
     "$Meta-Agent-Browser (applicable only when the task is frontend or browser-related)"
   ],
   "peer_summary_policy": {
