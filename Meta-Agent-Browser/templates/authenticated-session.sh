@@ -26,6 +26,10 @@ set -euo pipefail
 
 LOGIN_URL="${1:?Usage: $0 <login-url> [state-file]}"
 STATE_FILE="${2:-./auth-state.json}"
+ARTIFACT_DIR="${ARTIFACT_DIR:-${TMPDIR:-.}/agent-browser-artifacts}"
+LOGIN_FAILED_SCREENSHOT="$ARTIFACT_DIR/login-failed.png"
+
+mkdir -p "$ARTIFACT_DIR"
 
 echo "Authentication workflow: $LOGIN_URL"
 
@@ -93,7 +97,7 @@ exit 0
 # FINAL_URL=$(agent-browser get url)
 # if [[ "$FINAL_URL" == *"login"* ]] || [[ "$FINAL_URL" == *"signin"* ]]; then
 #     echo "Login failed - still on login page"
-#     agent-browser screenshot /tmp/login-failed.png
+#     agent-browser screenshot "$LOGIN_FAILED_SCREENSHOT"
 #     agent-browser close
 #     exit 1
 # fi

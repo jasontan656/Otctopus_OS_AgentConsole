@@ -14,6 +14,10 @@
 set -euo pipefail
 
 FORM_URL="${1:?Usage: $0 <form-url>}"
+ARTIFACT_DIR="${ARTIFACT_DIR:-${TMPDIR:-.}/agent-browser-artifacts}"
+RESULT_SCREENSHOT="$ARTIFACT_DIR/form-result.png"
+
+mkdir -p "$ARTIFACT_DIR"
 
 echo "Form automation: $FORM_URL"
 
@@ -54,8 +58,8 @@ agent-browser get url
 agent-browser snapshot -i
 
 # Optional: Capture evidence
-agent-browser screenshot /tmp/form-result.png
-echo "Screenshot saved: /tmp/form-result.png"
+agent-browser screenshot "$RESULT_SCREENSHOT"
+echo "Screenshot saved: $RESULT_SCREENSHOT"
 
 # Cleanup
 agent-browser close

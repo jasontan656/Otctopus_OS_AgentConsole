@@ -45,6 +45,7 @@ EVENT_COMMAND_PREVIEW_LIMIT = 420
 EVENT_COMMAND_SIGNATURE_LIMIT = 360
 EVIDENCE_SAMPLE_LIMIT = 3
 TIMELINE_LIMIT = 5
+BACKTICK = chr(96)
 
 def _sanitize_text_for_event(value: str, *, limit: int) -> str:
     text = str(value or "").strip()
@@ -79,7 +80,7 @@ def _normalize_signature_for_grouping(signature: str) -> str:
 
     # 去掉常见占位符与可变片段，保持命令骨架。
     s = re.sub(r"<[^>]+>", "<ARG>", s)
-    s = re.sub(r"`[^`]*`", " <CMD> ", s)
+    s = re.sub(rf"{BACKTICK}[^{BACKTICK}]*{BACKTICK}", " <CMD> ", s)
     s = re.sub(r"\$[A-Za-z_][A-Za-z0-9_]*", " <ENV> ", s)
     s = re.sub(r"\b\d+[A-Za-z]?\b", " <NUM> ", s)
     s = re.sub(r"\b[0-9a-fA-F]{12,}\b", " <ID> ", s)
@@ -428,7 +429,7 @@ def _group_items(items: list[dict[str, Any]]) -> dict[str, Any]:
         tool_counts = _top_counts([str(event.get("tool_name", "") or "") for event in events], limit=5)
 
         problem_statement = (
-            f"组 `{bucket['pain_group_key']}` 在 topic `{bucket['pain_topic']}` 下累计记录 {total_items} 次，"
+            f"组 {bucket['pain_group_key']} 在 topic {bucket['pain_topic']} 下累计记录 {total_items} 次，"
             f"当前仍有 {pending_items} 条未修复，且最高优先级为 {bucket['priority_top']}。"
         )
         narrative_package = build_narrative_package(

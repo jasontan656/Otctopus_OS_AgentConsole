@@ -5,7 +5,7 @@ from __future__ import annotations
 # required_fields: top_level_resident_docs,stage_order,stage_scopes,stage_docs,stage_commands,stage_graph_contracts,stage_checklists | optional_fields: none
 
 from stage_contract_graph_data import EVIDENCE_GRAPH_COMMANDS, EVIDENCE_GRAPH_DOCS
-TOP_LEVEL_RESIDENT_DOCS = ["rules/FULLSTACK_SKILL_HARD_RULES.md", "references/runtime/SKILL_RUNTIME_CONTRACT.md", "references/skill_native/00_SKILL_NATIVE_INDEX.md", "references/skill_native/10_PROJECT_BASELINE_INDEX.md", "references/authored_domains/00_DOMAIN_INDEX.md", "references/tooling/SKILL_TOOLING_WORKFLOW_CONTRACT.md", "/home/jasontan656/AI_Projects/AGENTS.md"]
+TOP_LEVEL_RESIDENT_DOCS = ["rules/FULLSTACK_SKILL_HARD_RULES.md", "references/runtime/SKILL_RUNTIME_CONTRACT.md", "references/skill_native/00_SKILL_NATIVE_INDEX.md", "references/skill_native/10_PROJECT_BASELINE_INDEX.md", "references/authored_domains/00_DOMAIN_INDEX.md", "references/tooling/SKILL_TOOLING_WORKFLOW_CONTRACT.md", "${AI_PROJECTS_ROOT:-$HOME/AI_Projects}/AGENTS.md"]
 STAGE_ORDER = ["mother_doc", "implementation", "evidence"]
 STAGE_SCOPES = {
     "mother_doc": "strengthen user intent, recursively navigate Mother_Doc, and write back current-state document structure",
@@ -61,7 +61,7 @@ STAGE_COMMANDS = {
         ],
         "stage_commands": [
             {
-                "command": "python3 /home/jasontan656/.codex/skills/Meta-prompt-write/scripts/filter_active_invoke_output.py --mode active_invoke --input-text \"<RAW_PROMPT_OUTPUT>\"",
+                "command": "python3 ${CODEX_HOME:-$HOME/.codex}/skills/Meta-prompt-write/scripts/filter_active_invoke_output.py --mode active_invoke --input-text \"<RAW_PROMPT_OUTPUT>\"",
                 "purpose": "strengthen the current user prompt with full repo context before selecting Mother_Doc scope",
             },
             {
@@ -81,7 +81,7 @@ STAGE_COMMANDS = {
                 "purpose": "refresh README.md, AGENTS.md, and same-name scope markdown files across the Mother_Doc tree only",
             },
             {
-                "command": "python3 scripts/Cli_Toolbox.py sync-mother-doc-status-from-git --repo-root /home/jasontan656/AI_Projects/Octopus_OS --stage mother_doc --path <relative-path> --json",
+                "command": "python3 scripts/Cli_Toolbox.py sync-mother-doc-status-from-git --repo-root ${AI_PROJECTS_ROOT:-$HOME/AI_Projects}/Octopus_OS --stage mother_doc --path <relative-path> --json",
                 "purpose": "derive modified / developed / null lifecycle states from local git-backed diff after mother_doc writeback",
             },
             {
@@ -123,7 +123,7 @@ STAGE_COMMANDS = {
                 "purpose": "print the implementation-stage contract with independent developer obligations and delivery expectations",
             },
             {
-                "command": "rg -n \"<target>\" /home/jasontan656/AI_Projects/Octopus_OS /home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs",
+                "command": "rg -n \"<target>\" ${AI_PROJECTS_ROOT:-$HOME/AI_Projects}/Octopus_OS ${AI_PROJECTS_ROOT:-$HOME/AI_Projects}/Octopus_OS/Mother_Doc/docs",
                 "purpose": "inspect doc-code drift and locate implementation slices without scanning unrelated sibling repositories",
             },
             {
