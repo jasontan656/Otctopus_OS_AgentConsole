@@ -1,28 +1,36 @@
 # Cli_Toolbox 开发文档架构总览
 
 ## 目标
-- 支撑复杂 Toolbox 的开发文档扩展，不依赖单一文档承载全部信息。
-- 通过“入口 + 分类 + 模块”结构降低认知负担与维护成本。
-- 保证 `SKILL.md` 维持纯入口式，而不是继续堆积治理细节。
-- 保证模板体系同时支持 `basic` 与 `staged_cli_first` 两个 profile。
+- 让模板技能的脚本、contracts、assets、tooling 文档与测试围绕同一套 façade 治理。
+- 保证 `create_skill_from_template.py` 生成的不是“占位文档集合”，而是可直接继续收敛的 skill control plane。
+- 保证 `basic` 与 `staged_cli_first` 共享统一门面哲学，但输出不同深度的合同面。
 
 ## 分层结构
-0. 技能入口层：`SKILL.md`
-1. 工具入口层：`references/tooling/Cli_Toolbox_DEVELOPMENT.md`
-2. 索引层：
-   - `references/tooling/development/10_MODULE_CATALOG.yaml`
-   - `references/tooling/development/20_CATEGORY_INDEX.md`
-3. 模块层：`references/tooling/development/modules/`
-4. 变更层：`references/tooling/development/90_CHANGELOG.md`
+0. 技能门面层：`SKILL.md`
+1. 运行合同层：`references/runtime/`
+2. 模板治理层：
+   - `references/skill_template_contract_v1.md`
+   - `references/skill_architecture_playbook.md`
+   - `references/staged_cli_first_profile_reference.md`
+3. 工具入口层：
+   - `scripts/Cli_Toolbox.py`
+   - `scripts/create_skill_from_template.py`
+4. 模板资产层：
+   - `assets/skill_template/`
+5. 校验层：
+   - `tests/`
+
+## 当前关键设计
+- 默认门面采用 backend 验证过的 7 段 façade。
+- `staged_cli_first` 默认生成 runtime contract 和 stage template kit。
+- stage template kit 包含：
+  - `CHECKLIST.json`
+  - `DOC_CONTRACT.json`
+  - `COMMAND_CONTRACT.json`
+  - `GRAPH_CONTRACT.json`
+- 默认资源目录包含 `tests/`，为模板回归预留位置。
 
 ## 维护原则
-- 先更新模块目录，再更新模块文档，再更新入口索引。
-- 每次工具改动至少触达一个模块文档或模块目录字段。
-- 入口文档只做导航与规则，不承载大量实现细节。
-- 若模板规则影响运行态合同模式，必须同步更新：
-  - 技能模板合同
-  - staged profile 提炼参考
-  - 技能架构手册
-  - `SKILL_TEMPLATE.md`
-  - `SKILL_TEMPLATE_STAGED.md`
-  - 使用文档中的模板行为描述
+- 先改 contracts 与模板资产，再改生成器，再补工具文档与测试。
+- 若改动的是 staged profile，必须把合同面和模板 kit 一起改完，不能只改 `SKILL_TEMPLATE_STAGED.md`。
+- 若脚本与文档描述不一致，以脚本行为为准并立即回写文档；不要保留“双真相”。

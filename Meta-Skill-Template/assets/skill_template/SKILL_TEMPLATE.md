@@ -5,79 +5,57 @@ description: ${description}
 
 # ${skill_name}
 
-## 1. 目标
-- [描述此技能在运行态要解决的业务问题，不要写“创建/生成本技能”这类建模流程目标。]
-- [未来生成技能默认采用“抽象层 + 业务需求层”写法。]
+## 1. 定位
+- 本文件只做门面入口，不承载规则正文。
+- [写明该技能在运行态的唯一主轴；禁止写“创建本技能/生成模板”之类 authoring 目标。]
+- [若技能存在运行态规则，写明运行指引由 CLI 输出的 machine-readable contract 决定。]
 
-## 2. 可用工具
-- 抽象层：
-  - [列出统一工具入口、共享工具能力、抽象辅助命令。]
-  - 命名规则：工具统一命名为 `Cli_Toolbox.<tool_name>`。
-- 业务需求层：
-  - `[domain_1]`：
-    - [列出该域专属命令、用途、入口。]
-  - [若只有一个业务域，也必须显式独立成域，不得与抽象层混写。]
-- 允许统一脚本入口。
-- 抽象功能可共享；特定域命令禁止共享、禁止串用。
-- 若声明工具，维护以下文档：
-  - 使用文档：`references/tooling/Cli_Toolbox_USAGE.md`
-  - 开发文档：`references/tooling/Cli_Toolbox_DEVELOPMENT.md`
-- 若工具为多模块结构，维护以下开发索引：
-  - `references/tooling/development/00_ARCHITECTURE_OVERVIEW.md`
-  - `references/tooling/development/10_MODULE_CATALOG.yaml`
-  - `references/tooling/development/20_CATEGORY_INDEX.md`
-  - `references/tooling/development/modules/MODULE_TEMPLATE.md`
-- 若技能存在运行态规则、约束、指引：
-  - 必须提供 CLI 输出入口。
-  - 必须提供 machine-readable `json/yaml` 合同。
-  - markdown 只可作为审计版，不能作为模型运行时规则源。
+## 2. 必读顺序
+1. [先读取本技能的 runtime contract 或统一入口命令。]
+2. [若无 runtime contract，列出固定必读文档顺序。]
+3. [在进入具体执行前，列出必须先拿到的 checklist、合同或门禁命令。]
+4. [若存在多域流程，写明切换时要丢弃哪些 focus。]
 
-## 3. 工作流约束
-- 抽象层：
-  - [写明抽象层工作流总则、统一入口、共通输入输出。]
-- 业务需求层：
-  - `[domain_1]`：
-    - [写明该域流程步骤、输入输出和完成判定。]
-  - [若存在多个业务域，继续逐域拆写；禁止混写。]
+## 3. 分类入口
+- 规则层：
+  - [rules/...]
+- 工作流/合同层：
+  - [references/...]
+- 模板或资产层：
+  - [assets/...]
+- 工具层：
+  - [scripts/Cli_Toolbox.py 或其他统一入口]
+- 运行边界层：
+  - [root AGENTS / companion AGENTS / 外部控制平面]
 
-## 4. 规则约束
-- 抽象层：
-  - [写明顶层规则、边界、命名、门禁与禁止项。]
-  - [若技能存在运行态规则，请显式声明：模型禁止直接阅读 markdown 获取运行指引；必须通过 CLI 读取 machine-readable 合同。]
-  - [若技能存在运行态规则，请显式声明：规则必须同时存在 markdown 与 json/yaml 两份，更新时必须同步。]
-- 业务需求层：
-  - `[domain_1]`：
-    - [写明该域的专属规则、专属边界、专属禁止项。]
-  - [若存在多个业务域，继续逐域拆写；禁止混写。]
+## 4. 适用域
+- 适用于：[明确此技能负责的任务类型]
+- 不适用于：[明确排除域]
+- [若依赖外部 companion skill，只写职责边界，不复制对方规则。]
 
-## 5. 方法论约束
-- 抽象层：
-  - [写明统一思维方式、统一推理方式、统一执行顺序。]
-- 业务需求层：
-  - `[domain_1]`：
-    - [写明该域的专属方法论、专属例外条件。]
-  - [若存在多个业务域，继续逐域拆写；禁止混写。]
+## 5. 执行入口
+- 统一入口：
+  - [列出最小可执行命令]
+- 合同入口：
+  - [列出 runtime contract / gate command / lint command]
+- 资产入口：
+  - [列出模板索引、固定输出路径或脚本命令]
 
-## 6. 内联导航索引
-- 抽象层：
-  - [索引项 1] -> [相对路径]
-  - [Cli_Toolbox 使用文档] -> [references/tooling/Cli_Toolbox_USAGE.md]
-  - [Cli_Toolbox 开发文档] -> [references/tooling/Cli_Toolbox_DEVELOPMENT.md]
-  - [Cli_Toolbox 开发架构总览] -> [references/tooling/development/00_ARCHITECTURE_OVERVIEW.md]
-  - [Cli_Toolbox 开发分类索引] -> [references/tooling/development/20_CATEGORY_INDEX.md]
-  - [Cli_Toolbox 模块目录] -> [references/tooling/development/10_MODULE_CATALOG.yaml]
-- 业务需求层：
-  - `[domain_1]` -> [相对路径]
-  - [若存在多个业务域，继续逐域列导航；禁止混写。]
-- [若存在运行态规则：运行合同 JSON] -> [references/runtime/<CONTRACT>.json]
-- [若存在运行态规则：运行合同审计版] -> [references/runtime/<CONTRACT>.md]
+## 6. 读取原则
+- 门面只做路由，规则正文下沉到 `references/`、contracts 与脚本。
+- 需要什么读什么，不要把所有引用文档一次性展开成新的门面正文。
+- 若存在运行态规则，模型禁止直接把 markdown 当运行规则源；必须通过 CLI 读取 machine-readable contract。
+- 单域技能也要保持窄域读取，不要把无关 sibling 文档带入运行 focus。
+- 若治理规则变化，同步更新门面、contracts、assets、scripts 与 tooling 文档。
 
-## 7. 架构契约
+## 7. 结构索引
 ```text
 <skill-name>/
 ├── SKILL.md
-├── agents/openai.yaml
+├── agents/
+│   └── openai.yaml
 ├── scripts/
 ├── references/
-└── assets/
+├── assets/
+└── tests/
 ```

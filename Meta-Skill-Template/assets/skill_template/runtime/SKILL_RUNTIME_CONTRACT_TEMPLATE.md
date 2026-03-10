@@ -1,9 +1,8 @@
 # Runtime Contract Template
 
-
 ## Contract Header
 - `contract_name`: `meta_skill_template_assets_skill_template_runtime_skill_runtime_contract_template`
-- `contract_version`: `1.0.0`
+- `contract_version`: `2.0.0`
 - `validation_mode`: `strict`
 - `required_fields`:
   - `contract_name`
@@ -14,17 +13,27 @@
 
 > Audit copy for `SKILL_RUNTIME_CONTRACT_TEMPLATE.json`.
 
+## Required Shape
 - `skill_name`: `${skill_name}`
-- `profile`: `staged_cli_first`
-- `SKILL.md` role: entry only
-- Runtime guidance source: `Cli_Toolbox` commands
-- Markdown role: human audit and reference
+- `skill_profile`: `staged_cli_first`
+- `SKILL.md` role: `entry_only`
+- required façade sections:
+  - `定位`
+  - `必读顺序`
+  - `分类入口`
+  - `适用域`
+  - `执行入口`
+  - `读取原则`
+  - `结构索引`
+
+## Required Stage Surface
+- `stage-checklist`
+- `stage-doc-contract`
+- `stage-command-contract`
+- `stage-graph-contract`
 
 ## Governance Rules
-- `SKILL.md` 必须保持轻量入口，不承载堆积式细节。
-- 模型禁止直接阅读 markdown 获取运行指引；必须通过 CLI 获取 machine-readable 合同。
-- 未来生成技能默认采用“抽象层 + 业务需求层”写法。
-- `3/4/5/6` 章节必须先写抽象层，再写各业务域；禁止混写。
-- 允许统一 CLI 入口；抽象功能可共享，但域命令必须独立，不得串用。
-- 阶段切换时只保留 resident docs，并显式丢弃上一阶段 focus。
-- 若规则依赖真实项目状态，必须显式标记为 dynamic runtime contract。
+- `SKILL.md` 必须保持门面化。
+- 运行态规则必须从 machine-readable contracts 消费，不得把 markdown 当真实规则源。
+- staged skill 必须显式定义 resident docs、stage order 和 stage-switch discard policy。
+- 阶段模板的人类叙事文件与 machine-readable contracts 必须分开维护。

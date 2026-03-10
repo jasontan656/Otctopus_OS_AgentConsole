@@ -1,57 +1,129 @@
 {
   "contract_name": "META_SKILL_TEMPLATE_RUNTIME_CONTRACT",
-  "contract_version": "v2",
-  "validation_mode": "cli_first",
+  "contract_version": "v3",
+  "validation_mode": "cli_first_strict",
   "required_fields": [
     "skill_name",
-    "routing_policy",
+    "authoring_model",
+    "routing_protocol",
     "profile_support",
     "tool_contracts",
-    "governance_rules"
+    "asset_contracts",
+    "governance_rules",
+    "validation_closure"
   ],
   "optional_fields": [
     "notes"
   ],
   "skill_name": "Meta-Skill-Template",
-  "routing_policy": {
+  "authoring_model": {
     "skill_md_role": "entry_only",
-    "runtime_guidance_source": "references/runtime/SKILL_RUNTIME_CONTRACT.json + Cli_Toolbox commands",
-    "markdown_role": "human_audit_and_reference",
-    "detail_downstream_paths": [
-      "references/skill_template_contract_v1.md",
-      "references/staged_cli_first_profile_reference.md",
-      "references/skill_architecture_playbook.md",
-      "references/tooling/Cli_Toolbox_USAGE.md",
-      "references/tooling/Cli_Toolbox_DEVELOPMENT.md"
-    ]
+    "proven_source_skill": "3-Octupos-OS-Backend",
+    "facade_sections": [
+      "定位",
+      "必读顺序",
+      "分类入口",
+      "适用域",
+      "执行入口",
+      "读取原则",
+      "结构索引"
+    ],
+    "extraction_rule": "extract stable runtime structure and governance shape; do not copy backend-only domain nouns, project paths, or acceptance semantics"
+  },
+  "routing_protocol": {
+    "first_command": "python3 scripts/Cli_Toolbox.py runtime-contract --json",
+    "profile_selection_rule": "prefer basic unless the target skill requires stage-specific runtime contracts, resident docs, and stage-switch discard governance",
+    "required_read_sequence": [
+      "runtime-contract",
+      "contract-reference",
+      "architecture-playbook",
+      "staged-skill-reference when profile=staged_cli_first",
+      "create-skill-from-template"
+    ],
+    "markdown_role": "human_audit_and_narrow_navigation",
+    "machine_rule_source": "Cli_Toolbox JSON outputs plus generated machine-readable contracts"
   },
   "profile_support": {
-    "basic": "基础技能骨架；适合低阶段复杂度技能。",
-    "staged_cli_first": "复杂技能骨架；强调阶段合同、目录深度、resident docs 与 CLI-first 运行边界。"
+    "basic": {
+      "target_shape": "single-axis entry-only skill facade with narrow references and optional runtime contract",
+      "required_generated_paths": [
+        "SKILL.md",
+        "agents/openai.yaml",
+        "references/tooling/Cli_Toolbox_USAGE.md",
+        "references/tooling/Cli_Toolbox_DEVELOPMENT.md"
+      ],
+      "optional_generated_paths": [
+        "references/runtime/",
+        "rules/",
+        "assets/templates/"
+      ]
+    },
+    "staged_cli_first": {
+      "target_shape": "backend-derived staged skill facade with resident docs, stage contracts, runtime contract, and stage template kit",
+      "required_generated_paths": [
+        "SKILL.md",
+        "references/runtime/SKILL_RUNTIME_CONTRACT.json",
+        "references/runtime/SKILL_RUNTIME_CONTRACT.md",
+        "references/stages/00_STAGE_INDEX.md",
+        "assets/templates/stages/README_STAGE_SYSTEM.md",
+        "assets/templates/stages/STAGE_TEMPLATE/CHECKLIST.json",
+        "assets/templates/stages/STAGE_TEMPLATE/DOC_CONTRACT.json",
+        "assets/templates/stages/STAGE_TEMPLATE/COMMAND_CONTRACT.json",
+        "assets/templates/stages/STAGE_TEMPLATE/GRAPH_CONTRACT.json"
+      ],
+      "stage_contract_surface": [
+        "stage-checklist",
+        "stage-doc-contract",
+        "stage-command-contract",
+        "stage-graph-contract"
+      ]
+    }
   },
   "tool_contracts": {
-    "Cli_Toolbox.create_skill_from_template": "统一入口创建或更新技能骨架。",
-    "Cli_Toolbox.skill_template": "输出 SKILL 模板资产。",
-    "Cli_Toolbox.staged_skill_template": "输出 staged CLI-first 复杂技能 SKILL 模板资产。",
-    "Cli_Toolbox.openai_template": "输出 openai.yaml 模板资产。",
-    "Cli_Toolbox.contract_reference": "输出模板契约参考。",
-    "Cli_Toolbox.staged_skill_reference": "输出从 3-Octupos-OS-Backend 提炼出的复杂技能 profile 参考。",
-    "Cli_Toolbox.runtime_contract_template": "输出运行合同模板资产。",
-    "Cli_Toolbox.architecture_playbook": "输出模板架构手册。",
-    "Cli_Toolbox.runtime_contract": "输出本技能运行合同。"
+    "Cli_Toolbox.create_skill_from_template": "Create or refactor a skill from the governed template pack.",
+    "Cli_Toolbox.skill_template": "Return the basic entry-only facade template.",
+    "Cli_Toolbox.staged_skill_template": "Return the backend-derived staged facade template.",
+    "Cli_Toolbox.openai_template": "Return the interface metadata template.",
+    "Cli_Toolbox.contract_reference": "Return the authoring contract for governed skills.",
+    "Cli_Toolbox.staged_skill_reference": "Return the generalized staged profile extracted from 3-Octupos-OS-Backend.",
+    "Cli_Toolbox.runtime_contract_template": "Return the staged runtime contract template asset.",
+    "Cli_Toolbox.architecture_playbook": "Return the architecture playbook for skill authoring.",
+    "Cli_Toolbox.runtime_contract": "Return this skill's own runtime contract."
+  },
+  "asset_contracts": {
+    "basic_assets": [
+      "assets/skill_template/SKILL_TEMPLATE.md",
+      "assets/skill_template/openai_template.yaml"
+    ],
+    "staged_assets": [
+      "assets/skill_template/SKILL_TEMPLATE_STAGED.md",
+      "assets/skill_template/runtime/SKILL_RUNTIME_CONTRACT_TEMPLATE.json",
+      "assets/skill_template/runtime/SKILL_RUNTIME_CONTRACT_TEMPLATE.md",
+      "assets/skill_template/stages/00_STAGE_INDEX_TEMPLATE.md",
+      "assets/skill_template/stages/README_STAGE_SYSTEM_TEMPLATE.md",
+      "assets/skill_template/stages/STAGE_TEMPLATE/*"
+    ],
+    "generated_output_expectation": "generated skills must be directly editable, facade-first, and consistent with the selected profile without requiring post-generation structural patching"
   },
   "governance_rules": [
-    "SKILL.md 必须保持轻量入口，不承载堆积式细节。",
-    "统一工具入口优先使用 scripts/Cli_Toolbox.py。",
-    "技能治理细节下沉到 references/ 与模板资产。",
-    "未来生成技能默认采用抽象层加业务需求层分域写法。",
-    "3/4/5/6 章节必须先写抽象层，再写各业务域；禁止混写。",
-    "允许统一 CLI 入口；抽象功能可共享，但业务域或阶段域命令必须独立，不得串用。",
-    "若目标技能属于 staged_cli_first，必须显式建模阶段目录、阶段合同与 resident docs。",
-    "若规则依赖真实项目状态，必须显式区分 static authoring contract 与 dynamic runtime contract。",
-    "若治理规则变化，同时更新 SKILL.md 入口、references 合同、tooling 文档与模板资产。"
+    "SKILL.md must remain an entry-only facade, not a pile of governance details.",
+    "The default template surface follows the proven 7-section facade extracted from 3-Octupos-OS-Backend.",
+    "If a skill has runtime rules, the model must consume machine-readable contracts through CLI outputs instead of treating markdown as the runtime rule source.",
+    "staged_cli_first skills must explicitly define top-level resident docs, stage order, stage checklist, stage doc contract, stage command contract, stage graph contract, and stage-switch discard policy.",
+    "Template clusters must separate human-readable markdown anchors from machine-readable contracts.",
+    "Do not copy backend-specific domain nouns, fixed runtime paths, or acceptance semantics into generic templates.",
+    "Prefer whole-template rewrites over patch stacking when the architecture contract changes.",
+    "When template governance changes, update SKILL facade, runtime contracts, references, assets, generator logic, tooling docs, and regression checks together."
+  ],
+  "validation_closure": [
+    "run toolbox self-check commands",
+    "generate at least one basic skill sandbox",
+    "generate at least one staged skill sandbox",
+    "verify staged assets include stage checklist and contract quartet",
+    "keep tooling docs and regression tests in sync with generator behavior"
   ],
   "notes": [
-    "本合同用于约束 Meta-Skill-Template 自身保持与其模板治理理念一致。"
+    "This contract governs Meta-Skill-Template itself.",
+    "The facade shape replaces the older generic abstract-layer/business-layer heading scheme with a backend-proven routing facade."
   ]
 }

@@ -1,81 +1,91 @@
 # 技能架构手册
 
 ## 设计目标
-构建便于模型路由、执行与验证的技能，同时避免加载不必要上下文，并默认采用“抽象层 + 业务需求层”的分域写法。
+- 让未来技能从第一版开始就拥有可路由、可执行、可治理的稳定骨架。
+- 将 `3-Octupos-OS-Backend` 的成功经验抽象为结构模板，而不是把后端领域语义打包复制。
+- 让 `SKILL.md` 回到门面职责，把运行细节下沉到 contracts、references、assets 和脚本。
+
+## 设计来源
+- 当前唯一已验证成功且架构成熟的母本：`3-Octupos-OS-Backend`
+- 被证明有效的不是它的后端业务语义，而是这些结构特征：
+  - 轻量门面
+  - 明确读序
+  - 极少 resident docs
+  - CLI-first 阶段合同
+  - 阶段切换丢弃策略
+  - 模板簇与 lint/测试闭环
+
+## 统一门面模式
+- 默认门面采用固定 7 段 façade：
+  1. `定位`
+  2. `必读顺序`
+  3. `分类入口`
+  4. `适用域`
+  5. `执行入口`
+  6. `读取原则`
+  7. `结构索引`
+- 这 7 段的职责是路由，不是正文。
+- 抽象层与业务层不再依赖重复标题表达，而是通过：
+  - read order
+  - entry classification
+  - references/contracts 分域
+  - profile-specific assets
+  来体现。
 
 ## Profile 选择
 - `basic`
-  - 单目标技能。
-  - 规则边界较少。
-  - 不需要阶段化 contract。
-  - 业务需求层通常是单业务域，但仍需显式独立成域。
+  - 单主轴技能。
+  - 无需阶段合同或只存在极少运行态规则。
+  - 可选 runtime contract，但若有运行规则就必须补齐。
 - `staged_cli_first`
-  - 多阶段技能。
-  - 当前阶段的运行时指引、门禁与可读域需要强控制。
-  - 业务需求层默认按阶段域承载。
-  - 适合复杂流程、强治理、强模板依赖的技能。
+  - 多阶段、多门禁、强窄域读取技能。
+  - 当前阶段该读什么、能做什么、能看什么必须由 CLI 合同给出。
+  - 适合复杂流程、强治理、模板簇依赖重的技能。
 
-## 推荐模式
-- 轻量 `SKILL.md`：仅保留路由、契约、流程。
-- 深度细节按需放在 `references/`。
-- 确定性动作放在 `scripts/`。
-- 描述结构统一为 1-7 章节且条目必须完整存在。
-- `3/4/5/6` 章节默认采用相同结构：
-  - 抽象层
-  - 各业务域
-- 工具统一采用 `Cli_Toolbox.<tool_name>` 命名，避免跨技能命名漂移。
-- 允许统一脚本入口。
-- 抽象功能可共享；业务域或阶段域命令必须独立，不得串用。
-- 每个工具同步维护“使用文档 + 开发文档”，避免只改代码导致知识断层。
-- 开发文档应按“入口索引 + 分类索引 + 模块目录 + 模块文档”组织，避免单文件持续膨胀。
-- 若技能存在运行态规则、约束、指引，优先采用 CLI-first 模式：
-  - machine-readable 合同作为运行时真实规则源
-  - markdown 作为审计镜像
-  - 模型通过 CLI 获取指引，不直接读 markdown
-
-## staged_cli_first 复杂技能模式
-- 把 `SKILL.md` 当门面，不当规则正文。
-- 将常驻文档限制在极少、固定的一组抽象层入口，避免阶段切换时上下文漂移。
-- 将每个阶段的运行信息按“抽象层 + 阶段域”拆开。
-- 将每个阶段的运行信息至少拆成：
+## staged_cli_first 设计骨架
+- `SKILL.md` 只做门面。
+- top-level resident docs 必须极少且固定。
+- 每个阶段至少要有：
   - checklist
   - doc contract
   - command contract
   - graph contract
-- 阶段切换时显式丢弃上一阶段 focus，只保留 resident docs。
-- 模板不能只是一份 `SKILL_TEMPLATE.md`；复杂技能需要模板簇。
-- 模板簇应分离：
-  - 人类阅读 markdown anchors
-  - machine-readable json/yaml contracts
-  - 脚本入口
-- 目录深度越深，单个文档的适用域越窄，模型越容易遵守边界。
+- 阶段切换时显式丢弃上一阶段 focus。
+- 阶段模板簇必须分离：
+  - markdown anchors
+  - machine-readable contracts
+  - 统一 CLI 入口
 
 ## static / dynamic contract 区分
 - static authoring contract
-  - 与具体项目状态无关。
-  - 可直接从模板或 skill 自身输出。
+  - 与真实项目状态无关。
+  - 适合作为模板资产与固定规则。
 - dynamic runtime contract
-  - 依赖真实项目路径、现有产物、当前运行态。
-  - 允许由 CLI 计算后输出。
-  - 必须在文档中显式声明其前置条件，避免在空环境下误判为脚本损坏。
+  - 依赖真实项目路径、已有产物或运行态。
+  - 只能由 CLI 计算输出。
+  - 必须声明前置条件和失败口径。
+
+## 模板作者方法论
+1. 先识别技能唯一主轴，而不是先套文件树。
+2. 决定它是 `basic` 还是 `staged_cli_first`。
+3. 先写门面，再下沉细节到 contracts/references/assets。
+4. 若需要运行态规则，优先设计 machine-readable contract，再补审计版 markdown。
+5. 若为 staged skill，先定义 resident docs、stage order 和 discard policy，再写阶段模板。
+6. 模板升级时优先整体重构，不做 patch stacking。
 
 ## 反模式
-- 巨型单体 SKILL 文档，混入多个无关目标。
-- 触发描述过宽，导致路由失真。
-- 没有完成标准或校验门禁。
-- 一个技能里塞入多个独立目标。
-- 把抽象层与业务需求层混写在同一段里。
-- 把多个业务域或多个阶段域混写在一个规则块里。
-- 让不同业务域或阶段域共享同一个特定命令。
-- 把“创建技能本身”写进被创建技能的 `1.目标` 章节，导致运行态目标漂移。
-- 让模型直接读取 markdown 作为运行规则源，却没有 machine-readable 合同与 CLI 输出入口。
+- 继续使用“大而全 SKILL.md”承载所有规则。
+- 把后端 skill 的项目路径、后端术语或验收口径直接复制进模板。
+- 把 `basic` 生成为半成品，再靠大量手改补成 staged。
+- 只有 markdown，没有 machine-readable contracts。
+- 阶段切换没有 discard policy，导致上一阶段上下文残留。
+- 模板改了但生成器、tooling 文档、测试没更新。
 
 ## 规范化步骤
-1. 识别技能唯一主决策目标。
-2. 先判定使用 `basic` 还是 `staged_cli_first` profile。
-3. 先定义抽象层，再定义业务需求层。
-4. 若业务需求层有多个域，显式拆域，禁止混写。
-5. 将非路由细节从 SKILL 下沉到 references。
-6. 为重复初始化或检查动作补充脚本锚点。
-7. 若为复杂技能，建立阶段目录与阶段合同出口。
-8. 若存在运行态规则，补齐 machine-readable 合同、markdown 审计版与 CLI 输出入口。
+1. 识别技能主轴与 profile。
+2. 用 7 段 façade 搭门面。
+3. 决定需要哪些 contracts。
+4. 决定需要哪些模板资产。
+5. 用 `create-skill-from-template` 生成骨架。
+6. 回填真实语义，去掉占位符。
+7. 运行最小回归，确认生成骨架与 contracts 没漂移。

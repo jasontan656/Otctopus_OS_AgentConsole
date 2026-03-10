@@ -1,10 +1,20 @@
 # <stage_name> Instruction Template
 
-## 目标
-- [当前阶段的唯一目标]
+## 阶段目标
+- [当前阶段唯一目标]
 
-## 必读来源
-- [当前阶段只允许读取的 CLI 合同或固定路径]
+## 合同入口
+- `CHECKLIST.json`
+- `DOC_CONTRACT.json`
+- `COMMAND_CONTRACT.json`
+- `GRAPH_CONTRACT.json`
+
+## 读取顺序
+1. 先读取 `CHECKLIST.json`
+2. 再读取 `DOC_CONTRACT.json`
+3. 再读取 `COMMAND_CONTRACT.json`
+4. 最后读取 `GRAPH_CONTRACT.json`
 
 ## 禁止项
-- [当前阶段禁止跨阶段读取或执行的内容]
+- [禁止跨阶段读取无关文档]
+- [禁止绕过当前阶段 checklist 直接执行]

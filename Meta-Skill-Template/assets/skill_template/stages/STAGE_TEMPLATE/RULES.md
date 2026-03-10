@@ -1,5 +1,8 @@
 # <stage_name> Rules Template
 
+## resident docs
+- [当前阶段共享的 resident docs]
+
 ## 读取边界
 - [当前阶段允许读取的范围]
 

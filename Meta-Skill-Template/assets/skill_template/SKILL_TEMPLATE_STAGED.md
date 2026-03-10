@@ -5,93 +5,84 @@ description: ${description}
 
 # ${skill_name}
 
-## 1. 目标
-- [描述此技能在运行态要解决的业务问题，不要写“创建/生成本技能”这类建模流程目标。]
-- [写明该技能的阶段主轴，示例：`mother_doc -> implementation -> evidence`。]
-- [复杂技能默认采用“抽象层 + 各阶段域”写法。]
+## 1. 定位
+- 本文件只做门面入口，不承载规则正文。
+- 本技能的唯一主轴是：`[stage_1] -> [stage_2] -> [stage_3] -> [stage_4]`。
+- 各阶段的细节规则、读取边界、命令入口与 graph 角色以下沉 contracts 为准，不得只凭本门面自行发挥。
+- 固定输出根与运行边界请在 runtime contract 或 stage contracts 中显式声明，不要把真实项目路径硬编码进模板。
 
-## 2. 可用工具
-- 抽象层：
-  - 统一工具入口：`scripts/Cli_Toolbox.py`
-  - 命名规则：工具统一命名为 `Cli_Toolbox.<tool_name>`。
-  - [列出共享抽象命令，例如运行合同、顶层规则、统一入口命令。]
-- 阶段域：
-  - `[stage_1]`：
-    - [列出该阶段专属命令、用途、入口。]
-  - `[stage_2]`：
-    - [列出该阶段专属命令、用途、入口。]
-  - `[stage_3]`：
-    - [列出该阶段专属命令、用途、入口。]
-- 抽象功能可共享；阶段域命令必须独立，不得串用。
-- 若声明工具，维护以下文档：
-  - 使用文档：`references/tooling/Cli_Toolbox_USAGE.md`
-  - 开发文档：`references/tooling/Cli_Toolbox_DEVELOPMENT.md`
-- 若技能存在运行态规则、约束、指引：
-  - 必须提供 CLI 输出入口。
-  - 必须提供 machine-readable `json/yaml` 合同。
-  - markdown 只可作为审计版，不能作为模型运行时规则源。
+## 2. 必读顺序
+1. 顶层常驻文档只保留：
+   - [rules/...]
+   - [references/tooling/...]
+   - [workspace root AGENTS]
+   - [companion repo AGENTS，如适用]
+2. 进入任一阶段前，必须先读取：
+   - `python3 scripts/Cli_Toolbox.py stage-checklist --stage <stage> --json`
+3. 当前阶段的读物边界只从工具取：
+   - `python3 scripts/Cli_Toolbox.py stage-doc-contract --stage <stage> --json`
+4. 当前阶段的入口/门禁命令只从工具取：
+   - `python3 scripts/Cli_Toolbox.py stage-command-contract --stage <stage> --json`
+5. 当前阶段的 graph/context 角色只从工具取：
+   - `python3 scripts/Cli_Toolbox.py stage-graph-contract --stage <stage> --json`
+6. 阶段切换时，必须显式丢弃上一阶段的 checklist、阶段文档与临时 focus，只保留第 `1` 步顶层常驻文档。
 
-## 3. 工作流约束
-- 抽象层：
-  - [写明阶段顺序、top-level always-load 规则、统一入口。]
-- 阶段域：
-  - `[stage_1]`：
-    - [写明进入条件、退出条件、产出。]
-  - `[stage_2]`：
-    - [写明进入条件、必须显式承接的前序阶段产物、退出条件、产出。]
-  - `[stage_3]`：
-    - [写明进入条件、必须显式承接的前序阶段产物、退出条件、产出。]
+## 3. 分类入口
+- 规则层：
+  - `rules/`
+- 工作流层：
+  - `references/tooling/`
+- 运行合同层：
+  - `references/runtime/`
+- 阶段层：
+  - `references/stages/`
+- 模板层：
+  - `assets/templates/`
+- 工具层：
+  - `scripts/Cli_Toolbox.py`
+- 外部辅助层：
+  - [companion skills / control plane / external validators]
+- 运行边界层：
+  - [workspace AGENTS]
+  - [active repo AGENTS]
 
-## 4. 规则约束
-- 抽象层：
-  - [写明 top-level resident docs。]
-  - [显式声明：模型禁止直接阅读 markdown 获取运行指引；必须通过 CLI 读取 machine-readable 合同。]
-  - [显式声明：规则必须同时存在 markdown 与 json/yaml 两份，更新时必须同步。]
-  - [若某些合同依赖真实项目状态，显式标注为 dynamic runtime contract。]
-- 阶段域：
-  - `[stage_1]`：
-    - [写明该阶段专属规则与专属禁止项。]
-  - `[stage_2]`：
-    - [写明该阶段专属规则与专属禁止项。]
-  - `[stage_3]`：
-    - [写明该阶段专属规则与专属禁止项。]
+## 4. 适用域
+- 适用于：[明确该 staged skill 负责的 staged workflow]
+- 不适用于：[明确排除域]
+- companion skills 只负责其自身能力；本技能只消费其输出，不在门面里重复造规则正文。
 
-## 5. 方法论约束
-- 抽象层：
-  - [推荐声明：先 contract，再 directive，再动作。]
-  - [推荐声明：抽象层与阶段域分开写，禁止混写。]
-- 阶段域：
-  - `[stage_1]`：
-    - [写明该阶段专属方法论。]
-  - `[stage_2]`：
-    - [写明该阶段专属方法论。]
-  - `[stage_3]`：
-    - [写明该阶段专属方法论。]
+## 5. 执行入口
+- 任一阶段启动都固定先读：
+  - `stage-checklist --stage <stage>`
+  - `stage-doc-contract --stage <stage>`
+  - `stage-command-contract --stage <stage>`
+  - `stage-graph-contract --stage <stage>`
+- profile-specific init/lint/archive/template 命令以 `stage-command-contract` 与 runtime contract 输出为准。
+- 如需模板索引、runtime contract 或其他统一入口，统一由 `scripts/Cli_Toolbox.py` 暴露。
 
-## 6. 内联导航索引
-- 抽象层：
-  - [规则层] -> [rules/]
-  - [运行合同 JSON] -> [references/runtime/SKILL_RUNTIME_CONTRACT.json]
-  - [运行合同审计版] -> [references/runtime/SKILL_RUNTIME_CONTRACT.md]
-  - [阶段索引] -> [references/stages/00_STAGE_INDEX.md]
-  - [Cli_Toolbox 使用文档] -> [references/tooling/Cli_Toolbox_USAGE.md]
-  - [Cli_Toolbox 开发文档] -> [references/tooling/Cli_Toolbox_DEVELOPMENT.md]
-- 阶段域：
-  - `[stage_1]` -> [相对路径]
-  - `[stage_2]` -> [相对路径]
-  - `[stage_3]` -> [相对路径]
+## 6. 读取原则
+- 门面只做“分类后的入口 + 适用域提示”。
+- 顶层常驻文档必须少且固定；阶段细节不得塞回常驻文档。
+- 单阶段执行时，只读当前阶段 checklist 与当前阶段直接需要的合同、模板和文档。
+- 多阶段连续执行时，阶段切换后必须重新读取当前阶段 checklist，并丢弃上一阶段 focus。
+- 若技能存在运行态规则，模型禁止直接阅读 markdown 获取运行指引；必须通过 CLI 读取 machine-readable contracts。
+- 模板簇应分离 markdown anchors 与 machine-readable contracts，不要把二者混成一个巨型模板。
 
-## 7. 架构契约
+## 7. 结构索引
 ```text
 <skill-name>/
 ├── SKILL.md
-├── agents/openai.yaml
+├── agents/
+│   └── openai.yaml
 ├── rules/
 ├── scripts/
+│   └── Cli_Toolbox.py
 ├── references/
 │   ├── runtime/
-│   └── stages/
-└── assets/
-    └── templates/
-        └── stages/
+│   ├── stages/
+│   └── tooling/
+├── assets/
+│   └── templates/
+│       └── stages/
+└── tests/
 ```

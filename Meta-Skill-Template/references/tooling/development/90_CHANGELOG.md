@@ -2,22 +2,19 @@
 
 - 2026-02-25
   - 将开发文档从单文件升级为“入口 + 分类 + 模块”结构。
-  - 新增：
-    - `00_ARCHITECTURE_OVERVIEW.md`
-    - `10_MODULE_CATALOG.yaml`
-    - `20_CATEGORY_INDEX.md`
-    - `modules/MODULE_TEMPLATE.md`
-    - `modules/create_skill_from_template.md`
 - 2026-02-26
-  - 澄清模板语义：被创建技能的 `1.目标` 仅允许写运行态目标，不得写“创建技能本身”。
-  - 调整 `create_skill_from_template.py` 默认 `description/default_prompt`，避免把建模流程目标注入生成技能。
+  - 澄清生成技能的 `1.目标` 只能写运行态目标，不能写“创建技能本身”。
 - 2026-03-09
-  - 增加模板契约：若技能存在运行态规则、约束、指引，必须提供 CLI 输出入口与 machine-readable 合同；markdown 只做审计版。
-  - 更新 `SKILL_TEMPLATE.md`、模板合同与架构手册，使模板同步支持 CLI-first 规则分发。
-- 2026-03-09
-  - 为 Meta-Skill-Template 自身补充 `scripts/Cli_Toolbox.py` 统一入口。
-  - 将 `SKILL.md` 收缩为纯入口页，详细治理规则下沉到 runtime contract 与 references。
-- 2026-03-09
-  - 引入 `staged_cli_first` profile，吸收 `3-Octupos-OS-Backend` 的复杂技能治理结构。
-  - 新增 `SKILL_TEMPLATE_STAGED.md`、runtime contract 模板与 stage template kit。
-  - `create_skill_from_template.py` 新增 `--profile`，可直接生成 staged CLI-first 复杂技能骨架。
+  - 引入 `staged_cli_first` profile，并为复杂技能补齐 runtime contract 与 stage template kit。
+- 2026-03-10
+  - 以 `3-Octupos-OS-Backend` 为母本，正式将模板门面升级为 7 段 façade：
+    - `定位`
+    - `必读顺序`
+    - `分类入口`
+    - `适用域`
+    - `执行入口`
+    - `读取原则`
+    - `结构索引`
+  - staged 模板 kit 新增 `CHECKLIST.json`，并把 resident docs、阶段合同四件套和 discard policy 升为模板硬约束。
+  - `create_skill_from_template.py` 默认资源新增 `tests/`。
+  - 引入生成回归测试，确保 profile 输出面不漂移。

@@ -9,7 +9,7 @@ import os
 import re
 from pathlib import Path
 from string import Template
-DEFAULT_RESOURCES = ("scripts", "references", "assets")
+DEFAULT_RESOURCES = ("scripts", "references", "assets", "tests")
 HEADING_TAG_RE = re.compile(r"^(##\s+[1-7]\.\s+[^\n（(]+?)\s*[（(][^）)\n]+[）)]\s*$", re.MULTILINE)
 def load_text(path: Path) -> str:
     return path.read_text(encoding="utf-8")
@@ -50,7 +50,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="基于模板创建或更新技能骨架。")
     parser.add_argument("--skill-name", required=True, help="目标技能目录名称。")
     parser.add_argument("--target-root", default=str(Path.home() / ".codex" / "skills"))
-    parser.add_argument("--resources", default="scripts,references,assets")
+    parser.add_argument("--resources", default="scripts,references,assets,tests")
     parser.add_argument("--description", default="")
     parser.add_argument("--profile", default="basic", choices=("basic", "staged_cli_first"))
     parser.add_argument("--overwrite", action="store_true")
@@ -90,11 +90,11 @@ def main() -> int:
     if args.profile == "staged_cli_first":
         default_prompt = (
             f"请围绕 {skill_name} 的实际业务目标执行任务；先读取 runtime contract 与阶段合同，"
-            "不要把创建技能流程本身当作技能目标。"
+            "使用 entry-only facade，严格按 stage checklist 与合同边界执行，不要把创建技能流程本身当作技能目标。"
         )
     else:
         default_prompt = (
-            f"请围绕 {skill_name} 的实际业务目标执行任务；不要把创建技能流程本身当作技能目标。"
+            f"请围绕 {skill_name} 的实际业务目标执行任务；保持 SKILL.md 为 entry-only facade，不要把创建技能流程本身当作技能目标。"
         )
 
     skill_md = normalize_generated_skill_md(
@@ -179,6 +179,7 @@ def main() -> int:
             "assets/templates/stages/STAGE_TEMPLATE/INSTRUCTION.md",
             "assets/templates/stages/STAGE_TEMPLATE/WORKFLOW.md",
             "assets/templates/stages/STAGE_TEMPLATE/RULES.md",
+            "assets/templates/stages/STAGE_TEMPLATE/CHECKLIST.json",
             "assets/templates/stages/STAGE_TEMPLATE/DOC_CONTRACT.json",
             "assets/templates/stages/STAGE_TEMPLATE/COMMAND_CONTRACT.json",
             "assets/templates/stages/STAGE_TEMPLATE/GRAPH_CONTRACT.json",

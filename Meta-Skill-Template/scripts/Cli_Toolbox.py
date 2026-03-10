@@ -108,7 +108,7 @@ def build_parser() -> argparse.ArgumentParser:
     create_skill = subparsers.add_parser("create-skill-from-template")
     create_skill.add_argument("--skill-name", required=True)
     create_skill.add_argument("--target-root", required=True)
-    create_skill.add_argument("--resources", default="scripts,references,assets")
+    create_skill.add_argument("--resources", default="scripts,references,assets,tests")
     create_skill.add_argument("--description", default="")
     create_skill.add_argument("--profile", default="basic", choices=("basic", "staged_cli_first"))
     create_skill.add_argument("--overwrite", action="store_true")

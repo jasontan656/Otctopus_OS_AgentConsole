@@ -6,30 +6,42 @@
 - `entrypoint`: `scripts/create_skill_from_template.py`
 
 ## 职责
-- 生成技能骨架：`SKILL.md`、`agents/openai.yaml`、资源目录。
-- 生成 `Cli_Toolbox` 使用文档和开发文档基础结构。
-- 根据 `--profile` 选择基础骨架或 staged CLI-first 复杂技能骨架。
-- 对 staged profile 补齐 runtime contract skeleton、stage index 与 stage template kit。
-- 保障输出为稳定 JSON，便于上游自动化消费。
-- 默认文案避免把“创建技能流程”写入被创建技能的运行态目标描述。
+- 基于受治理模板创建技能骨架。
+- 默认生成 backend-derived 7 段 façade `SKILL.md`。
+- 根据 `--profile` 选择 basic 或 staged output surface。
+- staged profile 额外补齐：
+  - runtime contract skeleton
+  - stage index
+  - stage system README
+  - stage checklist 模板
+  - stage doc/command/graph contract 模板
+- 默认创建 `tests/` 目录，为后续治理与回归预留位置。
 
 ## 输入输出契约
 - 输入：`--skill-name`、`--target-root`、`--resources`、`--description`、`--profile`、`--overwrite`
+- 默认资源：`scripts,references,assets,tests`
 - 输出：JSON（`skill_dir`、`profile`、`resources_created`、`write_results`）
-- 失败模式：参数缺失、模板文件缺失、路径不可写。
+- 失败模式：参数缺失、模板文件缺失、路径不可写
 
 ## 依赖与边界
-- 依赖：`assets/skill_template/*.md|*.yaml` 模板文件。
-- 边界：不负责 Git 提交、不负责 mirror 同步（由上层流程处理）。
-- 上层路由：优先由 `scripts/Cli_Toolbox.py create-skill-from-template` 进入。
+- 依赖：
+  - `assets/skill_template/*.md|*.yaml`
+  - `assets/skill_template/runtime/*`
+  - `assets/skill_template/stages/*`
+- 边界：
+  - 不负责 Git 留痕
+  - 不负责 mirror 同步
+  - 不负责补齐业务语义，只负责生成治理骨架
 
 ## 回归检查
 ```bash
 python3 scripts/create_skill_from_template.py --help
-python3 scripts/create_skill_from_template.py --skill-name meta-skill-template-sandbox --target-root ~/AI_Projects/Codex_Skill_Runtime/Meta-Skill-Template --overwrite
-python3 scripts/create_skill_from_template.py --skill-name staged-sandbox --target-root ~/AI_Projects/Codex_Skill_Runtime/Meta-Skill-Template --profile staged_cli_first --overwrite
+python3 scripts/create_skill_from_template.py --skill-name basic-sandbox --target-root /tmp/meta-skill-template --profile basic --overwrite
+python3 scripts/create_skill_from_template.py --skill-name staged-sandbox --target-root /tmp/meta-skill-template --profile staged_cli_first --overwrite
+python3 -m unittest discover -s tests
 ```
 
 ## 文档同步
 - 使用文档已同步：是
 - 模块目录已同步：是
+- staged 模板 kit 已同步：是

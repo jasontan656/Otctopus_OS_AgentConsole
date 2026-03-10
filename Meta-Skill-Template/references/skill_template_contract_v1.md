@@ -1,9 +1,8 @@
-# 技能模板契约 v1
-
+# 技能模板契约 v2
 
 ## Contract Header
-- `contract_name`: `meta_skill_template_references_skill_template_contract_v1`
-- `contract_version`: `1.0.0`
+- `contract_name`: `meta_skill_template_references_skill_template_contract_v2`
+- `contract_version`: `2.0.0`
 - `validation_mode`: `strict`
 - `required_fields`:
   - `contract_name`
@@ -13,126 +12,134 @@
   - `notes`
 
 ## 目标
-使用“模板优先、确定性执行”的契约来创建或规范化技能，保证结构稳定、触发行为可预测，并默认产出“抽象层 + 业务需求层”分域写法。
+使用 `3-Octupos-OS-Backend` 已验证的技能门面结构，创建或改造可长期治理的 Codex 技能。这里约束的是技能运行态骨架，不是一次性写作格式。
+
+## 核心升级
+- 不再把模板核心寄托在“抽象层 + 业务层”标题堆叠上。
+- 通用门面升级为 backend 验证过的 7 段 façade：
+  1. `定位`
+  2. `必读顺序`
+  3. `分类入口`
+  4. `适用域`
+  5. `执行入口`
+  6. `读取原则`
+  7. `结构索引`
+- 抽象层与业务层仍然存在，但它们应体现在：
+  - facade 的读序与分类
+  - references/contracts 的拆分
+  - profile-specific assets
+  - CLI-first runtime surfaces
 
 ## 必需文件
 - `SKILL.md`
 - `agents/openai.yaml`
 
-## 可选但推荐
+## 推荐目录
 - `scripts/`
 - `references/`
 - `assets/`
+- `tests/`
 
 ## Profile 契约
 - `basic`
-  - 适用于单目标、低阶段复杂度、弱运行态规则的技能。
-  - 仍必须采用“抽象层 + 业务需求层”写法。
+  - 适用于单主轴、低阶段复杂度技能。
+  - 仍必须使用 7 段 façade。
+  - 默认不强制阶段目录。
+  - 若存在运行态规则，必须补齐 runtime contract。
 - `staged_cli_first`
-  - 适用于多阶段、多合同、强运行态边界的复杂技能。
-  - 业务需求层默认以阶段域承载。
-  - 必须把“当前阶段该读什么、该做什么、能看什么”从 CLI 输出。
-  - 必须提供 `references/stages/` 或等价的阶段化目录体系。
+  - 适用于多阶段、多合同、强读取边界技能。
+  - 必须使用 7 段 façade。
+  - 必须显式建模：
+    - top-level resident docs
+    - stage order
+    - stage checklist
+    - stage doc contract
+    - stage command contract
+    - stage graph contract
+    - stage-switch discard policy
+  - 必须提供 `references/stages/` 或等价阶段目录体系。
 
-## SKILL.md 章节契约（1-7）
-1. 目标
-2. 可用工具
-3. 工作流约束
-4. 规则约束
-5. 方法论约束
-6. 内联导航索引
-7. 架构契约
+## 门面契约
+- `SKILL.md` 必须是 entry-only facade。
+- 门面只做：
+  - 运行定位
+  - 必读顺序
+  - 入口分类
+  - 适用域提示
+  - 执行入口
+  - 读取原则
+  - 结构索引
+- 门面不得承担：
+  - 长篇规则正文
+  - 多阶段细节全集
+  - 模板资产逐条解释
+  - 重复的 authoring 历史说明
 
-## 分层与分域契约
-- 所有未来生成技能默认采用两层：
-  - 抽象层
-  - 业务需求层
-- 业务需求层可继续细分为多个域；若是复杂技能，业务需求层默认以阶段域承载。
-- `3/4/5/6` 四个章节必须遵循相同组织原则：
-  - 先写抽象层
-  - 再写各业务域
-- 禁止任何可能的混写。
-- 即便只有一个业务域，也必须显式独立成域，不得与抽象层混成一个段落。
-
-## 工具与命令契约
-- 工具命名：技能内工具统一使用 `Cli_Toolbox.<tool_name>` 命名。
-- 工具入口：允许统一脚本入口，例如 `scripts/Cli_Toolbox.py`。
-- 抽象功能：允许共享。
-- 域命令：必须独立，不得串用。
-- 不允许把某个业务域或阶段域的特定命令伪装成通用命令重复复用到其他域。
-
-## 必须/可选规则
-- 必须：`1-7` 章节条目完整存在（标题不可缺失）
-- 强制填充：`1.目标`、`6.内联导航索引`、`7.架构契约`
-- 可选填充：`2.可用工具`、`3.工作流约束`、`4.规则约束`、`5.方法论约束`（不适用时写 `N/A`）
-- 标签语义边界：上述“必须/可选”仅用于模板填充规则，不属于生成技能正文标签；生成的 `SKILL.md` 标题不得携带 `（必须）/（可选）` 字样。
-- 工具文档同步：每个工具必须同时维护使用文档与开发文档。
-- 示例命令契约：工具使用文档中的示例命令必须是“一行可复制”完整命令，且必须以 `cd <skill_root> &&` 开头并包含管道，附最小用途描述。
-- 开发文档结构化：复杂 Toolbox 必须采用“入口 + 分类 + 模块”分层文档。
-- 若技能存在运行态规则、约束、指引：
+## 运行合同契约
+- 若技能存在运行态规则、约束或门禁：
   - 必须提供 CLI 输出入口。
   - 必须提供 machine-readable `json/yaml` 合同。
   - 必须提供 markdown 审计版。
-  - 必须在 `SKILL.md` 明示：模型禁止直接阅读 markdown 获取运行指引。
-  - 更新时必须同步两份，且建议以 machine-readable 合同刷新 markdown。
-- 若技能属于 `staged_cli_first`：
-  - 必须定义显式阶段顺序或阶段集合。
-  - 必须定义 top-level resident docs，且数量应尽量少、固定。
-  - 必须定义阶段切换时的 drop/discard 规则。
-  - 必须将阶段级规则拆成多个独立文件或独立 CLI 合同，禁止堆成单文件大纲。
-  - 阶段合同至少应覆盖：`checklist`、`doc contract`、`command contract`、`graph contract` 中的适用子集。
-  - 若某类合同依赖真实项目状态，必须显式标为 dynamic contract，不得伪装成纯静态模板。
+  - 必须在门面中写明：模型不能直接把 markdown 当运行规则源。
+- 若规则依赖真实项目状态：
+  - 必须显式标记为 dynamic runtime contract。
+  - 不能伪装成纯静态模板。
 
-## 目录深度与模板簇契约
-- 目录层级不仅是组织手段，也是模型的适用域收拢器。
-- 当规则、模板、工作流跨多个阶段或角色时，优先加深目录层级，不要继续扩写单文件。
-- 复杂技能推荐将内容拆为：
-  - 门面入口
-  - runtime 合同
-  - stages 阶段目录
-  - rules/workflow references
-  - assets/templates 模板簇
-- 模板簇中，人类叙事 markdown 与 machine files 应显式分离，不得混成一个巨型模板。
+## staged_cli_first 阶段合同契约
+- 当前阶段至少应暴露以下合同中的适用子集：
+  - `stage-checklist`
+  - `stage-doc-contract`
+  - `stage-command-contract`
+  - `stage-graph-contract`
+- 阶段切换后必须显式丢弃上一阶段 focus，仅保留 resident docs。
+- 阶段域规则不得混写在单个胖文档中。
+- 阶段模板簇必须分离：
+  - 人类叙事 markdown
+  - machine-readable contracts
+  - 脚本入口或统一 CLI 入口
 
-## 约束护栏
-- 每个技能只能有一个主决策目标，且该目标必须是技能运行态目标，不得写入“创建技能/改写模板”等建模流程目标。
-- SKILL 主体应保持精简并面向路由。
-- 避免将长篇参考资料直接嵌入 SKILL。
-- 对重复初始化动作使用确定性脚本。
-- references 与 SKILL 保持一跳可达。
-- 工具文档推荐固定路径：`references/tooling/Cli_Toolbox_USAGE.md` 与 `references/tooling/Cli_Toolbox_DEVELOPMENT.md`。
-- 复杂 Toolbox 推荐固定路径：
-  - `references/tooling/development/00_ARCHITECTURE_OVERVIEW.md`
+## 工具与文档契约
+- 工具命名统一使用 `Cli_Toolbox.<tool_name>`。
+- 工具入口允许统一为 `scripts/Cli_Toolbox.py`。
+- 工具变更时必须同步更新：
+  - `references/tooling/Cli_Toolbox_USAGE.md`
+  - `references/tooling/Cli_Toolbox_DEVELOPMENT.md`
   - `references/tooling/development/10_MODULE_CATALOG.yaml`
-  - `references/tooling/development/20_CATEGORY_INDEX.md`
-  - `references/tooling/development/modules/`
-- 若技能存在运行态规则，推荐固定路径：
-  - `references/runtime/`
-  - `references/stages/`
-- 若技能属于 `staged_cli_first`，推荐同时提供：
-  - `references/stages/00_STAGE_INDEX.md`
-  - `assets/templates/stages/`
-  - `assets/templates/stages/STAGE_TEMPLATE/`
-- 若技能需要真实项目上下文才能生成某些命令或边界，必须在文档中区分：
-  - static authoring contract
-  - dynamic runtime contract
+  - 受影响模块文档
+- 示例命令必须是一行可复制命令。
+
+## 模板簇契约
+- `basic` 至少要提供：
+  - 门面模板
+  - `openai.yaml` 模板
+- `staged_cli_first` 至少要提供：
+  - staged 门面模板
+  - runtime contract 模板
+  - stage system 模板
+  - stage checklist 模板
+  - stage doc/command/graph contract 模板
+- 不允许只有一份“大而全”的总模板。
+
+## 回归与治理契约
+- 模板升级时必须同时检查：
+  - 生成器是否仍能生成 profile 对应目录
+  - staged 输出是否包含 stage checklist 与合同四件套
+  - tooling 文档是否同步
+- 推荐提供最小回归测试覆盖模板生成行为。
 
 ## 验收清单
-- frontmatter 中存在 `name` 与 `description` 字段。
-- `1-7` 章节标题完整存在且可读。
-- `1/6/7` 内容必须可执行或可验证。
-- `2/3/4/5` 内容可执行/可验证，或明确标注 `N/A`（允许占位，不允许缺失条目）。
-- `2.可用工具` 章节必须存在：有工具时需显式声明 `Cli_Toolbox` 命名规则；无工具时写 `N/A`。
-- `3/4/5/6` 章节必须采用“抽象层 + 业务需求层”分域写法，不得混写。
-- 若技能包含工具，必须存在 `references/tooling/Cli_Toolbox_USAGE.md` 与 `references/tooling/Cli_Toolbox_DEVELOPMENT.md`。
-- `Cli_Toolbox_USAGE.md` 必须包含“示例命令（强制）”章节：`cd` 开头、一行可复制、包含管道、附最小用途描述。
-- 若 Toolbox 涉及多模块，必须存在开发分类索引与模块目录（`20_CATEGORY_INDEX.md` + `10_MODULE_CATALOG.yaml`）。
-- 若技能存在运行态规则，必须存在 CLI 输出入口、machine-readable 合同与 markdown 审计版三者闭环。
-- 若技能属于 `staged_cli_first`，必须能明确指出：
-  - 阶段顺序或阶段集合
+- frontmatter 包含 `name` 与 `description`。
+- `SKILL.md` 使用 7 段 façade，标题完整存在。
+- `SKILL.md` 为 entry-only，不承载规则正文。
+- 若技能存在运行态规则，存在 CLI 输出入口、machine-readable 合同、markdown 审计版三者闭环。
+- `basic` 与 `staged_cli_first` 的目录结构与资产深度符合各自 profile，不靠后补丁硬凑。
+- `staged_cli_first` 能明确指出：
   - resident docs
-  - stage switch discard policy
-  - stage templates 或 stage references 的固定入口
-- 必需文件中不存在未替换占位符（如 `[TODO]`、`<...>`、`TBD`）。
-- 接口元数据与技能目标一致。
-- 创建或更新的文件以明确路径形式输出。
+  - stage order
+  - stage checklist
+  - stage doc contract
+  - stage command contract
+  - stage graph contract
+  - stage-switch discard policy
+- 模板与脚本变更已同步到 tooling 文档。
+- 必需文件不存在未替换占位符。
