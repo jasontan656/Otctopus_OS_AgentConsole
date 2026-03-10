@@ -36,6 +36,7 @@ description: "未来项目 admin panel 内置的运营AI“章鱼”，负责 mo
 - `AGENTS/README manager` 分支运行合同入口：
   - CLI: `python3 scripts/Cli_Toolbox.py mother-doc-agents-contract --json`
   - CLI: `python3 scripts/Cli_Toolbox.py mother-doc-agents-directive --stage <scan|collect|push> --json`
+  - CLI: `python3 scripts/Cli_Toolbox.py mother-doc-agents-registry --json`
   - CLI: `python3 scripts/Cli_Toolbox.py mother-doc-agents-target-contract --relative-path "<PATH>" --file-kind <agents|readme> --json`
   - machine cache: `assets/mother_doc_agents/runtime_rules/**/**/*.runtime.json`
   - human audit source: `assets/mother_doc_agents/runtime_rules/**/AGENT_AUDIT.md` / `README_AUDIT.md`
@@ -52,6 +53,7 @@ description: "未来项目 admin panel 内置的运营AI“章鱼”，负责 mo
 
 ## 6. 运行边界
 - 模型默认先跑 CLI，再决定是否查看 markdown 审计版。
+- `mother_doc_agents` 分支默认走 `branch contract JSON -> stage directive JSON -> registry/target contract JSON`，并把 branch index 的关键信息下沉到 CLI JSON payload。
 - markdown 保留的内容限于：
   - 技能中文简介
   - 人类审计导航

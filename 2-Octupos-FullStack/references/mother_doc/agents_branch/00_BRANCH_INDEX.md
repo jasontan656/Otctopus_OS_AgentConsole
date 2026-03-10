@@ -8,7 +8,7 @@
   - `octopus_os_root`: `Octopus_OS/AGENTS.md + README.md`
   - `container_roots`: `Octopus_OS/<Container_Name>/AGENTS.md + README.md`
   - `mother_doc_docs`: `Octopus_OS/Mother_Doc/docs/**/AGENTS.md + README.md`
-- 目标是让所有 AGENTS/README 模板都由技能侧统一索引、统一推送、统一回收。
+- 目标是让所有 AGENTS/README 治理动作由技能侧统一索引、统一推送、统一回收，并且以 CLI JSON 直接承载运行时指导。
 - 本分支只做 `scan / collect / push`，不写普通文档正文。
 
 ## Managed Path Branches
@@ -43,5 +43,7 @@
 - [运行合同审计版](runtime/AGENTS_BRANCH_CONTRACT.md)
 - CLI 合同：`python3 scripts/Cli_Toolbox.py mother-doc-agents-contract --json`
 - CLI 阶段指引：`python3 scripts/Cli_Toolbox.py mother-doc-agents-directive --stage <scan|collect|push> --json`
+- CLI 机器索引：`python3 scripts/Cli_Toolbox.py mother-doc-agents-registry --json`
+- CLI 目标级合同：`python3 scripts/Cli_Toolbox.py mother-doc-agents-target-contract --relative-path "<PATH>" --file-kind <agents|readme> --json`
 - 模板资产根：`assets/mother_doc_agents/templates/`
-- 模板索引：`assets/mother_doc_agents/index.md`
+- 模板索引：`assets/mother_doc_agents/index.md`（仅人类审计，不是运行时主入口）

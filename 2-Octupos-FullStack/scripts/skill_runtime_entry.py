@@ -123,7 +123,13 @@ def load_skill_facade_contract(skill_root: Path) -> dict[str, object]:
             "mother_doc_agents_manager": {
                 "branch_contract_command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-contract --json",
                 "stage_directive_command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-directive --stage <scan|collect|push> --json",
+                "branch_registry_command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-registry --json",
                 "target_contract_command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-target-contract --relative-path \"<PATH>\" --file-kind <agents|readme> --json",
+                "runtime_model": [
+                    "branch contract JSON is the primary runtime source for branch-level governance",
+                    "registry JSON is the machine-readable branch index and carries the branch index content in payload form; index.md is human audit only",
+                    "target contract JSON is the primary runtime source for any concrete AGENTS.md or README.md path",
+                ],
             }
         },
         "audit_markdown_sources": [

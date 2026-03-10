@@ -94,7 +94,11 @@ STAGE_COMMANDS = {
             },
             {
                 "command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-directive --stage <scan|collect|push> --json",
-                "purpose": "load the sub-branch directive when the current mother_doc task is specifically about AGENTS/README scaffolding management",
+                "purpose": "load the sub-branch directive when the current mother_doc task is specifically about AGENTS/README governance mapping management",
+            },
+            {
+                "command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-registry --json",
+                "purpose": "use the machine-readable branch index instead of the human audit index.md when you need current managed target mappings",
             },
             {
                 "command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-scan --json",

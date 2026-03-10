@@ -1,6 +1,15 @@
 {
   "stage": "push",
+  "runtime_source_policy": {
+    "runtime_rule_source": "CLI_JSON",
+    "model_must_prefer_this_payload": true,
+    "audit_markdown_role": "human_only"
+  },
   "purpose": "push the current skill-side AGENTS/README templates back through Octopus_OS root, container roots, and the Mother_Doc docs tree, then resync the registry",
+  "entry_sequence": [
+    "python3 scripts/Cli_Toolbox.py mother-doc-agents-contract --json",
+    "python3 scripts/Cli_Toolbox.py mother-doc-agents-directive --stage push --json"
+  ],
   "inputs": [
     "current AGENTS/README template tree",
     "Octopus_OS"
@@ -10,6 +19,16 @@
     "fresh scan_report.json",
     "fresh registry.json"
   ],
+  "stage_runtime_rules": [
+    "push regenerates root/container AGENTS.md and README.md from the skill-managed generation model",
+    "push refreshes Mother_Doc docs AGENTS.md navigation and preserves docs README current state except missing-file initialization",
+    "push must rescan and recollect so registry.json stays aligned with the current external tree"
+  ],
+  "source_of_truth": {
+    "agents_runtime": "skill-managed routing plus target-contract payload",
+    "root_and_container_readme": "skill-side templates",
+    "mother_doc_docs_readme": "current external state unless navigation initializes a missing file"
+  },
   "prohibited": [
     "rewrite unrelated ordinary docs",
     "write implementation logs",

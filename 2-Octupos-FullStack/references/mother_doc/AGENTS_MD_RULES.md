@@ -37,7 +37,10 @@
 
 - 总入口：[agents_branch/00_BRANCH_INDEX.md](agents_branch/00_BRANCH_INDEX.md)
 - 统一模板根：`assets/mother_doc_agents/templates/`
-- 统一索引：`assets/mother_doc_agents/index.md`
+- 机器索引：`python3 scripts/Cli_Toolbox.py mother-doc-agents-registry --json`
+- 审计索引：`assets/mother_doc_agents/index.md`
+- `治理映射模版`：`runtime_rules/**` + `templates/**` + `collected_tree/**` + `registry.json`
+- `骨架生成模版`：`build_octopus_root_agents`、`build_container_root_agents`、`sync_navigation_tree`
 - `scan`：扫描 3 类路径中的当前 `AGENTS.md + README.md` 现状，不回写普通正文。
 - `collect`：把产品侧 `AGENTS.md + README.md` 反向采集回技能内 `assets/mother_doc_agents/collected_tree/`。
 - `push`：把技能侧当前模板反推回 3 类路径，随后自动重扫并回收。

@@ -46,6 +46,7 @@
 - `mother_doc` 阶段固定先判定 `direct_writeback`、`question_backfill` 或 `AGENTS/README manager`；不得混写。
 - `mother_doc` 的影响面判断固定采用“默认全相关 -> 排除高概率不相关项”。
 - `AGENTS/README manager` 统一管理 `Octopus_OS` 根层、各容器根层与 `Mother_Doc/docs` 文档树的 `AGENTS.md + README.md`，并固定采用 `scan / collect / push` 三阶段。
+- `AGENTS/README manager` 的主运行时链固定为 `branch contract JSON -> stage directive JSON -> registry/target contract JSON`；branch index 的关键信息必须下沉到 `JSON payload`，`branch index markdown` 与 `assets/mother_doc_agents/index.md` 仅保留人类导航 / 审计角色。
 - `direct_writeback` 只写已明确内容；`question_backfill` 只关闭未收口问题。
 - `mother_doc` 更新文档后，必须运行本地 `git` 驱动的状态脚本；变更文档标记为 `modified`，空占位标记为 `null`。
 - `mother_doc` 阶段禁止写开发日志、部署日志与 Git / GitHub 留痕。

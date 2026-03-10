@@ -1,8 +1,24 @@
 {
   "contract_name": "mother_doc_agents_readme_branch_runtime_contract",
-  "contract_version": "v1.0",
+  "contract_version": "v2.0",
   "validation_mode": "static_minimal",
   "branch_name": "mother_doc_agents_readme",
+  "runtime_source_policy": {
+    "runtime_rule_source": "CLI_JSON",
+    "audit_fields_are_not_primary_runtime_instructions": true,
+    "path_metadata_is_not_action_guidance": true,
+    "branch_markdown_role": "human_navigation_only",
+    "audit_markdown_role": "human_audit_only",
+    "machine_branch_index": "registry_json",
+    "human_branch_index": "index_md",
+    "model_must_prefer_cli_contract_output": true
+  },
+  "runtime_entry_commands": {
+    "branch_contract_command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-contract --json",
+    "stage_directive_command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-directive --stage <scan|collect|push> --json",
+    "branch_registry_command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-registry --json",
+    "target_contract_command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-target-contract --relative-path \"<PATH>\" --file-kind <agents|readme> --json"
+  },
   "managed_scopes": [
     "/home/jasontan656/AI_Projects/Octopus_OS/AGENTS.md + README.md",
     "/home/jasontan656/AI_Projects/Octopus_OS/<Container_Name>/AGENTS.md + README.md",
@@ -17,14 +33,93 @@
     "collect",
     "push"
   ],
+  "template_semantics": {
+    "governance_mapping_template": {
+      "definition": "skill 内长期保存、会被 collect / push 持续读写的被治理文件映射层。",
+      "assets": [
+        "assets/mother_doc_agents/runtime_rules/**/**/*.runtime.json",
+        "assets/mother_doc_agents/runtime_rules/**/AGENT_AUDIT.md",
+        "assets/mother_doc_agents/runtime_rules/**/README_AUDIT.md",
+        "assets/mother_doc_agents/collected_tree/**/AGENTS.md",
+        "assets/mother_doc_agents/collected_tree/**/README.md",
+        "assets/mother_doc_agents/templates/**/AGENTS.md",
+        "assets/mother_doc_agents/templates/**/README.md"
+      ],
+      "truth_boundary": [
+        "collect 把外部当前态收敛进来覆盖对应治理映射资产。",
+        "push 再把 skill 内治理映射资产作为内部真源推回外部目标。",
+        "对 AGENTS 而言，runtime_rules JSON 承载运行时主源；对 README 而言，template/collected snapshot 与 registry 共同承载当前态映射。"
+      ]
+    },
+    "skeleton_generation_template": {
+      "definition": "用于初始化新目标或补齐缺失导航文件的默认骨架生成规则。",
+      "owners": [
+        "build_octopus_root_agents",
+        "build_container_root_agents",
+        "sync_navigation_tree"
+      ],
+      "truth_boundary": [
+        "它只负责产出第一版外部骨架与第一版内部映射资产。",
+        "一旦目标进入 collect / push 周期，长期语义回到治理映射模版。"
+      ]
+    }
+  },
+  "managed_asset_model": {
+    "agents": {
+      "external_shape": "thin_runtime_entry_only",
+      "skill_runtime_asset": "assets/mother_doc_agents/runtime_rules/**/AGENTS.runtime.json",
+      "human_audit_asset": "assets/mother_doc_agents/runtime_rules/**/AGENT_AUDIT.md",
+      "push_rule": "push/regenerate the external AGENTS entry from skill-managed runtime routing"
+    },
+    "readme": {
+      "external_shape": "human_summary_only",
+      "root_and_container_mode": "template_managed",
+      "mother_doc_docs_mode": "collect_preserve",
+      "human_audit_asset": "assets/mother_doc_agents/collected_tree/**/README.md + registry.json",
+      "push_rule": "template-managed roots overwrite externally; docs README current state is preserved unless navigation initializes a missing file"
+    }
+  },
+  "managed_branch_profiles": {
+    "octopus_os_root": {
+      "scope_summary": "Octopus_OS 根层 runtime entry 与同层 human summary。",
+      "agents_role": "workspace_root_runtime_entry",
+      "readme_role": "workspace_root_human_summary",
+      "next_hop": "先判定 mother_doc / implementation / evidence，再选容器路径或 Mother_Doc 路径。"
+    },
+    "container_roots": {
+      "scope_summary": "各容器根 runtime entry 与同层容器总结。",
+      "agents_role": "container_root_runtime_entry",
+      "readme_role": "container_root_human_summary",
+      "next_hop": "在当前容器代码路径与对应 Mother_Doc/docs/<Container_Name>/ 之间决策。"
+    },
+    "mother_doc_docs": {
+      "scope_summary": "Mother_Doc 文档树递归 runtime entry 与当前层 README 摘要。",
+      "agents_role": "recursive_doc_scope_runtime_entry",
+      "readme_role": "current_scope_human_summary",
+      "next_hop": "留在当前文档子树内继续向下选择下一层 scope 或叶子文档。"
+    }
+  },
   "assets_root": "assets/mother_doc_agents",
   "artifacts": {
     "scan_report": "assets/mother_doc_agents/scan_report.json",
     "registry": "assets/mother_doc_agents/registry.json",
+    "registry_role": "machine_readable_branch_index",
     "index": "assets/mother_doc_agents/index.md",
+    "index_role": "human_audit_only",
     "collected_tree": "assets/mother_doc_agents/collected_tree/",
     "templates": "assets/mother_doc_agents/templates/"
   },
+  "forbidden_primary_runtime_pattern": [
+    "Do not treat audit markdown paths as the main runtime instructions.",
+    "Do not require the model to open a chain of markdown files just to learn the next stage or target to use.",
+    "Do not emit only path metadata when the real need is direct action guidance."
+  ],
+  "branch_runtime_rules": [
+    "先读 branch contract JSON；不要把 00_BRANCH_INDEX.md 或 index.md 当成主运行时来源。",
+    "需要当前 managed target 映射时，优先调用 mother-doc-agents-registry --json，让 branch index 内容通过 JSON payload 提供。",
+    "需要具体路径动作指导时，优先调用 mother-doc-agents-target-contract，而不是继续追 markdown 链。",
+    "scan / collect / push 都属于 mother_doc 内部治理分支，不得顺手执行 implementation 或 evidence 动作。"
+  ],
   "rules": [
     "This branch manages Octopus_OS root AGENTS/README, container-root AGENTS/README, and Mother_Doc docs AGENTS/README together.",
     "scan must inspect product-side AGENTS.md plus README.md state without rewriting ordinary content.",

@@ -23,6 +23,16 @@ def audit_md_path(skill_root: Path, relative_path: str, file_kind: str) -> Path:
     return runtime_rule_root(skill_root) / Path(relative_path) / (AGENT_AUDIT_FILENAME if file_kind == "agents" else README_AUDIT_FILENAME)
 
 
+def template_asset_path(skill_root: Path, relative_path: str, file_kind: str) -> Path:
+    filename = "AGENTS.md" if file_kind == "agents" else "README.md"
+    return skill_root / "assets" / "mother_doc_agents" / "templates" / Path(relative_path) / filename
+
+
+def collected_snapshot_path(skill_root: Path, relative_path: str, file_kind: str) -> Path:
+    filename = "AGENTS.md" if file_kind == "agents" else "README.md"
+    return skill_root / "assets" / "mother_doc_agents" / "collected_tree" / Path(relative_path) / filename
+
+
 def _peer_doc(entry: dict[str, str], file_kind: str) -> dict[str, str]:
     if file_kind == "agents":
         return {
@@ -56,15 +66,88 @@ def _turn_contract(relative_path: str, file_kind: str) -> dict[str, object]:
     }
 
 
+def _document_shape(entry: dict[str, str], file_kind: str) -> dict[str, object]:
+    if file_kind == "agents":
+        return {
+            "external_shape": "thin_runtime_entry_only",
+            "skill_side_primary_runtime_asset": "runtime_json",
+            "skill_side_audit_asset": "audit_markdown_only",
+            "push_behavior": "regenerate_external_entry_from_skill_runtime",
+            "collect_behavior": "capture_current_external_entry_as_snapshot",
+        }
+    if entry["readme_management_mode"] == "template_managed":
+        return {
+            "external_shape": "human_summary_only",
+            "skill_side_primary_runtime_asset": "template_and_snapshot_pair",
+            "skill_side_audit_asset": "collected_snapshot_plus_registry",
+            "push_behavior": "overwrite_external_readme_from_skill_template",
+            "collect_behavior": "capture_current_external_readme_as_snapshot",
+        }
+    return {
+        "external_shape": "human_summary_only",
+        "skill_side_primary_runtime_asset": "collected_snapshot_first",
+        "skill_side_audit_asset": "template_mirror_and_registry",
+        "push_behavior": "preserve_external_readme_current_state_unless_navigation_initializes_missing_file",
+        "collect_behavior": "external_readme_is_the_current_state_truth",
+    }
+
+
+def _execution_modes(file_kind: str) -> dict[str, object]:
+    shared_write_actions = [
+        "state the concrete write scope before editing",
+        "stay within the returned update_boundary and routing rules",
+        "re-read the peer document when the peer_doc policy upgrades from optional to required on write",
+    ]
+    if file_kind == "agents":
+        shared_write_actions.append("treat this target contract JSON as the runtime source of truth instead of the local markdown entry body")
+    else:
+        shared_write_actions.append("treat this README as human summary only and pair it with the same-scope AGENTS target contract on writes")
+    return {
+        "READ_EXEC": {
+            "goal": "classify the current scope, decide next hop, and inspect without rewriting files",
+            "default_actions": [
+                "prefer the returned JSON payload over audit markdown",
+                "read the peer document only when peer_doc says required or when the task explicitly needs human summary context",
+            ],
+        },
+        "WRITE_EXEC": {
+            "goal": "update the concrete AGENTS or README scope without drifting outside this target boundary",
+            "default_actions": shared_write_actions,
+        },
+    }
+
+
+def _runtime_constraints(entry: dict[str, str], file_kind: str) -> list[str]:
+    constraints = [
+        "treat CLI JSON as the primary runtime rule source",
+        "do not use audit markdown as the primary execution guide",
+        "path metadata is not action guidance by itself; use routing, update_boundary, and execution_modes together",
+        "do not open extra branch markdown files just to discover the next command when this payload already provides it",
+    ]
+    if file_kind == "agents":
+        constraints.append("AGENTS external files stay thin; detailed routing and update boundaries live in the returned JSON payload")
+    elif entry["readme_management_mode"] == "collect_preserve":
+        constraints.append("Mother_Doc docs README current state is preserved by collect; do not overwrite it from stale template assumptions")
+    else:
+        constraints.append("Root and container README files are template-managed human summaries and must stay aligned with the generated templates")
+    return constraints
+
+
 def build_target_contract(entry: dict[str, str], *, skill_root: Path, file_kind: str) -> dict[str, object]:
     relative_path = entry["relative_path"]
     branch = entry["scope_branch"]
+    target_cli = (
+        f'python3 {MIRROR_CLI} mother-doc-agents-target-contract '
+        f'--relative-path "{relative_path}" --file-kind {file_kind} --json'
+    )
     contract = {
         "schema_version": 1,
         "owner_skill": "2-Octupos-FullStack",
         "managed_branch": "mother_doc_agents_readme",
         "rule_source_policy": {
             "runtime_rule_source": "CLI_JSON",
+            "audit_fields_are_not_primary_runtime_instructions": True,
+            "path_metadata_is_not_action_guidance": True,
             "human_audit_source": "audit_markdown_only",
             "model_must_not_read_markdown_for_runtime_guidance": True,
         },
@@ -78,14 +161,45 @@ def build_target_contract(entry: dict[str, str], *, skill_root: Path, file_kind:
             "readme_management_mode": entry["readme_management_mode"],
         },
         "peer_doc": _peer_doc(entry, file_kind),
+        "turn_start_actions": [
+            "load and follow this target contract JSON before using any path-local AGENTS or README prose as guidance",
+            "use peer_doc.read_policy to decide whether the same-level peer file must also be read",
+            "classify the task as READ_EXEC or WRITE_EXEC before acting",
+        ],
+        "runtime_constraints": _runtime_constraints(entry, file_kind),
+        "forbidden_primary_runtime_pattern": [
+            "Do not treat audit markdown paths as the main runtime instructions.",
+            "Do not require the model to open a chain of markdown files just to learn the next target or command.",
+            "Do not emit only path metadata when the real need is direct action guidance.",
+        ],
+        "execution_modes": _execution_modes(file_kind),
+        "managed_asset_model": {
+            "scope_branch": branch,
+            "file_kind": file_kind,
+            "readme_management_mode": entry["readme_management_mode"],
+            "document_shape": _document_shape(entry, file_kind),
+            "governance_assets": {
+                "runtime_json_path": str(runtime_json_path(skill_root, relative_path, file_kind)),
+                "audit_md_path": str(audit_md_path(skill_root, relative_path, file_kind)),
+                "template_path": str(template_asset_path(skill_root, relative_path, file_kind)),
+                "collected_snapshot_path": str(collected_snapshot_path(skill_root, relative_path, file_kind)),
+            },
+        },
         "runtime_entry": {
-            "cli": (
-                f'python3 {MIRROR_CLI} mother-doc-agents-target-contract '
-                f'--relative-path "{relative_path}" --file-kind {file_kind} --json'
-            ),
+            "cli": target_cli,
             "runtime_json_path": str(runtime_json_path(skill_root, relative_path, file_kind)),
             "audit_md_path": str(audit_md_path(skill_root, relative_path, file_kind)),
         },
+        "payload_navigation": {
+            "branch_contract_cli": f"python3 {MIRROR_CLI} mother-doc-agents-contract --json",
+            "stage_directive_cli": f"python3 {MIRROR_CLI} mother-doc-agents-directive --stage <scan|collect|push> --json",
+            "branch_registry_cli": f"python3 {MIRROR_CLI} mother-doc-agents-registry --json",
+            "current_target_cli": target_cli,
+        },
+        "human_audit_sources": [
+            str(audit_md_path(skill_root, relative_path, file_kind)),
+            str(skill_root / "references" / "mother_doc" / "agents_branch" / "runtime" / "AGENTS_BRANCH_CONTRACT.md"),
+        ],
         "turn_contract": _turn_contract(relative_path, file_kind),
         "routing": {
             "document_role": "runtime_entry" if file_kind == "agents" else "human_summary",
@@ -205,14 +319,28 @@ def render_audit_markdown(contract: dict[str, object]) -> str:
         f"- cli: `{runtime_entry['cli']}`",
         f"- runtime_json_path: `{runtime_entry['runtime_json_path']}`",
         "",
+        "## Managed Asset Model",
+        f"- external_shape: `{contract['managed_asset_model']['document_shape']['external_shape']}`",
+        f"- push_behavior: `{contract['managed_asset_model']['document_shape']['push_behavior']}`",
+        f"- collect_behavior: `{contract['managed_asset_model']['document_shape']['collect_behavior']}`",
+        f"- template_path: `{contract['managed_asset_model']['governance_assets']['template_path']}`",
+        f"- collected_snapshot_path: `{contract['managed_asset_model']['governance_assets']['collected_snapshot_path']}`",
+        "",
         "## Peer Doc",
         f"- path: `{peer_doc['path']}`",
         f"- read_policy: `{peer_doc['read_policy']}`",
         "",
+        "## Runtime Constraints",
+    ]
+    lines.extend([f"- {item}" for item in contract["runtime_constraints"]])
+    lines.extend(
+        [
+        "",
         "## Turn Contract",
         f"- status: `{turn_contract['status']}`",
         "- turn_start:",
-    ]
+        ]
+    )
     lines.extend([f"  - {item}" for item in turn_contract["turn_start"]])
     lines.append("- turn_end:")
     lines.extend([f"  - {item}" for item in turn_contract["turn_end"]])
