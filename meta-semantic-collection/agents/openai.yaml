@@ -1,0 +1,4 @@
+interface:
+  display_name: "Meta Semantic Collection"
+  short_description: "读取用户歧义语义集合并优先按集合翻译 prompt。"
+  default_prompt: "使用 $meta-semantic-collection 先按用户语义集合翻译当前 prompt，再继续执行。"
