@@ -40,15 +40,9 @@ description: "集中管理 workspace 内的常驻默认文档。当前提供 sca
   - 阅读入口：`references/runtime_contracts/PUSH_STAGE_CONTRACT.md`
 
 ## 5. 维护入口
-- 当用户要求修改本技能自身的规范、模版、stage 合同、运行逻辑或静态资产时，必须把所有隐式相关面一起纳入审查。
-- 不允许只改某个单文件说明，然后忽略与之联动的 stage 文档、runtime contract、结构模版或受管资产规范。
-- 当用户要求修改 `AGENTS.md` 治理内容时，必须同时判断需求对 `Part A` 和 `Part B` 的影响。
-- 默认必须把 `Part A` 与 `Part B` 视为一个联动对象审查，禁止只改其中一半然后假设另一半自动正确。
-- 如果字段结构、payload shape 或分段标记发生变化，必须同步修改：
-  - `human` 模版
-  - machine JSON
-  - CLI 行为
-- 如果受管文件名集合发生变化，必须同步补齐对应的结构模版与 lint 合同。
+- 本入口用于新增受管文件，而不是在门面内展开完整维护流程。
+- 当用户要求让新文件进入治理范围时，先从这里进入，再按独立维护文档执行后续动作。
+- 新增受管文件的详细工作流、联动修改面与验证要求，见 `references/tooling/GOVERNED_FILE_ONBOARDING.md`。
 
 ## 6. 参考入口
 - [AGENTS 资产治理模型] -> [references/runtime_contracts/AGENTS_ASSET_GOVERNANCE.md]
@@ -60,6 +54,7 @@ description: "集中管理 workspace 内的常驻默认文档。当前提供 sca
 - [Payload 归档 JSON] -> [references/runtime_contracts/AGENTS_PAYLOAD_ARCHIVE.json]
 - [技能运行状态] -> [references/runtime_contracts/SKILL_RUNTIME_CONTRACT.json]
 - [当前受管资产根目录] -> [assets/managed_targets/AI_Projects]
+- [新增受管文件维护流程] -> [references/tooling/GOVERNED_FILE_ONBOARDING.md]
 
 ## 7. 约束
 - 工具实现必须以本技能当前保留的静态治理文档为准，不得回滚到旧的隐式分段或旧 CLI 结构。
