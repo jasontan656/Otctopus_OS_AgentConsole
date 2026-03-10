@@ -8,12 +8,14 @@
 - `python3 /home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/scripts/Cli_Toolbox.py target-contract --source-path "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/AGENTS.md" --json`
 
 2. 当前受管 repo 边界
-- 当前 concrete repo: `Codex_Skills_Mirror`
+- Current concrete repo: `Codex_Skills_Mirror`
+- Current target kind: `AGENTS.md`
+- `AGENTS.md` 应保持为 thin runtime entry；具体 routing/update 规则以返回的 JSON contract 为准。
 - same-level `README.md` 当前不可用，不需要作为同级摘要入口。
 
 3. Runtime Rule Source
 - CLI JSON 输出是该路径的运行时规则源。
-- skill 内部 markdown 仅供人类审计，不可替代 CLI JSON。
+- skill 内部 markdown 审计文件仅供人类审计，不可替代 CLI JSON。
 
 4. 同回合要求
 - 如果本回合写入 `Codex_Skills_Mirror`，必须从一开始就纳入 Constitution lint 与 Git traceability。
