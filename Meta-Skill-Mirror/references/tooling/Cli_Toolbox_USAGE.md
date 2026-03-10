@@ -17,8 +17,11 @@
   - “把 mirror 里的某个技能导入 codex 安装目录，你先判断该走覆盖还是安装。”
   - 命令：
     - `python3 scripts/Cli_Toolbox.py --scope skill --skill-name Meta-Impact-Investigation`
+    - `python3 scripts/Cli_Toolbox.py --scope skill --skill-name .system/skill-creator`
 - 电脑动作发生了什么：
   - 解析参数并归一化 mirror/codex 根目录。
+  - 将 `skill_name` 归一化为 skills 边界内的相对路径；允许 nested path，但拒绝空段、反斜杠、绝对路径与 `.` / `..` 越界段。
+  - 若请求的是 `.system/*`，自动把 codex 目标目录收敛为小写规范名，并按实际 mirror 目录名解析源路径。
   - 先检查目标技能在 codex 安装目录是否已存在。
   - 若已存在，自动进入 `Push` 模式。
   - 若不存在，自动返回 `Install` 路由结果，不直接 rsync 创建目标目录。
@@ -42,6 +45,7 @@
   - “这个技能还没安装，你不要直接覆盖，走安装链路。”
   - 命令：
     - `python3 scripts/Cli_Toolbox.py --scope skill --skill-name Meta-Impact-Investigation --mode install`
+    - `python3 scripts/Cli_Toolbox.py --scope skill --skill-name .system/skill-installer --mode install`
 - 电脑动作发生了什么：
   - 锁定源目录与目标目录，但不执行 rsync。
   - 输出外部技能顺序：
@@ -52,7 +56,7 @@
 
 ## 参数说明
 - `--scope`：`all` 或 `skill`
-- `--skill-name`：`scope=skill` 时必填
+- `--skill-name`：`scope=skill` 时必填；允许 `family/child-skill` 或 `.system/skill-creator` 这类 nested path
 - `--mode`：`auto`、`push` 或 `install`
 - `--codex-root`：可选；未提供时按 `CODEX_SKILLS_ROOT`，否则回退到 `$HOME/.codex/skills`
 - `--mirror-root`：可选；未提供时按 `CODEX_SKILLS_MIRROR_ROOT` 或自动发现/迁移 mirror 目录
@@ -63,5 +67,7 @@
   - 已实际执行覆盖同步
 - `resolved_mode=install`：
   - 仅完成路由，不直接安装
+- `source_skill_name` / `destination_skill_name`：
+  - 仅在 `scope=skill` 下出现，用于显式区分 mirror 实际源目录名与 codex 安装目录规范名
 - `next_skills`：
   - 仅在 `Install` 路由下出现

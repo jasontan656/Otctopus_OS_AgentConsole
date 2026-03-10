@@ -29,6 +29,7 @@
 
 ## 当前模式模型
 - 抽象层负责根目录归一化、目标存在性检查与模式路由。
+- 抽象层同时负责 `skill_name` 归一化、nested path 越界防护，以及 `.system/*` 的 source/destination 规范映射。
 - `Push` 模式负责实际 `rsync -a --delete`。
 - `Install` 模式只返回外部技能链：
   - `Skill-creator`

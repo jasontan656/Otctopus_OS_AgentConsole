@@ -7,15 +7,17 @@ import os
 import re
 import subprocess
 from pathlib import Path
+from pathlib import PurePosixPath
 from typing import List
 
-VALID_SKILL_RE = re.compile(r"^[A-Za-z0-9._-]+$")
+VALID_SKILL_SEGMENT_RE = re.compile(r"^[A-Za-z0-9._-]+$")
 RSYNC_EXCLUDES = (
     ".git/",
     "__pycache__/",
     "*.pyc",
     "Codex_Skill_Runtime/",
 )
+SYSTEM_SKILL_NAMESPACE = ".system"
 
 
 def _resolve_codex_root(raw: str | None) -> Path:
@@ -67,21 +69,86 @@ def _resolve_mirror_root(raw: str | None) -> Path:
     return fallback
 
 
-def _validate_skill_name(skill_name: str) -> None:
-    if not VALID_SKILL_RE.match(skill_name):
-        raise ValueError("skill_name contains illegal characters")
+def _normalize_skill_name(skill_name: str) -> str:
+    normalized = str(skill_name or "").strip()
+    if not normalized:
+        raise ValueError("skill_name cannot be empty")
+    if "\\" in normalized:
+        raise ValueError("skill_name must use forward slashes")
+    if normalized.startswith("/") or normalized.endswith("/"):
+        raise ValueError("skill_name must be a relative skill path")
+
+    posix_path = PurePosixPath(normalized)
+    if posix_path.is_absolute():
+        raise ValueError("skill_name must be a relative skill path")
+
+    raw_parts = normalized.split("/")
+    normalized_parts: list[str] = []
+    for part in raw_parts:
+        if not part:
+            raise ValueError("skill_name contains empty path segments")
+        if part in {".", ".."}:
+            raise ValueError("skill_name cannot contain dot traversal segments")
+        if not VALID_SKILL_SEGMENT_RE.match(part):
+            raise ValueError("skill_name contains illegal characters")
+        normalized_parts.append(part)
+
+    return "/".join(normalized_parts)
 
 
-def _build_paths(codex_root: Path, mirror_root: Path, scope: str, skill_name: str | None) -> tuple[Path, Path]:
+def _posix_join(parts: list[str]) -> str:
+    return "/".join(parts)
+
+
+def _resolve_existing_source_skill_name(mirror_root: Path, normalized_skill_name: str) -> str:
+    current = mirror_root
+    actual_parts: list[str] = []
+    for part in normalized_skill_name.split("/"):
+        exact = current / part
+        if exact.exists():
+            actual_parts.append(part)
+            current = exact
+            continue
+
+        try:
+            children = list(current.iterdir())
+        except FileNotFoundError as exc:
+            raise FileNotFoundError(f"source does not exist: {mirror_root / normalized_skill_name}") from exc
+
+        folded_matches = [child.name for child in children if child.name.casefold() == part.casefold()]
+        if len(folded_matches) != 1:
+            raise FileNotFoundError(f"source does not exist: {mirror_root / normalized_skill_name}")
+        actual_part = folded_matches[0]
+        actual_parts.append(actual_part)
+        current = current / actual_part
+
+    return _posix_join(actual_parts)
+
+
+def _canonical_destination_skill_name(normalized_skill_name: str) -> str:
+    parts = normalized_skill_name.split("/")
+    if parts and parts[0] == SYSTEM_SKILL_NAMESPACE:
+        return _posix_join([parts[0], *[part.lower() for part in parts[1:]]])
+    return normalized_skill_name
+
+
+def _build_paths(
+    codex_root: Path,
+    mirror_root: Path,
+    scope: str,
+    skill_name: str | None,
+) -> tuple[Path, Path, str | None, str | None, str | None]:
     if scope == "skill":
         if not skill_name:
             raise ValueError("--skill-name is required when --scope=skill")
-        _validate_skill_name(skill_name)
-        src = mirror_root / skill_name
-        dst = codex_root / skill_name
-        return src, dst
+        normalized_skill_name = _normalize_skill_name(skill_name)
+        source_skill_name = _resolve_existing_source_skill_name(mirror_root, normalized_skill_name)
+        destination_skill_name = _canonical_destination_skill_name(normalized_skill_name)
+        src = mirror_root / source_skill_name
+        dst = codex_root / destination_skill_name
+        return src, dst, normalized_skill_name, source_skill_name, destination_skill_name
 
-    return mirror_root, codex_root
+    return mirror_root, codex_root, None, None, None
 
 
 def _destination_exists(dst: Path, scope: str) -> bool:
@@ -126,7 +193,7 @@ def main() -> int:
     if not codex_root.exists():
         raise FileNotFoundError(f"codex root does not exist: {codex_root}")
 
-    src, dst = _build_paths(
+    src, dst, normalized_skill_name, source_skill_name, destination_skill_name = _build_paths(
         codex_root=codex_root,
         mirror_root=mirror_root,
         scope=args.scope,
@@ -151,7 +218,10 @@ def main() -> int:
             "status": "route_required",
             "action": "install_via_external_skills",
             "scope": args.scope,
-            "skill_name": args.skill_name,
+            "skill_name": normalized_skill_name,
+            "requested_skill_name": args.skill_name,
+            "source_skill_name": source_skill_name,
+            "destination_skill_name": destination_skill_name,
             "resolved_mode": "install",
             "source": str(src),
             "destination": str(dst),
@@ -176,7 +246,10 @@ def main() -> int:
         "status": "ok",
         "action": "mirror_to_codex",
         "scope": args.scope,
-        "skill_name": args.skill_name,
+        "skill_name": normalized_skill_name,
+        "requested_skill_name": args.skill_name,
+        "source_skill_name": source_skill_name,
+        "destination_skill_name": destination_skill_name,
         "resolved_mode": "push",
         "source": str(src),
         "destination": str(dst),

@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-03-10
+- `sync_mirror_to_codex` 新增 nested skill path 支持，并收敛 `skill_name` 为受控相对路径语义。
+- 为 `.system/*` 增加 mirror 实际目录名到 codex 安装目录小写规范名的自动映射。
+- 新增 CLI 回归测试，锁住 nested path、越界拒绝与 system skill 路由行为。
+
 ## 2026-02-28
 - 收敛同步方向为单向 `mirror_to_codex`。
 - 移除 `codex_to_mirror` 入口与相关文档。

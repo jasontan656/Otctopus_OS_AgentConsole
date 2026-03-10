@@ -33,7 +33,9 @@ description: 将 codex skill mirror 导入 codex skills 安装目录，并在 `P
 ### 1.4 抽象层硬约束
 - 除抽象层外，`Push` 与 `Install` 两个模式不得共享工作流内容。
 - `scope=skill` 时必须提供 `skill_name`。
-- `skill_name` 必须通过白名单字符校验：`[A-Za-z0-9._-]+`。
+- `skill_name` 必须是 skills 边界内的相对路径；允许多段 nested path，但每段都必须通过白名单字符校验：`[A-Za-z0-9._-]+`。
+- `skill_name` 禁止包含空段、反斜杠、绝对路径与 `.` / `..` 越界段。
+- `.system/*` 技能在 codex 安装目录使用小写规范名；工具必须自动把 mirror 侧实际目录名映射到安装目录规范名。
 - 只允许在 skills 边界目录内工作，禁止越界路径拼接。
 - 若本回合此前已对 `Codex_Skills_Mirror` 发生实际写入，则在完成真正写操作后，必须同回合执行该仓库自己的 Git 留痕收尾。
 

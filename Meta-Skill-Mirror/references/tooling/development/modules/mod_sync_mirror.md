@@ -14,6 +14,7 @@
 ## 输入合同
 - 可选：`--scope`（默认 `all`）
 - 条件必填：`--skill-name`（当 `scope=skill`）
+- `--skill-name` 支持 nested relative skill path；每段必须满足 `[A-Za-z0-9._-]+`，且禁止 `.` / `..` 越界段与反斜杠。
 - 可选：`--mode`（默认 `auto`）
 
 ## 输出合同
@@ -23,11 +24,13 @@
     - `action=mirror_to_codex`
     - `resolved_mode=push`
     - `scope/source/destination/command`
+    - `source_skill_name/destination_skill_name`
   - Install:
     - `status=route_required`
     - `action=install_via_external_skills`
     - `resolved_mode=install`
     - `scope/source/destination/next_skills`
+    - `source_skill_name/destination_skill_name`
 - 失败：
   - `status=error`
   - `error`
@@ -36,5 +39,6 @@
 - 源目录不存在。
 - `scope=skill` 且缺少 `--skill-name`。
 - `skill-name` 非法字符。
+- `skill-name` 包含空段、反斜杠、绝对路径或 `.` / `..` 越界段。
 - `mode=install` 但 `scope!=skill`。
 - `rsync` 执行失败。
