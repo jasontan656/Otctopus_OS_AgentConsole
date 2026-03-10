@@ -1,5 +1,17 @@
 # Mother_Doc AGENTS/README Branch Contract
 
+
+## Contract Header
+- `contract_name`: `2_octupos_fullstack_references_mother_doc_agents_branch_runtime_agents_branch_contract`
+- `contract_version`: `1.0.0`
+- `validation_mode`: `strict`
+- `required_fields`:
+  - `contract_name`
+  - `contract_version`
+  - `validation_mode`
+- `optional_fields`:
+  - `notes`
+
 适用阶段：`mother_doc`
 
 ## Scope

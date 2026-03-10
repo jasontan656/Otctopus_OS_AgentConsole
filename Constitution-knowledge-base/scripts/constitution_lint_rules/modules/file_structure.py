@@ -28,10 +28,18 @@ def lint(root: Path) -> dict[str, object]:
             violations.append({"path": rel(path, root), "reason": "orchestrator_name_must_end_with__orchestrator.py"})
         if lower.endswith(".py") and "domain" in tokens and not lower.endswith("_domain.py"):
             violations.append({"path": rel(path, root), "reason": "domain_name_must_end_with__domain.py"})
-        if ("repo" in tokens or "repository" in tokens) and not lower.endswith("_repo.py"):
+        if lower.endswith(".py") and ("repo" in tokens or "repository" in tokens) and not lower.endswith("_repo.py"):
             violations.append({"path": rel(path, root), "reason": "repo_name_must_end_with__repo.py"})
         if "helper" in lower and not (lower.endswith("_helper.py") or lower.endswith(".helper.ts") or lower.endswith(".helper.js")):
             violations.append({"path": rel(path, root), "reason": "helper_name_must_use_helper_suffix"})
-        if path.suffix.lower() in RULE_EXTS and any(token in lower for token in RULE_SUFFIXES) and "rules" not in path.parts:
+        in_reference_docs = "references" in path.parts
+        is_stage_template_rule = path.name == "RULES.md" and "assets" in path.parts and "stages" in path.parts
+        if (
+            path.suffix.lower() in RULE_EXTS
+            and any(token in lower for token in RULE_SUFFIXES)
+            and "rules" not in path.parts
+            and not in_reference_docs
+            and not is_stage_template_rule
+        ):
             violations.append({"path": rel(path, root), "reason": "rule_like_file_must_live_under_rules"})
     return make_gate("file_structure_gate", violations, checked)

@@ -1,5 +1,17 @@
 # Observability Contract
 
+
+## Contract Header
+- `contract_name`: `5_branch_chat_references_tooling_observability_contract`
+- `contract_version`: `1.0.0`
+- `validation_mode`: `strict`
+- `required_fields`:
+  - `contract_name`
+  - `contract_version`
+  - `validation_mode`
+- `optional_fields`:
+  - `notes`
+
 ## Runtime Anchors
 - `Codex_Skill_Runtime/5-Branch-Chat/machine.jsonl`
 - `Codex_Skill_Runtime/5-Branch-Chat/human.log`

@@ -1,5 +1,17 @@
 # Meta-Skill-Template Runtime Contract
 
+
+## Contract Header
+- `contract_name`: `meta_skill_template_references_runtime_skill_runtime_contract`
+- `contract_version`: `1.0.0`
+- `validation_mode`: `strict`
+- `required_fields`:
+  - `contract_name`
+  - `contract_version`
+  - `validation_mode`
+- `optional_fields`:
+  - `notes`
+
 > Audit copy for `references/runtime/SKILL_RUNTIME_CONTRACT.json`.
 
 - `SKILL.md` role: entry only

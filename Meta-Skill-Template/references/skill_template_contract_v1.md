@@ -1,5 +1,17 @@
 # 技能模板契约 v1
 
+
+## Contract Header
+- `contract_name`: `meta_skill_template_references_skill_template_contract_v1`
+- `contract_version`: `1.0.0`
+- `validation_mode`: `strict`
+- `required_fields`:
+  - `contract_name`
+  - `contract_version`
+  - `validation_mode`
+- `optional_fields`:
+  - `notes`
+
 ## 目标
 使用“模板优先、确定性执行”的契约来创建或规范化技能，保证结构稳定、触发行为可预测，并默认产出“抽象层 + 业务需求层”分域写法。
 

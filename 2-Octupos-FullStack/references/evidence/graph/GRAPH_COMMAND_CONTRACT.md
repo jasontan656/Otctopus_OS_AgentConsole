@@ -1,5 +1,17 @@
 # Graph Command Contract
 
+
+## Contract Header
+- `contract_name`: `2_octupos_fullstack_references_evidence_graph_graph_command_contract`
+- `contract_version`: `1.0.0`
+- `validation_mode`: `strict`
+- `required_fields`:
+  - `contract_name`
+  - `contract_version`
+  - `validation_mode`
+- `optional_fields`:
+  - `notes`
+
 适用阶段：`evidence > graph`
 
 ## Unified Entry

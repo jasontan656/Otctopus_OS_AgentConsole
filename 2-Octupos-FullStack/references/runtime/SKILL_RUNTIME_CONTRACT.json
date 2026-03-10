@@ -54,5 +54,13 @@
     "deployment-level witness 出现后，必须追加 deployment checkpoint 日志。",
     "开发/部署日志只写摘要；摘要必须等于同轮 Git 提交 message，具体修改由 Git / GitHub 提供明细。",
     "所有回填都采用覆盖写入，只维护当前状态；项目内部不保留文档版本，但日志保留时间线。"
+  ],
+  "required_fields": [
+    "contract_name",
+    "contract_version",
+    "validation_mode"
+  ],
+  "optional_fields": [
+    "notes"
   ]
 }

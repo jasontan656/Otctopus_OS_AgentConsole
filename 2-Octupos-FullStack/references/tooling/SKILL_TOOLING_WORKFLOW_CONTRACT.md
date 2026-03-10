@@ -1,5 +1,14 @@
 # 2-Octupos-FullStack Tooling & Workflow Contract
 
+
+## Contract Header
+- `required_fields`:
+  - `contract_name`
+  - `contract_version`
+  - `validation_mode`
+- `optional_fields`:
+  - `notes`
+
 ## Contract Header
 
 - `contract_name`: `octopus_fullstack_os_workflow_contract`

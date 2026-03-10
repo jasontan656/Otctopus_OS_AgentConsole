@@ -7,6 +7,7 @@ from constitution_lint_rules.shared import SOURCE_EXTS, iter_files, make_gate, r
 CONTRACT_HINTS = ("contract", "schema", "dto")
 REQUIRED_MARKERS = ("contract_name", "contract_version", "validation_mode")
 FIELD_MARKERS = (("required_fields", "required_keys"), ("optional_fields", "optional_keys"))
+DOC_EXTS = {".md", ".json", ".yaml", ".yml", ".toml"}
 
 
 def lint(root: Path) -> dict[str, object]:
@@ -15,7 +16,7 @@ def lint(root: Path) -> dict[str, object]:
     for path in iter_files(root, SOURCE_EXTS):
         text = read_text(path)
         lower = path.name.lower()
-        candidate = any(token in lower for token in CONTRACT_HINTS) or any(marker in text for marker in REQUIRED_MARKERS)
+        candidate = path.suffix.lower() in DOC_EXTS and any(token in lower for token in CONTRACT_HINTS)
         if not candidate:
             continue
         checked += 1

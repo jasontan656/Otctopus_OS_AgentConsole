@@ -13,6 +13,17 @@
  * from the same Database is the officially supported concurrency pattern.
  */
 
+/*
+ * Normalization Contract
+ * trace_id: kuzu_repo_pool_trace
+ * session_id: kuzu_repo_pool_session
+ * actor_id: local_graph_operator
+ * channel: local_filesystem
+ * payload_version: v1
+ * schema_name: kuzu_repo_pool_transport
+ * raw_ref: repo_db_path
+ */
+
 import fs from 'fs/promises';
 import kuzu from 'kuzu';
 

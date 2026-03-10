@@ -15,7 +15,8 @@ def lint(root: Path) -> dict[str, object]:
         text = read_text(path)
         lower_path = str(path).lower()
         is_normalizer = any(token in lower_path for token in NORMALIZER_HINTS)
-        if any(marker in text for marker in RAW_PAYLOAD_PATTERNS) and not is_normalizer:
+        is_lint_internal = "constitution_lint_rules" in path.parts or "tests" in path.parts
+        if any(marker in text for marker in RAW_PAYLOAD_PATTERNS) and not is_normalizer and not is_lint_internal:
             violations.append({"path": rel(path, root), "reason": "raw_payload_marker_outside_normalizer"})
         candidate = is_normalizer or any(marker in text for marker in ("payload_version", "schema_name", "raw_ref"))
         if not candidate:

@@ -1,4 +1,16 @@
 ---
+
+## Contract Header
+- `contract_name`: `meta_browser_operation_subskills_meta_browser_operation_headed_contract`
+- `contract_version`: `1.0.0`
+- `validation_mode`: `strict`
+- `required_fields`:
+  - `contract_name`
+  - `contract_version`
+  - `validation_mode`
+- `optional_fields`:
+  - `notes`
+
 name: meta-browser-operation-headed
 description: Methodology branch for Windows-side browser execution under `有头模式`, using Windows Edge via `win_chrome_devtools` as the default headed runtime.
 ---

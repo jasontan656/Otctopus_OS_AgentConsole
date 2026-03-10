@@ -1,5 +1,17 @@
 # Active Invoke Filter Contract (Meta-prompt-write)
 
+
+## Contract Header
+- `contract_name`: `meta_prompt_write_references_active_invoke_filter_contract`
+- `contract_version`: `1.0.0`
+- `validation_mode`: `strict`
+- `required_fields`:
+  - `contract_name`
+  - `contract_version`
+  - `validation_mode`
+- `optional_fields`:
+  - `notes`
+
 ## Contract ID
 `active_invoke_filter_contract_v3`
 

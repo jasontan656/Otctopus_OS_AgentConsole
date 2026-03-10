@@ -1,5 +1,17 @@
 # Skill Runtime Contract
 
+
+## Contract Header
+- `contract_name`: `meta_default_md_manager_references_runtime_skill_runtime_contract`
+- `contract_version`: `1.0.0`
+- `validation_mode`: `strict`
+- `required_fields`:
+  - `contract_name`
+  - `contract_version`
+  - `validation_mode`
+- `optional_fields`:
+  - `notes`
+
 > Audit copy generated from `references/runtime/SKILL_RUNTIME_CONTRACT.json`.
 > Runtime models must call `python3 scripts/Cli_Toolbox.py contract --json` instead of reading this markdown for guidance.
 

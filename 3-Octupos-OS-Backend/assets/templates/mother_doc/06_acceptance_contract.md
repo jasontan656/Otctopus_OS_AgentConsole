@@ -1,5 +1,17 @@
 # 06 Acceptance Contract
 
+
+## Contract Header
+- `contract_name`: `3_octupos_os_backend_assets_templates_mother_doc_06_acceptance_contract`
+- `contract_version`: `1.0.0`
+- `validation_mode`: `strict`
+- `required_fields`:
+  - `contract_name`
+  - `contract_version`
+  - `validation_mode`
+- `optional_fields`:
+  - `notes`
+
 ```python
 # replace_me_fill_rule:
 # - Replace every replace_me token with requirement-level and stage-level acceptance rules.

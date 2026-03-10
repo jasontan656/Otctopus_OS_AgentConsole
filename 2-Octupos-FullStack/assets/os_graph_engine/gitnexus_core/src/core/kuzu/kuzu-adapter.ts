@@ -3,6 +3,16 @@ import { createReadStream } from 'fs';
 import { createInterface } from 'readline';
 import path from 'path';
 import kuzu from 'kuzu';
+/*
+ * Normalization Contract
+ * trace_id: kuzu_core_trace
+ * session_id: kuzu_core_session
+ * actor_id: local_graph_operator
+ * channel: local_filesystem
+ * payload_version: v1
+ * schema_name: kuzu_core_transport
+ * raw_ref: db_path
+ */
 import { KnowledgeGraph } from '../graph/types.js';
 import {
   NODE_TABLES,

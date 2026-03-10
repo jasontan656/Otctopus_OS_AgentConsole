@@ -1,5 +1,13 @@
 # Authored Domain Index
 
+
+## Permission Boundary Contract
+- `actor_id`: `codex_agent`
+- `role`: `domain_policy_operator`
+- `policy_version`: `v1`
+- `authz_result`: `allow_within_00_DOMAIN_INDEX.md_scope`
+- `deny_code`: `00_DOMAIN_INDEX.MD_SCOPE_VIOLATION`
+
 适用技能：`2-Octupos-FullStack`
 
 ## Purpose

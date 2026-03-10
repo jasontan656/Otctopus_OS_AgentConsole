@@ -29,5 +29,16 @@
     "markdown_audit_paths": "references/runtime/SKILL_RUNTIME_CONTRACT.md + references/stages/*/(INSTRUCTION.md|WORKFLOW.md|RULES.md)",
     "update_rule": "运行合同或阶段指引变更时，必须先更新 JSON，再执行 render-audit-docs 刷新 markdown 审计版。",
     "runtime_read_rule": "运行态禁止把 markdown 作为规则源；markdown 只供人类审计。"
-  }
+  },
+  "contract_name": "meta_default_md_manager_references_runtime_skill_runtime_contract",
+  "contract_version": "1.0.0",
+  "validation_mode": "strict",
+  "required_fields": [
+    "contract_name",
+    "contract_version",
+    "validation_mode"
+  ],
+  "optional_fields": [
+    "notes"
+  ]
 }

@@ -1,5 +1,17 @@
 # Runtime Contract Template
 
+
+## Contract Header
+- `contract_name`: `meta_skill_template_assets_skill_template_runtime_skill_runtime_contract_template`
+- `contract_version`: `1.0.0`
+- `validation_mode`: `strict`
+- `required_fields`:
+  - `contract_name`
+  - `contract_version`
+  - `validation_mode`
+- `optional_fields`:
+  - `notes`
+
 > Audit copy for `SKILL_RUNTIME_CONTRACT_TEMPLATE.json`.
 
 - `skill_name`: `${skill_name}`

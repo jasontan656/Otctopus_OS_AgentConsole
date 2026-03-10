@@ -1,5 +1,14 @@
 # Mother_Doc Writing Rules
 
+
+## Permission Boundary Contract
+- `actor_id`: `codex_agent`
+- `role`: `domain_policy_operator`
+- `action`: `authored_doc_write`
+- `policy_version`: `v1`
+- `authz_result`: `allow_within_mother_doc_scope`
+- `deny_code`: `MOTHER_DOC_SCOPE_VIOLATION`
+
 - Scope: `Octopus_OS/Mother_Doc/docs/**`.
 - This family owns authored-doc tree shape, navigation shape, and docs-vs-container-root separation.
 - `Octopus_OS/Mother_Doc/` is the code container root; authored docs live only under `docs/`.

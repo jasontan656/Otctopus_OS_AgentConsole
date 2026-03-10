@@ -1,4 +1,16 @@
 ---
+
+## Contract Header
+- `contract_name`: `meta_browser_operation_subskills_meta_browser_operation_headless_contract`
+- `contract_version`: `1.0.0`
+- `validation_mode`: `strict`
+- `required_fields`:
+  - `contract_name`
+  - `contract_version`
+  - `validation_mode`
+- `optional_fields`:
+  - `notes`
+
 name: meta-browser-operation-headless
 description: Methodology for browser tasks in WSL under `无头模式`, including full Playwright CLI guidance (headless/headed), browser workflow patterns, and MCP-first execution guardrails.
 ---

@@ -8,5 +8,16 @@
   ],
   "drop_on_stage_switch": [
     "replace_me"
+  ],
+  "contract_name": "meta_skill_template_assets_skill_template_stages_stage_template_doc_contract",
+  "contract_version": "1.0.0",
+  "validation_mode": "strict",
+  "required_fields": [
+    "contract_name",
+    "contract_version",
+    "validation_mode"
+  ],
+  "optional_fields": [
+    "notes"
   ]
 }

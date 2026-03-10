@@ -1,5 +1,17 @@
 # 05 Domain Contracts
 
+
+## Contract Header
+- `contract_name`: `4_octupos_os_frontend_assets_templates_mother_doc_05_domain_contracts`
+- `contract_version`: `1.0.0`
+- `validation_mode`: `strict`
+- `required_fields`:
+  - `contract_name`
+  - `contract_version`
+  - `validation_mode`
+- `optional_fields`:
+  - `notes`
+
 ```python
 # replace_me_fill_rule:
 # - Replace every replace_me token with stable domain rules, request/response semantics, and ownership boundaries.

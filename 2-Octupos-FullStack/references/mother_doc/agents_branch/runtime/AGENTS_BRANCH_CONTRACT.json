@@ -31,5 +31,13 @@
     "collect must consume scan_report.json and copy current AGENTS.md plus README.md files back into the skill-side registry.",
     "push must regenerate root/container AGENTS.md plus README.md, refresh Mother_Doc docs AGENTS.md navigation, and sync the registry again.",
     "This branch is still inside mother_doc stage and must not perform implementation or evidence actions."
+  ],
+  "required_fields": [
+    "contract_name",
+    "contract_version",
+    "validation_mode"
+  ],
+  "optional_fields": [
+    "notes"
   ]
 }
