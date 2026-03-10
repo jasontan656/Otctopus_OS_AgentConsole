@@ -1,58 +1,59 @@
 {
-  "schema_version": 1,
-  "owner_skill": "Meta-Default-md-manager",
-  "managed_branch": "default_docs",
-  "rule_source_policy": {
+  "entry_role": "workspace_root_runtime_entry",
+  "runtime_source_policy": {
     "runtime_rule_source": "CLI_JSON",
-    "human_audit_source": "audit_markdown_only",
-    "model_must_not_read_markdown_for_runtime_guidance": true
+    "audit_fields_are_not_primary_runtime_instructions": true,
+    "path_metadata_is_not_action_guidance": true
   },
-  "target": {
-    "source_root": "/home/jasontan656/AI_Projects",
-    "source_path": "/home/jasontan656/AI_Projects/AGENTS.md",
-    "source_relative_path": "AGENTS.md",
-    "file_kind": "agents",
-    "target_kind": "AGENTS.md",
-    "peer_path": "/home/jasontan656/AI_Projects/README.md",
-    "managed_rel_path": "AI_Projects/AGENTS.md",
-    "managed_dir": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/AI_Projects",
-    "human_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/AI_Projects/AGENTS_human.md",
-    "machine_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/AI_Projects/AGENTS_machine.json"
+  "default_meta_skill_order": [
+    "$Meta-prompt-write (strengthen user intent and understand the real need)",
+    "$Meta-mindchain (think from the architecture level and reject one-sided thinking)",
+    "$Meta-reasoningchain (project the future shape to align the target state)",
+    "$Meta-keyword-first-edit (prefer delete > replace > add when editing)",
+    "$Meta-refactor-behavior-preserving (applicable only when refactor is needed)",
+    "$Meta-Agent-Browser (applicable only when the task is frontend or browser-related)"
+  ],
+  "turn_start_actions": [
+    "validate root AGENTS exists",
+    "classify the turn as READ_EXEC or WRITE_EXEC",
+    "apply the default meta sequence before concrete execution"
+  ],
+  "runtime_constraints": [
+    "treat CLI JSON as the primary runtime rule source",
+    "do not use audit markdown as the primary execution guide",
+    "choose READ_EXEC or WRITE_EXEC by actual write intent, not by file type alone",
+    "when a concrete repo path becomes active, load that repo-local contract before repo-specific write, lint, or Git actions"
+  ],
+  "execution_modes": {
+    "READ_EXEC": {
+      "goal": "answer, inspect, classify, or route without changing files",
+      "default_actions": [
+        "prefer direct CLI contract output over opening markdown rule files",
+        "open extra files only when the direct contract still leaves a real gap"
+      ]
+    },
+    "WRITE_EXEC": {
+      "goal": "edit files or trigger manager-owned write flows",
+      "default_actions": [
+        "apply the default meta sequence before editing",
+        "state the intended write scope before editing",
+        "edit the minimal correct scope that matches the user intent",
+        "do not trigger Git automation unless the active repo-local contract or the user explicitly requires it"
+      ]
+    }
   },
-  "peer_doc": {
-    "path": "/home/jasontan656/AI_Projects/README.md",
-    "relation": "same_level_summary",
-    "read_policy": "not_available"
-  },
-  "runtime_entry": {
-    "cli": "python3 /home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/scripts/Cli_Toolbox.py target-contract --source-path \"/home/jasontan656/AI_Projects/AGENTS.md\" --json",
-    "audit_md_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/AI_Projects/AGENTS_human.md",
-    "runtime_json_path": "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/assets/managed_targets/AI_Projects/AGENTS_machine.json"
-  },
-  "turn_contract": {
-    "status": "enforced",
-    "turn_start": [
-      "validate /home/jasontan656/AI_Projects/AGENTS.md exists",
-      "print TURN_START guardrails",
-      "print ROUTE guardrails",
-      "choose READ_EXEC or WRITE_EXEC by write intent"
-    ],
-    "turn_end": [
-      "print TURN_END guardrails"
-    ]
-  },
-  "routing": {
-    "document_role": "runtime_entry",
-    "default_next_hop": "use the target-contract JSON to decide peer reads and manager commands",
-    "rules": [
-      "use Meta-Default-md-manager CLI JSON as the runtime rule source",
-      "README-like files remain human summaries unless a peer AGENTS contract says otherwise",
-      "machine-readable runtime rules must stay in skill-managed JSON and CLI output"
-    ]
-  },
-  "update_boundary": [
-    "managed targets are owned by Meta-Default-md-manager",
-    "external AGENTS.md should remain a thin runtime entry",
-    "skill-managed JSON and CLI output are the runtime source of truth"
+  "repo_local_contract_handoff": [
+    "if work enters a repo with its own AGENTS runtime entry, load that repo-local target-contract before following repo-specific rules",
+    "repo-local contract may add stricter lint, delivery, or Git rules for that repo only",
+    "when repo-local and workspace-root rules overlap, keep the workspace-root boundary and add the repo-local concrete duties"
+  ],
+  "forbidden_primary_runtime_pattern": [
+    "Do not treat audit markdown paths as the main runtime instructions.",
+    "Do not require the model to open a chain of markdown files just to learn the next skill to use.",
+    "Do not emit only path metadata when the real need is direct action guidance."
+  ],
+  "turn_end_actions": [
+    "print TURN_END guardrails",
+    "defer repo-specific lint or Git duties to the concrete repo-local contract when applicable"
   ]
 }
