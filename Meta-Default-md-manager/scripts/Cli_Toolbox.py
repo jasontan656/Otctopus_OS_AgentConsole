@@ -11,7 +11,8 @@ from mdm_runtime import (
     ensure_within_workspace,
     extract_external_agents_part_a,
     extract_internal_part_a,
-    lint_discovered_entry,
+    lint_external_entry,
+    lint_managed_entry,
     load_machine_payload,
     match_scan_rules,
     read_json,
@@ -20,8 +21,7 @@ from mdm_runtime import (
     scaffold_external_agents,
     scaffold_internal_agents_human,
     sync_file_to_installed,
-    validate_internal_human_agents,
-    validate_machine_json,
+    validate_managed_agents_pair,
     write_stage_report,
     write_json,
     write_text,
@@ -71,7 +71,7 @@ def cmd_scan(args: argparse.Namespace) -> int:
         lint_results.append(
             {
                 "source_path": entry["source_path"],
-                "errors": lint_discovered_entry(paths, entry),
+                "errors": lint_external_entry(paths, entry),
             }
         )
     payload = {
@@ -95,7 +95,7 @@ def cmd_lint(args: argparse.Namespace) -> int:
     entries = match_scan_rules(paths, args.only, args.source_path)
     failed = []
     for entry in entries:
-        errors = lint_discovered_entry(paths, entry)
+        errors = lint_managed_entry(paths, entry)
         if errors:
             failed.append({"source_path": entry["source_path"], "errors": errors})
     payload = {
@@ -125,7 +125,7 @@ def cmd_collect(args: argparse.Namespace) -> int:
         source_path = Path(entry["source_path"])
         if source_path.name != "AGENTS.md":
             continue
-        lint_errors = lint_discovered_entry(paths, entry)
+        lint_errors = lint_external_entry(paths, entry)
         if lint_errors and not args.allow_invalid_external:
             failures.append({"source_path": str(source_path), "errors": lint_errors})
             continue
@@ -147,7 +147,6 @@ def cmd_collect(args: argparse.Namespace) -> int:
                 "source_path": str(source_path),
                 "managed_human_path": str(managed_human),
                 "managed_machine_path": str(managed_machine),
-                "legacy_part_a_marker_detected": "[PART A]" in external_text,
             }
         )
     payload = {
@@ -188,8 +187,12 @@ def cmd_push(args: argparse.Namespace) -> int:
     operations = []
     failures = []
     for human_path, external_path in iter_managed_humans(paths, args.only, args.source_path):
-        errors = validate_internal_human_agents(human_path.read_text(encoding="utf-8"))
-        errors.extend(validate_machine_json(human_path.with_name("AGENTS_machine.json")))
+        errors = validate_managed_agents_pair(
+            paths,
+            external_path,
+            human_path,
+            human_path.with_name("AGENTS_machine.json"),
+        )
         if errors and not args.allow_invalid_internal:
             failures.append({"managed_human_path": str(human_path), "errors": errors})
             continue

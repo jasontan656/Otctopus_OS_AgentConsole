@@ -15,7 +15,6 @@
 ### Required Shape Rules
 - External `AGENTS.md` must contain `Part A only`.
 - External `AGENTS.md` must use the explicit `<part_A> ... </part_A>` wrapper in the target shape.
-- During transition, collect/lint may temporarily accept legacy `[PART A]` markers from older external files, but push must emit the explicit `<part_A>` shape.
 - External `AGENTS.md` must not contain `<part_B> ... </part_B>`.
 - `Part A` must be human-readable and directly useful without reading raw json.
 - `Part A` may contain:
@@ -48,7 +47,9 @@
 - `AGENTS_machine.json` must contain `Part B only`.
 - It must not duplicate `Part A`.
 - It must remain valid json.
+- It must satisfy the source-path-specific payload structure contract in `AGENTS_payload_structure.json`.
 
 ## Lint Rule
-- If scan discovers `AGENTS.md`, lint must validate it against this contract.
+- If scan discovers `AGENTS.md`, lint must validate the external entry against this contract.
+- `lint` must also validate the paired internal `AGENTS_human.md` and `AGENTS_machine.json` against the current structure lock.
 - If scan discovers a newly governed filename without a matching structure template, scan must fail immediately.

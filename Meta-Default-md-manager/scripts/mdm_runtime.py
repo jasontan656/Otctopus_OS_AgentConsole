@@ -12,12 +12,11 @@ from typing import Any
 
 SKILL_NAME = "Meta-Default-md-manager"
 HOOK_HEADER = "[AGENT RUNTIME HOOK - ABSOLUTE ENFORCEMENT]"
-LEGACY_PART_A_MARKER = "[PART A]"
-LEGACY_PART_B_MARKER = "[PART B]"
 PART_A_OPEN = "<part_A>"
 PART_A_CLOSE = "</part_A>"
 PART_B_OPEN = "<part_B>"
 PART_B_CLOSE = "</part_B>"
+PAYLOAD_STRUCTURE_CONTRACT_RELATIVE_PATH = Path("references/runtime_contracts/AGENTS_payload_structure.json")
 
 
 @dataclass(frozen=True)
@@ -127,6 +126,10 @@ def load_scan_rules(paths: RuntimePaths) -> dict[str, Any]:
     return read_json(paths.scan_rules_path)
 
 
+def load_payload_structure_contract(paths: RuntimePaths) -> dict[str, Any]:
+    return read_json(paths.mirror_skill_root / PAYLOAD_STRUCTURE_CONTRACT_RELATIVE_PATH)
+
+
 def iter_workspace_files(paths: RuntimePaths):
     skip_roots = {
         paths.mirror_skill_root.resolve(),
@@ -171,21 +174,9 @@ def _extract_tag_block(text: str, open_tag: str, close_tag: str) -> str | None:
     return text.split(open_tag, 1)[1].split(close_tag, 1)[0].strip()
 
 
-def _extract_legacy_part_a_body(text: str) -> str | None:
-    if LEGACY_PART_A_MARKER not in text:
-        return None
-    body = text.split(LEGACY_PART_A_MARKER, 1)[1]
-    if LEGACY_PART_B_MARKER in body:
-        body = body.split(LEGACY_PART_B_MARKER, 1)[0]
-    return body.strip()
-
-
 def _extract_header_prefix(text: str) -> str:
     if PART_A_OPEN in text:
         prefix = text.split(PART_A_OPEN, 1)[0].rstrip()
-        return prefix + "\n"
-    if LEGACY_PART_A_MARKER in text:
-        prefix = text.split(LEGACY_PART_A_MARKER, 1)[0].rstrip()
         return prefix + "\n"
     return (
         f"{HOOK_HEADER}\n\n"
@@ -197,9 +188,6 @@ def extract_external_agents_part_a_body(text: str) -> str:
     tagged = _extract_tag_block(text, PART_A_OPEN, PART_A_CLOSE)
     if tagged is not None:
         return tagged
-    legacy = _extract_legacy_part_a_body(text)
-    if legacy is not None:
-        return legacy
     return text.strip()
 
 
@@ -234,8 +222,6 @@ def render_internal_agents_human(part_a_text: str, machine_payload: Any) -> str:
 def extract_internal_part_a(human_text: str) -> str:
     if PART_B_OPEN in human_text:
         return human_text.split(PART_B_OPEN, 1)[0].rstrip() + "\n"
-    if LEGACY_PART_B_MARKER in human_text:
-        return human_text.split(LEGACY_PART_B_MARKER, 1)[0].rstrip() + "\n"
     return human_text.rstrip() + "\n"
 
 
@@ -281,48 +267,145 @@ def scaffold_internal_agents_human(external_path: Path) -> str:
     return render_internal_agents_human(scaffold_external_agents(external_path), {})
 
 
+def _relative_source_key(paths: RuntimePaths, source_path: Path) -> str:
+    return str(source_path.resolve().relative_to(paths.workspace_root))
+
+
+def _payload_schema_for_source(paths: RuntimePaths, source_path: Path) -> dict[str, Any] | None:
+    contract = load_payload_structure_contract(paths)
+    targets = contract.get("targets", {})
+    return targets.get(_relative_source_key(paths, source_path))
+
+
+def _validate_tag_wrapper(text: str, open_tag: str, close_tag: str, label: str) -> list[str]:
+    errors: list[str] = []
+    if text.count(open_tag) != 1 or text.count(close_tag) != 1:
+        errors.append(f"{label}_wrapper_count_invalid")
+        return errors
+    if text.index(open_tag) > text.index(close_tag):
+        errors.append(f"{label}_wrapper_order_invalid")
+    return errors
+
+
+def _extract_fenced_json_payload(block: str) -> tuple[Any | None, list[str]]:
+    stripped = block.strip()
+    if not stripped.startswith("```json\n") or not stripped.endswith("\n```"):
+        return None, ["part_b_json_fence_invalid"]
+    if stripped.count("```json") != 1 or stripped.count("```") != 2:
+        return None, ["part_b_json_fence_count_invalid"]
+    payload_text = stripped[len("```json\n") : -len("\n```")]
+    try:
+        return json.loads(payload_text), []
+    except json.JSONDecodeError as exc:
+        return None, [f"part_b_invalid_json:{exc.msg}"]
+
+
+def _validate_payload_value(payload: Any, schema: dict[str, Any], path: str) -> list[str]:
+    errors: list[str] = []
+    expected_type = schema.get("type")
+    type_map = {
+        "object": dict,
+        "array": list,
+        "string": str,
+        "boolean": bool,
+    }
+    if expected_type not in type_map:
+        return [f"payload_schema_type_unsupported:{path}:{expected_type}"]
+    if not isinstance(payload, type_map[expected_type]):
+        return [f"payload_type_mismatch:{path}:{expected_type}"]
+    if expected_type == "object":
+        expected_keys = schema.get("key_order", [])
+        actual_keys = list(payload.keys())
+        if actual_keys != expected_keys:
+            errors.append(f"payload_key_order_mismatch:{path}")
+        for key in expected_keys:
+            if key not in payload:
+                errors.append(f"payload_missing_key:{path}.{key}")
+        for key in actual_keys:
+            if key not in expected_keys:
+                errors.append(f"payload_extra_key:{path}.{key}")
+        for key in expected_keys:
+            if key in payload:
+                errors.extend(
+                    _validate_payload_value(payload[key], schema["properties"][key], f"{path}.{key}")
+                )
+        return errors
+    if expected_type == "array":
+        item_schema = schema.get("items")
+        if item_schema is None:
+            return [f"payload_schema_items_missing:{path}"]
+        for index, item in enumerate(payload):
+            errors.extend(_validate_payload_value(item, item_schema, f"{path}[{index}]"))
+    return errors
+
+
 def validate_external_agents(text: str) -> list[str]:
     errors: list[str] = []
     if HOOK_HEADER not in text:
         errors.append("missing_hook_header")
     if "`HOOK_LOAD`" not in text:
         errors.append("missing_hook_load")
-    has_new_part_a = PART_A_OPEN in text and PART_A_CLOSE in text
-    has_legacy_part_a = LEGACY_PART_A_MARKER in text
-    if not has_new_part_a and not has_legacy_part_a:
-        errors.append("missing_part_a")
-    if PART_B_OPEN in text or PART_B_CLOSE in text or LEGACY_PART_B_MARKER in text:
+    errors.extend(_validate_tag_wrapper(text, PART_A_OPEN, PART_A_CLOSE, "part_a"))
+    if "[PART A]" in text:
+        errors.append("legacy_part_a_marker_forbidden")
+    if "[PART B]" in text:
+        errors.append("legacy_part_b_marker_forbidden")
+    if PART_B_OPEN in text or PART_B_CLOSE in text:
         errors.append("external_agents_forbids_part_b")
     return errors
 
 
-def validate_internal_human_agents(text: str) -> list[str]:
+def validate_internal_human_agents(text: str, payload_schema: dict[str, Any] | None = None) -> list[str]:
     errors: list[str] = []
     if HOOK_HEADER not in text:
         errors.append("missing_hook_header")
     if "`HOOK_LOAD`" not in text:
         errors.append("missing_hook_load")
-    has_new_part_a = PART_A_OPEN in text and PART_A_CLOSE in text
-    has_legacy_part_a = LEGACY_PART_A_MARKER in text
-    if not has_new_part_a and not has_legacy_part_a:
-        errors.append("missing_part_a")
-    has_new_part_b = PART_B_OPEN in text and PART_B_CLOSE in text
-    has_legacy_part_b = LEGACY_PART_B_MARKER in text
-    if not has_new_part_b and not has_legacy_part_b:
+    errors.extend(_validate_tag_wrapper(text, PART_A_OPEN, PART_A_CLOSE, "part_a"))
+    errors.extend(_validate_tag_wrapper(text, PART_B_OPEN, PART_B_CLOSE, "part_b"))
+    if "[PART A]" in text:
+        errors.append("legacy_part_a_marker_forbidden")
+    if "[PART B]" in text:
+        errors.append("legacy_part_b_marker_forbidden")
+    part_b_block = _extract_tag_block(text, PART_B_OPEN, PART_B_CLOSE)
+    if part_b_block is None:
         errors.append("missing_part_b")
-    if "```json" not in text:
-        errors.append("missing_json_fence")
+        return errors
+    payload, payload_errors = _extract_fenced_json_payload(part_b_block)
+    errors.extend(payload_errors)
+    if payload_schema is not None and payload is not None:
+        errors.extend(_validate_payload_value(payload, payload_schema, "$"))
     return errors
 
 
-def validate_machine_json(machine_path: Path) -> list[str]:
+def validate_machine_json(machine_path: Path, payload_schema: dict[str, Any] | None = None) -> list[str]:
     if not machine_path.exists():
         return ["missing_machine_json"]
     try:
-        read_json(machine_path)
+        payload = read_json(machine_path)
     except json.JSONDecodeError as exc:
         return [f"invalid_machine_json:{exc.msg}"]
-    return []
+    if payload_schema is None:
+        return []
+    return _validate_payload_value(payload, payload_schema, "$")
+
+
+def validate_managed_agents_pair(
+    paths: RuntimePaths,
+    source_path: Path,
+    human_path: Path,
+    machine_path: Path,
+) -> list[str]:
+    errors: list[str] = []
+    payload_schema = _payload_schema_for_source(paths, source_path)
+    if payload_schema is None:
+        return [f"missing_payload_structure_schema:{_relative_source_key(paths, source_path)}"]
+    if not human_path.exists():
+        errors.append("missing_managed_human")
+    else:
+        errors.extend(validate_internal_human_agents(human_path.read_text(encoding="utf-8"), payload_schema))
+    errors.extend(validate_machine_json(machine_path, payload_schema))
+    return errors
 
 
 def report_path(paths: RuntimePaths, stage: str) -> Path:
@@ -406,8 +489,24 @@ def match_scan_rules(
     return sorted(results, key=lambda item: item["relative_path"])
 
 
-def lint_discovered_entry(paths: RuntimePaths, entry: dict[str, Any]) -> list[str]:
+def lint_external_entry(paths: RuntimePaths, entry: dict[str, Any]) -> list[str]:
     source_path = Path(entry["source_path"])
     if source_path.name == "AGENTS.md":
         return validate_external_agents(source_path.read_text(encoding="utf-8"))
     return []
+
+
+def lint_managed_entry(paths: RuntimePaths, entry: dict[str, Any]) -> list[str]:
+    source_path = Path(entry["source_path"])
+    errors = lint_external_entry(paths, entry)
+    if source_path.name != "AGENTS.md":
+        return errors
+    errors.extend(
+        validate_managed_agents_pair(
+            paths,
+            source_path,
+            Path(entry["managed_human_path"]),
+            Path(entry["managed_machine_path"]),
+        )
+    )
+    return errors
