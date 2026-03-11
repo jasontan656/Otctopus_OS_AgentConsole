@@ -127,3 +127,17 @@ It exists so AI can keep reading the recent product evolution before the main it
   - `/home/jasontan656/AI_Projects/octopus-os-agent-console/docs/INSTALL_AND_CLEANUP_MODEL.md`
 - next_steps:
   - Run Constitution lint, sync updated skills to the live Codex installation directory, and continue refining the public installation story.
+
+## 2026-03-11 03:42:10Z - Open-source governance layer without open collaboration
+
+- author: `codex`
+- summary: Added the first public-governance files for the repository while keeping the project in an AI-maintained, suggestion-only phase instead of opening collaborative code contribution.
+- decisions:
+  - Introduce LICENSE, SECURITY, CONTRIBUTING, CODE_OF_CONDUCT, CHANGELOG, and minimal .github issue templates, but explicitly keep external code collaboration closed until the internal development phase is finished.
+- affected_paths:
+  - `/home/jasontan656/AI_Projects/octopus-os-agent-console/LICENSE`
+  - `/home/jasontan656/AI_Projects/octopus-os-agent-console/SECURITY.md`
+  - `/home/jasontan656/AI_Projects/octopus-os-agent-console/CONTRIBUTING.md`
+  - `/home/jasontan656/AI_Projects/octopus-os-agent-console/.github`
+- next_steps:
+  - Run Constitution lint, sync updated skills, and keep refining the public repo governance surface as release readiness improves.

@@ -92,6 +92,15 @@ GitHub binding warning:
 - `docs/INSTALL_AND_CLEANUP_MODEL.md`
 - `docs/PRODUCT_ITERATION_LOGGING.md`
 
+## Governance Files
+
+- `LICENSE`
+- `SECURITY.md`
+- `CONTRIBUTING.md`
+- `CODE_OF_CONDUCT.md`
+- `CHANGELOG.md`
+- `.github/`
+
 ## Directory Transition
 
 The product engineering name is now `octopus-os-agent-console`.

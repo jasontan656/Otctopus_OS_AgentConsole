@@ -1,0 +1,44 @@
+name: Feedback
+description: Suggest a change, report operator friction, or leave release-readiness feedback.
+title: "[Feedback]: "
+labels:
+  - feedback
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Octopus OS is currently AI-maintained and not open to collaborative code contribution.
+        Use this form for suggestions, operator feedback, and product concerns.
+  - type: dropdown
+    id: feedback_type
+    attributes:
+      label: Feedback Type
+      options:
+        - Product suggestion
+        - Operator workflow issue
+        - Documentation issue
+        - Safety concern
+        - Release-readiness feedback
+    validations:
+      required: true
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: Describe the issue or suggestion directly.
+    validations:
+      required: true
+  - type: textarea
+    id: impact
+    attributes:
+      label: Why It Matters
+      description: Explain the operator impact, release impact, or safety impact.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence or Reproduction
+      description: Provide the smallest useful reproduction or evidence. Do not include secrets.
+    validations:
+      required: false

@@ -1,0 +1,38 @@
+name: Bug Report
+description: Report a reproducible product or installer bug.
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Report reproducible problems only. Do not paste secrets, tokens, private infrastructure details, or sensitive repository content.
+  - type: textarea
+    id: what_happened
+    attributes:
+      label: What Happened
+      description: Describe the observed behavior.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: Describe what should have happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction Steps
+      description: Provide the smallest useful reproduction.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Include Codex CLI version, model profile, and whether you were in WSL2 Linux.
+    validations:
+      required: true
