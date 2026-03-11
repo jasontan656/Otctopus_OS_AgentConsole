@@ -1,6 +1,6 @@
 ---
 name: "skill-doc-structure"
-description: "治理 skills 内部文档组织、单 topic 原子文档与锚点图谱的技能。"
+description: "治理 skills 内部 markdown 文档树、metadata 与 anchor graph 的技能。"
 metadata:
   doc_structure:
     doc_id: "skill.entry.facade"
@@ -10,60 +10,87 @@ metadata:
       - target: "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md"
         relation: "governed_by"
         direction: "downstream"
-        reason: "The runtime contract defines the document-structure rules and graph constraints."
-      - target: "references/methodology/SEMANTIC_ROUTING_TREE.md"
+        reason: "The runtime contract defines the document-architecture rules and graph constraints."
+      - target: "references/rules/00_RULE_SYSTEM_INDEX.md"
         relation: "routes_to"
         direction: "downstream"
-        reason: "The semantic routing tree doc explains how to split docs into facade, branch, and atomic nodes."
+        reason: "The rule-system index is the first knowledge-track entry after the facade."
 ---
 
 # Skill-Doc-Structure
 
 ## 1. 定位
-- 本文件只做门面入口，不承载规则正文。
-- 本技能只负责 skill 内部 markdown 文档的原子化、锚点化、树状路由化与 graph 化治理。
-- 本技能只承载文档结构方法论本体，不承载其他扩展职责。
+- 本文件提供文档结构技能的入口节点与轨道分流。
+- 本技能负责 skill 内部 markdown 文档从入口节点开始的 tree-first 组织、metadata 约束、anchor graph 与 fewshot 样例树。
+- 本技能把知识面拆成三条入口轨：
+  - 规则轨
+  - fewshot 示例轨
+  - 元信息轨
+- 本技能另外提供三条 workflow 轨：
+  - 查询 workflow
+  - 架构组织 workflow
+  - 单文件写作 workflow
 
 ## 2. 必读顺序
 1. 先读取运行合同：
    - `npm run cli -- runtime-contract --json`
-2. 再读取语义拆分方法论：
-   - `references/methodology/SEMANTIC_ROUTING_TREE.md`
-3. 再读取 CLI 用法与开发文档：
+2. 再进入规则轨：
+   - `references/rules/00_RULE_SYSTEM_INDEX.md`
+3. 再进入 fewshot 示例轨：
+   - `references/fewshot/00_FEWSHOT_INDEX.md`
+4. 再进入元信息轨：
+   - `references/metadata/00_METADATA_INDEX.md`
+5. 再进入 workflow 轨：
+   - `references/workflows/00_WORKFLOW_INDEX.md`
+6. 若任务涉及 CLI 与 graph rebuild，再读取：
    - `references/tooling/Cli_Toolbox_USAGE.md`
    - `references/tooling/Cli_Toolbox_DEVELOPMENT.md`
-4. 若任务涉及模板与 frontmatter，读取：
+7. 若任务涉及模板与 frontmatter，再读取：
+   - `assets/templates/ROUTING_DOC_TEMPLATE.md`
+   - `assets/templates/INDEX_DOC_TEMPLATE.md`
    - `assets/templates/ATOMIC_DOC_TEMPLATE.md`
+   - `assets/templates/DOC_FRONTMATTER_TEMPLATE.yaml`
 
 ## 3. 分类入口
 - 运行合同层：
   - `references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md`
-- 方法论层：
+- 规则轨：
+  - `references/rules/00_RULE_SYSTEM_INDEX.md`
   - `references/methodology/SEMANTIC_ROUTING_TREE.md`
+- fewshot 示例轨：
+  - `references/fewshot/00_FEWSHOT_INDEX.md`
+- 元信息轨：
+  - `references/metadata/00_METADATA_INDEX.md`
+- workflow 轨：
+  - `references/workflows/00_WORKFLOW_INDEX.md`
 - 工具层：
   - `scripts/Cli_Toolbox.ts`
 - 模板层：
+  - `assets/templates/ROUTING_DOC_TEMPLATE.md`
+  - `assets/templates/INDEX_DOC_TEMPLATE.md`
   - `assets/templates/ATOMIC_DOC_TEMPLATE.md`
+  - `assets/templates/DOC_FRONTMATTER_TEMPLATE.yaml`
 - 工具开发层：
   - `references/tooling/development/`
 
 ## 4. 适用域
-- 适用于：skills 内 markdown 语义树拆分、门面文档设计、分叉节点设计、单 topic 原子文档、frontmatter anchors、graph JSON、文档 lint、self graph 重建。
-- 不适用于：任何非文档结构治理任务。
+- 适用于：skills 内 markdown 文档树设计、分叉节点设计、单 topic 原子文档、fewshot 样例树、frontmatter/anchors、graph JSON、文档 lint、self graph 重建。
 
 ## 5. 执行入口
 - `npm run cli -- runtime-contract --json`
-- `npm run cli -- lint-split-points --json`
+- `npm run cli -- lint-doc-anchors --target <skill_root> --json`
+- `npm run cli -- lint-split-points --target <skill_root> --json`
 - `npm run cli -- register-split-decision --target <skill_root> --doc <doc_path> --rule <rule_id> --decision <accepted|split_required> --note <text> --json`
-- `npm run cli -- build-anchor-graph --json`
+- `npm run cli -- build-anchor-graph --target <skill_root> --json`
 - `npm run cli -- rebuild-self-graph --json`
 
 ## 6. 读取原则
-- `SKILL.md` 只负责路由。
+- 入口节点负责把读者送到对应知识轨与 workflow 轨。
 - 文档结构规则以 CLI JSON 与下沉合同为准。
+- 文档树应先确定当前应进入哪一条知识轨，再确定对应 workflow。
 - 文档结构应先形成清晰 tree，再用 anchors 把必要的跨层关系织成 graph。
 - 若文档承担多个 topic 或多个独立分叉轴线，应优先拆分而不是堆补丁。
-- 模型应从门面 -> 分叉节点 -> 主题原子节点逐层收敛读取，不默认通读整个 skill。
+- 模型应从入口节点 -> 分叉节点 -> 主题原子节点逐层收敛读取，不默认通读整个 skill。
 
 ## 7. 结构索引
 ```text
@@ -72,8 +99,12 @@ skill-doc-structure/
 ├── agents/
 ├── assets/
 ├── references/
+│   ├── fewshot/
+│   ├── metadata/
 │   ├── methodology/
+│   ├── rules/
 │   ├── runtime/
+│   ├── workflows/
 │   └── tooling/
 ├── scripts/
 ├── src/

@@ -1,6 +1,6 @@
 {
   "matrix_name": "META_SKILL_DOCSTRUCTURE_ANCHOR_QUERY_MATRIX",
-  "matrix_version": "v1",
+  "matrix_version": "v2",
   "scope": "skill_internal_markdown_docs",
   "required_frontmatter_fields": [
     "doc_id",
@@ -26,6 +26,81 @@
     "anchor targets must point to real markdown docs"
   ],
   "anchor_query_semantics": [
+    {
+      "query": "规则轨",
+      "relations": [
+        "routes_to",
+        "belongs_to",
+        "expands"
+      ],
+      "directions": [
+        "downstream",
+        "upstream"
+      ],
+      "keywords": [
+        "规则",
+        "rule",
+        "tree",
+        "branch",
+        "routing"
+      ]
+    },
+    {
+      "query": "fewshot",
+      "relations": [
+        "indexes",
+        "details",
+        "belongs_to"
+      ],
+      "directions": [
+        "downstream",
+        "upstream"
+      ],
+      "keywords": [
+        "fewshot",
+        "example",
+        "示例",
+        "sample"
+      ]
+    },
+    {
+      "query": "元信息",
+      "relations": [
+        "conforms_to",
+        "governed_by",
+        "details"
+      ],
+      "directions": [
+        "upstream",
+        "downstream"
+      ],
+      "keywords": [
+        "frontmatter",
+        "metadata",
+        "anchor",
+        "header",
+        "topic"
+      ]
+    },
+    {
+      "query": "workflow",
+      "relations": [
+        "routes_to",
+        "details",
+        "implements"
+      ],
+      "directions": [
+        "downstream",
+        "upstream"
+      ],
+      "keywords": [
+        "workflow",
+        "query",
+        "authoring",
+        "组织",
+        "写作"
+      ]
+    },
     {
       "query": "上游规范",
       "relations": [

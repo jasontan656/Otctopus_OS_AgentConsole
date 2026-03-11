@@ -23,12 +23,14 @@ anchors:
 - 让新 skill 从第一版起就具备 `facade -> routing -> topic atom` 的稳定主路径。
 - 让 `basic` 与 `staged_cli_first` 共享同一套文档结构治理，再按 profile 拉开合同深度。
 - 让模板包、生成器、tooling docs、回归测试和 anchors 始终围绕同一套结构演进。
+- 让门面 contract 与入口之后的文档树 contract 分别落在正确的治理技能里。
 
 ## 基线架构
 - 顶层 `SKILL.md` 只做 entry facade。
 - 第二层至少存在一个单轴 routing doc，负责把读者继续送入更窄域的治理文档。
 - 深层规则落到单 topic 文档，避免一个文档同时承担 profile 选择、工具说明和工作流细节。
 - 索引文档只负责目录树与导航，不承担主规则正文。
+- 顶层门面 contract 由模板技能定义，入口之后的树形分层由 `skill-doc-structure` 落地。
 
 ## 为什么必须接入 skill-doc-structure
 - 模板技能如果不显式接入 `skill-doc-structure`，生成器很容易继续输出“巨型门面 + 补丁式拆分”。

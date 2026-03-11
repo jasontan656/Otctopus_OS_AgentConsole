@@ -1,8 +1,10 @@
 doc_id: "<skill.area.topic>"
-doc_type: "<skill_facade|routing_doc|topic_atom|index_doc|methodology_doc|runtime_contract|tooling_usage|tooling_development|tooling_architecture|module_doc|template_doc|changelog>"
+doc_type: "<entry_node|routing_doc|topic_atom|index_doc|example_doc|methodology_doc|runtime_contract|tooling_usage|tooling_development|tooling_architecture|module_doc|template_doc|changelog>"
 topic: "<one stable topic statement>"
+node_role: "<optional entry_node|routing_doc|topic_atom|index_doc|example_doc>"
+domain_type: "<optional domain marker>"
 anchors:
   - target: "<relative/path/to/another/doc.md>"
-    relation: "<governed_by|implements|details|expands|pairs_with|tracks_changes_to>"
+    relation: "<governed_by|implements|details|expands|pairs_with|tracks_changes_to|routes_to|belongs_to|indexes>"
     direction: "<upstream|downstream|lateral|cross>"
     reason: "<why this relation exists>"

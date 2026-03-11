@@ -19,6 +19,7 @@
   "skill_name": "skill-creation-template",
   "authoring_model": {
     "skill_md_role": "entry_only_facade",
+    "ownership": "This section owns the target skill's SKILL.md facade contract.",
     "facade_sections": [
       "技能定位",
       "必读顺序",
@@ -63,7 +64,8 @@
       "optional_nodes": [
         "index_doc"
       ],
-      "skill_md_metadata_path": "metadata.doc_structure"
+      "skill_md_metadata_path": "metadata.doc_structure",
+      "governance_start_point": "entry_handoff_below_skill_md"
     },
     "required_topic_docs": [
       "references/governance/SKILL_DOCSTRUCTURE_ENFORCEMENT.md",
@@ -148,7 +150,9 @@
   },
   "governance_rules": [
     "SKILL.md must remain an entry-only facade, not a mixed governance body.",
+    "The facade contract of the target skill is governed here by skill-creation-template.",
     "skill-doc-structure is mandatory for both new-skill creation and existing-skill governance.",
+    "skill-doc-structure starts from the entry handoff below SKILL.md and governs the downstream document tree.",
     "Keep the primary reading path as facade -> routing -> topic atom before adding graph cross-links.",
     "The existing 技能本体 / 规则说明 convention may survive only in routing or topic docs where it remains semantically local.",
     "If a skill has runtime rules, the model must consume machine-readable contracts through CLI outputs instead of treating markdown as the runtime rule source.",

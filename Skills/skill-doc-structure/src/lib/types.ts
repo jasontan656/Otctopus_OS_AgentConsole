@@ -15,6 +15,8 @@ export interface GraphNodeRecord {
   title: string
   anchorCount: number
   depth: number
+  nodeRole?: string
+  domainType?: string
 }
 
 export interface GraphEdgeRecord {
@@ -79,9 +81,21 @@ export interface RuntimeContractPayload {
   primary_goal: string
   thinking_chain: string[]
   commands: Record<string, string>
+  knowledge_tracks: {
+    rules_track_entry: string
+    fewshot_track_entry: string
+    metadata_track_entry: string
+  }
+  workflow_tracks: {
+    query_workflow_entry: string
+    architecture_workflow_entry: string
+    single_doc_workflow_entry: string
+  }
   frontmatter_contract: {
     template_path: string
+    template_assets: string[]
     required_fields: string[]
+    optional_fields: string[]
     skill_md_metadata_path: string
   }
   graph_contract: {

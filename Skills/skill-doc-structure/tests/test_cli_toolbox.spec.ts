@@ -54,12 +54,36 @@ describe('Skill-Doc-Structure TS runtime', () => {
     const contract = await loadRuntimeContract(path.resolve(__dirname, '..'))
     expect(contract.contract_name).toBe('META_SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT')
     expect(contract.semantic_split_contract.navigation_model).toBe('tree_first_graph_second')
+    expect(contract.knowledge_tracks.rules_track_entry).toBe('references/rules/00_RULE_SYSTEM_INDEX.md')
+    expect(contract.workflow_tracks.single_doc_workflow_entry).toBe('references/workflows/30_SINGLE_DOC_AUTHORING_WORKFLOW.md')
+    expect(contract.frontmatter_contract.optional_fields).toContain('node_role')
   })
 
   it('builds a doc graph workspace for the current skill', async () => {
     const workspace = await buildDocGraphWorkspace(path.resolve(__dirname, '..'))
     expect(workspace.status).toBe('pass')
     expect(workspace.graph.nodes.length).toBeGreaterThan(0)
+    expect(workspace.graph.nodes.some((node) => node.path === 'references/fewshot/00_FEWSHOT_INDEX.md')).toBe(true)
+  })
+
+  it('captures optional node metadata fields when present', async () => {
+    const skillRoot = await createTempSkill()
+    await mkdir(path.join(skillRoot, 'docs'), { recursive: true })
+    await writeFile(
+      path.join(skillRoot, 'SKILL.md'),
+      `---\nname: "temp-skill"\ndescription: "temporary skill"\nmetadata:\n  doc_structure:\n    doc_id: "skill.entry"\n    doc_type: "skill_facade"\n    topic: "temp facade"\n    anchors:\n      - target: "docs/guide.md"\n        relation: "details"\n        direction: "downstream"\n        reason: "guide expands facade"\n---\n\n# Temp Skill\n`,
+      'utf8',
+    )
+    await writeFile(
+      path.join(skillRoot, 'docs', 'guide.md'),
+      `---\ndoc_id: "docs.guide"\ndoc_type: "topic_atom"\ntopic: "guide"\nnode_role: "topic_atom"\ndomain_type: "example"\nanchors:\n  - target: "../SKILL.md"\n    relation: "belongs_to"\n    direction: "upstream"\n    reason: "guide belongs to the facade"\n---\n\n# Guide\n`,
+      'utf8',
+    )
+
+    const workspace = await buildDocGraphWorkspace(skillRoot)
+    const guide = workspace.graph.nodes.find((node) => node.path === 'docs/guide.md')
+    expect(guide?.nodeRole).toBe('topic_atom')
+    expect(guide?.domainType).toBe('example')
   })
 
   it('fails when a document loses its anchors', async () => {

@@ -12,13 +12,31 @@
       "decided_at": "2026-03-11T15:04:27.745Z"
     },
     {
+      "doc_path": "references/governance/SKILL_ARCHITECTURE_PLAYBOOK.md",
+      "doc_id": "skill_creation_template.governance.architecture_playbook",
+      "rule_id": "body_axis_overload",
+      "fingerprint": "75e5ef0f04147cdf04b44f7178d4f935ccfe910b",
+      "decision": "accepted",
+      "note": "This playbook intentionally remains one architecture atom because it defines the cross-document reconstruction order and ownership boundary between template facade governance and downstream doc-structure governance.",
+      "decided_at": "2026-03-11T22:37:17.623Z"
+    },
+    {
       "doc_path": "references/runtime/SKILL_RUNTIME_CONTRACT.md",
       "doc_id": "skill_creation_template.runtime.contract_audit",
       "rule_id": "body_axis_overload",
-      "fingerprint": "830084929e0f09c6cdb5490d34559966b7547ecf",
+      "fingerprint": "bf1f816080943a944714c98d0b52896d1874b808",
       "decision": "accepted",
-      "note": "Runtime contract audit copy remains one runtime-contract topic after the latest rewrite; task/profile/governance axes are already routed to sibling docs.",
-      "decided_at": "2026-03-11T15:04:49.873Z"
+      "note": "This runtime contract audit copy intentionally stays aggregated because it mirrors one machine contract and is consumed as a single contract surface.",
+      "decided_at": "2026-03-11T22:37:17.681Z"
+    },
+    {
+      "doc_path": "references/tooling/Cli_Toolbox_USAGE.md",
+      "doc_id": "skill_creation_template.tooling.usage",
+      "rule_id": "body_axis_overload",
+      "fingerprint": "9c8b9b6f85d79321780ed4d086af71ce00632e4c",
+      "decision": "accepted",
+      "note": "This usage guide intentionally stays as one tooling entry because the toolbox is consumed through a single operator-facing surface before readers branch into narrower development docs.",
+      "decided_at": "2026-03-11T22:37:17.698Z"
     }
   ]
 }

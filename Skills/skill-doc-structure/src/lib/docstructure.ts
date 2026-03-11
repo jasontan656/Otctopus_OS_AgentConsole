@@ -124,6 +124,8 @@ function extractContract(
   docId: string
   docType: string
   topic: string
+  nodeRole?: string
+  domainType?: string
   anchors: AnchorDefinition[]
 } {
   const contract = path.basename(absolutePath) === 'SKILL.md'
@@ -149,6 +151,12 @@ function extractContract(
     docId: String(contract.doc_id),
     docType: String(contract.doc_type),
     topic: String(contract.topic),
+    nodeRole: typeof contract.node_role === 'string' && contract.node_role.trim()
+      ? String(contract.node_role)
+      : undefined,
+    domainType: typeof contract.domain_type === 'string' && contract.domain_type.trim()
+      ? String(contract.domain_type)
+      : undefined,
     anchors: anchors.map((anchor) => {
       if (!anchor || typeof anchor !== 'object') {
         throw new DocStructureError(`anchor entry must be an object in ${absolutePath}`)
@@ -300,6 +308,8 @@ async function scanDocuments(context: ResolvedContext): Promise<{
         docId: contract.docId,
         docType: contract.docType,
         topic: contract.topic,
+        nodeRole: contract.nodeRole,
+        domainType: contract.domainType,
         anchors: contract.anchors,
         anchorCount: contract.anchors.length,
         depth: relativePath.split('/').length - 1,
@@ -390,6 +400,8 @@ export async function buildDocGraphWorkspace(targetRootInput: string): Promise<D
     title: doc.title,
     anchorCount: doc.anchorCount,
     depth: doc.depth,
+    nodeRole: doc.nodeRole,
+    domainType: doc.domainType,
   }))
 
   const blockingSplitCandidateCount = splitCandidates.filter((candidate) => candidate.blocking).length

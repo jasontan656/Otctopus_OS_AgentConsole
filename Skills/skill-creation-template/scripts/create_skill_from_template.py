@@ -104,13 +104,13 @@ def main() -> int:
     short_description = f"{display_name} 的模板化骨架。"
     if args.profile == "staged_cli_first":
         default_prompt = (
-            f"请围绕 {skill_name} 的实际业务目标执行任务；先读取 facade、task routing、doc-structure policy、"
+            f"请围绕 {skill_name} 的实际业务目标执行任务；先读取 SKILL.md 入口、task routing、doc-structure policy、"
             "runtime contract 与阶段合同，严格按 stage checklist 与合同边界执行，不要把创建技能流程本身当作技能目标。"
         )
     else:
         default_prompt = (
-            f"请围绕 {skill_name} 的实际业务目标执行任务；保持 SKILL.md 为 entry-only facade，"
-            "先经过 routing 与 doc-structure policy，再进入真正需要的原子文档。"
+            f"请围绕 {skill_name} 的实际业务目标执行任务；先经过 SKILL.md 入口与 task routing，"
+            "再进入 doc-structure policy 与真正需要的原子文档。"
         )
 
     skill_md = normalize_generated_skill_md(

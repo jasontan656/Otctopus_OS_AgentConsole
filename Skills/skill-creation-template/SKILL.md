@@ -73,6 +73,7 @@ metadata:
 
 ## 6. 读取原则
 - `SKILL.md` 只负责把读者送到下一层路由，不重新长回治理正文。
+- 目标 skill 的入口门面 contract 由本技能定义；进入入口之后的文档树再交给 `skill-doc-structure` 治理。
 - `skill-doc-structure` 是创建新 skill 与治理既有 skill 时必须显式应用的组成部分，不是隐式约定。
 - 原有 `技能本体 / 规则说明` 双段式约定保留在原子治理文档与模板资产中，不再继续占满顶层门面。
 - 若存在运行态规则，以 CLI 输出的 machine-readable contract 为准；markdown 只做人类审计与窄域导航。

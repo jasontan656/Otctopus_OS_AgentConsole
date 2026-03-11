@@ -32,6 +32,7 @@ anchors:
 - `skill_name`: `${skill_name}`
 - `skill_profile`: `staged_cli_first`
 - `SKILL.md` role: `entry_only_facade`
+- `facade_contract_owner`: `skill-creation-template`
 - required section layout:
   - `技能定位`
   - `必读顺序`
@@ -49,7 +50,7 @@ anchors:
 
 ## Governance Rules
 - `SKILL.md` 必须保持门面化。
-- `skill-doc-structure` 必须显式应用在 facade、routing doc 与 topic docs 上。
+- `skill-doc-structure` 必须显式应用在入口 handoff 之后的 routing doc、index doc、topic docs 与 anchors 上。
 - 运行态规则必须从 machine-readable contracts 消费，不得把 markdown 当真实规则源。
 - staged skill 必须显式定义 resident docs、stage order 和 stage-switch discard policy。
 - 阶段模板的人类叙事文件与 machine-readable contracts 必须分开维护。

@@ -26,6 +26,7 @@ anchors:
 
 ## Authoring Model
 - `SKILL.md` 角色：`entry_only_facade`
+- 本节是目标 skill 的门面 contract 权威来源。
 - facade 固定章节：
   - `技能定位`
   - `必读顺序`
@@ -59,6 +60,7 @@ anchors:
 - 结构基线：
   - `facade -> routing -> topic atom`
   - `index doc` 可选，但只做导航
+- `skill-doc-structure` 在这里从入口 handoff 之后开始组织文档树。
 - `SKILL.md` 的结构元数据写在 `metadata.doc_structure`
 - 必读治理文档：
   - `references/governance/SKILL_DOCSTRUCTURE_ENFORCEMENT.md`
@@ -92,6 +94,7 @@ anchors:
 
 ## Governance Rules
 - `SKILL.md` 必须保持极简 facade。
+- 目标 skill 的门面 contract 由本运行合同与模板资产共同定义。
 - `skill-doc-structure` 不是建议项，而是显式执行合同。
 - 先形成清晰 tree，再用 anchors 补 graph。
 - `技能本体 / 规则说明` 双段式约定可保留，但应下沉到 routing 或 topic 文档。

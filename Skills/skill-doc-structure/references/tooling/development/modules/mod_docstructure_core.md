@@ -18,5 +18,6 @@ anchors:
 ## 职责
 - 扫描 markdown 文档。
 - 解析 frontmatter anchor 合同。
+- 读取 runtime contract 中的知识轨、workflow 轨与 metadata 字段。
 - 产出 lint 结果、graph JSON 与 doc graph workspace。
 - 在当前 skill 模式下回写 `self_anchor_graph.json`。

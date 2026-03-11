@@ -62,7 +62,7 @@ anchors:
   - 系统执行 `python3 scripts/Cli_Toolbox.py runtime-contract --json`。
   - 命令读取 `references/runtime/SKILL_RUNTIME_CONTRACT.json` 并输出结构化合同。
 - 人类叙事版输出：
-  - 你会得到当前模板技能的 facade 结构、routing 读序、doc-structure 强制规则、profile 支持、模板资产契约和验证闭环。
+  - 你会得到当前模板技能定义的门面 contract、routing 读序、doc-structure 交接边界、profile 支持、模板资产契约和验证闭环。
 
 ### Cli_Toolbox.create_skill_from_template
 - 人类叙事版输入：
@@ -76,7 +76,7 @@ anchors:
     - `assets/templates/stages/README_STAGE_SYSTEM.md`
     - stage checklist 模板
     - stage doc/command/graph contract 模板
-  - 生成门面默认采用极简 facade，并通过 routing / governance docs 显式接入 `skill-doc-structure`。
+  - 生成结果会先按模板落好 `SKILL.md` 门面 contract，再通过 routing / governance docs 把入口之后的文档树交给 `skill-doc-structure`。
 - 人类叙事版输出：
   - 你会得到一个可直接继续编辑和治理的技能目录，以及 JSON 结果（`skill_dir`、`profile`、`resources_created`、`write_results`）。
 
@@ -86,7 +86,7 @@ anchors:
 - 电脑动作发生了什么：
   - 系统执行 `python3 scripts/Cli_Toolbox.py skill-template --json`。
 - 人类叙事版输出：
-  - 你会得到采用 `技能定位/必读顺序/分类入口/适用域/执行入口/读取原则/结构索引` 的 basic 门面草稿。
+  - 你会得到采用 `技能定位/必读顺序/分类入口/适用域/执行入口/读取原则/结构索引` 的 basic 门面合同草稿。
 
 ### Cli_Toolbox.staged_skill_template
 - 人类叙事版输入：
@@ -94,7 +94,7 @@ anchors:
 - 电脑动作发生了什么：
   - 系统执行 `python3 scripts/Cli_Toolbox.py staged-skill-template --json`。
 - 人类叙事版输出：
-  - 你会得到一份强调 resident docs、stage checklist、合同四件套和 stage-switch discard policy 的 staged facade 草稿。
+  - 你会得到一份强调 resident docs、stage checklist、合同四件套和 stage-switch discard policy 的 staged 门面合同草稿。
 
 ### Cli_Toolbox.runtime_contract_template
 - 人类叙事版输入：

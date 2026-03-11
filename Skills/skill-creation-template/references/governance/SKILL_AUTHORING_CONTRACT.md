@@ -23,6 +23,7 @@ anchors:
 - 用受治理模板创建或重构 skill，不接受“先生成一个胖门面，再靠后补丁慢慢拆”的做法。
 - 这里约束的是可执行的 skill 结构，而不是一次性写作格式。
 - `skill-doc-structure` 在本合同中是强制组成部分：创建新 skill 与治理既有 skill 时都必须显式应用。
+- `SKILL.md` 的入口门面 contract 由本技能负责；`skill-doc-structure` 从入口节点往下治理文档树。
 
 ## 门面契约
 - `SKILL.md` 必须是 `entry-only facade`。
@@ -36,13 +37,15 @@ anchors:
   - 结构索引
 - 门面必须把读者路由到 routing doc，而不是直接承载 authoring 正文。
 - 模板或治理类 skill 原有的 `技能本体 / 规则说明` 双段式约定保留，但应优先放在 routing doc 之后的 topic atom 中；只有在不破坏极简门面的前提下才允许出现在 facade。
+- 门面契约属于模板治理面，由本技能持续维护。
 
 ## 文档结构契约
 - skill 内 markdown 结构必须满足：
-  - 顶层先有 facade。
+  - 顶层先有由模板定义的 facade。
   - facade 后至少有一层 routing doc。
   - 深规则落到单 topic 原子文档。
   - 索引文档只做导航，不承担主规则正文。
+- 进入 facade 之后的文档树组织与 metadata/anchors 由 `skill-doc-structure` 继续治理。
 - 所有 markdown 文档都必须具备 `doc_structure` frontmatter 与至少一个 anchor。
 - 读写路径、阶段路径、语言路径等独立轴线不得混在同一个 routing doc 里。
 

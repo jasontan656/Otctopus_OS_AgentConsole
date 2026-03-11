@@ -1,16 +1,16 @@
 ---
 doc_id: "methodology.semantic_routing_tree"
 doc_type: "methodology_doc"
-topic: "Semantic routing tree methodology for splitting skill docs into facade, branch, and atomic nodes"
+topic: "Tree-first routing methodology for organizing skill-internal markdown docs"
 anchors:
   - target: "../runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md"
     relation: "expands"
     direction: "upstream"
-    reason: "This methodology expands the runtime contract with concrete semantic split rules."
-  - target: "../../assets/templates/ATOMIC_DOC_TEMPLATE.md"
-    relation: "governs"
+    reason: "This methodology expands the runtime contract with concrete tree rules."
+  - target: "../rules/00_RULE_SYSTEM_INDEX.md"
+    relation: "belongs_to"
     direction: "downstream"
-    reason: "The atomic template should be used according to this semantic routing tree."
+    reason: "The rule-system index routes readers from this methodology into narrower rule docs."
 ---
 
 # Semantic Routing Tree
@@ -20,99 +20,54 @@ anchors:
 - `tree` 负责主阅读路径，让模型从上往下逐层收敛应用域。
 - `graph` 负责补充横向、跨层、跨分支关系，但不能替代主路径。
 - 目标不是把所有内容堆成一个“大而全文档”，而是让模型只读当前分支真正需要的最小文档集。
+- 本技能治理的是“入口节点如何把读者送入文档树，以及入口之后的树形组织方式”。
 
 ## 节点角色
 
-### 1. 门面节点 `facade`
-- 只说明当前 skill 或当前主题域是什么。
-- 只给最小必要说明，不在门面里展开深规则。
-- 门面的主要责任是把读者送进下一个分叉点。
-- `SKILL.md` 通常就是最顶层门面。
+### 1. 入口节点 `entry`
+- 入口节点负责把读者送进文档树。
+- 对多数 skill 而言，`SKILL.md` 就是入口节点。
+- 在本技能里，入口节点承担 `tree root + first handoff` 的结构角色。
 
 ### 2. 分叉节点 `routing`
 - 每个分叉节点只承载一个分叉轴线。
-- 轴线示例：
-  - `读 / 写`
-  - `平台`
-  - `语言`
-  - `阶段`
-  - `角色`
-- 分叉节点不应同时承担两个以上独立轴线。
 - 如果一个节点同时在做“进入写规范”与“按语言继续分支”，说明还要再拆一层。
 
 ### 3. 主题原子节点 `topic_atom`
 - 只承载一个稳定 topic。
 - 到达原子节点后，模型应已经知道自己为何来到这里。
 - 原子节点只保留局部必需规则、局部例外、局部执行约束。
-- 原子节点不再重开新的大分叉；若仍需大分叉，说明它还不是叶子。
 
 ### 4. 索引节点 `index`
 - 只做清单、索引、导航、汇总。
 - 索引节点不应承担核心规则正文。
-- 当一个文档的主要价值是“告诉模型还可以去哪里看”，它应被视为索引节点而非规则节点。
+
+### 5. fewshot 示例节点 `example`
+- fewshot 节点不是目标技能正文，而是供模型理解 tree 组织方式的真实示例。
+- 示例必须是可追踪 tree，而不是一段抽象说明。
 
 ## 语义拆分流程
 1. 先判断当前文档在回答哪个问题。
 2. 再列出它当前混入了多少个独立语义轴线。
 3. 若只有一个轴线，继续判断是否已是单一 topic。
-4. 若存在多个轴线，先拆成上层门面或分叉节点，再把每个子轴线下沉为子文档。
+4. 若存在多个轴线，先拆成上层入口或分叉节点，再把每个子轴线下沉为子文档。
 5. 子文档写完后，再补 anchors，把树状主路径与横向依赖补齐。
 
-## 必拆信号
-- 一个文档同时承担“是什么”和“怎么做”的完整正文。
-- 一个文档同时讲 `读` 与 `写`。
-- 一个文档同时讲多种语言、多种平台或多种运行环境。
-- 一个文档里同时出现多个平级子主题，而且每个子主题都能独立成文。
-- 模型读完文档后，仍不能明确判断下一步该进入哪个子文档。
-- 文档标题能被自然拆成多个清晰标题，而不是一个稳定主题句。
-- 任何被 split lint 命中的候选点，默认都应停下来要求用户决策。
-
-## 停止拆分条件
-- 当前文档只剩一个稳定 topic。
-- 当前文档的读者不再需要在正文内部继续做“大分叉选择”。
-- 再继续拆分只会产生没有独立语义价值的碎片。
-- 当前节点已经能被其他文档稳定锚定和复用。
-
-## 组织规则
-
-### 主路径规则
-- 顶层必须先有门面。
-- 门面下方优先进入分叉节点，而不是直接撒出大量叶子文档。
+## 主路径规则
+- 顶层必须先有入口节点。
+- 入口节点下方优先进入分叉节点，而不是直接撒出大量叶子文档。
 - 分叉节点下面可以继续分叉，也可以直接落到原子节点。
 - 主路径必须让模型知道“为什么读这个节点”和“下一步往哪走”。
 
-### graph 规则
+## graph 规则
 - 所有 markdown 文档都至少要有一个 anchor。
-- 不是要求每个文档都连向所有文档，而是要求每个文档都进入至少一条可追踪关系链。
 - `upstream/downstream` 优先表达主路径。
 - `lateral/cross` 用于表达横向补充、跨层依赖、复用关系。
 - graph 可以像蜘蛛网，但前提是 tree 主路径已经清晰。
 
-## skill 结构示例
-```text
-SKILL.md
-└── 写作规范门面
-    ├── 读规范
-    │   ├── 通用读规则
-    │   └── 语言无关例外
-    └── 写规范
-        ├── 写作总则
-        ├── TypeScript 写规范
-        ├── Python 写规范
-        ├── Rust 写规范
-        └── 测试写规范
-```
-
 ## 写作要求
-- 门面文档写“是什么、适用域、去哪里”。
+- 入口节点写“当前从哪里进入文档树”。
 - 分叉文档写“当前按什么轴线分支、有哪些子入口、各入口边界是什么”。
 - 原子文档写“单一规则、单一主题、单一局部执行面”。
 - 索引文档写“清单与导航”，不要回填深层规则。
-
-## 给未来模型的执行句
-- 不要默认把整个 skill 全读完。
-- 先找门面，再找当前任务对应的分叉轴线。
-- 每次只沿一个分支继续下钻。
-- 只有当前节点不足以回答问题时，才进入下一级或横向补充节点。
-- 当一个文档已经同时承担多个独立分支时，应优先拆分该文档，而不是继续往里面追加内容。
-- 当 split lint 失败时，不要假装继续通过；先请求或写入显式决策，再继续。
+- fewshot 文档写“真实树形组织结果”，不要退化成口头总结。

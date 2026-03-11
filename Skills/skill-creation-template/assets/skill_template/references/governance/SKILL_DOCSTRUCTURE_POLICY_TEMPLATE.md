@@ -20,11 +20,10 @@ anchors:
 - 若当前结构与 facade / routing / topic atom 原则冲突，优先整体重建结构，而不是局部补丁。
 
 ## 必做项
-- `SKILL.md` 只做 facade。
-- 至少补齐一层 routing doc。
+- 以 `SKILL.md` 入口为 tree root，向下至少补齐一层 routing doc。
 - 深规则下沉到单 topic 原子文档。
 - 所有 markdown 文档补齐 `doc_structure` frontmatter 与 anchors。
 
 ## 双段式约定
-- 若本技能属于模板或治理类 skill，可在原子文档中使用 `技能本体 / 规则说明` 双段式。
-- 不得以双段式为理由让 facade 膨胀。
+- 若本技能属于模板或治理类 skill，可在 routing doc 或原子文档中使用 `技能本体 / 规则说明` 双段式。
+- 双段式内容应保持在当前语义局部，不回流到入口节点。
