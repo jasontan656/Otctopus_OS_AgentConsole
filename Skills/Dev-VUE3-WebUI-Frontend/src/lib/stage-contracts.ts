@@ -92,7 +92,7 @@ const STAGES: Record<StageId, StageDefinition> = {
         'references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md',
       ],
       do_not_read_by_default: [
-        'frontend_dev_contracts/VIEWER_SERVICE_WORKFLOW.md',
+        'frontend_dev_contracts/showroom_runtime/VIEWER_SERVICE_WORKFLOW.md',
         'ui-dev/client/src/App.vue',
       ],
       focus_rule: 'Stay at strategy, IA, and skill boundary level before touching responsive or runtime details.',
@@ -165,7 +165,7 @@ const STAGES: Record<StageId, StageDefinition> = {
         ...RESIDENT_DOCS,
         'references/stages/20_STAGE_SURFACE_LAYOUTS.md',
         'frontend_dev_contracts/rules/UI_LAYOUT_ADJUSTMENT_RULES.md',
-        'frontend_dev_contracts/VIEWER_STACK_AND_REUSE.md',
+        'frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md',
       ],
       do_not_read_by_default: [
         'ui-dev/server/viewer-server.ts',
@@ -200,7 +200,7 @@ const STAGES: Record<StageId, StageDefinition> = {
       prioritize_nodes: [
         'references/stages/20_STAGE_SURFACE_LAYOUTS.md',
         'frontend_dev_contracts/rules/UI_LAYOUT_ADJUSTMENT_RULES.md',
-        'frontend_dev_contracts/VIEWER_STACK_AND_REUSE.md',
+        'frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md',
       ],
       allowed_cross_links: [
         'Cross-link responsive docs with showroom stack docs when a surface rule changes the runtime shell.',
@@ -218,8 +218,8 @@ const STAGES: Record<StageId, StageDefinition> = {
       resident_docs: RESIDENT_DOCS,
       stage_docs: [
         'references/stages/30_STAGE_MOTION_COMPONENT_ARCHITECTURE.md',
-        'frontend_dev_contracts/UI_FILE_ORGANIZATION.md',
-        'frontend_dev_contracts/VIEWER_STACK_AND_REUSE.md',
+        'frontend_dev_contracts/positioning/UI_FILE_ORGANIZATION.md',
+        'frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md',
       ],
       entry_actions: [
         'Read component-system and motion docs before touching implementation files.',
@@ -239,11 +239,11 @@ const STAGES: Record<StageId, StageDefinition> = {
       doc_boundary: [
         ...RESIDENT_DOCS,
         'references/stages/30_STAGE_MOTION_COMPONENT_ARCHITECTURE.md',
-        'frontend_dev_contracts/UI_FILE_ORGANIZATION.md',
-        'frontend_dev_contracts/VIEWER_STACK_AND_REUSE.md',
+        'frontend_dev_contracts/positioning/UI_FILE_ORGANIZATION.md',
+        'frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md',
       ],
       do_not_read_by_default: [
-        'frontend_dev_contracts/VIEWER_SERVICE_WORKFLOW.md',
+        'frontend_dev_contracts/showroom_runtime/VIEWER_SERVICE_WORKFLOW.md',
       ],
       focus_rule: 'Stay on reusable component architecture, motion semantics, and code shape.',
     },
@@ -274,8 +274,8 @@ const STAGES: Record<StageId, StageDefinition> = {
       },
       prioritize_nodes: [
         'references/stages/30_STAGE_MOTION_COMPONENT_ARCHITECTURE.md',
-        'frontend_dev_contracts/UI_FILE_ORGANIZATION.md',
-        'frontend_dev_contracts/VIEWER_STACK_AND_REUSE.md',
+        'frontend_dev_contracts/positioning/UI_FILE_ORGANIZATION.md',
+        'frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md',
       ],
       allowed_cross_links: [
         'Cross-link stage docs with frontend contracts when a runtime component pattern becomes a general frontend rule.',
@@ -295,7 +295,7 @@ const STAGES: Record<StageId, StageDefinition> = {
         'references/stages/40_STAGE_SHOWROOM_RUNTIME.md',
         'ui-dev/UI_DEV_ENTRY.md',
         'frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md',
-        'frontend_dev_contracts/VIEWER_SERVICE_WORKFLOW.md',
+        'frontend_dev_contracts/showroom_runtime/VIEWER_SERVICE_WORKFLOW.md',
       ],
       entry_actions: [
         'Read the runtime/showroom docs before editing server or service files.',
@@ -317,8 +317,8 @@ const STAGES: Record<StageId, StageDefinition> = {
         'references/stages/40_STAGE_SHOWROOM_RUNTIME.md',
         'ui-dev/UI_DEV_ENTRY.md',
         'frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md',
-        'frontend_dev_contracts/VIEWER_SERVICE_WORKFLOW.md',
-        'frontend_dev_contracts/UI_TOOL_POSITIONING.md',
+        'frontend_dev_contracts/showroom_runtime/VIEWER_SERVICE_WORKFLOW.md',
+        'frontend_dev_contracts/positioning/UI_TOOL_POSITIONING.md',
       ],
       do_not_read_by_default: [
         'references/stages/20_STAGE_SURFACE_LAYOUTS.md',
@@ -354,7 +354,7 @@ const STAGES: Record<StageId, StageDefinition> = {
       prioritize_nodes: [
         'references/stages/40_STAGE_SHOWROOM_RUNTIME.md',
         'ui-dev/UI_DEV_ENTRY.md',
-        'frontend_dev_contracts/VIEWER_SERVICE_WORKFLOW.md',
+        'frontend_dev_contracts/showroom_runtime/VIEWER_SERVICE_WORKFLOW.md',
       ],
       allowed_cross_links: [
         'Showroom runtime docs may cross-link to any stage when the display shell exposes their rules to humans.',

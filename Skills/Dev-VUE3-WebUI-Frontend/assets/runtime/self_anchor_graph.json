@@ -3,8 +3,8 @@
   "graph_version": "v2",
   "source_skill": "Dev-VUE3-WebUI-Frontend",
   "summary": {
-    "nodeCount": 29,
-    "edgeCount": 58,
+    "nodeCount": 32,
+    "edgeCount": 71,
     "errorCount": 0,
     "warningCount": 0
   },
@@ -78,44 +78,44 @@
       "docType": "ui_dev_index",
       "topic": "Index of frontend development contracts for Dev-VUE3-WebUI-Frontend",
       "title": "Frontend Development Contracts",
-      "anchorCount": 2,
+      "anchorCount": 4,
       "depth": 1
     },
     {
-      "path": "frontend_dev_contracts/UI_FILE_ORGANIZATION.md",
+      "path": "frontend_dev_contracts/positioning/00_POSITIONING_INDEX.md",
+      "docId": "ui.dev.positioning.index",
+      "docType": "index_doc",
+      "topic": "Index of positioning and file-boundary contracts for the frontend development tree",
+      "title": "Positioning Contracts",
+      "anchorCount": 2,
+      "depth": 2
+    },
+    {
+      "path": "frontend_dev_contracts/positioning/UI_FILE_ORGANIZATION.md",
       "docId": "ui.tool.file_organization",
       "docType": "ui_dev_guide",
       "topic": "File organization rules for the Dev-VUE3-WebUI-Frontend showroom",
       "title": "UI File Organization",
-      "anchorCount": 2,
-      "depth": 1
+      "anchorCount": 3,
+      "depth": 2
     },
     {
-      "path": "frontend_dev_contracts/UI_TOOL_POSITIONING.md",
+      "path": "frontend_dev_contracts/positioning/UI_TOOL_POSITIONING.md",
       "docId": "ui.tool.positioning",
       "docType": "ui_dev_guide",
       "topic": "Positioning of frontend development contracts inside Dev-VUE3-WebUI-Frontend",
       "title": "UI Tool Positioning",
-      "anchorCount": 2,
-      "depth": 1
+      "anchorCount": 3,
+      "depth": 2
     },
     {
-      "path": "frontend_dev_contracts/VIEWER_SERVICE_WORKFLOW.md",
-      "docId": "ui.viewer.service_workflow",
-      "docType": "tooling_usage",
-      "topic": "Dev, build, and systemd workflow for the Dev-VUE3-WebUI-Frontend showroom",
-      "title": "Viewer Service Workflow",
+      "path": "frontend_dev_contracts/rules/00_RULES_INDEX.md",
+      "docId": "ui.dev.rules.index",
+      "docType": "index_doc",
+      "topic": "Index of layout and responsive frontend rule contracts",
+      "title": "Frontend Rules Index",
       "anchorCount": 2,
-      "depth": 1
-    },
-    {
-      "path": "frontend_dev_contracts/VIEWER_STACK_AND_REUSE.md",
-      "docId": "ui.viewer.stack",
-      "docType": "tooling_architecture",
-      "topic": "Viewer stack, reusable UI direction, and showroom layout contract",
-      "title": "Viewer Stack Reuse Contract",
-      "anchorCount": 2,
-      "depth": 1
+      "depth": 2
     },
     {
       "path": "frontend_dev_contracts/rules/UI_LAYOUT_ADJUSTMENT_RULES.md",
@@ -123,7 +123,34 @@
       "docType": "ui_dev_guide",
       "topic": "Layout adjustment rules for the Dev-VUE3-WebUI-Frontend showroom",
       "title": "UI Layout Adjustment Rules",
+      "anchorCount": 3,
+      "depth": 2
+    },
+    {
+      "path": "frontend_dev_contracts/showroom_runtime/00_SHOWROOM_RUNTIME_INDEX.md",
+      "docId": "ui.dev.showroom_runtime.index",
+      "docType": "index_doc",
+      "topic": "Index of showroom runtime, stack, and service workflow contracts",
+      "title": "Showroom Runtime Contracts",
       "anchorCount": 2,
+      "depth": 2
+    },
+    {
+      "path": "frontend_dev_contracts/showroom_runtime/VIEWER_SERVICE_WORKFLOW.md",
+      "docId": "ui.viewer.service_workflow",
+      "docType": "tooling_usage",
+      "topic": "Dev, build, and systemd workflow for the Dev-VUE3-WebUI-Frontend showroom",
+      "title": "Viewer Service Workflow",
+      "anchorCount": 3,
+      "depth": 2
+    },
+    {
+      "path": "frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md",
+      "docId": "ui.viewer.stack",
+      "docType": "tooling_architecture",
+      "topic": "Viewer stack, reusable UI direction, and showroom layout contract",
+      "title": "Viewer Stack Reuse Contract",
+      "anchorCount": 3,
       "depth": 2
     },
     {
@@ -379,70 +406,105 @@
     },
     {
       "source": "frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md",
-      "target": "frontend_dev_contracts/UI_TOOL_POSITIONING.md",
-      "relation": "indexes",
+      "target": "frontend_dev_contracts/positioning/00_POSITIONING_INDEX.md",
+      "relation": "routes_to",
       "direction": "downstream",
-      "reason": "Positioning is the first frontend contract branch."
+      "reason": "Positioning and file-boundary contracts form the first branch of the frontend contract tree."
     },
     {
-      "source": "frontend_dev_contracts/UI_FILE_ORGANIZATION.md",
-      "target": "frontend_dev_contracts/UI_TOOL_POSITIONING.md",
+      "source": "frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md",
+      "target": "frontend_dev_contracts/showroom_runtime/00_SHOWROOM_RUNTIME_INDEX.md",
+      "relation": "routes_to",
+      "direction": "downstream",
+      "reason": "Showroom runtime contracts form the second branch of the frontend contract tree."
+    },
+    {
+      "source": "frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md",
+      "target": "frontend_dev_contracts/rules/00_RULES_INDEX.md",
+      "relation": "routes_to",
+      "direction": "downstream",
+      "reason": "Layout and responsive rules form the rule branch of the frontend contract tree."
+    },
+    {
+      "source": "frontend_dev_contracts/positioning/00_POSITIONING_INDEX.md",
+      "target": "frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "This index is one branch under the frontend development contract entry."
+    },
+    {
+      "source": "frontend_dev_contracts/positioning/00_POSITIONING_INDEX.md",
+      "target": "frontend_dev_contracts/positioning/UI_TOOL_POSITIONING.md",
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "Positioning is the primary document of this branch."
+    },
+    {
+      "source": "frontend_dev_contracts/positioning/UI_FILE_ORGANIZATION.md",
+      "target": "frontend_dev_contracts/positioning/00_POSITIONING_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "This guide belongs to the positioning branch."
+    },
+    {
+      "source": "frontend_dev_contracts/positioning/UI_FILE_ORGANIZATION.md",
+      "target": "frontend_dev_contracts/positioning/UI_TOOL_POSITIONING.md",
       "relation": "pairs_with",
       "direction": "cross",
       "reason": "Positioning and file organization should be read together."
     },
     {
-      "source": "frontend_dev_contracts/UI_FILE_ORGANIZATION.md",
+      "source": "frontend_dev_contracts/positioning/UI_FILE_ORGANIZATION.md",
       "target": "ui-dev/UI_DEV_ENTRY.md",
       "relation": "supports",
       "direction": "upstream",
       "reason": "This guide constrains how the showroom codebase is organized."
     },
     {
-      "source": "frontend_dev_contracts/UI_TOOL_POSITIONING.md",
+      "source": "frontend_dev_contracts/positioning/UI_TOOL_POSITIONING.md",
+      "target": "frontend_dev_contracts/positioning/00_POSITIONING_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "This guide belongs to the positioning branch."
+    },
+    {
+      "source": "frontend_dev_contracts/positioning/UI_TOOL_POSITIONING.md",
       "target": "ui-dev/UI_DEV_ENTRY.md",
       "relation": "supports",
       "direction": "upstream",
       "reason": "This guide defines how the showroom consumes the frontend contracts."
     },
     {
-      "source": "frontend_dev_contracts/UI_TOOL_POSITIONING.md",
-      "target": "frontend_dev_contracts/UI_FILE_ORGANIZATION.md",
+      "source": "frontend_dev_contracts/positioning/UI_TOOL_POSITIONING.md",
+      "target": "frontend_dev_contracts/positioning/UI_FILE_ORGANIZATION.md",
       "relation": "pairs_with",
       "direction": "cross",
       "reason": "Positioning and file organization should be read together."
     },
     {
-      "source": "frontend_dev_contracts/VIEWER_SERVICE_WORKFLOW.md",
-      "target": "frontend_dev_contracts/VIEWER_STACK_AND_REUSE.md",
-      "relation": "operates",
+      "source": "frontend_dev_contracts/rules/00_RULES_INDEX.md",
+      "target": "frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md",
+      "relation": "belongs_to",
       "direction": "upstream",
-      "reason": "This workflow doc operates the stack defined there."
+      "reason": "This rule index is one branch under the frontend development contract entry."
     },
     {
-      "source": "frontend_dev_contracts/VIEWER_SERVICE_WORKFLOW.md",
-      "target": "ui-dev/UI_DEV_ENTRY.md",
-      "relation": "supports",
-      "direction": "upstream",
-      "reason": "This workflow drives the runnable showroom entry."
-    },
-    {
-      "source": "frontend_dev_contracts/VIEWER_STACK_AND_REUSE.md",
-      "target": "ui-dev/UI_DEV_ENTRY.md",
-      "relation": "supports",
-      "direction": "upstream",
-      "reason": "This stack contract is consumed by the runnable showroom entry."
-    },
-    {
-      "source": "frontend_dev_contracts/VIEWER_STACK_AND_REUSE.md",
+      "source": "frontend_dev_contracts/rules/00_RULES_INDEX.md",
       "target": "frontend_dev_contracts/rules/UI_LAYOUT_ADJUSTMENT_RULES.md",
-      "relation": "pairs_with",
-      "direction": "cross",
-      "reason": "Layout adjustment rules complement the stack contract."
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "Layout adjustment is the first concrete rule in this branch."
     },
     {
       "source": "frontend_dev_contracts/rules/UI_LAYOUT_ADJUSTMENT_RULES.md",
-      "target": "frontend_dev_contracts/VIEWER_STACK_AND_REUSE.md",
+      "target": "frontend_dev_contracts/rules/00_RULES_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "This guide belongs to the frontend rule branch."
+    },
+    {
+      "source": "frontend_dev_contracts/rules/UI_LAYOUT_ADJUSTMENT_RULES.md",
+      "target": "frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md",
       "relation": "extends",
       "direction": "upstream",
       "reason": "Layout adjustments must extend the viewer stack contract."
@@ -452,7 +514,63 @@
       "target": "frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md",
       "relation": "belongs_to",
       "direction": "upstream",
-      "reason": "This guide belongs to the frontend development contract set."
+      "reason": "The rule branch is part of the frontend development contract set."
+    },
+    {
+      "source": "frontend_dev_contracts/showroom_runtime/00_SHOWROOM_RUNTIME_INDEX.md",
+      "target": "frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "This index is one branch under the frontend development contract entry."
+    },
+    {
+      "source": "frontend_dev_contracts/showroom_runtime/00_SHOWROOM_RUNTIME_INDEX.md",
+      "target": "frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md",
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "Viewer stack and reuse is the primary architecture contract of this branch."
+    },
+    {
+      "source": "frontend_dev_contracts/showroom_runtime/VIEWER_SERVICE_WORKFLOW.md",
+      "target": "frontend_dev_contracts/showroom_runtime/00_SHOWROOM_RUNTIME_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "This workflow belongs to the showroom runtime branch."
+    },
+    {
+      "source": "frontend_dev_contracts/showroom_runtime/VIEWER_SERVICE_WORKFLOW.md",
+      "target": "frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md",
+      "relation": "operates",
+      "direction": "upstream",
+      "reason": "This workflow doc operates the stack defined there."
+    },
+    {
+      "source": "frontend_dev_contracts/showroom_runtime/VIEWER_SERVICE_WORKFLOW.md",
+      "target": "ui-dev/UI_DEV_ENTRY.md",
+      "relation": "supports",
+      "direction": "upstream",
+      "reason": "This workflow drives the runnable showroom entry."
+    },
+    {
+      "source": "frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md",
+      "target": "frontend_dev_contracts/showroom_runtime/00_SHOWROOM_RUNTIME_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "This contract belongs to the showroom runtime branch."
+    },
+    {
+      "source": "frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md",
+      "target": "ui-dev/UI_DEV_ENTRY.md",
+      "relation": "supports",
+      "direction": "upstream",
+      "reason": "This stack contract is consumed by the runnable showroom entry."
+    },
+    {
+      "source": "frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md",
+      "target": "frontend_dev_contracts/rules/UI_LAYOUT_ADJUSTMENT_RULES.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "Layout adjustment rules complement the stack contract."
     },
     {
       "source": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md",
@@ -519,7 +637,7 @@
     },
     {
       "source": "references/stages/10_STAGE_FOUNDATION.md",
-      "target": "frontend_dev_contracts/UI_TOOL_POSITIONING.md",
+      "target": "frontend_dev_contracts/positioning/UI_TOOL_POSITIONING.md",
       "relation": "pairs_with",
       "direction": "cross",
       "reason": "The frontend contract positioning guide reflects how the foundation appears in the runnable showroom."
@@ -540,7 +658,7 @@
     },
     {
       "source": "references/stages/30_STAGE_MOTION_COMPONENT_ARCHITECTURE.md",
-      "target": "frontend_dev_contracts/VIEWER_STACK_AND_REUSE.md",
+      "target": "frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md",
       "relation": "details",
       "direction": "downstream",
       "reason": "The frontend contract stack doc expands the runtime component and layout implications."
@@ -680,5 +798,5 @@
     }
   ],
   "warnings": [],
-  "updated_at": "2026-03-11T21:59:07.598Z"
+  "updated_at": "2026-03-11T22:44:56.357Z"
 }

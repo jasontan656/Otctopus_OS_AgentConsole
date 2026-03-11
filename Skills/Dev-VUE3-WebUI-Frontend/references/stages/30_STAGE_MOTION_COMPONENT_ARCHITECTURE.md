@@ -3,7 +3,7 @@ doc_id: "stages.motion_component_architecture"
 doc_type: "stage_doc"
 topic: "Motion language, reusable component boundaries, and code organization"
 anchors:
-  - target: "../../frontend_dev_contracts/VIEWER_STACK_AND_REUSE.md"
+  - target: "../../frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md"
     relation: "details"
     direction: "downstream"
     reason: "The frontend contract stack doc expands the runtime component and layout implications."

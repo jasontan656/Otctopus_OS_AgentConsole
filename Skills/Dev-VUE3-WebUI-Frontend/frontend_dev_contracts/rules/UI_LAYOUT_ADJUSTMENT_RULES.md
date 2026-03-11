@@ -2,15 +2,21 @@
 doc_id: "ui.viewer.layout_adjustment"
 doc_type: "ui_dev_guide"
 topic: "Layout adjustment rules for the Dev-VUE3-WebUI-Frontend showroom"
+node_role: "topic_atom"
+domain_type: "frontend_contract_atom"
 anchors:
-  - target: "../VIEWER_STACK_AND_REUSE.md"
+  - target: "00_RULES_INDEX.md"
+    relation: "belongs_to"
+    direction: "upstream"
+    reason: "This guide belongs to the frontend rule branch."
+  - target: "../showroom_runtime/VIEWER_STACK_AND_REUSE.md"
     relation: "extends"
     direction: "upstream"
     reason: "Layout adjustments must extend the viewer stack contract."
   - target: "../00_UI_DEVELOPMENT_INDEX.md"
     relation: "belongs_to"
     direction: "upstream"
-    reason: "This guide belongs to the frontend development contract set."
+    reason: "The rule branch is part of the frontend development contract set."
 ---
 
 # UI Layout Adjustment Rules
