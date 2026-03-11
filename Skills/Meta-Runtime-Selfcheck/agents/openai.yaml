@@ -1,0 +1,7 @@
+interface:
+  display_name: "Meta-Runtime-Selfcheck"
+  short_description: "Post-task runtime selfcheck for previous-turn hesitation, tool/script failure, guidance gaps, confused states, and maze-like execution. Output a pain report and concrete remediation plan."
+  default_prompt: "Use $Meta-Runtime-Selfcheck only after a task or run has ended. Analyze the previous run's hesitation, tool failure, script failure, guidance gaps, confused states, or maze-like execution, then output a complete pain report and exact remediation plan targeting docs, scripts, CLI guidance, prompts, workflow, or tool wrappers. Only use `修复` when the user explicitly wants writeback after manual changes are already applied."
+
+policy:
+  allow_implicit_invocation: false

@@ -64,3 +64,15 @@ families:
         migrated_from:
           - "meta-vue3-webui-frontend"
           - "Meta-VUE3-WebUI-frontend"
+  - family: "[Meta]"
+    description: "元技能,常用于自动化运行,必须常驻."
+    members:
+      - canonical_id: "meta-runtime-selfcheck"
+        display_name: "Meta-Runtime-Selfcheck"
+        prefix: "meta"
+        family: "[Meta]"
+        role_tag: "runtime-selfcheck"
+        status: "active"
+        trigger_summary: "当任务或运行结束后，需要复盘上一回合中的犹豫、工具失败、脚本失败、引导不足、模型 confused 与迷宫式流程时使用。"
+        migrated_from:
+          - "7-Task-runtime-selfcheck"

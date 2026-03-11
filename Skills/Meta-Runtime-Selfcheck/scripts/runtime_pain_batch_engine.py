@@ -504,7 +504,7 @@ def run_with_args(args: Any) -> int:
                     session_id=str(args.session_id or "").strip() or _latest_session_id(Path(args.history_path).expanduser()),
                     thread_id=str(args.thread_id or "").strip(),
                     target_groups=[group],
-                    resolved_by=str(args.resolved_by or "7-Task-runtime-selfcheck"),
+                    resolved_by=str(args.resolved_by or "Meta-Runtime-Selfcheck"),
                     turn_id=str(args.turn_id or "runtime-pain-batch"),
                     dry_run=bool(args.dry_run),
                 )

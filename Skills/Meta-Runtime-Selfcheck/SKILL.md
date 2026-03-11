@@ -1,9 +1,9 @@
 ---
-name: "7-Task-runtime-selfcheck"
+name: "Meta-Runtime-Selfcheck"
 description: "Manual-invoke-only post-task runtime selfcheck. 在任务运行结束后，分析上一回合中的犹豫、工具失败、脚本失败、引导不足、模型 confused 与迷宫式流程，并输出完整痛点报告和整改方案。"
 ---
 
-# 7-Task-runtime-selfcheck
+# Meta-Runtime-Selfcheck
 
 用于任务结束后的运行过程复盘。
 它的目标不是经营一套批处理回写系统，而是直接分析上一回合运行中哪里卡住、为什么卡住、应该改哪里。
@@ -28,7 +28,7 @@ description: "Manual-invoke-only post-task runtime selfcheck. 在任务运行结
 
 ## Execution Contract (Hard)
 
-- 仅手动触发：只有用户明确输入 `$7-Task-runtime-selfcheck` 或明确点名此技能时才允许执行。
+- 仅手动触发：只有用户明确输入 `$Meta-Runtime-Selfcheck` 或明确点名此技能时才允许执行。
 - 默认使用场景是某次任务或某一回合运行结束后，立刻复盘刚刚那次过程。
 - 默认目标是输出痛点报告和完整整改方案，而不是直接进入大规模 repair orchestration。
 - 数据源来自外部 pain provider；本技能把它当证据来源，不把 provider 协议本身当技能主叙事。
@@ -39,8 +39,8 @@ description: "Manual-invoke-only post-task runtime selfcheck. 在任务运行结
 
 ## Trigger
 
-- 默认诊断：`$7-Task-runtime-selfcheck` 或 `$7-Task-runtime-selfcheck >`
-- 显式修复回写：`$7-Task-runtime-selfcheck 修复`
+- 默认诊断：`$Meta-Runtime-Selfcheck` 或 `$Meta-Runtime-Selfcheck >`
+- 显式修复回写：`$Meta-Runtime-Selfcheck 修复`
 
 解释：
 - 默认关注点是诊断上一回合痛点并给出完整解决方案。
@@ -85,7 +85,7 @@ description: "Manual-invoke-only post-task runtime selfcheck. 在任务运行结
 
 默认诊断：
 ```bash
-python3 /home/jasontan656/.codex/skills/7-Task-runtime-selfcheck/scripts/runtime_pain_batch.py \
+python3 /home/jasontan656/.codex/skills/Meta-Runtime-Selfcheck/scripts/runtime_pain_batch.py \
   ">" \
   --session-scope-mode all_threads \
   --max-results 200
@@ -93,7 +93,7 @@ python3 /home/jasontan656/.codex/skills/7-Task-runtime-selfcheck/scripts/runtime
 
 显式修复回写：
 ```bash
-python3 /home/jasontan656/.codex/skills/7-Task-runtime-selfcheck/scripts/runtime_pain_batch.py \
+python3 /home/jasontan656/.codex/skills/Meta-Runtime-Selfcheck/scripts/runtime_pain_batch.py \
   修复 \
   --manual-repair-applied \
   --manual-repair-path /abs/path/to/changed_file.py \

@@ -658,7 +658,7 @@ def _build_waiting_instruction(
     all_resolved: bool,
 ) -> dict[str, Any]:
     def _manual_repair_cmd(group_key: str) -> str:
-        base = "$7-Task-runtime-selfcheck 修复"
+        base = "$Meta-Runtime-Selfcheck 修复"
         key = str(group_key or "").strip()
         if key:
             base = f"{base} --group-key {key}"
@@ -677,7 +677,7 @@ def _build_waiting_instruction(
         message = "完整痛点上下文报告已生成。请下达修复指令。"
 
     commands = [
-        "$7-Task-runtime-selfcheck >",
+        "$Meta-Runtime-Selfcheck >",
         focus_repair_cmd,
     ]
     if next_repair_cmd:

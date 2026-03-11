@@ -35,7 +35,7 @@ def build_parser() -> argparse.ArgumentParser:
     ap.add_argument("--max-results", type=int, default=200)
     ap.add_argument("--include-resolved", action=argparse.BooleanOptionalAction, default=True)
     ap.add_argument("--group-key", action="append", default=[])
-    ap.add_argument("--resolved-by", default="7-Task-runtime-selfcheck")
+    ap.add_argument("--resolved-by", default="Meta-Runtime-Selfcheck")
     ap.add_argument("--turn-id", default="runtime-pain-batch")
     ap.add_argument("--dry-run", action=argparse.BooleanOptionalAction, default=False)
     ap.add_argument(
