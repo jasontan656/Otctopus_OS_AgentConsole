@@ -59,3 +59,19 @@ It exists so AI can keep reading the recent product evolution before the main it
   - `production-form/references/runtime/CURRENT_PRODUCT_INTENT.md`
 - next_steps:
   - Continue removing product-facing dependence on the legacy mirror label while preserving compatibility aliases only where runtime fallback is still required.
+
+## 2026-03-11 02:00:30Z - Remove old external repo-path entrypoints
+
+- author: `codex`
+- summary: Updated active workspace entrypoints so external commands and governed AGENTS targets no longer reference the removed Codex_Skills_Mirror path.
+- decisions:
+  - Treat old Codex_Skills_Mirror path references in active entrypoints as broken and replace them with octopus-os-agent-console paths or current CLI examples.
+  - Use governed push flows to update AI_Projects/AGENTS.md and Octopus_OS/AGENTS.md instead of hand-editing external managed targets.
+- affected_paths:
+  - `Meta-Default-md-manager/assets/managed_targets/AI_Projects/AGENTS_human.md`
+  - `2-Octupos-FullStack/assets/mother_doc_agents/scan_report.json`
+  - `/home/jasontan656/AI_Projects/AGENTS.md`
+  - `/home/jasontan656/AI_Projects/Octopus_OS/AGENTS.md`
+  - `/home/jasontan656/AI_Projects/Codex_CLI_Start_Commands.md`
+- next_steps:
+  - Continue watching for stale historical references, but keep cleanup focused on active executable entrypoints rather than archived logs and evidence snapshots.

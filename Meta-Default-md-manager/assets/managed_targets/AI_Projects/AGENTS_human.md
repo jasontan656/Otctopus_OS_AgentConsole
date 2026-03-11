@@ -16,7 +16,7 @@
 - `$meta-github-operation` 当前仅管理以下 repo：
 - `Octopus_OS`
 - `octopus-os-agent-console`
-- `octopus-os-agent-console` 仍承担与 `~/.codex/skills` 的受控映射关系，但旧 mirror 名称不再作为产品身份暴露
+- `octopus-os-agent-console` 仍承担与 `~/.codex/skills` 的受控映射关系
 
 4. Multi-AGENT 工作模式
 - Multi-AGENT work mode 下，同一文件夹在工作过程中可能出现未预期的并行改动。
