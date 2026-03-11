@@ -1,7 +1,7 @@
 ---
 doc_id: "tooling.changelog"
 doc_type: "changelog"
-topic: "Change log for Meta-Skill-DocStructure"
+topic: "Change log for Skill-Doc-Structure"
 anchors:
   - target: "00_ARCHITECTURE_OVERVIEW.md"
     relation: "tracks_changes_to"

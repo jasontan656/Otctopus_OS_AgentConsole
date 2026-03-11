@@ -1,7 +1,7 @@
 {
   "contract_name": "META_SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT",
   "contract_version": "v5",
-  "skill_name": "meta-skill-docstructure",
+  "skill_name": "skill-doc-structure",
   "scope": "skill_internal_docs_only",
   "primary_goal": "Govern markdown document organization inside a skill folder with anchors, graph JSON, and a TypeScript CLI.",
   "thinking_chain": [

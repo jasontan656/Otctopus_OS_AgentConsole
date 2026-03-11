@@ -1,7 +1,7 @@
 {
   "graph_name": "META_SKILL_DOCSTRUCTURE_SELF_ANCHOR_GRAPH",
   "graph_version": "v2",
-  "source_skill": "Meta-Skill-DocStructure",
+  "source_skill": "skill-doc-structure",
   "summary": {
     "nodeCount": 10,
     "edgeCount": 20,
@@ -16,7 +16,7 @@
       "docId": "skill.entry.facade",
       "docType": "skill_facade",
       "topic": "Entry facade for the document-structure governance skill",
-      "title": "Meta-Skill-DocStructure",
+      "title": "Skill-Doc-Structure",
       "anchorCount": 2,
       "depth": 0
     },
@@ -87,7 +87,7 @@
       "path": "references/tooling/development/90_CHANGELOG.md",
       "docId": "tooling.changelog",
       "docType": "changelog",
-      "topic": "Change log for Meta-Skill-DocStructure",
+      "topic": "Change log for Skill-Doc-Structure",
       "title": "Change Log",
       "anchorCount": 2,
       "depth": 3
@@ -246,5 +246,5 @@
   ],
   "split_candidates": [],
   "warnings": [],
-  "updated_at": "2026-03-10T23:43:52.645Z"
+  "updated_at": "2026-03-11T00:10:10.169Z"
 }

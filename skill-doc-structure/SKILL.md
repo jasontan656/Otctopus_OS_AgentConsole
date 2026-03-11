@@ -1,5 +1,5 @@
 ---
-name: "Meta-Skill-DocStructure"
+name: "skill-doc-structure"
 description: "治理 skills 内部文档组织、单 topic 原子文档与锚点图谱的技能。"
 metadata:
   doc_structure:
@@ -17,7 +17,7 @@ metadata:
         reason: "The semantic routing tree doc explains how to split docs into facade, branch, and atomic nodes."
 ---
 
-# Meta-Skill-DocStructure
+# Skill-Doc-Structure
 
 ## 1. 定位
 - 本文件只做门面入口，不承载规则正文。
@@ -67,7 +67,7 @@ metadata:
 
 ## 7. 结构索引
 ```text
-Meta-Skill-DocStructure/
+skill-doc-structure/
 ├── SKILL.md
 ├── agents/
 ├── assets/

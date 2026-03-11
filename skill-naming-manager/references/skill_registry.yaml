@@ -24,3 +24,15 @@ families:
           - "Meta-Skill-Template"
         migrated_from:
           - "Meta-Skill-Mirror"
+      - canonical_id: "skill-doc-structure"
+        display_name: "Skill-Doc-Structure"
+        prefix: "skill"
+        family: "[SKILL-GOV]"
+        role_tag: "doc-structure"
+        status: "active"
+        trigger_summary: "当需要治理 skills 内部文档组织、单 topic 原子文档、锚点图谱与文档结构 runtime 时使用。"
+        companion_skills:
+          - "skill-naming-manager"
+          - "Meta-VUE3-WebUI-frontend"
+        migrated_from:
+          - "Meta-Skill-DocStructure"

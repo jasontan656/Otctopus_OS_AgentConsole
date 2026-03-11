@@ -49,7 +49,7 @@ afterEach(async () => {
   }
 })
 
-describe('Meta-Skill-DocStructure TS runtime', () => {
+describe('Skill-Doc-Structure TS runtime', () => {
   it('loads the runtime contract', async () => {
     const contract = await loadRuntimeContract(path.resolve(__dirname, '..'))
     expect(contract.contract_name).toBe('META_SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT')
