@@ -42,15 +42,25 @@ A better model is:
 - Installation now targets a dedicated Codex install root instead of reusing an arbitrary existing `~/.codex/skills`
 - The target Codex skills directory must be clean before Octopus OS is installed; only Codex initial `.system` entries are allowed
 - A dedicated GitHub skill repository binding is mandatory during installation
+- Octopus OS provides directory-level installation only and does not provide system-level Codex installation
 - The long-term target is a self-contained stack of skills and workflows owned by the product itself, reducing dependence on third-party skill installs and keeping AI behavior explicit, safe, and controllable
 
-## One-Line Install
+## Installation Modes
 
-Current install is command-line-first and can be run as a single command:
+Mode 1: direct command-line install into a dedicated target path.
 
 ```bash
 python3 product_tools/octopus_os_agent_console.py install --runtime-target codex-gpt-5.4-high --install-root ~/Octopus_Runtime/codex-home --github-skill-repo git@github.com:YOUR_ACCOUNT/octopus-os-skills.git --github-auth-mode ssh --acknowledge-github-control-risk && HOME=~/Octopus_Runtime/codex-home ~/Octopus_Runtime/codex-home/bin/codex -C ~/Octopus_Runtime/octopus-os-agent-console -m gpt-5.4 -c 'model_reasoning_effort="high"'
 ```
+
+Mode 2: use an already system-installed Codex CLI only as the bootstrap tool.
+
+1. Clone or pull this repository into a source directory.
+2. Open Codex in that source directory.
+3. Ask Codex to run the guided installation flow into your chosen dedicated target path.
+4. After installation, enter the dedicated target path and use the directory-level Codex CLI from there.
+
+The second mode still produces a directory-level Octopus OS runtime. It does not convert Octopus OS into a system-level install.
 
 The installer will refuse to continue if:
 
@@ -67,6 +77,7 @@ Install behavior is intentionally narrow:
 - it creates a sibling `octopus-os-agent-console` workspace mirror, including the repository root `AGENTS.md` and `Skills/AGENTS.md`
 - it captures a GitHub skill repository binding so Octopus OS can later drive its Git workflow
 - it then launches a new Codex CLI session against the sibling workspace so the installed skill ecosystem is active immediately
+- it does not write a system-level Codex installation for the user
 
 GitHub binding warning:
 

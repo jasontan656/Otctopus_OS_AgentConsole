@@ -115,3 +115,15 @@ It exists so AI can keep reading the recent product evolution before the main it
   - `/home/jasontan656/AI_Projects/octopus-os-agent-console/docs/INSTALL_AND_CLEANUP_MODEL.md`
 - next_steps:
   - Verify Constitution lint, sync updated skills to the live Codex installation directory, and continue tightening the release-grade installer contract.
+
+## 2026-03-11 03:30:28Z - Directory-level install only public guidance
+
+- author: `codex`
+- summary: Updated the public install narrative so Octopus OS now documents two operator entry paths while keeping the product artifact strictly directory-level.
+- decisions:
+  - Document direct CLI install and bootstrap-via-system-Codex as two supported entry paths, but explicitly state that Octopus OS itself only provides directory-level installation and does not ship a system-level install mode.
+- affected_paths:
+  - `/home/jasontan656/AI_Projects/octopus-os-agent-console/README.md`
+  - `/home/jasontan656/AI_Projects/octopus-os-agent-console/docs/INSTALL_AND_CLEANUP_MODEL.md`
+- next_steps:
+  - Run Constitution lint, sync updated skills to the live Codex installation directory, and continue refining the public installation story.

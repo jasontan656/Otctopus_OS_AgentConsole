@@ -29,13 +29,21 @@ Users should be warned that:
 
 ## Current Install Surface
 
-The intended public trial install surface is command-line-first and one-line callable:
+Octopus OS currently exposes two installation modes, but both of them remain directory-level installs.
+
+Mode 1: direct one-line install:
 
 ```bash
 python3 product_tools/octopus_os_agent_console.py install --runtime-target codex-gpt-5.4-high --install-root ~/Octopus_Runtime/codex-home --github-skill-repo git@github.com:YOUR_ACCOUNT/octopus-os-skills.git --github-auth-mode ssh --acknowledge-github-control-risk && HOME=~/Octopus_Runtime/codex-home ~/Octopus_Runtime/codex-home/bin/codex -C ~/Octopus_Runtime/octopus-os-agent-console -m gpt-5.4 -c 'model_reasoning_effort="high"'
 ```
 
-`wizard` may still exist as a guided TUI, but the canonical install path is the single-line CLI entry above.
+Mode 2: bootstrap from an already system-installed Codex CLI:
+
+1. open Codex inside the repository source directory
+2. ask Codex to follow the repository installation instructions and install into a dedicated target path
+3. after installation, switch to the directory-level Codex CLI under the target path and use that runtime
+
+`wizard` may still exist as a guided TUI, but the canonical product artifact remains the same in both modes: a dedicated install root plus a sibling Octopus OS workspace.
 
 ## Hard Install Gate
 
@@ -48,6 +56,18 @@ Install must refuse to continue unless all conditions are true:
 5. the GitHub control risk warning is acknowledged
 
 If any condition fails, install should stop instead of trying to adapt to another runtime layout or another model stack.
+
+## No System-Level Install
+
+Octopus OS does not provide a system-level Codex installation mode.
+
+Even when the operator already has a system-level Codex CLI, that system install is only treated as a bootstrap tool for driving the guided setup.
+
+The supported end state is still:
+
+1. a dedicated directory-level Codex install root
+2. a dedicated directory-level Codex skills root under that install root
+3. a sibling Octopus OS workspace mirror
 
 ## Minimum Model
 
