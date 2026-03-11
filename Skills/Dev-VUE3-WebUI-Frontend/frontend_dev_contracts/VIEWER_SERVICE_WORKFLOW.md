@@ -7,10 +7,10 @@ anchors:
     relation: "operates"
     direction: "upstream"
     reason: "This workflow doc operates the stack defined there."
-  - target: "../UI_DEV_ENTRY.md"
-    relation: "belongs_to"
+  - target: "../ui-dev/UI_DEV_ENTRY.md"
+    relation: "supports"
     direction: "upstream"
-    reason: "This workflow belongs to the ui-dev root."
+    reason: "This workflow drives the runnable showroom entry."
 ---
 
 # Viewer Service Workflow

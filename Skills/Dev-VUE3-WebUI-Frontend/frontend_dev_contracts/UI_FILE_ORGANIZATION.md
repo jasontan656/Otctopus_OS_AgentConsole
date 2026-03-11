@@ -7,10 +7,10 @@ anchors:
     relation: "pairs_with"
     direction: "cross"
     reason: "Positioning and file organization should be read together."
-  - target: "../UI_DEV_ENTRY.md"
-    relation: "belongs_to"
+  - target: "../ui-dev/UI_DEV_ENTRY.md"
+    relation: "supports"
     direction: "upstream"
-    reason: "This file-organization guide belongs to the ui-dev root."
+    reason: "This guide constrains how the showroom codebase is organized."
 ---
 
 # UI File Organization
@@ -20,9 +20,13 @@ anchors:
 - `server/` live payload server。
 - `lib/` viewer payload 适配层。
 - `tests/` UI runtime 相关回归。
-- `docs/` UI 开发文档。
 
-## 不应漂回 root 的内容
+## 必须留在 `frontend_dev_contracts/` 的内容
+- 前端开发合同索引。
+- 组件、布局、运行链与复用边界规范。
+- `rules/` 下的响应式与布局约束。
+
+## 不应漂回 root 其他位置的内容
 - 页面标题、布局细节、组件实验。
 - viewer payload 组装和 service 脚本。
 - `PreviewPayload` 一类 UI 语义类型。

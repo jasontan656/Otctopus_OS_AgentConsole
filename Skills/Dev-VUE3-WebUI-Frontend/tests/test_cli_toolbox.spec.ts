@@ -19,6 +19,7 @@ describe('Dev-VUE3-WebUI-Frontend stage contracts', () => {
   it('exposes ui-dev docs in the showroom runtime stage', () => {
     const showroom = getStageDefinition('showroom_runtime_delivery')
     expect(showroom.docContract.doc_boundary).toContain('ui-dev/UI_DEV_ENTRY.md')
+    expect(showroom.docContract.doc_boundary).toContain('frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md')
     expect(showroom.commandContract.gate_commands).toContain('cd ui-dev && npm run build')
   })
 })

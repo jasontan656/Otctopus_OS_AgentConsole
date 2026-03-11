@@ -10,7 +10,7 @@ anchors:
   - target: "../00_UI_DEVELOPMENT_INDEX.md"
     relation: "belongs_to"
     direction: "upstream"
-    reason: "This guide belongs to the UI development doc set."
+    reason: "This guide belongs to the frontend development contract set."
 ---
 
 # UI Layout Adjustment Rules

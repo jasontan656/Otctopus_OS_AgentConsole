@@ -73,6 +73,60 @@
       "depth": 4
     },
     {
+      "path": "frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md",
+      "docId": "ui.dev.docs.index",
+      "docType": "ui_dev_index",
+      "topic": "Index of frontend development contracts for Dev-VUE3-WebUI-Frontend",
+      "title": "Frontend Development Contracts",
+      "anchorCount": 2,
+      "depth": 1
+    },
+    {
+      "path": "frontend_dev_contracts/UI_FILE_ORGANIZATION.md",
+      "docId": "ui.tool.file_organization",
+      "docType": "ui_dev_guide",
+      "topic": "File organization rules for the Dev-VUE3-WebUI-Frontend showroom",
+      "title": "UI File Organization",
+      "anchorCount": 2,
+      "depth": 1
+    },
+    {
+      "path": "frontend_dev_contracts/UI_TOOL_POSITIONING.md",
+      "docId": "ui.tool.positioning",
+      "docType": "ui_dev_guide",
+      "topic": "Positioning of frontend development contracts inside Dev-VUE3-WebUI-Frontend",
+      "title": "UI Tool Positioning",
+      "anchorCount": 2,
+      "depth": 1
+    },
+    {
+      "path": "frontend_dev_contracts/VIEWER_SERVICE_WORKFLOW.md",
+      "docId": "ui.viewer.service_workflow",
+      "docType": "tooling_usage",
+      "topic": "Dev, build, and systemd workflow for the Dev-VUE3-WebUI-Frontend showroom",
+      "title": "Viewer Service Workflow",
+      "anchorCount": 2,
+      "depth": 1
+    },
+    {
+      "path": "frontend_dev_contracts/VIEWER_STACK_AND_REUSE.md",
+      "docId": "ui.viewer.stack",
+      "docType": "tooling_architecture",
+      "topic": "Viewer stack, reusable UI direction, and showroom layout contract",
+      "title": "Viewer Stack Reuse Contract",
+      "anchorCount": 2,
+      "depth": 1
+    },
+    {
+      "path": "frontend_dev_contracts/rules/UI_LAYOUT_ADJUSTMENT_RULES.md",
+      "docId": "ui.viewer.layout_adjustment",
+      "docType": "ui_dev_guide",
+      "topic": "Layout adjustment rules for the Dev-VUE3-WebUI-Frontend showroom",
+      "title": "UI Layout Adjustment Rules",
+      "anchorCount": 2,
+      "depth": 2
+    },
+    {
       "path": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md",
       "docId": "runtime.docgraph.audit",
       "docType": "runtime_contract",
@@ -215,60 +269,6 @@
       "title": "UI Dev Entry",
       "anchorCount": 2,
       "depth": 1
-    },
-    {
-      "path": "ui-dev/docs/00_UI_DEVELOPMENT_INDEX.md",
-      "docId": "ui.dev.docs.index",
-      "docType": "ui_dev_index",
-      "topic": "Index of UI development docs for the Dev-VUE3-WebUI-Frontend showroom",
-      "title": "UI Development Index",
-      "anchorCount": 2,
-      "depth": 2
-    },
-    {
-      "path": "ui-dev/docs/UI_FILE_ORGANIZATION.md",
-      "docId": "ui.tool.file_organization",
-      "docType": "ui_dev_guide",
-      "topic": "File organization rules for the Dev-VUE3-WebUI-Frontend showroom",
-      "title": "UI File Organization",
-      "anchorCount": 2,
-      "depth": 2
-    },
-    {
-      "path": "ui-dev/docs/UI_TOOL_POSITIONING.md",
-      "docId": "ui.tool.positioning",
-      "docType": "ui_dev_guide",
-      "topic": "Positioning of the ui-dev showroom inside Dev-VUE3-WebUI-Frontend",
-      "title": "UI Tool Positioning",
-      "anchorCount": 2,
-      "depth": 2
-    },
-    {
-      "path": "ui-dev/docs/VIEWER_SERVICE_WORKFLOW.md",
-      "docId": "ui.viewer.service_workflow",
-      "docType": "tooling_usage",
-      "topic": "Dev, build, and systemd workflow for the Dev-VUE3-WebUI-Frontend showroom",
-      "title": "Viewer Service Workflow",
-      "anchorCount": 2,
-      "depth": 2
-    },
-    {
-      "path": "ui-dev/docs/VIEWER_STACK_AND_REUSE.md",
-      "docId": "ui.viewer.stack",
-      "docType": "tooling_architecture",
-      "topic": "Viewer stack, reusable UI direction, and showroom layout contract",
-      "title": "Viewer Stack Reuse Contract",
-      "anchorCount": 2,
-      "depth": 2
-    },
-    {
-      "path": "ui-dev/docs/rules/UI_LAYOUT_ADJUSTMENT_RULES.md",
-      "docId": "ui.viewer.layout_adjustment",
-      "docType": "ui_dev_guide",
-      "topic": "Layout adjustment rules for the Dev-VUE3-WebUI-Frontend showroom",
-      "title": "UI Layout Adjustment Rules",
-      "anchorCount": 2,
-      "depth": 3
     }
   ],
   "edges": [
@@ -371,6 +371,90 @@
       "reason": "Workflow templates should align with CLI contract usage."
     },
     {
+      "source": "frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md",
+      "target": "ui-dev/UI_DEV_ENTRY.md",
+      "relation": "supports",
+      "direction": "upstream",
+      "reason": "The showroom consumes this frontend contract index as its official reading path."
+    },
+    {
+      "source": "frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md",
+      "target": "frontend_dev_contracts/UI_TOOL_POSITIONING.md",
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "Positioning is the first frontend contract branch."
+    },
+    {
+      "source": "frontend_dev_contracts/UI_FILE_ORGANIZATION.md",
+      "target": "frontend_dev_contracts/UI_TOOL_POSITIONING.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "Positioning and file organization should be read together."
+    },
+    {
+      "source": "frontend_dev_contracts/UI_FILE_ORGANIZATION.md",
+      "target": "ui-dev/UI_DEV_ENTRY.md",
+      "relation": "supports",
+      "direction": "upstream",
+      "reason": "This guide constrains how the showroom codebase is organized."
+    },
+    {
+      "source": "frontend_dev_contracts/UI_TOOL_POSITIONING.md",
+      "target": "ui-dev/UI_DEV_ENTRY.md",
+      "relation": "supports",
+      "direction": "upstream",
+      "reason": "This guide defines how the showroom consumes the frontend contracts."
+    },
+    {
+      "source": "frontend_dev_contracts/UI_TOOL_POSITIONING.md",
+      "target": "frontend_dev_contracts/UI_FILE_ORGANIZATION.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "Positioning and file organization should be read together."
+    },
+    {
+      "source": "frontend_dev_contracts/VIEWER_SERVICE_WORKFLOW.md",
+      "target": "frontend_dev_contracts/VIEWER_STACK_AND_REUSE.md",
+      "relation": "operates",
+      "direction": "upstream",
+      "reason": "This workflow doc operates the stack defined there."
+    },
+    {
+      "source": "frontend_dev_contracts/VIEWER_SERVICE_WORKFLOW.md",
+      "target": "ui-dev/UI_DEV_ENTRY.md",
+      "relation": "supports",
+      "direction": "upstream",
+      "reason": "This workflow drives the runnable showroom entry."
+    },
+    {
+      "source": "frontend_dev_contracts/VIEWER_STACK_AND_REUSE.md",
+      "target": "ui-dev/UI_DEV_ENTRY.md",
+      "relation": "supports",
+      "direction": "upstream",
+      "reason": "This stack contract is consumed by the runnable showroom entry."
+    },
+    {
+      "source": "frontend_dev_contracts/VIEWER_STACK_AND_REUSE.md",
+      "target": "frontend_dev_contracts/rules/UI_LAYOUT_ADJUSTMENT_RULES.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "Layout adjustment rules complement the stack contract."
+    },
+    {
+      "source": "frontend_dev_contracts/rules/UI_LAYOUT_ADJUSTMENT_RULES.md",
+      "target": "frontend_dev_contracts/VIEWER_STACK_AND_REUSE.md",
+      "relation": "extends",
+      "direction": "upstream",
+      "reason": "Layout adjustments must extend the viewer stack contract."
+    },
+    {
+      "source": "frontend_dev_contracts/rules/UI_LAYOUT_ADJUSTMENT_RULES.md",
+      "target": "frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "This guide belongs to the frontend development contract set."
+    },
+    {
       "source": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md",
       "target": "references/runtime/SKILL_RUNTIME_CONTRACT.md",
       "relation": "supports",
@@ -435,14 +519,14 @@
     },
     {
       "source": "references/stages/10_STAGE_FOUNDATION.md",
-      "target": "ui-dev/docs/UI_TOOL_POSITIONING.md",
+      "target": "frontend_dev_contracts/UI_TOOL_POSITIONING.md",
       "relation": "pairs_with",
       "direction": "cross",
-      "reason": "The ui-dev positioning guide reflects how the foundation appears in the runnable showroom."
+      "reason": "The frontend contract positioning guide reflects how the foundation appears in the runnable showroom."
     },
     {
       "source": "references/stages/20_STAGE_SURFACE_LAYOUTS.md",
-      "target": "ui-dev/docs/rules/UI_LAYOUT_ADJUSTMENT_RULES.md",
+      "target": "frontend_dev_contracts/rules/UI_LAYOUT_ADJUSTMENT_RULES.md",
       "relation": "implements",
       "direction": "downstream",
       "reason": "Runtime layout adjustments must follow these surface rules."
@@ -456,10 +540,10 @@
     },
     {
       "source": "references/stages/30_STAGE_MOTION_COMPONENT_ARCHITECTURE.md",
-      "target": "ui-dev/docs/VIEWER_STACK_AND_REUSE.md",
+      "target": "frontend_dev_contracts/VIEWER_STACK_AND_REUSE.md",
       "relation": "details",
       "direction": "downstream",
-      "reason": "The ui-dev stack doc expands the runtime component and layout implications."
+      "reason": "The frontend contract stack doc expands the runtime component and layout implications."
     },
     {
       "source": "references/stages/30_STAGE_MOTION_COMPONENT_ARCHITECTURE.md",
@@ -589,96 +673,12 @@
     },
     {
       "source": "ui-dev/UI_DEV_ENTRY.md",
-      "target": "ui-dev/docs/00_UI_DEVELOPMENT_INDEX.md",
+      "target": "frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md",
       "relation": "routes_to",
       "direction": "downstream",
-      "reason": "The docs index defines the local UI development reading path."
-    },
-    {
-      "source": "ui-dev/docs/00_UI_DEVELOPMENT_INDEX.md",
-      "target": "ui-dev/UI_DEV_ENTRY.md",
-      "relation": "belongs_to",
-      "direction": "upstream",
-      "reason": "This index belongs to the ui-dev showroom root."
-    },
-    {
-      "source": "ui-dev/docs/00_UI_DEVELOPMENT_INDEX.md",
-      "target": "ui-dev/docs/UI_TOOL_POSITIONING.md",
-      "relation": "indexes",
-      "direction": "downstream",
-      "reason": "Positioning is the first UI-specific development branch."
-    },
-    {
-      "source": "ui-dev/docs/UI_FILE_ORGANIZATION.md",
-      "target": "ui-dev/docs/UI_TOOL_POSITIONING.md",
-      "relation": "pairs_with",
-      "direction": "cross",
-      "reason": "Positioning and file organization should be read together."
-    },
-    {
-      "source": "ui-dev/docs/UI_FILE_ORGANIZATION.md",
-      "target": "ui-dev/UI_DEV_ENTRY.md",
-      "relation": "belongs_to",
-      "direction": "upstream",
-      "reason": "This file-organization guide belongs to the ui-dev root."
-    },
-    {
-      "source": "ui-dev/docs/UI_TOOL_POSITIONING.md",
-      "target": "ui-dev/UI_DEV_ENTRY.md",
-      "relation": "belongs_to",
-      "direction": "upstream",
-      "reason": "This guide belongs to the ui-dev showroom root."
-    },
-    {
-      "source": "ui-dev/docs/UI_TOOL_POSITIONING.md",
-      "target": "ui-dev/docs/UI_FILE_ORGANIZATION.md",
-      "relation": "pairs_with",
-      "direction": "cross",
-      "reason": "Positioning and file organization should be read together."
-    },
-    {
-      "source": "ui-dev/docs/VIEWER_SERVICE_WORKFLOW.md",
-      "target": "ui-dev/docs/VIEWER_STACK_AND_REUSE.md",
-      "relation": "operates",
-      "direction": "upstream",
-      "reason": "This workflow doc operates the stack defined there."
-    },
-    {
-      "source": "ui-dev/docs/VIEWER_SERVICE_WORKFLOW.md",
-      "target": "ui-dev/UI_DEV_ENTRY.md",
-      "relation": "belongs_to",
-      "direction": "upstream",
-      "reason": "This workflow belongs to the ui-dev root."
-    },
-    {
-      "source": "ui-dev/docs/VIEWER_STACK_AND_REUSE.md",
-      "target": "ui-dev/UI_DEV_ENTRY.md",
-      "relation": "implements",
-      "direction": "upstream",
-      "reason": "This stack doc implements the ui-dev showroom entry."
-    },
-    {
-      "source": "ui-dev/docs/VIEWER_STACK_AND_REUSE.md",
-      "target": "ui-dev/docs/rules/UI_LAYOUT_ADJUSTMENT_RULES.md",
-      "relation": "pairs_with",
-      "direction": "cross",
-      "reason": "Layout adjustment rules complement the stack contract."
-    },
-    {
-      "source": "ui-dev/docs/rules/UI_LAYOUT_ADJUSTMENT_RULES.md",
-      "target": "ui-dev/docs/VIEWER_STACK_AND_REUSE.md",
-      "relation": "extends",
-      "direction": "upstream",
-      "reason": "Layout adjustments must extend the viewer stack contract."
-    },
-    {
-      "source": "ui-dev/docs/rules/UI_LAYOUT_ADJUSTMENT_RULES.md",
-      "target": "ui-dev/docs/00_UI_DEVELOPMENT_INDEX.md",
-      "relation": "belongs_to",
-      "direction": "upstream",
-      "reason": "This guide belongs to the UI development doc set."
+      "reason": "The frontend contract index defines the official UI development reading path."
     }
   ],
   "warnings": [],
-  "updated_at": "2026-03-11T14:02:16.831Z"
+  "updated_at": "2026-03-11T21:59:07.598Z"
 }

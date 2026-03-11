@@ -7,10 +7,10 @@ anchors:
     relation: "implements"
     direction: "upstream"
     reason: "This stage operationalizes the resident north-star document."
-  - target: "../../ui-dev/docs/UI_TOOL_POSITIONING.md"
+  - target: "../../frontend_dev_contracts/UI_TOOL_POSITIONING.md"
     relation: "pairs_with"
     direction: "cross"
-    reason: "The ui-dev positioning guide reflects how the foundation appears in the runnable showroom."
+    reason: "The frontend contract positioning guide reflects how the foundation appears in the runnable showroom."
 ---
 
 # Stage Foundation

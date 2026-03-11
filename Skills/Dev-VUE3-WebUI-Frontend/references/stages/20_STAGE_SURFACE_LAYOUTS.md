@@ -3,7 +3,7 @@ doc_id: "stages.surface_layouts"
 doc_type: "stage_doc"
 topic: "Responsive surface rules for desktop, mobile landscape, and mobile portrait"
 anchors:
-  - target: "../../ui-dev/docs/rules/UI_LAYOUT_ADJUSTMENT_RULES.md"
+  - target: "../../frontend_dev_contracts/rules/UI_LAYOUT_ADJUSTMENT_RULES.md"
     relation: "implements"
     direction: "downstream"
     reason: "Runtime layout adjustments must follow these surface rules."

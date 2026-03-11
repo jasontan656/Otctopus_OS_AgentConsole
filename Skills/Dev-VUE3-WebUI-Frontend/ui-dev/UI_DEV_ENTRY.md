@@ -7,10 +7,10 @@ anchors:
     relation: "belongs_to"
     direction: "upstream"
     reason: "The ui-dev root is the concrete surface of the showroom runtime stage."
-  - target: "docs/00_UI_DEVELOPMENT_INDEX.md"
+  - target: "../frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md"
     relation: "routes_to"
     direction: "downstream"
-    reason: "The docs index defines the local UI development reading path."
+    reason: "The frontend contract index defines the official UI development reading path."
 ---
 
 # UI Dev Entry
@@ -21,7 +21,7 @@ anchors:
 - Vue3 + Vue Flow 页面代码。
 - viewer payload 装配层与 live server。
 - systemd 安装脚本与运行文档。
-- 组件、布局、运行链的 UI 开发文档。
+- 消费 `frontend_dev_contracts/` 中定义的前端开发合同。
 
 ## 使用方式
 - 开发：

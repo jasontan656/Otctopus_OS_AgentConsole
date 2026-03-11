@@ -53,7 +53,7 @@ metadata:
   - `references/stages/40_STAGE_SHOWROOM_RUNTIME.md`
 - UI 展厅层：
   - `ui-dev/UI_DEV_ENTRY.md`
-  - `ui-dev/docs/`
+  - `frontend_dev_contracts/`
 - 工具层：
   - `scripts/Cli_Toolbox.ts`
 
@@ -96,6 +96,7 @@ Dev-VUE3-WebUI-Frontend/
 │   ├── runtime/
 │   ├── stages/
 │   └── tooling/
+├── frontend_dev_contracts/
 ├── assets/
 │   ├── runtime/
 │   └── templates/

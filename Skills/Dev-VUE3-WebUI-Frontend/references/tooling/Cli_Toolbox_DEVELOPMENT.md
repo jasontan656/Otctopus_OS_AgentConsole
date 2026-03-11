@@ -25,5 +25,5 @@ anchors:
   - `references/runtime/`
   - `references/stages/`
   - `references/tooling/`
-  - `ui-dev/docs/` 中受影响的运行面文档
+  - `frontend_dev_contracts/` 中受影响的前端开发合同
 - 若 stage 语义变了，优先整体改 stage manifest，而不是局部补丁。
