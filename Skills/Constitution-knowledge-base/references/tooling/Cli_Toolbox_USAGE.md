@@ -7,7 +7,6 @@
 
 ## 工具清单
 - `Cli_Toolbox.constitution_keyword_query` -> `scripts/constitution_keyword_query.py`
-- `Cli_Toolbox.run_constitution_lints` -> `scripts/run_constitution_lints.py`
 
 ## 叙事式使用说明（固定格式）
 
@@ -24,23 +23,10 @@
 - 人类叙事版输出：
   - 控制台输出多行 JSON，每行一个机械规则对象，可直接给模型消费，不需要再做正文清洗。
 
-### Cli_Toolbox.run_constitution_lints
-- 人类叙事版输入：
-  - 我想对目标仓库执行宪法静态 gate，只关心可被 lint 的结构、契约和边界条款。
-- 电脑动作发生了什么：
-  - 脚本扫描目标目录，执行 `code_governance/fat_file/file_structure/folder_structure/modularity/typed_contract/payload_normalize/permission_boundary/hardcoded_asset/absolute_path` 模块。
-  - 对每个 gate 输出 `status/pass|fail`、违规文件与简短摘要。
-  - 任一 gate 失败时，以非零退出码阻断。
-- 人类叙事版输出：
-  - 控制台输出单个 JSON 对象，包含 `target/gates/summary`，可直接被 CI 或模型消费。
-
 ## 示例命令（强制：一行可复制）
 - 最小用途描述：双语关键词检索机器版宪法 JSONL（始终带 common_core，全程仅控制台输出）。
 - 一行命令：
   - `cd /home/jasontan656/AI_Projects/octopus-os-agent-console/Skills/Constitution-knowledge-base && python3 scripts/constitution_keyword_query.py --keywords-zh "会话,队列" --keywords-en "session,queue" | cat`
-- 最小用途描述：对目标仓库执行宪法静态 lint gate。
-- 一行命令：
-  - `cd /home/jasontan656/AI_Projects/octopus-os-agent-console/Skills/Constitution-knowledge-base && python3 scripts/run_constitution_lints.py --target /home/jasontan656/AI_Projects/Octopus_CodeBase_Backend | cat`
 - 禁止事项（强制）：
   - 查询命令禁止限制输出行数；禁止使用 `sed -n/head/tail/awk 'NR...'` 等限行命令。
 
@@ -48,8 +34,6 @@
 - `constitution_keyword_query` 输入：
   - `--keywords-zh`（必填）
   - `--keywords-en`（必填）
-- `run_constitution_lints` 输入：
-  - `--target`（必填）：待扫描仓库根目录。
 - 共同输出：
   - 仅控制台输出。
 - 查询输出：
@@ -58,13 +42,9 @@
   - `constitution_rule`
   - `no_hit`
   - `constitution_enforcement_contract`
-- lint 输出：
-  - `target`
-  - `gates[]`
-  - `summary`
 - 失败码约定：
   - `2`：参数错误。
-  - `1`：运行期异常或任一 lint gate 失败。
+  - `1`：运行期异常。
 
 ## 同步维护要求
 - 修改工具行为后，必须同步更新本文件与 `Cli_Toolbox_DEVELOPMENT.md`。

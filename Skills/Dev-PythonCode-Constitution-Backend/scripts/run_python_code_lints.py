@@ -11,8 +11,8 @@ WORKSPACE_ROOT = SCRIPT_DIR.parent.parent
 if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
 
-from constitution_lint_rules.modules import absolute_path, code_governance, fat_file, file_structure, folder_structure, hardcoded_asset, modularity, payload_normalize, permission_boundary, typed_contract
-from constitution_lint_rules.reporting import build_report
+from python_code_lint_rules.modules import absolute_path, code_governance, fat_file, file_structure, folder_structure, hardcoded_asset, modularity, payload_normalize, permission_boundary, typed_contract
+from python_code_lint_rules.reporting import build_report
 
 MODULES = [
     code_governance,
@@ -29,7 +29,7 @@ MODULES = [
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Run constitution static lint gates.")
+    parser = argparse.ArgumentParser(description="Run Python code governance static lint gates.")
     parser.add_argument("--target", required=True, help="Target repository root.")
     args = parser.parse_args()
     root = Path(args.target).resolve()

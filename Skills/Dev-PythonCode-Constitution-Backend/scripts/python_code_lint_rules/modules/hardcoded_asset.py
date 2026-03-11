@@ -3,7 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 import re
 
-from constitution_lint_rules.shared import (
+from python_code_lint_rules.shared import (
     IGNORE_DIRS,
     is_nested_scope_path,
     is_test_fixture_path,
@@ -16,7 +16,7 @@ from constitution_lint_rules.shared import (
     should_skip,
 )
 
-EXEC_EXTS = {".py", ".ts", ".tsx", ".js", ".jsx", ".sh", ".bash"}
+EXEC_EXTS = {".py", ".sh", ".bash"}
 ALLOW_MARKERS = ("INLINE_LITERAL_OK", "LINT_ALLOW_HARDCODED_ASSET=")
 TRIPLE_QUOTE_RE = re.compile(r'("""|\'\'\')([\s\S]*?)\1', re.MULTILINE)
 BACKTICK_RE = re.compile(r"`([\s\S]*?)`", re.MULTILINE)
@@ -34,7 +34,7 @@ ASSET_TOKENS = (
     "name:",
     "description:",
 )
-RULE_FILE = "Constitution-knowledge-base/scripts/constitution_lint_rules/modules/hardcoded_asset.py"
+RULE_FILE = "Dev-PythonCode-Constitution-Backend/scripts/python_code_lint_rules/modules/hardcoded_asset.py"
 
 
 def _iter_exec_files(root: Path):

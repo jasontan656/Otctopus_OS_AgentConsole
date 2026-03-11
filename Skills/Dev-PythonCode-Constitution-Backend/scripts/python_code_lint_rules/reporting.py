@@ -4,7 +4,7 @@ from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
 
-from constitution_lint_rules.shared import is_nested_scope_path, is_test_fixture_path
+from python_code_lint_rules.shared import is_nested_scope_path, is_test_fixture_path
 
 
 def _default_category(gate: str, reason: str) -> str:

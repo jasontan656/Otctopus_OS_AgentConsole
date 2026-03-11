@@ -4,9 +4,9 @@ from pathlib import Path
 from typing import Any, Iterable, Iterator
 
 IGNORE_DIRS = {".git", ".venv", ".venv-wsl", "node_modules", "dist", "build", "coverage", "__pycache__", ".pytest_cache"}
-TEXT_EXTS = {".py", ".ts", ".tsx", ".js", ".jsx", ".vue", ".json", ".yaml", ".yml", ".md", ".sql", ".toml"}
-SOURCE_EXTS = {".py", ".ts", ".tsx", ".js", ".jsx", ".vue", ".sql", ".yaml", ".yml", ".json", ".md"}
-SKIP_PREFIXES = {("references",), ("assets",), ("tests",), ("scripts", "constitution_lint_rules")}
+TEXT_EXTS = {".py", ".json", ".yaml", ".yml", ".md", ".sql", ".toml", ".sh", ".bash"}
+SOURCE_EXTS = {".py", ".sql", ".yaml", ".yml", ".json", ".md", ".toml"}
+SKIP_PREFIXES = {("references",), ("assets",), ("tests",), ("scripts", "python_code_lint_rules")}
 NESTED_SKIP_DIRS = {"references", "assets", "tests"}
 IO_PATTERNS = ("requests.", "httpx.", "fetch(", "axios(", "sqlalchemy", "psycopg", "redis.", "pymongo", "subprocess", "socket", "aiohttp", "requests.get(", "httpx.get(")
 RAW_PAYLOAD_PATTERNS = ("telegram_update", "callback_query", "webapp_data", "raw_payload", "raw_update", "incoming_update")
@@ -74,7 +74,7 @@ def is_test_fixture_path(path_text: str) -> bool:
     if "tests" in parts:
         return True
     lowered = path_text.lower()
-    return lowered.endswith(".test.ts") or lowered.endswith(".spec.ts")
+    return lowered.endswith("_test.py") or lowered.endswith("test_.py") or lowered.endswith(".spec.py")
 
 
 def make_violation(path: str, reason: str, **extra: Any) -> dict[str, Any]:

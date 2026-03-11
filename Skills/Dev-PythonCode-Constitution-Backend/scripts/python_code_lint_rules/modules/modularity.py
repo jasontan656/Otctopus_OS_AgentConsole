@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from constitution_lint_rules.shared import IO_PATTERNS, SOURCE_EXTS, iter_files, make_gate, read_text, rel
+from python_code_lint_rules.shared import IO_PATTERNS, SOURCE_EXTS, iter_files, make_gate, read_text, rel
 
 
 def lint(root: Path) -> dict[str, object]:

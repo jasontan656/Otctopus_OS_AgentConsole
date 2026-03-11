@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from constitution_lint_rules.shared import SOURCE_EXTS, iter_files, make_gate, read_text, rel
+from python_code_lint_rules.shared import SOURCE_EXTS, iter_files, make_gate, read_text, rel
 
 CONTRACT_HINTS = ("contract", "schema", "dto")
 REQUIRED_MARKERS = ("contract_name", "contract_version", "validation_mode")

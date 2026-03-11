@@ -55,7 +55,7 @@ graph_hook:
 
 ```bash
 rg -n "common_payload_normalize" references/anchor_docs/ANCHOR_DOC_REGISTRY.yaml references/anchor_docs/common
-python3 scripts/run_constitution_lints.py --target . | jq '.gates[] | select(.gate=="payload_normalize_gate")'
+python3 /home/jasontan656/AI_Projects/octopus-os-agent-console/Skills/Dev-PythonCode-Constitution-Backend/scripts/run_python_code_lints.py --target . | jq '.gates[] | select(.gate=="payload_normalize_gate")'
 ```
 
 ## 最小验收

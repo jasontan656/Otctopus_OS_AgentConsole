@@ -3,7 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 import re
 
-from constitution_lint_rules.shared import (
+from python_code_lint_rules.shared import (
     IGNORE_DIRS,
     is_nested_scope_path,
     is_test_fixture_path,
@@ -16,14 +16,14 @@ from constitution_lint_rules.shared import (
     should_skip,
 )
 
-SCAN_EXTS = {".py", ".ts", ".tsx", ".js", ".jsx", ".sh", ".bash", ".yaml", ".yml", ".json", ".toml"}
+SCAN_EXTS = {".py", ".sh", ".bash", ".yaml", ".yml", ".json", ".toml"}
 ALLOW_MARKERS = ("PATH_LITERAL_OK", "LINT_ALLOW_ABSOLUTE_PATH=")
 UNIX_ABS_RE = re.compile(r'(?<![A-Za-z0-9_])/(?:home|Users|opt|var|tmp|etc|srv|mnt|Volumes)/[^\s"\'`]+')
 WINDOWS_ABS_RE = re.compile(r'(?<![A-Za-z0-9_])[A-Za-z]:\\\\[^\s"\'`]+')
 FILE_URI_RE = re.compile(r'file:///[^\s"\'`]+')
 OCTOPUS_ESCAPE_RE = re.compile(r'["\'`](?:\.\./){2,}[^"\'`\n]*["\'`]')
 WORKSPACE_MANAGER_ROOTS = {"Codex_Skills_Mirror", "octopus-os-agent-console", "AI_Projects"}
-RULE_FILE = "Constitution-knowledge-base/scripts/constitution_lint_rules/modules/absolute_path.py"
+RULE_FILE = "Dev-PythonCode-Constitution-Backend/scripts/python_code_lint_rules/modules/absolute_path.py"
 
 
 def _iter_scan_files(root: Path):

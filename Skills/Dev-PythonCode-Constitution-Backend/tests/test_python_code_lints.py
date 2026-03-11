@@ -1,0 +1,126 @@
+from __future__ import annotations
+
+import json
+import subprocess
+import tempfile
+import unittest
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+class PythonCodeLintTests(unittest.TestCase):
+    def _run_lint(self, target: Path) -> subprocess.CompletedProcess[str]:
+        return subprocess.run(
+            ["python3", str(ROOT / "scripts/run_python_code_lints.py"), "--target", str(target)],
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+
+    def _assert_enhanced_report_shape(self, report: dict[str, object]) -> None:
+        self.assertIn("summary_enhanced", report)
+        self.assertIn("gate_diagnostics", report)
+        self.assertIn("violation_details", report)
+        self.assertIn("clusters", report)
+
+    def test_static_lints_detect_and_pass(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="py_lint_", dir=str(ROOT.parent)) as tmp:
+            root = Path(tmp)
+            bad = root / "bad"
+            bad.mkdir()
+            (bad / "user_domain.py").write_text(
+                "import requests\nrequests.get('https://example.com')\n",
+                encoding="utf-8",
+            )
+            bad_result = self._run_lint(bad)
+            self.assertEqual(bad_result.returncode, 1, bad_result.stdout + bad_result.stderr)
+            bad_report = json.loads(bad_result.stdout)
+            self._assert_enhanced_report_shape(bad_report)
+            self.assertTrue(any(g["gate"] == "modularity_gate" and g["status"] == "fail" for g in bad_report["gates"]))
+
+            good = root / "good"
+            good.mkdir()
+            (good / "user_orchestrator.py").write_text("def run() -> None:\n    pass\n", encoding="utf-8")
+            good_result = self._run_lint(good)
+            self.assertEqual(good_result.returncode, 0, good_result.stdout + good_result.stderr)
+
+    def test_hardcoded_asset_gate_detects_inline_prompt_and_allows_external_asset(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="py_lint_", dir=str(ROOT.parent)) as tmp:
+            root = Path(tmp)
+            bad = root / "bad_prompt.py"
+            bad.write_text(
+                'PROMPT = """\n'
+                "You are an audit assistant.\n"
+                "## 1. Goal\n"
+                "- 必须读取规则\n"
+                "- 禁止跳过验证\n"
+                "- 输出契约固定\n"
+                "- workflow 需要完整\n"
+                "- name: inline\n"
+                "- description: inline\n"
+                "- 必须遵守 assets/rules\n"
+                '"""\n',
+                encoding="utf-8",
+            )
+            result = self._run_lint(root)
+            self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+            report = json.loads(result.stdout)
+            gate = next(g for g in report["gates"] if g["gate"] == "hardcoded_asset_gate")
+            self.assertTrue(any(v["path"] == "bad_prompt.py" for v in gate["violations"]))
+
+            assets = root / "assets"
+            assets.mkdir(exist_ok=True)
+            (assets / "prompt.txt").write_text("You are an audit assistant.\n", encoding="utf-8")
+            (root / "loader.py").write_text(
+                "from pathlib import Path\n"
+                "PROMPT = (Path(__file__).parent / 'assets' / 'prompt.txt').read_text(encoding='utf-8')\n",
+                encoding="utf-8",
+            )
+            result = self._run_lint(root)
+            report = json.loads(result.stdout)
+            gate = next(g for g in report["gates"] if g["gate"] == "hardcoded_asset_gate")
+            self.assertFalse(any(v["path"] == "loader.py" for v in gate["violations"]))
+
+    def test_absolute_path_gate_respects_repo_boundaries(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="py_lint_", dir=str(ROOT.parent)) as tmp:
+            octopus_root = Path(tmp) / "Octopus_OS"
+            octopus_root.mkdir()
+            (octopus_root / "deploy.py").write_text(
+                'CONFIG = "/home/jasontan656/AI_Projects/Octopus_OS/config/settings.yaml"\n'
+                'ESCAPE = "../../shared/runtime.json"\n',
+                encoding="utf-8",
+            )
+            result = self._run_lint(octopus_root)
+            self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+            report = json.loads(result.stdout)
+            reasons = {v["reason"] for v in next(g for g in report["gates"] if g["gate"] == "absolute_path_gate")["violations"]}
+            self.assertIn("octopus_os_forbids_unix_absolute_paths", reasons)
+            self.assertIn("octopus_os_forbids_repo_escape_relative_paths", reasons)
+
+    def test_fat_file_distinguishes_contract_support_from_real_cli(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="py_lint_", dir=str(ROOT.parent)) as tmp:
+            root = Path(tmp)
+            scripts = root / "scripts"
+            scripts.mkdir(parents=True)
+
+            (scripts / "workflow_stage_contract.py").write_text("VALUE = 1\n" * 230, encoding="utf-8")
+            (scripts / "run_cli.py").write_text(
+                "import argparse\n"
+                "parser = argparse.ArgumentParser()\n"
+                "parser.add_argument('--x')\n"
+                + ("print('x')\n" * 421),
+                encoding="utf-8",
+            )
+
+            result = self._run_lint(root)
+            self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+            report = json.loads(result.stdout)
+            fat_gate = next(g for g in report["gates"] if g["gate"] == "fat_file_gate")
+            violations = {v["path"]: v["reason"] for v in fat_gate["violations"]}
+            self.assertNotIn("scripts/workflow_stage_contract.py", violations)
+            self.assertEqual(violations.get("scripts/run_cli.py"), "cli_or_task_script>420")
+
+
+if __name__ == "__main__":
+    unittest.main()

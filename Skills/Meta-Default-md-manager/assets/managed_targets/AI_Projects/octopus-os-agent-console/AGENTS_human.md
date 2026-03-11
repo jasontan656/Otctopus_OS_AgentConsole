@@ -24,11 +24,11 @@
 - skill 内部 markdown 审计文件仅供人类审计，不可替代 CLI JSON。
 
 5. 同回合要求
-- 如果本回合写入 `octopus-os-agent-console`，必须从一开始就纳入 Constitution lint 与 Git traceability。
+- 如果本回合写入 `octopus-os-agent-console`，必须从一开始就纳入 Git traceability；若任务内容涉及 Python 相关编辑，还必须把 `Dev-PythonCode-Constitution-Backend` 的阅读与 lint 纳入同回合范围。
 - skill mirror 根目录固定为 `octopus-os-agent-console/Skills/`；repo 根目录保留给产品文档、产品工具与正常代码库入口。
 - 如果本回合编辑 skill，必须先在 `octopus-os-agent-console/Skills/` 中的 mirror 副本完成编辑，禁止直接编辑 codex 安装目录下的对应 skill。
 - skill 编辑完成后，若目标 skill 已存在于 codex 安装目录，必须同回合执行 `$skill-mirror-to-codex` 的 `Push`；若目标 skill 是新建且 codex 安装目录中尚不存在，必须同回合执行 `$skill-mirror-to-codex` 的 `Install`。
-- 结束前必须完成 concrete repo 的 Constitution lint。
+- 若任务内容涉及 Python 相关编辑，结束前必须完成 `Dev-PythonCode-Constitution-Backend` 的 lint。
 - 如果本回合写入了 `octopus-os-agent-console`，必须同回合 commit-and-push。
 </part_A>
 
@@ -47,7 +47,7 @@
     "$skill-mirror-to-codex (edit skills only in the product repo mirror paths, never directly in the codex installation directory; after editing, use Push for already-installed skills and Install for newly created skills)",
     "$skill-creation-template ( should be considered to imply if there is no specific user request on how skill should be created (prioritize user request than template) )",
     "$skill-creator (for skill standard formatter to ensure codex reads it properly, do not use its template for skill creation)",
-    "$Constitution-knowledge-base (for skill CLI tool lints )"
+    "$Dev-PythonCode-Constitution-Backend (for Python-related fat-file checks, split guidance, and lint runs when the task edits Python code)"
   ],
   "peer_summary_policy": {
     "available": true,
@@ -65,16 +65,17 @@
   "turn_start_actions": [
     "use the returned target contract JSON as the runtime rule source",
     "classify the turn as READ_EXEC or WRITE_EXEC",
-    "if the turn will write octopus-os-agent-console, plan same-turn Constitution lint and Git traceability from the start",
+    "if the turn will write octopus-os-agent-console, plan same-turn Git traceability from the start; if task contents include Python related edits, also plan Dev-PythonCode-Constitution-Backend reading and lint from the start",
     "if the turn touches language surfaces, enforce outward English docs and inward Chinese development boundaries before editing",
-    "if the turn will edit a skill, treat the mirror copy under octopus-os-agent-console/Skills as the only editable source and determine whether downstream sync must be Push or Install"
+    "if the turn will edit a skill, treat the mirror copy under octopus-os-agent-console/Skills as the only editable source and determine whether downstream sync must be Push or Install",
+    "if task contents include Python related edits, read Dev-PythonCode-Constitution-Backend through SKILL.md -> TASK_ROUTING -> SKILL_EXECUTION_RULES before editing"
   ],
   "runtime_constraints": [
     "treat CLI JSON as the primary runtime rule source",
     "do not use audit markdown as the primary execution guide",
     "stay within the concrete repo-local boundary defined by this payload",
     "choose READ_EXEC or WRITE_EXEC by actual write intent, not by file type alone",
-    "when this repo is written, keep same-turn Constitution lint and Git traceability in scope",
+    "when this repo is written, keep same-turn Git traceability in scope; if task contents include Python related edits, keep same-turn Dev-PythonCode-Constitution-Backend lint in scope",
     "public-facing product README and docs must remain English-only",
     "end-user wizard and installation TUI surfaces must support both English and Chinese",
     "skill core docs, governance contracts, and internal iteration artifacts may remain Chinese-first",
@@ -102,7 +103,7 @@
         "for public product surfaces, keep English-only wording and avoid leaking internal Chinese governance content",
         "for skill edits, write only the mirror copy under octopus-os-agent-console/Skills and do not directly edit the codex installed copy",
         "after skill edits, run skill-mirror-to-codex Push for existing installed skills or Install for newly created skills",
-        "run Constitution lint on octopus-os-agent-console before closing the turn",
+        "if task contents include Python related edits, run Dev-PythonCode-Constitution-Backend lint on the concrete Python-related target scope before closing the turn",
         "complete same-turn commit-and-push when octopus-os-agent-console files are written"
       ]
     }
@@ -113,7 +114,7 @@
     "Do not emit only path metadata when the real need is direct action guidance."
   ],
   "turn_end_actions": [
-    "run Constitution lint on the concrete octopus-os-agent-console target root",
+    "if task contents include Python related edits, run Dev-PythonCode-Constitution-Backend lint on the concrete Python-related target scope",
     "if the turn edited a skill, complete skill-mirror-to-codex Push or Install before closing the turn",
     "if the turn wrote octopus-os-agent-console, complete same-turn commit-and-push before closing the turn"
   ],

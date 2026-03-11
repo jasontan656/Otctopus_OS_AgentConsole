@@ -7,7 +7,6 @@ REQUIRED_COMMON_ANCHORS = [
     "common_code_governance",
     "common_file_structure",
     "common_folder_structure",
-    "common_fat_file",
     "common_modularity",
     "common_typed_contract",
     "common_permission_boundary",
@@ -16,17 +15,7 @@ REQUIRED_CONSTRAINT_ANCHORS = [
     "constraint_always_attach_common",
     "constraint_task_package_constitution_binding",
 ]
-REQUIRED_GATES = [
-    "constitution_binding_gate",
-    "static_structure_gate",
-    "rule_traceability_gate",
-    "code_governance_gate",
-    "typed_contract_gate",
-    "payload_normalize_gate",
-    "permission_boundary_gate",
-    "hardcoded_asset_gate",
-    "absolute_path_gate",
-]
+REQUIRED_GATES: list[str] = []
 MINIMUM_KEYWORD_CONTRACT = {
     "bilingual_required": True,
     "min_keywords": {"zh": 1, "en": 1},

@@ -10,9 +10,6 @@ common_core:
 - anchor_id: common_folder_structure
   graph_node: common_always_on
   doc: references/anchor_docs/common/common_folder_structure.md
-- anchor_id: common_fat_file
-  graph_node: common_always_on
-  doc: references/anchor_docs/common/common_fat_file.md
 - anchor_id: common_modularity
   graph_node: common_always_on
   doc: references/anchor_docs/common/common_modularity.md

@@ -10,7 +10,7 @@ graph_hook:
 
 ## 在项目中起什么作用
 - 将代码质量、拆分质量、目录质量统一为可执行治理合同。
-- 把 `common_fat_file`（行数阈值）与 `common_file_structure`（固定落点）纳入同一阻断链路。
+- 将结构、契约与边界治理统一为可执行合同。
 - 防止“逻辑可跑但结构失控”的隐性债务持续累积。
 
 ## 适用范围（必须全覆盖）
@@ -27,12 +27,11 @@ graph_hook:
 - 每条规则必须对应至少一个可执行检查动作。
 - 禁止描述性口号，必须使用可验证语句。
 
-## 与 `common_fat_file` / `common_file_structure` 联动规则
+## 与 `common_file_structure` 的联动规则
 
-1. 行数治理必须遵循 `common_fat_file` 的文件矩阵上限。
-2. 超阈值拆分必须遵循 `common_file_structure` 的固定职责落点模板。
-3. 任何超阈值或落点错误都视为代码治理失败，阻断合并与发布。
-4. 规则类文件仅在“规则定义纯文件”前提下可使用 1000 行上限。
+1. 结构治理必须遵循 `common_file_structure` 的固定职责落点模板。
+2. 规则类文件仅在“规则定义纯文件”前提下可使用 1000 行上限。
+3. Python 胖文件阈值与拆分规则已迁移到 `Dev-PythonCode-Constitution-Backend`。
 
 ## 代码执行合同（Project Required）
 
@@ -42,7 +41,6 @@ graph_hook:
 | 错误边界 | 业务错误与系统错误分层，统一错误码 |
 | 类型边界 | 输入输出模型显式定义并版本化 |
 | 分层边界 | controller/page 不承载域规则与外部 I/O 细节 |
-| 阈值联动 | 达阈值 85% 预拆分，100% 前完成拆分 |
 | 结构联动 | 拆分后文件必须落在固定职责模板路径 |
 | 校验阻断 | CI 校验失败必须非零退出并阻断 |
 
@@ -60,8 +58,8 @@ graph_hook:
 4. 不允许把业务实现塞入规则文件规避普通文件上限。
 
 ## 必须做（Do）
-1. 新增功能先选择文件类别并确认阈值上限。
-2. 达到阈值预警即按固定模板拆分，不得拖到超限。
+1. 新增功能先选择文件职责边界并确认固定落点。
+2. 需要 Python 胖文件阈值时，转入 `Dev-PythonCode-Constitution-Backend`。
 3. 关键改动必须同时更新类型、错误码和验证用例。
 4. 每次跨层改动都要检视依赖方向是否破坏分层。
 5. PR 必须附带“阈值 + 结构 + 兼容性”三类检查结果。
@@ -74,7 +72,7 @@ graph_hook:
 5. 不要保留不可解释魔法值和硬编码常量。
 
 ## 为什么（Why）
-1. 阈值治理若不和结构治理联动，最终仍会回到巨无霸文件。
+1. 结构治理若没有固定落点模板，最终仍会回到巨无霸文件。
 2. 固定职责模板可显著降低定位成本与回归范围。
 3. 零豁免能阻止“个案例外”持续侵蚀工程纪律。
 4. 规则文件放宽上限但保持纯度，可兼顾可读性与工程现实。
@@ -82,7 +80,7 @@ graph_hook:
 ## 实操命令（项目级）
 ```bash
 # 1) 代码治理锚点反查
-rg -n "common_code_governance|common_fat_file|common_file_structure" references/anchor_docs/ANCHOR_DOC_REGISTRY.yaml references/anchor_docs/common
+rg -n "common_code_governance|common_file_structure" references/anchor_docs/ANCHOR_DOC_REGISTRY.yaml references/anchor_docs/common
 
 # 2) 高风险标记巡检
 rg -n "TODO|FIXME|HACK|WAIVER|waiver|临时豁免" . | head
@@ -97,7 +95,7 @@ find . -type f \( -name "*rule*.yaml" -o -name "*constitution*.md" -o -name "*li
 ```
 
 ## 最小验收
-1. 非规则类文件无超 `common_fat_file` 矩阵上限项。
-2. 超阈值文件全部按 `common_file_structure` 固定落点完成拆分。
-3. CI 对“阈值 + 结构”校验失败时可阻断合并/发布。
+1. 结构化职责边界清晰且无越层实现。
+2. 需要拆分的文件都能按 `common_file_structure` 固定落点完成拆分。
+3. CI 对“结构 + 契约”校验失败时可阻断合并/发布。
 4. PR 中不存在任何 waiver 或绕过记录。

@@ -3,7 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 import re
 
-from constitution_lint_rules.shared import SOURCE_EXTS, iter_files, make_gate, rel
+from python_code_lint_rules.shared import SOURCE_EXTS, iter_files, make_gate, rel
 
 
 def _name_has(path: Path, *tokens: str) -> bool:
@@ -38,7 +38,7 @@ def _text_signals_cli(path: Path) -> bool:
 THRESHOLDS = [
     ("rule_definition_file", 1000, lambda p: "rules" in p.parts or _name_has(p, "rule", "constitution", "lint")),
     ("integration_e2e_test_file", 420, lambda p: "tests" in p.parts and _name_has(p, "integration", "e2e")),
-    ("unit_test_file", 500, lambda p: "tests" in p.parts),
+    ("unit_test_file", 260, lambda p: "tests" in p.parts),
     ("runtime_config_file", 180, lambda p: p.suffix in {".yaml", ".yml", ".json", ".toml"} and _name_has(p, "config", "settings", "env")),
     ("schema_or_contract_file", 300, lambda p: _name_has(p, "schema", "contract", "dto", "payload")),
     ("workflow_or_contract_support", 240, lambda p: "scripts" in p.parts and _name_has(p, "workflow", "policy", "support")),

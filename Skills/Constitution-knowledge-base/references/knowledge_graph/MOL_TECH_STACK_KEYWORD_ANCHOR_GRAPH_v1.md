@@ -34,7 +34,6 @@ graph_nodes:
       - task_package
       - file_structure
       - folder_structure
-      - fat_file
       - modularity
       - typed_contract
       - permission_boundary

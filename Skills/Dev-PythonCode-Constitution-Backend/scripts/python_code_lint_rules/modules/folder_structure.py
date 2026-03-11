@@ -2,10 +2,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from constitution_lint_rules.shared import IGNORE_DIRS, SOURCE_EXTS, iter_files, make_gate, rel, should_skip
+from python_code_lint_rules.shared import IGNORE_DIRS, SOURCE_EXTS, iter_files, make_gate, rel, should_skip
 
 FORBIDDEN_DIR_TOKENS = {"misc", "other", "new_folder", "newfolder", "folder2", "tmp2"}
-CODE_EXTS = {".py", ".ts", ".tsx", ".js", ".jsx", ".vue", ".go", ".rs"}
+CODE_EXTS = {".py"}
 
 
 def lint(root: Path) -> dict[str, object]:

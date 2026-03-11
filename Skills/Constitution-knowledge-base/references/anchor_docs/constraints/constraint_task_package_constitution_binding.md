@@ -34,7 +34,7 @@ graph_hook:
 | `trigger_any_of` | `任务包/task package/work package/L1/L2/L3` 任一命中即触发 |
 | `keyword_source` | 必须由任务目标、阶段描述、约束条款提取双语关键词 |
 | `anchor_lookup` | 必须通过宪法关键词查询工具定位锚点，不允许手工猜测 |
-| `required_common` | 必挂 `common_code_governance/common_file_structure/common_folder_structure/common_fat_file/common_modularity/common_typed_contract/common_permission_boundary` |
+| `required_common` | 必挂 `common_code_governance/common_file_structure/common_folder_structure/common_modularity/common_typed_contract/common_permission_boundary` |
 | `required_constraints` | 必挂 `constraint_always_attach_common/constraint_task_package_constitution_binding` |
 | `narrative_binding_target` | 人类叙事板块必须包含 `governance_obligations/acceptance_gate/static_lint_contract` |
 | `machine_binding_target` | 机械任务文件必须包含 `anchor_bindings[]`，每项必填 `anchor_id/clause_ref/binding_reason/target_block/evidence_ref` |
@@ -66,7 +66,7 @@ graph_hook:
 rg -n "constraint_task_package_constitution_binding" references/anchor_docs/ANCHOR_DOC_REGISTRY.yaml references/anchor_docs/constraints
 
 # 2) 通用锚点集合检查
-rg -n "common_code_governance|common_file_structure|common_folder_structure|common_fat_file|common_modularity|common_typed_contract|common_permission_boundary" references/anchor_docs/ANCHOR_DOC_REGISTRY.yaml
+rg -n "common_code_governance|common_file_structure|common_folder_structure|common_modularity|common_typed_contract|common_permission_boundary" references/anchor_docs/ANCHOR_DOC_REGISTRY.yaml
 
 # 3) 机械任务文件锚点绑定检查（示例字段）
 rg -n "anchor_bindings|anchor_id|clause_ref|binding_reason|target_block|evidence_ref" OctuposOS_Runtime_Backend -S

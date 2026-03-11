@@ -1,0 +1,19 @@
+catalog_version: v1
+toolbox_name: Cli_Toolbox
+toolbox_status: script_backed_runtime
+maintain_rules:
+  naming: "Cli_Toolbox.<tool_name>"
+  docs_sync_required: true
+  required_docs:
+    - references/tooling/Cli_Toolbox_USAGE.md
+    - references/tooling/Cli_Toolbox_DEVELOPMENT.md
+    - references/tooling/development/20_CATEGORY_INDEX.md
+  note: "当前 skill 以 run_python_code_lints.py 承载 Python lint 执行面。"
+profile_support:
+  - basic
+modules:
+  - module_id: python_lint_runner
+    tool_alias: Cli_Toolbox.run_python_code_lints
+    entrypoint: scripts/run_python_code_lints.py
+    status: active
+    doc: references/tooling/development/modules/mod_python_lint_runner.md

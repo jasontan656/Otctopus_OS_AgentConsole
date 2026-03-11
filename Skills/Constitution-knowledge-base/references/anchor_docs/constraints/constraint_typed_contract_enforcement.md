@@ -40,7 +40,7 @@ graph_hook:
 
 ```bash
 rg -n "constraint_typed_contract_enforcement" references/anchor_docs/ANCHOR_DOC_REGISTRY.yaml references/anchor_docs/constraints
-python3 scripts/run_constitution_lints.py --target . | jq '.gates[] | select(.gate=="typed_contract_gate")'
+python3 /home/jasontan656/AI_Projects/octopus-os-agent-console/Skills/Dev-PythonCode-Constitution-Backend/scripts/run_python_code_lints.py --target . | jq '.gates[] | select(.gate=="typed_contract_gate")'
 ```
 
 ## 最小验收

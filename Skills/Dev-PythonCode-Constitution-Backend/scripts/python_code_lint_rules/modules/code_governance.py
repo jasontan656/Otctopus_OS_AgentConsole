@@ -3,7 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 import re
 
-from constitution_lint_rules.shared import SOURCE_EXTS, iter_files, make_gate, read_text, rel
+from python_code_lint_rules.shared import SOURCE_EXTS, iter_files, make_gate, read_text, rel
 
 WAIVER_PATTERNS = (
     re.compile(r"\bwaiver approved\b", re.IGNORECASE),
@@ -22,7 +22,7 @@ def lint(root: Path) -> dict[str, object]:
     violations = []
     checked = 0
     for path in iter_files(root, SOURCE_EXTS):
-        if "constitution_lint_rules" in path.parts:
+        if "python_code_lint_rules" in path.parts:
             continue
         checked += 1
         text = read_text(path)

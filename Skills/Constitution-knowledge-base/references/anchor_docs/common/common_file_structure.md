@@ -1,4 +1,4 @@
-# 通用锚点：file_structure（文件结构与阈值联动合同）
+# 通用锚点：file_structure（文件结构合同）
 
 anchor_id: `common_file_structure`
 category: `common`
@@ -9,7 +9,7 @@ graph_hook:
 - graph_node: `common_always_on`
 
 ## 在项目中起什么作用
-- 把“文件结构”与 `common_fat_file` 的行数矩阵硬绑定，避免只定上限但不定拆分落点。
+- 规定超限或复杂实现时必须按固定职责拆分并落到固定位置，不允许随意新建杂项文件。
 - 规定超阈值后必须按固定职责拆分并落到固定位置，不允许随意新建杂项文件。
 - 保证 helper 抽象、职责分离、目录清洁可以机械执行。
 
@@ -27,12 +27,11 @@ graph_hook:
 - 每个约束都要明确违规判定标准。
 - 拆分动作必须能映射到固定模板路径。
 
-## 与 `common_fat_file` 的强绑定规则
+## 固定拆分落点规则
 
-1. 行数阈值以 `common_fat_file` 为唯一上位来源，`common_file_structure` 只定义“超限后的固定拆分落点”。
-2. 任一文件达到阈值的 `85%` 时，必须预拆分；达到 `100%` 前必须完成拆分。
-3. 规则类文件上限遵循 `rule_definition_file <= 1000`，但仍必须遵循单一规则域。
-4. 本条款与 `common_fat_file` 同时生效；任一违反均触发阻断。
+1. `common_file_structure` 只定义“复杂实现或需拆分时的固定落点”。
+2. 规则类文件仍必须遵循单一规则域。
+3. Python 胖文件阈值已迁移到 `Dev-PythonCode-Constitution-Backend`。
 
 ## 固定目录与文件职责模板（必须遵守）
 
@@ -59,7 +58,7 @@ graph_hook:
 
 ## 阈值触发后的拆分矩阵（结构联动）
 
-| 文件类别（来自 `common_fat_file`） | 达阈值时必须拆到 |
+| 文件类别 | 需要拆分时必须拆到 |
 |---|---|
 | `backend_api_controller` | `*_controller.py` + `*_orchestrator.py` |
 | `backend_orchestrator` | `*_orchestrator.py` + `*_domain.py` |
@@ -124,7 +123,7 @@ find . -type f \( -name "*rule*.yaml" -o -name "*constitution*.md" -o -name "*li
   xargs -0 wc -l | awk '$1>1000{print;bad=1} END{exit bad}'
 
 # 4) 本条款反查
-rg -n "common_file_structure|common_fat_file" references/anchor_docs/ANCHOR_DOC_REGISTRY.yaml references/anchor_docs/common
+rg -n "common_file_structure" references/anchor_docs/ANCHOR_DOC_REGISTRY.yaml references/anchor_docs/common
 ```
 
 ## 最小验收

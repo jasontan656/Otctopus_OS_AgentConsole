@@ -10,7 +10,7 @@ graph_hook:
 
 ## 在项目中起什么作用
 - 提供可直接落地的工程目录标准，避免“目录过粗 + 代码堆叠”。
-- 将目录治理与 `common_fat_file`、`common_file_structure` 绑定，确保超阈值能有固定拆分落点。
+- 将目录治理与 `common_file_structure` 绑定，确保复杂实现能有固定拆分落点。
 - 明确 `core/common/tmp` 等关键目录角色，保证工程整洁可持续。
 
 ## 适用范围（必须全覆盖）
@@ -125,11 +125,10 @@ flowchart LR
 
 ## 与阈值治理联动规则（强制）
 
-1. 文件行数上限以 `common_fat_file` 为唯一来源。
-2. 超阈值拆分路径以 `common_file_structure` 固定模板为唯一来源。
-3. 目录结构必须给阈值拆分提供落点，不得出现“超限但无目录归属”。
-4. `rules/` 中规则文件允许至 `1000` 行，仅限规则定义；超过则按子域拆分。
-5. `tmp/` 仅允许临时产物，禁止长期保留可执行源代码。
+1. 复杂实现拆分路径以 `common_file_structure` 固定模板为唯一来源。
+2. 目录结构必须给拆分提供落点，不得出现“需要拆分但无目录归属”。
+3. `rules/` 中规则文件允许至 `1000` 行，仅限规则定义；超过则按子域拆分。
+4. `tmp/` 仅允许临时产物，禁止长期保留可执行源代码。
 
 ## 扩展合同（按需）
 - `archive_root`: 冷数据归档目录与保留策略。
@@ -182,7 +181,7 @@ find rules -type f \( -name "*.md" -o -name "*.yaml" -o -name "*.yml" \) -print0
   xargs -0 wc -l | awk '$1>1000{print;bad=1} END{exit bad}'
 
 # 4) 本条款反查
-rg -n "common_folder_structure|common_fat_file|common_file_structure" references/anchor_docs/common references/anchor_docs/ANCHOR_DOC_REGISTRY.yaml
+rg -n "common_folder_structure|common_file_structure" references/anchor_docs/common references/anchor_docs/ANCHOR_DOC_REGISTRY.yaml
 ```
 
 ## 最小验收

@@ -33,7 +33,7 @@ graph_hook:
 |---|---|
 | `trigger_scope` | 命中任意业务域关键词即触发 |
 | `required_node` | 必挂 `common_core` |
-| `required_anchors` | 必含 `common_code_governance/common_file_structure/common_folder_structure/common_fat_file/common_modularity/common_typed_contract/common_permission_boundary` |
+| `required_anchors` | 必含 `common_code_governance/common_file_structure/common_folder_structure/common_modularity/common_typed_contract/common_permission_boundary` |
 | `required_constraints` | 任务包生成与更新场景必须附 `constraint_task_package_constitution_binding` |
 | `missing_policy` | 缺任一项返回 `insufficient_evidence` 并阻断 |
 | `trace_flag` | 查询结果必须显式给出 `required_common_anchors` |
@@ -66,7 +66,7 @@ rg -n "constraint_always_attach_common" references/anchor_docs/ANCHOR_DOC_REGIST
 rg -n "common_always_on" references/knowledge_graph/MOL_TECH_STACK_KEYWORD_ANCHOR_GRAPH_v1.md
 
 # 3) 必挂锚点集合检查
-rg -n "common_code_governance|common_file_structure|common_folder_structure|common_fat_file|common_modularity|common_typed_contract|common_permission_boundary" references/anchor_docs/ANCHOR_DOC_REGISTRY.yaml
+rg -n "common_code_governance|common_file_structure|common_folder_structure|common_modularity|common_typed_contract|common_permission_boundary" references/anchor_docs/ANCHOR_DOC_REGISTRY.yaml
 
 # 4) 任务包绑定约束检查
 rg -n "constraint_task_package_constitution_binding" references/anchor_docs/ANCHOR_DOC_REGISTRY.yaml

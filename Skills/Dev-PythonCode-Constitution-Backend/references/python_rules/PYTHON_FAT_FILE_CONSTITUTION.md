@@ -1,12 +1,19 @@
-# 通用锚点：fat_file（胖文件治理合同，零豁免强制版）
+---
+doc_id: "dev_pythoncode_constitution_backend.python_rules.fat_file"
+doc_type: "topic_atom"
+topic: "Python fat-file governance and split guidance"
+anchors:
+  - target: "../governance/SKILL_EXECUTION_RULES.md"
+    relation: "implements"
+    direction: "upstream"
+    reason: "The execution rules route Python fat-file work into this rule doc."
+  - target: "../routing/TASK_ROUTING.md"
+    relation: "implements"
+    direction: "upstream"
+    reason: "Task routing sends fat-file and lint tasks here."
+---
 
-anchor_id: `common_fat_file`
-category: `common`
-mol_resident_source:
-- `assets/goal/MOL_FULL_CANON.md`
-graph_hook:
-- graph_doc: `references/knowledge_graph/MOL_TECH_STACK_KEYWORD_ANCHOR_GRAPH_v1.md`
-- graph_node: `common_always_on`
+# Python Fat File Constitution
 
 ## 在项目中起什么作用
 - 强制把实现拆成小职责文件，避免“巨无霸文件”吞掉可维护性。
@@ -18,10 +25,9 @@ graph_hook:
 | 资产域 | 受约束文件 |
 |---|---|
 | `backend` | `.py` 业务实现、API、worker、repository、adapter |
-| `frontend` | `.ts/.vue` 页面、组件、状态管理、API 客户端、helper |
-| `database` | repository、model、migration、schema |
-| `tooling` | CLI 脚本、构建脚本、校验脚本 |
-| `rule_files` | lint/rule/policy/constitution 规则类定义文件 |
+| `database` | Python repository、model、migration、schema |
+| `tooling` | Python CLI 脚本、构建脚本、校验脚本 |
+| `rule_files` | Python 相关 lint/rule/policy/constitution 规则类定义文件 |
 
 ## 写法风格（命令式）
 - 先写文件类别，再写上限，再写超限动作。
@@ -42,7 +48,7 @@ graph_hook:
 | `schema_or_contract_file` | 300 | 类型/契约定义，不混业务流程。 |
 | `workflow_or_contract_support` | 240 | `scripts/` 下的流程合同、策略支持、阶段支持类文件。 |
 | `registry_or_contract_data` | 280 | `scripts/` 下的 registry/data/映射类文件。 |
-| `cli_or_task_script` | 220 | 参数解析 + 单一任务执行；必须具备明确 CLI 入口特征。 |
+| `cli_or_task_script` | 420 | 参数解析 + 单一任务执行；必须具备明确 CLI 入口特征。 |
 | `unit_test_file` | 260 | 单模块测试。 |
 | `integration_e2e_test_file` | 420 | 允许更长，但必须按场景分段。 |
 | `runtime_config_file` | 180 | 仅配置映射，不写业务流程。 |
@@ -96,11 +102,11 @@ graph_hook:
 1. 新增功能先选定文件类别，再按矩阵控制行数。
 2. 触碰上限前先拆分，不得超限后补救。
 3. 拆分必须按固定职责模板落地。
-4. PR 检查必须包含文件行数矩阵校验并以非零退出码阻断。
+4. Python 相关回合若触发 lint，必须执行 `python3 scripts/run_python_code_lints.py --target <target_root>` 并以非零退出码阻断失败项。
 5. 规则类文件必须显式标记为 `rule_definition_file` 才能享受 1000 行上限。
 
 ## 不要做（Don't）
-1. 不要在 controller/page 中堆叠业务规则与外部调用。
+1. 不要在 controller/handler 中堆叠业务规则与外部调用。
 2. 不要把 helper 写成隐式状态容器。
 3. 不要把超限合理化为“这个文件特殊”。
 4. 不要把规则文件当业务实现收容器。
@@ -115,19 +121,19 @@ graph_hook:
 ## 实操命令（项目级）
 ```bash
 # 1) 全量查看超长文件（快速巡检）
-find . -type f \( -name "*.py" -o -name "*.ts" -o -name "*.vue" -o -name "*.sql" -o -name "*.yaml" -o -name "*.yml" \) \
+find . -type f \( -name "*.py" -o -name "*.sql" -o -name "*.yaml" -o -name "*.yml" \) \
   -not -path "*/.git/*" -print0 | xargs -0 wc -l | sort -nr | head -n 200
 
 # 2) helper 文件强约束（>120 直接失败）
-find . -type f \( -name "*helper*.py" -o -name "*helper*.ts" \) -print0 | \
+find . -type f -name "*helper*.py" -print0 | \
   xargs -0 wc -l | awk '$1>120{print;bad=1} END{exit bad}'
 
 # 3) 规则类文件上限检查（>1000 失败）
 find . -type f \( -name "*rule*.md" -o -name "*rule*.yaml" -o -name "*lint*.yaml" -o -name "*constitution*.md" \) -print0 | \
   xargs -0 wc -l | awk '$1>1000{print;bad=1} END{exit bad}'
 
-# 4) 本条款反查
-rg -n "common_fat_file" references/anchor_docs/ANCHOR_DOC_REGISTRY.yaml
+# 4) 执行 Python lint
+python3 scripts/run_python_code_lints.py --target .
 ```
 
 ## 最小验收

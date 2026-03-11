@@ -3,7 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 import re
 
-from constitution_lint_rules.shared import SOURCE_EXTS, iter_files, make_gate, rel
+from python_code_lint_rules.shared import SOURCE_EXTS, iter_files, make_gate, rel
 
 RULE_SUFFIXES = ("rule", "constitution", "lint")
 RULE_EXTS = {".md", ".yaml", ".yml", ".json"}
@@ -30,7 +30,7 @@ def lint(root: Path) -> dict[str, object]:
             violations.append({"path": rel(path, root), "reason": "domain_name_must_end_with__domain.py"})
         if lower.endswith(".py") and ("repo" in tokens or "repository" in tokens) and not lower.endswith("_repo.py"):
             violations.append({"path": rel(path, root), "reason": "repo_name_must_end_with__repo.py"})
-        if "helper" in lower and not (lower.endswith("_helper.py") or lower.endswith(".helper.ts") or lower.endswith(".helper.js")):
+        if "helper" in lower and not lower.endswith("_helper.py"):
             violations.append({"path": rel(path, root), "reason": "helper_name_must_use_helper_suffix"})
         in_reference_docs = "references" in path.parts
         is_stage_template_rule = path.name == "RULES.md" and "assets" in path.parts and "stages" in path.parts

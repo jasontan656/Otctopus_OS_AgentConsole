@@ -103,22 +103,17 @@ def main() -> int:
         "required_gates": REQUIRED_GATES,
         "minimum_keyword_contract": MINIMUM_KEYWORD_CONTRACT,
         "static_enforcement_scope": {
-            "lintable_categories": ["common_core", "common_conditional", "constraints"],
-            "hard_gate_focus": [
-                "code_governance",
-                "file_structure",
-                "folder_structure",
-                "fat_file",
-                "modularity",
-                "typed_contract",
-                "payload_normalize",
-                "permission_boundary",
-                "hardcoded_asset",
-                "absolute_path",
-                "rule_traceability",
+            "lintable_categories": [],
+            "hard_gate_focus": [],
+            "non_goal": [
+                "dependency_selection",
+                "framework_selection",
+                "runtime_dependency_binding",
+                "runtime_evidence",
+                "python_code_lint_execution",
             ],
-            "non_goal": ["dependency_selection", "framework_selection", "runtime_dependency_binding", "runtime_evidence"],
         },
         "enforcement_decision": "pass",
+        "execution_owner_hint": "specialized skill or repo-local contract",
     })
     return 0
