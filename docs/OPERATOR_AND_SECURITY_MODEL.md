@@ -55,3 +55,6 @@ At the current phase:
 - product boundaries are still being shaped
 - commit cadence is very high
 - the system is suitable for local trial and learning, not for stable external consumption
+- the supported runtime is currently Codex only
+- the supported model profile is currently GPT-5.4 with high reasoning effort only
+- other models are unsupported and unverified, so behavior equivalence must not be assumed

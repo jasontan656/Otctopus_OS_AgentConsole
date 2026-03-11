@@ -19,6 +19,28 @@ Users should be warned that:
 - the product is still structurally unstable
 - installable does not mean stable
 - each install may reflect a build that is superseded again within 10 to 15 minutes
+- the product currently supports Codex only
+- the product currently supports only GPT-5.4 with high reasoning effort
+- other models are unsupported, untested, and may not behave equivalently
+
+## Current Install Surface
+
+The intended public trial install surface is command-line-first and one-line callable:
+
+```bash
+python3 product_tools/octopus_os_agent_console.py install --runtime-target codex-gpt-5.4-high --codex-root ~/.codex/skills --workspace-root ~/Octopus_OS_Agent_Console
+```
+
+`wizard` may still exist as a guided TUI, but the canonical install path is the single-line CLI entry above.
+
+## Hard Install Gate
+
+Install must refuse to continue unless both conditions are true:
+
+1. the target skills root matches a Codex-style directory shape such as `.../.codex/skills`
+2. the operator explicitly targets `codex-gpt-5.4-high`
+
+If either condition fails, install should stop instead of trying to adapt to another runtime layout or another model stack.
 
 ## Minimum Model
 

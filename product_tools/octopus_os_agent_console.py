@@ -23,6 +23,8 @@ SYSTEM_SKILL_MARKER = ".codex-system-skills.marker"
 SKILLS_DIR_NAME = "Skills"
 WORKSPACE_MARKER = ".octopus_os_workspace_install.json"
 PRODUCT_NAME = "Octopus OS - Natural-Language-Driven Multi-Agent Console"
+SUPPORTED_RUNTIME_TARGET = "codex-gpt-5.4-high"
+SUPPORTED_RUNTIME_LABEL = "Codex + GPT-5.4 high reasoning effort"
 
 
 def _resolve_repo_root(raw: str | None) -> Path:
@@ -50,6 +52,24 @@ def _resolve_state_root(raw: str | None) -> Path:
     if raw:
         return Path(raw).expanduser().resolve()
     return (Path.home() / ".octopus-os-agent-console" / "install_sessions").resolve()
+
+
+def _validate_codex_root_structure(codex_root: Path) -> None:
+    if codex_root.name != "skills" or codex_root.parent.name != ".codex":
+        raise ValueError(
+            "codex root must be a Codex skills directory shaped like .../.codex/skills; "
+            f"refusing install for non-codex target: {codex_root}"
+        )
+
+
+def _require_supported_runtime_target(runtime_target: str | None) -> str:
+    normalized = str(runtime_target or "").strip()
+    if normalized != SUPPORTED_RUNTIME_TARGET:
+        raise ValueError(
+            "installation is limited to Codex with GPT-5.4 high reasoning effort; "
+            f"rerun with --runtime-target {SUPPORTED_RUNTIME_TARGET}"
+        )
+    return normalized
 
 
 def _resolve_skills_root(repo_root: Path) -> Path:
@@ -130,6 +150,14 @@ def _build_plan(repo_root: Path, codex_root: Path, workspace_root: Path) -> dict
         "skills_root": str(_resolve_skills_root(repo_root)),
         "codex_root": str(codex_root),
         "workspace_root": str(workspace_root),
+        "supported_runtime_target": SUPPORTED_RUNTIME_TARGET,
+        "supported_runtime_label": SUPPORTED_RUNTIME_LABEL,
+        "recommended_install_command": (
+            "python3 product_tools/octopus_os_agent_console.py install "
+            f"--runtime-target {SUPPORTED_RUNTIME_TARGET} "
+            f"--codex-root {codex_root} "
+            f"--workspace-root {workspace_root}"
+        ),
         "skills": skills,
         "overwrite_skills": overwrite_skills,
         "workspace_exists": workspace_root.exists(),
@@ -218,6 +246,7 @@ def _print_plan_summary(lang: str, plan: dict[str, object]) -> None:
     overwrite_skills = plan["overwrite_skills"]
     workspace_exists = plan["workspace_exists"]
     print(_label(lang, "Product:", "产品："), PRODUCT_NAME)
+    print(_label(lang, "Supported runtime:", "受支持运行时："), SUPPORTED_RUNTIME_LABEL)
     print(_label(lang, "Codex root:", "Codex 根目录："), plan["codex_root"])
     print(_label(lang, "Workspace root:", "工作区根目录："), plan["workspace_root"])
     print(_label(lang, "Syncable skills:", "可同步技能："), len(skills))
@@ -237,6 +266,12 @@ def _print_plan_summary(lang: str, plan: dict[str, object]) -> None:
     print(f"  - {_label(lang, 'This build is for local trial only.', '当前构建仅供本地试用。')}")
     print(f"  - {_label(lang, 'The repository may change again within 10 to 15 minutes.', '仓库可能在 10 到 15 分钟内再次变化。')}")
     print(f"  - {_label(lang, 'Installable does not mean stable.', '可安装不代表稳定。')}")
+    print(
+        f"  - {_label(lang, 'Only Codex with GPT-5.4 high reasoning effort is supported.', '仅支持 Codex + GPT-5.4 high reasoning effort。')}"
+    )
+    print(
+        f"  - {_label(lang, 'Other models are unsupported, untested, and may behave differently.', '其他模型不受支持、未经测试，效果不可保证。')}"
+    )
     print()
 
 
@@ -259,6 +294,8 @@ def install_command(args: argparse.Namespace) -> int:
     codex_root = _resolve_codex_root(args.codex_root)
     workspace_root = _resolve_workspace_root(args.workspace_root)
     state_root = _resolve_state_root(args.state_root)
+    runtime_target = _require_supported_runtime_target(getattr(args, "runtime_target", None))
+    _validate_codex_root_structure(codex_root)
     plan = _build_plan(repo_root, codex_root, workspace_root)
 
     if plan["overwrite_skills"] and not args.allow_overwrite_skills:
@@ -312,6 +349,7 @@ def install_command(args: argparse.Namespace) -> int:
     manifest = {
         "session_id": session_id,
         "product_name": PRODUCT_NAME,
+        "supported_runtime_target": runtime_target,
         "repo_root": str(repo_root),
         "codex_root": str(codex_root),
         "workspace_root": str(workspace_root),
@@ -326,6 +364,7 @@ def install_command(args: argparse.Namespace) -> int:
         "action": "install",
         "manifest_path": str(manifest_path),
         "session_id": session_id,
+        "supported_runtime_target": runtime_target,
         "overwrite_skills": plan["overwrite_skills"],
         "workspace_root": str(workspace_root),
     }
@@ -400,7 +439,18 @@ def wizard_command(args: argparse.Namespace) -> int:
                 str(workspace_root),
             )
         ).expanduser().resolve()
+        runtime_confirmed = _prompt_confirm(
+            lang,
+            "Confirm that the target runtime is Codex with GPT-5.4 high reasoning effort only.",
+            "请确认目标运行时仅为 Codex + GPT-5.4 high reasoning effort。",
+            default=False,
+        )
+        if not runtime_confirmed:
+            raise ValueError("wizard aborted because the supported runtime constraint was not accepted")
+        args.runtime_target = SUPPORTED_RUNTIME_TARGET
 
+    runtime_target = _require_supported_runtime_target(getattr(args, "runtime_target", None))
+    _validate_codex_root_structure(codex_root)
     plan = _build_plan(repo_root, codex_root, workspace_root)
     if not args.yes:
         _print_header(lang, "Install Plan", "安装计划")
@@ -449,6 +499,7 @@ def wizard_command(args: argparse.Namespace) -> int:
         codex_root=str(codex_root),
         workspace_root=str(workspace_root),
         state_root=str(state_root),
+        runtime_target=runtime_target,
         allow_overwrite_skills=allow_overwrite,
         allow_replace_workspace=allow_replace_workspace,
     )
@@ -469,6 +520,7 @@ def main() -> int:
     parser.add_argument("--workspace-root")
     parser.add_argument("--state-root")
     parser.add_argument("--session-id")
+    parser.add_argument("--runtime-target")
     parser.add_argument("--allow-overwrite-skills", action="store_true")
     parser.add_argument("--allow-replace-workspace", action="store_true")
     parser.add_argument("--wizard-language", choices=["auto", "en", "zh", "bilingual"], default="auto")

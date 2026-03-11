@@ -15,6 +15,9 @@
 - Positioning: natural-language-driven multi-agent console
 - Current phase: rapid local product shaping for a solo operator before the full public product form stabilizes
 - Near-term direction: shape a self-contained AI collaboration stack instead of depending on opaque external skill bundles
+- Install surface: command-line-first and one-line callable
+- Runtime boundary: support Codex-style `.../.codex/skills` targets only
+- Model boundary: support only `Codex + GPT-5.4 high reasoning effort`; other models are unsupported and untested
 
 ## Logging Rule
 - Read the current product intent before making new product decisions.

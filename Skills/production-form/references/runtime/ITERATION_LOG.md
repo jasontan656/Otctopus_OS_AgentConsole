@@ -75,3 +75,17 @@ It exists so AI can keep reading the recent product evolution before the main it
   - `/home/jasontan656/AI_Projects/Codex_CLI_Start_Commands.md`
 - next_steps:
   - Continue watching for stale historical references, but keep cleanup focused on active executable entrypoints rather than archived logs and evidence snapshots.
+
+## 2026-03-11 02:33:59Z - Constrain install surface to Codex runtime
+
+- author: `codex`
+- summary: Locked the public install surface to a one-line CLI flow with Codex directory validation and explicit GPT-5.4 high reasoning effort targeting.
+- decisions:
+  - Reject non-Codex install roots, require explicit runtime target acknowledgement, and document that other models are unsupported and untested.
+- affected_paths:
+  - `product_tools/octopus_os_agent_console.py`
+  - `docs/INSTALL_AND_CLEANUP_MODEL.md`
+  - `README.md`
+  - `references/runtime/CURRENT_PRODUCT_INTENT.md`
+- next_steps:
+  - Keep release messaging aligned with the Codex-only install gate until a broader runtime validation story exists.

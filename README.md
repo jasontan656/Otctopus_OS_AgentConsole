@@ -14,6 +14,9 @@ This repository is the product foundation for Octopus OS. It has two responsibil
 - Stage: Alpha
 - Intended use: learning, testing, and trial runs
 - Not recommended yet for critical production workflows
+- Supported runtime: Codex only
+- Supported model profile: GPT-5.4 with high reasoning effort only
+- Other models are unsupported, untested, and may behave differently
 - The repository currently changes at a very high pace, often every 10 to 15 minutes
 - Commit-by-commit reading is not a meaningful way to learn the system yet; use the higher-level product documents instead
 
@@ -33,7 +36,22 @@ A better model is:
 - Product-facing files may evolve here, but they must not pollute `~/.codex/skills`
 - Skill roots must remain pushable through `skill-mirror-to-codex`
 - Install and cleanup must stay manifest-driven instead of using guess-based deletion
+- Installation is limited to Codex-style targets shaped like `.../.codex/skills`
+- Non-Codex targets are rejected by the installer
 - The long-term target is a self-contained stack of skills and workflows owned by the product itself, reducing dependence on third-party skill installs and keeping AI behavior explicit, safe, and controllable
+
+## One-Line Install
+
+Current install is command-line-first and can be run as a single command:
+
+```bash
+python3 product_tools/octopus_os_agent_console.py install --runtime-target codex-gpt-5.4-high --codex-root ~/.codex/skills --workspace-root ~/Octopus_OS_Agent_Console
+```
+
+The installer will refuse to continue if:
+
+- the target skills directory does not match a Codex-style path such as `.../.codex/skills`
+- the runtime target is not explicitly acknowledged as `codex-gpt-5.4-high`
 
 ## Entry Documents
 

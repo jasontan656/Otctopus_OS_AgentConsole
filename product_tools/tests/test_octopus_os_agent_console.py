@@ -13,6 +13,8 @@ SCRIPT = (
 
 
 class OctopusOSAgentConsoleTests(unittest.TestCase):
+    supported_runtime_target = "codex-gpt-5.4-high"
+
     def run_cli(self, *args: str, check: bool = True) -> subprocess.CompletedProcess[str]:
         return subprocess.run(
             ["python3", str(SCRIPT), *args],
@@ -59,14 +61,14 @@ class OctopusOSAgentConsoleTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             repo_root = Path(tmp) / "repo"
             skills_root = repo_root / "Skills"
-            codex_root = Path(tmp) / "codex"
+            codex_root = Path(tmp) / ".codex" / "skills"
             workspace_root = Path(tmp) / "workspace"
             state_root = Path(tmp) / "state"
             skill_root = skills_root / "Meta-Impact-Investigation"
             skill_root.mkdir(parents=True)
             (skill_root / "SKILL.md").write_text("skill\n", encoding="utf-8")
             (repo_root / "README.md").write_text("product\n", encoding="utf-8")
-            codex_root.mkdir()
+            codex_root.parent.mkdir(parents=True)
 
             install = self.run_cli(
                 "install",
@@ -78,9 +80,12 @@ class OctopusOSAgentConsoleTests(unittest.TestCase):
                 str(workspace_root),
                 "--state-root",
                 str(state_root),
+                "--runtime-target",
+                self.supported_runtime_target,
             )
             install_payload = json.loads(install.stdout)
             self.assertEqual(install_payload["status"], "ok")
+            self.assertEqual(install_payload["supported_runtime_target"], self.supported_runtime_target)
             self.assertTrue((codex_root / "Meta-Impact-Investigation" / "SKILL.md").exists())
             self.assertFalse((codex_root / "README.md").exists())
             self.assertTrue((workspace_root / "README.md").exists())
@@ -101,13 +106,13 @@ class OctopusOSAgentConsoleTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             repo_root = Path(tmp) / "repo"
             skills_root = repo_root / "Skills"
-            codex_root = Path(tmp) / "codex"
+            codex_root = Path(tmp) / ".codex" / "skills"
             workspace_root = Path(tmp) / "workspace"
             state_root = Path(tmp) / "state"
             skill_root = skills_root / "Meta-Impact-Investigation"
             skill_root.mkdir(parents=True)
             (skill_root / "SKILL.md").write_text("skill\n", encoding="utf-8")
-            codex_root.mkdir()
+            codex_root.parent.mkdir(parents=True)
 
             wizard = self.run_cli(
                 "wizard",
@@ -122,12 +127,75 @@ class OctopusOSAgentConsoleTests(unittest.TestCase):
                 str(workspace_root),
                 "--state-root",
                 str(state_root),
+                "--runtime-target",
+                self.supported_runtime_target,
             )
 
             payload = json.loads(wizard.stdout)
             self.assertEqual(payload["status"], "ok")
             self.assertTrue((codex_root / "Meta-Impact-Investigation" / "SKILL.md").exists())
             self.assertTrue(workspace_root.exists())
+
+    def test_install_rejects_non_codex_root_shape(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            repo_root = Path(tmp) / "repo"
+            skills_root = repo_root / "Skills"
+            codex_root = Path(tmp) / "other-model" / "skills"
+            workspace_root = Path(tmp) / "workspace"
+            state_root = Path(tmp) / "state"
+            skill_root = skills_root / "Meta-Impact-Investigation"
+            skill_root.mkdir(parents=True)
+            (skill_root / "SKILL.md").write_text("skill\n", encoding="utf-8")
+
+            install = self.run_cli(
+                "install",
+                "--repo-root",
+                str(repo_root),
+                "--codex-root",
+                str(codex_root),
+                "--workspace-root",
+                str(workspace_root),
+                "--state-root",
+                str(state_root),
+                "--runtime-target",
+                self.supported_runtime_target,
+                check=False,
+            )
+
+            self.assertNotEqual(install.returncode, 0)
+            payload = json.loads(install.stdout)
+            self.assertEqual(payload["status"], "error")
+            self.assertIn("non-codex target", payload["error"])
+
+    def test_install_requires_supported_runtime_target(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            repo_root = Path(tmp) / "repo"
+            skills_root = repo_root / "Skills"
+            codex_root = Path(tmp) / ".codex" / "skills"
+            workspace_root = Path(tmp) / "workspace"
+            state_root = Path(tmp) / "state"
+            skill_root = skills_root / "Meta-Impact-Investigation"
+            skill_root.mkdir(parents=True)
+            (skill_root / "SKILL.md").write_text("skill\n", encoding="utf-8")
+            codex_root.parent.mkdir(parents=True)
+
+            install = self.run_cli(
+                "install",
+                "--repo-root",
+                str(repo_root),
+                "--codex-root",
+                str(codex_root),
+                "--workspace-root",
+                str(workspace_root),
+                "--state-root",
+                str(state_root),
+                check=False,
+            )
+
+            self.assertNotEqual(install.returncode, 0)
+            payload = json.loads(install.stdout)
+            self.assertEqual(payload["status"], "error")
+            self.assertIn(self.supported_runtime_target, payload["error"])
 
 
 if __name__ == "__main__":
