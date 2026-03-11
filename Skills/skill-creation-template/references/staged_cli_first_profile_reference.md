@@ -6,13 +6,13 @@
 
 ## 应保留的稳定结构
 - `SKILL.md` 只做门面，不做正文。
-- 门面采用固定 façade：
-  - `定位`
-  - `必读顺序`
-  - `分类入口`
+- 门面采用固定 7 章结构：
+  - `技能定位`
   - `适用域`
-  - `执行入口`
-  - `读取原则`
+  - `可用工具简述&入口`
+  - `文档指引&入口`
+  - `工作流指引`
+  - `顶层常驻通用规则`
   - `结构索引`
 - 运行态规则优先由 CLI 输出，而不是让模型直接通读 markdown。
 - 顶层常驻文档极少且固定。
@@ -81,7 +81,7 @@
 
 ## 模板治理建议
 - `skill-creation-template` 的 staged profile 至少生成：
-  - staged façade `SKILL.md`
+  - staged 门面 `SKILL.md`
   - runtime contract skeleton
   - `references/stages/00_STAGE_INDEX.md`
   - stage system README
@@ -89,7 +89,7 @@
   - `DOC_CONTRACT.json`
   - `COMMAND_CONTRACT.json`
   - `GRAPH_CONTRACT.json`
-- 若 staged skill 存在 companion skill 或外部 control plane，应在门面 `分类入口` 中显式指向，但不要把 companion 规则抄进本技能。
+- 若 staged skill 存在 companion skill 或外部 control plane，应在门面 `文档指引&入口` 中显式指向，但不要把 companion 规则抄进本技能。
 
 ## 作者检查清单
 - 这个技能真的需要 staged，而不是 basic 吗？

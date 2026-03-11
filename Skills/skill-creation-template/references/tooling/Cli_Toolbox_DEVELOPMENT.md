@@ -18,7 +18,7 @@
 - `Module Catalog`
   - 记录 CLI 入口、生成器入口与职责边界。
 - `Category`
-  - 记录 façade、profile、contracts、回归测试等分类索引。
+  - 记录门面结构、profile、contracts、回归测试等分类索引。
 - `Module Docs`
   - 单独记录生成器逻辑与回归口径。
 - `Changelog`
@@ -29,7 +29,7 @@
   - `references/tooling/Cli_Toolbox_USAGE.md`
   - `references/tooling/development/10_MODULE_CATALOG.yaml`
   - 受影响模块文档
-- 若改动影响 façade、runtime contract、profile 结构或 stage template kit，还必须同步更新：
+- 若改动影响门面结构、runtime contract、profile 结构或 stage template kit，还必须同步更新：
   - `references/runtime/SKILL_RUNTIME_CONTRACT.json`
   - `references/skill_template_contract_v1.md`
   - `references/staged_cli_first_profile_reference.md`

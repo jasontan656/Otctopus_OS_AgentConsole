@@ -11,10 +11,10 @@
   - 用途：基于受治理模板创建或改造技能骨架。
 - `Cli_Toolbox.skill_template`
   - 入口：`scripts/Cli_Toolbox.py skill-template`
-  - 用途：输出 `basic` profile 的 7 段 façade 模板。
+  - 用途：输出 `basic` profile 的 7 章门面模板。
 - `Cli_Toolbox.staged_skill_template`
   - 入口：`scripts/Cli_Toolbox.py staged-skill-template`
-  - 用途：输出 `staged_cli_first` profile 的 staged façade 模板。
+  - 用途：输出 `staged_cli_first` profile 的 staged 门面模板。
 - `Cli_Toolbox.openai_template`
   - 入口：`scripts/Cli_Toolbox.py openai-template`
   - 用途：输出 `agents/openai.yaml` 模板。
@@ -43,7 +43,7 @@
   - 系统执行 `python3 scripts/Cli_Toolbox.py runtime-contract --json`。
   - 命令读取 `references/runtime/SKILL_RUNTIME_CONTRACT.json` 并输出结构化合同。
 - 人类叙事版输出：
-  - 你会得到当前模板技能的 façade、profile 支持、工具映射、模板资产契约和验证闭环。
+  - 你会得到当前模板技能的门面结构、profile 支持、工具映射、模板资产契约和验证闭环。
 
 ### Cli_Toolbox.create_skill_from_template
 - 人类叙事版输入：
@@ -57,7 +57,7 @@
     - `assets/templates/stages/README_STAGE_SYSTEM.md`
     - stage checklist 模板
     - stage doc/command/graph contract 模板
-  - 生成门面默认采用标准化 7 段 façade，而不是旧的抽象层/业务层堆叠标题。
+  - 生成门面默认采用标准化 7 章结构，而不是旧的抽象层/业务层堆叠标题。
 - 人类叙事版输出：
   - 你会得到一个可直接继续编辑和治理的技能目录，以及 JSON 结果（`skill_dir`、`profile`、`resources_created`、`write_results`）。
 
@@ -67,7 +67,7 @@
 - 电脑动作发生了什么：
   - 系统执行 `python3 scripts/Cli_Toolbox.py skill-template --json`。
 - 人类叙事版输出：
-  - 你会得到采用 `定位/必读顺序/分类入口/适用域/执行入口/读取原则/结构索引` 的 basic façade 草稿。
+  - 你会得到采用 `技能定位/适用域/可用工具简述&入口/文档指引&入口/工作流指引/顶层常驻通用规则/结构索引` 的 basic 门面草稿。
 
 ### Cli_Toolbox.staged_skill_template
 - 人类叙事版输入：
@@ -75,7 +75,7 @@
 - 电脑动作发生了什么：
   - 系统执行 `python3 scripts/Cli_Toolbox.py staged-skill-template --json`。
 - 人类叙事版输出：
-  - 你会得到一份强调 resident docs、stage checklist、合同四件套和 stage-switch discard policy 的 staged façade 草稿。
+  - 你会得到一份强调 resident docs、stage checklist、合同四件套和 stage-switch discard policy 的 staged 门面草稿。
 
 ### Cli_Toolbox.runtime_contract_template
 - 人类叙事版输入：
@@ -103,7 +103,7 @@
 
 ## 同步维护要求
 - 工具变更后必须同步更新本文件与 `Cli_Toolbox_DEVELOPMENT.md`。
-- 若变更了 façade 结构、staged 合同面或默认生成资源，还必须同步：
+- 若变更了门面结构、staged 合同面或默认生成资源，还必须同步：
   - `references/runtime/SKILL_RUNTIME_CONTRACT.json`
   - `references/skill_template_contract_v1.md`
   - `references/staged_cli_first_profile_reference.md`

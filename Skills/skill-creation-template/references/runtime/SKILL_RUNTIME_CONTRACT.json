@@ -19,12 +19,12 @@
   "authoring_model": {
     "skill_md_role": "entry_only",
     "facade_sections": [
-      "定位",
-      "必读顺序",
-      "分类入口",
+      "技能定位",
       "适用域",
-      "执行入口",
-      "读取原则",
+      "可用工具简述&入口",
+      "文档指引&入口",
+      "工作流指引",
+      "顶层常驻通用规则",
       "结构索引"
     ],
     "extraction_rule": "extract stable runtime structure and governance shape; do not copy source-skill narration, project paths, or project-specific acceptance semantics"
@@ -106,7 +106,7 @@
   },
   "governance_rules": [
     "SKILL.md must remain an entry-only facade, not a pile of governance details.",
-    "The default template surface follows the standard 7-section facade.",
+    "The default template surface follows the standard 7-chapter entry layout.",
     "If a skill has runtime rules, the model must consume machine-readable contracts through CLI outputs instead of treating markdown as the runtime rule source.",
     "staged_cli_first skills must explicitly define top-level resident docs, stage order, stage checklist, stage doc contract, stage command contract, stage graph contract, and stage-switch discard policy.",
     "Template clusters must separate human-readable markdown anchors from machine-readable contracts.",

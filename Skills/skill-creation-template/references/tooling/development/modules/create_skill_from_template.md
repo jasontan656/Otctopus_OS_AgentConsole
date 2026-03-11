@@ -7,7 +7,7 @@
 
 ## 职责
 - 基于受治理模板创建技能骨架。
-- 默认生成标准 7 段 façade `SKILL.md`。
+- 默认生成标准 7 章门面 `SKILL.md`。
 - 根据 `--profile` 选择 basic 或 staged output surface。
 - staged profile 额外补齐：
   - runtime contract skeleton

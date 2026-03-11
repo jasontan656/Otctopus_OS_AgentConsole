@@ -1,7 +1,7 @@
 # Cli_Toolbox 开发文档架构总览
 
 ## 目标
-- 让模板技能的脚本、contracts、assets、tooling 文档与测试围绕同一套 façade 治理。
+- 让模板技能的脚本、contracts、assets、tooling 文档与测试围绕同一套门面结构治理。
 - 保证 `create_skill_from_template.py` 生成的不是“占位文档集合”，而是可直接继续收敛的 skill control plane。
 - 保证 `basic` 与 `staged_cli_first` 共享统一门面哲学，但输出不同深度的合同面。
 
@@ -21,7 +21,7 @@
    - `tests/`
 
 ## 当前关键设计
-- 默认门面采用标准 7 段 façade。
+- 默认门面采用标准 7 章结构。
 - `staged_cli_first` 默认生成 runtime contract 和 stage template kit。
 - stage template kit 包含：
   - `CHECKLIST.json`

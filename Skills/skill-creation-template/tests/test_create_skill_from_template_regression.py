@@ -22,7 +22,7 @@ def run_generator(*args: str) -> dict[str, object]:
 
 
 class CreateSkillFromTemplateRegressionTest(unittest.TestCase):
-    def test_basic_profile_generates_standard_facade(self) -> None:
+    def test_basic_profile_generates_standard_section_layout(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             payload = run_generator(
                 "--skill-name",
@@ -36,8 +36,9 @@ class CreateSkillFromTemplateRegressionTest(unittest.TestCase):
             skill_dir = Path(payload["skill_dir"])
             skill_md = (skill_dir / "SKILL.md").read_text(encoding="utf-8")
 
-            self.assertIn("## 1. 定位", skill_md)
-            self.assertIn("## 2. 必读顺序", skill_md)
+            self.assertIn("## 1. 技能定位", skill_md)
+            self.assertIn("## 2. 适用域", skill_md)
+            self.assertIn("## 6. 顶层常驻通用规则", skill_md)
             self.assertIn("## 7. 结构索引", skill_md)
             self.assertTrue((skill_dir / "tests").exists())
             self.assertFalse((skill_dir / "references" / "runtime").exists())

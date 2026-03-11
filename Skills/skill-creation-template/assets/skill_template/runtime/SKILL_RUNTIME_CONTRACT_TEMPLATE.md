@@ -17,13 +17,13 @@
 - `skill_name`: `${skill_name}`
 - `skill_profile`: `staged_cli_first`
 - `SKILL.md` role: `entry_only`
-- required façade sections:
-  - `定位`
-  - `必读顺序`
-  - `分类入口`
+- required section layout:
+  - `技能定位`
   - `适用域`
-  - `执行入口`
-  - `读取原则`
+  - `可用工具简述&入口`
+  - `文档指引&入口`
+  - `工作流指引`
+  - `顶层常驻通用规则`
   - `结构索引`
 
 ## Required Stage Surface

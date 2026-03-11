@@ -18,3 +18,14 @@
   - staged 模板 kit 新增 `CHECKLIST.json`，并把 resident docs、阶段合同四件套和 discard policy 升为模板硬约束。
   - `create_skill_from_template.py` 默认资源新增 `tests/`。
   - 引入生成回归测试，确保 profile 输出面不漂移。
+- 2026-03-11
+  - 将模板门面重排为新的 7 章结构：
+    - `技能定位`
+    - `适用域`
+    - `可用工具简述&入口`
+    - `文档指引&入口`
+    - `工作流指引`
+    - `顶层常驻通用规则`
+    - `结构索引`
+  - basic 与 staged 模板同步切换到“工具入口 / 文档入口 / 工作流 / 顶层常驻规则”分层。
+  - runtime contract、模板契约、tooling 文档与回归测试同步更新。
