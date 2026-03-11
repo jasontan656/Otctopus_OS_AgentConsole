@@ -32,3 +32,13 @@ Each commit should ideally answer:
 ## Value
 
 When other developers inspect the repository history, they should be able to understand how Octopus OS evolved as a product, not just how individual files were patched.
+
+## Current Limitation
+
+At the current phase, the repository changes so frequently that commit-by-commit reading is not yet a reliable learning path.
+
+For now:
+
+- public readers should use the product documents first
+- local product-form logs should retain the short-range design history
+- Git history should be treated as traceability, not as stable documentation

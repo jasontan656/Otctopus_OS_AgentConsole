@@ -9,6 +9,17 @@ The public trial surface must eventually support:
 - one-command cleanup
 - no accidental deletion of unrelated user files
 
+## Current Trial Warning
+
+The install flow is currently for local trial only.
+
+Users should be warned that:
+
+- the repository is changing extremely quickly
+- the product is still structurally unstable
+- installable does not mean stable
+- each install may reflect a build that is superseded again within 10 to 15 minutes
+
 ## Minimum Model
 
 The installer has to manage two targets at the same time:
@@ -54,6 +65,7 @@ Current behavior already includes:
 - manifest persistence
 - manifest-driven uninstall
 - a bilingual terminal wizard for end users
+- explicit warning surfaces for the current unstable phase should remain part of the install experience
 
 Future enhancements can still add:
 

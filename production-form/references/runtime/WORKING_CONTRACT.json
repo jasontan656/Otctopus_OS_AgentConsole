@@ -7,14 +7,16 @@
     "brand_name": "Octopus OS",
     "engineering_repo": "octopus-os-agent-console",
     "product_positioning": "natural-language-driven multi-agent console",
-    "current_phase": "rapid local product shaping"
+    "current_phase": "rapid local product shaping for a solo operator"
   },
   "hard_boundaries": [
     "public product README and docs stay English-only",
     "end-user wizard and TUI surfaces stay bilingual English/Chinese",
     "internal skill core and governance docs may stay Chinese-first",
     "product-facing docs and product tools must not be pushed into the codex installation directory",
-    "skill roots still evolve here first and then flow to ~/.codex/skills through the governed sync path"
+    "skill roots still evolve here first and then flow to ~/.codex/skills through the governed sync path",
+    "the long-term target is a self-contained skill and workflow stack rather than dependency on external third-party skill installs",
+    "the current build is intentionally unstable and may change again within 10 to 15 minutes"
   ],
   "local_history_contract": {
     "primary_log_path": "references/runtime/ITERATION_LOG.md",

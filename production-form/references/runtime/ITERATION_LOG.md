@@ -19,3 +19,24 @@ It exists so AI can keep reading the recent product evolution before the main it
   - If the skill is not kept updated, AI may start relying on stale local history.
 - next_steps:
   - Add the runtime CLI and keep appending real product-shaping decisions here.
+
+## 2026-03-11 01:28:40Z - Refine solo-operator product narrative
+
+- author: `codex`
+- summary: Expanded the public product shape around the solo-operator use case, self-contained workflow ownership, explicit instability warnings, and a clearer learning path for external readers.
+- decisions:
+  - Position Octopus OS as the product foundation for a solo operator building an end-to-end AI collaboration stack from zero to one.
+  - State that the long-term target is a self-contained skill and workflow stack owned by the product rather than dependency on third-party skill installs.
+  - Warn publicly that current builds are installable for local trial but may be superseded again within 10 to 15 minutes.
+- affected_paths:
+  - `README.md`
+  - `docs/PRODUCT_IDENTITY.md`
+  - `docs/OPERATOR_AND_SECURITY_MODEL.md`
+  - `docs/INSTALL_AND_CLEANUP_MODEL.md`
+  - `docs/PRODUCT_ITERATION_LOGGING.md`
+  - `product_tools/octopus_os_agent_console.py`
+  - `production-form/references/runtime/CURRENT_PRODUCT_INTENT.md`
+  - `production-form/references/runtime/WORKING_CONTRACT.json`
+  - `production-form/references/runtime/WORKING_CONTRACT.md`
+- next_steps:
+  - Continue shaping operator workflow, orchestration boundaries, and the public learning surface without leaking product-only internals into the codex installation directory.

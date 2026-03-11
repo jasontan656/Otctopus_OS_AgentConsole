@@ -21,13 +21,14 @@ It is:
 - the product-facing shell around the skill system
 - the skill-based foundation for natural-language-driven agent work
 - the future entry point for installation, cleanup, workspace mirroring, and product iteration records
+- the evolving control plane for a solo operator who wants AI collaborators to eventually cover development, deployment, operations, marketing work, and multi-agent orchestration
 
 ## Public Narrative
 
 Recommended positioning:
 
 > Octopus OS is a natural-language-driven multi-agent console.  
-> It treats skills as capability units and composition as the operating model, allowing individuals to progressively build a personalized intelligent assistant system.
+> It treats skills as capability units and composition as the operating model, allowing a solo operator to progressively build a personalized, end-to-end assistant system from zero to one.
 
 ## Internal Narrative
 
@@ -42,3 +43,5 @@ The following facts still remain true internally:
 - release stage: `alpha`
 - distribution strategy: `local-first`
 - remote strategy: `the current remote still acts mainly as backup and traceability origin`
+- current development rhythm: `extremely high-frequency iteration`
+- reading warning: `commit-by-commit reading is not currently a useful way to understand the product`

@@ -13,7 +13,8 @@
 - Brand: `Octopus OS`
 - Engineering repository: `octopus-os-agent-console`
 - Positioning: natural-language-driven multi-agent console
-- Current phase: rapid local product shaping before the full public product form stabilizes
+- Current phase: rapid local product shaping for a solo operator before the full public product form stabilizes
+- Near-term direction: shape a self-contained AI collaboration stack instead of depending on opaque external skill bundles
 
 ## Logging Rule
 - Read the current product intent before making new product decisions.

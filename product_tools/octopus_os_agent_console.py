@@ -223,6 +223,12 @@ def _print_plan_summary(lang: str, plan: dict[str, object]) -> None:
         print(_label(lang, "The workspace root already exists.", "工作区根目录已存在。"))
         print()
 
+    print(_label(lang, "Current warning:", "当前警告："))
+    print(f"  - {_label(lang, 'This build is for local trial only.', '当前构建仅供本地试用。')}")
+    print(f"  - {_label(lang, 'The repository may change again within 10 to 15 minutes.', '仓库可能在 10 到 15 分钟内再次变化。')}")
+    print(f"  - {_label(lang, 'Installable does not mean stable.', '可安装不代表稳定。')}")
+    print()
+
 
 def plan_command(args: argparse.Namespace) -> int:
     repo_root = _resolve_repo_root(args.repo_root)
