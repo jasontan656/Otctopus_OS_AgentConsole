@@ -6,6 +6,9 @@ import { Controls } from '@vue-flow/controls'
 import { MiniMap } from '@vue-flow/minimap'
 import { MarkerType, Position, VueFlow } from '@vue-flow/core'
 import type { Edge, Node } from '@vue-flow/core'
+import LocatorNodeFrame from './LocatorNodeFrame.vue'
+import { UI_COMPONENTS } from '../contracts/ui-identity-registry'
+import { useUiLocatorNode } from '../composables/useUiLocatorNode'
 import type { GraphEdgeRecord, PreviewDocumentRecord } from '../types'
 
 const props = defineProps<{
@@ -17,6 +20,8 @@ const props = defineProps<{
 const emit = defineEmits<{
   select: [path: string]
 }>()
+
+const graphCanvasNode = useUiLocatorNode(UI_COMPONENTS.graphPanelGraphCanvas.id)
 
 const palette: Record<string, string> = {
   skill_facade: '#dd6742',
@@ -103,19 +108,21 @@ const flowEdges = computed<Edge[]>(() => props.edges.map((edge) => ({
 </script>
 
 <template>
-  <div class="graph-shell">
-    <VueFlow
-      :nodes="flowNodes"
-      :edges="flowEdges"
-      fit-view-on-init
-      :min-zoom="0.2"
-      :max-zoom="1.8"
-      class="doc-graph"
-      @node-click="({ node }) => emit('select', node.id)"
-    >
-      <Background pattern-color="rgba(15, 23, 42, 0.1)" :gap="28" />
-      <MiniMap pannable zoomable />
-      <Controls />
-    </VueFlow>
-  </div>
+  <LocatorNodeFrame :node="graphCanvasNode">
+    <div class="graph-shell">
+      <VueFlow
+        :nodes="flowNodes"
+        :edges="flowEdges"
+        fit-view-on-init
+        :min-zoom="0.2"
+        :max-zoom="1.8"
+        class="doc-graph"
+        @node-click="({ node }) => emit('select', node.id)"
+      >
+        <Background pattern-color="rgba(15, 23, 42, 0.1)" :gap="28" />
+        <MiniMap pannable zoomable />
+        <Controls />
+      </VueFlow>
+    </div>
+  </LocatorNodeFrame>
 </template>

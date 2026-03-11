@@ -9,6 +9,10 @@ anchors:
     relation: "supports"
     direction: "upstream"
     reason: "The showroom consumes this frontend contract index as its official reading path."
+  - target: "layers/00_LAYERS_INDEX.md"
+    relation: "routes_to"
+    direction: "downstream"
+    reason: "Layer contracts define the long-lived layer catalog, node mapping, locator protocol, and lint workflow."
   - target: "containers/00_CONTAINERS_INDEX.md"
     relation: "routes_to"
     direction: "downstream"
@@ -30,6 +34,8 @@ anchors:
 # Frontend Development Contracts
 
 ## 分支读序
+- `layers/00_LAYERS_INDEX.md`
+  - 负责 layer 全覆盖设计、layer-container-component 映射、locator 协议与 lint 工作流。
 - `containers/00_CONTAINERS_INDEX.md`
   - 负责 SPA 容器角色、层级、状态边界、布局权、交互协议与治理规则。
 - `positioning/00_POSITIONING_INDEX.md`
@@ -40,7 +46,8 @@ anchors:
   - 负责布局调整与响应式约束。
 
 ## 最小读取路径
-1. 先读 `containers/00_CONTAINERS_INDEX.md`，确认 SPA 容器树、状态边界和布局权边界。
-2. 再读 `positioning/00_POSITIONING_INDEX.md`，确认这个目录在整个 skill 里的职责。
-3. 再读 `showroom_runtime/00_SHOWROOM_RUNTIME_INDEX.md`，确认展厅运行面和复用面。
-4. 最后读 `rules/00_RULES_INDEX.md`，收敛到具体布局规则。
+1. 先读 `layers/00_LAYERS_INDEX.md`，确认 layer catalog、节点命名协议和 locator 治理边界。
+2. 再读 `containers/00_CONTAINERS_INDEX.md`，确认 SPA 容器树、状态边界和布局权边界。
+3. 再读 `positioning/00_POSITIONING_INDEX.md`，确认这个目录在整个 skill 里的职责。
+4. 再读 `showroom_runtime/00_SHOWROOM_RUNTIME_INDEX.md`，确认展厅运行面和复用面。
+5. 最后读 `rules/00_RULES_INDEX.md`，收敛到具体布局规则。

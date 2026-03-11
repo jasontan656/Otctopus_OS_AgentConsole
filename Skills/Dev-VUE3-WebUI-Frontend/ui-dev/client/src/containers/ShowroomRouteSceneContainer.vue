@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import LocatorNodeFrame from '../components/LocatorNodeFrame.vue'
+import { UI_CONTAINERS } from '../contracts/ui-identity-registry'
 import RuntimeStatusContainer from './RuntimeStatusContainer.vue'
+import { useUiLocatorNode } from '../composables/useUiLocatorNode'
 import ShowroomWorkspaceContainer from './ShowroomWorkspaceContainer.vue'
 import { useShowroomRuntimeBridge } from '../composables/useShowroomRuntimeBridge'
 
+const routeSceneNode = useUiLocatorNode(UI_CONTAINERS.showroomRouteScene.id)
 const { payload, liveState, lastError } = useShowroomRuntimeBridge()
 
 const statusLabel = computed(() => {
@@ -15,13 +19,15 @@ const statusLabel = computed(() => {
 </script>
 
 <template>
-  <section class="scene-stack">
-    <RuntimeStatusContainer
-      :payload="payload"
-      :live-state="liveState"
-      :status-label="statusLabel"
-      :last-error="lastError"
-    />
-    <ShowroomWorkspaceContainer :payload="payload" />
-  </section>
+  <LocatorNodeFrame :node="routeSceneNode">
+    <section class="scene-stack">
+      <RuntimeStatusContainer
+        :payload="payload"
+        :live-state="liveState"
+        :status-label="statusLabel"
+        :last-error="lastError"
+      />
+      <ShowroomWorkspaceContainer :payload="payload" />
+    </section>
+  </LocatorNodeFrame>
 </template>

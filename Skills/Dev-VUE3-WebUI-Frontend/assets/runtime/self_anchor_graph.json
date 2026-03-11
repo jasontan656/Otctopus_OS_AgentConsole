@@ -3,8 +3,8 @@
   "graph_version": "v2",
   "source_skill": "Dev-VUE3-WebUI-Frontend",
   "summary": {
-    "nodeCount": 45,
-    "edgeCount": 117,
+    "nodeCount": 50,
+    "edgeCount": 140,
     "errorCount": 0,
     "warningCount": 0
   },
@@ -78,7 +78,7 @@
       "docType": "ui_dev_index",
       "topic": "Index of frontend development contracts for Dev-VUE3-WebUI-Frontend",
       "title": "Frontend Development Contracts",
-      "anchorCount": 5,
+      "anchorCount": 6,
       "depth": 1
     },
     {
@@ -199,6 +199,42 @@
       "depth": 3
     },
     {
+      "path": "frontend_dev_contracts/layers/00_LAYERS_INDEX.md",
+      "docId": "ui.dev.layers.index",
+      "docType": "ui_dev_index",
+      "topic": "Index of layer contracts, locator protocol, and UI identifier governance",
+      "title": "Layers Index",
+      "anchorCount": 5,
+      "depth": 2
+    },
+    {
+      "path": "frontend_dev_contracts/layers/10_LAYER_TAXONOMY.md",
+      "docId": "ui.dev.layers.taxonomy",
+      "docType": "ui_dev_guide",
+      "topic": "Fixed layer catalog for the Dev-VUE3-WebUI-Frontend SPA and showroom",
+      "title": "Layer Taxonomy",
+      "anchorCount": 3,
+      "depth": 2
+    },
+    {
+      "path": "frontend_dev_contracts/layers/20_LAYER_NODE_MAPPING.md",
+      "docId": "ui.dev.layers.node_mapping",
+      "docType": "ui_dev_guide",
+      "topic": "Mapping between layers, containers, components, and their runtime files",
+      "title": "Layer Node Mapping",
+      "anchorCount": 3,
+      "depth": 2
+    },
+    {
+      "path": "frontend_dev_contracts/layers/30_LOCATOR_AND_IDENTIFIER_PROTOCOL.md",
+      "docId": "ui.dev.layers.locator_protocol",
+      "docType": "ui_dev_guide",
+      "topic": "Visible locator identifiers and toggle protocol for containers and components",
+      "title": "Locator Identifier Protocol",
+      "anchorCount": 3,
+      "depth": 2
+    },
+    {
       "path": "frontend_dev_contracts/positioning/00_POSITIONING_INDEX.md",
       "docId": "ui.dev.positioning.index",
       "docType": "index_doc",
@@ -231,7 +267,16 @@
       "docType": "index_doc",
       "topic": "Index of layout and responsive frontend rule contracts",
       "title": "Frontend Rules Index",
-      "anchorCount": 2,
+      "anchorCount": 3,
+      "depth": 2
+    },
+    {
+      "path": "frontend_dev_contracts/rules/UI_IDENTIFIER_LINT_WORKFLOW.md",
+      "docId": "ui.dev.rules.identifier_lint",
+      "docType": "tooling_usage",
+      "topic": "Lint workflow for layer, container, and component identifiers",
+      "title": "UI Identifier Lint Workflow",
+      "anchorCount": 3,
       "depth": 2
     },
     {
@@ -267,7 +312,7 @@
       "docType": "tooling_architecture",
       "topic": "Viewer stack, reusable UI direction, and showroom layout contract",
       "title": "Viewer Stack Reuse Contract",
-      "anchorCount": 4,
+      "anchorCount": 5,
       "depth": 2
     },
     {
@@ -330,7 +375,7 @@
       "docType": "stage_doc",
       "topic": "Motion language, reusable component boundaries, and code organization",
       "title": "Stage Motion Component Architecture",
-      "anchorCount": 3,
+      "anchorCount": 4,
       "depth": 2
     },
     {
@@ -339,7 +384,7 @@
       "docType": "stage_doc",
       "topic": "Runnable showroom and runtime delivery stage for the Vue3 web UI frontend skill",
       "title": "Stage Showroom Runtime",
-      "anchorCount": 3,
+      "anchorCount": 4,
       "depth": 2
     },
     {
@@ -411,7 +456,7 @@
       "docType": "ui_dev_entry",
       "topic": "Runnable showroom root for Dev-VUE3-WebUI-Frontend",
       "title": "UI Dev Entry",
-      "anchorCount": 3,
+      "anchorCount": 4,
       "depth": 1
     }
   ],
@@ -520,6 +565,13 @@
       "relation": "supports",
       "direction": "upstream",
       "reason": "The showroom consumes this frontend contract index as its official reading path."
+    },
+    {
+      "source": "frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md",
+      "target": "frontend_dev_contracts/layers/00_LAYERS_INDEX.md",
+      "relation": "routes_to",
+      "direction": "downstream",
+      "reason": "Layer contracts define the long-lived layer catalog, node mapping, locator protocol, and lint workflow."
     },
     {
       "source": "frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md",
@@ -823,6 +875,104 @@
       "reason": "Normalized payload is the input boundary for container interaction."
     },
     {
+      "source": "frontend_dev_contracts/layers/00_LAYERS_INDEX.md",
+      "target": "frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "The layers branch is a top-level branch of the frontend development contract tree."
+    },
+    {
+      "source": "frontend_dev_contracts/layers/00_LAYERS_INDEX.md",
+      "target": "frontend_dev_contracts/layers/10_LAYER_TAXONOMY.md",
+      "relation": "routes_to",
+      "direction": "downstream",
+      "reason": "The taxonomy doc defines the fixed layer catalog."
+    },
+    {
+      "source": "frontend_dev_contracts/layers/00_LAYERS_INDEX.md",
+      "target": "frontend_dev_contracts/layers/20_LAYER_NODE_MAPPING.md",
+      "relation": "routes_to",
+      "direction": "downstream",
+      "reason": "The mapping doc binds layers to concrete containers and components."
+    },
+    {
+      "source": "frontend_dev_contracts/layers/00_LAYERS_INDEX.md",
+      "target": "frontend_dev_contracts/layers/30_LOCATOR_AND_IDENTIFIER_PROTOCOL.md",
+      "relation": "routes_to",
+      "direction": "downstream",
+      "reason": "The locator protocol defines the visible identifiers and global switch."
+    },
+    {
+      "source": "frontend_dev_contracts/layers/00_LAYERS_INDEX.md",
+      "target": "frontend_dev_contracts/rules/UI_IDENTIFIER_LINT_WORKFLOW.md",
+      "relation": "routes_to",
+      "direction": "downstream",
+      "reason": "The rules branch carries the lint workflow that enforces layer naming coverage."
+    },
+    {
+      "source": "frontend_dev_contracts/layers/10_LAYER_TAXONOMY.md",
+      "target": "frontend_dev_contracts/layers/00_LAYERS_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "This taxonomy belongs to the layers branch."
+    },
+    {
+      "source": "frontend_dev_contracts/layers/10_LAYER_TAXONOMY.md",
+      "target": "frontend_dev_contracts/containers/model/10_CONTAINER_ROLE_TAXONOMY.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "Layer design and container role design must stay aligned."
+    },
+    {
+      "source": "frontend_dev_contracts/layers/10_LAYER_TAXONOMY.md",
+      "target": "frontend_dev_contracts/layers/20_LAYER_NODE_MAPPING.md",
+      "relation": "feeds",
+      "direction": "downstream",
+      "reason": "The node mapping doc instantiates this layer catalog."
+    },
+    {
+      "source": "frontend_dev_contracts/layers/20_LAYER_NODE_MAPPING.md",
+      "target": "frontend_dev_contracts/layers/00_LAYERS_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "This mapping belongs to the layers branch."
+    },
+    {
+      "source": "frontend_dev_contracts/layers/20_LAYER_NODE_MAPPING.md",
+      "target": "frontend_dev_contracts/containers/00_CONTAINERS_INDEX.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "Container contracts define the container side of this mapping."
+    },
+    {
+      "source": "frontend_dev_contracts/layers/20_LAYER_NODE_MAPPING.md",
+      "target": "frontend_dev_contracts/layers/30_LOCATOR_AND_IDENTIFIER_PROTOCOL.md",
+      "relation": "feeds",
+      "direction": "downstream",
+      "reason": "The locator protocol renders this mapping visible to humans."
+    },
+    {
+      "source": "frontend_dev_contracts/layers/30_LOCATOR_AND_IDENTIFIER_PROTOCOL.md",
+      "target": "frontend_dev_contracts/layers/00_LAYERS_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "This protocol belongs to the layers branch."
+    },
+    {
+      "source": "frontend_dev_contracts/layers/30_LOCATOR_AND_IDENTIFIER_PROTOCOL.md",
+      "target": "frontend_dev_contracts/layers/20_LAYER_NODE_MAPPING.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "Identifiers render the layer-node mapping visible to humans."
+    },
+    {
+      "source": "frontend_dev_contracts/layers/30_LOCATOR_AND_IDENTIFIER_PROTOCOL.md",
+      "target": "frontend_dev_contracts/rules/UI_IDENTIFIER_LINT_WORKFLOW.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "The lint workflow enforces the protocol defined here."
+    },
+    {
       "source": "frontend_dev_contracts/positioning/00_POSITIONING_INDEX.md",
       "target": "frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md",
       "relation": "belongs_to",
@@ -891,6 +1041,34 @@
       "relation": "indexes",
       "direction": "downstream",
       "reason": "Layout adjustment is the first concrete rule in this branch."
+    },
+    {
+      "source": "frontend_dev_contracts/rules/00_RULES_INDEX.md",
+      "target": "frontend_dev_contracts/rules/UI_IDENTIFIER_LINT_WORKFLOW.md",
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "Identifier lint is the enforcement rule for layer and node naming."
+    },
+    {
+      "source": "frontend_dev_contracts/rules/UI_IDENTIFIER_LINT_WORKFLOW.md",
+      "target": "frontend_dev_contracts/rules/00_RULES_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "This lint workflow belongs to the frontend rules branch."
+    },
+    {
+      "source": "frontend_dev_contracts/rules/UI_IDENTIFIER_LINT_WORKFLOW.md",
+      "target": "ui-dev/UI_DEV_ENTRY.md",
+      "relation": "supports",
+      "direction": "upstream",
+      "reason": "The runnable showroom must stay in sync with the identifier lint."
+    },
+    {
+      "source": "frontend_dev_contracts/rules/UI_IDENTIFIER_LINT_WORKFLOW.md",
+      "target": "frontend_dev_contracts/layers/30_LOCATOR_AND_IDENTIFIER_PROTOCOL.md",
+      "relation": "implements",
+      "direction": "upstream",
+      "reason": "The lint workflow enforces the locator and identifier protocol."
     },
     {
       "source": "frontend_dev_contracts/rules/UI_LAYOUT_ADJUSTMENT_RULES.md",
@@ -975,6 +1153,13 @@
       "relation": "pairs_with",
       "direction": "cross",
       "reason": "The showroom stack is implemented through the SPA container tree."
+    },
+    {
+      "source": "frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md",
+      "target": "frontend_dev_contracts/layers/00_LAYERS_INDEX.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "The showroom stack must also follow the fixed layer catalog and locator protocol."
     },
     {
       "source": "frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md",
@@ -1076,6 +1261,13 @@
     },
     {
       "source": "references/stages/30_STAGE_MOTION_COMPONENT_ARCHITECTURE.md",
+      "target": "frontend_dev_contracts/layers/10_LAYER_TAXONOMY.md",
+      "relation": "details",
+      "direction": "downstream",
+      "reason": "The fixed layer catalog shapes how containers and components should be organized."
+    },
+    {
+      "source": "references/stages/30_STAGE_MOTION_COMPONENT_ARCHITECTURE.md",
       "target": "frontend_dev_contracts/containers/model/10_CONTAINER_ROLE_TAXONOMY.md",
       "relation": "details",
       "direction": "downstream",
@@ -1101,6 +1293,13 @@
       "relation": "implements",
       "direction": "downstream",
       "reason": "The runnable showroom root is the concrete execution surface of this stage."
+    },
+    {
+      "source": "references/stages/40_STAGE_SHOWROOM_RUNTIME.md",
+      "target": "frontend_dev_contracts/layers/30_LOCATOR_AND_IDENTIFIER_PROTOCOL.md",
+      "relation": "details",
+      "direction": "downstream",
+      "reason": "The locator protocol defines the visible node identifiers that the runtime UI must surface."
     },
     {
       "source": "references/stages/40_STAGE_SHOWROOM_RUNTIME.md",
@@ -1234,8 +1433,15 @@
       "relation": "implements",
       "direction": "downstream",
       "reason": "The runnable showroom must realize the container contracts through the SPA UI code."
+    },
+    {
+      "source": "ui-dev/UI_DEV_ENTRY.md",
+      "target": "frontend_dev_contracts/layers/00_LAYERS_INDEX.md",
+      "relation": "implements",
+      "direction": "downstream",
+      "reason": "The runnable showroom must realize the layer catalog and visible locator protocol."
     }
   ],
   "warnings": [],
-  "updated_at": "2026-03-11T23:15:06.449Z"
+  "updated_at": "2026-03-11T23:41:52.869Z"
 }

@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
+import LocatorNodeFrame from '../components/LocatorNodeFrame.vue'
+import { UI_CONTAINERS } from '../contracts/ui-identity-registry'
+import { useUiLocatorNode } from '../composables/useUiLocatorNode'
 import type { PreviewDocumentRecord, PreviewPayload } from '../types'
 import DocumentNavigatorContainer from './DocumentNavigatorContainer.vue'
 import DocumentReaderContainer from './DocumentReaderContainer.vue'
@@ -9,6 +12,7 @@ const props = defineProps<{
   payload: PreviewPayload | null
 }>()
 
+const workspaceNode = useUiLocatorNode(UI_CONTAINERS.showroomWorkspace.id)
 const selectedPath = ref('SKILL.md')
 const searchKeyword = ref('')
 
@@ -44,25 +48,27 @@ watch(() => props.payload, (nextPayload) => {
 </script>
 
 <template>
-  <main class="dashboard-grid">
-    <DocumentNavigatorContainer
-      :docs="filteredDocs"
-      :search-keyword="searchKeyword"
-      :selected-path="selectedPath"
-      @update-search="searchKeyword = $event"
-      @select-doc="selectedPath = $event"
-    />
-    <GraphPanelContainer
-      :docs="docs"
-      :edges="payload?.graph.edges ?? []"
-      :selected-path="selectedPath"
-      :target-root="payload?.targetRoot ?? ''"
-      :updated-at="payload?.updatedAt ?? ''"
-      @select-doc="selectedPath = $event"
-    />
-    <DocumentReaderContainer
-      :selected-doc="selectedDoc"
-      @follow-anchor="selectedPath = $event"
-    />
-  </main>
+  <LocatorNodeFrame :node="workspaceNode">
+    <main class="dashboard-grid">
+      <DocumentNavigatorContainer
+        :docs="filteredDocs"
+        :search-keyword="searchKeyword"
+        :selected-path="selectedPath"
+        @update-search="searchKeyword = $event"
+        @select-doc="selectedPath = $event"
+      />
+      <GraphPanelContainer
+        :docs="docs"
+        :edges="payload?.graph.edges ?? []"
+        :selected-path="selectedPath"
+        :target-root="payload?.targetRoot ?? ''"
+        :updated-at="payload?.updatedAt ?? ''"
+        @select-doc="selectedPath = $event"
+      />
+      <DocumentReaderContainer
+        :selected-doc="selectedDoc"
+        @follow-anchor="selectedPath = $event"
+      />
+    </main>
+  </LocatorNodeFrame>
 </template>

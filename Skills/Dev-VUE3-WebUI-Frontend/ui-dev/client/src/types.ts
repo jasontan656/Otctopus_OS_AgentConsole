@@ -10,3 +10,11 @@ export type {
 export type {
   RuntimeLiveState,
 } from './contracts/showroom-container-contract'
+
+export type {
+  UiComponentDefinition,
+  UiContainerDefinition,
+  UiLayerDefinition,
+  UiLayerId,
+  UiNodeDefinition,
+} from './contracts/ui-identity-registry'

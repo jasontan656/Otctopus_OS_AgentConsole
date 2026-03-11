@@ -13,6 +13,10 @@ anchors:
     relation: "pairs_with"
     direction: "cross"
     reason: "The showroom stack is implemented through the SPA container tree."
+  - target: "../layers/00_LAYERS_INDEX.md"
+    relation: "pairs_with"
+    direction: "cross"
+    reason: "The showroom stack must also follow the fixed layer catalog and locator protocol."
   - target: "../../ui-dev/UI_DEV_ENTRY.md"
     relation: "supports"
     direction: "upstream"
@@ -37,3 +41,4 @@ anchors:
 - graph、文档列表、正文阅读流都是可复用的展厅母板，但它们应被工作区容器正确承载。
 - 后续组件若稳定，应从页面实现中抽离成可复用单元。
 - 页面入口不再直接承担全部状态和布局权，而应下沉到 app shell、scene、workspace、panel 容器。
+- 所有容器与组件都应显式暴露 locator id，方便 AI / human 协作定位。

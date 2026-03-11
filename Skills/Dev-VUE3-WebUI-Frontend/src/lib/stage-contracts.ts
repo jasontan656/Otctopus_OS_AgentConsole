@@ -145,6 +145,7 @@ const STAGES: Record<StageId, StageDefinition> = {
       stage_docs: [
         'references/stages/20_STAGE_SURFACE_LAYOUTS.md',
         'frontend_dev_contracts/rules/UI_LAYOUT_ADJUSTMENT_RULES.md',
+        'frontend_dev_contracts/layers/30_LOCATOR_AND_IDENTIFIER_PROTOCOL.md',
         'frontend_dev_contracts/containers/layout/10_APP_SHELL_AND_WORKSPACE_LAYOUT_AUTHORITY.md',
       ],
       entry_actions: [
@@ -166,6 +167,7 @@ const STAGES: Record<StageId, StageDefinition> = {
         ...RESIDENT_DOCS,
         'references/stages/20_STAGE_SURFACE_LAYOUTS.md',
         'frontend_dev_contracts/rules/UI_LAYOUT_ADJUSTMENT_RULES.md',
+        'frontend_dev_contracts/layers/30_LOCATOR_AND_IDENTIFIER_PROTOCOL.md',
         'frontend_dev_contracts/containers/layout/10_APP_SHELL_AND_WORKSPACE_LAYOUT_AUTHORITY.md',
         'frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md',
       ],
@@ -202,6 +204,7 @@ const STAGES: Record<StageId, StageDefinition> = {
       prioritize_nodes: [
         'references/stages/20_STAGE_SURFACE_LAYOUTS.md',
         'frontend_dev_contracts/rules/UI_LAYOUT_ADJUSTMENT_RULES.md',
+        'frontend_dev_contracts/layers/30_LOCATOR_AND_IDENTIFIER_PROTOCOL.md',
         'frontend_dev_contracts/containers/layout/10_APP_SHELL_AND_WORKSPACE_LAYOUT_AUTHORITY.md',
         'frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md',
       ],
@@ -221,6 +224,8 @@ const STAGES: Record<StageId, StageDefinition> = {
       resident_docs: RESIDENT_DOCS,
       stage_docs: [
         'references/stages/30_STAGE_MOTION_COMPONENT_ARCHITECTURE.md',
+        'frontend_dev_contracts/layers/10_LAYER_TAXONOMY.md',
+        'frontend_dev_contracts/layers/20_LAYER_NODE_MAPPING.md',
         'frontend_dev_contracts/positioning/UI_FILE_ORGANIZATION.md',
         'frontend_dev_contracts/containers/model/10_CONTAINER_ROLE_TAXONOMY.md',
         'frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md',
@@ -243,6 +248,8 @@ const STAGES: Record<StageId, StageDefinition> = {
       doc_boundary: [
         ...RESIDENT_DOCS,
         'references/stages/30_STAGE_MOTION_COMPONENT_ARCHITECTURE.md',
+        'frontend_dev_contracts/layers/10_LAYER_TAXONOMY.md',
+        'frontend_dev_contracts/layers/20_LAYER_NODE_MAPPING.md',
         'frontend_dev_contracts/positioning/UI_FILE_ORGANIZATION.md',
         'frontend_dev_contracts/containers/model/10_CONTAINER_ROLE_TAXONOMY.md',
         'frontend_dev_contracts/containers/layout/10_APP_SHELL_AND_WORKSPACE_LAYOUT_AUTHORITY.md',
@@ -260,6 +267,7 @@ const STAGES: Record<StageId, StageDefinition> = {
         'npm run cli -- stage-doc-contract --stage motion_component_architecture --json',
       ],
       gate_commands: [
+        'npm run cli -- lint-ui-identity --json',
         'cd ui-dev && npm run typecheck',
         'cd ui-dev && npm test',
       ],
@@ -281,6 +289,7 @@ const STAGES: Record<StageId, StageDefinition> = {
       },
       prioritize_nodes: [
         'references/stages/30_STAGE_MOTION_COMPONENT_ARCHITECTURE.md',
+        'frontend_dev_contracts/layers/10_LAYER_TAXONOMY.md',
         'frontend_dev_contracts/positioning/UI_FILE_ORGANIZATION.md',
         'frontend_dev_contracts/containers/model/10_CONTAINER_ROLE_TAXONOMY.md',
         'frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md',
@@ -303,6 +312,8 @@ const STAGES: Record<StageId, StageDefinition> = {
         'references/stages/40_STAGE_SHOWROOM_RUNTIME.md',
         'ui-dev/UI_DEV_ENTRY.md',
         'frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md',
+        'frontend_dev_contracts/layers/30_LOCATOR_AND_IDENTIFIER_PROTOCOL.md',
+        'frontend_dev_contracts/rules/UI_IDENTIFIER_LINT_WORKFLOW.md',
         'frontend_dev_contracts/containers/state/20_CONTAINER_PAYLOAD_NORMALIZATION.md',
         'frontend_dev_contracts/containers/interaction/10_CONTAINER_EVENT_AND_ROUTE_PROTOCOL.md',
         'frontend_dev_contracts/showroom_runtime/VIEWER_SERVICE_WORKFLOW.md',
@@ -327,6 +338,9 @@ const STAGES: Record<StageId, StageDefinition> = {
         'references/stages/40_STAGE_SHOWROOM_RUNTIME.md',
         'ui-dev/UI_DEV_ENTRY.md',
         'frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md',
+        'frontend_dev_contracts/layers/00_LAYERS_INDEX.md',
+        'frontend_dev_contracts/layers/30_LOCATOR_AND_IDENTIFIER_PROTOCOL.md',
+        'frontend_dev_contracts/rules/UI_IDENTIFIER_LINT_WORKFLOW.md',
         'frontend_dev_contracts/containers/00_CONTAINERS_INDEX.md',
         'frontend_dev_contracts/containers/state/20_CONTAINER_PAYLOAD_NORMALIZATION.md',
         'frontend_dev_contracts/containers/interaction/10_CONTAINER_EVENT_AND_ROUTE_PROTOCOL.md',
@@ -345,6 +359,7 @@ const STAGES: Record<StageId, StageDefinition> = {
         'npm run cli -- rebuild-self-graph --json',
       ],
       gate_commands: [
+        'npm run cli -- lint-ui-identity --json',
         'cd ui-dev && npm run typecheck',
         'cd ui-dev && npm test',
         'cd ui-dev && npm run build',
@@ -367,6 +382,7 @@ const STAGES: Record<StageId, StageDefinition> = {
       prioritize_nodes: [
         'references/stages/40_STAGE_SHOWROOM_RUNTIME.md',
         'ui-dev/UI_DEV_ENTRY.md',
+        'frontend_dev_contracts/layers/30_LOCATOR_AND_IDENTIFIER_PROTOCOL.md',
         'frontend_dev_contracts/containers/state/20_CONTAINER_PAYLOAD_NORMALIZATION.md',
         'frontend_dev_contracts/showroom_runtime/VIEWER_SERVICE_WORKFLOW.md',
       ],
@@ -425,6 +441,8 @@ export const RUNTIME_CONTRACT = {
     'Cli_Toolbox.stage-doc-contract': 'Emit the current stage document boundary.',
     'Cli_Toolbox.stage-command-contract': 'Emit entry commands, gate commands, stage actions, and forbidden actions.',
     'Cli_Toolbox.stage-graph-contract': 'Emit graph-reading and graph-update policy for the current stage.',
+    'Cli_Toolbox.ui-identity-contract': 'Emit the fixed layer, container, and component registry for the showroom UI.',
+    'Cli_Toolbox.lint-ui-identity': 'Validate layer ids, container/component identifiers, short codes, and registry-file coverage.',
     'Cli_Toolbox.build-anchor-graph': 'Emit the current markdown graph workspace for a target skill root.',
     'Cli_Toolbox.rebuild-self-graph': 'Rebuild self_anchor_graph.json for the current skill root.',
   },

@@ -8,6 +8,10 @@ import {
   rebuildSelfGraph,
 } from '../src/lib/docstructure.js'
 import {
+  lintUiIdentity,
+  loadUiIdentityContract,
+} from '../src/lib/ui-identity.js'
+import {
   RUNTIME_CONTRACT,
   getStageDefinition,
 } from '../src/lib/stage-contracts.js'
@@ -32,6 +36,8 @@ function usage(): never {
     '  npm run cli -- stage-doc-contract --stage <stage> --json',
     '  npm run cli -- stage-command-contract --stage <stage> --json',
     '  npm run cli -- stage-graph-contract --stage <stage> --json',
+    '  npm run cli -- ui-identity-contract --json',
+    '  npm run cli -- lint-ui-identity --json',
     '  npm run cli -- build-anchor-graph --target <skill_root> --json',
     '  npm run cli -- rebuild-self-graph --json',
   ].join('\n'))
@@ -96,6 +102,17 @@ async function main(): Promise<void> {
         warnings: payload.warnings,
         errors: payload.errors,
       })
+      process.exit(payload.status === 'fail' ? 1 : 0)
+    }
+
+    if (command === 'ui-identity-contract') {
+      printJson(await loadUiIdentityContract(target))
+      return
+    }
+
+    if (command === 'lint-ui-identity') {
+      const payload = await lintUiIdentity(target)
+      printJson(payload)
       process.exit(payload.status === 'fail' ? 1 : 0)
     }
 

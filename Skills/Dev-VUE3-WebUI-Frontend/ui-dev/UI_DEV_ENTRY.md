@@ -15,6 +15,10 @@ anchors:
     relation: "implements"
     direction: "downstream"
     reason: "The runnable showroom must realize the container contracts through the SPA UI code."
+  - target: "../frontend_dev_contracts/layers/00_LAYERS_INDEX.md"
+    relation: "implements"
+    direction: "downstream"
+    reason: "The runnable showroom must realize the layer catalog and visible locator protocol."
 ---
 
 # UI Dev Entry
@@ -24,6 +28,7 @@ anchors:
 ## 包含内容
 - Vue3 + Vue Flow 页面代码。
 - app shell、scene、workspace、panel 容器实现。
+- layer / container / component locator registry 与显式定位开关。
 - viewer payload 装配层与 live server。
 - systemd 安装脚本与运行文档。
 - 消费 `frontend_dev_contracts/` 中定义的前端开发合同。

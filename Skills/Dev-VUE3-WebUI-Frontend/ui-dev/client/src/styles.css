@@ -30,6 +30,44 @@ code {
   min-height: 100vh;
 }
 
+.locator-node-frame {
+  position: relative;
+  min-height: 0;
+}
+
+.locator-chip {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 40;
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.92);
+  color: #f8fafc;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.18);
+}
+
+.locator-chip-code {
+  font-weight: 700;
+  color: #facc15;
+}
+
+.locator-layer-sh > .locator-chip { background: rgba(180, 83, 9, 0.95); }
+.locator-layer-sc > .locator-chip { background: rgba(2, 132, 199, 0.95); }
+.locator-layer-rt > .locator-chip { background: rgba(12, 74, 110, 0.95); }
+.locator-layer-wk > .locator-chip { background: rgba(14, 116, 144, 0.95); }
+.locator-layer-pn > .locator-chip { background: rgba(31, 41, 55, 0.95); }
+.locator-layer-at > .locator-chip { background: rgba(91, 33, 182, 0.95); }
+.locator-layer-gv > .locator-chip { background: rgba(21, 94, 117, 0.95); }
+.locator-layer-dc > .locator-chip { background: rgba(55, 48, 163, 0.95); }
+.locator-layer-dx > .locator-chip { background: rgba(17, 24, 39, 0.95); }
+.locator-layer-ov > .locator-chip { background: rgba(76, 29, 149, 0.95); }
+
 .page-shell {
   padding: 24px;
 }
@@ -147,6 +185,11 @@ code {
   gap: 16px;
   padding: 20px 22px 14px;
   border-bottom: 1px solid rgba(18, 32, 45, 0.08);
+}
+
+.panel-head-stack {
+  display: grid;
+  gap: 14px;
 }
 
 .panel-head h2 {
@@ -296,6 +339,72 @@ code {
   text-align: center;
 }
 
+.locator-overlay-host {
+  position: fixed;
+  top: 22px;
+  right: 22px;
+  z-index: 60;
+  width: min(360px, calc(100vw - 32px));
+}
+
+.locator-overlay {
+  display: grid;
+  gap: 12px;
+}
+
+.locator-toolbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: center;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(15, 23, 42, 0.92);
+  color: #f8fafc;
+  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.22);
+}
+
+.locator-toolbar-label {
+  margin: 0 0 6px;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.locator-toggle {
+  border: 0;
+  border-radius: 999px;
+  padding: 10px 14px;
+  background: #facc15;
+  color: #111827;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.locator-legend {
+  display: grid;
+  gap: 14px;
+  padding: 16px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(18, 32, 45, 0.08);
+  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.16);
+  max-height: calc(100vh - 120px);
+  overflow: auto;
+}
+
+.locator-legend-section h3 {
+  margin: 0 0 10px;
+  font-size: 0.92rem;
+}
+
+.locator-legend-item {
+  margin: 6px 0 0;
+  color: #334155;
+  line-height: 1.5;
+}
+
 .markdown-body h1,
 .markdown-body h2,
 .markdown-body h3 {
@@ -328,6 +437,13 @@ code {
 
   .runtime-status-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .locator-overlay-host {
+    position: sticky;
+    top: 12px;
+    right: auto;
+    width: 100%;
   }
 }
 

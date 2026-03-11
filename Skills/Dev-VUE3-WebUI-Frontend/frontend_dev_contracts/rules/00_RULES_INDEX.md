@@ -13,6 +13,10 @@ anchors:
     relation: "indexes"
     direction: "downstream"
     reason: "Layout adjustment is the first concrete rule in this branch."
+  - target: "UI_IDENTIFIER_LINT_WORKFLOW.md"
+    relation: "indexes"
+    direction: "downstream"
+    reason: "Identifier lint is the enforcement rule for layer and node naming."
 ---
 
 # Frontend Rules Index
@@ -20,6 +24,9 @@ anchors:
 ## 本分支负责
 - `UI_LAYOUT_ADJUSTMENT_RULES.md`
   - 定义展厅布局调整、信息层级和响应式切换约束。
+- `UI_IDENTIFIER_LINT_WORKFLOW.md`
+  - 定义 layer、container、component 标识的 lint 工作流。
 
 ## 读取顺序
 1. `UI_LAYOUT_ADJUSTMENT_RULES.md`
+2. `UI_IDENTIFIER_LINT_WORKFLOW.md`

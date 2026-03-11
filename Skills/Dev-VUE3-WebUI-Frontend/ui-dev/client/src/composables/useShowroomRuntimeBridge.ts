@@ -1,6 +1,9 @@
 import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { UI_CONTAINERS } from '../contracts/ui-identity-registry'
 import type { ShowroomRuntimeSnapshot } from '../contracts/showroom-container-contract'
 import type { PreviewPayload } from '../types'
+
+export const UI_LOCATOR_NODE_ID = UI_CONTAINERS.showroomRuntimeBridge.id
 
 export function useShowroomRuntimeBridge(): ShowroomRuntimeSnapshot {
   const payload = ref<PreviewPayload | null>(null)
