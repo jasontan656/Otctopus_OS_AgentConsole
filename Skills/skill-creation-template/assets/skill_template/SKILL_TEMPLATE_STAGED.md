@@ -6,10 +6,15 @@ description: ${description}
 # ${skill_name}
 
 ## 1. 技能定位
-- 本文件只做门面入口，不承载规则正文。
-- 本技能的唯一主轴是：`[stage_1] -> [stage_2] -> [stage_3] -> [stage_4]`。
-- 各阶段的细节规则、读取边界、命令入口与 graph 角色以下沉 contracts 为准，不得只凭本门面自行发挥。
-- 固定输出根与运行边界请在 runtime contract 或 stage contracts 中显式声明，不要把真实项目路径硬编码进模板。
+- 本体描述：
+  - 本文件只做门面入口，不承载规则正文。
+  - 本技能的唯一主轴是：`[stage_1] -> [stage_2] -> [stage_3] -> [stage_4]`。
+  - 各阶段的细节规则、读取边界、命令入口与 graph 角色以下沉 contracts 为准，不得只凭本门面自行发挥。
+  - 固定输出根与运行边界请在 runtime contract 或 stage contracts 中显式声明，不要把真实项目路径硬编码进模板。
+- 注释描述：
+  - 若该 staged skill 同时也是模板或治理技能，本章可采用“本体描述 + 注释描述”双段写法。
+  - 注释描述需点明：技能定位至少要交代 stage 主轴、核心合同入口、运行边界。
+  - 注释描述保持旁白式简洁；如需扩充，只提示入口，不回填阶段正文。
 
 ## 2. 适用域
 - 适用于：[明确该 staged skill 负责的 staged workflow]

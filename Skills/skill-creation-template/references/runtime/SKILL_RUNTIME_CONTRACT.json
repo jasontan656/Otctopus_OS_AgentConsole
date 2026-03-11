@@ -107,6 +107,7 @@
   "governance_rules": [
     "SKILL.md must remain an entry-only facade, not a pile of governance details.",
     "The default template surface follows the standard 7-chapter entry layout.",
+    "For template or governance skills, the 技能定位 section may use a body-plus-annotation two-part form; the annotation only explains writing rules and must stay concise.",
     "If a skill has runtime rules, the model must consume machine-readable contracts through CLI outputs instead of treating markdown as the runtime rule source.",
     "staged_cli_first skills must explicitly define top-level resident docs, stage order, stage checklist, stage doc contract, stage command contract, stage graph contract, and stage-switch discard policy.",
     "Template clusters must separate human-readable markdown anchors from machine-readable contracts.",
