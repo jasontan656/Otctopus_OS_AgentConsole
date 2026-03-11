@@ -1,0 +1,3 @@
+# Repo-local Python dependency lock file for skills workflows.
+# Install and maintain third-party Python packages in ./.venv_backend_skills.
+# No third-party Python packages are currently locked here.

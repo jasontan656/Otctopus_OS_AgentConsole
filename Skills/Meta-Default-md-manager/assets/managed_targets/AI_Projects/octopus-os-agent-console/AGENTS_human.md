@@ -30,6 +30,13 @@
 - skill 编辑完成后，若目标 skill 已存在于 codex 安装目录，必须同回合执行 `$skill-mirror-to-codex` 的 `Push`；若目标 skill 是新建且 codex 安装目录中尚不存在，必须同回合执行 `$skill-mirror-to-codex` 的 `Install`。
 - 若任务内容涉及 Python 相关编辑，结束前必须完成 `Dev-PythonCode-Constitution-Backend` 的 lint。
 - 如果本回合写入了 `octopus-os-agent-console`，必须同回合 commit-and-push。
+
+6. Repo-local skills 依赖环境
+- 与 skills 执行相关的 Python 依赖，必须安装到 repo 根目录下的 `./.venv_backend_skills`，禁止依赖全局 Python site-packages。
+- `./requirements-backend_skills.lock.txt` 是 Python 依赖锁定清单；当新增、升级、删除 Python 依赖时，必须同回合同步更新它。
+- 与 skills 执行相关的前端依赖，必须安装并锁定在 repo 根目录下的 `./frontend_skills/` 中；该目录下的 `package.json` 与 `package-lock.json` 是前端依赖真源。
+- 若后续出现其他类型依赖，也必须优先落在 `octopus-os-agent-console` 目录内的 repo-local `*_skills` 环境或其对应 manifest/lock 文件中，禁止把全局环境当成长期依赖承载层。
+- 当依赖集合发生变化时，必须同时保持 `Meta-Default-md-manager` 内的治理映射模版与外部 `AGENTS.md` 内容同步。
 </part_A>
 
 <part_B>
@@ -66,6 +73,7 @@
     "use the returned target contract JSON as the runtime rule source",
     "classify the turn as READ_EXEC or WRITE_EXEC",
     "if the turn will write octopus-os-agent-console, plan same-turn Git traceability from the start; if task contents include Python related edits, also plan Dev-PythonCode-Constitution-Backend reading and lint from the start",
+    "if the task needs repo-local dependencies, read the backend/frontend skills environment manifests before installing or invoking tooling",
     "if the turn touches language surfaces, enforce outward English docs and inward Chinese development boundaries before editing",
     "if the turn will edit a skill, treat the mirror copy under octopus-os-agent-console/Skills as the only editable source and determine whether downstream sync must be Push or Install",
     "if task contents include Python related edits, read Dev-PythonCode-Constitution-Backend through SKILL.md -> TASK_ROUTING -> SKILL_EXECUTION_RULES before editing"
@@ -80,6 +88,9 @@
     "end-user wizard and installation TUI surfaces must support both English and Chinese",
     "skill core docs, governance contracts, and internal iteration artifacts may remain Chinese-first",
     "GitHub-facing product iteration logs and commit subjects should prefer English wording",
+    "skills runtime dependencies must be installed into repo-local *_skills environments or their tracked manifest/lock files, not global environments",
+    "keep requirements-backend_skills.lock.txt in sync with the Python dependencies installed into .venv_backend_skills",
+    "keep frontend_skills/package.json and frontend_skills/package-lock.json in sync with the frontend dependency set used by skills tasks",
     "for skill changes, edit the mirror copy under octopus-os-agent-console/Skills and never directly edit the codex installation directory",
     "all product-repo skill roots live under octopus-os-agent-console/Skills and repo root is not a syncable skill container",
     "product-facing docs and product tools must not be pushed into the codex installation directory; only syncable skill roots and .system may flow downstream",
@@ -115,6 +126,7 @@
   ],
   "turn_end_actions": [
     "if task contents include Python related edits, run Dev-PythonCode-Constitution-Backend lint on the concrete Python-related target scope",
+    "if dependency manifests or lock files changed, keep the repo-local skills environments and AGENTS governance mapping synchronized in the same turn",
     "if the turn edited a skill, complete skill-mirror-to-codex Push or Install before closing the turn",
     "if the turn wrote octopus-os-agent-console, complete same-turn commit-and-push before closing the turn"
   ],
