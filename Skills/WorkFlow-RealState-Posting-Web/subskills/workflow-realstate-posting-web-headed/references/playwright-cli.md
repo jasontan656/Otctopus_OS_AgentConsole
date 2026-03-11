@@ -4,7 +4,7 @@ Use the wrapper script unless the CLI is already installed globally:
 
 ```bash
 export CODEX_HOME="${CODEX_HOME:-$HOME/.codex}"
-export PWCLI="$CODEX_HOME/skills/Meta-browser-operation/subskills/meta-browser-operation-headed/scripts/playwright_cli.sh"
+export PWCLI="$CODEX_HOME/skills/WorkFlow-RealState-Posting-Web/subskills/workflow-realstate-posting-web-headed/scripts/playwright_cli.sh"
 "$PWCLI" --help
 ```
 

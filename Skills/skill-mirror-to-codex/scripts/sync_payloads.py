@@ -1,0 +1,135 @@
+from __future__ import annotations
+
+from pathlib import Path
+
+
+RENAME_WORKFLOW = [
+    "Run Meta-Impact-Investigation before changing folder names or content.",
+    "Rename the skill folder and internal names in the mirror repo first.",
+    "Push the renamed mirror skill into the old codex folder with delete semantics.",
+    "Rename the codex folder from old name to new name so old/new folders never coexist.",
+    "Apply remaining content updates manually with apply_patch in the mirror repo.",
+]
+
+
+def build_install_payload(
+    *,
+    scope: str,
+    skill_name: str | None,
+    requested_skill_name: str | None,
+    source_skill_name: str | None,
+    destination_skill_name: str | None,
+    src: Path,
+    dst: Path,
+    mirror_root: Path,
+    skills_root: Path,
+    codex_root: Path,
+    dry_run: bool,
+    destination_exists: bool,
+) -> dict[str, object]:
+    return {
+        "status": "route_required",
+        "action": "install_via_external_skills",
+        "scope": scope,
+        "skill_name": skill_name,
+        "requested_skill_name": requested_skill_name,
+        "source_skill_name": source_skill_name,
+        "destination_skill_name": destination_skill_name,
+        "resolved_mode": "install",
+        "source": str(src),
+        "destination": str(dst),
+        "mirror_root": str(mirror_root),
+        "skills_root": str(skills_root),
+        "codex_root": str(codex_root),
+        "dry_run": dry_run,
+        "destination_exists": destination_exists,
+        "next_skills": ["Skill-creator", "Skill-installer"],
+        "next_steps": [
+            "Use Skill-creator to validate the skill folder format and fix issues if needed.",
+            "Use Skill-installer to install the skill into the codex skills directory.",
+        ],
+    }
+
+
+def build_push_payload(
+    *,
+    scope: str,
+    skill_name: str | None,
+    requested_skill_name: str | None,
+    source_skill_name: str | None,
+    destination_skill_name: str | None,
+    src: Path,
+    dst: Path,
+    mirror_root: Path,
+    skills_root: Path,
+    codex_root: Path,
+    dry_run: bool,
+    destination_exists: bool,
+) -> dict[str, object]:
+    return {
+        "status": "ok",
+        "action": "mirror_to_codex",
+        "scope": scope,
+        "skill_name": skill_name,
+        "requested_skill_name": requested_skill_name,
+        "source_skill_name": source_skill_name,
+        "destination_skill_name": destination_skill_name,
+        "resolved_mode": "push",
+        "source": str(src),
+        "destination": str(dst),
+        "mirror_root": str(mirror_root),
+        "skills_root": str(skills_root),
+        "codex_root": str(codex_root),
+        "dry_run": dry_run,
+        "destination_exists": destination_exists,
+    }
+
+
+def build_rename_payload(
+    *,
+    skill_name: str,
+    requested_skill_name: str | None,
+    source_skill_name: str,
+    destination_skill_name: str,
+    src: Path,
+    destination: Path,
+    mirror_root: Path,
+    skills_root: Path,
+    codex_root: Path,
+    dry_run: bool,
+    rename_from: str,
+    rename_from_destination_skill_name: str,
+    rename_from_destination: Path,
+    staged_destination: Path,
+    rename_source_exists: bool,
+    rename_destination_preexisting: bool,
+    removed_existing_new_destination: bool,
+    renamed_path: bool,
+    command: list[str],
+) -> dict[str, object]:
+    return {
+        "status": "ok",
+        "action": "mirror_rename_to_codex",
+        "scope": "skill",
+        "skill_name": skill_name,
+        "requested_skill_name": requested_skill_name,
+        "source_skill_name": source_skill_name,
+        "destination_skill_name": destination_skill_name,
+        "resolved_mode": "rename",
+        "source": str(src),
+        "destination": str(destination),
+        "mirror_root": str(mirror_root),
+        "skills_root": str(skills_root),
+        "codex_root": str(codex_root),
+        "dry_run": dry_run,
+        "rename_from": rename_from,
+        "rename_from_destination_skill_name": rename_from_destination_skill_name,
+        "rename_from_destination": str(rename_from_destination),
+        "staged_destination": str(staged_destination),
+        "rename_source_exists": rename_source_exists,
+        "rename_destination_preexisting": rename_destination_preexisting,
+        "removed_existing_new_destination": removed_existing_new_destination,
+        "renamed_path": renamed_path,
+        "command": command,
+        "workflow": RENAME_WORKFLOW,
+    }

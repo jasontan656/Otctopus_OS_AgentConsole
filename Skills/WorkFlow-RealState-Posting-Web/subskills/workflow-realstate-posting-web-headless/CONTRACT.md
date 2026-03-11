@@ -1,7 +1,7 @@
 ---
 
 ## Contract Header
-- `contract_name`: `meta_browser_operation_subskills_meta_browser_operation_headless_contract`
+- `contract_name`: `workflow_realstate_posting_web_subskills_workflow_realstate_posting_web_headless_contract`
 - `contract_version`: `1.0.0`
 - `validation_mode`: `strict`
 - `required_fields`:
@@ -11,15 +11,16 @@
 - `optional_fields`:
   - `notes`
 
-name: meta-browser-operation-headless
-description: Methodology for browser tasks in WSL under `无头模式`, including full Playwright CLI guidance (headless/headed), browser workflow patterns, and MCP-first execution guardrails.
+name: workflow-realstate-posting-web-headless
+description: Headless branch for real-estate posting web tasks in WSL under `无头模式`, including Playwright CLI guidance and MCP-first execution guardrails.
 ---
 
-# Meta-browser-operation — Headless Mode (WSL MCP)
+# WorkFlow-RealState-Posting-Web — Headless Mode
 
 ## Goal
-- Run browser tasks reliably in WSL.
-- Keep Playwright professional guidance and CLI usage in this branch after migration from legacy `playwright` skill.
+- Run房源发布网页任务 reliably in WSL.
+- Keep Playwright professional guidance and CLI usage in this branch.
+- Serve as the first non-`agent-browser` fallback for posting tasks.
 
 ## Preconditions
 - Runtime is WSL.
@@ -38,7 +39,7 @@ If missing, require Node.js/npm installation first.
 ## Branch-Local Wrapper Path
 ```bash
 export CODEX_HOME="${CODEX_HOME:-$HOME/.codex}"
-export PWCLI="$CODEX_HOME/skills/Meta-browser-operation/subskills/meta-browser-operation-headless/scripts/playwright_cli.sh"
+export PWCLI="$CODEX_HOME/skills/WorkFlow-RealState-Posting-Web/subskills/workflow-realstate-posting-web-headless/scripts/playwright_cli.sh"
 ```
 
 ## Playwright Quick Start
@@ -62,25 +63,25 @@ Headless run:
 
 ## Core Workflow (MCP + CLI)
 1. Select primary tool:
-   - `chrome-devtools` for inspection/network/performance debugging.
-   - Playwright CLI wrapper for repeatable interaction loops.
+   - `chrome-devtools` for inspection/network/performance debugging
+   - Playwright CLI wrapper for repeatable interaction loops
 2. Snapshot before first interaction:
    - `chrome-devtools`: `take_snapshot`
    - Playwright CLI: `snapshot`
 3. Execute interaction loop:
    - navigate -> snapshot -> click/fill/type -> wait -> snapshot
 4. Collect evidence:
-   - screenshots for visual proof;
-   - snapshots for structural proof.
+   - screenshots for visual proof
+   - snapshots for structural proof
 5. Store artifacts:
    - `<WorkspaceRoot>/ChangeLog/BrowserTests/consumers/<consumer_id>/runs/<run_id>/`
 
 ## Snapshot Refresh Rules
 Refresh snapshot after:
-- navigation;
-- modal/menu open-close;
-- significant DOM updates;
-- tab switch.
+- navigation
+- modal/menu open-close
+- significant DOM updates
+- tab switch
 
 If element refs become stale, snapshot again before retry.
 

@@ -5,10 +5,14 @@ import argparse
 import json
 import os
 import re
+import shutil
 import subprocess
 from pathlib import Path
 from pathlib import PurePosixPath
 from typing import List
+from sync_payloads import build_install_payload
+from sync_payloads import build_push_payload
+from sync_payloads import build_rename_payload
 
 VALID_SKILL_SEGMENT_RE = re.compile(r"^[A-Za-z0-9._-]+$")
 RSYNC_EXCLUDES = (
@@ -23,8 +27,6 @@ SKILLS_DIR_NAME = "Skills"
 CANONICAL_MIRROR_REPO_NAME = "octopus-os-agent-console"
 LEGACY_MIRROR_REPO_NAME = "Codex_Skills_Mirror"
 FORBIDDEN_CODEX_ROOT_FILES = ("AGENTS.md",)
-
-
 def _resolve_codex_root(raw: str | None) -> Path:
     if raw:
         return Path(raw).expanduser().resolve()
@@ -32,8 +34,6 @@ def _resolve_codex_root(raw: str | None) -> Path:
     if env_root:
         return Path(env_root).expanduser().resolve()
     return (Path.home() / ".codex" / "skills").resolve()
-
-
 def _discover_visible_mirror() -> Path | None:
     env_root = os.environ.get("CODEX_SKILLS_MIRROR_ROOT")
     if env_root:
@@ -44,8 +44,6 @@ def _discover_visible_mirror() -> Path | None:
             if candidate.is_dir():
                 return candidate.resolve()
     return None
-
-
 def _migrate_hidden_mirror_if_present() -> Path | None:
     for repo_name in (CANONICAL_MIRROR_REPO_NAME, LEGACY_MIRROR_REPO_NAME):
         for hidden in sorted(Path.home().glob(f"*/{repo_name}")):
@@ -57,8 +55,6 @@ def _migrate_hidden_mirror_if_present() -> Path | None:
             os.replace(hidden, visible)
             return visible.resolve()
     return None
-
-
 def _resolve_mirror_root(raw: str | None) -> Path:
     if raw:
         return Path(raw).expanduser().resolve()
@@ -74,15 +70,11 @@ def _resolve_mirror_root(raw: str | None) -> Path:
     fallback = (Path.cwd() / CANONICAL_MIRROR_REPO_NAME).resolve()
     fallback.mkdir(parents=True, exist_ok=True)
     return fallback
-
-
 def _resolve_skill_container(mirror_root: Path) -> Path:
     skills_root = mirror_root / SKILLS_DIR_NAME
     if skills_root.is_dir():
         return skills_root.resolve()
     return mirror_root.resolve()
-
-
 def _normalize_skill_name(skill_name: str) -> str:
     normalized = str(skill_name or "").strip()
     if not normalized:
@@ -106,14 +98,9 @@ def _normalize_skill_name(skill_name: str) -> str:
         if not VALID_SKILL_SEGMENT_RE.match(part):
             raise ValueError("skill_name contains illegal characters")
         normalized_parts.append(part)
-
     return "/".join(normalized_parts)
-
-
 def _posix_join(parts: list[str]) -> str:
     return "/".join(parts)
-
-
 def _resolve_existing_source_skill_name(mirror_root: Path, normalized_skill_name: str) -> str:
     current = mirror_root
     actual_parts: list[str] = []
@@ -135,17 +122,15 @@ def _resolve_existing_source_skill_name(mirror_root: Path, normalized_skill_name
         actual_part = folded_matches[0]
         actual_parts.append(actual_part)
         current = current / actual_part
-
     return _posix_join(actual_parts)
-
-
 def _canonical_destination_skill_name(normalized_skill_name: str) -> str:
     parts = normalized_skill_name.split("/")
     if parts and parts[0] == SYSTEM_SKILL_NAMESPACE:
         return _posix_join([parts[0], *[part.lower() for part in parts[1:]]])
     return normalized_skill_name
-
-
+def _resolve_destination_skill_path(codex_root: Path, normalized_skill_name: str) -> tuple[str, Path]:
+    destination_skill_name = _canonical_destination_skill_name(normalized_skill_name)
+    return destination_skill_name, codex_root / destination_skill_name
 def _build_paths(
     codex_root: Path,
     mirror_root: Path,
@@ -158,14 +143,10 @@ def _build_paths(
             raise ValueError("--skill-name is required when --scope=skill")
         normalized_skill_name = _normalize_skill_name(skill_name)
         source_skill_name = _resolve_existing_source_skill_name(skill_container, normalized_skill_name)
-        destination_skill_name = _canonical_destination_skill_name(normalized_skill_name)
+        destination_skill_name, dst = _resolve_destination_skill_path(codex_root, normalized_skill_name)
         src = skill_container / source_skill_name
-        dst = codex_root / destination_skill_name
         return src, dst, normalized_skill_name, source_skill_name, destination_skill_name
-
     return skill_container, codex_root, None, None, None
-
-
 def _discover_syncable_roots(mirror_root: Path) -> list[tuple[str, Path, Path]]:
     syncable: list[tuple[str, Path, Path]] = []
     skill_container = _resolve_skill_container(mirror_root)
@@ -185,24 +166,19 @@ def _discover_syncable_roots(mirror_root: Path) -> list[tuple[str, Path, Path]]:
 
         if (child / "SKILL.md").is_file():
             syncable.append((child.name, child, child.name))
-
     if not syncable:
         raise FileNotFoundError(f"no syncable skill roots found under mirror root: {skill_container}")
     return syncable
-
-
 def _destination_exists(dst: Path, scope: str) -> bool:
     if scope == "all":
         return True
     return dst.exists()
-
-
 def _rsync(src: Path, dst: Path, dry_run: bool) -> List[str]:
     if not src.exists():
         raise FileNotFoundError(f"source does not exist: {src}")
 
     dst.parent.mkdir(parents=True, exist_ok=True)
-    cmd = ["rsync", "-a", "--delete"]
+    cmd = ["rsync", "-a", "--delete", "--checksum"]
     for pattern in RSYNC_EXCLUDES:
         cmd.extend(["--exclude", pattern])
     if dry_run:
@@ -213,8 +189,6 @@ def _rsync(src: Path, dst: Path, dry_run: bool) -> List[str]:
     if completed.returncode != 0:
         raise RuntimeError(completed.stderr.strip() or "rsync failed")
     return cmd
-
-
 def _rsync_syncable_roots(
     mirror_root: Path,
     codex_root: Path,
@@ -241,20 +215,83 @@ def _rsync_syncable_roots(
         removed_forbidden_entries.append(str(target))
         if dry_run:
             continue
-        if target.is_dir():
-            subprocess.run(["rm", "-rf", str(target)], check=True)
-        else:
-            target.unlink()
+        _remove_path(target)
     return synced_entries, commands, removed_forbidden_entries
+def _remove_path(target: Path) -> None:
+    if not target.exists():
+        return
+    if target.is_dir():
+        shutil.rmtree(target)
+        return
+    target.unlink()
+def _rename_push(
+    *,
+    src: Path,
+    codex_root: Path,
+    normalized_skill_name: str,
+    source_skill_name: str,
+    destination_skill_name: str,
+    requested_skill_name: str | None,
+    rename_from: str,
+    dry_run: bool,
+    mirror_root: Path,
+) -> dict[str, object]:
+    old_skill_name = _normalize_skill_name(rename_from)
+    old_destination_skill_name, old_destination = _resolve_destination_skill_path(codex_root, old_skill_name)
+    new_destination = codex_root / destination_skill_name
 
+    if old_destination_skill_name == destination_skill_name:
+        raise ValueError("--rename-from must differ from --skill-name")
 
+    old_destination_exists = old_destination.exists()
+    new_destination_exists = new_destination.exists()
+    if not old_destination_exists and not new_destination_exists:
+        raise FileNotFoundError(
+            "rename target does not exist in codex root; use push/install instead of rename"
+        )
+
+    staged_destination = old_destination if old_destination_exists else new_destination
+    command = _rsync(src=src, dst=staged_destination, dry_run=dry_run)
+
+    renamed_path = False
+    removed_new_destination = False
+    if not dry_run and old_destination_exists and old_destination != new_destination:
+        if new_destination.exists():
+            _remove_path(new_destination)
+            removed_new_destination = True
+        new_destination.parent.mkdir(parents=True, exist_ok=True)
+        os.replace(old_destination, new_destination)
+        renamed_path = True
+
+    return build_rename_payload(
+        skill_name=normalized_skill_name,
+        requested_skill_name=requested_skill_name,
+        source_skill_name=source_skill_name,
+        destination_skill_name=destination_skill_name,
+        src=src,
+        destination=new_destination,
+        mirror_root=mirror_root,
+        skills_root=_resolve_skill_container(mirror_root),
+        codex_root=codex_root,
+        dry_run=bool(dry_run),
+        rename_from=old_skill_name,
+        rename_from_destination_skill_name=old_destination_skill_name,
+        rename_from_destination=old_destination,
+        staged_destination=staged_destination,
+        rename_source_exists=old_destination_exists,
+        rename_destination_preexisting=new_destination_exists,
+        removed_existing_new_destination=removed_new_destination,
+        renamed_path=renamed_path,
+        command=command,
+    )
 def main() -> int:
     parser = argparse.ArgumentParser(
         description="Skill-Mirror-to-Codex toolbox (one-way: mirror -> codex)"
     )
     parser.add_argument("--scope", choices=["all", "skill"], default="all")
     parser.add_argument("--skill-name")
-    parser.add_argument("--mode", choices=["auto", "push", "install"], default="auto")
+    parser.add_argument("--mode", choices=["auto", "push", "install", "rename"], default="auto")
+    parser.add_argument("--rename-from")
     parser.add_argument("--codex-root")
     parser.add_argument("--mirror-root")
     parser.add_argument("--dry-run", action="store_true")
@@ -277,6 +314,24 @@ def main() -> int:
 
     if args.mode == "install" and args.scope != "skill":
         raise ValueError("--mode=install only supports --scope=skill")
+    if args.mode == "rename":
+        if args.scope != "skill":
+            raise ValueError("--mode=rename only supports --scope=skill")
+        if not args.rename_from:
+            raise ValueError("--rename-from is required when --mode=rename")
+        payload = _rename_push(
+            src=src,
+            codex_root=codex_root,
+            normalized_skill_name=normalized_skill_name or "",
+            source_skill_name=source_skill_name or "",
+            destination_skill_name=destination_skill_name or "",
+            requested_skill_name=args.skill_name,
+            rename_from=args.rename_from,
+            dry_run=args.dry_run,
+            mirror_root=mirror_root,
+        )
+        print(json.dumps(payload, ensure_ascii=False, indent=2))
+        return 0
 
     destination_exists = _destination_exists(dst=dst, scope=args.scope)
     if args.mode == "push":
@@ -287,51 +342,37 @@ def main() -> int:
         resolved_mode = "push" if destination_exists else "install"
 
     if resolved_mode == "install":
-        payload = {
-            "status": "route_required",
-            "action": "install_via_external_skills",
-            "scope": args.scope,
-            "skill_name": normalized_skill_name,
-            "requested_skill_name": args.skill_name,
-            "source_skill_name": source_skill_name,
-            "destination_skill_name": destination_skill_name,
-            "resolved_mode": "install",
-            "source": str(src),
-            "destination": str(dst),
-            "mirror_root": str(mirror_root),
-            "skills_root": str(_resolve_skill_container(mirror_root)),
-            "codex_root": str(codex_root),
-            "dry_run": bool(args.dry_run),
-            "destination_exists": destination_exists,
-            "next_skills": [
-                "Skill-creator",
-                "Skill-installer",
-            ],
-            "next_steps": [
-                "Use Skill-creator to validate the skill folder format and fix issues if needed.",
-                "Use Skill-installer to install the skill into the codex skills directory.",
-            ],
-        }
+        payload = build_install_payload(
+            scope=args.scope,
+            skill_name=normalized_skill_name,
+            requested_skill_name=args.skill_name,
+            source_skill_name=source_skill_name,
+            destination_skill_name=destination_skill_name,
+            src=src,
+            dst=dst,
+            mirror_root=mirror_root,
+            skills_root=_resolve_skill_container(mirror_root),
+            codex_root=codex_root,
+            dry_run=bool(args.dry_run),
+            destination_exists=destination_exists,
+        )
         print(json.dumps(payload, ensure_ascii=False, indent=2))
         return 0
 
-    payload: dict[str, object] = {
-        "status": "ok",
-        "action": "mirror_to_codex",
-        "scope": args.scope,
-        "skill_name": normalized_skill_name,
-        "requested_skill_name": args.skill_name,
-        "source_skill_name": source_skill_name,
-        "destination_skill_name": destination_skill_name,
-        "resolved_mode": "push",
-        "source": str(src),
-        "destination": str(dst),
-        "mirror_root": str(mirror_root),
-        "skills_root": str(_resolve_skill_container(mirror_root)),
-        "codex_root": str(codex_root),
-        "dry_run": bool(args.dry_run),
-        "destination_exists": destination_exists,
-    }
+    payload = build_push_payload(
+        scope=args.scope,
+        skill_name=normalized_skill_name,
+        requested_skill_name=args.skill_name,
+        source_skill_name=source_skill_name,
+        destination_skill_name=destination_skill_name,
+        src=src,
+        dst=dst,
+        mirror_root=mirror_root,
+        skills_root=_resolve_skill_container(mirror_root),
+        codex_root=codex_root,
+        dry_run=bool(args.dry_run),
+        destination_exists=destination_exists,
+    )
 
     if args.scope == "all":
         synced_entries, commands, removed_forbidden_entries = _rsync_syncable_roots(
@@ -347,8 +388,6 @@ def main() -> int:
         payload["command"] = command
     print(json.dumps(payload, ensure_ascii=False, indent=2))
     return 0
-
-
 if __name__ == "__main__":
     try:
         raise SystemExit(main())

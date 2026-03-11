@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-03-12
+- 新增显式 `Rename` 模式：`--mode rename --scope skill --skill-name <new> --rename-from <old>`。
+- `Rename` 模式收敛为“新目录内容覆盖旧目录，再将 codex 目录名改为新名”，彻底消灭 rename 场景下的新旧双目录并存。
+- 新增 CLI 回归测试，锁住 rename 参数校验与目录更名行为。
+
 ## 2026-03-11
 - `scope=all` 的 Push 语义收敛为“只同步真正的技能根与 `.system/`”，不再把整个 repo 根目录直接镜像进 codex 安装目录。
 - 为全量 Push 新增 `synced_entries` 与 `commands` 输出，显式暴露实际同步边界。

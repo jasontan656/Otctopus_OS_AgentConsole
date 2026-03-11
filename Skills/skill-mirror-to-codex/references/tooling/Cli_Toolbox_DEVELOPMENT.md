@@ -30,8 +30,12 @@
 ## 当前模式模型
 - 抽象层负责根目录归一化、目标存在性检查与模式路由。
 - 抽象层同时负责 `skill_name` 归一化、nested path 越界防护，以及 `.system/*` 的 source/destination 规范映射。
-- `Push` 模式负责实际 `rsync -a --delete`。
+- `Push` 模式负责实际 `rsync -a --delete --checksum`。
 - 当 `scope=all` 时，Push 必须先发现 mirror 顶层真正的技能根，禁止把整个 repo 根目录直接镜像到 codex 安装目录。
 - `Install` 模式只返回外部技能链：
   - `Skill-creator`
   - `Skill-installer`
+- `Rename` 模式只处理“mirror 已完成更名”的同步收口：
+  - 要求 `--mode rename --scope skill --rename-from <old_name>`
+  - 先用新目录内容覆盖 codex 旧目录
+  - 再把 codex 旧目录名收敛为新目录名，防止新旧双目录并存

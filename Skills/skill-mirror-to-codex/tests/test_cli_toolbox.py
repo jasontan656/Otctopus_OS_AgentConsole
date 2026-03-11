@@ -208,6 +208,75 @@ class MetaSkillMirrorCliTests(unittest.TestCase):
                 [str(codex_root / "AGENTS.md")],
             )
 
+    def test_rename_mode_replaces_old_destination_and_renames_folder(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            mirror_root = Path(tmp) / "mirror"
+            codex_root = Path(tmp) / "codex"
+            source_skill = mirror_root / "Skills" / "WorkFlow-RealState-Posting-Web"
+            old_destination = codex_root / "Meta-browser-operation"
+            source_skill.mkdir(parents=True)
+            old_destination.mkdir(parents=True)
+            codex_root.mkdir(parents=True, exist_ok=True)
+            (source_skill / "SKILL.md").write_text("new-skill\n", encoding="utf-8")
+            (source_skill / "new.txt").write_text("new\n", encoding="utf-8")
+            (old_destination / "SKILL.md").write_text("old-skill\n", encoding="utf-8")
+            (old_destination / "stale.txt").write_text("stale\n", encoding="utf-8")
+
+            completed = self.run_cli(
+                "--scope",
+                "skill",
+                "--skill-name",
+                "WorkFlow-RealState-Posting-Web",
+                "--mode",
+                "rename",
+                "--rename-from",
+                "Meta-browser-operation",
+                "--mirror-root",
+                str(mirror_root),
+                "--codex-root",
+                str(codex_root),
+            )
+
+            payload = json.loads(completed.stdout)
+            new_destination = codex_root / "WorkFlow-RealState-Posting-Web"
+            self.assertEqual(payload["status"], "ok")
+            self.assertEqual(payload["resolved_mode"], "rename")
+            self.assertEqual(payload["rename_from"], "Meta-browser-operation")
+            self.assertEqual(payload["destination"], str(new_destination))
+            self.assertTrue(payload["renamed_path"])
+            self.assertFalse(old_destination.exists())
+            self.assertTrue(new_destination.exists())
+            self.assertEqual((new_destination / "SKILL.md").read_text(encoding="utf-8"), "new-skill\n")
+            self.assertFalse((new_destination / "stale.txt").exists())
+
+    def test_rename_mode_requires_rename_from(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            mirror_root = Path(tmp) / "mirror"
+            codex_root = Path(tmp) / "codex"
+            source_skill = mirror_root / "Skills" / "WorkFlow-RealState-Posting-Web"
+            source_skill.mkdir(parents=True)
+            codex_root.mkdir(parents=True)
+            (source_skill / "SKILL.md").write_text("new-skill\n", encoding="utf-8")
+
+            completed = self.run_cli(
+                "--scope",
+                "skill",
+                "--skill-name",
+                "WorkFlow-RealState-Posting-Web",
+                "--mode",
+                "rename",
+                "--mirror-root",
+                str(mirror_root),
+                "--codex-root",
+                str(codex_root),
+                check=False,
+            )
+
+            self.assertNotEqual(completed.returncode, 0)
+            payload = json.loads(completed.stdout)
+            self.assertEqual(payload["status"], "error")
+            self.assertIn("--rename-from", payload["error"])
+
 
 if __name__ == "__main__":
     unittest.main()

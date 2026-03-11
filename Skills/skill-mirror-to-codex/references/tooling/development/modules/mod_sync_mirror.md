@@ -10,6 +10,7 @@
 - 在 `Push` 模式执行 mirror -> codex 覆盖同步。
 - 当 `scope=all` 时，只同步真正的技能根，不同步产品层目录。
 - 在 `Install` 模式返回外部技能调用顺序。
+- 在 `Rename` 模式执行“新 skill 覆盖旧 skill + codex 目标目录改名”的收口动作。
 - 在需要时将隐藏 mirror 根目录迁移为可见目录。
 
 ## 输入合同
@@ -17,6 +18,7 @@
 - 条件必填：`--skill-name`（当 `scope=skill`）
 - `--skill-name` 支持 nested relative skill path；每段必须满足 `[A-Za-z0-9._-]+`，且禁止 `.` / `..` 越界段与反斜杠。
 - 可选：`--mode`（默认 `auto`）
+- 条件必填：`--rename-from`（当 `mode=rename`）
 
 ## 输出合同
 - 成功：
@@ -33,6 +35,12 @@
     - `resolved_mode=install`
     - `scope/source/destination/next_skills`
     - `source_skill_name/destination_skill_name`
+  - Rename:
+    - `status=ok`
+    - `action=mirror_rename_to_codex`
+    - `resolved_mode=rename`
+    - `rename_from/rename_from_destination/staged_destination/destination`
+    - `command/workflow`
 - 失败：
   - `status=error`
   - `error`
@@ -43,4 +51,7 @@
 - `skill-name` 非法字符。
 - `skill-name` 包含空段、反斜杠、绝对路径或 `.` / `..` 越界段。
 - `mode=install` 但 `scope!=skill`。
+- `mode=rename` 但 `scope!=skill`。
+- `mode=rename` 但缺少 `--rename-from`。
+- `mode=rename` 且 codex 中旧名、新名都不存在，无法判定 rename 落点。
 - `rsync` 执行失败。

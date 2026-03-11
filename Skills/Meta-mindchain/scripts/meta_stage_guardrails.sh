@@ -27,8 +27,8 @@ case "$stage" in
     print_common_header "ROUTE"
     echo "[DO][Routing] classify branch by disk-write intent (read-only vs non-read-only)"
     echo "[DONT][Routing] do not enter read-only branch if any create/modify/delete/move/rename may occur"
-    echo "[DO][Meta-browser-operation] if browser task, choose exactly one mode: headless or headed"
-    echo "[DONT][Meta-browser-operation] do not mix headless and headed workflows in same branch"
+    echo "[DO][Meta-Agent-Browser] if browser task, start from browser-total-entry and escalate agent-browser -> headless -> windows headed only when needed"
+    echo "[DONT][Meta-Agent-Browser] do not mix multiple browser runtimes in one branch without an explicit fallback reason"
     ;;
   READ_EXEC)
     print_common_header "READ_EXEC"

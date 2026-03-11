@@ -1,10 +1,23 @@
 ---
 name: Meta-Agent-Browser
-description: Manual-invoke browser automation skill for Vercel agent-browser. Use only when the user explicitly asks to use `Meta-Agent-Browser` or explicitly requests agent-browser-based browser automation through shell commands.
+description: Manual-invoke browser automation skill for Vercel agent-browser, with extra entry docs for browser fallback routing and Windows headed bridge guidance.
 allowed-tools: Bash(npx agent-browser:*), Bash(agent-browser:*)
 ---
 
 # Browser Automation with agent-browser
+
+## Extra Entrypoints
+
+This skill now owns two extra browser workflow entry docs in addition to the core `agent-browser` runtime guidance:
+
+- `references/browser-total-entry.md`
+  - Browser 总入口与兜底策略入口。
+  - 默认顺序：`Agent-Browser -> 无头模式浏览器 -> Windows 有头桥接浏览器`
+- `references/windows-headed-bridge.md`
+  - Windows 桥接指引用于 `有头模式`。
+  - 收敛 WSL 动态网关、Edge debug 端口、恢复/重置脚本与预检步骤。
+
+Use the total-entry doc when the task is browser-related but the runtime path is not yet fixed. Use the Windows bridge doc only when headed verification is required.
 
 ## Local Runtime Notes (WSL)
 

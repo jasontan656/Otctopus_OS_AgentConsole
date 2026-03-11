@@ -1,6 +1,6 @@
 ---
 name: "skill-mirror-to-codex"
-description: 将产品仓内的 syncable skills 导入 codex skills 安装目录，并在 `Push` / `Install` 双模式之间自动导航。使用场景：需要把 repo 中的技能落到安装目录、判断目标技能是否已安装、对已存在技能执行覆盖同步，或对尚未存在的技能先校验格式再走外部安装链路。
+description: 将产品仓内的 syncable skills 导入 codex skills 安装目录，并在 `Push` / `Install` / `Rename` 三种模式之间使用受控入口完成同步或安装。
 ---
 
 # Skill-Mirror-to-Codex
@@ -9,15 +9,18 @@ description: 将产品仓内的 syncable skills 导入 codex skills 安装目录
 
 ### 1.1 目标
 - 提供唯一入口，把 mirror 中的技能安全导入 codex 安装目录。
-- 先判断目标技能在安装目录是否已存在，再在两种模式之间自动导航：
+- 先判断目标技能在安装目录是否已存在，再在两种自动导航模式之间收敛：
   - `Push`
   - `Install`
+- 为显式重命名场景提供第三个独立入口：
+  - `Rename`
 - 将 product repo 根目录固定为可见工程路径：`/home/jasontan656/AI_Projects/octopus-os-agent-console`。
 
 ### 1.2 统一入口
 - 本技能唯一 CLI 入口：`scripts/Cli_Toolbox.py`
 - 本技能唯一本地工具名：`Cli_Toolbox.sync_mirror_to_codex`
 - 默认导航模式：`auto`
+- 显式 rename 模式：`--mode rename --scope skill --skill-name <new_name> --rename-from <old_name>`
 
 ### 1.3 自动导航合同
 - 输入至少包含：
@@ -29,13 +32,15 @@ description: 将产品仓内的 syncable skills 导入 codex skills 安装目录
   3. 检查目标技能在 codex 安装目录是否已存在
   4. 已存在则进入 `Push`
   5. 不存在则进入 `Install`
+- `Rename` 不参与 `auto` 猜测；必须显式指定 `--mode rename`
 
 ### 1.4 抽象层硬约束
-- 除抽象层外，`Push` 与 `Install` 两个模式不得共享工作流内容。
+- 除抽象层外，`Push`、`Install`、`Rename` 三个模式不得共享工作流正文。
 - `scope=skill` 时必须提供 `skill_name`。
 - `skill_name` 必须是 skills 边界内的相对路径；允许多段 nested path，但每段都必须通过白名单字符校验：`[A-Za-z0-9._-]+`。
 - `skill_name` 禁止包含空段、反斜杠、绝对路径与 `.` / `..` 越界段。
 - `.system/*` 技能在 codex 安装目录使用小写规范名；工具必须自动把 mirror 侧实际目录名映射到安装目录规范名。
+- `Rename` 模式下必须显式提供 `--rename-from`，且旧名与新名不得相同。
 - 只允许在 skills 边界目录内工作，禁止越界路径拼接。
 - 若本回合此前已对 `octopus-os-agent-console` 发生实际写入，则在完成真正写操作后，必须同回合执行该仓库自己的 Git 留痕收尾。
 
@@ -51,9 +56,9 @@ description: 将产品仓内的 syncable skills 导入 codex skills 安装目录
 
 ### 2.3 模式工作流
 1. 锁定源目录与目标目录。
-2. 若 `scope=all`，先发现 mirror 顶层真正可同步的技能根，再逐个执行 `rsync -a --delete`。
-3. 若 `scope=skill`，只对目标技能执行 `rsync -a --delete`。
-3. 返回结构化 JSON，明确已执行覆盖同步。
+2. 若 `scope=all`，先发现 mirror 顶层真正可同步的技能根，再逐个执行 `rsync -a --delete --checksum`。
+3. 若 `scope=skill`，只对目标技能执行 `rsync -a --delete --checksum`。
+4. 返回结构化 JSON，明确已执行覆盖同步。
 
 ### 2.4 模式输出
 - `status=ok`
@@ -106,18 +111,55 @@ description: 将产品仓内的 syncable skills 导入 codex skills 安装目录
 - 不把 `$Skill-creator` 与 `$Skill-installer` 的完整实现复制进本技能。
 - 本模式只声明自动导航顺序与进入条件，不接管外部技能内部实现。
 
-## 4. 工具与文档
+## 4. Rename 模式
+
+### 4.1 模式目标
+- 为技能重命名提供一个明确、单义的同步入口，避免 codex 安装目录同时保留新旧两个文件夹。
+
+### 4.2 模式入口条件
+- 显式指定 `--mode rename`
+- 且 `scope=skill`
+- 且同时提供：
+  - `--skill-name <new_name>`
+  - `--rename-from <old_name>`
+
+### 4.3 模式工作流
+1. 在真正修改前，先用 `$Meta-Impact-Investigation` 盘清 rename 影响面。
+2. 在 mirror repo 中，直接完成 skill 文件夹与内容内的命名替换，形成新名字作为唯一源目录。
+3. 推送时，用新名字对应的 mirror 源目录先覆盖 codex 中旧名字对应的目录，保持 `rsync -a --delete --checksum` 语义。
+4. 覆盖完成后，把 codex 安装目录中的旧文件夹名落成新文件夹名，确保不会出现新旧双目录并存。
+5. 其他非目录名变更，继续在 mirror 侧用 `apply_patch` 手工修改。
+
+### 4.4 模式输出
+- `status=ok`
+- `action=mirror_rename_to_codex`
+- `resolved_mode=rename`
+- `rename_from`
+- `rename_from_destination`
+- `staged_destination`
+- `destination`
+- `command`
+- `workflow`
+
+### 4.5 模式约束
+- 不参与 `auto` 模式推断。
+- 不接受 `scope=all`。
+- 若 codex 安装目录中旧名与新名都不存在，则应停止并要求改走 `Push` 或 `Install`，而不是伪装成 rename。
+- rename 的目标是消灭双目录并存，而不是保留 old/new mapping 作为长期结构。
+
+## 5. 工具与文档
 - 工具入口：`scripts/Cli_Toolbox.py`
 - Agent 元数据：`agents/openai.yaml`
 - 使用文档：`references/tooling/Cli_Toolbox_USAGE.md`
 - 开发文档：`references/tooling/Cli_Toolbox_DEVELOPMENT.md`
 
-## 5. 方法论约束
+## 6. 方法论约束
 - 先导航，再执行；不要先执行覆盖再事后解释为什么该覆盖。
-- 已安装对象走 `Push`，未安装对象走 `Install`，不得混用。
+- 已安装对象走 `Push`，未安装对象走 `Install`，显式重命名对象走 `Rename`，三者不得混用。
 - `Install` 模式的价值是防止把“未安装 skill 的首次落盘”伪装成“覆盖同步”。
+- `Rename` 模式的价值是防止把“技能更名”退化成“旧目录保留 + 新目录新建”。
 
-## 6. 架构契约
+## 7. 架构契约
 ```text
 skill-mirror-to-codex/
 ├── SKILL.md
@@ -140,7 +182,7 @@ skill-mirror-to-codex/
                 └── mod_sync_mirror.md
 ```
 
-## 7. 落地规则
-- `Push` 与 `Install` 必须作为独立模式书写与维护。
+## 8. 落地规则
+- `Push`、`Install`、`Rename` 必须作为独立模式书写与维护。
 - 抽象层可以共享入口、边界与路由合同；模式层禁止复用对方流程描述。
 - 若修改了 `scripts/Cli_Toolbox.py`，必须同步更新相关 tooling 文档。

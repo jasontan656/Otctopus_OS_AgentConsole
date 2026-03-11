@@ -101,3 +101,19 @@ families:
         trigger_summary: "当任务或运行结束后，需要复盘上一回合中的犹豫、工具失败、脚本失败、引导不足、模型 confused 与迷宫式流程时使用。"
         migrated_from:
           - "7-Task-runtime-selfcheck"
+  - family: "[WorkFlow]"
+    description: "各类自动化的工作流统一管理."
+    members:
+      - canonical_id: "workflow-realstate-posting-web"
+        display_name: "WorkFlow-RealState-Posting-Web"
+        prefix: "workflow"
+        family: "[WorkFlow]"
+        role_tag: "real-estate-posting-router"
+        status: "active"
+        trigger_summary: "当进行房源发布类网页自动化，需要按无头或有头模式进入固定工作流并绑定 HouseSale 资产时使用。"
+        companion_skills:
+          - "Meta-Agent-Browser"
+          - "skill-mirror-to-codex"
+        migrated_from:
+          - "Meta-browser-operation"
+          - "meta-browser-operation"

@@ -12,6 +12,7 @@ modules:
         - auto
         - push
         - install
+        - rename
       skill_path_policy:
         shape: relative_nested_path
         allows_system_namespace: true
