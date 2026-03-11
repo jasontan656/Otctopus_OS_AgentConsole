@@ -1,0 +1,31 @@
+{
+  "skill_name": "production-form",
+  "contract_version": "0.1.0",
+  "status": "temporary_active",
+  "mission": "Continuously carry the current Octopus OS product-shaping task until the full product form is stable enough to move the main iteration history back to GitHub.",
+  "current_product_target": {
+    "brand_name": "Octopus OS",
+    "engineering_repo": "octopus-os-agent-console",
+    "product_positioning": "natural-language-driven multi-agent console",
+    "current_phase": "rapid local product shaping"
+  },
+  "hard_boundaries": [
+    "public product README and docs stay English-only",
+    "end-user wizard and TUI surfaces stay bilingual English/Chinese",
+    "internal skill core and governance docs may stay Chinese-first",
+    "product-facing docs and product tools must not be pushed into the codex installation directory",
+    "skill roots still evolve here first and then flow to ~/.codex/skills through the governed sync path"
+  ],
+  "local_history_contract": {
+    "primary_log_path": "references/runtime/ITERATION_LOG.md",
+    "intent_snapshot_path": "references/runtime/CURRENT_PRODUCT_INTENT.md",
+    "log_update_rule": "append a log entry whenever a new product-shaping decision, boundary change, or workflow convergence is made",
+    "future_switch_rule": "once the product form is mature enough, the main iteration history may gradually switch back to GitHub commits and release-facing logs"
+  },
+  "tooling": {
+    "working_contract_command": "python3 scripts/Cli_Toolbox.py working-contract --json",
+    "intent_snapshot_command": "python3 scripts/Cli_Toolbox.py intent-snapshot --json",
+    "latest_log_command": "python3 scripts/Cli_Toolbox.py latest-log --json",
+    "append_log_command": "python3 scripts/Cli_Toolbox.py append-iteration-log --title \"<title>\" --summary \"<summary>\" --decision \"<decision>\" --affected-path \"<path>\" --next-step \"<next>\""
+  }
+}

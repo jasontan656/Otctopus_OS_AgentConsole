@@ -1,0 +1,12 @@
+version: 1
+modules:
+  - module_id: cli_toolbox_runtime_reader
+    entrypoint: scripts/Cli_Toolbox.py
+    capabilities:
+      - Cli_Toolbox.working_contract
+      - Cli_Toolbox.intent_snapshot
+      - Cli_Toolbox.latest_log
+      - Cli_Toolbox.append_iteration_log
+    docs:
+      usage: references/tooling/Cli_Toolbox_USAGE.md
+      development: references/tooling/Cli_Toolbox_DEVELOPMENT.md
