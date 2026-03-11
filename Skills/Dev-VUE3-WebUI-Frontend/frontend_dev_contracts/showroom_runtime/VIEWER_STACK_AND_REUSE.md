@@ -9,6 +9,10 @@ anchors:
     relation: "belongs_to"
     direction: "upstream"
     reason: "This contract belongs to the showroom runtime branch."
+  - target: "../containers/00_CONTAINERS_INDEX.md"
+    relation: "pairs_with"
+    direction: "cross"
+    reason: "The showroom stack is implemented through the SPA container tree."
   - target: "../../ui-dev/UI_DEV_ENTRY.md"
     relation: "supports"
     direction: "upstream"
@@ -30,5 +34,6 @@ anchors:
 
 ## 复用方向
 - 当前 viewer 是未来前端组件库与设计标准的试验母体。
-- graph、文档列表、正文阅读流都是可复用的展厅母板。
+- graph、文档列表、正文阅读流都是可复用的展厅母板，但它们应被工作区容器正确承载。
 - 后续组件若稳定，应从页面实现中抽离成可复用单元。
+- 页面入口不再直接承担全部状态和布局权，而应下沉到 app shell、scene、workspace、panel 容器。

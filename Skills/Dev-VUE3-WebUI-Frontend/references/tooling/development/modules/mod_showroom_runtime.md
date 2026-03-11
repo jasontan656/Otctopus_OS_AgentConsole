@@ -20,6 +20,7 @@ anchors:
 - `ui-dev/client/*`
 - `ui-dev/scripts/install_user_service.sh`
 - `frontend_dev_contracts/showroom_runtime/VIEWER_SERVICE_WORKFLOW.md`
+- `frontend_dev_contracts/containers/*`
 
 ## 设计意图
 - 让网站既是技能门面，又是前端规范展厅。

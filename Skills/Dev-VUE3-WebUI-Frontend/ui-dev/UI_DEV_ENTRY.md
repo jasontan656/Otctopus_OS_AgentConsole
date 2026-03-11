@@ -11,6 +11,10 @@ anchors:
     relation: "routes_to"
     direction: "downstream"
     reason: "The frontend contract index defines the official UI development reading path."
+  - target: "../frontend_dev_contracts/containers/00_CONTAINERS_INDEX.md"
+    relation: "implements"
+    direction: "downstream"
+    reason: "The runnable showroom must realize the container contracts through the SPA UI code."
 ---
 
 # UI Dev Entry
@@ -19,6 +23,7 @@ anchors:
 
 ## 包含内容
 - Vue3 + Vue Flow 页面代码。
+- app shell、scene、workspace、panel 容器实现。
 - viewer payload 装配层与 live server。
 - systemd 安装脚本与运行文档。
 - 消费 `frontend_dev_contracts/` 中定义的前端开发合同。

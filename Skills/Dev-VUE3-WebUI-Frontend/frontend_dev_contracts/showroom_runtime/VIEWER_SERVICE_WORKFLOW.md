@@ -9,6 +9,10 @@ anchors:
     relation: "belongs_to"
     direction: "upstream"
     reason: "This workflow belongs to the showroom runtime branch."
+  - target: "../containers/state/20_CONTAINER_PAYLOAD_NORMALIZATION.md"
+    relation: "pairs_with"
+    direction: "cross"
+    reason: "The service workflow feeds the normalized payload boundary consumed by UI containers."
   - target: "VIEWER_STACK_AND_REUSE.md"
     relation: "operates"
     direction: "upstream"
@@ -26,6 +30,7 @@ anchors:
 - `npm run dev`
 - 修改 skill 内 markdown、json、yaml 后，watcher 会推送新 payload。
 - viewer 运行时只读 skill 内容，不负责写回 root 规则文档。
+- browser 端容器只消费已经归一化的 `PreviewPayload`，不直接消费 watcher raw channel。
 
 ## Prod 模式
 - `npm run build`

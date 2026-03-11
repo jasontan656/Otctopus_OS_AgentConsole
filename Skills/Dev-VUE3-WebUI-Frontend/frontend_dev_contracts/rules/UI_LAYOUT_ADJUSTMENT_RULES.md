@@ -9,6 +9,10 @@ anchors:
     relation: "belongs_to"
     direction: "upstream"
     reason: "This guide belongs to the frontend rule branch."
+  - target: "../containers/layout/10_APP_SHELL_AND_WORKSPACE_LAYOUT_AUTHORITY.md"
+    relation: "pairs_with"
+    direction: "cross"
+    reason: "Responsive rules refine the layout authority assigned to shell and workspace containers."
   - target: "../showroom_runtime/VIEWER_STACK_AND_REUSE.md"
     relation: "extends"
     direction: "upstream"
@@ -25,3 +29,4 @@ anchors:
 - 优先调整信息层级，再调整视觉装饰。
 - 保持 `SKILL.md` 仍是默认进入正文。
 - graph、文档列表、正文面板三者必须同时可见或可快速切换。
+- 窄屏退化应由 workspace 容器统一裁决，不得让单个 panel 各自漂移。

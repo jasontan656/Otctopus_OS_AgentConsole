@@ -145,6 +145,7 @@ const STAGES: Record<StageId, StageDefinition> = {
       stage_docs: [
         'references/stages/20_STAGE_SURFACE_LAYOUTS.md',
         'frontend_dev_contracts/rules/UI_LAYOUT_ADJUSTMENT_RULES.md',
+        'frontend_dev_contracts/containers/layout/10_APP_SHELL_AND_WORKSPACE_LAYOUT_AUTHORITY.md',
       ],
       entry_actions: [
         'Read the current surface-system docs.',
@@ -165,6 +166,7 @@ const STAGES: Record<StageId, StageDefinition> = {
         ...RESIDENT_DOCS,
         'references/stages/20_STAGE_SURFACE_LAYOUTS.md',
         'frontend_dev_contracts/rules/UI_LAYOUT_ADJUSTMENT_RULES.md',
+        'frontend_dev_contracts/containers/layout/10_APP_SHELL_AND_WORKSPACE_LAYOUT_AUTHORITY.md',
         'frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md',
       ],
       do_not_read_by_default: [
@@ -200,6 +202,7 @@ const STAGES: Record<StageId, StageDefinition> = {
       prioritize_nodes: [
         'references/stages/20_STAGE_SURFACE_LAYOUTS.md',
         'frontend_dev_contracts/rules/UI_LAYOUT_ADJUSTMENT_RULES.md',
+        'frontend_dev_contracts/containers/layout/10_APP_SHELL_AND_WORKSPACE_LAYOUT_AUTHORITY.md',
         'frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md',
       ],
       allowed_cross_links: [
@@ -219,6 +222,7 @@ const STAGES: Record<StageId, StageDefinition> = {
       stage_docs: [
         'references/stages/30_STAGE_MOTION_COMPONENT_ARCHITECTURE.md',
         'frontend_dev_contracts/positioning/UI_FILE_ORGANIZATION.md',
+        'frontend_dev_contracts/containers/model/10_CONTAINER_ROLE_TAXONOMY.md',
         'frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md',
       ],
       entry_actions: [
@@ -240,6 +244,8 @@ const STAGES: Record<StageId, StageDefinition> = {
         ...RESIDENT_DOCS,
         'references/stages/30_STAGE_MOTION_COMPONENT_ARCHITECTURE.md',
         'frontend_dev_contracts/positioning/UI_FILE_ORGANIZATION.md',
+        'frontend_dev_contracts/containers/model/10_CONTAINER_ROLE_TAXONOMY.md',
+        'frontend_dev_contracts/containers/layout/10_APP_SHELL_AND_WORKSPACE_LAYOUT_AUTHORITY.md',
         'frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md',
       ],
       do_not_read_by_default: [
@@ -259,6 +265,7 @@ const STAGES: Record<StageId, StageDefinition> = {
       ],
       stage_actions: [
         'Refine component/file organization docs before restructuring code.',
+        'Use the container taxonomy to separate shell, workspace, and panel responsibilities.',
         'Promote stable UI pieces into reusable components instead of one-off view code.',
       ],
       forbidden_actions: [
@@ -275,6 +282,7 @@ const STAGES: Record<StageId, StageDefinition> = {
       prioritize_nodes: [
         'references/stages/30_STAGE_MOTION_COMPONENT_ARCHITECTURE.md',
         'frontend_dev_contracts/positioning/UI_FILE_ORGANIZATION.md',
+        'frontend_dev_contracts/containers/model/10_CONTAINER_ROLE_TAXONOMY.md',
         'frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md',
       ],
       allowed_cross_links: [
@@ -295,6 +303,8 @@ const STAGES: Record<StageId, StageDefinition> = {
         'references/stages/40_STAGE_SHOWROOM_RUNTIME.md',
         'ui-dev/UI_DEV_ENTRY.md',
         'frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md',
+        'frontend_dev_contracts/containers/state/20_CONTAINER_PAYLOAD_NORMALIZATION.md',
+        'frontend_dev_contracts/containers/interaction/10_CONTAINER_EVENT_AND_ROUTE_PROTOCOL.md',
         'frontend_dev_contracts/showroom_runtime/VIEWER_SERVICE_WORKFLOW.md',
       ],
       entry_actions: [
@@ -317,6 +327,9 @@ const STAGES: Record<StageId, StageDefinition> = {
         'references/stages/40_STAGE_SHOWROOM_RUNTIME.md',
         'ui-dev/UI_DEV_ENTRY.md',
         'frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md',
+        'frontend_dev_contracts/containers/00_CONTAINERS_INDEX.md',
+        'frontend_dev_contracts/containers/state/20_CONTAINER_PAYLOAD_NORMALIZATION.md',
+        'frontend_dev_contracts/containers/interaction/10_CONTAINER_EVENT_AND_ROUTE_PROTOCOL.md',
         'frontend_dev_contracts/showroom_runtime/VIEWER_SERVICE_WORKFLOW.md',
         'frontend_dev_contracts/positioning/UI_TOOL_POSITIONING.md',
       ],
@@ -354,6 +367,7 @@ const STAGES: Record<StageId, StageDefinition> = {
       prioritize_nodes: [
         'references/stages/40_STAGE_SHOWROOM_RUNTIME.md',
         'ui-dev/UI_DEV_ENTRY.md',
+        'frontend_dev_contracts/containers/state/20_CONTAINER_PAYLOAD_NORMALIZATION.md',
         'frontend_dev_contracts/showroom_runtime/VIEWER_SERVICE_WORKFLOW.md',
       ],
       allowed_cross_links: [

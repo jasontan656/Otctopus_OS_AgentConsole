@@ -23,12 +23,16 @@ anchors:
 
 ## 必须留在 `ui-dev/` 的内容
 - `client/` 页面与组件实现。
+- `client/src/containers/` SPA 容器实现。
+- `client/src/composables/` runtime bridge 与派生 view model。
+- `client/src/contracts/` 容器 typed contract 与共享前端协议类型。
 - `server/` live payload server。
 - `lib/` viewer payload 适配层。
 - `tests/` UI runtime 相关回归。
 
 ## 必须留在 `frontend_dev_contracts/` 的内容
 - 前端开发合同索引。
+- `containers/` 下的容器角色、状态边界、布局权、交互协议和治理规则。
 - 组件、布局、运行链与复用边界规范。
 - `rules/` 下的响应式与布局约束。
 

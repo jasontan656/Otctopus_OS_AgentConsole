@@ -21,8 +21,18 @@ describe('Dev-VUE3-WebUI-Frontend stage contracts', () => {
     expect(showroom.docContract.doc_boundary).toContain('ui-dev/UI_DEV_ENTRY.md')
     expect(showroom.docContract.doc_boundary).toContain('frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md')
     expect(showroom.docContract.doc_boundary).toContain(
+      'frontend_dev_contracts/containers/state/20_CONTAINER_PAYLOAD_NORMALIZATION.md',
+    )
+    expect(showroom.docContract.doc_boundary).toContain(
       'frontend_dev_contracts/showroom_runtime/VIEWER_SERVICE_WORKFLOW.md',
     )
     expect(showroom.commandContract.gate_commands).toContain('cd ui-dev && npm run build')
+  })
+
+  it('exposes container taxonomy in the motion architecture stage', () => {
+    const motion = getStageDefinition('motion_component_architecture')
+    expect(motion.docContract.doc_boundary).toContain(
+      'frontend_dev_contracts/containers/model/10_CONTAINER_ROLE_TAXONOMY.md',
+    )
   })
 })

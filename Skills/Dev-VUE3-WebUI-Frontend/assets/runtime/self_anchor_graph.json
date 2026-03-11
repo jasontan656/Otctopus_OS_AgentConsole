@@ -3,8 +3,8 @@
   "graph_version": "v2",
   "source_skill": "Dev-VUE3-WebUI-Frontend",
   "summary": {
-    "nodeCount": 32,
-    "edgeCount": 71,
+    "nodeCount": 45,
+    "edgeCount": 117,
     "errorCount": 0,
     "warningCount": 0
   },
@@ -78,8 +78,125 @@
       "docType": "ui_dev_index",
       "topic": "Index of frontend development contracts for Dev-VUE3-WebUI-Frontend",
       "title": "Frontend Development Contracts",
-      "anchorCount": 4,
+      "anchorCount": 5,
       "depth": 1
+    },
+    {
+      "path": "frontend_dev_contracts/containers/00_CONTAINERS_INDEX.md",
+      "docId": "ui.dev.containers.index",
+      "docType": "ui_dev_index",
+      "topic": "Index of SPA container contracts for the Dev-VUE3-WebUI-Frontend showroom",
+      "title": "Containers Contract Index",
+      "anchorCount": 6,
+      "depth": 2
+    },
+    {
+      "path": "frontend_dev_contracts/containers/governance/00_CONTAINER_GOVERNANCE_INDEX.md",
+      "docId": "ui.dev.container.governance.index",
+      "docType": "ui_dev_index",
+      "topic": "Index of governance rules for SPA containers",
+      "title": "Container Governance Index",
+      "anchorCount": 2,
+      "depth": 3
+    },
+    {
+      "path": "frontend_dev_contracts/containers/governance/10_CONTAINER_PERMISSION_AND_CODE_PLACEMENT.md",
+      "docId": "ui.dev.container.permission_code_placement",
+      "docType": "ui_dev_guide",
+      "topic": "Permission, visibility, code placement, and testability rules for showroom containers",
+      "title": "Container Permission Code Placement",
+      "anchorCount": 3,
+      "depth": 3
+    },
+    {
+      "path": "frontend_dev_contracts/containers/interaction/00_INTERACTION_PROTOCOL_INDEX.md",
+      "docId": "ui.dev.container.interaction.index",
+      "docType": "ui_dev_index",
+      "topic": "Index of interaction and route protocols for SPA containers",
+      "title": "Interaction Protocol Index",
+      "anchorCount": 2,
+      "depth": 3
+    },
+    {
+      "path": "frontend_dev_contracts/containers/interaction/10_CONTAINER_EVENT_AND_ROUTE_PROTOCOL.md",
+      "docId": "ui.dev.container.interaction_protocol",
+      "docType": "ui_dev_guide",
+      "topic": "Event, selection, and route-scene protocol for showroom containers",
+      "title": "Container Event Route Protocol",
+      "anchorCount": 3,
+      "depth": 3
+    },
+    {
+      "path": "frontend_dev_contracts/containers/layout/00_LAYOUT_AUTHORITY_INDEX.md",
+      "docId": "ui.dev.container.layout.index",
+      "docType": "ui_dev_index",
+      "topic": "Index of layout authority contracts for SPA containers",
+      "title": "Layout Authority Index",
+      "anchorCount": 2,
+      "depth": 3
+    },
+    {
+      "path": "frontend_dev_contracts/containers/layout/10_APP_SHELL_AND_WORKSPACE_LAYOUT_AUTHORITY.md",
+      "docId": "ui.dev.container.layout_authority",
+      "docType": "ui_dev_guide",
+      "topic": "Layout authority boundaries for app shell, route scene, workspace, and panels",
+      "title": "App Shell Workspace Layout Authority",
+      "anchorCount": 3,
+      "depth": 3
+    },
+    {
+      "path": "frontend_dev_contracts/containers/model/00_CONTAINER_MODEL_INDEX.md",
+      "docId": "ui.dev.container.model.index",
+      "docType": "ui_dev_index",
+      "topic": "Index of container role and hierarchy contracts",
+      "title": "Container Model Index",
+      "anchorCount": 3,
+      "depth": 3
+    },
+    {
+      "path": "frontend_dev_contracts/containers/model/10_CONTAINER_ROLE_TAXONOMY.md",
+      "docId": "ui.dev.container.role_taxonomy",
+      "docType": "ui_dev_guide",
+      "topic": "Stable taxonomy for SPA containers in the Vue showroom",
+      "title": "Container Role Taxonomy",
+      "anchorCount": 3,
+      "depth": 3
+    },
+    {
+      "path": "frontend_dev_contracts/containers/model/20_CONTAINER_HIERARCHY_AND_NESTING.md",
+      "docId": "ui.dev.container.hierarchy",
+      "docType": "ui_dev_guide",
+      "topic": "Hierarchy, nesting, and parent-child constraints for showroom containers",
+      "title": "Container Hierarchy Nesting",
+      "anchorCount": 3,
+      "depth": 3
+    },
+    {
+      "path": "frontend_dev_contracts/containers/state/00_STATE_AND_DATA_INDEX.md",
+      "docId": "ui.dev.container.state.index",
+      "docType": "ui_dev_index",
+      "topic": "Index of container state, payload, and data-boundary contracts",
+      "title": "State Data Index",
+      "anchorCount": 3,
+      "depth": 3
+    },
+    {
+      "path": "frontend_dev_contracts/containers/state/10_CONTAINER_STATE_OWNERSHIP.md",
+      "docId": "ui.dev.container.state_ownership",
+      "docType": "ui_dev_guide",
+      "topic": "State ownership boundaries for showroom containers",
+      "title": "Container State Ownership",
+      "anchorCount": 3,
+      "depth": 3
+    },
+    {
+      "path": "frontend_dev_contracts/containers/state/20_CONTAINER_PAYLOAD_NORMALIZATION.md",
+      "docId": "ui.dev.container.payload_normalization",
+      "docType": "tooling_architecture",
+      "topic": "Payload normalization boundary for the showroom runtime and SPA containers",
+      "title": "Container Payload Normalization",
+      "anchorCount": 3,
+      "depth": 3
     },
     {
       "path": "frontend_dev_contracts/positioning/00_POSITIONING_INDEX.md",
@@ -123,7 +240,7 @@
       "docType": "ui_dev_guide",
       "topic": "Layout adjustment rules for the Dev-VUE3-WebUI-Frontend showroom",
       "title": "UI Layout Adjustment Rules",
-      "anchorCount": 3,
+      "anchorCount": 4,
       "depth": 2
     },
     {
@@ -141,7 +258,7 @@
       "docType": "tooling_usage",
       "topic": "Dev, build, and systemd workflow for the Dev-VUE3-WebUI-Frontend showroom",
       "title": "Viewer Service Workflow",
-      "anchorCount": 3,
+      "anchorCount": 4,
       "depth": 2
     },
     {
@@ -150,7 +267,7 @@
       "docType": "tooling_architecture",
       "topic": "Viewer stack, reusable UI direction, and showroom layout contract",
       "title": "Viewer Stack Reuse Contract",
-      "anchorCount": 3,
+      "anchorCount": 4,
       "depth": 2
     },
     {
@@ -213,7 +330,7 @@
       "docType": "stage_doc",
       "topic": "Motion language, reusable component boundaries, and code organization",
       "title": "Stage Motion Component Architecture",
-      "anchorCount": 2,
+      "anchorCount": 3,
       "depth": 2
     },
     {
@@ -222,7 +339,7 @@
       "docType": "stage_doc",
       "topic": "Runnable showroom and runtime delivery stage for the Vue3 web UI frontend skill",
       "title": "Stage Showroom Runtime",
-      "anchorCount": 2,
+      "anchorCount": 3,
       "depth": 2
     },
     {
@@ -294,7 +411,7 @@
       "docType": "ui_dev_entry",
       "topic": "Runnable showroom root for Dev-VUE3-WebUI-Frontend",
       "title": "UI Dev Entry",
-      "anchorCount": 2,
+      "anchorCount": 3,
       "depth": 1
     }
   ],
@@ -406,6 +523,13 @@
     },
     {
       "source": "frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md",
+      "target": "frontend_dev_contracts/containers/00_CONTAINERS_INDEX.md",
+      "relation": "routes_to",
+      "direction": "downstream",
+      "reason": "Container contracts define the SPA shell, workspace, state, and governance boundaries."
+    },
+    {
+      "source": "frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md",
       "target": "frontend_dev_contracts/positioning/00_POSITIONING_INDEX.md",
       "relation": "routes_to",
       "direction": "downstream",
@@ -424,6 +548,279 @@
       "relation": "routes_to",
       "direction": "downstream",
       "reason": "Layout and responsive rules form the rule branch of the frontend contract tree."
+    },
+    {
+      "source": "frontend_dev_contracts/containers/00_CONTAINERS_INDEX.md",
+      "target": "frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "The containers branch is a core branch of the frontend contract tree."
+    },
+    {
+      "source": "frontend_dev_contracts/containers/00_CONTAINERS_INDEX.md",
+      "target": "frontend_dev_contracts/containers/model/00_CONTAINER_MODEL_INDEX.md",
+      "relation": "routes_to",
+      "direction": "downstream",
+      "reason": "The model branch defines container roles and nesting."
+    },
+    {
+      "source": "frontend_dev_contracts/containers/00_CONTAINERS_INDEX.md",
+      "target": "frontend_dev_contracts/containers/state/00_STATE_AND_DATA_INDEX.md",
+      "relation": "routes_to",
+      "direction": "downstream",
+      "reason": "The state branch defines ownership and payload boundaries."
+    },
+    {
+      "source": "frontend_dev_contracts/containers/00_CONTAINERS_INDEX.md",
+      "target": "frontend_dev_contracts/containers/layout/00_LAYOUT_AUTHORITY_INDEX.md",
+      "relation": "routes_to",
+      "direction": "downstream",
+      "reason": "The layout branch defines shell, workspace, and panel authority."
+    },
+    {
+      "source": "frontend_dev_contracts/containers/00_CONTAINERS_INDEX.md",
+      "target": "frontend_dev_contracts/containers/interaction/00_INTERACTION_PROTOCOL_INDEX.md",
+      "relation": "routes_to",
+      "direction": "downstream",
+      "reason": "The interaction branch defines route, event, and overlay protocols."
+    },
+    {
+      "source": "frontend_dev_contracts/containers/00_CONTAINERS_INDEX.md",
+      "target": "frontend_dev_contracts/containers/governance/00_CONTAINER_GOVERNANCE_INDEX.md",
+      "relation": "routes_to",
+      "direction": "downstream",
+      "reason": "The governance branch defines permission, code placement, and test surfaces."
+    },
+    {
+      "source": "frontend_dev_contracts/containers/governance/00_CONTAINER_GOVERNANCE_INDEX.md",
+      "target": "frontend_dev_contracts/containers/00_CONTAINERS_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "This index is the governance branch of the containers contract tree."
+    },
+    {
+      "source": "frontend_dev_contracts/containers/governance/00_CONTAINER_GOVERNANCE_INDEX.md",
+      "target": "frontend_dev_contracts/containers/governance/10_CONTAINER_PERMISSION_AND_CODE_PLACEMENT.md",
+      "relation": "routes_to",
+      "direction": "downstream",
+      "reason": "The governance contract defines permission visibility and code placement boundaries."
+    },
+    {
+      "source": "frontend_dev_contracts/containers/governance/10_CONTAINER_PERMISSION_AND_CODE_PLACEMENT.md",
+      "target": "frontend_dev_contracts/containers/governance/00_CONTAINER_GOVERNANCE_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "This governance contract belongs to the governance branch."
+    },
+    {
+      "source": "frontend_dev_contracts/containers/governance/10_CONTAINER_PERMISSION_AND_CODE_PLACEMENT.md",
+      "target": "frontend_dev_contracts/positioning/UI_FILE_ORGANIZATION.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "Container governance refines the broader file-organization contract."
+    },
+    {
+      "source": "frontend_dev_contracts/containers/governance/10_CONTAINER_PERMISSION_AND_CODE_PLACEMENT.md",
+      "target": "frontend_dev_contracts/containers/state/10_CONTAINER_STATE_OWNERSHIP.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "Read/write permissions are meaningful only when state ownership is clear."
+    },
+    {
+      "source": "frontend_dev_contracts/containers/interaction/00_INTERACTION_PROTOCOL_INDEX.md",
+      "target": "frontend_dev_contracts/containers/00_CONTAINERS_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "This index is the interaction branch of the containers contract tree."
+    },
+    {
+      "source": "frontend_dev_contracts/containers/interaction/00_INTERACTION_PROTOCOL_INDEX.md",
+      "target": "frontend_dev_contracts/containers/interaction/10_CONTAINER_EVENT_AND_ROUTE_PROTOCOL.md",
+      "relation": "routes_to",
+      "direction": "downstream",
+      "reason": "The interaction contract defines event flow between workspace containers."
+    },
+    {
+      "source": "frontend_dev_contracts/containers/interaction/10_CONTAINER_EVENT_AND_ROUTE_PROTOCOL.md",
+      "target": "frontend_dev_contracts/containers/interaction/00_INTERACTION_PROTOCOL_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "This protocol belongs to the interaction branch."
+    },
+    {
+      "source": "frontend_dev_contracts/containers/interaction/10_CONTAINER_EVENT_AND_ROUTE_PROTOCOL.md",
+      "target": "frontend_dev_contracts/containers/state/20_CONTAINER_PAYLOAD_NORMALIZATION.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "Interaction begins from normalized runtime payload."
+    },
+    {
+      "source": "frontend_dev_contracts/containers/interaction/10_CONTAINER_EVENT_AND_ROUTE_PROTOCOL.md",
+      "target": "frontend_dev_contracts/containers/model/20_CONTAINER_HIERARCHY_AND_NESTING.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "Allowed event flow depends on the container tree."
+    },
+    {
+      "source": "frontend_dev_contracts/containers/layout/00_LAYOUT_AUTHORITY_INDEX.md",
+      "target": "frontend_dev_contracts/containers/00_CONTAINERS_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "This index is the layout branch of the containers contract tree."
+    },
+    {
+      "source": "frontend_dev_contracts/containers/layout/00_LAYOUT_AUTHORITY_INDEX.md",
+      "target": "frontend_dev_contracts/containers/layout/10_APP_SHELL_AND_WORKSPACE_LAYOUT_AUTHORITY.md",
+      "relation": "routes_to",
+      "direction": "downstream",
+      "reason": "The layout authority contract defines shell and workspace responsibility."
+    },
+    {
+      "source": "frontend_dev_contracts/containers/layout/10_APP_SHELL_AND_WORKSPACE_LAYOUT_AUTHORITY.md",
+      "target": "frontend_dev_contracts/containers/layout/00_LAYOUT_AUTHORITY_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "This contract belongs to the layout branch."
+    },
+    {
+      "source": "frontend_dev_contracts/containers/layout/10_APP_SHELL_AND_WORKSPACE_LAYOUT_AUTHORITY.md",
+      "target": "frontend_dev_contracts/rules/UI_LAYOUT_ADJUSTMENT_RULES.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "Responsive rules refine the authority boundaries defined here."
+    },
+    {
+      "source": "frontend_dev_contracts/containers/layout/10_APP_SHELL_AND_WORKSPACE_LAYOUT_AUTHORITY.md",
+      "target": "frontend_dev_contracts/containers/model/20_CONTAINER_HIERARCHY_AND_NESTING.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "Layout authority follows the container hierarchy."
+    },
+    {
+      "source": "frontend_dev_contracts/containers/model/00_CONTAINER_MODEL_INDEX.md",
+      "target": "frontend_dev_contracts/containers/00_CONTAINERS_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "This index is the model branch of the containers contract tree."
+    },
+    {
+      "source": "frontend_dev_contracts/containers/model/00_CONTAINER_MODEL_INDEX.md",
+      "target": "frontend_dev_contracts/containers/model/10_CONTAINER_ROLE_TAXONOMY.md",
+      "relation": "routes_to",
+      "direction": "downstream",
+      "reason": "The taxonomy contract defines the stable role set."
+    },
+    {
+      "source": "frontend_dev_contracts/containers/model/00_CONTAINER_MODEL_INDEX.md",
+      "target": "frontend_dev_contracts/containers/model/20_CONTAINER_HIERARCHY_AND_NESTING.md",
+      "relation": "routes_to",
+      "direction": "downstream",
+      "reason": "The hierarchy contract defines the nesting tree and parent-child restrictions."
+    },
+    {
+      "source": "frontend_dev_contracts/containers/model/10_CONTAINER_ROLE_TAXONOMY.md",
+      "target": "frontend_dev_contracts/containers/model/00_CONTAINER_MODEL_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "This taxonomy belongs to the container model branch."
+    },
+    {
+      "source": "frontend_dev_contracts/containers/model/10_CONTAINER_ROLE_TAXONOMY.md",
+      "target": "frontend_dev_contracts/containers/state/10_CONTAINER_STATE_OWNERSHIP.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "Role semantics must match state ownership boundaries."
+    },
+    {
+      "source": "frontend_dev_contracts/containers/model/10_CONTAINER_ROLE_TAXONOMY.md",
+      "target": "frontend_dev_contracts/containers/layout/10_APP_SHELL_AND_WORKSPACE_LAYOUT_AUTHORITY.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "Container roles imply different layout authority scopes."
+    },
+    {
+      "source": "frontend_dev_contracts/containers/model/20_CONTAINER_HIERARCHY_AND_NESTING.md",
+      "target": "frontend_dev_contracts/containers/model/00_CONTAINER_MODEL_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "This hierarchy contract belongs to the container model branch."
+    },
+    {
+      "source": "frontend_dev_contracts/containers/model/20_CONTAINER_HIERARCHY_AND_NESTING.md",
+      "target": "frontend_dev_contracts/containers/model/10_CONTAINER_ROLE_TAXONOMY.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "The hierarchy instantiates the stable role taxonomy."
+    },
+    {
+      "source": "frontend_dev_contracts/containers/model/20_CONTAINER_HIERARCHY_AND_NESTING.md",
+      "target": "frontend_dev_contracts/containers/interaction/10_CONTAINER_EVENT_AND_ROUTE_PROTOCOL.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "Parent-child topology determines allowed event flow."
+    },
+    {
+      "source": "frontend_dev_contracts/containers/state/00_STATE_AND_DATA_INDEX.md",
+      "target": "frontend_dev_contracts/containers/00_CONTAINERS_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "This index is the state branch of the containers contract tree."
+    },
+    {
+      "source": "frontend_dev_contracts/containers/state/00_STATE_AND_DATA_INDEX.md",
+      "target": "frontend_dev_contracts/containers/state/10_CONTAINER_STATE_OWNERSHIP.md",
+      "relation": "routes_to",
+      "direction": "downstream",
+      "reason": "The ownership contract defines which container owns which state."
+    },
+    {
+      "source": "frontend_dev_contracts/containers/state/00_STATE_AND_DATA_INDEX.md",
+      "target": "frontend_dev_contracts/containers/state/20_CONTAINER_PAYLOAD_NORMALIZATION.md",
+      "relation": "routes_to",
+      "direction": "downstream",
+      "reason": "The payload contract defines the normalization boundary and runtime bridge responsibilities."
+    },
+    {
+      "source": "frontend_dev_contracts/containers/state/10_CONTAINER_STATE_OWNERSHIP.md",
+      "target": "frontend_dev_contracts/containers/state/00_STATE_AND_DATA_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "This contract belongs to the state branch."
+    },
+    {
+      "source": "frontend_dev_contracts/containers/state/10_CONTAINER_STATE_OWNERSHIP.md",
+      "target": "frontend_dev_contracts/containers/state/20_CONTAINER_PAYLOAD_NORMALIZATION.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "State ownership depends on normalized payload boundaries."
+    },
+    {
+      "source": "frontend_dev_contracts/containers/state/10_CONTAINER_STATE_OWNERSHIP.md",
+      "target": "frontend_dev_contracts/containers/model/10_CONTAINER_ROLE_TAXONOMY.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "Role semantics and state ownership must stay aligned."
+    },
+    {
+      "source": "frontend_dev_contracts/containers/state/20_CONTAINER_PAYLOAD_NORMALIZATION.md",
+      "target": "frontend_dev_contracts/containers/state/00_STATE_AND_DATA_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "This contract belongs to the state and data branch."
+    },
+    {
+      "source": "frontend_dev_contracts/containers/state/20_CONTAINER_PAYLOAD_NORMALIZATION.md",
+      "target": "frontend_dev_contracts/showroom_runtime/VIEWER_SERVICE_WORKFLOW.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "The viewer service workflow provides the runtime source that feeds the normalized payload."
+    },
+    {
+      "source": "frontend_dev_contracts/containers/state/20_CONTAINER_PAYLOAD_NORMALIZATION.md",
+      "target": "frontend_dev_contracts/containers/interaction/10_CONTAINER_EVENT_AND_ROUTE_PROTOCOL.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "Normalized payload is the input boundary for container interaction."
     },
     {
       "source": "frontend_dev_contracts/positioning/00_POSITIONING_INDEX.md",
@@ -504,6 +901,13 @@
     },
     {
       "source": "frontend_dev_contracts/rules/UI_LAYOUT_ADJUSTMENT_RULES.md",
+      "target": "frontend_dev_contracts/containers/layout/10_APP_SHELL_AND_WORKSPACE_LAYOUT_AUTHORITY.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "Responsive rules refine the layout authority assigned to shell and workspace containers."
+    },
+    {
+      "source": "frontend_dev_contracts/rules/UI_LAYOUT_ADJUSTMENT_RULES.md",
       "target": "frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md",
       "relation": "extends",
       "direction": "upstream",
@@ -539,6 +943,13 @@
     },
     {
       "source": "frontend_dev_contracts/showroom_runtime/VIEWER_SERVICE_WORKFLOW.md",
+      "target": "frontend_dev_contracts/containers/state/20_CONTAINER_PAYLOAD_NORMALIZATION.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "The service workflow feeds the normalized payload boundary consumed by UI containers."
+    },
+    {
+      "source": "frontend_dev_contracts/showroom_runtime/VIEWER_SERVICE_WORKFLOW.md",
       "target": "frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md",
       "relation": "operates",
       "direction": "upstream",
@@ -557,6 +968,13 @@
       "relation": "belongs_to",
       "direction": "upstream",
       "reason": "This contract belongs to the showroom runtime branch."
+    },
+    {
+      "source": "frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md",
+      "target": "frontend_dev_contracts/containers/00_CONTAINERS_INDEX.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "The showroom stack is implemented through the SPA container tree."
     },
     {
       "source": "frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md",
@@ -658,6 +1076,13 @@
     },
     {
       "source": "references/stages/30_STAGE_MOTION_COMPONENT_ARCHITECTURE.md",
+      "target": "frontend_dev_contracts/containers/model/10_CONTAINER_ROLE_TAXONOMY.md",
+      "relation": "details",
+      "direction": "downstream",
+      "reason": "The container taxonomy defines the stable container roles that shape component architecture."
+    },
+    {
+      "source": "references/stages/30_STAGE_MOTION_COMPONENT_ARCHITECTURE.md",
       "target": "frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md",
       "relation": "details",
       "direction": "downstream",
@@ -676,6 +1101,13 @@
       "relation": "implements",
       "direction": "downstream",
       "reason": "The runnable showroom root is the concrete execution surface of this stage."
+    },
+    {
+      "source": "references/stages/40_STAGE_SHOWROOM_RUNTIME.md",
+      "target": "frontend_dev_contracts/containers/state/20_CONTAINER_PAYLOAD_NORMALIZATION.md",
+      "relation": "details",
+      "direction": "downstream",
+      "reason": "The payload normalization contract defines the runtime bridge input boundary for the showroom."
     },
     {
       "source": "references/stages/40_STAGE_SHOWROOM_RUNTIME.md",
@@ -795,8 +1227,15 @@
       "relation": "routes_to",
       "direction": "downstream",
       "reason": "The frontend contract index defines the official UI development reading path."
+    },
+    {
+      "source": "ui-dev/UI_DEV_ENTRY.md",
+      "target": "frontend_dev_contracts/containers/00_CONTAINERS_INDEX.md",
+      "relation": "implements",
+      "direction": "downstream",
+      "reason": "The runnable showroom must realize the container contracts through the SPA UI code."
     }
   ],
   "warnings": [],
-  "updated_at": "2026-03-11T22:44:56.357Z"
+  "updated_at": "2026-03-11T23:15:06.449Z"
 }

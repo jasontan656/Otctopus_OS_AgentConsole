@@ -46,6 +46,15 @@ code {
   box-shadow: 0 18px 48px rgba(18, 32, 45, 0.1);
 }
 
+.hero-sidecopy {
+  align-self: end;
+  padding: 18px;
+  border-radius: 22px;
+  background: rgba(17, 33, 49, 0.06);
+  color: #354251;
+  line-height: 1.7;
+}
+
 .eyebrow {
   margin: 0 0 10px;
   text-transform: uppercase;
@@ -71,6 +80,29 @@ code {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
   align-content: start;
+}
+
+.scene-stack {
+  display: grid;
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.runtime-status-panel {
+  padding-bottom: 20px;
+}
+
+.runtime-status-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  padding: 0 22px;
+}
+
+.runtime-note {
+  margin: 14px 22px 0;
+  color: #52606d;
+  line-height: 1.6;
 }
 
 .stat-card {
@@ -254,6 +286,16 @@ code {
   line-height: 1.72;
 }
 
+.empty-state {
+  display: grid;
+  place-items: center;
+  min-height: 220px;
+  padding: 24px;
+  color: #52606d;
+  line-height: 1.6;
+  text-align: center;
+}
+
 .markdown-body h1,
 .markdown-body h2,
 .markdown-body h3 {
@@ -281,6 +323,16 @@ code {
   }
 
   .page-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .runtime-status-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .runtime-status-grid {
     grid-template-columns: 1fr;
   }
 }
