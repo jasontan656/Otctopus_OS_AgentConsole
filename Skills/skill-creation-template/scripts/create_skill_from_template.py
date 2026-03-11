@@ -43,6 +43,12 @@ def normalize_generated_skill_md(text: str) -> str:
     return HEADING_TAG_RE.sub(r"\1", text)
 
 
+def rewrite_generated_anchor_targets(text: str, replacements: dict[str, str]) -> str:
+    for old, new in replacements.items():
+        text = text.replace(old, new)
+    return text
+
+
 def main() -> int:
     trace_id = "trace_id:main"
     run_id = "run_id:create_skill_from_template"
@@ -115,20 +121,91 @@ def main() -> int:
         short_description=short_description,
         default_prompt=default_prompt,
     )
-    toolbox_usage_md = toolbox_usage_template.safe_substitute(skill_name=skill_name)
-    toolbox_development_md = toolbox_development_template.safe_substitute(skill_name=skill_name)
-    toolbox_dev_architecture_md = toolbox_dev_architecture_template.safe_substitute(skill_name=skill_name)
+    toolbox_usage_md = rewrite_generated_anchor_targets(
+        toolbox_usage_template.safe_substitute(skill_name=skill_name),
+        {
+            "Cli_Toolbox_DEVELOPMENT_TEMPLATE.md": "Cli_Toolbox_DEVELOPMENT.md",
+            "references/governance/SKILL_DOCSTRUCTURE_POLICY_TEMPLATE.md": "../governance/SKILL_DOCSTRUCTURE_POLICY.md",
+        },
+    )
+    toolbox_development_md = rewrite_generated_anchor_targets(
+        toolbox_development_template.safe_substitute(skill_name=skill_name),
+        {
+            "Cli_Toolbox_USAGE_TEMPLATE.md": "Cli_Toolbox_USAGE.md",
+            "Cli_Toolbox_DEV_ARCHITECTURE_TEMPLATE.md": "development/00_ARCHITECTURE_OVERVIEW.md",
+        },
+    )
+    toolbox_dev_architecture_md = rewrite_generated_anchor_targets(
+        toolbox_dev_architecture_template.safe_substitute(skill_name=skill_name),
+        {
+            "Cli_Toolbox_DEVELOPMENT_TEMPLATE.md": "../Cli_Toolbox_DEVELOPMENT.md",
+            "references/governance/SKILL_EXECUTION_RULES_TEMPLATE.md": "../../governance/SKILL_EXECUTION_RULES.md",
+        },
+    )
     toolbox_dev_catalog_yaml = toolbox_dev_catalog_template.safe_substitute(skill_name=skill_name)
-    toolbox_dev_category_md = toolbox_dev_category_template.safe_substitute(skill_name=skill_name)
-    toolbox_dev_module_md = toolbox_dev_module_template.safe_substitute(skill_name=skill_name)
-    toolbox_dev_changelog_md = toolbox_dev_changelog_template.safe_substitute(skill_name=skill_name)
-    task_routing_md = task_routing_template.safe_substitute(skill_name=skill_name)
-    docstructure_policy_md = docstructure_policy_template.safe_substitute(skill_name=skill_name)
-    execution_rules_md = execution_rules_template.safe_substitute(skill_name=skill_name)
+    toolbox_dev_category_md = rewrite_generated_anchor_targets(
+        toolbox_dev_category_template.safe_substitute(skill_name=skill_name),
+        {
+            "Cli_Toolbox_DEVELOPMENT_TEMPLATE.md": "../Cli_Toolbox_DEVELOPMENT.md",
+            "Cli_Toolbox_DEV_MODULE_TEMPLATE.md": "modules/MODULE_TEMPLATE.md",
+        },
+    )
+    toolbox_dev_module_md = rewrite_generated_anchor_targets(
+        toolbox_dev_module_template.safe_substitute(skill_name=skill_name),
+        {
+            "Cli_Toolbox_DEV_CATEGORY_INDEX_TEMPLATE.md": "../20_CATEGORY_INDEX.md",
+            "Cli_Toolbox_DEV_CHANGELOG_TEMPLATE.md": "../90_CHANGELOG.md",
+        },
+    )
+    toolbox_dev_changelog_md = rewrite_generated_anchor_targets(
+        toolbox_dev_changelog_template.safe_substitute(skill_name=skill_name),
+        {
+            "Cli_Toolbox_DEVELOPMENT_TEMPLATE.md": "../Cli_Toolbox_DEVELOPMENT.md",
+            "references/governance/SKILL_EXECUTION_RULES_TEMPLATE.md": "../../governance/SKILL_EXECUTION_RULES.md",
+        },
+    )
+    task_routing_md = rewrite_generated_anchor_targets(
+        task_routing_template.safe_substitute(skill_name=skill_name),
+        {
+            "../../SKILL_TEMPLATE.md": "../../SKILL.md",
+            "../governance/SKILL_DOCSTRUCTURE_POLICY_TEMPLATE.md": "../governance/SKILL_DOCSTRUCTURE_POLICY.md",
+        },
+    )
+    docstructure_policy_md = rewrite_generated_anchor_targets(
+        docstructure_policy_template.safe_substitute(skill_name=skill_name),
+        {
+            "../routing/TASK_ROUTING_TEMPLATE.md": "../routing/TASK_ROUTING.md",
+            "SKILL_EXECUTION_RULES_TEMPLATE.md": "SKILL_EXECUTION_RULES.md",
+        },
+    )
+    execution_rules_md = rewrite_generated_anchor_targets(
+        execution_rules_template.safe_substitute(skill_name=skill_name),
+        {
+            "SKILL_DOCSTRUCTURE_POLICY_TEMPLATE.md": "SKILL_DOCSTRUCTURE_POLICY.md",
+            "../routing/TASK_ROUTING_TEMPLATE.md": "../routing/TASK_ROUTING.md",
+        },
+    )
     runtime_contract_json = runtime_contract_json_template.safe_substitute(skill_name=skill_name)
-    runtime_contract_md = runtime_contract_md_template.safe_substitute(skill_name=skill_name)
-    stage_system_md = stage_system_template.safe_substitute(skill_name=skill_name)
-    stage_index_md = stage_index_template.safe_substitute(skill_name=skill_name)
+    runtime_contract_md = rewrite_generated_anchor_targets(
+        runtime_contract_md_template.safe_substitute(skill_name=skill_name),
+        {
+            "../SKILL_TEMPLATE_STAGED.md": "../../SKILL.md",
+            "../references/governance/SKILL_DOCSTRUCTURE_POLICY_TEMPLATE.md": "../governance/SKILL_DOCSTRUCTURE_POLICY.md",
+        },
+    )
+    stage_system_md = rewrite_generated_anchor_targets(
+        stage_system_template.safe_substitute(skill_name=skill_name),
+        {
+            "../runtime/SKILL_RUNTIME_CONTRACT_TEMPLATE.md": "../../../references/runtime/SKILL_RUNTIME_CONTRACT.md",
+        },
+    )
+    stage_index_md = rewrite_generated_anchor_targets(
+        stage_index_template.safe_substitute(skill_name=skill_name),
+        {
+            "README_STAGE_SYSTEM_TEMPLATE.md": "../../assets/templates/stages/README_STAGE_SYSTEM.md",
+            "../SKILL_TEMPLATE_STAGED.md": "../../SKILL.md",
+        },
+    )
 
     results: dict[str, str] = {}
     results[str(skill_dir / "SKILL.md")] = write_text(skill_dir / "SKILL.md", skill_md, args.overwrite)
@@ -211,9 +288,18 @@ def main() -> int:
             "assets/templates/stages/STAGE_TEMPLATE/GRAPH_CONTRACT.json",
         ):
             source = template_dir / relative_path.replace("assets/templates/", "")
+            text = load_text(source)
+            if relative_path == "assets/templates/stages/00_STAGE_INDEX_TEMPLATE.md":
+                text = rewrite_generated_anchor_targets(
+                    text,
+                    {
+                        "README_STAGE_SYSTEM_TEMPLATE.md": "README_STAGE_SYSTEM.md",
+                        "../SKILL_TEMPLATE_STAGED.md": "../../../SKILL.md",
+                    },
+                )
             results[str(skill_dir / relative_path)] = write_text(
                 skill_dir / relative_path,
-                load_text(source),
+                text,
                 args.overwrite,
             )
 
