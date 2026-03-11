@@ -38,7 +38,7 @@
   "default_meta_skill_order": [
     "$meta-github-operation (after any write to Codex_Skills_Mirror, commit-and-push the mirror repo for Git traceability; Git push is not a substitute for syncing the codex installation directory)",
     "$skill-mirror-to-codex (edit skills only in Codex_Skills_Mirror mirror paths, never directly in the codex installation directory; after editing, use Push for already-installed skills and Install for newly created skills)",
-    "$Meta-Skill-Template ( should be considered to imply if there is no specific user request on how skill should be created (prioritize user request than template) )",
+    "$skill-creation-template ( should be considered to imply if there is no specific user request on how skill should be created (prioritize user request than template) )",
     "$skill-creator (for skill standard formatter to ensure codex reads it properly, do not use its template for skill creation)",
     "$Constitution-knowledge-base (for skill CLI tool lints )"
   ],

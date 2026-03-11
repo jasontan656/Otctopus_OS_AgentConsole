@@ -1,6 +1,6 @@
 # Cli_Toolbox 开发文档（入口）
 
-适用技能：`Meta-Skill-Template`
+适用技能：`skill-creation-template`
 
 ## 命名约束
 - 本技能内工具统一使用 `Cli_Toolbox.<tool_name>` 命名。

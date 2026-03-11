@@ -1,4 +1,4 @@
-# Meta-Skill-Template Runtime Contract
+# Skill-Creation-Template Runtime Contract
 
 ## Contract Header
 - `contract_name`: `meta_skill_template_references_runtime_skill_runtime_contract`

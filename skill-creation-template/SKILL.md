@@ -1,9 +1,9 @@
 ---
-name: "Meta-Skill-Template"
+name: "skill-creation-template"
 description: "将 3-Octupos-OS-Backend 已验证的技能骨架提炼为通用模板治理面板，用统一 Cli_Toolbox 创建或改造 basic 与 staged_cli_first 技能。"
 ---
 
-# Meta-Skill-Template
+# Skill-Creation-Template
 
 ## 1. 定位
 - 本文件只做模板技能门面入口，不承载模板治理正文。
@@ -89,7 +89,7 @@ description: "将 3-Octupos-OS-Backend 已验证的技能骨架提炼为通用�
 
 ## 7. 结构索引
 ```text
-Meta-Skill-Template/
+skill-creation-template/
 ├── SKILL.md
 ├── agents/
 │   └── openai.yaml

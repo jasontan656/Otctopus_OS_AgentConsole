@@ -15,7 +15,7 @@
   "optional_fields": [
     "notes"
   ],
-  "skill_name": "Meta-Skill-Template",
+  "skill_name": "skill-creation-template",
   "authoring_model": {
     "skill_md_role": "entry_only",
     "proven_source_skill": "3-Octupos-OS-Backend",
@@ -123,7 +123,7 @@
     "keep tooling docs and regression tests in sync with generator behavior"
   ],
   "notes": [
-    "This contract governs Meta-Skill-Template itself.",
+    "This contract governs skill-creation-template itself.",
     "The facade shape replaces the older generic abstract-layer/business-layer heading scheme with a backend-proven routing facade."
   ]
 }

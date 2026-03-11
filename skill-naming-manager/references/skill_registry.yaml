@@ -21,7 +21,7 @@ families:
         trigger_summary: "当需要把 mirror 中的技能同步或安装到 codex skills 目录时使用。"
         companion_skills:
           - "skill-naming-manager"
-          - "Meta-Skill-Template"
+          - "skill-creation-template"
         migrated_from:
           - "Meta-Skill-Mirror"
       - canonical_id: "skill-doc-structure"
@@ -36,3 +36,15 @@ families:
           - "Meta-VUE3-WebUI-frontend"
         migrated_from:
           - "Meta-Skill-DocStructure"
+      - canonical_id: "skill-creation-template"
+        display_name: "Skill-Creation-Template"
+        prefix: "skill"
+        family: "[SKILL-GOV]"
+        role_tag: "template"
+        status: "active"
+        trigger_summary: "当需要用统一模板创建、改造或治理 skills 骨架时使用。"
+        companion_skills:
+          - "skill-naming-manager"
+          - "skill-mirror-to-codex"
+        migrated_from:
+          - "Meta-Skill-Template"

@@ -1,4 +1,4 @@
 interface:
   display_name: "Temp Plan"
   short_description: "快速注入用户当前长期开发意图与技能化策略。"
-  default_prompt: "先读取 temp-plan 的参考文档，理解用户当前的长期开发意图、技能化优先策略与 OK 边界；如果任务是创建新技能，再转入 Meta-Skill-Template。"
+  default_prompt: "先读取 temp-plan 的参考文档，理解用户当前的长期开发意图、技能化优先策略与 OK 边界；如果任务是创建新技能，再转入 skill-creation-template。"

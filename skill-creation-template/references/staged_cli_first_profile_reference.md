@@ -82,7 +82,7 @@
   - 输出当前阶段对 graph/context 的角色定义。
 
 ## 模板治理建议
-- `Meta-Skill-Template` 的 staged profile 至少生成：
+- `skill-creation-template` 的 staged profile 至少生成：
   - staged façade `SKILL.md`
   - runtime contract skeleton
   - `references/stages/00_STAGE_INDEX.md`

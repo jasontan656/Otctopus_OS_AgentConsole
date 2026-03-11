@@ -102,7 +102,7 @@ def cmd_runtime_contract(args) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Meta-Skill-Template unified toolbox")
+    parser = argparse.ArgumentParser(description="Skill-Creation-Template unified toolbox")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     create_skill = subparsers.add_parser("create-skill-from-template")
