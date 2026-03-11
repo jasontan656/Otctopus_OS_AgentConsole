@@ -13,7 +13,7 @@ from command_support import cmd_answer_question, cmd_extract_final_reply, cmd_lo
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Cli_Toolbox for 5-Branch-Chat")
+    parser = argparse.ArgumentParser(description="Cli_Toolbox for Functional-CodexBranchSession-Chat")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     locate = subparsers.add_parser("locate-session", help="Locate session files by session/resume id")

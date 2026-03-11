@@ -2,7 +2,7 @@
 
 
 ## Contract Header
-- `contract_name`: `5_branch_chat_references_tooling_observability_contract`
+- `contract_name`: `functional_codex_branch_session_chat_references_tooling_observability_contract`
 - `contract_version`: `1.0.0`
 - `validation_mode`: `strict`
 - `required_fields`:
@@ -13,8 +13,8 @@
   - `notes`
 
 ## Runtime Anchors
-- `Codex_Skill_Runtime/5-Branch-Chat/machine.jsonl`
-- `Codex_Skill_Runtime/5-Branch-Chat/human.log`
+- `Codex_Skill_Runtime/Functional-CodexBranchSession-Chat/machine.jsonl`
+- `Codex_Skill_Runtime/Functional-CodexBranchSession-Chat/human.log`
 - `logs/machine.jsonl`（project-local anchor）
 - `logs/human.log`（project-local anchor）
 

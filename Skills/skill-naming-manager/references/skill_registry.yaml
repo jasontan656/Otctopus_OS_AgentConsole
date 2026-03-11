@@ -64,6 +64,18 @@ families:
         migrated_from:
           - "meta-vue3-webui-frontend"
           - "Meta-VUE3-WebUI-frontend"
+  - family: "[Functional]"
+    description: "功能化组件技能，用于各个适用域的小任务。"
+    members:
+      - canonical_id: "functional-codex-branch-session-chat"
+        display_name: "Functional-CodexBranchSession-Chat"
+        prefix: "functional"
+        family: "[Functional]"
+        role_tag: "branch-session-chat"
+        status: "active"
+        trigger_summary: "当用户提供 resume_id 或 session_id，并希望基于历史会话证据直接提问答疑时使用。"
+        migrated_from:
+          - "5-Branch-Chat"
   - family: "[Meta]"
     description: "元技能,常用于自动化运行,必须常驻."
     members:

@@ -1,9 +1,9 @@
 ---
-name: "5-Branch-Chat"
+name: "Functional-CodexBranchSession-Chat"
 description: 接收 resume/session id 与问题（可选关键词）定位会话证据，并基于证据直接回答用户问题。
 ---
 
-# 5-Branch-Chat
+# Functional-CodexBranchSession-Chat
 
 ## 1. 目标
 - 接收用户输入的 `resume_id/session_id + question`（`keyword` 可选），定位指定 session 中的目标 assistant 回复与主题证据。
@@ -63,10 +63,10 @@ description: 接收 resume/session id 与问题（可选关键词）定位会话
   - 提供 `keyword` 但未命中 assistant 消息，必须返回 `status=error` + 可用候选提示。
   - 未提供 `keyword` 且 session 无 assistant 消息，必须返回 `status=error`。
 - 目录边界：
-  - 技能实现仅落地于 `octopus-os-agent-console/Skills/5-Branch-Chat`。
+  - 技能实现仅落地于 `octopus-os-agent-console/Skills/Functional-CodexBranchSession-Chat`。
 - 运行观测契约：
   - 必须保留双通道日志：`machine.jsonl`（机器可解析）与 `human.log`（人类可读）。
-  - 日志根目录锚点：`Codex_Skill_Runtime/5-Branch-Chat/`。
+  - 日志根目录锚点：`Codex_Skill_Runtime/Functional-CodexBranchSession-Chat/`。
 
 ## 5. 方法论约束
 - 何时使用：
@@ -91,7 +91,7 @@ description: 接收 resume/session id 与问题（可选关键词）定位会话
 
 ## 7. 架构契约
 ```text
-5-Branch-Chat/
+Functional-CodexBranchSession-Chat/
 ├── SKILL.md
 ├── agents/
 │   └── openai.yaml

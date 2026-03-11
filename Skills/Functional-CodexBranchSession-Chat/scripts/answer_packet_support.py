@@ -5,9 +5,9 @@ from typing import Any, Dict, List, Set
 
 
 OBSERVABILITY_CHANNELS = {
-    "machine_log": "Codex_Skill_Runtime/5-Branch-Chat/machine.jsonl",
-    "human_log": "Codex_Skill_Runtime/5-Branch-Chat/human.log",
-    "result_anchor": "Codex_Skills_Result/5-Branch-Chat",
+    "machine_log": "Codex_Skill_Runtime/Functional-CodexBranchSession-Chat/machine.jsonl",
+    "human_log": "Codex_Skill_Runtime/Functional-CodexBranchSession-Chat/human.log",
+    "result_anchor": "Codex_Skills_Result/Functional-CodexBranchSession-Chat",
     "project_machine_log": "logs/machine.jsonl",
     "project_human_log": "logs/human.log",
 }

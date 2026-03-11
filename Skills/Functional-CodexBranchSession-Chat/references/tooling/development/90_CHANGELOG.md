@@ -1,7 +1,7 @@
 # Cli_Toolbox 开发变更记录
 
 - 2026-02-26
-  - 初始化 `5-Branch-Chat` 技能骨架与 1-7 章节文档。
+  - 初始化 `Functional-CodexBranchSession-Chat` 技能骨架与 1-7 章节文档。
   - 新增 `scripts/branch_chat_toolbox.py`。
   - 新增三个模块文档：`session_locator`、`final_reply_extractor`、`study_packet_builder`。
   - 补齐 usage/development/index/catalog 的文档联动。

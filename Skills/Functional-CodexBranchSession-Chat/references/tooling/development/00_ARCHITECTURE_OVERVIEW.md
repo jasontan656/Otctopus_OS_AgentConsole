@@ -1,6 +1,6 @@
 # Cli_Toolbox 开发文档架构总览
 
-适用技能：`5-Branch-Chat`
+适用技能：`Functional-CodexBranchSession-Chat`
 
 ## 目标
 - 用稳定的只读提取链路，支持“从历史 session 抽取目标 assistant 回复与主题证据，并直接回答问题”。

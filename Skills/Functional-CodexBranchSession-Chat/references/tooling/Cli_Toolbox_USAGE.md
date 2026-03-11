@@ -1,6 +1,6 @@
 # Cli_Toolbox 使用文档
 
-适用技能：`5-Branch-Chat`
+适用技能：`Functional-CodexBranchSession-Chat`
 
 ## 命名约束
 - 工具统一命名为 `Cli_Toolbox.<tool_name>`。
