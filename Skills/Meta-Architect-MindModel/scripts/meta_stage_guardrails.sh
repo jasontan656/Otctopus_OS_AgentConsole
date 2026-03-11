@@ -15,9 +15,9 @@ print_common_header() {
 case "$stage" in
   TURN_START)
     print_common_header "TURN_START"
-    echo "[DO][Meta-mindchain] architect-first, assess whole-system impact and base-layer cleanliness before solution"
-    echo "[DO][Meta-mindchain] if user request harms architecture stability, explicitly refuse and propose a cleaner path"
-    echo "[DONT][Meta-mindchain] no local-only patching, no dead-code/compatibility-shell retention, no compliance on architecture-conflicting requests"
+    echo "[DO][Meta-Architect-MindModel] architect-first, assess whole-system impact and base-layer cleanliness before solution"
+    echo "[DO][Meta-Architect-MindModel] if user request harms architecture stability, explicitly refuse and propose a cleaner path"
+    echo "[DONT][Meta-Architect-MindModel] no local-only patching, no dead-code/compatibility-shell retention, no compliance on architecture-conflicting requests"
     echo "[DO][Meta-Reasoning-Chain] use single-layer chain before advice: clarify/assumptions/evidence/alternatives/future/consequences/pilot"
     echo "[DONT][Meta-Reasoning-Chain] unless NO_FUTURE_PROJECTION, do not skip full chain (especially evidence/future/rollback thresholds)"
     echo "[DO][Meta-prompt-write] if prompt/instruction text changes, run filter script and print structured intent block"

@@ -87,11 +87,25 @@ families:
         status: "active"
         trigger_summary: "当需要对非平凡讨论、规划、设计或评审回合强制输出单层混合推理链并形成可决策结论时使用。"
         companion_skills:
-          - "Meta-mindchain"
+          - "Meta-Architect-MindModel"
           - "Meta-keyword-first-edit"
         migrated_from:
           - "Meta-reasoningchain"
           - "meta-reasoningchain"
+      - canonical_id: "meta-architect-mindmodel"
+        display_name: "Meta-Architect-MindModel"
+        prefix: "meta"
+        family: "[Meta]"
+        role_tag: "architect-first-lens"
+        status: "active"
+        trigger_summary: "当需要以 architect-first 视角评估整体架构影响、边界清晰度与长期整洁性，并在局部请求与整体结构冲突时给出更干净替代方案时使用。"
+        companion_skills:
+          - "Meta-Impact-Investigation"
+          - "Meta-Reasoning-Chain"
+          - "Meta-keyword-first-edit"
+        migrated_from:
+          - "Meta-mindchain"
+          - "meta-mindchain"
       - canonical_id: "meta-runtime-selfcheck"
         display_name: "Meta-Runtime-Selfcheck"
         prefix: "meta"

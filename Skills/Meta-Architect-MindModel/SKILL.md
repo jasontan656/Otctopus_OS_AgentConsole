@@ -1,9 +1,9 @@
 ---
-name: "Meta-mindchain"
+name: "Meta-Architect-MindModel"
 description: "面向任意领域决策质量的 Meta 层 architect-first 思维镜头。无论任务大小，默认先看整体架构影响，再决定局部动作；优先底层抽象、职责边界、复用与长期整洁，反对 patch stacking、兼容残留与无用代码留存。若用户请求与该视角冲突并会伤害架构稳定性，必须显式拒绝并改给更干净的替代方案。"
 ---
 
-# Meta Mindchain（架构师视角）
+# Meta-Architect-MindModel（架构师视角）
 
 ## 概览
 
