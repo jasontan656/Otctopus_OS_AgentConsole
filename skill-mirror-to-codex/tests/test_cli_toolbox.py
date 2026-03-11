@@ -130,6 +130,49 @@ class MetaSkillMirrorCliTests(unittest.TestCase):
             self.assertEqual(payload["status"], "error")
             self.assertIn("dot traversal", payload["error"])
 
+    def test_all_scope_push_only_syncs_skill_roots(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            mirror_root = Path(tmp) / "mirror"
+            codex_root = Path(tmp) / "codex"
+            skill_root = mirror_root / "Meta-Impact-Investigation"
+            product_docs = mirror_root / "docs"
+            product_tools = mirror_root / "product_tools"
+            system_root = mirror_root / ".system"
+
+            skill_root.mkdir(parents=True)
+            product_docs.mkdir(parents=True)
+            product_tools.mkdir(parents=True)
+            system_root.mkdir(parents=True)
+            codex_root.mkdir(parents=True)
+
+            (skill_root / "SKILL.md").write_text("skill\n", encoding="utf-8")
+            (product_docs / "README.md").write_text("docs\n", encoding="utf-8")
+            (product_tools / "installer.py").write_text("print('installer')\n", encoding="utf-8")
+            (system_root / ".codex-system-skills.marker").write_text("marker\n", encoding="utf-8")
+            (system_root / "Skill-creator").mkdir()
+            (system_root / "Skill-creator" / "SKILL.md").write_text("creator\n", encoding="utf-8")
+
+            completed = self.run_cli(
+                "--scope",
+                "all",
+                "--mirror-root",
+                str(mirror_root),
+                "--codex-root",
+                str(codex_root),
+                "--dry-run",
+            )
+
+            payload = json.loads(completed.stdout)
+            self.assertEqual(payload["status"], "ok")
+            self.assertEqual(payload["resolved_mode"], "push")
+            self.assertEqual(payload["scope"], "all")
+            self.assertEqual(
+                [entry["root_name"] for entry in payload["synced_entries"]],
+                [".system", "Meta-Impact-Investigation"],
+            )
+            self.assertTrue(all("docs" not in " ".join(command) for command in payload["commands"]))
+            self.assertTrue(all("product_tools" not in " ".join(command) for command in payload["commands"]))
+
 
 if __name__ == "__main__":
     unittest.main()

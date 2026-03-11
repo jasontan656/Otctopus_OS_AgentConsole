@@ -18,6 +18,7 @@ RSYNC_EXCLUDES = (
     "Codex_Skill_Runtime/",
 )
 SYSTEM_SKILL_NAMESPACE = ".system"
+SYSTEM_SKILL_MARKER = ".codex-system-skills.marker"
 
 
 def _resolve_codex_root(raw: str | None) -> Path:
@@ -151,6 +152,30 @@ def _build_paths(
     return mirror_root, codex_root, None, None, None
 
 
+def _discover_syncable_roots(mirror_root: Path) -> list[tuple[str, Path, Path]]:
+    syncable: list[tuple[str, Path, Path]] = []
+    for child in sorted(mirror_root.iterdir(), key=lambda item: item.name.lower()):
+        if not child.is_dir():
+            continue
+        if child.name == ".git":
+            continue
+
+        if child.name == SYSTEM_SKILL_NAMESPACE:
+            if (child / SYSTEM_SKILL_MARKER).exists():
+                syncable.append((child.name, child, child.name))
+            continue
+
+        if child.name.startswith("."):
+            continue
+
+        if (child / "SKILL.md").is_file():
+            syncable.append((child.name, child, child.name))
+
+    if not syncable:
+        raise FileNotFoundError(f"no syncable skill roots found under mirror root: {mirror_root}")
+    return syncable
+
+
 def _destination_exists(dst: Path, scope: str) -> bool:
     if scope == "all":
         return True
@@ -173,6 +198,27 @@ def _rsync(src: Path, dst: Path, dry_run: bool) -> List[str]:
     if completed.returncode != 0:
         raise RuntimeError(completed.stderr.strip() or "rsync failed")
     return cmd
+
+
+def _rsync_syncable_roots(
+    mirror_root: Path,
+    codex_root: Path,
+    dry_run: bool,
+) -> tuple[list[dict[str, str]], list[list[str]]]:
+    synced_entries: list[dict[str, str]] = []
+    commands: list[list[str]] = []
+    for root_name, source_root, destination_name in _discover_syncable_roots(mirror_root):
+        destination_root = codex_root / destination_name
+        command = _rsync(src=source_root, dst=destination_root, dry_run=dry_run)
+        synced_entries.append(
+            {
+                "root_name": root_name,
+                "source": str(source_root),
+                "destination": str(destination_root),
+            }
+        )
+        commands.append(command)
+    return synced_entries, commands
 
 
 def main() -> int:
@@ -241,8 +287,7 @@ def main() -> int:
         print(json.dumps(payload, ensure_ascii=False, indent=2))
         return 0
 
-    command = _rsync(src=src, dst=dst, dry_run=args.dry_run)
-    payload = {
+    payload: dict[str, object] = {
         "status": "ok",
         "action": "mirror_to_codex",
         "scope": args.scope,
@@ -257,8 +302,19 @@ def main() -> int:
         "codex_root": str(codex_root),
         "dry_run": bool(args.dry_run),
         "destination_exists": destination_exists,
-        "command": command,
     }
+
+    if args.scope == "all":
+        synced_entries, commands = _rsync_syncable_roots(
+            mirror_root=mirror_root,
+            codex_root=codex_root,
+            dry_run=args.dry_run,
+        )
+        payload["synced_entries"] = synced_entries
+        payload["commands"] = commands
+    else:
+        command = _rsync(src=src, dst=dst, dry_run=args.dry_run)
+        payload["command"] = command
     print(json.dumps(payload, ensure_ascii=False, indent=2))
     return 0
 

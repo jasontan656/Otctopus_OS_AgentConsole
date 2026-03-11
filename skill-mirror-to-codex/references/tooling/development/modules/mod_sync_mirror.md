@@ -8,6 +8,7 @@
 - 将同步动作收敛为单一 CLI 入口。
 - 先检查目标是否已存在，再路由到 `Push` 或 `Install`。
 - 在 `Push` 模式执行 mirror -> codex 覆盖同步。
+- 当 `scope=all` 时，只同步真正的技能根，不同步产品层目录。
 - 在 `Install` 模式返回外部技能调用顺序。
 - 在需要时将隐藏 mirror 根目录迁移为可见目录。
 
@@ -24,6 +25,7 @@
     - `action=mirror_to_codex`
     - `resolved_mode=push`
     - `scope/source/destination/command`
+    - `commands/synced_entries`（当 `scope=all`）
     - `source_skill_name/destination_skill_name`
   - Install:
     - `status=route_required`

@@ -36,9 +36,11 @@
     - `python3 scripts/Cli_Toolbox.py --scope all --mode push`
 - 电脑动作发生了什么：
   - 解析参数，确认已显式进入 `Push` 模式。
-  - 执行 `rsync -a --delete`，按目录镜像覆盖目标。
+  - 扫描 mirror 顶层，发现真正可同步的技能根。
+  - 仅对包含 `SKILL.md` 的顶层技能目录与 `.system/` 系统技能根执行 `rsync -a --delete`。
+  - 顶层 `README.md`、`docs/`、`product_tools/` 等产品层对象不会进入 codex 安装目录。
 - 人类叙事版输出：
-  - 返回 `status=ok`、`resolved_mode=push`、源目录、目标目录与实际命令。
+  - 返回 `status=ok`、`resolved_mode=push`、`synced_entries` 与实际 `commands`。
 
 ### Cli_Toolbox.sync_mirror_to_codex（Install / 单技能）
 - 人类叙事版输入：
@@ -65,6 +67,8 @@
 ## 输出说明
 - `resolved_mode=push`：
   - 已实际执行覆盖同步
+- `synced_entries`：
+  - 仅在 `scope=all` 下出现，列出真正被同步的技能根
 - `resolved_mode=install`：
   - 仅完成路由，不直接安装
 - `source_skill_name` / `destination_skill_name`：

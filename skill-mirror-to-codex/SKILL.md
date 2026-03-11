@@ -51,7 +51,8 @@ description: 将 codex skill mirror 导入 codex skills 安装目录，并在 `P
 
 ### 2.3 模式工作流
 1. 锁定源目录与目标目录。
-2. 执行 `rsync -a --delete`。
+2. 若 `scope=all`，先发现 mirror 顶层真正可同步的技能根，再逐个执行 `rsync -a --delete`。
+3. 若 `scope=skill`，只对目标技能执行 `rsync -a --delete`。
 3. 返回结构化 JSON，明确已执行覆盖同步。
 
 ### 2.4 模式输出
@@ -60,12 +61,15 @@ description: 将 codex skill mirror 导入 codex skills 安装目录，并在 `P
 - `resolved_mode=push`
 - `source`
 - `destination`
-- `command`
+- `command`（单技能）
+- `commands`（全量）
+- `synced_entries`（全量）
 
 ### 2.5 模式约束
 - 仅执行 mirror -> codex 覆盖同步。
 - 不负责格式修正。
 - 不调用外部技能。
+- `scope=all` 只允许同步技能根与 `.system/`，不得把产品门面、产品工具和顶层文档直接推入 codex 安装目录。
 
 ## 3. Install 模式
 
