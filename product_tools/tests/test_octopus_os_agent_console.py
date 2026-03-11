@@ -47,6 +47,7 @@ class OctopusOSAgentConsoleTests(unittest.TestCase):
 
             payload = json.loads(completed.stdout)
             self.assertEqual(payload["status"], "ok")
+            self.assertEqual(payload["product_name"], "Octopus OS - Natural-Language-Driven Multi-Agent Console")
             self.assertEqual(
                 [item["name"] for item in payload["plan"]["skills"]],
                 [".system", "Meta-Impact-Investigation"],
@@ -92,6 +93,37 @@ class OctopusOSAgentConsoleTests(unittest.TestCase):
             self.assertEqual(uninstall_payload["status"], "ok")
             self.assertFalse((codex_root / "Meta-Impact-Investigation").exists())
             self.assertFalse(workspace_root.exists())
+
+    def test_wizard_supports_bilingual_non_interactive_install(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            repo_root = Path(tmp) / "repo"
+            codex_root = Path(tmp) / "codex"
+            workspace_root = Path(tmp) / "workspace"
+            state_root = Path(tmp) / "state"
+            skill_root = repo_root / "Meta-Impact-Investigation"
+            skill_root.mkdir(parents=True)
+            (skill_root / "SKILL.md").write_text("skill\n", encoding="utf-8")
+            codex_root.mkdir()
+
+            wizard = self.run_cli(
+                "wizard",
+                "--yes",
+                "--wizard-language",
+                "bilingual",
+                "--repo-root",
+                str(repo_root),
+                "--codex-root",
+                str(codex_root),
+                "--workspace-root",
+                str(workspace_root),
+                "--state-root",
+                str(state_root),
+            )
+
+            payload = json.loads(wizard.stdout)
+            self.assertEqual(payload["status"], "ok")
+            self.assertTrue((codex_root / "Meta-Impact-Investigation" / "SKILL.md").exists())
+            self.assertTrue(workspace_root.exists())
 
 
 if __name__ == "__main__":

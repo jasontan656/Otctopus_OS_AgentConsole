@@ -21,6 +21,8 @@
 - `Part A` may contain:
   - entry commands
   - language rules
+  - product-facing documentation language boundaries
+  - wizard language support notes
   - managed boundary notes
   - multi-agent handling notes
   - other concise direct-read governance instructions

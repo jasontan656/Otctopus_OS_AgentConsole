@@ -5,7 +5,7 @@
 <part_A>
 1. 根入口命令
 - 在处理 workspace root 路径规则之前，必须先运行：
-- `python3 /home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-Default-md-manager/scripts/Cli_Toolbox.py target-contract --source-path "/home/jasontan656/AI_Projects/AGENTS.md" --json`
+- `python3 /home/jasontan656/AI_Projects/octopus-os-agent-console/Meta-Default-md-manager/scripts/Cli_Toolbox.py target-contract --source-path "/home/jasontan656/AI_Projects/AGENTS.md" --json`
 
 2. 语言规范
 - 对话输出必须使用中文为主。
@@ -15,7 +15,8 @@
 3. 当前受管 repo 边界
 - `$meta-github-operation` 当前仅管理以下 repo：
 - `Octopus_OS`
-- `Codex_Skills_Mirror`
+- `octopus-os-agent-console`
+- `Codex_Skills_Mirror` 仅作为 `octopus-os-agent-console` 的 legacy compatibility entry
 
 4. Multi-AGENT 工作模式
 - Multi-AGENT work mode 下，同一文件夹在工作过程中可能出现未预期的并行改动。

@@ -19,6 +19,8 @@ description: "集中管理 workspace 内的常驻默认文档。当前提供 sca
 ## 2. 受管范围
 - 当前仅治理 `AI_Projects` 下两份 `AGENTS.md`：
   - `/home/jasontan656/AI_Projects/AGENTS.md`
+  - `/home/jasontan656/AI_Projects/octopus-os-agent-console/AGENTS.md`
+- legacy compatibility entry:
   - `/home/jasontan656/AI_Projects/Codex_Skills_Mirror/AGENTS.md`
 - 当前 CLI 的 scan 结果也必须严格限制在这两份受管目标内。
 

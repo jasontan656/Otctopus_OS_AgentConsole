@@ -8,6 +8,7 @@ import shutil
 import subprocess
 from datetime import UTC, datetime
 from pathlib import Path
+from types import SimpleNamespace
 
 
 RSYNC_EXCLUDES = (
@@ -20,6 +21,7 @@ RSYNC_EXCLUDES = (
 SYSTEM_SKILL_NAMESPACE = ".system"
 SYSTEM_SKILL_MARKER = ".codex-system-skills.marker"
 WORKSPACE_MARKER = ".octopus_os_workspace_install.json"
+PRODUCT_NAME = "Octopus OS - Natural-Language-Driven Multi-Agent Console"
 
 
 def _resolve_repo_root(raw: str | None) -> Path:
@@ -143,6 +145,85 @@ def _load_manifest(state_root: Path, session_id: str | None) -> tuple[Path, dict
     return manifest_path, json.loads(manifest_path.read_text(encoding="utf-8"))
 
 
+def _label(lang: str, en: str, zh: str) -> str:
+    if lang == "zh":
+        return zh
+    if lang == "bilingual":
+        return f"{en} / {zh}"
+    return en
+
+
+def _clear_screen() -> None:
+    print("\033[2J\033[H", end="")
+
+
+def _print_header(lang: str, title_en: str, title_zh: str) -> None:
+    _clear_screen()
+    title = _label(lang, title_en, title_zh)
+    line = "=" * len(title)
+    print(line)
+    print(title)
+    print(line)
+    print()
+
+
+def _prompt_text(lang: str, prompt_en: str, prompt_zh: str, default: str) -> str:
+    prompt = _label(lang, prompt_en, prompt_zh)
+    answer = input(f"{prompt} [{default}]: ").strip()
+    return answer or default
+
+
+def _prompt_confirm(lang: str, prompt_en: str, prompt_zh: str, default: bool = False) -> bool:
+    suffix = "Y/n" if default else "y/N"
+    prompt = _label(lang, prompt_en, prompt_zh)
+    answer = input(f"{prompt} [{suffix}]: ").strip().lower()
+    if not answer:
+        return default
+    return answer in {"y", "yes", "1", "true", "ok", "zh", "en"}
+
+
+def _select_wizard_language(args: argparse.Namespace) -> str:
+    if args.wizard_language and args.wizard_language != "auto":
+        return args.wizard_language
+    if args.yes:
+        return "bilingual"
+
+    _clear_screen()
+    print("==============================")
+    print("Octopus OS Wizard Language")
+    print("章鱼 OS 向导语言")
+    print("==============================")
+    print()
+    print("1. English")
+    print("2. 中文")
+    print("3. Bilingual / 双语")
+    print()
+    answer = input("Select language / 选择语言 [3]: ").strip() or "3"
+    mapping = {"1": "en", "2": "zh", "3": "bilingual"}
+    return mapping.get(answer, "bilingual")
+
+
+def _print_plan_summary(lang: str, plan: dict[str, object]) -> None:
+    skills = plan["skills"]
+    overwrite_skills = plan["overwrite_skills"]
+    workspace_exists = plan["workspace_exists"]
+    print(_label(lang, "Product:", "产品："), PRODUCT_NAME)
+    print(_label(lang, "Codex root:", "Codex 根目录："), plan["codex_root"])
+    print(_label(lang, "Workspace root:", "工作区根目录："), plan["workspace_root"])
+    print(_label(lang, "Syncable skills:", "可同步技能："), len(skills))
+    for skill in skills:
+        print(f"  - {skill['name']} -> {skill['destination']}")
+    print()
+    if overwrite_skills:
+        print(_label(lang, "Skills that will overwrite existing installs:", "将覆盖现有安装的技能："))
+        for skill_name in overwrite_skills:
+            print(f"  - {skill_name}")
+        print()
+    if workspace_exists:
+        print(_label(lang, "The workspace root already exists.", "工作区根目录已存在。"))
+        print()
+
+
 def plan_command(args: argparse.Namespace) -> int:
     repo_root = _resolve_repo_root(args.repo_root)
     codex_root = _resolve_codex_root(args.codex_root)
@@ -150,7 +231,7 @@ def plan_command(args: argparse.Namespace) -> int:
     payload = {
         "status": "ok",
         "action": "plan",
-        "product_name": "章鱼 OS - 自然语言驱动的多 Agent 控制台",
+        "product_name": PRODUCT_NAME,
         "plan": _build_plan(repo_root, codex_root, workspace_root),
     }
     print(json.dumps(payload, ensure_ascii=False, indent=2))
@@ -214,7 +295,7 @@ def install_command(args: argparse.Namespace) -> int:
 
     manifest = {
         "session_id": session_id,
-        "product_name": "章鱼 OS - 自然语言驱动的多 Agent 控制台",
+        "product_name": PRODUCT_NAME,
         "repo_root": str(repo_root),
         "codex_root": str(codex_root),
         "workspace_root": str(workspace_root),
@@ -277,11 +358,96 @@ def uninstall_command(args: argparse.Namespace) -> int:
     return 0
 
 
+def wizard_command(args: argparse.Namespace) -> int:
+    lang = _select_wizard_language(args)
+
+    repo_root = _resolve_repo_root(args.repo_root)
+    codex_root = _resolve_codex_root(args.codex_root)
+    workspace_root = _resolve_workspace_root(args.workspace_root)
+    state_root = _resolve_state_root(args.state_root)
+
+    if not args.yes:
+        _print_header(lang, "Octopus OS Installation Wizard", "章鱼 OS 安装向导")
+        codex_root = Path(
+            _prompt_text(
+                lang,
+                "Codex skills root",
+                "Codex 技能根目录",
+                str(codex_root),
+            )
+        ).expanduser().resolve()
+        workspace_root = Path(
+            _prompt_text(
+                lang,
+                "Workspace root",
+                "工作区根目录",
+                str(workspace_root),
+            )
+        ).expanduser().resolve()
+
+    plan = _build_plan(repo_root, codex_root, workspace_root)
+    if not args.yes:
+        _print_header(lang, "Install Plan", "安装计划")
+        _print_plan_summary(lang, plan)
+
+    allow_overwrite = args.allow_overwrite_skills
+    if plan["overwrite_skills"] and not allow_overwrite:
+        if args.yes:
+            allow_overwrite = True
+        else:
+            allow_overwrite = _prompt_confirm(
+                lang,
+                "Allow overwriting existing codex skill directories?",
+                "允许覆盖已有的 codex 技能目录吗？",
+                default=False,
+            )
+        if not allow_overwrite:
+            raise ValueError("wizard aborted because overwrite approval was not granted")
+
+    allow_replace_workspace = args.allow_replace_workspace
+    if plan["workspace_exists"] and not allow_replace_workspace:
+        if args.yes:
+            allow_replace_workspace = True
+        else:
+            allow_replace_workspace = _prompt_confirm(
+                lang,
+                "Allow replacing the existing workspace directory?",
+                "允许替换现有工作区目录吗？",
+                default=False,
+            )
+        if not allow_replace_workspace:
+            raise ValueError("wizard aborted because workspace replacement approval was not granted")
+
+    if not args.yes:
+        confirmed = _prompt_confirm(
+            lang,
+            "Proceed with installation now?",
+            "现在开始安装吗？",
+            default=True,
+        )
+        if not confirmed:
+            raise ValueError("wizard aborted by user")
+
+    install_args = SimpleNamespace(
+        repo_root=str(repo_root),
+        codex_root=str(codex_root),
+        workspace_root=str(workspace_root),
+        state_root=str(state_root),
+        allow_overwrite_skills=allow_overwrite,
+        allow_replace_workspace=allow_replace_workspace,
+    )
+    result = install_command(install_args)
+    if not args.yes:
+        print()
+        print(_label(lang, "Installation finished.", "安装完成。"))
+    return result
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         description="Octopus OS product installer and cleanup entrypoint"
     )
-    parser.add_argument("action", choices=["plan", "install", "uninstall"])
+    parser.add_argument("action", choices=["plan", "install", "uninstall", "wizard"])
     parser.add_argument("--repo-root")
     parser.add_argument("--codex-root")
     parser.add_argument("--workspace-root")
@@ -289,12 +455,16 @@ def main() -> int:
     parser.add_argument("--session-id")
     parser.add_argument("--allow-overwrite-skills", action="store_true")
     parser.add_argument("--allow-replace-workspace", action="store_true")
+    parser.add_argument("--wizard-language", choices=["auto", "en", "zh", "bilingual"], default="auto")
+    parser.add_argument("--yes", action="store_true")
     args = parser.parse_args()
 
     if args.action == "plan":
         return plan_command(args)
     if args.action == "install":
         return install_command(args)
+    if args.action == "wizard":
+        return wizard_command(args)
     return uninstall_command(args)
 
 

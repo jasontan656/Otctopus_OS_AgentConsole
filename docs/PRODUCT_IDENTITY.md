@@ -1,44 +1,44 @@
-# 产品身份
+# Product Identity
 
-## 品牌
+## Brand
 
-- 中文品牌：`章鱼 OS`
-- 对外副标题：`自然语言驱动的多 Agent 控制台`
-- 工程代号：`octopus-os-agent-console`
+- Product brand: `Octopus OS`
+- Public subtitle: `Natural-Language-Driven Multi-Agent Console`
+- Engineering repository name: `octopus-os-agent-console`
 
-## 这个仓库是什么
+## What This Repository Is
 
-这是章鱼 OS 的控制平面与技能基座仓库。
+This repository is the control plane and skill foundation for Octopus OS.
 
-它不是：
+It is not:
 
-- 一个只服务内部的技能镜像备份
-- 一个纯文档项目
-- 一个已经稳定的对外发行版
+- a private backup-only skill mirror
+- a documentation-only project
+- a stable public release
 
-它是：
+It is:
 
-- 技能体系的产品化承载层
-- 自然语言驱动的 Agent 工作方式的能力底座
-- 未来一键安装、一键清理、工作区镜像与产品迭代日志的统一入口
+- the product-facing shell around the skill system
+- the skill-based foundation for natural-language-driven agent work
+- the future entry point for installation, cleanup, workspace mirroring, and product iteration records
 
-## 对外叙事
+## Public Narrative
 
-推荐固定口径：
+Recommended positioning:
 
-> 章鱼 OS 是一个自然语言驱动的多 Agent 控制台。  
-> 它以技能为能力单元，以组合与编排为工作方式，让个人用户逐步搭建自己的定制化智能助理系统。
+> Octopus OS is a natural-language-driven multi-agent console.  
+> It treats skills as capability units and composition as the operating model, allowing individuals to progressively build a personalized intelligent assistant system.
 
-## 对内叙事
+## Internal Narrative
 
-对内仍然保留以下硬事实：
+The following facts still remain true internally:
 
-- 这里是内部技能的唯一迭代源
-- 技能修改后仍需推送到 `~/.codex/skills`
-- 产品门面不应跟随技能推送进入安装目录
+- this repository is still the single editable source for the skill core
+- skill changes still need to be pushed into `~/.codex/skills`
+- public product surfaces must not be pushed into the codex installation directory
 
-## 当前阶段
+## Current Phase
 
 - release stage: `alpha`
 - distribution strategy: `local-first`
-- remote strategy: `current remote only acts as backup and traceability origin`
+- remote strategy: `the current remote still acts mainly as backup and traceability origin`

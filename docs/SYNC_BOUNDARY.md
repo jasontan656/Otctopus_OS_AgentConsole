@@ -1,40 +1,40 @@
-# 同步边界
+# Sync Boundary
 
-## 核心原则
+## Core Principle
 
-章鱼 OS 仓库现在同时包含：
+The Octopus OS repository now contains:
 
-- 技能内核
-- 产品门面
-- 产品工具
+- the skill core
+- the product facade
+- product tooling
 
-其中只有技能内核允许同步到 `~/.codex/skills`。
+Only the skill core is allowed to flow into `~/.codex/skills`.
 
-## 允许进入 codex 安装目录的对象
+## Objects Allowed In The Codex Installation Directory
 
-- 顶层包含 `SKILL.md` 的技能目录
-- `.system/` 系统技能根
+- top-level skill directories that contain `SKILL.md`
+- the `.system/` system skill root
 
-## 不允许进入 codex 安装目录的对象
+## Objects Forbidden From The Codex Installation Directory
 
 - `README.md`
 - `docs/`
 - `product_tools/`
 - `.git/`
 - `.tooling_runtime/`
-- 任意产品化说明、安装说明、品牌文案和发布辅助资产
+- any product-facing narrative, installation guide, branding text, or release helper assets
 
-## 当前同步策略
+## Current Sync Strategy
 
-`skill-mirror-to-codex` 的 `scope=all` 已收敛为：
+`skill-mirror-to-codex` with `scope=all` now behaves as follows:
 
-1. 扫描仓库顶层
-2. 仅发现真正可同步的技能根
-3. 对每个技能根分别执行 `rsync`
-4. 不再把整个 repo 根目录直接镜像进 `~/.codex/skills`
+1. scan the repository root
+2. discover only real syncable skill roots
+3. run `rsync` per discovered skill root
+4. never mirror the whole repository root directly into `~/.codex/skills`
 
-## 设计收益
+## Why This Matters
 
-- 产品层可以自由演进
-- codex 安装目录只保留技能执行面
-- 提交历史可以承载产品迭代说明，不会污染技能安装目录
+- the product layer can evolve freely
+- the codex installation directory stays execution-focused
+- Git history can document product iteration without polluting downstream skill installs

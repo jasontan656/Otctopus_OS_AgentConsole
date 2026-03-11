@@ -1,33 +1,33 @@
-# 安装与清理模型
+# Install And Cleanup Model
 
-## 目标
+## Goal
 
-未来对外试用必须支持：
+The public trial surface must eventually support:
 
-- 一键安装
-- 安装前覆盖警告
-- 一键清理
-- 不误删用户无关文件
+- one-command install
+- overwrite warnings before install
+- one-command cleanup
+- no accidental deletion of unrelated user files
 
-## 最小模型
+## Minimum Model
 
-安装器必须同时处理两处目标：
+The installer has to manage two targets at the same time:
 
 1. `~/.codex/skills`
-2. 用户指定的章鱼 OS workspace 目录
+2. a user-selected Octopus OS workspace directory
 
-## 安装前必须输出
+## Required Output Before Install
 
-- 将同步哪些技能
-- 哪些同名技能会被覆盖
-- workspace 将创建到哪里
-- 清理时会删除或恢复哪些对象
+- which skills will be synced
+- which same-name skills will be overwritten
+- where the workspace will be created
+- which objects cleanup will remove or restore
 
-## 清理必须遵循 manifest
+## Cleanup Must Be Manifest-Driven
 
-禁止按“猜测某些目录应该属于章鱼 OS”来删除。
+Cleanup must never guess which files "probably belong to Octopus OS".
 
-必须依赖安装时生成的 manifest：
+It must rely on an install-time manifest that records:
 
 - install session id
 - codex root
@@ -35,24 +35,28 @@
 - installed skill list
 - overwritten skill backups
 
-## 当前实现状态
+## Current Implementation Status
 
-仓库已新增 `product_tools/octopus_os_agent_console.py` 作为产品安装器骨架，提供：
+The repository already contains a product installer entrypoint at `product_tools/octopus_os_agent_console.py`.
+
+Current capabilities:
 
 - `plan`
 - `install`
 - `uninstall`
+- `wizard`
 
-它当前已经具备：
+Current behavior already includes:
 
-- 技能根发现
-- 覆盖警告
-- workspace 镜像落盘
-- manifest 写入
-- 基于 manifest 的卸载
+- skill root discovery
+- overwrite warnings
+- workspace mirror creation
+- manifest persistence
+- manifest-driven uninstall
+- a bilingual terminal wizard for end users
 
-后续仍可继续增强：
+Future enhancements can still add:
 
-- 更细粒度的冲突检测
-- 用户修改检测
-- rollback 审计输出
+- finer conflict detection
+- user modification detection
+- rollback audit output

@@ -17,6 +17,11 @@ PART_A_CLOSE = "</part_A>"
 PART_B_OPEN = "<part_B>"
 PART_B_CLOSE = "</part_B>"
 PAYLOAD_STRUCTURE_CONTRACT_RELATIVE_PATH = Path("references/runtime_contracts/AGENTS_payload_structure.json")
+REPO_ROOT_CANONICAL_NAME = "octopus-os-agent-console"
+REPO_ROOT_COMPAT_ALIASES = {
+    "Codex_Skills_Mirror": REPO_ROOT_CANONICAL_NAME,
+    REPO_ROOT_CANONICAL_NAME: REPO_ROOT_CANONICAL_NAME,
+}
 
 
 @dataclass(frozen=True)
@@ -43,19 +48,22 @@ def detect_paths(script_file: str) -> RuntimePaths:
 
     workspace_root = _env_path("MDM_WORKSPACE_ROOT")
     if workspace_root is None:
-        if skill_root.parent.name == "Codex_Skills_Mirror":
+        if skill_root.parent.name in REPO_ROOT_COMPAT_ALIASES:
             workspace_root = skill_root.parent.parent
         else:
             workspace_root = (Path.home() / "AI_Projects").resolve()
 
     mirror_skill_root = _env_path("MDM_MIRROR_SKILL_ROOT")
     if mirror_skill_root is None:
-        if skill_root.parent.name == "Codex_Skills_Mirror":
+        if skill_root.parent.name in REPO_ROOT_COMPAT_ALIASES:
             mirror_skill_root = skill_root
         else:
-            mirror_skill_root = (
-                workspace_root / "Codex_Skills_Mirror" / SKILL_NAME
-            ).resolve()
+            candidates = [
+                workspace_root / REPO_ROOT_CANONICAL_NAME / SKILL_NAME,
+                workspace_root / "Codex_Skills_Mirror" / SKILL_NAME,
+            ]
+            existing = next((candidate for candidate in candidates if candidate.exists()), candidates[0])
+            mirror_skill_root = existing.resolve()
 
     installed_skill_root = _env_path("MDM_INSTALLED_SKILL_ROOT")
     if installed_skill_root is None:
@@ -155,7 +163,7 @@ def file_contains_keyword(path: Path, keyword: str) -> bool:
 
 
 def derive_managed_dir(paths: RuntimePaths, source_path: Path) -> Path:
-    relative = source_path.relative_to(paths.workspace_root)
+    relative = _canonical_relative_path(paths, source_path)
     parent = relative.parent
     if str(parent) == ".":
         return paths.managed_targets_root
@@ -245,7 +253,7 @@ def add_governed_source_path(paths: RuntimePaths, source_path: Path, dry_run: bo
 
 def scaffold_external_agents(external_path: Path) -> str:
     command = (
-        "python3 /home/jasontan656/AI_Projects/Codex_Skills_Mirror/"
+        "python3 /home/jasontan656/AI_Projects/octopus-os-agent-console/"
         "Meta-Default-md-manager/scripts/Cli_Toolbox.py "
         f'target-contract --source-path "{external_path}" --json'
     )
@@ -268,7 +276,22 @@ def scaffold_internal_agents_human(external_path: Path) -> str:
 
 
 def _relative_source_key(paths: RuntimePaths, source_path: Path) -> str:
-    return str(source_path.resolve().relative_to(paths.workspace_root))
+    return str(_canonical_relative_path(paths, source_path))
+
+
+def _canonicalize_relative_path(relative_path: Path) -> Path:
+    parts = list(relative_path.parts)
+    if not parts:
+        return relative_path
+    first = REPO_ROOT_COMPAT_ALIASES.get(parts[0], parts[0])
+    if len(parts) == 1:
+        return Path(first)
+    return Path(first, *parts[1:])
+
+
+def _canonical_relative_path(paths: RuntimePaths, source_path: Path) -> Path:
+    relative = source_path.resolve().relative_to(paths.workspace_root)
+    return _canonicalize_relative_path(relative)
 
 
 def _payload_schema_for_source(paths: RuntimePaths, source_path: Path) -> dict[str, Any] | None:

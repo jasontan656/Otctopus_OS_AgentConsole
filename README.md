@@ -1,44 +1,44 @@
-# 章鱼 OS
+# Octopus OS
 
-章鱼 OS 是一个自然语言驱动的多 Agent 控制台。
+Octopus OS is a natural-language-driven multi-agent console.
 
-这个仓库是章鱼 OS 的产品化基座。它同时承担两类职责：
+This repository is the product foundation for Octopus OS. It has two responsibilities at the same time:
 
-- 对外：作为未来可开源的产品仓，承载定位、安装模型、工作区镜像与产品迭代说明。
-- 对内：继续作为 `codex` 技能体系的唯一迭代源，并保留把技能推送到 `~/.codex/skills` 的能力。
+- Public product surface: positioning, installation model, workspace mirror, and product-facing documentation.
+- Internal skill source of truth: the skill core still evolves here first and can still be pushed into `~/.codex/skills`.
 
-当前状态：
+## Current Status
 
-- 仍处于高速迭代中的 Alpha 阶段。
-- 适合学习、测试、试用，不建议直接用于关键生产流程。
-- 产品门面已经开始收敛，但内部技能内核仍然保持原有的 codex 技能组织方式。
+- Stage: Alpha
+- Intended use: learning, testing, and trial runs
+- Not recommended yet for critical production workflows
 
-## 仓库心智模型
+## How To Read This Repository
 
-不要把这里理解成普通的 skill mirror。
+This is not just a generic skill mirror.
 
-更准确的理解是：
+A better model is:
 
-- 技能目录：章鱼 OS 的能力内核
-- `skill-mirror-to-codex`：把内核推送进 `~/.codex/skills` 的内部桥接器
-- `docs/`、`product_tools/`：产品层，不应被同步进 codex 安装目录
-- 提交历史：产品迭代与设计思路的外置日志
+- Skill directories: the execution core of Octopus OS
+- `skill-mirror-to-codex`: the internal bridge that pushes skill roots into `~/.codex/skills`
+- `docs/` and `product_tools/`: product surfaces that must stay outside the codex installation directory
+- Git history: an externalized product iteration log
 
-## 关键边界
+## Hard Boundaries
 
-- 产品层文件可以持续增长，但不能污染 `~/.codex/skills`
-- 技能层仍然必须可被 `skill-mirror-to-codex` 单独或批量推送
-- 一键安装与一键清理必须基于 manifest，而不是猜测性删除
+- Product-facing files may evolve here, but they must not pollute `~/.codex/skills`
+- Skill roots must remain pushable through `skill-mirror-to-codex`
+- Install and cleanup must stay manifest-driven instead of using guess-based deletion
 
-## 入口文档
+## Entry Documents
 
 - `docs/PRODUCT_IDENTITY.md`
 - `docs/SYNC_BOUNDARY.md`
 - `docs/INSTALL_AND_CLEANUP_MODEL.md`
 - `docs/PRODUCT_ITERATION_LOGGING.md`
 
-## 当前目录过渡说明
+## Directory Transition
 
-产品工程名已经收敛为 `octopus-os-agent-console`，但为了兼容既有 runtime、合同和脚本路径，当前仓库仍保留 `Codex_Skills_Mirror` 兼容入口。
+The product engineering name is now `octopus-os-agent-console`.
 
-这是一层过渡兼容，而不是继续把仓库定义为“镜像产品”。
+For compatibility with existing runtime contracts and scripts, the workspace still keeps a legacy entry alias named `Codex_Skills_Mirror`. That alias exists only as a compatibility surface and no longer defines the product identity of this repository.

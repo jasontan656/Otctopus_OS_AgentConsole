@@ -2,7 +2,8 @@
   "version": 1,
   "governed_source_paths": [
     "AGENTS.md",
-    "Codex_Skills_Mirror/AGENTS.md"
+    "Codex_Skills_Mirror/AGENTS.md",
+    "octopus-os-agent-console/AGENTS.md"
   ],
   "exact_filename_rules": [
     "AGENTS.md"
