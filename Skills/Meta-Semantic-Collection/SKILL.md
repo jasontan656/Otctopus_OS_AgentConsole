@@ -1,9 +1,9 @@
 ---
-name: "meta-semantic-collection"
+name: "Meta-Semantic-Collection"
 description: "runtime 必须维护的语义词池。用于让模型在每个 turn start 自动加载用户常用词与动作语义映射，并在用户澄清语义、纠正误解或补充真实意图时自动触发本技能；必要时在 turn end 可选更新词池。"
 ---
 
-# meta-semantic-collection
+# Meta-Semantic-Collection
 
 ## 1. 目标
 - 本技能是 runtime 必须维护的语义词池，负责整合用户常用词与 AI 易偏差理解之间的翻译和映射。

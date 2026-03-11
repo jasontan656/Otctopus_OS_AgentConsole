@@ -31,6 +31,12 @@
 - 只要你未来要做统一命名治理，就必须把技能当成“应被注册的对象”，而不是零散目录。
 - 当用户说“使用某 prefix 系列全技能”时，模型应以 registry 字段为准，而不是凭目录名猜测。
 
+## 注册写入语义
+- 注册动作默认按 `canonical_id` 执行 upsert。
+- 若 registry 中已存在相同 `canonical_id`，应更新已有条目的 `display_name`、`prefix`、`family`、`role_tag`、`status`、`trigger_summary`、`companion_skills` 与 `migrated_from`，而不是重复新增第二条记录。
+- 只有当 `canonical_id` 在 registry 中不存在时，才应创建新的技能登记。
+- 当用户口头要求“完成注册”，但该技能已经登记时，模型应把请求解释为“完成注册更新”。
+
 ## family 与 prefix 的关系
 - prefix 是第一层聚类。
 - family 是 prefix 下的语义分组。

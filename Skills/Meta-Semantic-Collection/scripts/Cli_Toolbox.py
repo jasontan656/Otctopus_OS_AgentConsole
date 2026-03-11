@@ -66,7 +66,7 @@ def build_runtime_contract(payload_path: Path) -> dict[str, object]:
     return {
         "contract_name": "META_SEMANTIC_COLLECTION_RUNTIME_CONTRACT",
         "contract_version": "v1",
-        "skill_name": "meta-semantic-collection",
+        "skill_name": "Meta-Semantic-Collection",
         "enforcement_mode": "required",
         "turn_start": {
             "required": True,
@@ -207,7 +207,7 @@ def build_runtime_contract_from_payload(payload_path: Path, semantic_pool: list[
     return {
         "contract_name": "META_SEMANTIC_COLLECTION_RUNTIME_CONTRACT",
         "contract_version": "v1",
-        "skill_name": "meta-semantic-collection",
+        "skill_name": "Meta-Semantic-Collection",
         "enforcement_mode": "required",
         "turn_start": {
             "required": True,
@@ -237,7 +237,7 @@ def build_runtime_contract_from_payload(payload_path: Path, semantic_pool: list[
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="meta-semantic-collection toolbox")
+    parser = argparse.ArgumentParser(description="Meta-Semantic-Collection toolbox")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     runtime_contract = subparsers.add_parser("runtime-contract")

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Meta-Semantic-Collection"
+  short_description: "runtime 自动维护并加载用户语义词池。"
+  default_prompt: "使用 $Meta-Semantic-Collection 在 turn start 加载语义词池，并在用户澄清语义时自动更新映射。"

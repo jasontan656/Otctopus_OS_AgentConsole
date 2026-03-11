@@ -115,6 +115,19 @@ families:
         trigger_summary: "当任务或运行结束后，需要复盘上一回合中的犹豫、工具失败、脚本失败、引导不足、模型 confused 与迷宫式流程时使用。"
         migrated_from:
           - "7-Task-runtime-selfcheck"
+      - canonical_id: "meta-semantic-collection"
+        display_name: "Meta-Semantic-Collection"
+        prefix: "meta"
+        family: "[Meta]"
+        role_tag: "semantic-pool"
+        status: "active"
+        trigger_summary: "当需要在 turn start 加载用户语义词池，或在用户澄清语义、纠正误解时维护动作语义映射时使用。"
+        companion_skills:
+          - "Meta-prompt-write"
+          - "Meta-keyword-first-edit"
+        migrated_from:
+          - "meta-semantic-collection"
+          - "Meta Semantic Collection"
   - family: "[WorkFlow]"
     description: "各类自动化的工作流统一管理."
     members:
