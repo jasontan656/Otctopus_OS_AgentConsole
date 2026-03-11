@@ -1,4 +1,4 @@
 interface:
   display_name: "Meta-GitHub-Operation"
-  short_description: "受限 GitHub control plane，仅服务 Octopus_OS 与 octopus-os-agent-console。"
-  default_prompt: "仅对 Octopus_OS 与 octopus-os-agent-console 执行 Git / GitHub 自动化操作。优先使用 scripts/Cli_Toolbox.py；不要对 workspace 根目录或其他未注册仓库执行 GitHub 自动化。"
+  short_description: "受限 GitHub control plane，仅服务 Octopus_OS 与 octopus-os-agent-console，并对开发仓/发布仓分流施加硬约束。"
+  default_prompt: "仅对 Octopus_OS 与 octopus-os-agent-console 执行 Git / GitHub 自动化操作。对于 octopus-os-agent-console，默认只允许把自动迭代推到 origin 开发仓；public-release 仅保留给未来发布，当前禁止写入，因为开发未闭环且发布流程未设计。优先使用 scripts/Cli_Toolbox.py；不要对 workspace 根目录或其他未注册仓库执行 GitHub 自动化。"

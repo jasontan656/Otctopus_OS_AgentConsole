@@ -2,9 +2,14 @@ from __future__ import annotations
 
 import json
 import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
+
+from registry_repo import ensure_remote_write_allowed, remote_policy_payload
 
 
 SCRIPT = Path(__file__).resolve().parents[1] / "scripts" / "Cli_Toolbox.py"
@@ -36,10 +41,21 @@ class MetaGithubOperationCliTests(unittest.TestCase):
         self.assertEqual(push_payload["entry"], "push")
         self.assertTrue(any(command["name"] == "commit-and-push" for command in push_payload["commands"]))
         self.assertFalse(any(command["name"] == "baseline-create" for command in push_payload["commands"]))
+        self.assertEqual(
+            push_payload["remote_policy"]["octopus-os-agent-console"]["origin"]["role"],
+            "private_dev_remote",
+        )
+        self.assertFalse(
+            push_payload["remote_policy"]["octopus-os-agent-console"]["public-release"]["automation_write_allowed"]
+        )
 
         baseline_payload = json.loads(self.run_cli("baseline-contract", "--json").stdout)
         self.assertEqual(baseline_payload["entry"], "baseline")
         self.assertEqual([command["name"] for command in baseline_payload["commands"]], ["baseline-create"])
+        self.assertEqual(
+            baseline_payload["release_publication_state"]["octopus-os-agent-console"]["public-release"]["status"],
+            "disabled",
+        )
 
         rollback_payload = json.loads(self.run_cli("rollback-contract", "--json").stdout)
         self.assertEqual(rollback_payload["entry"], "rollback")
@@ -194,6 +210,30 @@ class MetaGithubOperationCliTests(unittest.TestCase):
             self.assertTrue(remote_tag)
             self.assertEqual(remote_heads.returncode, 1)
             self.assertEqual(remote_heads.stdout.strip(), "")
+
+    def test_remote_info_exposes_managed_remote_policy(self) -> None:
+        payload = json.loads(self.run_cli("remote-info", "--repo", "octopus-os-agent-console", "--json").stdout)
+        policy = payload["managed_remote_policy"]
+        self.assertEqual(policy["repo"], "octopus-os-agent-console")
+        self.assertTrue(any(item["name"] == "origin" for item in policy["remotes"]))
+        blocked = next(item for item in policy["remotes"] if item["name"] == "public-release")
+        self.assertEqual(blocked["status"], "disabled")
+        self.assertFalse(blocked["automation_write_allowed"])
+
+    def test_remote_policy_blocks_public_release_writes_for_product_repo(self) -> None:
+        with self.assertRaisesRegex(ValueError, "remote_write_blocked"):
+            ensure_remote_write_allowed(
+                "octopus-os-agent-console",
+                "public-release",
+                operation="push",
+            )
+
+    def test_remote_policy_payload_marks_public_release_disabled(self) -> None:
+        payload = remote_policy_payload("octopus-os-agent-console")
+        blocked = next(item for item in payload["remotes"] if item["name"] == "public-release")
+        self.assertEqual(blocked["role"], "future_public_release_remote")
+        self.assertFalse(blocked["manual_publish_allowed"])
+        self.assertIn("publishable closure", blocked["disabled_reason"])
 
     def test_rollback_paths_strongly_restores_and_deletes_extra_files(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

@@ -7,7 +7,7 @@ def push_contract_payload() -> dict[str, object]:
         "contract_version": "v1",
         "validation_mode": "static_minimal",
         "required_fields": ["entry", "purpose", "allowed_repos", "commands", "rules"],
-        "optional_fields": [],
+        "optional_fields": ["remote_policy"],
         "entry": "push",
         "purpose": "Group push-related Git traceability tools and rules behind one explicit CLI-readable runtime entry.",
         "allowed_repos": ["Octopus_OS", "octopus-os-agent-console"],
@@ -41,11 +41,44 @@ def push_contract_payload() -> dict[str, object]:
                 "role": "push the current branch state without creating a new commit",
             },
         ],
+        "remote_policy": {
+            "Octopus_OS": {
+                "origin": {
+                    "role": "standard_primary_remote",
+                    "automation_write_allowed": True,
+                    "status": "enabled",
+                }
+            },
+            "octopus-os-agent-console": {
+                "origin": {
+                    "role": "private_dev_remote",
+                    "automation_write_allowed": True,
+                    "status": "enabled",
+                    "notes": [
+                        "Use for automatic iteration pushes and same-turn Git traceability.",
+                        "This remote is the default target for commit-and-push and push flows.",
+                    ],
+                },
+                "public-release": {
+                    "role": "future_public_release_remote",
+                    "automation_write_allowed": False,
+                    "manual_publish_allowed": False,
+                    "status": "disabled",
+                    "disabled_reason": "development has not reached a publishable closure and the release workflow is not designed yet",
+                    "notes": [
+                        "Reserved for future human-approved publishable snapshots only.",
+                        "Do not use this remote for automatic iteration pushes.",
+                    ],
+                },
+            },
+        },
         "rules": [
             "Do not widen automation beyond the registered repos.",
             "Push-related runtime guidance must come from CLI JSON, not markdown.",
             "Use explicit scope selection for commits; do not silently widen scope.",
             "Use force-with-lease only when the caller explicitly requests it.",
+            "For octopus-os-agent-console, automatic iteration pushes must go to origin only.",
+            "For octopus-os-agent-console, public-release is currently disabled because development has not reached publishable closure and no release workflow is designed yet.",
         ],
     }
 
@@ -97,7 +130,7 @@ def baseline_contract_payload() -> dict[str, object]:
         "contract_version": "v1",
         "validation_mode": "static_minimal",
         "required_fields": ["entry", "purpose", "allowed_repos", "commands", "rules"],
-        "optional_fields": [],
+        "optional_fields": ["release_publication_state"],
         "entry": "baseline",
         "purpose": "Create a named rollback anchor without overloading push semantics.",
         "allowed_repos": ["Octopus_OS", "octopus-os-agent-console"],
@@ -107,10 +140,19 @@ def baseline_contract_payload() -> dict[str, object]:
                 "role": "create a local or remote rollback baseline as a tag-only anchor for clean repos or a commit-plus-tag anchor for dirty repos",
             },
         ],
+        "release_publication_state": {
+            "octopus-os-agent-console": {
+                "public-release": {
+                    "status": "disabled",
+                    "disabled_reason": "development has not reached a publishable closure and the release workflow is not designed yet",
+                }
+            }
+        },
         "rules": [
             "Baseline is a separate runtime entry from push.",
             "Clean repos should prefer tag-only baselines instead of empty traceability commits.",
             "Dirty repos may create a scoped baseline commit before tagging.",
             "Remote baseline publication must remain within the registered repos.",
+            "For octopus-os-agent-console, do not publish baselines to public-release while the public release flow is disabled.",
         ],
     }

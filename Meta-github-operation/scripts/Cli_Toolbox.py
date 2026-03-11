@@ -14,7 +14,7 @@ from git_cli_support import pull_rebase as git_pull_rebase
 from git_cli_support import push as git_push
 from git_cli_support import push_tag
 from git_cli_support import remote_urls, repo_status_payload, resolve_commit_scope, rollback_paths, rollback_sync, run_git, stage_paths
-from registry_repo import registry_payload, resolve_repo
+from registry_repo import ensure_remote_write_allowed, registry_payload, remote_policy_payload, resolve_repo
 
 
 def emit(payload: dict[str, object], *, as_json: bool = False) -> int:
@@ -62,6 +62,7 @@ def cmd_remote_info(args) -> int:
         "repo": repo_name,
         "repo_root": str(repo_root),
         "remotes": remote_urls(repo_root),
+        "managed_remote_policy": remote_policy_payload(repo_name),
     }
     return emit(payload, as_json=args.json)
 
@@ -114,6 +115,7 @@ def cmd_commit(args) -> int:
 
 def cmd_commit_and_push(args) -> int:
     repo_name, repo_root = resolve_repo_root(args)
+    ensure_remote_write_allowed(repo_name, args.remote, operation="commit-and-push")
     scope = resolve_commit_scope(
         repo_root,
         explicit_paths=list(args.path or []),
@@ -137,6 +139,7 @@ def cmd_commit_and_push(args) -> int:
 
 def cmd_push(args) -> int:
     repo_name, repo_root = resolve_repo_root(args)
+    ensure_remote_write_allowed(repo_name, args.remote, operation="push")
     payload = {"repo": repo_name, "repo_root": str(repo_root)}
     payload.update(
         git_push(
@@ -184,6 +187,7 @@ def cmd_baseline_create(args) -> int:
 
     payload["tag_result"] = create_annotated_tag(repo_root, tag_name=tag_name, message=message)
     if args.publish == "remote":
+        ensure_remote_write_allowed(repo_name, args.remote, operation="baseline-create:publish")
         published: dict[str, object] = {"tag": push_tag(repo_root, remote=args.remote, tag_name=tag_name)}
         if dirty:
             published["branch"] = git_push(
