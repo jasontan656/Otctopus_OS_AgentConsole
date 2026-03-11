@@ -362,7 +362,7 @@ def _build_meta_reasoningchain_contract(
         },
         "tooling_lint_workflow_delta": {
             "tooling_changes": [
-                "runtime_pain_narrative.py: 新增 Meta-reasoningchain 合同结构生成。",
+                "runtime_pain_narrative.py: 新增 Meta-Reasoning-Chain 合同结构生成。",
                 "runtime_pain_batch.py: focus_group 输出 before/after/change_manifest 摘要。",
                 "SKILL.md: 输出合同升级为 reasoningchain 强制字段。",
             ],

@@ -67,6 +67,19 @@ families:
   - family: "[Meta]"
     description: "元技能,常用于自动化运行,必须常驻."
     members:
+      - canonical_id: "meta-reasoning-chain"
+        display_name: "Meta-Reasoning-Chain"
+        prefix: "meta"
+        family: "[Meta]"
+        role_tag: "reasoning-contract"
+        status: "active"
+        trigger_summary: "当需要对非平凡讨论、规划、设计或评审回合强制输出单层混合推理链并形成可决策结论时使用。"
+        companion_skills:
+          - "Meta-mindchain"
+          - "Meta-keyword-first-edit"
+        migrated_from:
+          - "Meta-reasoningchain"
+          - "meta-reasoningchain"
       - canonical_id: "meta-runtime-selfcheck"
         display_name: "Meta-Runtime-Selfcheck"
         prefix: "meta"

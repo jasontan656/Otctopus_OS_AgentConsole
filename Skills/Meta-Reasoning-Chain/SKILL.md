@@ -1,9 +1,9 @@
 ---
-name: "Meta-reasoningchain"
+name: "Meta-Reasoning-Chain"
 description: 常驻型 Meta 推理契约。对所有非平凡的讨论/规划/设计/评审回合，默认使用“单层混合推理链”（澄清/假设/证据/替代视角/未来形态/后果回滚/试点决策）输出可决策结论。仅当显式出现 opt-out 标记 `NO_FUTURE_PROJECTION` 时可跳过。
 ---
 
-# Meta Reasoning Chain（元推理链）
+# Meta-Reasoning-Chain（元推理链）
 
 ## 目标
 通过单层混合推理链，把讨论型输入转成可检验、可追溯、可决策输出。

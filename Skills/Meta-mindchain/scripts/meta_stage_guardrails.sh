@@ -18,8 +18,8 @@ case "$stage" in
     echo "[DO][Meta-mindchain] architect-first, assess whole-system impact and base-layer cleanliness before solution"
     echo "[DO][Meta-mindchain] if user request harms architecture stability, explicitly refuse and propose a cleaner path"
     echo "[DONT][Meta-mindchain] no local-only patching, no dead-code/compatibility-shell retention, no compliance on architecture-conflicting requests"
-    echo "[DO][Meta-reasoningchain] use single-layer chain before advice: clarify/assumptions/evidence/alternatives/future/consequences/pilot"
-    echo "[DONT][Meta-reasoningchain] unless NO_FUTURE_PROJECTION, do not skip full chain (especially evidence/future/rollback thresholds)"
+    echo "[DO][Meta-Reasoning-Chain] use single-layer chain before advice: clarify/assumptions/evidence/alternatives/future/consequences/pilot"
+    echo "[DONT][Meta-Reasoning-Chain] unless NO_FUTURE_PROJECTION, do not skip full chain (especially evidence/future/rollback thresholds)"
     echo "[DO][Meta-prompt-write] if prompt/instruction text changes, run filter script and print structured intent block"
     echo "[DONT][Meta-prompt-write] no unstructured free-form prompt rewrite without mode decision"
     ;;
@@ -34,7 +34,7 @@ case "$stage" in
     print_common_header "READ_EXEC"
     echo "[DO][Read-only] read/retrieve/analyze/report only"
     echo "[DONT][Read-only] no disk writes"
-    echo "[DO][Meta-reasoningchain] keep claim/support/unknowns per step in single-layer reasoning outputs"
+    echo "[DO][Meta-Reasoning-Chain] keep claim/support/unknowns per step in single-layer reasoning outputs"
     echo "[DONT][Meta-keyword-first-edit] do not run edit flow in read-only branch"
     ;;
   WRITE_EXEC)
