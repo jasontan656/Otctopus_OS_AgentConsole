@@ -22,6 +22,7 @@ SYSTEM_SKILL_MARKER = ".codex-system-skills.marker"
 SKILLS_DIR_NAME = "Skills"
 CANONICAL_MIRROR_REPO_NAME = "octopus-os-agent-console"
 LEGACY_MIRROR_REPO_NAME = "Codex_Skills_Mirror"
+FORBIDDEN_CODEX_ROOT_FILES = ("AGENTS.md",)
 
 
 def _resolve_codex_root(raw: str | None) -> Path:
@@ -218,7 +219,7 @@ def _rsync_syncable_roots(
     mirror_root: Path,
     codex_root: Path,
     dry_run: bool,
-) -> tuple[list[dict[str, str]], list[list[str]]]:
+) -> tuple[list[dict[str, str]], list[list[str]], list[str]]:
     synced_entries: list[dict[str, str]] = []
     commands: list[list[str]] = []
     for root_name, source_root, destination_name in _discover_syncable_roots(mirror_root):
@@ -232,7 +233,19 @@ def _rsync_syncable_roots(
             }
         )
         commands.append(command)
-    return synced_entries, commands
+    removed_forbidden_entries: list[str] = []
+    for name in FORBIDDEN_CODEX_ROOT_FILES:
+        target = codex_root / name
+        if not target.exists():
+            continue
+        removed_forbidden_entries.append(str(target))
+        if dry_run:
+            continue
+        if target.is_dir():
+            subprocess.run(["rm", "-rf", str(target)], check=True)
+        else:
+            target.unlink()
+    return synced_entries, commands, removed_forbidden_entries
 
 
 def main() -> int:
@@ -321,13 +334,14 @@ def main() -> int:
     }
 
     if args.scope == "all":
-        synced_entries, commands = _rsync_syncable_roots(
+        synced_entries, commands, removed_forbidden_entries = _rsync_syncable_roots(
             mirror_root=mirror_root,
             codex_root=codex_root,
             dry_run=args.dry_run,
         )
         payload["synced_entries"] = synced_entries
         payload["commands"] = commands
+        payload["removed_forbidden_entries"] = removed_forbidden_entries
     else:
         command = _rsync(src=src, dst=dst, dry_run=args.dry_run)
         payload["command"] = command

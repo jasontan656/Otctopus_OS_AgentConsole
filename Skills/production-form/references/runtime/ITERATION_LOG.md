@@ -89,3 +89,16 @@ It exists so AI can keep reading the recent product evolution before the main it
   - `references/runtime/CURRENT_PRODUCT_INTENT.md`
 - next_steps:
   - Keep release messaging aligned with the Codex-only install gate until a broader runtime validation story exists.
+
+## 2026-03-11 02:47:28Z - Codex CLI-only install flow and AGENTS boundary
+
+- author: `codex`
+- summary: Tightened the product install path to a one-line Codex CLI launch flow, formalized the Codex CLI plus VS Code host boundary, and forbade stale root-level AGENTS.md from remaining in ~/.codex/skills.
+- decisions:
+  - Keep the workspace mirror responsible for root AGENTS.md and Skills/AGENTS.md, while codex root receives only real skill roots and .system. Future syncs must actively remove accidental ~/.codex/skills/AGENTS.md.
+- affected_paths:
+  - `/home/jasontan656/AI_Projects/octopus-os-agent-console/product_tools/octopus_os_agent_console.py`
+  - `/home/jasontan656/AI_Projects/octopus-os-agent-console/Skills/skill-mirror-to-codex/scripts/Cli_Toolbox.py`
+  - `/home/jasontan656/AI_Projects/octopus-os-agent-console/README.md`
+- next_steps:
+  - Verify the updated sync path against the live codex installation directory and continue refining the release-grade install surface.

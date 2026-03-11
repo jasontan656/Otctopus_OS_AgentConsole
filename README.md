@@ -15,8 +15,10 @@ This repository is the product foundation for Octopus OS. It has two responsibil
 - Intended use: learning, testing, and trial runs
 - Not recommended yet for critical production workflows
 - Supported runtime: Codex only
+- Supported host environment: Codex CLI in the author's current Codex CLI + VS Code workflow only
 - Supported model profile: GPT-5.4 with high reasoning effort only
 - Other models are unsupported, untested, and may behave differently
+- No other environment adapters are planned at the current phase
 - The repository currently changes at a very high pace, often every 10 to 15 minutes
 - Commit-by-commit reading is not a meaningful way to learn the system yet; use the higher-level product documents instead
 
@@ -45,13 +47,20 @@ A better model is:
 Current install is command-line-first and can be run as a single command:
 
 ```bash
-python3 product_tools/octopus_os_agent_console.py install --runtime-target codex-gpt-5.4-high --codex-root ~/.codex/skills --workspace-root ~/Octopus_OS_Agent_Console
+python3 product_tools/octopus_os_agent_console.py install --runtime-target codex-gpt-5.4-high --codex-root ~/.codex/skills --workspace-root ~/Octopus_OS_Agent_Console && codex -C ~/Octopus_OS_Agent_Console -m gpt-5.4 -c 'model_reasoning_effort="high"'
 ```
 
 The installer will refuse to continue if:
 
 - the target skills directory does not match a Codex-style path such as `.../.codex/skills`
 - the runtime target is not explicitly acknowledged as `codex-gpt-5.4-high`
+
+Install behavior is intentionally narrow:
+
+- it syncs only real skill roots into `~/.codex/skills`
+- it removes any accidental root-level `~/.codex/skills/AGENTS.md`
+- it mirrors the product workspace, including the repository root `AGENTS.md` and `Skills/AGENTS.md`
+- it then launches a new Codex CLI session against the workspace so the installed skill ecosystem is active immediately
 
 ## Entry Documents
 

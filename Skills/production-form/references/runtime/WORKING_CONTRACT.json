@@ -15,8 +15,12 @@
       "internal skill core and governance docs may stay Chinese-first",
       "product-facing docs and product tools must not be pushed into the codex installation directory",
       "installation is limited to Codex-style targets shaped like .../.codex/skills",
+      "the supported host environment is the author's Codex CLI + VS Code workflow only",
       "the supported runtime target is Codex + GPT-5.4 high reasoning effort only",
       "other models are unsupported and untested, so behavior equivalence must not be claimed",
+      "other host environment adapters are out of scope for the current phase",
+      "install must sync only real skill roots into ~/.codex/skills and must remove accidental root-level ~/.codex/skills/AGENTS.md",
+      "install must deploy the repository root AGENTS.md and Skills/AGENTS.md into the local workspace mirror",
       "skill roots still evolve here first and then flow to ~/.codex/skills through the governed sync path",
       "the long-term target is a self-contained skill and workflow stack rather than dependency on external third-party skill installs",
       "the current build is intentionally unstable and may change again within 10 to 15 minutes"

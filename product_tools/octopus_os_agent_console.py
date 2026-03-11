@@ -25,6 +25,8 @@ WORKSPACE_MARKER = ".octopus_os_workspace_install.json"
 PRODUCT_NAME = "Octopus OS - Natural-Language-Driven Multi-Agent Console"
 SUPPORTED_RUNTIME_TARGET = "codex-gpt-5.4-high"
 SUPPORTED_RUNTIME_LABEL = "Codex + GPT-5.4 high reasoning effort"
+SUPPORTED_HOST_ENV_LABEL = "Codex CLI + VS Code"
+FORBIDDEN_CODEX_ROOT_FILES = ("AGENTS.md",)
 
 
 def _resolve_repo_root(raw: str | None) -> Path:
@@ -70,6 +72,28 @@ def _require_supported_runtime_target(runtime_target: str | None) -> str:
             f"rerun with --runtime-target {SUPPORTED_RUNTIME_TARGET}"
         )
     return normalized
+
+
+def _build_codex_launch_command(workspace_root: Path) -> str:
+    return (
+        f'codex -C "{workspace_root}" '
+        '-m gpt-5.4 '
+        '-c \'model_reasoning_effort="high"\''
+    )
+
+
+def _cleanup_forbidden_codex_root_files(codex_root: Path) -> list[str]:
+    removed: list[str] = []
+    for name in FORBIDDEN_CODEX_ROOT_FILES:
+        target = codex_root / name
+        if not target.exists():
+            continue
+        if target.is_dir():
+            shutil.rmtree(target)
+        else:
+            target.unlink()
+        removed.append(str(target))
+    return removed
 
 
 def _resolve_skills_root(repo_root: Path) -> Path:
@@ -150,13 +174,23 @@ def _build_plan(repo_root: Path, codex_root: Path, workspace_root: Path) -> dict
         "skills_root": str(_resolve_skills_root(repo_root)),
         "codex_root": str(codex_root),
         "workspace_root": str(workspace_root),
+        "supported_host_env": SUPPORTED_HOST_ENV_LABEL,
         "supported_runtime_target": SUPPORTED_RUNTIME_TARGET,
         "supported_runtime_label": SUPPORTED_RUNTIME_LABEL,
+        "codex_launch_command": _build_codex_launch_command(workspace_root),
         "recommended_install_command": (
             "python3 product_tools/octopus_os_agent_console.py install "
             f"--runtime-target {SUPPORTED_RUNTIME_TARGET} "
             f"--codex-root {codex_root} "
             f"--workspace-root {workspace_root}"
+        ),
+        "recommended_install_and_launch_command": (
+            "python3 product_tools/octopus_os_agent_console.py install "
+            f"--runtime-target {SUPPORTED_RUNTIME_TARGET} "
+            f"--codex-root {codex_root} "
+            f'--workspace-root "{workspace_root}"'
+            " && "
+            f"{_build_codex_launch_command(workspace_root)}"
         ),
         "skills": skills,
         "overwrite_skills": overwrite_skills,
@@ -246,9 +280,11 @@ def _print_plan_summary(lang: str, plan: dict[str, object]) -> None:
     overwrite_skills = plan["overwrite_skills"]
     workspace_exists = plan["workspace_exists"]
     print(_label(lang, "Product:", "产品："), PRODUCT_NAME)
+    print(_label(lang, "Supported host:", "受支持宿主："), SUPPORTED_HOST_ENV_LABEL)
     print(_label(lang, "Supported runtime:", "受支持运行时："), SUPPORTED_RUNTIME_LABEL)
     print(_label(lang, "Codex root:", "Codex 根目录："), plan["codex_root"])
     print(_label(lang, "Workspace root:", "工作区根目录："), plan["workspace_root"])
+    print(_label(lang, "Launch command:", "启动命令："), plan["codex_launch_command"])
     print(_label(lang, "Syncable skills:", "可同步技能："), len(skills))
     for skill in skills:
         print(f"  - {skill['name']} -> {skill['destination']}")
@@ -271,6 +307,9 @@ def _print_plan_summary(lang: str, plan: dict[str, object]) -> None:
     )
     print(
         f"  - {_label(lang, 'Other models are unsupported, untested, and may behave differently.', '其他模型不受支持、未经测试，效果不可保证。')}"
+    )
+    print(
+        f'  - {_label(lang, "Only Codex CLI in the author\'s Codex CLI + VS Code environment is currently supported.", "当前仅支持作者使用中的 Codex CLI + VS Code 环境。")}'
     )
     print()
 
@@ -311,6 +350,7 @@ def install_command(args: argparse.Namespace) -> int:
     session_root = state_root / session_id
     backup_root = session_root / "backups"
     codex_root.mkdir(parents=True, exist_ok=True)
+    removed_forbidden_codex_root_files = _cleanup_forbidden_codex_root_files(codex_root)
 
     installed_entries: list[dict[str, object]] = []
     for skill in plan["skills"]:
@@ -364,7 +404,18 @@ def install_command(args: argparse.Namespace) -> int:
         "action": "install",
         "manifest_path": str(manifest_path),
         "session_id": session_id,
+        "supported_host_env": SUPPORTED_HOST_ENV_LABEL,
         "supported_runtime_target": runtime_target,
+        "codex_launch_command": _build_codex_launch_command(workspace_root),
+        "recommended_install_and_launch_command": (
+            "python3 product_tools/octopus_os_agent_console.py install "
+            f"--runtime-target {runtime_target} "
+            f"--codex-root {codex_root} "
+            f'--workspace-root "{workspace_root}"'
+            " && "
+            f"{_build_codex_launch_command(workspace_root)}"
+        ),
+        "removed_forbidden_codex_root_files": removed_forbidden_codex_root_files,
         "overwrite_skills": plan["overwrite_skills"],
         "workspace_root": str(workspace_root),
     }

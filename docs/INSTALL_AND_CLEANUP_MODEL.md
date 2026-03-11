@@ -20,15 +20,17 @@ Users should be warned that:
 - installable does not mean stable
 - each install may reflect a build that is superseded again within 10 to 15 minutes
 - the product currently supports Codex only
+- the current supported host environment is the author's Codex CLI + VS Code workflow only
 - the product currently supports only GPT-5.4 with high reasoning effort
 - other models are unsupported, untested, and may not behave equivalently
+- no other environment adapters are planned at the current phase
 
 ## Current Install Surface
 
 The intended public trial install surface is command-line-first and one-line callable:
 
 ```bash
-python3 product_tools/octopus_os_agent_console.py install --runtime-target codex-gpt-5.4-high --codex-root ~/.codex/skills --workspace-root ~/Octopus_OS_Agent_Console
+python3 product_tools/octopus_os_agent_console.py install --runtime-target codex-gpt-5.4-high --codex-root ~/.codex/skills --workspace-root ~/Octopus_OS_Agent_Console && codex -C ~/Octopus_OS_Agent_Console -m gpt-5.4 -c 'model_reasoning_effort="high"'
 ```
 
 `wizard` may still exist as a guided TUI, but the canonical install path is the single-line CLI entry above.
@@ -48,6 +50,12 @@ The installer has to manage two targets at the same time:
 
 1. `~/.codex/skills`
 2. a user-selected Octopus OS workspace directory
+
+The two targets have different contents by design:
+
+- `~/.codex/skills` receives only syncable skill roots and `.system/`
+- the workspace receives the full product mirror, including the repository root `AGENTS.md` and `Skills/AGENTS.md`
+- accidental root-level files such as `~/.codex/skills/AGENTS.md` must be removed instead of preserved
 
 ## Required Output Before Install
 
@@ -84,6 +92,8 @@ Current behavior already includes:
 - skill root discovery
 - overwrite warnings
 - workspace mirror creation
+- root `AGENTS.md` and `Skills/AGENTS.md` deployment into the workspace mirror
+- cleanup of forbidden root-level files accidentally present in `~/.codex/skills`
 - manifest persistence
 - manifest-driven uninstall
 - a bilingual terminal wizard for end users

@@ -23,7 +23,9 @@ It is:
 - the future entry point for installation, cleanup, workspace mirroring, and product iteration records
 - the evolving control plane for a solo operator who wants AI collaborators to eventually cover development, deployment, operations, marketing work, and multi-agent orchestration
 - currently scoped to Codex as the supported runtime
+- currently scoped to Codex CLI in the author's Codex CLI + VS Code environment
 - currently scoped to GPT-5.4 high reasoning effort as the only supported model profile
+- currently not planning adapters for other host environments
 
 ## Public Narrative
 
@@ -39,6 +41,8 @@ The following facts still remain true internally:
 - this repository is still the single editable source for the skill core
 - skill changes still need to be pushed into `~/.codex/skills`
 - public product surfaces must not be pushed into the codex installation directory
+- the product workspace must still carry the repository root `AGENTS.md` and `Skills/AGENTS.md` as part of the operating ecosystem
+- root-level `~/.codex/skills/AGENTS.md` is an accidental artifact and must be removed
 - non-Codex model environments are not supported by the install surface at this stage
 
 ## Current Phase

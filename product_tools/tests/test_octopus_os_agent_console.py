@@ -67,8 +67,12 @@ class OctopusOSAgentConsoleTests(unittest.TestCase):
             skill_root = skills_root / "Meta-Impact-Investigation"
             skill_root.mkdir(parents=True)
             (skill_root / "SKILL.md").write_text("skill\n", encoding="utf-8")
+            (skills_root / "AGENTS.md").write_text("skills agents\n", encoding="utf-8")
+            (repo_root / "AGENTS.md").write_text("root agents\n", encoding="utf-8")
             (repo_root / "README.md").write_text("product\n", encoding="utf-8")
             codex_root.parent.mkdir(parents=True)
+            (codex_root / "AGENTS.md").parent.mkdir(parents=True, exist_ok=True)
+            (codex_root / "AGENTS.md").write_text("stale\n", encoding="utf-8")
 
             install = self.run_cli(
                 "install",
@@ -86,9 +90,14 @@ class OctopusOSAgentConsoleTests(unittest.TestCase):
             install_payload = json.loads(install.stdout)
             self.assertEqual(install_payload["status"], "ok")
             self.assertEqual(install_payload["supported_runtime_target"], self.supported_runtime_target)
+            self.assertEqual(install_payload["supported_host_env"], "Codex CLI + VS Code")
             self.assertTrue((codex_root / "Meta-Impact-Investigation" / "SKILL.md").exists())
+            self.assertFalse((codex_root / "AGENTS.md").exists())
             self.assertFalse((codex_root / "README.md").exists())
+            self.assertTrue((workspace_root / "AGENTS.md").exists())
+            self.assertTrue((workspace_root / "Skills" / "AGENTS.md").exists())
             self.assertTrue((workspace_root / "README.md").exists())
+            self.assertIn('codex -C "', install_payload["codex_launch_command"])
 
             uninstall = self.run_cli(
                 "uninstall",
@@ -112,6 +121,8 @@ class OctopusOSAgentConsoleTests(unittest.TestCase):
             skill_root = skills_root / "Meta-Impact-Investigation"
             skill_root.mkdir(parents=True)
             (skill_root / "SKILL.md").write_text("skill\n", encoding="utf-8")
+            (skills_root / "AGENTS.md").write_text("skills agents\n", encoding="utf-8")
+            (repo_root / "AGENTS.md").write_text("root agents\n", encoding="utf-8")
             codex_root.parent.mkdir(parents=True)
 
             wizard = self.run_cli(
@@ -135,6 +146,8 @@ class OctopusOSAgentConsoleTests(unittest.TestCase):
             self.assertEqual(payload["status"], "ok")
             self.assertTrue((codex_root / "Meta-Impact-Investigation" / "SKILL.md").exists())
             self.assertTrue(workspace_root.exists())
+            self.assertTrue((workspace_root / "AGENTS.md").exists())
+            self.assertTrue((workspace_root / "Skills" / "AGENTS.md").exists())
 
     def test_install_rejects_non_codex_root_shape(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
