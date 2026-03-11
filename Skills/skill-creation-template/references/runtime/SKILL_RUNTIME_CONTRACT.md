@@ -15,7 +15,6 @@
 
 ## Authoring Model
 - `SKILL.md` role: `entry_only`
-- Proven source skill: `3-Octupos-OS-Backend`
 - Default facade sections:
   - `定位`
   - `必读顺序`
@@ -24,7 +23,7 @@
   - `执行入口`
   - `读取原则`
   - `结构索引`
-- 抽取原则：只提炼稳定运行结构与治理形态，不复制后端业务术语、固定项目路径与验收语义。
+- 模板原则：只保留稳定运行结构与治理形态，不混入来源技能、固定项目路径与项目专有验收语义。
 
 ## Routing Protocol
 - 第一入口命令：`python3 scripts/Cli_Toolbox.py runtime-contract --json`
@@ -46,7 +45,7 @@
   - 必需输出：`SKILL.md`、`agents/openai.yaml`、tooling 文档。
   - 运行态合同可选；若存在运行态规则，则必须补齐 `references/runtime/`。
 - `staged_cli_first`
-  - 目标形态：来自 backend 成功骨架的 staged facade。
+  - 目标形态：受治理的 staged facade。
   - 必需输出：
     - runtime contract
     - `references/stages/00_STAGE_INDEX.md`
@@ -62,13 +61,13 @@
 - `Cli_Toolbox.skill_template`
   - 输出 `basic` 门面模板。
 - `Cli_Toolbox.staged_skill_template`
-  - 输出 backend-derived staged 门面模板。
+  - 输出 staged 门面模板。
 - `Cli_Toolbox.openai_template`
   - 输出 `agents/openai.yaml` 模板。
 - `Cli_Toolbox.contract_reference`
   - 输出模板作者合同。
 - `Cli_Toolbox.staged_skill_reference`
-  - 输出 `3-Octupos-OS-Backend` 的通用化提炼结果。
+  - 输出 `staged_cli_first` profile 的通用参考。
 - `Cli_Toolbox.runtime_contract_template`
   - 输出 staged runtime contract 模板资产。
 - `Cli_Toolbox.architecture_playbook`
@@ -78,7 +77,7 @@
 
 ## Governance Rules
 - `SKILL.md` 必须保持门面化，不得重新长回治理正文。
-- 默认模板门面采用 backend 验证过的 7 段 façade，而不是旧的“抽象层/业务层标题重复堆叠”。
+- 默认模板门面采用标准 7 段 façade，而不是旧的“抽象层/业务层标题重复堆叠”。
 - 若技能存在运行态规则，必须以 CLI-first + machine-readable contract 作为真实规则源。
 - `staged_cli_first` 技能必须显式建模：
   - stage order

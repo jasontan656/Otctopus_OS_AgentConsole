@@ -21,7 +21,7 @@
    - `tests/`
 
 ## 当前关键设计
-- 默认门面采用 backend 验证过的 7 段 façade。
+- 默认门面采用标准 7 段 façade。
 - `staged_cli_first` 默认生成 runtime contract 和 stage template kit。
 - stage template kit 包含：
   - `CHECKLIST.json`

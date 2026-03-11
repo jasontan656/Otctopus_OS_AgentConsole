@@ -14,7 +14,7 @@
   - 用途：输出 `basic` profile 的 7 段 façade 模板。
 - `Cli_Toolbox.staged_skill_template`
   - 入口：`scripts/Cli_Toolbox.py staged-skill-template`
-  - 用途：输出基于 `3-Octupos-OS-Backend` 提炼的 staged façade 模板。
+  - 用途：输出 `staged_cli_first` profile 的 staged façade 模板。
 - `Cli_Toolbox.openai_template`
   - 入口：`scripts/Cli_Toolbox.py openai-template`
   - 用途：输出 `agents/openai.yaml` 模板。
@@ -23,7 +23,7 @@
   - 用途：输出技能模板作者合同。
 - `Cli_Toolbox.staged_skill_reference`
   - 入口：`scripts/Cli_Toolbox.py staged-skill-reference`
-  - 用途：输出 backend 成功骨架的 staged 泛化参考。
+  - 用途：输出 `staged_cli_first` profile 的通用参考。
 - `Cli_Toolbox.runtime_contract_template`
   - 入口：`scripts/Cli_Toolbox.py runtime-contract-template`
   - 用途：输出 staged runtime contract 模板资产。
@@ -57,7 +57,7 @@
     - `assets/templates/stages/README_STAGE_SYSTEM.md`
     - stage checklist 模板
     - stage doc/command/graph contract 模板
-  - 生成门面默认采用 backend 提炼出的 7 段 façade，而不是旧的抽象层/业务层堆叠标题。
+  - 生成门面默认采用标准化 7 段 façade，而不是旧的抽象层/业务层堆叠标题。
 - 人类叙事版输出：
   - 你会得到一个可直接继续编辑和治理的技能目录，以及 JSON 结果（`skill_dir`、`profile`、`resources_created`、`write_results`）。
 
@@ -87,11 +87,11 @@
 
 ### Cli_Toolbox.staged_skill_reference
 - 人类叙事版输入：
-  - 我想知道 staged 模板到底从 backend 技能提炼了哪些稳定结构。
+  - 我想知道 staged 模板到底要求保留哪些稳定结构。
 - 电脑动作发生了什么：
   - 系统执行 `python3 scripts/Cli_Toolbox.py staged-skill-reference --json`。
 - 人类叙事版输出：
-  - 你会得到“哪些结构必须保留，哪些业务语义必须剔除”的泛化参考。
+  - 你会得到“哪些结构必须保留，哪些项目专有语义必须剔除”的通用参考。
 
 ## 参数与结果
 - 核心输入参数：`create-skill-from-template` 的 `--skill-name`、`--target-root`、`--resources`、`--description`、`--profile`、`--overwrite`

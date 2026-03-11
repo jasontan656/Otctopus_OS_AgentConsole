@@ -1,12 +1,10 @@
 # staged_cli_first 复杂技能 profile 提炼参考
 
-来源母本：`3-Octupos-OS-Backend`
-
 ## 目标
-- 抽取 backend skill 成功的运行结构，作为复杂 staged 技能的通用模板。
-- 这里沉淀的是治理形状，不是后端业务内容。
+- 提炼复杂 staged 技能应保留的通用运行结构，作为可复用 profile 参考。
+- 这里沉淀的是治理形状，不是任何来源技能的项目语义。
 
-## 从母本中提炼出的稳定结构
+## 应保留的稳定结构
 - `SKILL.md` 只做门面，不做正文。
 - 门面采用固定 façade：
   - `定位`
@@ -46,9 +44,9 @@
 - validation closure
 
 ## 泛化后必须去掉什么
-- 后端专有目录名
+- 来源技能专有目录名
 - 固定项目路径
-- `mother_doc`、`construction_plan`、`acceptance` 等业务命名
+- 项目专有阶段名、交付物名、验收口径
 - 针对某个项目的 env、graph、acceptance 口径
 - 任何依赖单一仓库现实的 hard-coded 语义
 

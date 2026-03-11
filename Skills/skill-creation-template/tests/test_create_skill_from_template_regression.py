@@ -22,7 +22,7 @@ def run_generator(*args: str) -> dict[str, object]:
 
 
 class CreateSkillFromTemplateRegressionTest(unittest.TestCase):
-    def test_basic_profile_generates_backend_derived_facade(self) -> None:
+    def test_basic_profile_generates_standard_facade(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             payload = run_generator(
                 "--skill-name",

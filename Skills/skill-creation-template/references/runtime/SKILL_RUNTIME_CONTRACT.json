@@ -18,7 +18,6 @@
   "skill_name": "skill-creation-template",
   "authoring_model": {
     "skill_md_role": "entry_only",
-    "proven_source_skill": "3-Octupos-OS-Backend",
     "facade_sections": [
       "定位",
       "必读顺序",
@@ -28,7 +27,7 @@
       "读取原则",
       "结构索引"
     ],
-    "extraction_rule": "extract stable runtime structure and governance shape; do not copy backend-only domain nouns, project paths, or acceptance semantics"
+    "extraction_rule": "extract stable runtime structure and governance shape; do not copy source-skill narration, project paths, or project-specific acceptance semantics"
   },
   "routing_protocol": {
     "first_command": "python3 scripts/Cli_Toolbox.py runtime-contract --json",
@@ -59,7 +58,7 @@
       ]
     },
     "staged_cli_first": {
-      "target_shape": "backend-derived staged skill facade with resident docs, stage contracts, runtime contract, and stage template kit",
+      "target_shape": "governed staged skill facade with resident docs, stage contracts, runtime contract, and stage template kit",
       "required_generated_paths": [
         "SKILL.md",
         "references/runtime/SKILL_RUNTIME_CONTRACT.json",
@@ -82,10 +81,10 @@
   "tool_contracts": {
     "Cli_Toolbox.create_skill_from_template": "Create or refactor a skill from the governed template pack.",
     "Cli_Toolbox.skill_template": "Return the basic entry-only facade template.",
-    "Cli_Toolbox.staged_skill_template": "Return the backend-derived staged facade template.",
+    "Cli_Toolbox.staged_skill_template": "Return the staged facade template.",
     "Cli_Toolbox.openai_template": "Return the interface metadata template.",
     "Cli_Toolbox.contract_reference": "Return the authoring contract for governed skills.",
-    "Cli_Toolbox.staged_skill_reference": "Return the generalized staged profile extracted from 3-Octupos-OS-Backend.",
+    "Cli_Toolbox.staged_skill_reference": "Return the generalized staged profile reference.",
     "Cli_Toolbox.runtime_contract_template": "Return the staged runtime contract template asset.",
     "Cli_Toolbox.architecture_playbook": "Return the architecture playbook for skill authoring.",
     "Cli_Toolbox.runtime_contract": "Return this skill's own runtime contract."
@@ -107,11 +106,11 @@
   },
   "governance_rules": [
     "SKILL.md must remain an entry-only facade, not a pile of governance details.",
-    "The default template surface follows the proven 7-section facade extracted from 3-Octupos-OS-Backend.",
+    "The default template surface follows the standard 7-section facade.",
     "If a skill has runtime rules, the model must consume machine-readable contracts through CLI outputs instead of treating markdown as the runtime rule source.",
     "staged_cli_first skills must explicitly define top-level resident docs, stage order, stage checklist, stage doc contract, stage command contract, stage graph contract, and stage-switch discard policy.",
     "Template clusters must separate human-readable markdown anchors from machine-readable contracts.",
-    "Do not copy backend-specific domain nouns, fixed runtime paths, or acceptance semantics into generic templates.",
+    "Do not copy source-skill narration, fixed runtime paths, or project-specific acceptance semantics into generic templates.",
     "Prefer whole-template rewrites over patch stacking when the architecture contract changes.",
     "When template governance changes, update SKILL facade, runtime contracts, references, assets, generator logic, tooling docs, and regression checks together."
   ],
@@ -124,6 +123,6 @@
   ],
   "notes": [
     "This contract governs skill-creation-template itself.",
-    "The facade shape replaces the older generic abstract-layer/business-layer heading scheme with a backend-proven routing facade."
+    "The facade shape replaces the older generic abstract-layer/business-layer heading scheme with a routed template facade."
   ]
 }

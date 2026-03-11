@@ -14,7 +14,7 @@
 
 ## 文档分类规则
 - `Architecture`
-  - 解释模板技能如何把 backend 成功骨架转成通用 authoring control plane。
+  - 解释模板技能如何把通用治理结构收敛成统一 authoring control plane。
 - `Module Catalog`
   - 记录 CLI 入口、生成器入口与职责边界。
 - `Category`

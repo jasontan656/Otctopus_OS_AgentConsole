@@ -3,7 +3,7 @@
 适用技能：`${skill_name}`
 
 ## 目标
-- 为复杂 staged skill 提供与 backend 成功骨架一致的阶段目录设计。
+- 为复杂 staged skill 提供统一的阶段目录设计。
 - 让阶段切换、读取边界和命令边界有固定出口，而不是散落在长文档里。
 - markdown 用于人类审计与窄域导航；运行态边界由 CLI 输出的 machine-readable contracts 决定。
 

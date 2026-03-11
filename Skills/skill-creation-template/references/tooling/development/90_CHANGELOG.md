@@ -7,7 +7,7 @@
 - 2026-03-09
   - 引入 `staged_cli_first` profile，并为复杂技能补齐 runtime contract 与 stage template kit。
 - 2026-03-10
-  - 以 `3-Octupos-OS-Backend` 为母本，正式将模板门面升级为 7 段 façade：
+  - 将模板门面统一升级为 7 段 façade：
     - `定位`
     - `必读顺序`
     - `分类入口`
