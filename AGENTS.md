@@ -9,7 +9,6 @@
 
 2. 当前受管 repo 身份
 - Current concrete repo: `octopus-os-agent-console`
-- Legacy compatibility entry: `Codex_Skills_Mirror`
 - Current target kind: `AGENTS.md`
 - `AGENTS.md` 应保持为 thin runtime entry；具体 routing/update 规则以返回的 JSON contract 为准。
 - same-level `README.md` 已可用，可作为对外产品摘要入口。

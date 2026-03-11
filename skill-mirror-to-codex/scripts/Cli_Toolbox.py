@@ -19,6 +19,8 @@ RSYNC_EXCLUDES = (
 )
 SYSTEM_SKILL_NAMESPACE = ".system"
 SYSTEM_SKILL_MARKER = ".codex-system-skills.marker"
+CANONICAL_MIRROR_REPO_NAME = "octopus-os-agent-console"
+LEGACY_MIRROR_REPO_NAME = "Codex_Skills_Mirror"
 
 
 def _resolve_codex_root(raw: str | None) -> Path:
@@ -35,21 +37,23 @@ def _discover_visible_mirror() -> Path | None:
     if env_root:
         return Path(env_root).expanduser().resolve()
 
-    for candidate in sorted(Path.home().glob("*/Codex_Skills_Mirror")):
-        if candidate.is_dir():
-            return candidate.resolve()
+    for repo_name in (CANONICAL_MIRROR_REPO_NAME, LEGACY_MIRROR_REPO_NAME):
+        for candidate in sorted(Path.home().glob(f"*/{repo_name}")):
+            if candidate.is_dir():
+                return candidate.resolve()
     return None
 
 
 def _migrate_hidden_mirror_if_present() -> Path | None:
-    for hidden in sorted(Path.home().glob("*/Codex_Skills_Mirror")):
-        if not hidden.is_dir():
-            continue
-        visible = hidden.parent / "Codex_Skills_Mirror"
-        if visible.exists() and visible.is_dir():
+    for repo_name in (CANONICAL_MIRROR_REPO_NAME, LEGACY_MIRROR_REPO_NAME):
+        for hidden in sorted(Path.home().glob(f"*/{repo_name}")):
+            if not hidden.is_dir():
+                continue
+            visible = hidden.parent / CANONICAL_MIRROR_REPO_NAME
+            if visible.exists() and visible.is_dir():
+                return visible.resolve()
+            os.replace(hidden, visible)
             return visible.resolve()
-        os.replace(hidden, visible)
-        return visible.resolve()
     return None
 
 
@@ -65,7 +69,7 @@ def _resolve_mirror_root(raw: str | None) -> Path:
     if migrated is not None:
         return migrated
 
-    fallback = (Path.cwd() / "Codex_Skills_Mirror").resolve()
+    fallback = (Path.cwd() / CANONICAL_MIRROR_REPO_NAME).resolve()
     fallback.mkdir(parents=True, exist_ok=True)
     return fallback
 

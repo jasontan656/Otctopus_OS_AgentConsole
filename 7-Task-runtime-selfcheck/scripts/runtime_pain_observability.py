@@ -27,7 +27,11 @@ def new_run_id(mode: str) -> str:
 
 def _is_blocked_runtime_parent(path: Path) -> bool:
     text = str(path.resolve()).replace("\\", "/")
-    return "/.codex/skills" in text or "/Codex_Skills_Mirror" in text
+    return (
+        "/.codex/skills" in text
+        or "/octopus-os-agent-console" in text
+        or "/Codex_Skills_Mirror" in text
+    )
 
 
 def _discover_runtime_root_from_cwd() -> Path | None:

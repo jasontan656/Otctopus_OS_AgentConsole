@@ -10,7 +10,7 @@ def push_contract_payload() -> dict[str, object]:
         "optional_fields": [],
         "entry": "push",
         "purpose": "Group push-related Git traceability tools and rules behind one explicit CLI-readable runtime entry.",
-        "allowed_repos": ["Octopus_OS", "Codex_Skills_Mirror"],
+        "allowed_repos": ["Octopus_OS", "octopus-os-agent-console"],
         "commands": [
             {
                 "name": "status",
@@ -59,7 +59,7 @@ def rollback_contract_payload() -> dict[str, object]:
         "optional_fields": [],
         "entry": "rollback",
         "purpose": "Group rollback-related Git restore tools and rules behind one explicit CLI-readable runtime entry.",
-        "allowed_repos": ["Octopus_OS", "Codex_Skills_Mirror"],
+        "allowed_repos": ["Octopus_OS", "octopus-os-agent-console"],
         "commands": [
             {
                 "name": "status",
@@ -100,7 +100,7 @@ def baseline_contract_payload() -> dict[str, object]:
         "optional_fields": [],
         "entry": "baseline",
         "purpose": "Create a named rollback anchor without overloading push semantics.",
-        "allowed_repos": ["Octopus_OS", "Codex_Skills_Mirror"],
+        "allowed_repos": ["Octopus_OS", "octopus-os-agent-console"],
         "commands": [
             {
                 "name": "baseline-create",

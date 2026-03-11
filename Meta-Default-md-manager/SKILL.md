@@ -20,8 +20,7 @@ description: "集中管理 workspace 内的常驻默认文档。当前提供 sca
 - 当前仅治理 `AI_Projects` 下两份 `AGENTS.md`：
   - `/home/jasontan656/AI_Projects/AGENTS.md`
   - `/home/jasontan656/AI_Projects/octopus-os-agent-console/AGENTS.md`
-- legacy compatibility entry:
-  - `/home/jasontan656/AI_Projects/Codex_Skills_Mirror/AGENTS.md`
+- 兼容路径 alias 仅允许作为 runtime fallback，不得再被表述为受管 repo 身份。
 - 当前 CLI 的 scan 结果也必须严格限制在这两份受管目标内。
 
 ## 3. 双模版语义

@@ -4,7 +4,7 @@ import unittest
 from pathlib import Path
 
 
-SKILL_ROOT = Path("/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-code-graph-base")
+SKILL_ROOT = Path("/home/jasontan656/AI_Projects/octopus-os-agent-console/Meta-code-graph-base")
 WRAPPER = SKILL_ROOT / "scripts" / "meta_code_graph_base.py"
 RUNTIME_ROOT = Path("/home/jasontan656/AI_Projects/OctuposOS_Runtime_Backend/code_graph_runtime")
 TARGET_REPO = Path("/home/jasontan656/AI_Projects/Human_Work_Zone/GitNexus")

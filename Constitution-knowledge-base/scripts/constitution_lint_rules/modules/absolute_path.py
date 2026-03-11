@@ -22,7 +22,7 @@ UNIX_ABS_RE = re.compile(r'(?<![A-Za-z0-9_])/(?:home|Users|opt|var|tmp|etc|srv|m
 WINDOWS_ABS_RE = re.compile(r'(?<![A-Za-z0-9_])[A-Za-z]:\\\\[^\s"\'`]+')
 FILE_URI_RE = re.compile(r'file:///[^\s"\'`]+')
 OCTOPUS_ESCAPE_RE = re.compile(r'["\'`](?:\.\./){2,}[^"\'`\n]*["\'`]')
-WORKSPACE_MANAGER_ROOTS = {"Codex_Skills_Mirror", "AI_Projects"}
+WORKSPACE_MANAGER_ROOTS = {"Codex_Skills_Mirror", "octopus-os-agent-console", "AI_Projects"}
 RULE_FILE = "Constitution-knowledge-base/scripts/constitution_lint_rules/modules/absolute_path.py"
 
 

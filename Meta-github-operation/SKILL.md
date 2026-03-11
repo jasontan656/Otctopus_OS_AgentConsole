@@ -1,6 +1,6 @@
 ---
 name: "meta-github-operation"
-description: "受限 GitHub control plane：仅服务 Octopus_OS 与 Codex_Skills_Mirror 两个仓库的状态、提交、推送与远端信息操作。"
+description: "受限 GitHub control plane：仅服务 Octopus_OS 与 octopus-os-agent-console 两个仓库的状态、提交、推送与远端信息操作。"
 ---
 
 # Meta-github-operation
@@ -9,7 +9,7 @@ description: "受限 GitHub control plane：仅服务 Octopus_OS 与 Codex_Skill
 
 本技能已恢复为受限启用状态，但当前只服务以下两个仓库：
 - `/home/jasontan656/AI_Projects/Octopus_OS`
-- `/home/jasontan656/AI_Projects/Codex_Skills_Mirror`
+- `/home/jasontan656/AI_Projects/octopus-os-agent-console`
 
 ## Scope
 
@@ -34,7 +34,7 @@ description: "受限 GitHub control plane：仅服务 Octopus_OS 与 Codex_Skill
 - CLI 入口：`scripts/Cli_Toolbox.py`
 - registry 固定只暴露：
   - `Octopus_OS`
-  - `Codex_Skills_Mirror`
+  - `octopus-os-agent-console`
 
 ## Reactivation Boundary
 

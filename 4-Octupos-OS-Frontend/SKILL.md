@@ -50,8 +50,8 @@ description: "Project-description-driven frontend skill: build a directory mothe
 - 工具层：
   - `scripts/Cli_Toolbox.py`
 - 外部辅助层：
-  - `/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-code-graph-base/SKILL.md`
-  - `/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-code-graph-base/scripts/meta_code_graph_base.py`
+  - `/home/jasontan656/AI_Projects/octopus-os-agent-console/Meta-code-graph-base/SKILL.md`
+  - `/home/jasontan656/AI_Projects/octopus-os-agent-console/Meta-code-graph-base/scripts/meta_code_graph_base.py`
 - 运行边界层：
   - `/home/jasontan656/AI_Projects/AGENTS.md`
   - `/home/jasontan656/AI_Projects/Octopus_CodeBase_Frontend/AGENTS.md`

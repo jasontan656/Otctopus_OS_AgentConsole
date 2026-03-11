@@ -40,3 +40,22 @@ It exists so AI can keep reading the recent product evolution before the main it
   - `production-form/references/runtime/WORKING_CONTRACT.md`
 - next_steps:
   - Continue shaping operator workflow, orchestration boundaries, and the public learning surface without leaking product-only internals into the codex installation directory.
+
+## 2026-03-11 01:50:07Z - Unify local repo identity under the product name
+
+- author: `codex`
+- summary: Removed the old mirror directory name from active product surfaces and primary runtime contracts, while keeping legacy alias resolution only inside compatibility mappings.
+- decisions:
+  - Treat octopus-os-agent-console as the only active local product identity.
+  - Keep Codex_Skills_Mirror only as a compatibility alias for runtime mapping and installed-skill sync flows, not as a visible product name.
+  - Switch canonical-first path resolution across repo tooling, registry, and skill bridge entry points.
+- affected_paths:
+  - `README.md`
+  - `AGENTS.md`
+  - `Meta-Default-md-manager/`
+  - `Meta-github-operation/`
+  - `skill-mirror-to-codex/`
+  - `Meta-code-graph-base/`
+  - `production-form/references/runtime/CURRENT_PRODUCT_INTENT.md`
+- next_steps:
+  - Continue removing product-facing dependence on the legacy mirror label while preserving compatibility aliases only where runtime fallback is still required.

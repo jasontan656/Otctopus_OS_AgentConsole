@@ -1,6 +1,6 @@
 ---
 name: "skill-mirror-to-codex"
-description: 将 codex skill mirror 导入 codex skills 安装目录，并在 `Push` / `Install` 双模式之间自动导航。使用场景：需要把 mirror 中的技能落到安装目录、判断目标技能是否已安装、对已存在技能执行覆盖同步，或对尚未存在的技能先校验格式再走外部安装链路。
+description: 将产品仓内的 syncable skills 导入 codex skills 安装目录，并在 `Push` / `Install` 双模式之间自动导航。使用场景：需要把 repo 中的技能落到安装目录、判断目标技能是否已安装、对已存在技能执行覆盖同步，或对尚未存在的技能先校验格式再走外部安装链路。
 ---
 
 # Skill-Mirror-to-Codex
@@ -12,7 +12,7 @@ description: 将 codex skill mirror 导入 codex skills 安装目录，并在 `P
 - 先判断目标技能在安装目录是否已存在，再在两种模式之间自动导航：
   - `Push`
   - `Install`
-- 将 mirror 根目录固定为非隐藏路径：`/home/jasontan656/AI_Projects/Codex_Skills_Mirror`。
+- 将 product repo 根目录固定为可见工程路径：`/home/jasontan656/AI_Projects/octopus-os-agent-console`。
 
 ### 1.2 统一入口
 - 本技能唯一 CLI 入口：`scripts/Cli_Toolbox.py`
@@ -37,7 +37,7 @@ description: 将 codex skill mirror 导入 codex skills 安装目录，并在 `P
 - `skill_name` 禁止包含空段、反斜杠、绝对路径与 `.` / `..` 越界段。
 - `.system/*` 技能在 codex 安装目录使用小写规范名；工具必须自动把 mirror 侧实际目录名映射到安装目录规范名。
 - 只允许在 skills 边界目录内工作，禁止越界路径拼接。
-- 若本回合此前已对 `Codex_Skills_Mirror` 发生实际写入，则在完成真正写操作后，必须同回合执行该仓库自己的 Git 留痕收尾。
+- 若本回合此前已对 `octopus-os-agent-console` 发生实际写入，则在完成真正写操作后，必须同回合执行该仓库自己的 Git 留痕收尾。
 
 ## 2. Push 模式
 

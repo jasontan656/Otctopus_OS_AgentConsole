@@ -26,6 +26,7 @@ _LEGACY_SED_SUFFIX_ALIASES = (
     ("/postrun/errors.json", "/postrun_manifest.json"),
     ("/constitution_lint_rules/governance_rules.py", "/constitution_lint_rules/registry.py"),
 )
+_MIRROR_DIR_ALIASES = ("octopus-os-agent-console", "Codex_Skills_Mirror")
 
 
 def _build_known_multi_repo_container_paths() -> frozenset[Path]:
@@ -54,9 +55,9 @@ def _build_known_multi_repo_container_paths() -> frozenset[Path]:
             if candidate in visited:
                 continue
             visited.add(candidate)
-            mirror_path = candidate / "Codex_Skills_Mirror"
+            mirror_exists = any((candidate / name).exists() for name in _MIRROR_DIR_ALIASES)
             runtime_path = candidate / "Codex_Skill_Runtime"
-            if not mirror_path.exists() and not runtime_path.exists():
+            if not mirror_exists and not runtime_path.exists():
                 continue
             candidates.add(candidate.resolve())
             if runtime_path.exists():

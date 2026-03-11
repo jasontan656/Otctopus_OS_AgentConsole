@@ -23,5 +23,5 @@ Machine-only constitution corpus for `Cli_Toolbox.constitution_keyword_query`.
 
 ## Build
 ```bash
-cd /home/jasontan656/AI_Projects/Codex_Skills_Mirror/Constitution-knowledge-base && python3 scripts/build_machine_anchor_docs.py
+cd /home/jasontan656/AI_Projects/octopus-os-agent-console/Constitution-knowledge-base && python3 scripts/build_machine_anchor_docs.py
 ```

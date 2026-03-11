@@ -46,5 +46,4 @@ A better model is:
 ## Directory Transition
 
 The product engineering name is now `octopus-os-agent-console`.
-
-For compatibility with existing runtime contracts and scripts, the workspace still keeps a legacy entry alias named `Codex_Skills_Mirror`. That alias exists only as a compatibility surface and no longer defines the product identity of this repository.
+Internally, this repository still acts as the governed source that maps syncable skill roots into `~/.codex/skills`.

@@ -51,7 +51,7 @@ def root_payload() -> dict:
         },
         "default_meta_skill_order": [
             "$meta-github-operation ( applicable on every write_exec turn. Automatically push everything done to github for tracability )",
-            "$skill-mirror-to-codex (all skill edit must happen first in octopus-os-agent-console or its legacy alias Codex_Skills_Mirror, then use the skill to push/install to the codex installation folder )",
+            "$skill-mirror-to-codex (all skill edit must happen first in octopus-os-agent-console, then use the skill to push/install to the codex installation folder )",
             "$skill-creation-template ( should be considered to imply if there is no specific user request on how skill should be created (prioritize user request than template) )",
             "$skill-creator (for skill standard formatter to ensure codex reads it properly, do not use its template for skill creation)",
             "$Constitution-knowledge-base (for skill CLI tool lints )",
@@ -190,7 +190,7 @@ def legacy_repo_payload() -> dict:
         ],
         "runtime_constraints": [
             "treat CLI JSON as the primary runtime rule source",
-            "stay within the concrete Codex_Skills_Mirror repo boundary defined by this payload",
+            "stay within the concrete octopus-os-agent-console repo boundary defined by this payload",
         ],
         "execution_modes": {
             "READ_EXEC": {
@@ -213,9 +213,9 @@ def legacy_repo_payload() -> dict:
             "Do not treat audit markdown paths as the main runtime instructions.",
         ],
         "turn_end_actions": [
-            "run Constitution lint on the concrete Codex_Skills_Mirror target root",
+            "run Constitution lint on the concrete octopus-os-agent-console target root",
         ],
-        "repo_name": "Codex_Skills_Mirror",
+        "repo_name": "octopus-os-agent-console",
     }
 
 
@@ -241,7 +241,6 @@ class CliToolboxTests(unittest.TestCase):
                     "version": 1,
                     "governed_source_paths": [
                         "AGENTS.md",
-                        "Codex_Skills_Mirror/AGENTS.md",
                         "octopus-os-agent-console/AGENTS.md",
                     ],
                     "exact_filename_rules": ["AGENTS.md"],

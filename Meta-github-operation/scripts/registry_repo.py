@@ -16,16 +16,18 @@ REPO_REGISTRY: dict[str, RepoSpec] = {
         name="Octopus_OS",
         path=Path("/home/jasontan656/AI_Projects/Octopus_OS"),
     ),
-    "Codex_Skills_Mirror": RepoSpec(
-        name="Codex_Skills_Mirror",
-        path=Path("/home/jasontan656/AI_Projects/Codex_Skills_Mirror"),
+    "octopus-os-agent-console": RepoSpec(
+        name="octopus-os-agent-console",
+        path=Path("/home/jasontan656/AI_Projects/octopus-os-agent-console"),
     ),
 }
 
 REPO_ALIASES: dict[str, str] = {
     "octopus_os": "Octopus_OS",
-    "skills_mirror": "Codex_Skills_Mirror",
-    "codex_skills_mirror": "Codex_Skills_Mirror",
+    "skills_mirror": "octopus-os-agent-console",
+    "codex_skills_mirror": "octopus-os-agent-console",
+    "Codex_Skills_Mirror": "octopus-os-agent-console",
+    "octopus_os_agent_console": "octopus-os-agent-console",
 }
 
 

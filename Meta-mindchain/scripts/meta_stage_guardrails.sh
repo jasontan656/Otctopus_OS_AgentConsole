@@ -43,7 +43,7 @@ case "$stage" in
     echo "[DONT][Meta-keyword-first-edit] no additive-first edits when replacement can satisfy intent"
     echo "[DO][Meta-refactor-behavior] define OEC (consumer/observables/invariants/witness) before refactor"
     echo "[DONT][Meta-refactor-behavior] do not change observable behavior unless in allowed_deltas"
-    echo "[DO][Meta-github-operation] if this write turn touched Octopus_OS or Codex_Skills_Mirror, finish same-turn GitHub traceability before closing"
+    echo "[DO][Meta-github-operation] if this write turn touched Octopus_OS or octopus-os-agent-console, finish same-turn GitHub traceability before closing"
     echo "[DONT][Meta-github-operation] do not defer required repo traceability to a later turn"
     ;;
   TURN_END)

@@ -9,7 +9,7 @@ from pathlib import Path
 from datetime import datetime, timezone
 
 
-SKILL_ROOT = Path("/home/jasontan656/AI_Projects/Codex_Skills_Mirror/2-Octupos-FullStack")
+SKILL_ROOT = Path(__file__).resolve().parents[1]
 ENGINE_ROOT = SKILL_ROOT / "assets" / "os_graph_engine" / "gitnexus_core"
 DIST_ENTRY = ENGINE_ROOT / "dist" / "cli" / "index.js"
 GRAPH_ROOT = Path("/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/graph")

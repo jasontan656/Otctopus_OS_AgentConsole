@@ -11,7 +11,7 @@
 
 1. Load Target Contract
 - Must run this command before following any path-specific rule:
-- `python3 /home/jasontan656/AI_Projects/Codex_Skills_Mirror/2-Octupos-FullStack/scripts/Cli_Toolbox.py mother-doc-agents-target-contract --relative-path "octopus_os_root" --file-kind agents --json`
+- `python3 /home/jasontan656/AI_Projects/octopus-os-agent-console/2-Octupos-FullStack/scripts/Cli_Toolbox.py mother-doc-agents-target-contract --relative-path "octopus_os_root" --file-kind agents --json`
 
 2. TURN_START Contract
 - if the turn will write Octopus_OS, plan same-turn Constitution lint from the start

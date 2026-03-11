@@ -5,9 +5,7 @@ from pathlib import Path
 
 from workflow_policy_contract import IMPLEMENTATION_SOURCE_POLICY
 
-GRAPH_SKILL_SCRIPT = Path(
-    "/home/jasontan656/AI_Projects/Codex_Skills_Mirror/Meta-code-graph-base/scripts/meta_code_graph_base.py"
-)
+GRAPH_SKILL_SCRIPT = Path(__file__).resolve().parents[2] / "Meta-code-graph-base" / "scripts" / "meta_code_graph_base.py"
 
 SOURCE_EXTENSIONS = {
     ".py",

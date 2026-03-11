@@ -50,8 +50,8 @@
 3. 无法稳定静态验证的条款不再进入 registry 与 gate。
 
 ## 示例命令（强制：一行可复制）
-- `cd /home/jasontan656/AI_Projects/Codex_Skills_Mirror/Constitution-knowledge-base && python3 scripts/constitution_keyword_query.py --keywords-zh "队列,门禁" --keywords-en "queue,gate" | cat`
-- `cd /home/jasontan656/AI_Projects/Codex_Skills_Mirror/Constitution-knowledge-base && python3 scripts/run_constitution_lints.py --target /home/jasontan656/AI_Projects/Octopus_CodeBase_Backend | cat`
+- `cd /home/jasontan656/AI_Projects/octopus-os-agent-console/Constitution-knowledge-base && python3 scripts/constitution_keyword_query.py --keywords-zh "队列,门禁" --keywords-en "queue,gate" | cat`
+- `cd /home/jasontan656/AI_Projects/octopus-os-agent-console/Constitution-knowledge-base && python3 scripts/run_constitution_lints.py --target /home/jasontan656/AI_Projects/Octopus_CodeBase_Backend | cat`
 
 ## 同步维护约束（强制）
 - 工具变更必须同步更新：

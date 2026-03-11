@@ -18,7 +18,6 @@
       "description": "The exact governed external targets for the current active scope.",
       "default_values": [
         "AGENTS.md",
-        "Codex_Skills_Mirror/AGENTS.md",
         "octopus-os-agent-console/AGENTS.md"
       ]
     },
@@ -49,7 +48,6 @@
     ],
     "current_governed_source_paths": [
       "AGENTS.md",
-      "Codex_Skills_Mirror/AGENTS.md",
       "octopus-os-agent-console/AGENTS.md"
     ],
     "default_disallowed_roots": [
