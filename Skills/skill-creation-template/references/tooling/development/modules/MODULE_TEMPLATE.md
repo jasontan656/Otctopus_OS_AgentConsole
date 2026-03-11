@@ -1,3 +1,18 @@
+---
+doc_id: "skill_creation_template.tooling.module_template"
+doc_type: "module_doc"
+topic: "Template for module-level development docs in this skill"
+anchors:
+  - target: "../20_CATEGORY_INDEX.md"
+    relation: "implements"
+    direction: "upstream"
+    reason: "Module docs are routed from the tooling category index."
+  - target: "../90_CHANGELOG.md"
+    relation: "pairs_with"
+    direction: "lateral"
+    reason: "Module updates should stay traceable in the changelog."
+---
+
 # <module_id> 模块开发文档模板
 
 ## 模块标识

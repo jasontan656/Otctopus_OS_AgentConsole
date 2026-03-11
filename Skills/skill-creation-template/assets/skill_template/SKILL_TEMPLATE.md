@@ -1,84 +1,75 @@
 ---
 name: "${skill_name}"
 description: ${description}
+doc_id: "skill_creation_template.asset.basic_skill_template"
+doc_type: "template_doc"
+topic: "Basic skill facade template asset"
+anchors:
+  - target: "references/routing/TASK_ROUTING_TEMPLATE.md"
+    relation: "implements"
+    direction: "downstream"
+    reason: "This asset routes to the task routing template in the current template pack."
+  - target: "references/governance/SKILL_DOCSTRUCTURE_POLICY_TEMPLATE.md"
+    relation: "governed_by"
+    direction: "downstream"
+    reason: "The template pack governs basic facades through the doc-structure policy template."
+metadata:
+  doc_structure:
+    doc_id: "${skill_name}.entry.facade"
+    doc_type: "skill_facade"
+    topic: "Entry facade for ${skill_name}"
+    anchors:
+      - target: "references/routing/TASK_ROUTING.md"
+        relation: "routes_to"
+        direction: "downstream"
+        reason: "The facade must route readers into the first task branch."
+      - target: "references/governance/SKILL_DOCSTRUCTURE_POLICY.md"
+        relation: "governed_by"
+        direction: "downstream"
+        reason: "Doc-structure policy is a mandatory governance branch."
 ---
 
 # ${skill_name}
 
 ## 1. 技能定位
-- 技能本体：
-  - [本文件只做门面入口，不承载规则正文。]
-  - [写明该技能在运行态的唯一主轴；禁止写“创建本技能/生成模板”之类 authoring 目标。]
-  - [若技能存在运行态规则，写明运行指引由 CLI 输出的 machine-readable contract 决定。]
-- 规则说明：
-  - [若该技能本身也是模板或治理技能，则本章采用“技能本体 + 规则说明”双段写法。]
-  - [规则说明要说明：技能定位必须说清本技能是什么、承载什么内容、自己的工具或入口是什么。]
-  - [规则说明必须简洁，像旁白，不得长篇大论；如需扩充，只能给出轻量入口提示。]
+- [本文件只做门面入口，不承载深规则正文。]
+- [写清本技能的唯一主轴与最小职责边界。]
+- [若技能存在运行态规则，写明真实规则源来自 CLI 输出的 machine-readable contract。]
 
-## 2. 适用域
-- 技能本体：
-  - 适用于：[明确此技能负责的任务类型]
-  - 不适用于：[明确排除域]
-  - [若依赖外部 companion skill，只写职责边界，不复制对方规则。]
-- 规则说明：
-  - [若该技能属于模板或治理技能，本章也可采用“技能本体 + 规则说明”双段写法。]
-  - [适用域必须细分为语义自洽的域；每个域都要有自己的工具、入口、输入输出或阶段边界。]
-  - [不得把语义跳跃的动作混成一个域。坏例子：撰写文档和生成计划混在一起；校验和修复混在一起。]
-  - [允许一个域内有多个动作，但这些动作必须语义连贯并服务同一目标。]
+## 2. 必读顺序
+1. [若有 runtime contract，先读取 runtime contract。]
+2. 读取 `references/routing/TASK_ROUTING.md`。
+3. 读取 `references/governance/SKILL_DOCSTRUCTURE_POLICY.md`。
+4. 再进入当前任务真正需要的 execution rules、tooling docs 或其他原子文档。
 
-## 3. 可用工具简述&入口
-- 技能本体：
-  - 统一工具入口：
-    - [scripts/Cli_Toolbox.py 或其他统一入口]
-  - 核心工具：
-    - [Cli_Toolbox.<tool_name> -> 用途 -> 命令]
-  - 合同/门禁工具：
-    - [runtime contract / lint / gate command]
-  - [若没有工具，明确写“本技能无专属 CLI tool，入口即门面与固定文档”。]
-- 规则说明：
-  - [工具章节只写工具、入口、用途与命令，不混入文档说明或工作流。]
-  - [工具应按语义域分组；同一组内的工具必须自洽，不得跨域混排。]
+## 3. 分类入口
+- 路由层：
+  - `references/routing/TASK_ROUTING.md`
+- 治理层：
+  - `references/governance/SKILL_DOCSTRUCTURE_POLICY.md`
+  - `references/governance/SKILL_EXECUTION_RULES.md`
+- 工具层：
+  - [本技能统一 CLI 入口或说明无专属 CLI tool]
+- 运行合同层：
+  - [若存在 runtime contract，写在这里]
 
-## 4. 文档指引&入口
-- 技能本体：
-  - 规则层：
-    - [rules/...]
-  - 工作流/合同层：
-    - [references/...]
-  - 模板或资产层：
-    - [assets/...]
-  - 运行边界层：
-    - [root AGENTS / companion AGENTS / 外部控制平面]
-- 规则说明：
-  - [文档入口按职责分域，不要把合同、资产、验证和工具入口混成一个列表。]
-  - [每个文档域都应只承载一种主要职责，避免混淆。]
+## 4. 适用域
+- 适用于：[明确本技能负责的任务类型]
+- 不适用于：[明确排除域]
+- [若依赖 companion skill，只写职责边界，不复制对方规则]
 
-## 5. 工作流指引
-- 技能本体：
-  1. [先读取本技能的 runtime contract 或统一入口命令。]
-  2. [若无 runtime contract，列出固定文档读取顺序。]
-  3. [列出进入具体执行前必须拿到的 checklist、合同或门禁命令。]
-  4. [列出主执行步骤与收口条件。]
-  5. [若存在多域流程，写明切换时要丢弃哪些 focus。]
-- 规则说明：
-  - [工作流只写顺序化动作，不写长篇背景。]
-  - [每一步都应是当前域内可执行的连贯动作；若有分支，先分流再列步骤。]
-  - [允许多个动作同一步，但必须围绕同一阶段或同一目标，不得跳跃式混写。]
+## 5. 执行入口
+- [统一 CLI 入口命令]
+- [门禁命令 / lint 命令 / contract 命令]
+- [若无工具，明确说明入口即门面与固定文档]
 
-## 6. 顶层常驻通用规则
-- 技能本体：
-  - 门面只做路由，规则正文下沉到 `references/`、contracts 与脚本。
-  - 当前 7 章结构本身就是门面合同，不要在其他地方再复制一份平行门面说明。
-  - 需要什么读什么，不要把所有引用文档一次性展开成新的门面正文。
-  - 若存在运行态规则，模型禁止直接把 markdown 当运行规则源；必须通过 CLI 读取 machine-readable contract。
-  - 单域技能也要保持窄域读取，不要把无关 sibling 文档带入运行 focus。
-  - 若治理规则变化，同步更新门面、contracts、assets、scripts 与 tooling 文档。
-- 规则说明：
-  - [这里只写跨章节稳定规则，不写局部流程和局部工具细节。]
-  - [若该技能属于模板或治理技能，可沿用双段写法，但注释段只解释写法和边界。]
+## 6. 读取原则
+- 门面只负责路由，不重新长回规则正文。
+- `skill-doc-structure` 是创建与治理本技能时必须应用的显式规则。
+- 若某条规则只属于单一 topic，应下沉到原子文档；不要继续堆在门面里。
+- 若此 skill 属于模板或治理类 skill，可在下沉文档中使用 `技能本体 / 规则说明` 双段式，但门面仍应保持极简。
 
 ## 7. 结构索引
-- 技能本体：
 ```text
 <skill-name>/
 ├── SKILL.md
@@ -86,8 +77,10 @@ description: ${description}
 │   └── openai.yaml
 ├── scripts/
 ├── references/
+│   ├── governance/
+│   ├── routing/
+│   ├── runtime/        # optional
+│   └── tooling/
 ├── assets/
 └── tests/
 ```
-- 规则说明：
-  - [结构索引只展示稳定目录结构，不展开第二层正文说明。]

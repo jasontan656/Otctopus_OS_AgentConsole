@@ -69,13 +69,19 @@ def cmd_openai_template(args) -> int:
 
 
 def cmd_contract_reference(args) -> int:
-    return emit(text_payload(SKILL_ROOT / "references" / "skill_template_contract_v1.md", "contract_reference"), args.json)
+    return emit(
+        text_payload(
+            SKILL_ROOT / "references" / "governance" / "SKILL_AUTHORING_CONTRACT.md",
+            "contract_reference",
+        ),
+        args.json,
+    )
 
 
 def cmd_staged_skill_reference(args) -> int:
     return emit(
         text_payload(
-            SKILL_ROOT / "references" / "staged_cli_first_profile_reference.md",
+            SKILL_ROOT / "references" / "governance" / "STAGED_PROFILE_REFERENCE.md",
             "staged_skill_reference",
         ),
         args.json,
@@ -93,7 +99,13 @@ def cmd_runtime_contract_template(args) -> int:
 
 
 def cmd_architecture_playbook(args) -> int:
-    return emit(text_payload(SKILL_ROOT / "references" / "skill_architecture_playbook.md", "architecture_playbook"), args.json)
+    return emit(
+        text_payload(
+            SKILL_ROOT / "references" / "governance" / "SKILL_ARCHITECTURE_PLAYBOOK.md",
+            "architecture_playbook",
+        ),
+        args.json,
+    )
 
 
 def cmd_runtime_contract(args) -> int:

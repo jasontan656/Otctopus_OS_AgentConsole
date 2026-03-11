@@ -1,3 +1,22 @@
+---
+doc_id: "skill_creation_template.tooling.development_entry"
+doc_type: "tooling_development"
+topic: "Entry document for Cli_Toolbox development references"
+anchors:
+  - target: "../runtime/SKILL_RUNTIME_CONTRACT.md"
+    relation: "implements"
+    direction: "upstream"
+    reason: "Development work must follow the runtime contract."
+  - target: "development/00_ARCHITECTURE_OVERVIEW.md"
+    relation: "routes_to"
+    direction: "downstream"
+    reason: "Architecture details live in the development overview."
+  - target: "Cli_Toolbox_USAGE.md"
+    relation: "pairs_with"
+    direction: "lateral"
+    reason: "Usage and development docs must stay in sync."
+---
+
 # Cli_Toolbox 开发文档（入口）
 
 适用技能：`skill-creation-template`
@@ -31,9 +50,10 @@
   - 受影响模块文档
 - 若改动影响门面结构、runtime contract、profile 结构或 stage template kit，还必须同步更新：
   - `references/runtime/SKILL_RUNTIME_CONTRACT.json`
-  - `references/skill_template_contract_v1.md`
-  - `references/staged_cli_first_profile_reference.md`
-  - `references/skill_architecture_playbook.md`
+  - `references/governance/SKILL_AUTHORING_CONTRACT.md`
+  - `references/governance/STAGED_PROFILE_REFERENCE.md`
+  - `references/governance/SKILL_ARCHITECTURE_PLAYBOOK.md`
+  - `references/governance/SKILL_DOCSTRUCTURE_ENFORCEMENT.md`
   - `assets/skill_template/`
   - `tests/test_create_skill_from_template_regression.py`
 - `SKILL.md` 只允许保留入口、边界与导航；若细节重新长回门面，优先下沉到 references 或 contracts。

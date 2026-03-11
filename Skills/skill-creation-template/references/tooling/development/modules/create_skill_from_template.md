@@ -1,3 +1,22 @@
+---
+doc_id: "skill_creation_template.tooling.create_skill_from_template"
+doc_type: "module_doc"
+topic: "Module documentation for the create_skill_from_template generator"
+anchors:
+  - target: "../20_CATEGORY_INDEX.md"
+    relation: "implements"
+    direction: "upstream"
+    reason: "The module doc is routed from the tooling category index."
+  - target: "../../../governance/SKILL_AUTHORING_CONTRACT.md"
+    relation: "pairs_with"
+    direction: "lateral"
+    reason: "The generator implements the authoring contract."
+  - target: "../../../runtime/SKILL_RUNTIME_CONTRACT.md"
+    relation: "pairs_with"
+    direction: "lateral"
+    reason: "The generator must stay aligned with the runtime contract."
+---
+
 # create_skill_from_template 模块开发文档
 
 ## 模块标识
@@ -7,8 +26,9 @@
 
 ## 职责
 - 基于受治理模板创建技能骨架。
-- 默认生成标准 7 章门面 `SKILL.md`。
+- 默认生成极简 facade `SKILL.md`，并把读者继续路由到下沉文档。
 - 根据 `--profile` 选择 basic 或 staged output surface。
+- 两个 profile 都必须显式接入 `skill-doc-structure` 所要求的 routing / topic docs。
 - staged profile 额外补齐：
   - runtime contract skeleton
   - stage index
@@ -26,6 +46,7 @@
 ## 依赖与边界
 - 依赖：
   - `assets/skill_template/*.md|*.yaml`
+  - `assets/skill_template/references/**/*`
   - `assets/skill_template/runtime/*`
   - `assets/skill_template/stages/*`
 - 边界：

@@ -1,3 +1,18 @@
+---
+doc_id: "skill_creation_template.tooling.changelog"
+doc_type: "changelog"
+topic: "Change log for the skill template toolbox and governance pack"
+anchors:
+  - target: "../Cli_Toolbox_DEVELOPMENT.md"
+    relation: "implements"
+    direction: "upstream"
+    reason: "The changelog belongs to the development references set."
+  - target: "../../runtime/SKILL_RUNTIME_CONTRACT.md"
+    relation: "tracks_changes_to"
+    direction: "cross"
+    reason: "Runtime contract changes must be traceable in the changelog."
+---
+
 # Cli_Toolbox 开发文档变更记录
 
 - 2026-02-25
@@ -19,14 +34,7 @@
   - `create_skill_from_template.py` 默认资源新增 `tests/`。
   - 引入生成回归测试，确保 profile 输出面不漂移。
 - 2026-03-11
-  - 将模板门面重排为新的 7 章结构：
-    - `技能定位`
-    - `适用域`
-    - `可用工具简述&入口`
-    - `文档指引&入口`
-    - `工作流指引`
-    - `顶层常驻通用规则`
-    - `结构索引`
-  - basic 与 staged 模板同步切换到“工具入口 / 文档入口 / 工作流 / 顶层常驻规则”分层。
-  - runtime contract、模板契约、tooling 文档与回归测试同步更新。
-  - 为模板/治理类技能补充“双段写法”协议，并将 `技能定位`、`适用域` 到后续章节统一收敛为 `技能本体 + 规则说明`。
+  - 将模板技能自身重构为 `facade + routing + topic docs + index` 的文档树。
+  - 将 `skill-doc-structure` 写入 runtime contract、authoring contract、playbook 与模板资产，升为显式执行合同。
+  - basic / staged 模板生成结果新增 task routing、doc-structure policy 与 execution rules。
+  - tooling 文档、生成器与回归测试同步切换到新结构。

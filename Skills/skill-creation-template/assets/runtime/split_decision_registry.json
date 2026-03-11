@@ -1,0 +1,24 @@
+{
+  "registry_name": "META_SKILL_DOCSTRUCTURE_SPLIT_DECISION_REGISTRY",
+  "registry_version": "v1",
+  "entries": [
+    {
+      "doc_path": "references/tooling/development/00_ARCHITECTURE_OVERVIEW.md",
+      "doc_id": "skill_creation_template.tooling.architecture_overview",
+      "rule_id": "body_axis_overload",
+      "fingerprint": "2ccba049d5749a83101cad0558a7edf92a683983",
+      "decision": "accepted",
+      "note": "This architecture overview stays as one tooling-architecture topic; module details and index navigation are already split into sibling docs.",
+      "decided_at": "2026-03-11T15:04:27.745Z"
+    },
+    {
+      "doc_path": "references/runtime/SKILL_RUNTIME_CONTRACT.md",
+      "doc_id": "skill_creation_template.runtime.contract_audit",
+      "rule_id": "body_axis_overload",
+      "fingerprint": "830084929e0f09c6cdb5490d34559966b7547ecf",
+      "decision": "accepted",
+      "note": "Runtime contract audit copy remains one runtime-contract topic after the latest rewrite; task/profile/governance axes are already routed to sibling docs.",
+      "decided_at": "2026-03-11T15:04:49.873Z"
+    }
+  ]
+}

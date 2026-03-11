@@ -1,11 +1,12 @@
 {
   "contract_name": "META_SKILL_TEMPLATE_RUNTIME_CONTRACT",
-  "contract_version": "v3",
-  "validation_mode": "cli_first_strict",
+  "contract_version": "v4",
+  "validation_mode": "cli_first_doc_structure",
   "required_fields": [
     "skill_name",
     "authoring_model",
     "routing_protocol",
+    "doc_structure_governance",
     "profile_support",
     "tool_contracts",
     "asset_contracts",
@@ -17,50 +18,85 @@
   ],
   "skill_name": "skill-creation-template",
   "authoring_model": {
-    "skill_md_role": "entry_only",
+    "skill_md_role": "entry_only_facade",
     "facade_sections": [
       "技能定位",
+      "必读顺序",
+      "分类入口",
       "适用域",
-      "可用工具简述&入口",
-      "文档指引&入口",
-      "工作流指引",
-      "顶层常驻通用规则",
+      "执行入口",
+      "读取原则",
       "结构索引"
     ],
-    "extraction_rule": "extract stable runtime structure and governance shape; do not copy source-skill narration, project paths, or project-specific acceptance semantics"
+    "facade_constraint": "SKILL.md may route readers and state stable boundaries only; deep governance must live in routing or topic docs."
   },
   "routing_protocol": {
     "first_command": "python3 scripts/Cli_Toolbox.py runtime-contract --json",
-    "profile_selection_rule": "prefer basic unless the target skill requires stage-specific runtime contracts, resident docs, and stage-switch discard governance",
+    "task_routing_doc": "references/routing/TASK_ROUTING.md",
+    "profile_routing_doc": "references/routing/PROFILE_ROUTING.md",
     "required_read_sequence": [
       "runtime-contract",
+      "references/routing/TASK_ROUTING.md",
+      "references/governance/SKILL_DOCSTRUCTURE_ENFORCEMENT.md",
+      "references/routing/PROFILE_ROUTING.md when profile selection is required",
       "contract-reference",
       "architecture-playbook",
       "staged-skill-reference when profile=staged_cli_first",
       "create-skill-from-template"
     ],
-    "markdown_role": "human_audit_and_narrow_navigation",
-    "machine_rule_source": "Cli_Toolbox JSON outputs plus generated machine-readable contracts"
+    "machine_rule_source": "Cli_Toolbox JSON outputs plus generated machine-readable contracts",
+    "markdown_role": "human audit, semantic routing, and anchor-based narrowing"
+  },
+  "doc_structure_governance": {
+    "mandatory_skill": "skill-doc-structure",
+    "mandatory_application_scope": [
+      "create_new_skill",
+      "govern_existing_skill",
+      "restructure_template_pack"
+    ],
+    "required_shape": {
+      "tree_order": [
+        "skill_facade",
+        "routing_doc",
+        "topic_atom"
+      ],
+      "optional_nodes": [
+        "index_doc"
+      ],
+      "skill_md_metadata_path": "metadata.doc_structure"
+    },
+    "required_topic_docs": [
+      "references/governance/SKILL_DOCSTRUCTURE_ENFORCEMENT.md",
+      "references/governance/SKILL_AUTHORING_CONTRACT.md",
+      "references/governance/SKILL_ARCHITECTURE_PLAYBOOK.md"
+    ]
   },
   "profile_support": {
     "basic": {
-      "target_shape": "single-axis entry-only skill facade with narrow references and optional runtime contract",
+      "target_shape": "single-axis skill control plane with facade, task routing, and minimal governance atoms",
       "required_generated_paths": [
         "SKILL.md",
         "agents/openai.yaml",
+        "references/routing/TASK_ROUTING.md",
+        "references/governance/SKILL_DOCSTRUCTURE_POLICY.md",
+        "references/governance/SKILL_EXECUTION_RULES.md",
         "references/tooling/Cli_Toolbox_USAGE.md",
         "references/tooling/Cli_Toolbox_DEVELOPMENT.md"
       ],
       "optional_generated_paths": [
         "references/runtime/",
-        "rules/",
-        "assets/templates/"
+        "assets/templates/",
+        "tests/"
       ]
     },
     "staged_cli_first": {
-      "target_shape": "governed staged skill facade with resident docs, stage contracts, runtime contract, and stage template kit",
+      "target_shape": "staged skill control plane with facade, routing, governance atoms, runtime contract, and stage contract kit",
       "required_generated_paths": [
         "SKILL.md",
+        "agents/openai.yaml",
+        "references/routing/TASK_ROUTING.md",
+        "references/governance/SKILL_DOCSTRUCTURE_POLICY.md",
+        "references/governance/SKILL_EXECUTION_RULES.md",
         "references/runtime/SKILL_RUNTIME_CONTRACT.json",
         "references/runtime/SKILL_RUNTIME_CONTRACT.md",
         "references/stages/00_STAGE_INDEX.md",
@@ -80,8 +116,8 @@
   },
   "tool_contracts": {
     "Cli_Toolbox.create_skill_from_template": "Create or refactor a skill from the governed template pack.",
-    "Cli_Toolbox.skill_template": "Return the basic entry-only facade template.",
-    "Cli_Toolbox.staged_skill_template": "Return the staged facade template.",
+    "Cli_Toolbox.skill_template": "Return the basic facade template that already assumes doc-structure governance.",
+    "Cli_Toolbox.staged_skill_template": "Return the staged facade template that routes readers into stage contracts.",
     "Cli_Toolbox.openai_template": "Return the interface metadata template.",
     "Cli_Toolbox.contract_reference": "Return the authoring contract for governed skills.",
     "Cli_Toolbox.staged_skill_reference": "Return the generalized staged profile reference.",
@@ -92,39 +128,46 @@
   "asset_contracts": {
     "basic_assets": [
       "assets/skill_template/SKILL_TEMPLATE.md",
+      "assets/skill_template/references/routing/TASK_ROUTING_TEMPLATE.md",
+      "assets/skill_template/references/governance/SKILL_DOCSTRUCTURE_POLICY_TEMPLATE.md",
+      "assets/skill_template/references/governance/SKILL_EXECUTION_RULES_TEMPLATE.md",
       "assets/skill_template/openai_template.yaml"
     ],
     "staged_assets": [
       "assets/skill_template/SKILL_TEMPLATE_STAGED.md",
+      "assets/skill_template/references/routing/TASK_ROUTING_TEMPLATE.md",
+      "assets/skill_template/references/governance/SKILL_DOCSTRUCTURE_POLICY_TEMPLATE.md",
+      "assets/skill_template/references/governance/SKILL_EXECUTION_RULES_TEMPLATE.md",
       "assets/skill_template/runtime/SKILL_RUNTIME_CONTRACT_TEMPLATE.json",
       "assets/skill_template/runtime/SKILL_RUNTIME_CONTRACT_TEMPLATE.md",
       "assets/skill_template/stages/00_STAGE_INDEX_TEMPLATE.md",
       "assets/skill_template/stages/README_STAGE_SYSTEM_TEMPLATE.md",
       "assets/skill_template/stages/STAGE_TEMPLATE/*"
     ],
-    "generated_output_expectation": "generated skills must be directly editable, facade-first, and consistent with the selected profile without requiring post-generation structural patching"
+    "generated_output_expectation": "generated skills must be facade-first, doc-structure-complete, and directly editable without post-generation structural rescue"
   },
   "governance_rules": [
-    "SKILL.md must remain an entry-only facade, not a pile of governance details.",
-    "The default template surface follows the standard 7-chapter entry layout.",
-    "For template or governance skills, sections may use a skill-body-plus-rule-note two-part form; the rule note only explains writing rules and must stay concise.",
-    "The 适用域 section must be split into semantically coherent domains and must not mix cross-domain or cross-stage actions into one scope.",
+    "SKILL.md must remain an entry-only facade, not a mixed governance body.",
+    "skill-doc-structure is mandatory for both new-skill creation and existing-skill governance.",
+    "Keep the primary reading path as facade -> routing -> topic atom before adding graph cross-links.",
+    "The existing 技能本体 / 规则说明 convention may survive only in routing or topic docs where it remains semantically local.",
     "If a skill has runtime rules, the model must consume machine-readable contracts through CLI outputs instead of treating markdown as the runtime rule source.",
-    "staged_cli_first skills must explicitly define top-level resident docs, stage order, stage checklist, stage doc contract, stage command contract, stage graph contract, and stage-switch discard policy.",
+    "staged_cli_first skills must explicitly define resident docs, stage order, stage checklist, stage doc contract, stage command contract, stage graph contract, and stage-switch discard policy.",
     "Template clusters must separate human-readable markdown anchors from machine-readable contracts.",
-    "Do not copy source-skill narration, fixed runtime paths, or project-specific acceptance semantics into generic templates.",
     "Prefer whole-template rewrites over patch stacking when the architecture contract changes.",
-    "When template governance changes, update SKILL facade, runtime contracts, references, assets, generator logic, tooling docs, and regression checks together."
+    "When template governance changes, update facade, runtime contracts, routing docs, references, assets, generator logic, tooling docs, and regression checks together."
   ],
   "validation_closure": [
     "run toolbox self-check commands",
+    "run skill-doc-structure lints on skill-creation-template",
     "generate at least one basic skill sandbox",
     "generate at least one staged skill sandbox",
+    "run skill-doc-structure lints on generated sandboxes",
     "verify staged assets include stage checklist and contract quartet",
     "keep tooling docs and regression tests in sync with generator behavior"
   ],
   "notes": [
     "This contract governs skill-creation-template itself.",
-    "The facade shape replaces the older generic abstract-layer/business-layer heading scheme with a routed template facade."
+    "The skill now treats skill-doc-structure as an explicit mandatory contract."
   ]
 }

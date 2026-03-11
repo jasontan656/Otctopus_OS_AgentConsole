@@ -1,3 +1,18 @@
+---
+doc_id: "skill_creation_template.asset.toolbox_development_template"
+doc_type: "template_doc"
+topic: "Template for a generated skill's Cli_Toolbox development entry"
+anchors:
+  - target: "Cli_Toolbox_USAGE_TEMPLATE.md"
+    relation: "pairs_with"
+    direction: "lateral"
+    reason: "Usage and development templates are paired."
+  - target: "Cli_Toolbox_DEV_ARCHITECTURE_TEMPLATE.md"
+    relation: "routes_to"
+    direction: "downstream"
+    reason: "The development entry should route readers into the architecture template."
+---
+
 # Cli_Toolbox 开发文档（入口）
 
 适用技能：`${skill_name}`
@@ -24,6 +39,7 @@
   - `10_MODULE_CATALOG.yaml`
   - 对应模块文档
 - 若模板或工具会影响模型如何读取运行态规则，必须同步更新模板合同、架构手册与正文模板。
+- 若模板或工具会影响 facade / routing / atomic doc tree，必须同步更新 `references/routing/` 与 `references/governance/`。
 - 若技能使用 staged CLI-first profile，必须同步维护阶段目录与 runtime contract。
 
 ## 版本变更记录

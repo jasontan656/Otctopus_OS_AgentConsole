@@ -1,3 +1,18 @@
+---
+doc_id: "skill_creation_template.asset.stage_rules_template"
+doc_type: "template_doc"
+topic: "Template for one stage rules document"
+anchors:
+  - target: "INSTRUCTION.md"
+    relation: "pairs_with"
+    direction: "lateral"
+    reason: "Stage rules should stay aligned with stage instruction."
+  - target: "../00_STAGE_INDEX_TEMPLATE.md"
+    relation: "implements"
+    direction: "upstream"
+    reason: "The stage index routes readers into stage rules."
+---
+
 # <stage_name> Rules Template
 
 ## resident docs

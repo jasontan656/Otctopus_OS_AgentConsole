@@ -1,3 +1,18 @@
+---
+doc_id: "skill_creation_template.asset.toolbox_usage_template"
+doc_type: "template_doc"
+topic: "Template for a generated skill's Cli_Toolbox usage doc"
+anchors:
+  - target: "Cli_Toolbox_DEVELOPMENT_TEMPLATE.md"
+    relation: "pairs_with"
+    direction: "lateral"
+    reason: "Usage and development templates should be maintained together."
+  - target: "references/governance/SKILL_DOCSTRUCTURE_POLICY_TEMPLATE.md"
+    relation: "governed_by"
+    direction: "downstream"
+    reason: "Generated tool docs should also respect doc-structure governance."
+---
+
 # Cli_Toolbox 使用文档
 
 适用技能：`${skill_name}`
@@ -46,6 +61,9 @@
   - `references/tooling/development/10_MODULE_CATALOG.yaml`
   - `references/tooling/development/20_CATEGORY_INDEX.md`
   - 对应模块文档（`references/tooling/development/modules/*.md`）
+- 若 skill 已采用 facade + routing + atomic docs 结构，还需同步更新：
+  - `references/routing/`
+  - `references/governance/`
 - 若技能采用 staged CLI-first 复杂 profile，还应补齐：
   - `references/runtime/`
   - `references/stages/`

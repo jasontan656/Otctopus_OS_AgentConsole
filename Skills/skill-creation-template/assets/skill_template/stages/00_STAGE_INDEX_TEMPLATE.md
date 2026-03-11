@@ -1,7 +1,24 @@
+---
+doc_id: "skill_creation_template.asset.stage_index_template"
+doc_type: "template_doc"
+topic: "Template for the staged skill stage index document"
+anchors:
+  - target: "README_STAGE_SYSTEM_TEMPLATE.md"
+    relation: "pairs_with"
+    direction: "lateral"
+    reason: "The stage index works with the stage system template."
+  - target: "../SKILL_TEMPLATE_STAGED.md"
+    relation: "implements"
+    direction: "upstream"
+    reason: "The staged facade template routes readers into the stage index."
+---
+
 # Stage Index Template
 
 ## 顶层常驻文档
-- `replace_me`
+- `references/governance/SKILL_DOCSTRUCTURE_POLICY.md`
+- `references/governance/SKILL_EXECUTION_RULES.md`
+- `references/tooling/Cli_Toolbox_USAGE.md`
 
 ## 统一入口
 - `python3 scripts/Cli_Toolbox.py stage-checklist --stage <stage> --json`

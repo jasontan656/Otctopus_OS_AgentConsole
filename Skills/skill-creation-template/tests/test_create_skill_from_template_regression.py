@@ -37,9 +37,13 @@ class CreateSkillFromTemplateRegressionTest(unittest.TestCase):
             skill_md = (skill_dir / "SKILL.md").read_text(encoding="utf-8")
 
             self.assertIn("## 1. 技能定位", skill_md)
-            self.assertIn("## 2. 适用域", skill_md)
-            self.assertIn("## 6. 顶层常驻通用规则", skill_md)
+            self.assertIn("## 2. 必读顺序", skill_md)
+            self.assertIn("## 6. 读取原则", skill_md)
             self.assertIn("## 7. 结构索引", skill_md)
+            self.assertIn("metadata:", skill_md)
+            self.assertTrue((skill_dir / "references" / "routing" / "TASK_ROUTING.md").exists())
+            self.assertTrue((skill_dir / "references" / "governance" / "SKILL_DOCSTRUCTURE_POLICY.md").exists())
+            self.assertTrue((skill_dir / "references" / "governance" / "SKILL_EXECUTION_RULES.md").exists())
             self.assertTrue((skill_dir / "tests").exists())
             self.assertFalse((skill_dir / "references" / "runtime").exists())
 
@@ -60,7 +64,10 @@ class CreateSkillFromTemplateRegressionTest(unittest.TestCase):
             )
 
             self.assertEqual(runtime_contract["skill_profile"], "staged_cli_first")
+            self.assertEqual(runtime_contract["doc_structure_governance"]["mandatory_skill"], "skill-doc-structure")
             self.assertIn("stage-checklist", runtime_contract["stage_contract_policy"]["required_contracts"])
+            self.assertTrue((skill_dir / "references" / "routing" / "TASK_ROUTING.md").exists())
+            self.assertTrue((skill_dir / "references" / "governance" / "SKILL_DOCSTRUCTURE_POLICY.md").exists())
             self.assertTrue(
                 (skill_dir / "assets" / "templates" / "stages" / "STAGE_TEMPLATE" / "CHECKLIST.json").exists()
             )

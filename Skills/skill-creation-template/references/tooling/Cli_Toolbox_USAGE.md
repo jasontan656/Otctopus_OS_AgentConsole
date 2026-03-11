@@ -1,3 +1,22 @@
+---
+doc_id: "skill_creation_template.tooling.usage"
+doc_type: "tooling_usage"
+topic: "Usage guide for the skill-creation-template Cli_Toolbox"
+anchors:
+  - target: "../runtime/SKILL_RUNTIME_CONTRACT.md"
+    relation: "implements"
+    direction: "upstream"
+    reason: "Tool usage must follow the runtime contract."
+  - target: "../governance/SKILL_AUTHORING_CONTRACT.md"
+    relation: "details"
+    direction: "upstream"
+    reason: "The authoring contract defines what these tools must support."
+  - target: "Cli_Toolbox_DEVELOPMENT.md"
+    relation: "pairs_with"
+    direction: "lateral"
+    reason: "Development documentation complements the usage guide."
+---
+
 # Cli_Toolbox 使用文档
 
 适用技能：`skill-creation-template`
@@ -38,26 +57,26 @@
 
 ### Cli_Toolbox.runtime_contract
 - 人类叙事版输入：
-  - 我先想知道这个模板技能现在到底要求我按什么结构创建技能。
+  - 我先想知道这个模板技能现在到底要求我按什么结构创建或治理技能。
 - 电脑动作发生了什么：
   - 系统执行 `python3 scripts/Cli_Toolbox.py runtime-contract --json`。
   - 命令读取 `references/runtime/SKILL_RUNTIME_CONTRACT.json` 并输出结构化合同。
 - 人类叙事版输出：
-  - 你会得到当前模板技能的门面结构、profile 支持、工具映射、模板资产契约和验证闭环。
+  - 你会得到当前模板技能的 facade 结构、routing 读序、doc-structure 强制规则、profile 支持、模板资产契约和验证闭环。
 
 ### Cli_Toolbox.create_skill_from_template
 - 人类叙事版输入：
   - 我想创建一个新技能，并直接拿到受治理的骨架。
 - 电脑动作发生了什么：
   - 系统执行 `python3 scripts/Cli_Toolbox.py create-skill-from-template --skill-name my-skill --target-root ~/.codex/skills --profile staged_cli_first --overwrite`。
-  - 脚本会生成 `SKILL.md`、`agents/openai.yaml`、tooling 文档、开发索引，并默认创建 `tests/`。
+  - 脚本会生成 `SKILL.md`、`agents/openai.yaml`、task routing、doc-structure policy、execution rules、tooling 文档，并默认创建 `tests/`。
   - 若使用 `--profile staged_cli_first`，还会补齐：
     - `references/runtime/*`
     - `references/stages/00_STAGE_INDEX.md`
     - `assets/templates/stages/README_STAGE_SYSTEM.md`
     - stage checklist 模板
     - stage doc/command/graph contract 模板
-  - 生成门面默认采用标准化 7 章结构，而不是旧的抽象层/业务层堆叠标题。
+  - 生成门面默认采用极简 facade，并通过 routing / governance docs 显式接入 `skill-doc-structure`。
 - 人类叙事版输出：
   - 你会得到一个可直接继续编辑和治理的技能目录，以及 JSON 结果（`skill_dir`、`profile`、`resources_created`、`write_results`）。
 
@@ -67,7 +86,7 @@
 - 电脑动作发生了什么：
   - 系统执行 `python3 scripts/Cli_Toolbox.py skill-template --json`。
 - 人类叙事版输出：
-  - 你会得到采用 `技能定位/适用域/可用工具简述&入口/文档指引&入口/工作流指引/顶层常驻通用规则/结构索引` 的 basic 门面草稿。
+  - 你会得到采用 `技能定位/必读顺序/分类入口/适用域/执行入口/读取原则/结构索引` 的 basic 门面草稿。
 
 ### Cli_Toolbox.staged_skill_template
 - 人类叙事版输入：
@@ -75,7 +94,7 @@
 - 电脑动作发生了什么：
   - 系统执行 `python3 scripts/Cli_Toolbox.py staged-skill-template --json`。
 - 人类叙事版输出：
-  - 你会得到一份强调 resident docs、stage checklist、合同四件套和 stage-switch discard policy 的 staged 门面草稿。
+  - 你会得到一份强调 resident docs、stage checklist、合同四件套和 stage-switch discard policy 的 staged facade 草稿。
 
 ### Cli_Toolbox.runtime_contract_template
 - 人类叙事版输入：
@@ -103,10 +122,11 @@
 
 ## 同步维护要求
 - 工具变更后必须同步更新本文件与 `Cli_Toolbox_DEVELOPMENT.md`。
-- 若变更了门面结构、staged 合同面或默认生成资源，还必须同步：
+- 若变更了 facade/routing/tree、staged 合同面或默认生成资源，还必须同步：
   - `references/runtime/SKILL_RUNTIME_CONTRACT.json`
-  - `references/skill_template_contract_v1.md`
-  - `references/staged_cli_first_profile_reference.md`
-  - `references/skill_architecture_playbook.md`
+  - `references/governance/SKILL_AUTHORING_CONTRACT.md`
+  - `references/governance/STAGED_PROFILE_REFERENCE.md`
+  - `references/governance/SKILL_ARCHITECTURE_PLAYBOOK.md`
+  - `references/governance/SKILL_DOCSTRUCTURE_ENFORCEMENT.md`
   - `assets/skill_template/*`
   - `tests/test_create_skill_from_template_regression.py`

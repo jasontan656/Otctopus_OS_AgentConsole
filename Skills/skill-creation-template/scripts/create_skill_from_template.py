@@ -77,6 +77,15 @@ def main() -> int:
     toolbox_dev_category_template = Template(load_text(template_dir / "Cli_Toolbox_DEV_CATEGORY_INDEX_TEMPLATE.md"))
     toolbox_dev_module_template = Template(load_text(template_dir / "Cli_Toolbox_DEV_MODULE_TEMPLATE.md"))
     toolbox_dev_changelog_template = Template(load_text(template_dir / "Cli_Toolbox_DEV_CHANGELOG_TEMPLATE.md"))
+    task_routing_template = Template(
+        load_text(template_dir / "references" / "routing" / "TASK_ROUTING_TEMPLATE.md")
+    )
+    docstructure_policy_template = Template(
+        load_text(template_dir / "references" / "governance" / "SKILL_DOCSTRUCTURE_POLICY_TEMPLATE.md")
+    )
+    execution_rules_template = Template(
+        load_text(template_dir / "references" / "governance" / "SKILL_EXECUTION_RULES_TEMPLATE.md")
+    )
     runtime_contract_json_template = Template(load_text(template_dir / "runtime" / "SKILL_RUNTIME_CONTRACT_TEMPLATE.json"))
     runtime_contract_md_template = Template(load_text(template_dir / "runtime" / "SKILL_RUNTIME_CONTRACT_TEMPLATE.md"))
     stage_system_template = Template(load_text(template_dir / "stages" / "README_STAGE_SYSTEM_TEMPLATE.md"))
@@ -89,12 +98,13 @@ def main() -> int:
     short_description = f"{display_name} 的模板化骨架。"
     if args.profile == "staged_cli_first":
         default_prompt = (
-            f"请围绕 {skill_name} 的实际业务目标执行任务；先读取 runtime contract 与阶段合同，"
-            "使用 entry-only facade，严格按 stage checklist 与合同边界执行，不要把创建技能流程本身当作技能目标。"
+            f"请围绕 {skill_name} 的实际业务目标执行任务；先读取 facade、task routing、doc-structure policy、"
+            "runtime contract 与阶段合同，严格按 stage checklist 与合同边界执行，不要把创建技能流程本身当作技能目标。"
         )
     else:
         default_prompt = (
-            f"请围绕 {skill_name} 的实际业务目标执行任务；保持 SKILL.md 为 entry-only facade，不要把创建技能流程本身当作技能目标。"
+            f"请围绕 {skill_name} 的实际业务目标执行任务；保持 SKILL.md 为 entry-only facade，"
+            "先经过 routing 与 doc-structure policy，再进入真正需要的原子文档。"
         )
 
     skill_md = normalize_generated_skill_md(
@@ -112,6 +122,9 @@ def main() -> int:
     toolbox_dev_category_md = toolbox_dev_category_template.safe_substitute(skill_name=skill_name)
     toolbox_dev_module_md = toolbox_dev_module_template.safe_substitute(skill_name=skill_name)
     toolbox_dev_changelog_md = toolbox_dev_changelog_template.safe_substitute(skill_name=skill_name)
+    task_routing_md = task_routing_template.safe_substitute(skill_name=skill_name)
+    docstructure_policy_md = docstructure_policy_template.safe_substitute(skill_name=skill_name)
+    execution_rules_md = execution_rules_template.safe_substitute(skill_name=skill_name)
     runtime_contract_json = runtime_contract_json_template.safe_substitute(skill_name=skill_name)
     runtime_contract_md = runtime_contract_md_template.safe_substitute(skill_name=skill_name)
     stage_system_md = stage_system_template.safe_substitute(skill_name=skill_name)
@@ -124,6 +137,19 @@ def main() -> int:
     )
     results[str(skill_dir / "references" / "tooling" / "Cli_Toolbox_USAGE.md")] = write_text(
         skill_dir / "references" / "tooling" / "Cli_Toolbox_USAGE.md", toolbox_usage_md, args.overwrite
+    )
+    results[str(skill_dir / "references" / "routing" / "TASK_ROUTING.md")] = write_text(
+        skill_dir / "references" / "routing" / "TASK_ROUTING.md", task_routing_md, args.overwrite
+    )
+    results[str(skill_dir / "references" / "governance" / "SKILL_DOCSTRUCTURE_POLICY.md")] = write_text(
+        skill_dir / "references" / "governance" / "SKILL_DOCSTRUCTURE_POLICY.md",
+        docstructure_policy_md,
+        args.overwrite,
+    )
+    results[str(skill_dir / "references" / "governance" / "SKILL_EXECUTION_RULES.md")] = write_text(
+        skill_dir / "references" / "governance" / "SKILL_EXECUTION_RULES.md",
+        execution_rules_md,
+        args.overwrite,
     )
     results[str(skill_dir / "references" / "tooling" / "Cli_Toolbox_DEVELOPMENT.md")] = write_text(
         skill_dir / "references" / "tooling" / "Cli_Toolbox_DEVELOPMENT.md", toolbox_development_md, args.overwrite

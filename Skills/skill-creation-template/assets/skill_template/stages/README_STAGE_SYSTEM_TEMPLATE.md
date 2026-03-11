@@ -1,3 +1,18 @@
+---
+doc_id: "skill_creation_template.asset.stage_system_template"
+doc_type: "template_doc"
+topic: "Template for the staged skill stage system overview"
+anchors:
+  - target: "00_STAGE_INDEX_TEMPLATE.md"
+    relation: "pairs_with"
+    direction: "lateral"
+    reason: "The stage system overview and stage index are maintained together."
+  - target: "../runtime/SKILL_RUNTIME_CONTRACT_TEMPLATE.md"
+    relation: "implements"
+    direction: "upstream"
+    reason: "The stage system template depends on the staged runtime contract template."
+---
+
 # Stage System Template
 
 适用技能：`${skill_name}`
