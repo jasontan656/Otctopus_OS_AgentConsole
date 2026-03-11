@@ -33,7 +33,7 @@ families:
         trigger_summary: "当需要治理 skills 内部文档组织、单 topic 原子文档、锚点图谱与文档结构 runtime 时使用。"
         companion_skills:
           - "skill-naming-manager"
-          - "Meta-VUE3-WebUI-frontend"
+          - "Dev-VUE3-WebUI-Frontend"
         migrated_from:
           - "Meta-Skill-DocStructure"
       - canonical_id: "skill-creation-template"
@@ -48,3 +48,19 @@ families:
           - "skill-mirror-to-codex"
         migrated_from:
           - "Meta-Skill-Template"
+  - family: "[DEV]"
+    description: "开发相关的技能收敛在一起管理。"
+    members:
+      - canonical_id: "dev-vue3-webui-frontend"
+        display_name: "Dev-VUE3-WebUI-Frontend"
+        prefix: "dev"
+        family: "[DEV]"
+        role_tag: "frontend-standards-showroom"
+        status: "active"
+        trigger_summary: "当进行前端开发，需要项目定制 Vue3 组件使用方式、自包含 UI 界面、展厅级可视化效果与前端规范时必须使用。"
+        companion_skills:
+          - "4-Octupos-OS-Frontend"
+          - "skill-doc-structure"
+        migrated_from:
+          - "meta-vue3-webui-frontend"
+          - "Meta-VUE3-WebUI-frontend"

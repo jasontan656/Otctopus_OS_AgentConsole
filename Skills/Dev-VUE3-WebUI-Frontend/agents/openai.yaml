@@ -1,0 +1,4 @@
+interface:
+  display_name: "Dev-VUE3-WebUI-Frontend"
+  short_description: "Required frontend development skill for project-specific Vue3 components, self-contained UI showroom, visible-effect review, and frontend standards."
+  default_prompt: "Use Dev-VUE3-WebUI-Frontend as the required staged frontend skill for project-specific Vue3 components, self-contained UI surfaces, visible showroom review, and frontend standards. Read the runtime contract first, then the current stage contracts, and treat ui-dev as the runnable showroom that visualizes the skill's live doc graph."

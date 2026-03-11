@@ -1,4 +1,0 @@
-interface:
-  display_name: "Meta VUE3 WebUI Frontend"
-  short_description: "治理 Vue3 Web UI 规范、前端展厅、graph 展示与可复用组件资产的多 stage 技能。"
-  default_prompt: "Use Meta-VUE3-WebUI-frontend as a staged frontend skill. Read the runtime contract first, then the current stage contracts, and treat ui-dev as the runnable showroom that visualizes the skill's live doc graph and frontend standards."
