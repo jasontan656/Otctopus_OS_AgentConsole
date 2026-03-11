@@ -60,3 +60,5 @@ At the current phase:
 - the supported model profile is currently GPT-5.4 with high reasoning effort only
 - other models are unsupported and unverified, so behavior equivalence must not be assumed
 - no cross-environment compatibility work is promised at this stage
+- the installation flow expects a dedicated GitHub repository binding for Octopus OS
+- operators should use a fresh GitHub account, or fully back up and clear the current one before binding it to this machine workflow

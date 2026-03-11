@@ -102,3 +102,16 @@ It exists so AI can keep reading the recent product evolution before the main it
   - `/home/jasontan656/AI_Projects/octopus-os-agent-console/README.md`
 - next_steps:
   - Verify the updated sync path against the live codex installation directory and continue refining the release-grade install surface.
+
+## 2026-03-11 03:15:29Z - Dedicated install-root bootstrap and GitHub binding
+
+- author: `codex`
+- summary: Shifted Octopus OS installation from reusing an existing codex skills path to provisioning a dedicated install root, validating a clean Codex skill state, capturing a GitHub repository binding, and creating a sibling workspace mirror.
+- decisions:
+  - The installer now provisions the latest Codex CLI into a dedicated install root, derives <install-root>/.codex/skills, rejects dirty user-skill state, requires GitHub binding plus explicit risk acknowledgement, and creates a sibling octopus-os-agent-console workspace for ongoing mirror-first skill development.
+- affected_paths:
+  - `/home/jasontan656/AI_Projects/octopus-os-agent-console/product_tools/octopus_os_agent_console.py`
+  - `/home/jasontan656/AI_Projects/octopus-os-agent-console/README.md`
+  - `/home/jasontan656/AI_Projects/octopus-os-agent-console/docs/INSTALL_AND_CLEANUP_MODEL.md`
+- next_steps:
+  - Verify Constitution lint, sync updated skills to the live Codex installation directory, and continue tightening the release-grade installer contract.

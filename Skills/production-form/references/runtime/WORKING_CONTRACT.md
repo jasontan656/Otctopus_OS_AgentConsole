@@ -17,9 +17,9 @@
 - Near-term direction: shape a self-contained AI collaboration stack instead of depending on opaque external skill bundles
 - Install surface: command-line-first and one-line callable
 - Host environment boundary: support only the author's current Codex CLI + VS Code workflow
-- Runtime boundary: support Codex-style `.../.codex/skills` targets only
+- Runtime boundary: provision a dedicated install root and derive the Codex skills directory as `<install-root>/.codex/skills`
 - Model boundary: support only `Codex + GPT-5.4 high reasoning effort`; other models are unsupported and untested
-- Install deployment boundary: sync only real skill roots into `~/.codex/skills`, remove accidental root-level `~/.codex/skills/AGENTS.md`, and mirror both root `AGENTS.md` and `Skills/AGENTS.md` into the local workspace
+- Install deployment boundary: first install the latest Codex CLI into the dedicated install root, require a clean Codex skills root, require a GitHub skill repository binding, sync only real skill roots into `<install-root>/.codex/skills`, remove accidental root-level `AGENTS.md`, and mirror both root `AGENTS.md` and `Skills/AGENTS.md` into the sibling workspace
 
 ## Logging Rule
 - Read the current product intent before making new product decisions.

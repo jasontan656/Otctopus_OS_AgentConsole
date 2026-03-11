@@ -19,6 +19,7 @@ This repository is the product foundation for Octopus OS. It has two responsibil
 - Supported model profile: GPT-5.4 with high reasoning effort only
 - Other models are unsupported, untested, and may behave differently
 - No other environment adapters are planned at the current phase
+- A dedicated GitHub repository binding is required for Octopus OS skill evolution and Git automation
 - The repository currently changes at a very high pace, often every 10 to 15 minutes
 - Commit-by-commit reading is not a meaningful way to learn the system yet; use the higher-level product documents instead
 
@@ -38,8 +39,9 @@ A better model is:
 - Product-facing files may evolve here, but they must not pollute `~/.codex/skills`
 - Skill roots must remain pushable through `skill-mirror-to-codex`
 - Install and cleanup must stay manifest-driven instead of using guess-based deletion
-- Installation is limited to Codex-style targets shaped like `.../.codex/skills`
-- Non-Codex targets are rejected by the installer
+- Installation now targets a dedicated Codex install root instead of reusing an arbitrary existing `~/.codex/skills`
+- The target Codex skills directory must be clean before Octopus OS is installed; only Codex initial `.system` entries are allowed
+- A dedicated GitHub skill repository binding is mandatory during installation
 - The long-term target is a self-contained stack of skills and workflows owned by the product itself, reducing dependence on third-party skill installs and keeping AI behavior explicit, safe, and controllable
 
 ## One-Line Install
@@ -47,20 +49,29 @@ A better model is:
 Current install is command-line-first and can be run as a single command:
 
 ```bash
-python3 product_tools/octopus_os_agent_console.py install --runtime-target codex-gpt-5.4-high --codex-root ~/.codex/skills --workspace-root ~/Octopus_OS_Agent_Console && codex -C ~/Octopus_OS_Agent_Console -m gpt-5.4 -c 'model_reasoning_effort="high"'
+python3 product_tools/octopus_os_agent_console.py install --runtime-target codex-gpt-5.4-high --install-root ~/Octopus_Runtime/codex-home --github-skill-repo git@github.com:YOUR_ACCOUNT/octopus-os-skills.git --github-auth-mode ssh --acknowledge-github-control-risk && HOME=~/Octopus_Runtime/codex-home ~/Octopus_Runtime/codex-home/bin/codex -C ~/Octopus_Runtime/octopus-os-agent-console -m gpt-5.4 -c 'model_reasoning_effort="high"'
 ```
 
 The installer will refuse to continue if:
 
-- the target skills directory does not match a Codex-style path such as `.../.codex/skills`
 - the runtime target is not explicitly acknowledged as `codex-gpt-5.4-high`
+- the dedicated Codex skills root is not clean
+- a GitHub skill repository binding is not provided
+- the GitHub control risk warning is not explicitly acknowledged
 
 Install behavior is intentionally narrow:
 
-- it syncs only real skill roots into `~/.codex/skills`
-- it removes any accidental root-level `~/.codex/skills/AGENTS.md`
-- it mirrors the product workspace, including the repository root `AGENTS.md` and `Skills/AGENTS.md`
-- it then launches a new Codex CLI session against the workspace so the installed skill ecosystem is active immediately
+- it installs the latest Codex CLI into the dedicated install root by using the official npm package
+- it uses that install root as the Codex home boundary and syncs only real skill roots into `<install-root>/.codex/skills`
+- it removes any accidental root-level `<install-root>/.codex/skills/AGENTS.md`
+- it creates a sibling `octopus-os-agent-console` workspace mirror, including the repository root `AGENTS.md` and `Skills/AGENTS.md`
+- it captures a GitHub skill repository binding so Octopus OS can later drive its Git workflow
+- it then launches a new Codex CLI session against the sibling workspace so the installed skill ecosystem is active immediately
+
+GitHub binding warning:
+
+- this machine flow is intentionally GitHub-controlling
+- use a fresh GitHub account for Octopus OS, or fully back up and clear the existing account before binding it
 
 ## Entry Documents
 

@@ -4,7 +4,9 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import shlex
 import shutil
+import stat
 import subprocess
 from datetime import UTC, datetime
 from pathlib import Path
@@ -22,11 +24,23 @@ SYSTEM_SKILL_NAMESPACE = ".system"
 SYSTEM_SKILL_MARKER = ".codex-system-skills.marker"
 SKILLS_DIR_NAME = "Skills"
 WORKSPACE_MARKER = ".octopus_os_workspace_install.json"
+PRODUCT_RUNTIME_DIR = ".product_runtime"
+GITHUB_BINDING_FILE = "github_skill_repo_binding.json"
+DEFAULT_WORKSPACE_DIR_NAME = "octopus-os-agent-console"
+CODEX_HOME_DIR_NAME = ".codex"
+CODEX_CLI_PACKAGE = "@openai/codex@latest"
+CODEX_CLI_INSTALL_MODE_ENV = "OCTOPUS_OS_CODEX_INSTALL_MODE"
+DEFAULT_GITHUB_API_ENV_VAR = "GITHUB_TOKEN"
 PRODUCT_NAME = "Octopus OS - Natural-Language-Driven Multi-Agent Console"
 SUPPORTED_RUNTIME_TARGET = "codex-gpt-5.4-high"
 SUPPORTED_RUNTIME_LABEL = "Codex + GPT-5.4 high reasoning effort"
 SUPPORTED_HOST_ENV_LABEL = "Codex CLI + VS Code"
 FORBIDDEN_CODEX_ROOT_FILES = ("AGENTS.md",)
+ALLOWED_CLEAN_CODEX_ROOT_ENTRIES = {SYSTEM_SKILL_NAMESPACE}
+
+
+def _shell_join(parts: list[str]) -> str:
+    return " ".join(shlex.quote(str(part)) for part in parts)
 
 
 def _resolve_repo_root(raw: str | None) -> Path:
@@ -35,33 +49,46 @@ def _resolve_repo_root(raw: str | None) -> Path:
     return Path(__file__).resolve().parents[1]
 
 
-def _resolve_codex_root(raw: str | None) -> Path:
-    if raw:
-        return Path(raw).expanduser().resolve()
-    env_root = os.environ.get("CODEX_SKILLS_ROOT")
-    if env_root:
-        return Path(env_root).expanduser().resolve()
-    return (Path.home() / ".codex" / "skills").resolve()
+def _validate_legacy_codex_root(raw: str) -> Path:
+    codex_root = Path(raw).expanduser().resolve()
+    if codex_root.name != "skills" or codex_root.parent.name != CODEX_HOME_DIR_NAME:
+        raise ValueError(
+            "legacy codex root must match .../.codex/skills when used as a compatibility input; "
+            f"got: {codex_root}"
+        )
+    return codex_root
 
 
-def _resolve_workspace_root(raw: str | None) -> Path:
+def _resolve_install_root(raw: str | None, legacy_codex_root: str | None) -> Path:
     if raw:
         return Path(raw).expanduser().resolve()
-    return (Path.home() / "Octopus_OS_Agent_Console").resolve()
+    if legacy_codex_root:
+        return _validate_legacy_codex_root(legacy_codex_root).parent.parent.resolve()
+    return (Path.home() / "Octopus_Runtime" / "codex-home").resolve()
+
+
+def _derive_codex_home(install_root: Path) -> Path:
+    return install_root / CODEX_HOME_DIR_NAME
+
+
+def _derive_codex_root(install_root: Path) -> Path:
+    return _derive_codex_home(install_root) / "skills"
+
+
+def _derive_codex_cli_bin(install_root: Path) -> Path:
+    return install_root / "bin" / "codex"
+
+
+def _resolve_workspace_root(raw: str | None, install_root: Path) -> Path:
+    if raw:
+        return Path(raw).expanduser().resolve()
+    return (install_root.parent / DEFAULT_WORKSPACE_DIR_NAME).resolve()
 
 
 def _resolve_state_root(raw: str | None) -> Path:
     if raw:
         return Path(raw).expanduser().resolve()
     return (Path.home() / ".octopus-os-agent-console" / "install_sessions").resolve()
-
-
-def _validate_codex_root_structure(codex_root: Path) -> None:
-    if codex_root.name != "skills" or codex_root.parent.name != ".codex":
-        raise ValueError(
-            "codex root must be a Codex skills directory shaped like .../.codex/skills; "
-            f"refusing install for non-codex target: {codex_root}"
-        )
 
 
 def _require_supported_runtime_target(runtime_target: str | None) -> str:
@@ -74,12 +101,81 @@ def _require_supported_runtime_target(runtime_target: str | None) -> str:
     return normalized
 
 
-def _build_codex_launch_command(workspace_root: Path) -> str:
-    return (
-        f'codex -C "{workspace_root}" '
-        '-m gpt-5.4 '
-        '-c \'model_reasoning_effort="high"\''
+def _normalize_required_text(raw: str | None, field_name: str) -> str:
+    value = str(raw or "").strip()
+    if not value:
+        raise ValueError(f"{field_name} is required")
+    return value
+
+
+def _normalize_optional_text(raw: str | None) -> str | None:
+    value = str(raw or "").strip()
+    return value or None
+
+
+def _build_codex_cli_install_command(install_root: Path) -> str:
+    return _shell_join(["npm", "install", "-g", CODEX_CLI_PACKAGE, "--prefix", str(install_root)])
+
+
+def _build_codex_launch_command(install_root: Path, workspace_root: Path) -> str:
+    command = _shell_join(
+        [
+            str(_derive_codex_cli_bin(install_root)),
+            "-C",
+            str(workspace_root),
+            "-m",
+            "gpt-5.4",
+            "-c",
+            'model_reasoning_effort="high"',
+        ]
     )
+    return f"HOME={shlex.quote(str(install_root))} {command}"
+
+
+def _build_github_binding(args: argparse.Namespace, *, require_complete: bool) -> dict[str, object]:
+    repo = _normalize_optional_text(getattr(args, "github_skill_repo", None))
+    auth_mode = _normalize_optional_text(getattr(args, "github_auth_mode", None))
+    if require_complete:
+        repo = _normalize_required_text(repo, "--github-skill-repo")
+        auth_mode = _normalize_required_text(auth_mode, "--github-auth-mode")
+        if auth_mode not in {"ssh", "api"}:
+            raise ValueError("--github-auth-mode must be ssh or api")
+        if not getattr(args, "acknowledge_github_control_risk", False):
+            raise ValueError(
+                "install requires --acknowledge-github-control-risk because Octopus OS will drive GitHub workflows on this machine"
+            )
+    elif auth_mode and auth_mode not in {"ssh", "api"}:
+        raise ValueError("--github-auth-mode must be ssh or api")
+
+    if not repo or not auth_mode:
+        return {
+            "configured": False,
+            "repo": repo,
+            "auth_mode": auth_mode,
+            "warning": (
+                "Octopus OS requires a dedicated GitHub repository binding for skill evolution and Git automation."
+            ),
+        }
+
+    github_api_env_var = None
+    github_ssh_key_path = None
+    if auth_mode == "api":
+        github_api_env_var = _normalize_optional_text(getattr(args, "github_api_env_var", None)) or DEFAULT_GITHUB_API_ENV_VAR
+    else:
+        github_ssh_key_path = _normalize_optional_text(getattr(args, "github_ssh_key_path", None))
+
+    return {
+        "configured": True,
+        "repo": repo,
+        "auth_mode": auth_mode,
+        "github_api_env_var": github_api_env_var,
+        "github_ssh_key_path": github_ssh_key_path,
+        "risk_acknowledged": bool(getattr(args, "acknowledge_github_control_risk", False)),
+        "warning": (
+            "Use a fresh GitHub account for Octopus OS, or fully back up and clear any existing account state before binding. "
+            "This machine workflow is intentionally GitHub-controlling."
+        ),
+    }
 
 
 def _cleanup_forbidden_codex_root_files(codex_root: Path) -> list[str]:
@@ -94,6 +190,89 @@ def _cleanup_forbidden_codex_root_files(codex_root: Path) -> list[str]:
             target.unlink()
         removed.append(str(target))
     return removed
+
+
+def _summarize_codex_root_cleanliness(codex_root: Path) -> dict[str, object]:
+    if not codex_root.exists():
+        return {
+            "state": "missing",
+            "is_clean": True,
+            "root_entries": [],
+            "unexpected_root_entries": [],
+        }
+
+    root_entries = sorted(child.name for child in codex_root.iterdir())
+    unexpected_root_entries = [
+        entry for entry in root_entries if entry not in ALLOWED_CLEAN_CODEX_ROOT_ENTRIES
+    ]
+    return {
+        "state": "existing",
+        "is_clean": not unexpected_root_entries,
+        "root_entries": root_entries,
+        "unexpected_root_entries": unexpected_root_entries,
+    }
+
+
+def _assert_clean_codex_root(codex_root: Path) -> tuple[dict[str, object], list[str]]:
+    removed_forbidden = _cleanup_forbidden_codex_root_files(codex_root)
+    summary = _summarize_codex_root_cleanliness(codex_root)
+    unexpected = summary["unexpected_root_entries"]
+    if unexpected:
+        raise ValueError(
+            "codex skills root is not clean; only Codex initial .system entries may exist before Octopus OS install. "
+            f"Unexpected entries: {unexpected}"
+        )
+    return summary, removed_forbidden
+
+
+def _install_codex_cli_latest(install_root: Path) -> dict[str, object]:
+    install_root.mkdir(parents=True, exist_ok=True)
+    mode = os.environ.get(CODEX_CLI_INSTALL_MODE_ENV, "npm").strip().lower()
+    codex_bin = _derive_codex_cli_bin(install_root)
+
+    if mode == "stub":
+        codex_bin.parent.mkdir(parents=True, exist_ok=True)
+        codex_bin.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
+        codex_bin.chmod(codex_bin.stat().st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
+        system_root = _derive_codex_root(install_root) / SYSTEM_SKILL_NAMESPACE
+        system_root.mkdir(parents=True, exist_ok=True)
+        marker = system_root / SYSTEM_SKILL_MARKER
+        if not marker.exists():
+            marker.write_text("marker\n", encoding="utf-8")
+        return {
+            "mode": "stub",
+            "command": [CODEX_CLI_INSTALL_MODE_ENV, "stub"],
+            "codex_cli_bin": str(codex_bin),
+            "codex_cli_install_command": _build_codex_cli_install_command(install_root),
+            "version": "stub",
+        }
+
+    npm_bin = shutil.which("npm")
+    if not npm_bin:
+        raise FileNotFoundError("npm is required to install the latest Codex CLI")
+
+    command = [npm_bin, "install", "-g", CODEX_CLI_PACKAGE, "--prefix", str(install_root)]
+    completed = subprocess.run(command, check=False, capture_output=True, text=True)
+    if completed.returncode != 0:
+        raise RuntimeError(completed.stderr.strip() or completed.stdout.strip() or "failed to install Codex CLI")
+    if not codex_bin.exists():
+        raise FileNotFoundError(f"Codex CLI install completed but binary is missing: {codex_bin}")
+
+    version_completed = subprocess.run(
+        [str(codex_bin), "--version"],
+        check=False,
+        capture_output=True,
+        text=True,
+        env={**os.environ, "HOME": str(install_root)},
+    )
+    version = version_completed.stdout.strip() or version_completed.stderr.strip() or "unknown"
+    return {
+        "mode": "npm",
+        "command": command,
+        "codex_cli_bin": str(codex_bin),
+        "codex_cli_install_command": _build_codex_cli_install_command(install_root),
+        "version": version,
+    }
 
 
 def _resolve_skills_root(repo_root: Path) -> Path:
@@ -154,7 +333,47 @@ def _copy_tree(source: Path, destination: Path) -> None:
     shutil.copytree(source, destination)
 
 
-def _build_plan(repo_root: Path, codex_root: Path, workspace_root: Path) -> dict[str, object]:
+def _build_recommended_install_command(
+    install_root: Path,
+    github_binding: dict[str, object],
+) -> str:
+    repo = str(github_binding.get("repo") or "git@github.com:YOUR_ACCOUNT/octopus-os-skills.git")
+    auth_mode = str(github_binding.get("auth_mode") or "ssh")
+    parts = [
+        "python3",
+        "product_tools/octopus_os_agent_console.py",
+        "install",
+        "--runtime-target",
+        SUPPORTED_RUNTIME_TARGET,
+        "--install-root",
+        str(install_root),
+        "--github-skill-repo",
+        repo,
+        "--github-auth-mode",
+        auth_mode,
+        "--acknowledge-github-control-risk",
+    ]
+    if auth_mode == "api":
+        parts.extend(
+            [
+                "--github-api-env-var",
+                str(github_binding.get("github_api_env_var") or DEFAULT_GITHUB_API_ENV_VAR),
+            ]
+        )
+    elif github_binding.get("github_ssh_key_path"):
+        parts.extend(["--github-ssh-key-path", str(github_binding["github_ssh_key_path"])])
+    return _shell_join(parts)
+
+
+def _build_plan(
+    repo_root: Path,
+    install_root: Path,
+    workspace_root: Path,
+    github_binding: dict[str, object],
+) -> dict[str, object]:
+    codex_root = _derive_codex_root(install_root)
+    codex_cli_bin = _derive_codex_cli_bin(install_root)
+    cleanliness = _summarize_codex_root_cleanliness(codex_root)
     skills: list[dict[str, object]] = []
     overwrite_skills: list[str] = []
     for skill in _discover_skill_roots(repo_root):
@@ -169,32 +388,29 @@ def _build_plan(repo_root: Path, codex_root: Path, workspace_root: Path) -> dict
                 "destination_exists": exists,
             }
         )
+    install_command = _build_recommended_install_command(install_root, github_binding)
     return {
         "repo_root": str(repo_root),
         "skills_root": str(_resolve_skills_root(repo_root)),
+        "install_root": str(install_root),
+        "codex_home": str(_derive_codex_home(install_root)),
         "codex_root": str(codex_root),
+        "codex_cli_bin": str(codex_cli_bin),
         "workspace_root": str(workspace_root),
         "supported_host_env": SUPPORTED_HOST_ENV_LABEL,
         "supported_runtime_target": SUPPORTED_RUNTIME_TARGET,
         "supported_runtime_label": SUPPORTED_RUNTIME_LABEL,
-        "codex_launch_command": _build_codex_launch_command(workspace_root),
-        "recommended_install_command": (
-            "python3 product_tools/octopus_os_agent_console.py install "
-            f"--runtime-target {SUPPORTED_RUNTIME_TARGET} "
-            f"--codex-root {codex_root} "
-            f"--workspace-root {workspace_root}"
-        ),
+        "codex_cli_install_command": _build_codex_cli_install_command(install_root),
+        "codex_launch_command": _build_codex_launch_command(install_root, workspace_root),
+        "recommended_install_command": install_command,
         "recommended_install_and_launch_command": (
-            "python3 product_tools/octopus_os_agent_console.py install "
-            f"--runtime-target {SUPPORTED_RUNTIME_TARGET} "
-            f"--codex-root {codex_root} "
-            f'--workspace-root "{workspace_root}"'
-            " && "
-            f"{_build_codex_launch_command(workspace_root)}"
+            f"{install_command} && {_build_codex_launch_command(install_root, workspace_root)}"
         ),
+        "codex_root_cleanliness": cleanliness,
         "skills": skills,
         "overwrite_skills": overwrite_skills,
         "workspace_exists": workspace_root.exists(),
+        "github_binding": github_binding,
     }
 
 
@@ -254,6 +470,21 @@ def _prompt_confirm(lang: str, prompt_en: str, prompt_zh: str, default: bool = F
     return answer in {"y", "yes", "1", "true", "ok", "zh", "en"}
 
 
+def _prompt_choice(
+    lang: str,
+    prompt_en: str,
+    prompt_zh: str,
+    options: dict[str, str],
+    default: str,
+) -> str:
+    prompt = _label(lang, prompt_en, prompt_zh)
+    answer = input(f"{prompt} [{default}]: ").strip().lower()
+    selected = answer or default
+    if selected not in options:
+        raise ValueError(f"unsupported choice: {selected}")
+    return selected
+
+
 def _select_wizard_language(args: argparse.Namespace) -> str:
     if args.wizard_language and args.wizard_language != "auto":
         return args.wizard_language
@@ -277,23 +508,26 @@ def _select_wizard_language(args: argparse.Namespace) -> str:
 
 def _print_plan_summary(lang: str, plan: dict[str, object]) -> None:
     skills = plan["skills"]
-    overwrite_skills = plan["overwrite_skills"]
     workspace_exists = plan["workspace_exists"]
+    cleanliness = plan["codex_root_cleanliness"]
+    github_binding = plan["github_binding"]
     print(_label(lang, "Product:", "产品："), PRODUCT_NAME)
     print(_label(lang, "Supported host:", "受支持宿主："), SUPPORTED_HOST_ENV_LABEL)
     print(_label(lang, "Supported runtime:", "受支持运行时："), SUPPORTED_RUNTIME_LABEL)
-    print(_label(lang, "Codex root:", "Codex 根目录："), plan["codex_root"])
+    print(_label(lang, "Install root:", "安装根目录："), plan["install_root"])
+    print(_label(lang, "Codex home:", "Codex Home："), plan["codex_home"])
+    print(_label(lang, "Codex skills root:", "Codex 技能根目录："), plan["codex_root"])
     print(_label(lang, "Workspace root:", "工作区根目录："), plan["workspace_root"])
+    print(_label(lang, "Codex CLI install command:", "Codex CLI 安装命令："), plan["codex_cli_install_command"])
     print(_label(lang, "Launch command:", "启动命令："), plan["codex_launch_command"])
+    print(_label(lang, "Codex root clean state:", "Codex 根目录洁净状态："), cleanliness["state"])
+    print(_label(lang, "Unexpected codex root entries:", "Codex 根目录异常项："), cleanliness["unexpected_root_entries"])
+    print(_label(lang, "GitHub skill repo:", "GitHub 技能仓库："), github_binding.get("repo"))
+    print(_label(lang, "GitHub auth mode:", "GitHub 认证模式："), github_binding.get("auth_mode"))
     print(_label(lang, "Syncable skills:", "可同步技能："), len(skills))
     for skill in skills:
         print(f"  - {skill['name']} -> {skill['destination']}")
     print()
-    if overwrite_skills:
-        print(_label(lang, "Skills that will overwrite existing installs:", "将覆盖现有安装的技能："))
-        for skill_name in overwrite_skills:
-            print(f"  - {skill_name}")
-        print()
     if workspace_exists:
         print(_label(lang, "The workspace root already exists.", "工作区根目录已存在。"))
         print()
@@ -306,23 +540,30 @@ def _print_plan_summary(lang: str, plan: dict[str, object]) -> None:
         f"  - {_label(lang, 'Only Codex with GPT-5.4 high reasoning effort is supported.', '仅支持 Codex + GPT-5.4 high reasoning effort。')}"
     )
     print(
-        f"  - {_label(lang, 'Other models are unsupported, untested, and may behave differently.', '其他模型不受支持、未经测试，效果不可保证。')}"
+        f'  - {_label(lang, "Only Codex CLI in the author\'s Codex CLI + VS Code environment is currently supported.", "当前仅支持作者使用中的 Codex CLI + VS Code 环境。")}'
     )
     print(
-        f'  - {_label(lang, "Only Codex CLI in the author\'s Codex CLI + VS Code environment is currently supported.", "当前仅支持作者使用中的 Codex CLI + VS Code 环境。")}'
+        f"  - {_label(lang, 'Use a fresh GitHub account, or back up and clear the existing one before binding it to Octopus OS.', '请使用新的 GitHub 账户，或先完整备份并清空旧账户资产后再绑定到 Octopus OS。')}"
     )
     print()
 
 
+def _write_github_binding(workspace_root: Path, github_binding: dict[str, object]) -> Path:
+    binding_path = workspace_root / PRODUCT_RUNTIME_DIR / GITHUB_BINDING_FILE
+    _write_json(binding_path, github_binding)
+    return binding_path
+
+
 def plan_command(args: argparse.Namespace) -> int:
     repo_root = _resolve_repo_root(args.repo_root)
-    codex_root = _resolve_codex_root(args.codex_root)
-    workspace_root = _resolve_workspace_root(args.workspace_root)
+    install_root = _resolve_install_root(args.install_root, args.codex_root)
+    workspace_root = _resolve_workspace_root(args.workspace_root, install_root)
+    github_binding = _build_github_binding(args, require_complete=False)
     payload = {
         "status": "ok",
         "action": "plan",
         "product_name": PRODUCT_NAME,
-        "plan": _build_plan(repo_root, codex_root, workspace_root),
+        "plan": _build_plan(repo_root, install_root, workspace_root, github_binding),
     }
     print(json.dumps(payload, ensure_ascii=False, indent=2))
     return 0
@@ -330,17 +571,16 @@ def plan_command(args: argparse.Namespace) -> int:
 
 def install_command(args: argparse.Namespace) -> int:
     repo_root = _resolve_repo_root(args.repo_root)
-    codex_root = _resolve_codex_root(args.codex_root)
-    workspace_root = _resolve_workspace_root(args.workspace_root)
+    install_root = _resolve_install_root(args.install_root, args.codex_root)
+    workspace_root = _resolve_workspace_root(args.workspace_root, install_root)
     state_root = _resolve_state_root(args.state_root)
     runtime_target = _require_supported_runtime_target(getattr(args, "runtime_target", None))
-    _validate_codex_root_structure(codex_root)
-    plan = _build_plan(repo_root, codex_root, workspace_root)
+    github_binding = _build_github_binding(args, require_complete=True)
+    codex_install = _install_codex_cli_latest(install_root)
+    codex_root = _derive_codex_root(install_root)
+    clean_summary, removed_forbidden_codex_root_files = _assert_clean_codex_root(codex_root)
+    plan = _build_plan(repo_root, install_root, workspace_root, github_binding)
 
-    if plan["overwrite_skills"] and not args.allow_overwrite_skills:
-        raise ValueError(
-            "overwrite required for existing codex skills; rerun with --allow-overwrite-skills"
-        )
     if workspace_root.exists() and any(workspace_root.iterdir()) and not args.allow_replace_workspace:
         raise ValueError(
             "workspace root already exists and is not empty; rerun with --allow-replace-workspace"
@@ -349,8 +589,6 @@ def install_command(args: argparse.Namespace) -> int:
     session_id = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
     session_root = state_root / session_id
     backup_root = session_root / "backups"
-    codex_root.mkdir(parents=True, exist_ok=True)
-    removed_forbidden_codex_root_files = _cleanup_forbidden_codex_root_files(codex_root)
 
     installed_entries: list[dict[str, object]] = []
     for skill in plan["skills"]:
@@ -376,12 +614,14 @@ def install_command(args: argparse.Namespace) -> int:
         shutil.rmtree(workspace_root)
     _rsync(repo_root, workspace_root)
 
+    github_binding_path = _write_github_binding(workspace_root, github_binding)
     workspace_marker = workspace_root / WORKSPACE_MARKER
     _write_json(
         workspace_marker,
         {
             "session_id": session_id,
             "repo_root": str(repo_root),
+            "install_root": str(install_root),
             "workspace_root": str(workspace_root),
         },
     )
@@ -391,10 +631,18 @@ def install_command(args: argparse.Namespace) -> int:
         "product_name": PRODUCT_NAME,
         "supported_runtime_target": runtime_target,
         "repo_root": str(repo_root),
+        "install_root": str(install_root),
+        "codex_home": str(_derive_codex_home(install_root)),
         "codex_root": str(codex_root),
+        "codex_cli_bin": codex_install["codex_cli_bin"],
+        "codex_cli_install": codex_install,
         "workspace_root": str(workspace_root),
         "installed_entries": installed_entries,
         "workspace_marker": str(workspace_marker),
+        "github_binding_path": str(github_binding_path),
+        "github_binding": github_binding,
+        "codex_root_cleanliness": clean_summary,
+        "removed_forbidden_codex_root_files": removed_forbidden_codex_root_files,
     }
     manifest_path = session_root / "install_manifest.json"
     _write_json(manifest_path, manifest)
@@ -404,20 +652,20 @@ def install_command(args: argparse.Namespace) -> int:
         "action": "install",
         "manifest_path": str(manifest_path),
         "session_id": session_id,
+        "install_root": str(install_root),
+        "codex_root": str(codex_root),
+        "workspace_root": str(workspace_root),
         "supported_host_env": SUPPORTED_HOST_ENV_LABEL,
         "supported_runtime_target": runtime_target,
-        "codex_launch_command": _build_codex_launch_command(workspace_root),
-        "recommended_install_and_launch_command": (
-            "python3 product_tools/octopus_os_agent_console.py install "
-            f"--runtime-target {runtime_target} "
-            f"--codex-root {codex_root} "
-            f'--workspace-root "{workspace_root}"'
-            " && "
-            f"{_build_codex_launch_command(workspace_root)}"
-        ),
+        "codex_cli_bin": codex_install["codex_cli_bin"],
+        "codex_cli_version": codex_install["version"],
+        "codex_cli_install_command": codex_install["codex_cli_install_command"],
+        "codex_launch_command": _build_codex_launch_command(install_root, workspace_root),
+        "recommended_install_and_launch_command": plan["recommended_install_and_launch_command"],
         "removed_forbidden_codex_root_files": removed_forbidden_codex_root_files,
-        "overwrite_skills": plan["overwrite_skills"],
-        "workspace_root": str(workspace_root),
+        "codex_root_cleanliness": clean_summary,
+        "github_binding_path": str(github_binding_path),
+        "github_binding": github_binding,
     }
     print(json.dumps(payload, ensure_ascii=False, indent=2))
     return 0
@@ -466,30 +714,51 @@ def uninstall_command(args: argparse.Namespace) -> int:
 
 def wizard_command(args: argparse.Namespace) -> int:
     lang = _select_wizard_language(args)
-
     repo_root = _resolve_repo_root(args.repo_root)
-    codex_root = _resolve_codex_root(args.codex_root)
-    workspace_root = _resolve_workspace_root(args.workspace_root)
+    install_root = _resolve_install_root(args.install_root, args.codex_root)
+    workspace_root = _resolve_workspace_root(args.workspace_root, install_root)
     state_root = _resolve_state_root(args.state_root)
 
     if not args.yes:
         _print_header(lang, "Octopus OS Installation Wizard", "章鱼 OS 安装向导")
-        codex_root = Path(
+        install_root = Path(
             _prompt_text(
                 lang,
-                "Codex skills root",
-                "Codex 技能根目录",
-                str(codex_root),
+                "Dedicated Codex install root",
+                "专用 Codex 安装根目录",
+                str(install_root),
             )
         ).expanduser().resolve()
-        workspace_root = Path(
-            _prompt_text(
+        workspace_root = _resolve_workspace_root(args.workspace_root, install_root)
+        args.github_skill_repo = _prompt_text(
+            lang,
+            "GitHub skill repository for Octopus OS",
+            "Octopus OS 使用的 GitHub 技能仓库",
+            str(getattr(args, "github_skill_repo", "") or "git@github.com:YOUR_ACCOUNT/octopus-os-skills.git"),
+        )
+        args.github_auth_mode = _prompt_choice(
+            lang,
+            "GitHub auth mode: ssh or api",
+            "GitHub 认证模式：ssh 或 api",
+            {"ssh": "ssh", "api": "api"},
+            str(getattr(args, "github_auth_mode", "") or "ssh"),
+        )
+        if args.github_auth_mode == "ssh":
+            args.github_ssh_key_path = _prompt_text(
                 lang,
-                "Workspace root",
-                "工作区根目录",
-                str(workspace_root),
+                "SSH key path (optional)",
+                "SSH key 路径（可选）",
+                str(getattr(args, "github_ssh_key_path", "") or "~/.ssh/id_ed25519"),
             )
-        ).expanduser().resolve()
+            args.github_api_env_var = None
+        else:
+            args.github_api_env_var = _prompt_text(
+                lang,
+                "GitHub API token env var",
+                "GitHub API Token 环境变量名",
+                str(getattr(args, "github_api_env_var", "") or DEFAULT_GITHUB_API_ENV_VAR),
+            )
+            args.github_ssh_key_path = None
         runtime_confirmed = _prompt_confirm(
             lang,
             "Confirm that the target runtime is Codex with GPT-5.4 high reasoning effort only.",
@@ -498,28 +767,24 @@ def wizard_command(args: argparse.Namespace) -> int:
         )
         if not runtime_confirmed:
             raise ValueError("wizard aborted because the supported runtime constraint was not accepted")
+        github_risk_confirmed = _prompt_confirm(
+            lang,
+            "Confirm that you are using a fresh GitHub account or have already backed up and cleared the existing one.",
+            "请确认你使用的是新的 GitHub 账户，或旧账户资产已完成备份并清空。",
+            default=False,
+        )
+        if not github_risk_confirmed:
+            raise ValueError("wizard aborted because the GitHub control risk warning was not accepted")
+        args.acknowledge_github_control_risk = True
         args.runtime_target = SUPPORTED_RUNTIME_TARGET
 
     runtime_target = _require_supported_runtime_target(getattr(args, "runtime_target", None))
-    _validate_codex_root_structure(codex_root)
-    plan = _build_plan(repo_root, codex_root, workspace_root)
+    github_binding = _build_github_binding(args, require_complete=True)
+    plan = _build_plan(repo_root, install_root, workspace_root, github_binding)
+
     if not args.yes:
         _print_header(lang, "Install Plan", "安装计划")
         _print_plan_summary(lang, plan)
-
-    allow_overwrite = args.allow_overwrite_skills
-    if plan["overwrite_skills"] and not allow_overwrite:
-        if args.yes:
-            allow_overwrite = True
-        else:
-            allow_overwrite = _prompt_confirm(
-                lang,
-                "Allow overwriting existing codex skill directories?",
-                "允许覆盖已有的 codex 技能目录吗？",
-                default=False,
-            )
-        if not allow_overwrite:
-            raise ValueError("wizard aborted because overwrite approval was not granted")
 
     allow_replace_workspace = args.allow_replace_workspace
     if plan["workspace_exists"] and not allow_replace_workspace:
@@ -547,12 +812,17 @@ def wizard_command(args: argparse.Namespace) -> int:
 
     install_args = SimpleNamespace(
         repo_root=str(repo_root),
-        codex_root=str(codex_root),
+        install_root=str(install_root),
+        codex_root=None,
         workspace_root=str(workspace_root),
         state_root=str(state_root),
         runtime_target=runtime_target,
-        allow_overwrite_skills=allow_overwrite,
         allow_replace_workspace=allow_replace_workspace,
+        github_skill_repo=github_binding["repo"],
+        github_auth_mode=github_binding["auth_mode"],
+        github_ssh_key_path=github_binding.get("github_ssh_key_path"),
+        github_api_env_var=github_binding.get("github_api_env_var"),
+        acknowledge_github_control_risk=True,
     )
     result = install_command(install_args)
     if not args.yes:
@@ -567,13 +837,18 @@ def main() -> int:
     )
     parser.add_argument("action", choices=["plan", "install", "uninstall", "wizard"])
     parser.add_argument("--repo-root")
+    parser.add_argument("--install-root")
     parser.add_argument("--codex-root")
     parser.add_argument("--workspace-root")
     parser.add_argument("--state-root")
     parser.add_argument("--session-id")
     parser.add_argument("--runtime-target")
-    parser.add_argument("--allow-overwrite-skills", action="store_true")
     parser.add_argument("--allow-replace-workspace", action="store_true")
+    parser.add_argument("--github-skill-repo")
+    parser.add_argument("--github-auth-mode", choices=["ssh", "api"])
+    parser.add_argument("--github-ssh-key-path")
+    parser.add_argument("--github-api-env-var")
+    parser.add_argument("--acknowledge-github-control-risk", action="store_true")
     parser.add_argument("--wizard-language", choices=["auto", "en", "zh", "bilingual"], default="auto")
     parser.add_argument("--yes", action="store_true")
     args = parser.parse_args()

@@ -16,12 +16,16 @@
 - skill 仍然必须先在本仓演进，再推送到 `~/.codex/skills`。
 - 产品门面、产品文档、产品工具不能进入 codex 安装目录污染技能执行面。
 - 当前安装方式必须收敛为命令行一行命令安装，而不是依赖手工目录操作。
-- 当前一行安装命令的目标动作，是先把 `Skills/` 内真实技能根同步到目标 `~/.codex/skills`，再直接启动新的 `Codex CLI` 会话。
-- 安装前必须校验目标 skill 安装目录是否符合 Codex 结构，即 `.../.codex/skills` 形态；若不符合，必须拒绝安装。
+- 当前一行安装命令的目标动作，是先在用户指定的安装根目录内安装最新版 `Codex CLI`，再把 `Skills/` 内真实技能根同步到该安装根目录下的 `.codex/skills`，最后直接启动新的 `Codex CLI` 会话。
+- 当前 canonical install root 不再是用户手填的现成 `~/.codex/skills`，而是专用安装根目录；`codex skills root` 应由安装器推导为 `<install-root>/.codex/skills`。
+- 安装前必须校验目标 `codex skills root` 是否足够干净；干净的定义是：没有安装过任何用户技能，最多只允许 Codex 初始 `.system` 项存在。
 - 当前安装面只支持作者实际使用中的 `Codex CLI + VS Code` 环境。
 - 当前安装面只支持 `Codex + GPT-5.4 high reasoning effort`。
 - 其他模型当前不支持、未经过测试，也不能宣称效果等同。
 - 当前阶段不会开发其他宿主环境适配。
+- 安装必须要求用户提供一个给 Octopus OS 使用的 GitHub 技能仓库绑定。
+- wizard 必须协助收集 GitHub 仓库地址与认证模式（SSH 或 API）。
+- 必须明确警告用户：该机器流程会被 AI 用于控制 GitHub，所以应使用新的 GitHub 账户，或确保旧账户资产已完成备份并清空后再绑定。
 - 安装时必须把 repo root `AGENTS.md` 和 `Skills/AGENTS.md` 一起部署到工作区镜像，否则技能生态链条会断裂。
 - `~/.codex/skills/AGENTS.md` 属于误同步产物，必须删除，后续同步也不得再保留它。
 - 长期目标是把 AI 所需流程全部内建并定制到产品自身，而不是依赖外部技能安装。
