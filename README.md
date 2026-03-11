@@ -23,7 +23,7 @@ This is not just a generic skill mirror.
 
 A better model is:
 
-- Skill directories: the execution core of Octopus OS
+- `Skills/`: the execution core of Octopus OS and the only syncable skill container
 - `skill-mirror-to-codex`: the internal bridge that pushes skill roots into `~/.codex/skills`
 - `docs/` and `product_tools/`: product surfaces that must stay outside the codex installation directory
 - Git history: an externalized product iteration log
@@ -46,4 +46,11 @@ A better model is:
 ## Directory Transition
 
 The product engineering name is now `octopus-os-agent-console`.
-Internally, this repository still acts as the governed source that maps syncable skill roots into `~/.codex/skills`.
+Internally, this repository still acts as the governed source that maps syncable skill roots from `Skills/` into `~/.codex/skills`.
+
+## Repository Layout
+
+- `Skills/`: all skill roots, including `.system/`
+- `docs/`: public product documentation
+- `product_tools/`: installer and product-side utilities
+- repository root: normal product repository entry files such as `README.md`, `AGENTS.md`, and future code or release metadata

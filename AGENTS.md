@@ -5,7 +5,7 @@
 <part_A>
 1. 根入口命令
 - 在处理 `octopus-os-agent-console` 路径规则之前，必须先运行：
-- `python3 /home/jasontan656/AI_Projects/octopus-os-agent-console/Meta-Default-md-manager/scripts/Cli_Toolbox.py target-contract --source-path "/home/jasontan656/AI_Projects/octopus-os-agent-console/AGENTS.md" --json`
+- `python3 /home/jasontan656/AI_Projects/octopus-os-agent-console/Skills/Meta-Default-md-manager/scripts/Cli_Toolbox.py target-contract --source-path "/home/jasontan656/AI_Projects/octopus-os-agent-console/AGENTS.md" --json`
 
 2. 当前受管 repo 身份
 - Current concrete repo: `octopus-os-agent-console`
@@ -25,7 +25,8 @@
 
 5. 同回合要求
 - 如果本回合写入 `octopus-os-agent-console`，必须从一开始就纳入 Constitution lint 与 Git traceability。
-- 如果本回合编辑 skill，必须先在 `octopus-os-agent-console` 中的 mirror 副本完成编辑，禁止直接编辑 codex 安装目录下的对应 skill。
+- skill mirror 根目录固定为 `octopus-os-agent-console/Skills/`；repo 根目录保留给产品文档、产品工具与正常代码库入口。
+- 如果本回合编辑 skill，必须先在 `octopus-os-agent-console/Skills/` 中的 mirror 副本完成编辑，禁止直接编辑 codex 安装目录下的对应 skill。
 - skill 编辑完成后，若目标 skill 已存在于 codex 安装目录，必须同回合执行 `$skill-mirror-to-codex` 的 `Push`；若目标 skill 是新建且 codex 安装目录中尚不存在，必须同回合执行 `$skill-mirror-to-codex` 的 `Install`。
 - 结束前必须完成 concrete repo 的 Constitution lint。
 - 如果本回合写入了 `octopus-os-agent-console`，必须同回合 commit-and-push。

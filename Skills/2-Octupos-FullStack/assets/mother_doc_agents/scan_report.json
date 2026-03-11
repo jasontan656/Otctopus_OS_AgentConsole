@@ -1,0 +1,9 @@
+{
+  "schema_version": "3.0",
+  "workspace_root": "/home/jasontan656/AI_Projects/Octopus_OS",
+  "managed_external_target": "/home/jasontan656/AI_Projects/Octopus_OS/AGENTS.md",
+  "root_agents_exists": true,
+  "extra_agents": [],
+  "obsolete_branch_assets": [],
+  "scan_report_path": "/home/jasontan656/AI_Projects/octopus-os-agent-console/Skills/2-Octupos-FullStack/assets/mother_doc_agents/scan_report.json"
+}

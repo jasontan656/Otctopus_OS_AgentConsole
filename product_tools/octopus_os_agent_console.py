@@ -20,6 +20,7 @@ RSYNC_EXCLUDES = (
 )
 SYSTEM_SKILL_NAMESPACE = ".system"
 SYSTEM_SKILL_MARKER = ".codex-system-skills.marker"
+SKILLS_DIR_NAME = "Skills"
 WORKSPACE_MARKER = ".octopus_os_workspace_install.json"
 PRODUCT_NAME = "Octopus OS - Natural-Language-Driven Multi-Agent Console"
 
@@ -51,9 +52,17 @@ def _resolve_state_root(raw: str | None) -> Path:
     return (Path.home() / ".octopus-os-agent-console" / "install_sessions").resolve()
 
 
+def _resolve_skills_root(repo_root: Path) -> Path:
+    skills_root = repo_root / SKILLS_DIR_NAME
+    if skills_root.is_dir():
+        return skills_root.resolve()
+    return repo_root.resolve()
+
+
 def _discover_skill_roots(repo_root: Path) -> list[dict[str, str]]:
     skills: list[dict[str, str]] = []
-    for child in sorted(repo_root.iterdir(), key=lambda item: item.name.lower()):
+    skills_root = _resolve_skills_root(repo_root)
+    for child in sorted(skills_root.iterdir(), key=lambda item: item.name.lower()):
         if not child.is_dir():
             continue
         if child.name == ".git":
@@ -79,7 +88,7 @@ def _discover_skill_roots(repo_root: Path) -> list[dict[str, str]]:
                 }
             )
     if not skills:
-        raise FileNotFoundError(f"no syncable skill roots found under repo root: {repo_root}")
+        raise FileNotFoundError(f"no syncable skill roots found under skills root: {skills_root}")
     return skills
 
 
@@ -118,6 +127,7 @@ def _build_plan(repo_root: Path, codex_root: Path, workspace_root: Path) -> dict
         )
     return {
         "repo_root": str(repo_root),
+        "skills_root": str(_resolve_skills_root(repo_root)),
         "codex_root": str(codex_root),
         "workspace_root": str(workspace_root),
         "skills": skills,

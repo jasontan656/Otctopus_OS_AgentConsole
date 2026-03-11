@@ -24,16 +24,17 @@ class OctopusOSAgentConsoleTests(unittest.TestCase):
     def test_plan_only_targets_skill_roots_for_codex(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             repo_root = Path(tmp) / "repo"
+            skills_root = repo_root / "Skills"
             codex_root = Path(tmp) / "codex"
             workspace_root = Path(tmp) / "workspace"
-            (repo_root / "Meta-Impact-Investigation").mkdir(parents=True)
-            (repo_root / "Meta-Impact-Investigation" / "SKILL.md").write_text("skill\n", encoding="utf-8")
+            (skills_root / "Meta-Impact-Investigation").mkdir(parents=True)
+            (skills_root / "Meta-Impact-Investigation" / "SKILL.md").write_text("skill\n", encoding="utf-8")
             (repo_root / "docs").mkdir()
             (repo_root / "docs" / "README.md").write_text("docs\n", encoding="utf-8")
-            (repo_root / ".system").mkdir()
-            (repo_root / ".system" / ".codex-system-skills.marker").write_text("marker\n", encoding="utf-8")
-            (repo_root / ".system" / "Skill-creator").mkdir()
-            (repo_root / ".system" / "Skill-creator" / "SKILL.md").write_text("creator\n", encoding="utf-8")
+            (skills_root / ".system").mkdir()
+            (skills_root / ".system" / ".codex-system-skills.marker").write_text("marker\n", encoding="utf-8")
+            (skills_root / ".system" / "Skill-creator").mkdir()
+            (skills_root / ".system" / "Skill-creator" / "SKILL.md").write_text("creator\n", encoding="utf-8")
 
             completed = self.run_cli(
                 "plan",
@@ -48,6 +49,7 @@ class OctopusOSAgentConsoleTests(unittest.TestCase):
             payload = json.loads(completed.stdout)
             self.assertEqual(payload["status"], "ok")
             self.assertEqual(payload["product_name"], "Octopus OS - Natural-Language-Driven Multi-Agent Console")
+            self.assertEqual(payload["plan"]["skills_root"], str(skills_root))
             self.assertEqual(
                 [item["name"] for item in payload["plan"]["skills"]],
                 [".system", "Meta-Impact-Investigation"],
@@ -56,10 +58,11 @@ class OctopusOSAgentConsoleTests(unittest.TestCase):
     def test_install_and_uninstall_round_trip(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             repo_root = Path(tmp) / "repo"
+            skills_root = repo_root / "Skills"
             codex_root = Path(tmp) / "codex"
             workspace_root = Path(tmp) / "workspace"
             state_root = Path(tmp) / "state"
-            skill_root = repo_root / "Meta-Impact-Investigation"
+            skill_root = skills_root / "Meta-Impact-Investigation"
             skill_root.mkdir(parents=True)
             (skill_root / "SKILL.md").write_text("skill\n", encoding="utf-8")
             (repo_root / "README.md").write_text("product\n", encoding="utf-8")
@@ -97,10 +100,11 @@ class OctopusOSAgentConsoleTests(unittest.TestCase):
     def test_wizard_supports_bilingual_non_interactive_install(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             repo_root = Path(tmp) / "repo"
+            skills_root = repo_root / "Skills"
             codex_root = Path(tmp) / "codex"
             workspace_root = Path(tmp) / "workspace"
             state_root = Path(tmp) / "state"
-            skill_root = repo_root / "Meta-Impact-Investigation"
+            skill_root = skills_root / "Meta-Impact-Investigation"
             skill_root.mkdir(parents=True)
             (skill_root / "SKILL.md").write_text("skill\n", encoding="utf-8")
             codex_root.mkdir()
