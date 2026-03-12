@@ -22,9 +22,9 @@ description: "暂时不启用，避免被误触发；仅保留为可修改的历
 
 ## AGENTS Manager 入口
 
-- `python3 scripts/Cli_Toolbox.py mother-doc-agents-contract --json`
-- `python3 scripts/Cli_Toolbox.py mother-doc-agents-directive --stage <scan|collect|push> --json`
-- `python3 scripts/Cli_Toolbox.py mother-doc-agents-target-contract --relative-path "octopus_os_root" --file-kind agents --json`
-- `python3 scripts/Cli_Toolbox.py mother-doc-agents-scan --json`
-- `python3 scripts/Cli_Toolbox.py mother-doc-agents-collect --json`
-- `python3 scripts/Cli_Toolbox.py mother-doc-agents-push --json`
+- `./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py mother-doc-agents-contract --json`
+- `./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py mother-doc-agents-directive --stage <scan|collect|push> --json`
+- `./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py mother-doc-agents-target-contract --relative-path "octopus_os_root" --file-kind agents --json`
+- `./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py mother-doc-agents-scan --json`
+- `./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py mother-doc-agents-collect --json`
+- `./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py mother-doc-agents-push --json`

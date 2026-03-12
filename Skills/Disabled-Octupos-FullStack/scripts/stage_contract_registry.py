@@ -71,16 +71,16 @@ STAGE_DOCS = {
 STAGE_COMMANDS = {
     "mother_doc": {
         "required_contract_reads": [
-            "python3 scripts/Cli_Toolbox.py stage-checklist --stage mother_doc --json",
-            "python3 scripts/Cli_Toolbox.py stage-doc-contract --stage mother_doc --json",
-            "python3 scripts/Cli_Toolbox.py stage-command-contract --stage mother_doc --json",
-            "python3 scripts/Cli_Toolbox.py stage-graph-contract --stage mother_doc --json",
+            "./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py stage-checklist --stage mother_doc --json",
+            "./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py stage-doc-contract --stage mother_doc --json",
+            "./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py stage-command-contract --stage mother_doc --json",
+            "./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py stage-graph-contract --stage mother_doc --json",
         ],
         "stage_commands": [
             {
                 "command": (
                     f"python3 ${{CODEX_HOME:-{LOCAL_CODEX_HOME}}}/skills/"
-                    "Meta-prompt-write/scripts/filter_active_invoke_output.py "
+                    "Meta-Enhance-Prompt/scripts/filter_active_invoke_output.py "
                     '--mode active_invoke --input-text "<RAW_PROMPT_OUTPUT>"'
                 ),
                 "purpose": "strengthen the current user prompt with full repo context before selecting Mother_Doc scope",
@@ -98,24 +98,24 @@ STAGE_COMMANDS = {
                 "purpose": "close open design gaps iteratively while staying inside mother_doc and without starting implementation or evidence",
             },
             {
-                "command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-directive --stage <scan|collect|push> --json",
+                "command": "./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py mother-doc-agents-directive --stage <scan|collect|push> --json",
                 "purpose": "load the AGENTS manager directive when the current task is specifically about the single governed root AGENTS target",
             },
             {
-                "command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-scan --json",
+                "command": "./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py mother-doc-agents-scan --json",
                 "purpose": "discover the single managed Octopus_OS root AGENTS target and report forbidden extra AGENTS.md files under Octopus_OS",
             },
             {
-                "command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-collect --json",
+                "command": "./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py mother-doc-agents-collect --json",
                 "purpose": "collect the current Octopus_OS root AGENTS file back into the skill-side managed human/machine pair",
             },
             {
-                "command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-push --json",
+                "command": "./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py mother-doc-agents-push --json",
                 "purpose": "push the managed root AGENTS payload back to Octopus_OS and delete forbidden extra AGENTS.md files",
             },
             {
                 "command": (
-                    f"python3 scripts/Cli_Toolbox.py sync-mother-doc-status-from-git "
+                    f"./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py sync-mother-doc-status-from-git "
                     f"--repo-root {OCTOPUS_OS_ROOT} --stage mother_doc --path <relative-path> --json"
                 ),
                 "purpose": "derive modified / developed / null lifecycle states from local git-backed diff after mother_doc writeback",
@@ -124,14 +124,14 @@ STAGE_COMMANDS = {
     },
     "implementation": {
         "required_contract_reads": [
-            "python3 scripts/Cli_Toolbox.py stage-checklist --stage implementation --json",
-            "python3 scripts/Cli_Toolbox.py stage-doc-contract --stage implementation --json",
-            "python3 scripts/Cli_Toolbox.py stage-command-contract --stage implementation --json",
-            "python3 scripts/Cli_Toolbox.py stage-graph-contract --stage implementation --json",
+            "./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py stage-checklist --stage implementation --json",
+            "./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py stage-doc-contract --stage implementation --json",
+            "./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py stage-command-contract --stage implementation --json",
+            "./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py stage-graph-contract --stage implementation --json",
         ],
         "stage_commands": [
             {
-                "command": "python3 scripts/Cli_Toolbox.py implementation-stage --json",
+                "command": "./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py implementation-stage --json",
                 "purpose": "print the implementation-stage contract with independent developer obligations and delivery expectations",
             },
             {
@@ -146,14 +146,14 @@ STAGE_COMMANDS = {
     },
     "evidence": {
         "required_contract_reads": [
-            "python3 scripts/Cli_Toolbox.py stage-checklist --stage evidence --json",
-            "python3 scripts/Cli_Toolbox.py stage-doc-contract --stage evidence --json",
-            "python3 scripts/Cli_Toolbox.py stage-command-contract --stage evidence --json",
-            "python3 scripts/Cli_Toolbox.py stage-graph-contract --stage evidence --json",
+            "./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py stage-checklist --stage evidence --json",
+            "./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py stage-doc-contract --stage evidence --json",
+            "./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py stage-command-contract --stage evidence --json",
+            "./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py stage-graph-contract --stage evidence --json",
         ],
         "stage_commands": [
             {
-                "command": "python3 scripts/Cli_Toolbox.py evidence-stage --json",
+                "command": "./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py evidence-stage --json",
                 "purpose": "print the evidence-stage contract with writeback and witness requirements",
             },
             *EVIDENCE_GRAPH_COMMANDS,
@@ -162,7 +162,7 @@ STAGE_COMMANDS = {
                 "purpose": "collect real delivery witnesses after implementation bring-up instead of fabricating completion status",
             },
             {
-                "command": "python3 scripts/Cli_Toolbox.py sync-mother-doc-status --stage evidence --path <relative-path> --lifecycle-state developed --json",
+                "command": "./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py sync-mother-doc-status --stage evidence --path <relative-path> --lifecycle-state developed --json",
                 "purpose": "flip affected Mother_Doc documents and block registries to developed once evidence closes the loop",
             },
         ],
@@ -215,7 +215,7 @@ STAGE_CHECKLISTS = {
         "entry_requirements": [
             "load top-level resident docs",
             "load the project baseline before selecting container scope",
-            "strengthen the user prompt with Meta-prompt-write",
+            "strengthen the user prompt with Meta-Enhance-Prompt",
             "choose direct_writeback, question_backfill, or the root-only AGENTS manager by actual task intent",
         ],
         "exit_requirements": [

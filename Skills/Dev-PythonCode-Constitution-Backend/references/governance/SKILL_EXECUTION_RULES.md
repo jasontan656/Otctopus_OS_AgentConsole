@@ -28,7 +28,7 @@ anchors:
 - 当用户未提供框架、版本、项目约定或风格基线时，必须显式标记“未知”，不得把常见偏好伪装成既定规范。
 - 对代码审查、改写或生成请求，应说明建议依据来自哪里；若依据不足，应先收缩结论而不是扩张规范。
 - 涉及第三方库、框架、lint、typing、测试工具等时效性规则时，应以当时官方文档为准，本技能不缓存实时真相。
-- 若任务内容包含 Python 相关编辑，且需要在回合末执行结构/边界校验，应运行 `python3 scripts/run_python_code_lints.py --target <target_root>`。
+- 若任务内容包含 Python 相关编辑，且需要在回合末执行结构/边界校验，应运行 `./.venv_backend_skills/bin/python Skills/Dev-PythonCode-Constitution-Backend/scripts/run_python_code_lints.py --target <target_root>`。
 - 运行 lint 前，先确认目标范围与 Python 相关；不要把非 Python 任务或纯文档任务强行套进本技能的 lint 链路。
 - lint 的治理对象只包括两类：`.py` 文件本体，以及已被 Python 文件引用或在内容/路径上具备明确 Python 证据的非 `.py` 资产。
 - 仅因文件名包含 `contract`、`rule`、`rules`、`constitution`、`lint`，不足以判定该文件受本技能治理；必须先确认它属于 Python 资产或 Python 语境。

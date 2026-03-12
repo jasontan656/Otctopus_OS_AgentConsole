@@ -21,10 +21,10 @@ anchors:
 - `references/tooling/Cli_Toolbox_USAGE.md`
 
 ## 统一入口
-- `python3 scripts/Cli_Toolbox.py stage-checklist --stage <stage> --json`
-- `python3 scripts/Cli_Toolbox.py stage-doc-contract --stage <stage> --json`
-- `python3 scripts/Cli_Toolbox.py stage-command-contract --stage <stage> --json`
-- `python3 scripts/Cli_Toolbox.py stage-graph-contract --stage <stage> --json`
+- `<repo-root>/.venv_backend_skills/bin/python <repo-root>/Skills/${skill_name}/scripts/Cli_Toolbox.py stage-checklist --stage <stage> --json`
+- `<repo-root>/.venv_backend_skills/bin/python <repo-root>/Skills/${skill_name}/scripts/Cli_Toolbox.py stage-doc-contract --stage <stage> --json`
+- `<repo-root>/.venv_backend_skills/bin/python <repo-root>/Skills/${skill_name}/scripts/Cli_Toolbox.py stage-command-contract --stage <stage> --json`
+- `<repo-root>/.venv_backend_skills/bin/python <repo-root>/Skills/${skill_name}/scripts/Cli_Toolbox.py stage-graph-contract --stage <stage> --json`
 
 ## 阶段集合
 | stage_id | objective | checklist | doc_contract | command_contract | graph_contract | exit_signal |

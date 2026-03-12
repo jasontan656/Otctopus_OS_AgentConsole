@@ -34,7 +34,7 @@ anchors:
 - 再读 `../python_rules/PYTHON_FAT_FILE_CONSTITUTION.md`，确认当前 lint 的治理依据。
 - 若 lint 涉及 typing、data boundary、concurrency、import side effect、exception、logging、subprocess、HTTP timeout 安全边界，也要同时读 `../python_rules/PYTHON_RUNTIME_SAFETY_CONSTITUTION.md`。
 - 若 lint 涉及 pytest、package resource、`pyproject.toml` 或 entrypoint，也要同时读 `../python_rules/PYTHON_PROJECT_INTEGRATION_CONSTITUTION.md`。
-- 然后执行 `python3 scripts/run_python_code_lints.py --target <target_root>`。
+- 然后执行 `./.venv_backend_skills/bin/python Skills/Dev-PythonCode-Constitution-Backend/scripts/run_python_code_lints.py --target <target_root>`。
 
 ## 分支三：维护本技能自身结构
 - 先读 `../governance/SKILL_DOCSTRUCTURE_POLICY.md`。

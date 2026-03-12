@@ -59,7 +59,7 @@ anchors:
 - 人类叙事版输入：
   - 我先想知道这个模板技能现在到底要求我按什么结构创建或治理技能。
 - 电脑动作发生了什么：
-  - 系统执行 `python3 scripts/Cli_Toolbox.py runtime-contract --json`。
+  - 系统执行 `./.venv_backend_skills/bin/python Skills/SkillsManager-Creation-Template/scripts/Cli_Toolbox.py runtime-contract --json`。
   - 命令读取 `references/runtime/SKILL_RUNTIME_CONTRACT.json` 并输出结构化合同。
 - 人类叙事版输出：
   - 你会得到当前模板技能定义的门面 contract、routing 读序、doc-structure 交接边界、profile 支持、模板资产契约和验证闭环。
@@ -68,7 +68,7 @@ anchors:
 - 人类叙事版输入：
   - 我想创建一个新技能，并直接拿到受治理的骨架。
 - 电脑动作发生了什么：
-  - 系统执行 `python3 scripts/Cli_Toolbox.py create-skill-from-template --skill-name my-skill --target-root ~/.codex/skills --profile staged_cli_first --overwrite`。
+  - 系统执行 `./.venv_backend_skills/bin/python Skills/SkillsManager-Creation-Template/scripts/Cli_Toolbox.py create-skill-from-template --skill-name my-skill --target-root ~/.codex/skills --profile staged_cli_first --overwrite`。
   - 脚本会生成 `SKILL.md`、`agents/openai.yaml`、task routing、doc-structure policy、execution rules、tooling 文档，并默认创建 `tests/`。
   - 若使用 `--profile staged_cli_first`，还会补齐：
     - `references/runtime/*`
@@ -84,7 +84,7 @@ anchors:
 - 人类叙事版输入：
   - 我需要一份 basic skill 的受治理门面模板。
 - 电脑动作发生了什么：
-  - 系统执行 `python3 scripts/Cli_Toolbox.py skill-template --json`。
+  - 系统执行 `./.venv_backend_skills/bin/python Skills/SkillsManager-Creation-Template/scripts/Cli_Toolbox.py skill-template --json`。
 - 人类叙事版输出：
   - 你会得到采用 `技能定位/必读顺序/分类入口/适用域/执行入口/读取原则/结构索引` 的 basic 门面合同草稿。
 
@@ -92,7 +92,7 @@ anchors:
 - 人类叙事版输入：
   - 我需要一份复杂 staged skill 的门面模板。
 - 电脑动作发生了什么：
-  - 系统执行 `python3 scripts/Cli_Toolbox.py staged-skill-template --json`。
+  - 系统执行 `./.venv_backend_skills/bin/python Skills/SkillsManager-Creation-Template/scripts/Cli_Toolbox.py staged-skill-template --json`。
 - 人类叙事版输出：
   - 你会得到一份强调 resident docs、stage checklist、合同四件套和 stage-switch discard policy 的 staged 门面合同草稿。
 
@@ -100,7 +100,7 @@ anchors:
 - 人类叙事版输入：
   - 我需要 staged skill 的 runtime contract 骨架。
 - 电脑动作发生了什么：
-  - 系统执行 `python3 scripts/Cli_Toolbox.py runtime-contract-template --json`。
+  - 系统执行 `./.venv_backend_skills/bin/python Skills/SkillsManager-Creation-Template/scripts/Cli_Toolbox.py runtime-contract-template --json`。
 - 人类叙事版输出：
   - 你会拿到要求 `skill_md_role`、`routing_protocol`、`resident_doc_policy`、`stage_contract_policy` 的 contract 模板。
 
@@ -108,7 +108,7 @@ anchors:
 - 人类叙事版输入：
   - 我想知道 staged 模板到底要求保留哪些稳定结构。
 - 电脑动作发生了什么：
-  - 系统执行 `python3 scripts/Cli_Toolbox.py staged-skill-reference --json`。
+  - 系统执行 `./.venv_backend_skills/bin/python Skills/SkillsManager-Creation-Template/scripts/Cli_Toolbox.py staged-skill-reference --json`。
 - 人类叙事版输出：
   - 你会得到“哪些结构必须保留，哪些项目专有语义必须剔除”的通用参考。
 

@@ -22,7 +22,7 @@ description: 宪法库技能用于让大模型使用关键字查询,相关规范
 ## 3. 工作流约束
 - 查询步骤（强制）：
   1. 先准备双语关键词：中文放入 `--keywords-zh`，英文放入 `--keywords-en`。
-  2. 直接运行查询命令：`python3 scripts/constitution_keyword_query.py --keywords-zh "<zh_terms>" --keywords-en "<en_terms>"`。
+  2. 直接运行查询命令：`./.venv_backend_skills/bin/python Skills/Constitution-knowledge-base/scripts/constitution_keyword_query.py --keywords-zh "<zh_terms>" --keywords-en "<en_terms>"`。
   3. 将控制台返回的 JSONL 逐行作为机器规则消费：识别 `query_meta`、`constitution_rule`、`no_hit` 三类记录。
   4. 将 `minimum_keyword_contract` 作为输入门槛合同：若双语关键词不足最小门槛，必须阻断并补词后重跑。
   5. 将 `constitution_enforcement_contract` 作为强执行合同：读取 `required_common_anchors/required_constraint_anchors/required_gates/static_enforcement_scope`。

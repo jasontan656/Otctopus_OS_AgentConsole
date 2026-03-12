@@ -13,13 +13,13 @@ description: 接收 resume/session id 与问题（可选关键词）定位会话
 ## 2. 可用工具
 - 命名规则：工具统一命名为 `Cli_Toolbox.<tool_name>`。
 - `Cli_Toolbox.locate_session`
-  - 入口：`python3 scripts/branch_chat_toolbox.py locate-session --session-id <session_id>`（或 `--resume-id <resume_id>`）
+  - 入口：`./.venv_backend_skills/bin/python Skills/Functional-CodexBranchSession-Chat/scripts/branch_chat_toolbox.py locate-session --session-id <session_id>`（或 `--resume-id <resume_id>`）
   - 作用：自动发现 Codex 安装目录（优先 `--codex-home`，其次 `<root>/.codex`，再到 `$CODEX_HOME`，最后回退 `~/.codex`），并在 `sessions/` 下定位对应 session 日志文件。
 - `Cli_Toolbox.extract_assistant_final_reply`
-  - 入口：`python3 scripts/branch_chat_toolbox.py extract-final-reply --session-id <session_id> --keyword "<keyword>"`（或 `--resume-id <resume_id>`）
+  - 入口：`./.venv_backend_skills/bin/python Skills/Functional-CodexBranchSession-Chat/scripts/branch_chat_toolbox.py extract-final-reply --session-id <session_id> --keyword "<keyword>"`（或 `--resume-id <resume_id>`）
   - 作用：读取 session 日志中的 assistant 消息，按关键词匹配并返回最终命中的 assistant reply（默认取时间上最后一条命中）。
 - `Cli_Toolbox.answer_question`
-  - 入口：`python3 scripts/branch_chat_toolbox.py answer-question --session-id <session_id> --question "<user_question>" [--keyword "<keyword>"] [--evidence-limit 8]`（或 `--resume-id <resume_id>`）
+  - 入口：`./.venv_backend_skills/bin/python Skills/Functional-CodexBranchSession-Chat/scripts/branch_chat_toolbox.py answer-question --session-id <session_id> --question "<user_question>" [--keyword "<keyword>"] [--evidence-limit 8]`（或 `--resume-id <resume_id>`）
   - 作用：
     - 若提供 `keyword`：优先按关键词命中 assistant 回复，再补充主题证据。
     - 若不提供 `keyword`：按问题主题在 session 内自动收集高相关证据并定位主要 assistant 锚点回复。

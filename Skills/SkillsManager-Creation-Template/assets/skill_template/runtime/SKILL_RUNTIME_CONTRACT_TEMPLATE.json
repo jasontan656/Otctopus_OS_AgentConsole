@@ -33,7 +33,7 @@
     ]
   },
   "routing_protocol": {
-    "first_command": "python3 scripts/Cli_Toolbox.py runtime-contract --json",
+    "first_command": "<repo-root>/.venv_backend_skills/bin/python <repo-root>/Skills/${skill_name}/scripts/Cli_Toolbox.py runtime-contract --json",
     "task_routing_doc": "references/routing/TASK_ROUTING.md",
     "stage_contract_sequence": [
       "stage-checklist",

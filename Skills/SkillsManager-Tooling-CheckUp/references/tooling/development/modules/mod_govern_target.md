@@ -23,5 +23,5 @@
 
 ## 回归检查
 ```bash
-cd /home/jasontan656/AI_Projects/octopus-os-agent-console/Skills/SkillsManager-Tooling-CheckUp && python3 -m unittest tests.test_cli_toolbox
+cd <repo-root> && python3 -m unittest tests.test_cli_toolbox
 ```

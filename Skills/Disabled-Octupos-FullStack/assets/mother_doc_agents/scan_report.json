@@ -5,5 +5,5 @@
   "root_agents_exists": true,
   "extra_agents": [],
   "obsolete_branch_assets": [],
-  "scan_report_path": "/home/jasontan656/AI_Projects/octopus-os-agent-console/Skills/Disabled-Octupos-FullStack/assets/mother_doc_agents/scan_report.json"
+  "scan_report_path": "Skills/Disabled-Octupos-FullStack/assets/mother_doc_agents/scan_report.json"
 }

@@ -14,7 +14,7 @@
   "topic": "output-governance",
   "purpose": "Keep Meta-Agent-Browser artifacts inside governed runtime and result roots without mutating the external agent-browser installation.",
   "instruction": [
-    "Resolve governed paths through `python3 scripts/Cli_Toolbox.py paths --json` before choosing default artifact destinations.",
+    "Resolve governed paths through `./.venv_backend_skills/bin/python Skills/Meta-Agent-Browser/scripts/Cli_Toolbox.py paths --json` before choosing default artifact destinations.",
     "Use __RUNTIME_DIR__ for skill-local runtime logs and guardrail traces.",
     "Use __RESULT_DIR__ for screenshots, PDFs, auth state, downloads, traces, extracted text, and other generic result artifacts."
   ],

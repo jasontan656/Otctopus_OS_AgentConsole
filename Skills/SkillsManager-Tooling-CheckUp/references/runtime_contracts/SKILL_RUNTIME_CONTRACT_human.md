@@ -3,8 +3,8 @@
 <part_A>
 - 人类阅读入口：本文件说明 `SkillsManager-Tooling-CheckUp` 已切换为 CLI-first runtime contract。
 - 模型运行时入口固定为：
-  - `python3 scripts/Cli_Toolbox.py contract --json`
-  - `python3 scripts/Cli_Toolbox.py directive --topic <topic> --json`
+  - `./.venv_backend_skills/bin/python Skills/SkillsManager-Tooling-CheckUp/scripts/Cli_Toolbox.py contract --json`
+  - `./.venv_backend_skills/bin/python Skills/SkillsManager-Tooling-CheckUp/scripts/Cli_Toolbox.py directive --topic <topic> --json`
 - 人类可以阅读本 markdown 的叙事部分，但模型应总是优先消费 Part B 的 JSON payload。
 - 若 JSON payload 仍有真实语义缺口，才允许把 legacy reference docs 当补充证据，而不是主指令源。
 </part_A>
@@ -25,9 +25,9 @@
   "tool_entry": {
     "script": "scripts/Cli_Toolbox.py",
     "commands": {
-      "contract": "python3 scripts/Cli_Toolbox.py contract --json",
-      "directive": "python3 scripts/Cli_Toolbox.py directive --topic <topic> --json",
-      "govern-target": "python3 scripts/Cli_Toolbox.py govern-target --target-skill-root <path> --json"
+      "contract": "./.venv_backend_skills/bin/python Skills/SkillsManager-Tooling-CheckUp/scripts/Cli_Toolbox.py contract --json",
+      "directive": "./.venv_backend_skills/bin/python Skills/SkillsManager-Tooling-CheckUp/scripts/Cli_Toolbox.py directive --topic <topic> --json",
+      "govern-target": "./.venv_backend_skills/bin/python Skills/SkillsManager-Tooling-CheckUp/scripts/Cli_Toolbox.py govern-target --target-skill-root <path> --json"
     }
   },
   "must_use_sequence": [

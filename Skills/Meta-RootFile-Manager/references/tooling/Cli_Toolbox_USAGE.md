@@ -1,12 +1,12 @@
 # Cli_Toolbox Usage
 
 ## Commands
-- `python3 scripts/Cli_Toolbox.py scaffold`
-- `python3 scripts/Cli_Toolbox.py scan`
-- `python3 scripts/Cli_Toolbox.py lint`
-- `python3 scripts/Cli_Toolbox.py collect`
-- `python3 scripts/Cli_Toolbox.py push`
-- `python3 scripts/Cli_Toolbox.py target-contract --source-path "<external AGENTS path>"`
+- `./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py scaffold`
+- `./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py scan`
+- `./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py lint`
+- `./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py collect`
+- `./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py push`
+- `./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py target-contract --source-path "<external AGENTS path>"`
 
 ## Shared Flags
 - `--dry-run`

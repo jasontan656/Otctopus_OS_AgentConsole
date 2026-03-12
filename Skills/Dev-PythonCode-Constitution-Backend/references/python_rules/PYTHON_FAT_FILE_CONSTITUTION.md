@@ -108,7 +108,7 @@ anchors:
 1. 新增功能先选定文件类别，再按矩阵控制行数。
 2. 触碰上限前先拆分，不得超限后补救。
 3. 拆分必须按固定职责模板落地。
-4. Python 相关回合若触发 lint，必须执行 `python3 scripts/run_python_code_lints.py --target <target_root>` 并以非零退出码阻断失败项。
+4. Python 相关回合若触发 lint，必须执行 `./.venv_backend_skills/bin/python Skills/Dev-PythonCode-Constitution-Backend/scripts/run_python_code_lints.py --target <target_root>` 并以非零退出码阻断失败项。
 5. 规则类文件必须显式标记为 `rule_definition_file` 才能享受 1000 行上限。
 6. 非 `.py` 的 contract/rule 资产，必须先完成 Python 归属确认后，才允许进入对应类别治理。
 
@@ -140,7 +140,7 @@ find . -type f \( -name "*rule*.md" -o -name "*rule*.yaml" -o -name "*lint*.yaml
   xargs -0 wc -l | awk '$1>1000{print;bad=1} END{exit bad}'
 
 # 4) 执行 Python lint
-python3 scripts/run_python_code_lints.py --target .
+./.venv_backend_skills/bin/python Skills/Dev-PythonCode-Constitution-Backend/scripts/run_python_code_lints.py --target .
 ```
 
 ## 最小验收

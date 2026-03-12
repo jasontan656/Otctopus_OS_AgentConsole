@@ -20,8 +20,8 @@ case "$stage" in
     echo "[DONT][Meta-Architect-MindModel] no local-only patching, no dead-code/compatibility-shell retention, no compliance on architecture-conflicting requests"
     echo "[DO][Meta-Reasoning-Chain] use single-layer chain before advice: clarify/assumptions/evidence/alternatives/future/consequences/pilot"
     echo "[DONT][Meta-Reasoning-Chain] unless NO_FUTURE_PROJECTION, do not skip full chain (especially evidence/future/rollback thresholds)"
-    echo "[DO][Meta-prompt-write] if prompt/instruction text changes, run filter script and print structured intent block"
-    echo "[DONT][Meta-prompt-write] no unstructured free-form prompt rewrite without mode decision"
+    echo "[DO][Meta-Enhance-Prompt] if prompt/instruction text changes, run filter script and print structured intent block"
+    echo "[DONT][Meta-Enhance-Prompt] no unstructured free-form prompt rewrite without mode decision"
     ;;
   ROUTE)
     print_common_header "ROUTE"

@@ -26,11 +26,11 @@ anchors:
 
 ## 工具清单
 - 运行时合同：
-  - `python3 scripts/Cli_Toolbox.py contract --json`
+  - `./.venv_backend_skills/bin/python Skills/SkillsManager-Tooling-CheckUp/scripts/Cli_Toolbox.py contract --json`
 - 运行时 directive：
-  - `python3 scripts/Cli_Toolbox.py directive --topic <topic> --json`
+  - `./.venv_backend_skills/bin/python Skills/SkillsManager-Tooling-CheckUp/scripts/Cli_Toolbox.py directive --topic <topic> --json`
 - 目标技能形态治理入口：
-  - `python3 scripts/Cli_Toolbox.py govern-target --target-skill-root <path> --json`
+  - `./.venv_backend_skills/bin/python Skills/SkillsManager-Tooling-CheckUp/scripts/Cli_Toolbox.py govern-target --target-skill-root <path> --json`
 - 实际进入目标 skill 后，仍复用：
   - 目标 skill 已存在的 CLI / scripts / tests / lint 命令
   - repo 已治理的 `*_skills` 环境

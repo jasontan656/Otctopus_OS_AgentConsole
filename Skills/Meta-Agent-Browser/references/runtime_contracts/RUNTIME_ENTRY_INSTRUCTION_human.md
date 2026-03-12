@@ -14,14 +14,14 @@
   "topic": "runtime-entry",
   "purpose": "Enter Meta-Agent-Browser through CLI JSON, then use the skill-local wrappers around the external agent-browser tool.",
   "instruction": [
-    "Treat `python3 scripts/Cli_Toolbox.py contract --json` as the first runtime entry for this skill.",
+    "Treat `./.venv_backend_skills/bin/python Skills/Meta-Agent-Browser/scripts/Cli_Toolbox.py contract --json` as the first runtime entry for this skill.",
     "Use `scripts/agent-browser-runtime-guard.sh` only to validate the external prerequisite and clean skill-local stale runtime state.",
     "Use `scripts/agent-browser-stable.sh` for stable multi-step sessions after the runtime guard succeeds."
   ],
   "workflow": [
     "Call contract --json.",
-    "Call `python3 scripts/Cli_Toolbox.py directive --topic runtime-entry --json` for the local execution path.",
-    "If artifact paths matter, call `python3 scripts/Cli_Toolbox.py paths --json` before choosing screenshot, PDF, download, trace, or auth-state destinations.",
+    "Call `./.venv_backend_skills/bin/python Skills/Meta-Agent-Browser/scripts/Cli_Toolbox.py directive --topic runtime-entry --json` for the local execution path.",
+    "If artifact paths matter, call `./.venv_backend_skills/bin/python Skills/Meta-Agent-Browser/scripts/Cli_Toolbox.py paths --json` before choosing screenshot, PDF, download, trace, or auth-state destinations.",
     "Only if the JSON payload is still insufficient, open supplementary human docs such as references/browser-total-entry.md or references/windows-headed-bridge.md."
   ],
   "rules": [

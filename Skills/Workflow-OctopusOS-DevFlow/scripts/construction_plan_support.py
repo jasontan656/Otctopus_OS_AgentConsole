@@ -24,7 +24,7 @@ def construction_plan_init_payload(target: Path, design_plan_path: Path, force: 
         pack_dir = target / f"{index:02d}_{slugify(step['design_step_id'])}"
         write_pack(pack_dir, step, index)
         pack_dirs.append(str(pack_dir))
-    return {"status": "pass", "target": str(target), "created_packs": pack_dirs, "construction_plan_lint_command": f"python3 scripts/Cli_Toolbox.py construction-plan-lint --path {target} --json"}, 0
+    return {"status": "pass", "target": str(target), "created_packs": pack_dirs, "construction_plan_lint_command": f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py construction-plan-lint --path {target} --json"}, 0
 
 
 def construction_plan_lint_payload(path: Path) -> dict:

@@ -1,16 +1,16 @@
 ---
 name: Meta-Agent-Browser
 description: Manual-invoke browser automation skill for the external agent-browser tool, with CLI-first runtime contracts, fallback routing, and governed output defaults.
-allowed-tools: Bash(agent-browser:*), Bash(python3 scripts/Cli_Toolbox.py:*)
+allowed-tools: Bash(agent-browser:*), Bash(./.venv_backend_skills/bin/python Skills/Meta-Agent-Browser/scripts/Cli_Toolbox.py:*)
 ---
 
 # Meta-Agent-Browser
 
 ## 1. 工具入口
 - 本技能运行时统一入口：
-  - `python3 scripts/Cli_Toolbox.py contract --json`
-  - `python3 scripts/Cli_Toolbox.py directive --topic <topic> --json`
-  - `python3 scripts/Cli_Toolbox.py paths --json`
+  - `./.venv_backend_skills/bin/python Skills/Meta-Agent-Browser/scripts/Cli_Toolbox.py contract --json`
+  - `./.venv_backend_skills/bin/python Skills/Meta-Agent-Browser/scripts/Cli_Toolbox.py directive --topic <topic> --json`
+  - `./.venv_backend_skills/bin/python Skills/Meta-Agent-Browser/scripts/Cli_Toolbox.py paths --json`
 - 可选的 skill-local wrapper：
   - `scripts/agent-browser-runtime-guard.sh`
   - `scripts/agent-browser-stable.sh`
@@ -22,12 +22,12 @@ allowed-tools: Bash(agent-browser:*), Bash(python3 scripts/Cli_Toolbox.py:*)
 - 不适用于：修改或安装全局 `agent-browser`、修补上游 npm 包、把其他浏览器 workflow family 的 domain policy 吞进本 skill。
 
 ## 3. 必读顺序
-1. 先执行 `python3 scripts/Cli_Toolbox.py contract --json`。
+1. 先执行 `./.venv_backend_skills/bin/python Skills/Meta-Agent-Browser/scripts/Cli_Toolbox.py contract --json`。
 2. 按任务意图读取 directive：
-   - 正常运行入口：`python3 scripts/Cli_Toolbox.py directive --topic runtime-entry --json`
-   - runtime 选择与 fallback：`python3 scripts/Cli_Toolbox.py directive --topic fallback-routing --json`
-   - 截图、PDF、auth state、trace、下载等产物：`python3 scripts/Cli_Toolbox.py directive --topic output-governance --json`
-3. 当任务涉及任何文件产物时，再执行 `python3 scripts/Cli_Toolbox.py paths --json` 获取当前仓内解析结果。
+   - 正常运行入口：`./.venv_backend_skills/bin/python Skills/Meta-Agent-Browser/scripts/Cli_Toolbox.py directive --topic runtime-entry --json`
+   - runtime 选择与 fallback：`./.venv_backend_skills/bin/python Skills/Meta-Agent-Browser/scripts/Cli_Toolbox.py directive --topic fallback-routing --json`
+   - 截图、PDF、auth state、trace、下载等产物：`./.venv_backend_skills/bin/python Skills/Meta-Agent-Browser/scripts/Cli_Toolbox.py directive --topic output-governance --json`
+3. 当任务涉及任何文件产物时，再执行 `./.venv_backend_skills/bin/python Skills/Meta-Agent-Browser/scripts/Cli_Toolbox.py paths --json` 获取当前仓内解析结果。
 4. 只有当 CLI JSON 仍留下真实语义缺口时，才打开 human mirror 或 `references/browser-total-entry.md`、`references/windows-headed-bridge.md` 等补充文档。
 
 ## 4. 外部工具边界

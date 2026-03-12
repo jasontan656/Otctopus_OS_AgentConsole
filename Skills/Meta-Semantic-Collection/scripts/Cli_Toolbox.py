@@ -71,7 +71,7 @@ def build_runtime_contract(payload_path: Path) -> dict[str, object]:
         "turn_start": {
             "required": True,
             "action": "load_semantic_pool_runtime_contract",
-            "cli_command": "python3 scripts/Cli_Toolbox.py runtime-contract --json",
+            "cli_command": "./.venv_backend_skills/bin/python Skills/Meta-Semantic-Collection/scripts/Cli_Toolbox.py runtime-contract --json",
         },
         "turn_end": {
             "required": False,
@@ -212,7 +212,7 @@ def build_runtime_contract_from_payload(payload_path: Path, semantic_pool: list[
         "turn_start": {
             "required": True,
             "action": "load_semantic_pool_runtime_contract",
-            "cli_command": "python3 scripts/Cli_Toolbox.py runtime-contract --json",
+            "cli_command": "./.venv_backend_skills/bin/python Skills/Meta-Semantic-Collection/scripts/Cli_Toolbox.py runtime-contract --json",
         },
         "turn_end": {
             "required": False,

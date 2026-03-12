@@ -168,8 +168,8 @@ def load_target_contract(skill_root: Path, relative_path: str, file_kind: str) -
         "managed_machine_path": str(managed_machine_path(skill_root)),
         "rule_source_policy": payload["runtime_source_policy"],
         "payload_navigation": {
-            "branch_contract_cli": "python3 scripts/Cli_Toolbox.py mother-doc-agents-contract --json",
-            "stage_directive_cli": "python3 scripts/Cli_Toolbox.py mother-doc-agents-directive --stage <scan|collect|push> --json",
+            "branch_contract_cli": "./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py mother-doc-agents-contract --json",
+            "stage_directive_cli": "./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py mother-doc-agents-directive --stage <scan|collect|push> --json",
         },
         "managed_asset_model": {
             "document_shape": {

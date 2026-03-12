@@ -2,7 +2,7 @@
 
 <part_A>
 - 本 guide 说明如何用本技能治理“目标 skill 的运行时形态”。
-- 模型运行时应先调用 `python3 scripts/Cli_Toolbox.py govern-target --target-skill-root <path> --json` 获取目标感知审计结果。
+- 模型运行时应先调用 `./.venv_backend_skills/bin/python Skills/SkillsManager-Tooling-CheckUp/scripts/Cli_Toolbox.py govern-target --target-skill-root <path> --json` 获取目标感知审计结果。
 - 人类可以看本 mirror；模型仍应以 Part B payload 为主。
 </part_A>
 

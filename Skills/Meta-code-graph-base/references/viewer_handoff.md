@@ -6,7 +6,7 @@ This skill owns the local code graph runtime artifacts and query surface.
 It does not own the final viewer shell anymore.
 
 The governed frontend host is:
-- `/home/jasontan656/AI_Projects/octopus-os-agent-console/Skills/Dev-VUE3-WebUI-Frontend`
+- `Skills/Dev-VUE3-WebUI-Frontend`
 
 ## Handoff Model
 

@@ -71,10 +71,10 @@
     "rootfile_rule": "if a console productization task touches a rootfile-managed external file, route the body maintenance through Meta-RootFile-Manager and do not directly edit the governed external file from this skill"
   },
   "tooling": {
-    "working_contract_command": "python3 scripts/Cli_Toolbox.py working-contract --json",
-    "intent_snapshot_command": "python3 scripts/Cli_Toolbox.py intent-snapshot --json",
-    "latest_log_command": "python3 scripts/Cli_Toolbox.py latest-log --json",
-    "append_log_command": "python3 scripts/Cli_Toolbox.py append-iteration-log --title \"<title>\" --summary \"<summary>\" --decision \"<decision>\" --affected-path \"<path>\" --next-step \"<next>\"",
-    "rootfile_target_contract_example": "python3 /home/jasontan656/AI_Projects/octopus-os-agent-console/Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py target-contract --source-path \"<rootfile-path>\" --json"
+    "working_contract_command": "./.venv_backend_skills/bin/python Skills/SkillsManager-Production-Form/scripts/Cli_Toolbox.py working-contract --json",
+    "intent_snapshot_command": "./.venv_backend_skills/bin/python Skills/SkillsManager-Production-Form/scripts/Cli_Toolbox.py intent-snapshot --json",
+    "latest_log_command": "./.venv_backend_skills/bin/python Skills/SkillsManager-Production-Form/scripts/Cli_Toolbox.py latest-log --json",
+    "append_log_command": "./.venv_backend_skills/bin/python Skills/SkillsManager-Production-Form/scripts/Cli_Toolbox.py append-iteration-log --title \"<title>\" --summary \"<summary>\" --decision \"<decision>\" --affected-path \"<path>\" --next-step \"<next>\"",
+    "rootfile_target_contract_example": "./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py target-contract --source-path \"<rootfile-path>\" --json"
   }
 }

@@ -5,7 +5,7 @@
 <part_A>
 1. 根入口命令
 - 在处理 `octopus-os-agent-console` 路径规则之前，必须先运行：
-- `python3 /home/jasontan656/AI_Projects/octopus-os-agent-console/Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py target-contract --source-path "/home/jasontan656/AI_Projects/octopus-os-agent-console/AGENTS.md" --json`
+- `./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py target-contract --source-path "/home/jasontan656/AI_Projects/octopus-os-agent-console/AGENTS.md" --json`
 
 2. 当前受管 repo 身份
 - Current concrete repo: `octopus-os-agent-console`

@@ -16,7 +16,7 @@
 
 ## Unified Entry
 
-- `python3 scripts/os_graph_cli.py <command> [args...]`
+- `./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/os_graph_cli.py <command> [args...]`
 
 ## Native Commands
 

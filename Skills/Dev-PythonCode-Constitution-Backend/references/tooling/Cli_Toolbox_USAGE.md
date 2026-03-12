@@ -24,11 +24,11 @@ anchors:
 ## 最小使用方式
 - 进入 `SKILL.md`，再按 `references/routing/TASK_ROUTING.md` 进入具体分支。
 - 查询、审查或改写 Python 代码时，固定读取 `references/governance/SKILL_EXECUTION_RULES.md` 与 `references/python_rules/PYTHON_FAT_FILE_CONSTITUTION.md`。
-- 需要执行静态校验时，运行 `python3 scripts/run_python_code_lints.py --target <target_root>`。
+- 需要执行静态校验时，运行 `./.venv_backend_skills/bin/python Skills/Dev-PythonCode-Constitution-Backend/scripts/run_python_code_lints.py --target <target_root>`。
 
 ## 命令约束
 - 一行命令：
-  - `cd /home/jasontan656/AI_Projects/octopus-os-agent-console/Skills/Dev-PythonCode-Constitution-Backend && python3 scripts/run_python_code_lints.py --target /home/jasontan656/AI_Projects/octopus-os-agent-console/Skills/Dev-PythonCode-Constitution-Backend | cat`
+  - `cd <repo-root> && ./.venv_backend_skills/bin/python Skills/Dev-PythonCode-Constitution-Backend/scripts/run_python_code_lints.py --target Skills/Dev-PythonCode-Constitution-Backend | cat`
 - 当前 CLI 只接受 `--target`。
 - lint 输出为单个 JSON 对象；任一 gate 失败时返回非零退出码。
 - lint 会显式排除虚拟环境、构建产物、缓存与临时目录，例如 `.venv*`、`venv*`、`node_modules/`、`dist/`、`build/`、`coverage/`、`tmp/`、`temp/`、`.tmp*`、`.temp*`、`__pycache__/`、`.pytest_cache/`、`.mypy_cache/`、`.ruff_cache/`。

@@ -38,5 +38,5 @@ anchors:
 
 ## 回归检查
 ```bash
-cd /home/jasontan656/AI_Projects/octopus-os-agent-console/Skills/Dev-PythonCode-Constitution-Backend && python3 -m pytest tests/test_python_code_lints.py
+cd <repo-root> && python3 -m pytest tests/test_python_code_lints.py
 ```

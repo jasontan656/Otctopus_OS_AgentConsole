@@ -1,9 +1,9 @@
 <part_A>
 # Meta-Agent-Browser Runtime Contract
 
-- 本文件是给人看的镜像；模型运行时主入口仍然是 `python3 scripts/Cli_Toolbox.py contract --json`。
+- 本文件是给人看的镜像；模型运行时主入口仍然是 `./.venv_backend_skills/bin/python Skills/Meta-Agent-Browser/scripts/Cli_Toolbox.py contract --json`。
 - 本技能只治理 `Meta-Agent-Browser` 自己的包装层，不接管外部 `agent-browser` 安装与上游实现。
-- 需要输出路径时，再调用 `python3 scripts/Cli_Toolbox.py paths --json` 获取当前仓内解析结果。
+- 需要输出路径时，再调用 `./.venv_backend_skills/bin/python Skills/Meta-Agent-Browser/scripts/Cli_Toolbox.py paths --json` 获取当前仓内解析结果。
 </part_A>
 
 <part_B>
@@ -20,9 +20,9 @@
   "tool_entry": {
     "script": "scripts/Cli_Toolbox.py",
     "commands": {
-      "contract": "python3 scripts/Cli_Toolbox.py contract --json",
-      "directive": "python3 scripts/Cli_Toolbox.py directive --topic <topic> --json",
-      "paths": "python3 scripts/Cli_Toolbox.py paths --json"
+      "contract": "./.venv_backend_skills/bin/python Skills/Meta-Agent-Browser/scripts/Cli_Toolbox.py contract --json",
+      "directive": "./.venv_backend_skills/bin/python Skills/Meta-Agent-Browser/scripts/Cli_Toolbox.py directive --topic <topic> --json",
+      "paths": "./.venv_backend_skills/bin/python Skills/Meta-Agent-Browser/scripts/Cli_Toolbox.py paths --json"
     }
   },
   "must_use_sequence": [
@@ -55,7 +55,7 @@
   "path_policy": {
     "runtime_dir_rule": "Derive runtime logs and audit artifacts from product_root.parent / Codex_Skill_Runtime / __SKILL_NAME__.",
     "result_dir_rule": "Derive default screenshots, PDFs, state files, downloaded files, traces, and generic outputs from product_root.parent / Codex_Skills_Result / __SKILL_NAME__.",
-    "resolved_paths_command": "python3 scripts/Cli_Toolbox.py paths --json"
+    "resolved_paths_command": "./.venv_backend_skills/bin/python Skills/Meta-Agent-Browser/scripts/Cli_Toolbox.py paths --json"
   },
   "hard_constraints": [
     "Do not treat SKILL.md or browser-total-entry.md as the primary runtime instruction source.",

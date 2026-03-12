@@ -56,9 +56,9 @@ anchors:
 
 ## 回归检查
 ```bash
-python3 scripts/create_skill_from_template.py --help
-python3 scripts/create_skill_from_template.py --skill-name basic-sandbox --target-root /tmp/meta-skill-template --profile basic --overwrite
-python3 scripts/create_skill_from_template.py --skill-name staged-sandbox --target-root /tmp/meta-skill-template --profile staged_cli_first --overwrite
+./.venv_backend_skills/bin/python Skills/SkillsManager-Creation-Template/scripts/create_skill_from_template.py --help
+./.venv_backend_skills/bin/python Skills/SkillsManager-Creation-Template/scripts/create_skill_from_template.py --skill-name basic-sandbox --target-root /tmp/meta-skill-template --profile basic --overwrite
+./.venv_backend_skills/bin/python Skills/SkillsManager-Creation-Template/scripts/create_skill_from_template.py --skill-name staged-sandbox --target-root /tmp/meta-skill-template --profile staged_cli_first --overwrite
 python3 -m pytest tests
 ```
 

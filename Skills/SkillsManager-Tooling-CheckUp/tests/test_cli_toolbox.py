@@ -35,7 +35,7 @@ class CliToolboxTests(unittest.TestCase):
         self.assertEqual(completed.returncode, 0, completed.stderr)
         payload = json.loads(completed.stdout)
         self.assertEqual(payload["contract_name"], "skills_tooling_checkup_runtime_contract")
-        self.assertEqual(payload["tool_entry"]["commands"]["contract"], "python3 scripts/Cli_Toolbox.py contract --json")
+        self.assertEqual(payload["tool_entry"]["commands"]["contract"], "./.venv_backend_skills/bin/python Skills/SkillsManager-Tooling-CheckUp/scripts/Cli_Toolbox.py contract --json")
 
     def test_directive_returns_known_topic(self) -> None:
         completed = run_cli("directive", "--topic", "read-audit", "--json")

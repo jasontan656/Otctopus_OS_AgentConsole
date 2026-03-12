@@ -17,8 +17,8 @@
 - 人类叙事版输入：
   - “把 mirror 里的某个技能导入 codex 安装目录，你先判断该走覆盖还是安装。”
   - 命令：
-    - `python3 scripts/Cli_Toolbox.py --scope skill --skill-name Meta-Impact-Investigation`
-    - `python3 scripts/Cli_Toolbox.py --scope skill --skill-name .system/skill-creator`
+    - `./.venv_backend_skills/bin/python Skills/SkillsManager-Mirror-To-Codex/scripts/Cli_Toolbox.py --scope skill --skill-name Meta-Impact-Investigation`
+    - `./.venv_backend_skills/bin/python Skills/SkillsManager-Mirror-To-Codex/scripts/Cli_Toolbox.py --scope skill --skill-name .system/skill-creator`
 - 电脑动作发生了什么：
   - 解析参数并归一化 mirror/codex 根目录。
   - 将 `skill_name` 归一化为 skills 边界内的相对路径；允许 nested path，但拒绝空段、反斜杠、绝对路径与 `.` / `..` 越界段。
@@ -34,7 +34,7 @@
 - 人类叙事版输入：
   - “把 mirror 里当前所有技能完整同步回 codex 安装目录。”
   - 命令：
-    - `python3 scripts/Cli_Toolbox.py --scope all --mode push`
+    - `./.venv_backend_skills/bin/python Skills/SkillsManager-Mirror-To-Codex/scripts/Cli_Toolbox.py --scope all --mode push`
 - 电脑动作发生了什么：
   - 解析参数，确认已显式进入 `Push` 模式。
   - 扫描 mirror 顶层，发现真正可同步的技能根。
@@ -47,8 +47,8 @@
 - 人类叙事版输入：
   - “这个技能还没安装，你不要直接覆盖，走安装链路。”
   - 命令：
-    - `python3 scripts/Cli_Toolbox.py --scope skill --skill-name Meta-Impact-Investigation --mode install`
-    - `python3 scripts/Cli_Toolbox.py --scope skill --skill-name .system/skill-installer --mode install`
+    - `./.venv_backend_skills/bin/python Skills/SkillsManager-Mirror-To-Codex/scripts/Cli_Toolbox.py --scope skill --skill-name Meta-Impact-Investigation --mode install`
+    - `./.venv_backend_skills/bin/python Skills/SkillsManager-Mirror-To-Codex/scripts/Cli_Toolbox.py --scope skill --skill-name .system/skill-installer --mode install`
 - 电脑动作发生了什么：
   - 锁定源目录与目标目录，但不执行 rsync。
   - 输出外部技能顺序：
@@ -61,7 +61,7 @@
 - 人类叙事版输入：
   - “这个技能已经改名了，你把新目录内容覆盖旧目录，再把 codex 里的文件夹名一起改掉，不要保留双目录。”
   - 命令：
-    - `python3 scripts/Cli_Toolbox.py --scope skill --skill-name WorkFlow-RealState-Posting-Web --mode rename --rename-from Meta-browser-operation`
+    - `./.venv_backend_skills/bin/python Skills/SkillsManager-Mirror-To-Codex/scripts/Cli_Toolbox.py --scope skill --skill-name WorkFlow-RealState-Posting-Web --mode rename --rename-from Meta-browser-operation`
 - 电脑动作发生了什么：
   - 先验证 rename 是显式请求，并确认旧名与新名是两个不同的 skill path。
   - 要求 mirror 侧已经完成目录与内容重命名，新名字目录成为唯一源。

@@ -3,7 +3,7 @@
 <part_A>
 - 本合同专门治理目标 skill 的 runtime 日志与结果落点。
 - 人类阅读时，应关注五件事是否闭合：代码路径、默认回退、显式落点参数、文档声明、历史迁移责任。
-- 模型运行时应通过 `python3 scripts/Cli_Toolbox.py directive --topic output-governance --json` 获取 Part B。
+- 模型运行时应通过 `./.venv_backend_skills/bin/python Skills/SkillsManager-Tooling-CheckUp/scripts/Cli_Toolbox.py directive --topic output-governance --json` 获取 Part B。
 </part_A>
 
 <part_B>

@@ -38,7 +38,7 @@ anchors:
 - facade 只承载稳定边界与下一层入口，不承载治理正文。
 
 ## Routing Protocol
-- 第一入口命令：`python3 scripts/Cli_Toolbox.py runtime-contract --json`
+- 第一入口命令：`./.venv_backend_skills/bin/python Skills/SkillsManager-Creation-Template/scripts/Cli_Toolbox.py runtime-contract --json`
 - 第一层路由：`references/routing/TASK_ROUTING.md`
 - profile 路由：`references/routing/PROFILE_ROUTING.md`
 - 读取顺序：

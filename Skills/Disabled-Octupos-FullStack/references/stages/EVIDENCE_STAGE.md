@@ -15,7 +15,7 @@
 1. 显式承接 `mother_doc + implementation` 当前状态产物，并继续保留项目统一目标基线。
 2. 以 `OS_graph` 的四层模型组织总览文档、共享合同、代码模块、helper、父级目录与 witness。
 3. 把 graph 运行产物写回 `Octopus_OS/Mother_Doc/graph/`。
-4. graph 命令域统一从 `python3 scripts/os_graph_cli.py <command> [args...]` 进入，不得与其他阶段命令串用。
+4. graph 命令域统一从 `./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/os_graph_cli.py <command> [args...]` 进入，不得与其他阶段命令串用。
 5. 先把 implementation 的对齐结果写成 implementation batch。
 6. 把真实 evidence 回填到对应的文档节点与代码节点，并把已闭环范围的文档/区块状态回写为 `developed`。
 7. 如已形成真实部署/上线 witness，则追加 deployment checkpoint。

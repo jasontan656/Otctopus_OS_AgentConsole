@@ -129,4 +129,4 @@ anchors:
 5. 默认 Python 命令执行使用 `subprocess.run(...)`，且没有 `shell=True`。
 6. 外部 HTTP 调用不会以“无超时”或“显式关闭超时”的形式长期悬挂。
 7. 非 CLI 模块全部使用命名 logger，且不修改 root logging 配置。
-8. 违反以上规则时，`python3 scripts/run_python_code_lints.py --target <target_root>` 返回非零退出码。
+8. 违反以上规则时，`./.venv_backend_skills/bin/python Skills/Dev-PythonCode-Constitution-Backend/scripts/run_python_code_lints.py --target <target_root>` 返回非零退出码。

@@ -19,9 +19,9 @@
     "scan_report_path": "assets/mother_doc_agents/scan_report.json"
   },
   "runtime_entry_commands": {
-    "branch_contract_command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-contract --json",
-    "stage_directive_command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-directive --stage <scan|collect|push> --json",
-    "target_contract_command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-target-contract --relative-path \"octopus_os_root\" --file-kind agents --json"
+    "branch_contract_command": "./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py mother-doc-agents-contract --json",
+    "stage_directive_command": "./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py mother-doc-agents-directive --stage <scan|collect|push> --json",
+    "target_contract_command": "./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py mother-doc-agents-target-contract --relative-path \"octopus_os_root\" --file-kind agents --json"
   },
   "stage_order": [
     "scan",

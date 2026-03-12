@@ -27,13 +27,13 @@ description: "暂时不启用，避免被误触发；仅保留为可修改的历
    - `<root>/AGENTS.md`
    - `<root>/Octopus_CodeBase_Backend/AGENTS.md`
 2. 进入任一阶段前，必须先读取：
-   - `python3 scripts/Cli_Toolbox.py stage-checklist --stage <mother_doc|construction_plan|implementation|acceptance> --json`
+   - `./.venv_backend_skills/bin/python Skills/Disabled-Octupos-OS-Backend/scripts/Cli_Toolbox.py stage-checklist --stage <mother_doc|construction_plan|implementation|acceptance> --json`
 3. 当前阶段的读物边界只从工具取：
-   - `python3 scripts/Cli_Toolbox.py stage-doc-contract --stage <stage> --json`
+   - `./.venv_backend_skills/bin/python Skills/Disabled-Octupos-OS-Backend/scripts/Cli_Toolbox.py stage-doc-contract --stage <stage> --json`
 4. 当前阶段的入口/门禁命令只从工具取：
-   - `python3 scripts/Cli_Toolbox.py stage-command-contract --stage <stage> --json`
+   - `./.venv_backend_skills/bin/python Skills/Disabled-Octupos-OS-Backend/scripts/Cli_Toolbox.py stage-command-contract --stage <stage> --json`
 5. 当前阶段的 graph 角色只从工具取：
-   - `python3 scripts/Cli_Toolbox.py stage-graph-contract --stage <stage> --json`
+   - `./.venv_backend_skills/bin/python Skills/Disabled-Octupos-OS-Backend/scripts/Cli_Toolbox.py stage-graph-contract --stage <stage> --json`
 6. 阶段切换时，必须显式丢弃上一阶段的阶段文档与临时 focus，只保留第 `1` 步顶层常驻文档。
 - 未完成 `1` 和 `2`，不得进入任何阶段执行。
 

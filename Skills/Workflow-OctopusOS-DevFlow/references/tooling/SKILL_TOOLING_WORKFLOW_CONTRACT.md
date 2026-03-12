@@ -194,7 +194,7 @@
 - 目标是增强后续 debug、扩展和阅读，不是完成态门禁。
 
 ## 9. Required Templates
-- 模板索引统一从 `python3 scripts/Cli_Toolbox.py template-index --json` 读取。
+- 模板索引统一从 `./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py template-index --json` 读取。
 - `assets/templates/mother_doc/11_risks_and_blockers.md`
 - `assets/templates/execution_atom_plan_validation_packs/00_index.md`
 - `assets/templates/execution_atom_plan_validation_packs/PACK_TEMPLATE/*`
@@ -263,10 +263,10 @@
 
 ## 14. Example Commands
 ```bash
-python3 scripts/Cli_Toolbox.py workflow-contract --json
-python3 scripts/Cli_Toolbox.py stage-checklist --stage construction_plan --json
-python3 scripts/Cli_Toolbox.py stage-doc-contract --stage construction_plan --json
-python3 scripts/Cli_Toolbox.py stage-command-contract --stage construction_plan --json
-python3 scripts/Cli_Toolbox.py stage-graph-contract --stage construction_plan --json
-python3 scripts/Cli_Toolbox.py template-index --json
+./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py workflow-contract --json
+./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py stage-checklist --stage construction_plan --json
+./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py stage-doc-contract --stage construction_plan --json
+./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py stage-command-contract --stage construction_plan --json
+./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py stage-graph-contract --stage construction_plan --json
+./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py template-index --json
 ```

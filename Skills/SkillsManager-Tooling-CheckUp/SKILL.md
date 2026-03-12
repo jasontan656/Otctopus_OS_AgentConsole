@@ -25,9 +25,9 @@ metadata:
   - `directive`
   - `govern-target`
 - 运行时统一入口：
-  - `python3 scripts/Cli_Toolbox.py contract --json`
-  - `python3 scripts/Cli_Toolbox.py directive --topic <topic> --json`
-  - `python3 scripts/Cli_Toolbox.py govern-target --target-skill-root <path> --json`
+  - `./.venv_backend_skills/bin/python Skills/SkillsManager-Tooling-CheckUp/scripts/Cli_Toolbox.py contract --json`
+  - `./.venv_backend_skills/bin/python Skills/SkillsManager-Tooling-CheckUp/scripts/Cli_Toolbox.py directive --topic <topic> --json`
+  - `./.venv_backend_skills/bin/python Skills/SkillsManager-Tooling-CheckUp/scripts/Cli_Toolbox.py govern-target --target-skill-root <path> --json`
 - 模型读取合同、workflow、instruction、guide 时必须走 CLI JSON；human markdown 只作为人类叙事镜像。
 
 ## 2. 适用域
@@ -38,7 +38,7 @@ metadata:
 - 若修正落在 Python 代码，仍要遵守 `Dev-PythonCode-Constitution-Backend`；若修正落在 Vue3 / TypeScript tooling code，仍要遵守目标前端 skill 的既有合同。
 
 ## 3. 必读顺序
-1. 先执行 `python3 scripts/Cli_Toolbox.py contract --json`。
+1. 先执行 `./.venv_backend_skills/bin/python Skills/SkillsManager-Tooling-CheckUp/scripts/Cli_Toolbox.py contract --json`。
 2. 按任务意图选择 directive：
    - 只读检查：`--topic read-audit`
    - 进入修正：`--topic remediation`

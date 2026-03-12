@@ -21,11 +21,11 @@
 
 ## 回归检查
 ```bash
-python3 scripts/branch_chat_toolbox.py answer-question \
+./.venv_backend_skills/bin/python Skills/Functional-CodexBranchSession-Chat/scripts/branch_chat_toolbox.py answer-question \
   --session-id 019c9775-52cb-7b83-a15c-5fafb7998f2f \
   --question "这个会话里的 lint 全扫脚本为什么慢？"
 
-python3 scripts/branch_chat_toolbox.py answer-question \
+./.venv_backend_skills/bin/python Skills/Functional-CodexBranchSession-Chat/scripts/branch_chat_toolbox.py answer-question \
   --session-id 019c9775-52cb-7b83-a15c-5fafb7998f2f \
   --keyword "external-lint-all" \
   --question "这些脚本的工作原理是什么？" \

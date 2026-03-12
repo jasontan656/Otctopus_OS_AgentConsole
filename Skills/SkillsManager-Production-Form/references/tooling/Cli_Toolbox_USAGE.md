@@ -57,10 +57,10 @@ Applies to skill: `SkillsManager-Production-Form`
 
 ## Example Commands
 - Load working contract:
-  - `cd /home/jasontan656/AI_Projects/octopus-os-agent-console/Skills/SkillsManager-Production-Form && python3 scripts/Cli_Toolbox.py working-contract --json | sed -n '1,200p'`
+  - `cd <repo-root> && ./.venv_backend_skills/bin/python Skills/SkillsManager-Production-Form/scripts/Cli_Toolbox.py working-contract --json | sed -n '1,200p'`
 - Load current intent snapshot:
-  - `cd /home/jasontan656/AI_Projects/octopus-os-agent-console/Skills/SkillsManager-Production-Form && python3 scripts/Cli_Toolbox.py intent-snapshot --json | sed -n '1,200p'`
+  - `cd <repo-root> && ./.venv_backend_skills/bin/python Skills/SkillsManager-Production-Form/scripts/Cli_Toolbox.py intent-snapshot --json | sed -n '1,200p'`
 - Load latest log:
-  - `cd /home/jasontan656/AI_Projects/octopus-os-agent-console/Skills/SkillsManager-Production-Form && python3 scripts/Cli_Toolbox.py latest-log --json | sed -n '1,200p'`
+  - `cd <repo-root> && ./.venv_backend_skills/bin/python Skills/SkillsManager-Production-Form/scripts/Cli_Toolbox.py latest-log --json | sed -n '1,200p'`
 - Append a new local design log entry:
-  - `cd /home/jasontan656/AI_Projects/octopus-os-agent-console/Skills/SkillsManager-Production-Form && python3 scripts/Cli_Toolbox.py append-iteration-log --title "Refine console boundary" --summary "Locked the Skills directory as the console productization source surface." --decision "Keep runtime contracts and registry aligned with the skill root" --affected-path "SkillsManager-Production-Form/SKILL.md" --next-step "Continue consolidating console-facing skill governance" --json | sed -n '1,200p'`
+  - `cd <repo-root> && ./.venv_backend_skills/bin/python Skills/SkillsManager-Production-Form/scripts/Cli_Toolbox.py append-iteration-log --title "Refine console boundary" --summary "Locked the Skills directory as the console productization source surface." --decision "Keep runtime contracts and registry aligned with the skill root" --affected-path "SkillsManager-Production-Form/SKILL.md" --next-step "Continue consolidating console-facing skill governance" --json | sed -n '1,200p'`

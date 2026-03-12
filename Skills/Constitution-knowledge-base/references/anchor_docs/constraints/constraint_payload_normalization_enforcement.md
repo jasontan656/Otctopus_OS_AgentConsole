@@ -41,7 +41,7 @@ graph_hook:
 
 ```bash
 rg -n "constraint_payload_normalization_enforcement" references/anchor_docs/ANCHOR_DOC_REGISTRY.yaml references/anchor_docs/constraints
-python3 /home/jasontan656/AI_Projects/octopus-os-agent-console/Skills/Dev-PythonCode-Constitution-Backend/scripts/run_python_code_lints.py --target . | jq '.gates[] | select(.gate=="payload_normalize_gate")'
+./.venv_backend_skills/bin/python Skills/Dev-PythonCode-Constitution-Backend/scripts/run_python_code_lints.py --target . | jq '.gates[] | select(.gate=="payload_normalize_gate")'
 ```
 
 ## 最小验收

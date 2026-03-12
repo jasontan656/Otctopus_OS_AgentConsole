@@ -18,9 +18,9 @@ anchors:
 ## CLI-first 入口
 - 本路由文档保留为 human reference。
 - 模型运行时应先执行：
-  - `python3 scripts/Cli_Toolbox.py contract --json`
-  - `python3 scripts/Cli_Toolbox.py directive --topic <topic> --json`
-  - 当目标是治理某个具体 skill 的形态时：`python3 scripts/Cli_Toolbox.py govern-target --target-skill-root <path> --json`
+  - `./.venv_backend_skills/bin/python Skills/SkillsManager-Tooling-CheckUp/scripts/Cli_Toolbox.py contract --json`
+  - `./.venv_backend_skills/bin/python Skills/SkillsManager-Tooling-CheckUp/scripts/Cli_Toolbox.py directive --topic <topic> --json`
+  - 当目标是治理某个具体 skill 的形态时：`./.venv_backend_skills/bin/python Skills/SkillsManager-Tooling-CheckUp/scripts/Cli_Toolbox.py govern-target --target-skill-root <path> --json`
 
 ## 当前分叉轴线
 - 本文件只按一个语义轴线分流：当前任务是在做只读定位、实改修正，还是要求变更 repo 技术栈基线本身。

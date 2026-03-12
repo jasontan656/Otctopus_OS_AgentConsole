@@ -17,7 +17,7 @@
 
 ## 回归检查
 ```bash
-python3 scripts/branch_chat_toolbox.py extract-final-reply \
+./.venv_backend_skills/bin/python Skills/Functional-CodexBranchSession-Chat/scripts/branch_chat_toolbox.py extract-final-reply \
   --session-id 019c9775-52cb-7b83-a15c-5fafb7998f2f \
   --keyword "结构化 Prompt"
 ```

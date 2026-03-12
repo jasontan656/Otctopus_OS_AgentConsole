@@ -22,19 +22,19 @@ EVIDENCE_GRAPH_DOCS = [
 
 EVIDENCE_GRAPH_COMMANDS = [
     {
-        "command": "python3 scripts/os_graph_cli.py status",
+        "command": "./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/os_graph_cli.py status",
         "purpose": "verify OS_graph runtime readiness and vendored engine availability before graph writeback",
     },
     {
-        "command": "python3 scripts/os_graph_cli.py sync-doc-bindings",
+        "command": "./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/os_graph_cli.py sync-doc-bindings",
         "purpose": "materialize authored-doc nodes, edges, and frontend layer bundles under Mother_Doc/graph/runtime",
     },
     {
-        "command": "python3 scripts/os_graph_cli.py sync-evidence",
+        "command": "./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/os_graph_cli.py sync-evidence",
         "purpose": "materialize evidence nodes, lifecycle indexes, and evidence-side frontend bundles under Mother_Doc/graph/runtime",
     },
     {
-        "command": "python3 scripts/os_graph_cli.py <analyze|query|context|impact|detect-changes|resource|map|wiki|cypher> [args...]",
+        "command": "./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/os_graph_cli.py <analyze|query|context|impact|detect-changes|resource|map|wiki|cypher> [args...]",
         "purpose": "run the evidence-owned OS_graph command surface without leaving the Disabled-Octupos-FullStack skill",
     },
 ]

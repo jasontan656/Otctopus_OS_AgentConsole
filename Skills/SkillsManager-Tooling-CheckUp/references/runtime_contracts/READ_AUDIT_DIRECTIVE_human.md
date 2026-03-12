@@ -3,7 +3,7 @@
 <part_A>
 - 本指令用于只读检查。
 - 人类阅读时，可把它理解为“先锁定目标，再判断是否真的命中重复造轮子或落盘治理缺口”。
-- 模型运行时应通过 `python3 scripts/Cli_Toolbox.py directive --topic read-audit --json` 获取 Part B。
+- 模型运行时应通过 `./.venv_backend_skills/bin/python Skills/SkillsManager-Tooling-CheckUp/scripts/Cli_Toolbox.py directive --topic read-audit --json` 获取 Part B。
 </part_A>
 
 <part_B>

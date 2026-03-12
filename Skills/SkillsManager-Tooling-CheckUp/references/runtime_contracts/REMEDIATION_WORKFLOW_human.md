@@ -3,7 +3,7 @@
 <part_A>
 - 本工作流用于真正进入目标 skill 做改写。
 - 人类应把它理解为“先证明可替换，再做最小改写，再跑目标 skill 自己的验证链”。
-- 模型运行时应通过 `python3 scripts/Cli_Toolbox.py directive --topic remediation --json` 获取 Part B。
+- 模型运行时应通过 `./.venv_backend_skills/bin/python Skills/SkillsManager-Tooling-CheckUp/scripts/Cli_Toolbox.py directive --topic remediation --json` 获取 Part B。
 </part_A>
 
 <part_B>

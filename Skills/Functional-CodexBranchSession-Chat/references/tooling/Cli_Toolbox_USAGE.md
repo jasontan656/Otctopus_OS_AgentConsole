@@ -7,11 +7,11 @@
 
 ## 工具清单
 - `Cli_Toolbox.locate_session`
-  - `python3 scripts/branch_chat_toolbox.py locate-session --session-id <session_id>`（或 `--resume-id <resume_id>`）
+  - `./.venv_backend_skills/bin/python Skills/Functional-CodexBranchSession-Chat/scripts/branch_chat_toolbox.py locate-session --session-id <session_id>`（或 `--resume-id <resume_id>`）
 - `Cli_Toolbox.extract_assistant_final_reply`
-  - `python3 scripts/branch_chat_toolbox.py extract-final-reply --session-id <session_id> --keyword "<keyword>"`（或 `--resume-id <resume_id>`）
+  - `./.venv_backend_skills/bin/python Skills/Functional-CodexBranchSession-Chat/scripts/branch_chat_toolbox.py extract-final-reply --session-id <session_id> --keyword "<keyword>"`（或 `--resume-id <resume_id>`）
 - `Cli_Toolbox.answer_question`
-  - `python3 scripts/branch_chat_toolbox.py answer-question --session-id <session_id> --question "<question>" [--keyword "<keyword>"] [--evidence-limit 8]`（或 `--resume-id <resume_id>`）
+  - `./.venv_backend_skills/bin/python Skills/Functional-CodexBranchSession-Chat/scripts/branch_chat_toolbox.py answer-question --session-id <session_id> --question "<question>" [--keyword "<keyword>"] [--evidence-limit 8]`（或 `--resume-id <resume_id>`）
 
 ## 叙事式使用说明（固定格式）
 
@@ -43,13 +43,13 @@
 ### 快速示例
 ```bash
 # 关键词精确模式
-python3 scripts/branch_chat_toolbox.py answer-question \
+./.venv_backend_skills/bin/python Skills/Functional-CodexBranchSession-Chat/scripts/branch_chat_toolbox.py answer-question \
   --resume-id 019c9775-52cb-7b83-a15c-5fafb7998f2f \
   --keyword "external-lint-all" \
   --question "这些 lint 脚本为什么在全扫时很慢？"
 
 # 主题证据模式（不提供关键词）
-python3 scripts/branch_chat_toolbox.py answer-question \
+./.venv_backend_skills/bin/python Skills/Functional-CodexBranchSession-Chat/scripts/branch_chat_toolbox.py answer-question \
   --resume-id 019c9775-52cb-7b83-a15c-5fafb7998f2f \
   --question "这个会话里的 lint 全扫脚本工作原理是什么，为什么慢？" \
   --evidence-limit 10

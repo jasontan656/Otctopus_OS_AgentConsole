@@ -27,7 +27,7 @@ GOVERNANCE_RULES_EN = [
     "The AGENTS manager centrally governs only Octopus_OS/AGENTS.md using scan / collect / push and a managed human/machine payload pair.",
     "Use branch contract, stage directive, and target contract as the AGENTS manager runtime navigation chain.",
     "Project baseline belongs to the always-load layer and must be read before entering any concrete container or domain.",
-    "The mother_doc stage must first strengthen user intent with Meta-prompt-write, then choose direct_writeback, question_backfill, or the root-only AGENTS manager branch.",
+    "The mother_doc stage must first strengthen user intent with Meta-Enhance-Prompt, then choose direct_writeback, question_backfill, or the root-only AGENTS manager branch.",
     "Impact selection in mother_doc is fixed as: default all-relevant, then subtract high-probability-irrelevant scopes.",
     "After mother_doc updates documents, the local git-backed status script must run; changed docs become modified and empty placeholders become null.",
     "The mother_doc stage must not write implementation logs, deployment logs, or Git / GitHub traceability records.",
@@ -61,8 +61,8 @@ def load_skill_runtime_contract(skill_root: Path) -> dict[str, object]:
         "preferred_runtime_language": "en",
     }
     payload["recommended_entry_commands"] = [
-        "python3 scripts/Cli_Toolbox.py skill-runtime-contract --json",
-        "python3 scripts/Cli_Toolbox.py skill-facade-contract --json",
+        "./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py skill-runtime-contract --json",
+        "./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py skill-facade-contract --json",
     ]
     payload["audit_source_language"] = "zh-CN"
     payload["skill_root"] = str(skill_root)
@@ -79,7 +79,7 @@ def _stage_entry(stage: str) -> dict[str, object]:
         "stage": stage,
         "scope": STAGE_SCOPES[stage],
         "required_contract_reads": command_block["required_contract_reads"],
-        "summary_command": f"python3 scripts/Cli_Toolbox.py {stage_command} --json",
+        "summary_command": f"./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py {stage_command} --json",
         "operation_commands": command_block["stage_commands"],
     }
 
@@ -95,11 +95,11 @@ def load_skill_facade_contract(skill_root: Path) -> dict[str, object]:
         },
         "entry_sequence": [
             {
-                "command": "python3 scripts/Cli_Toolbox.py skill-runtime-contract --json",
+                "command": "./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py skill-runtime-contract --json",
                 "purpose": "load the skill-level runtime contract before following any stage-specific path",
             },
             {
-                "command": "python3 scripts/Cli_Toolbox.py skill-facade-contract --json",
+                "command": "./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py skill-facade-contract --json",
                 "purpose": "load the runtime routing map for stages and the root-only AGENTS manager",
             },
         ],
@@ -108,10 +108,10 @@ def load_skill_facade_contract(skill_root: Path) -> dict[str, object]:
         "stages": [_stage_entry(stage) for stage in STAGE_ORDER],
         "specialized_runtime_entries": {
             "mother_doc_agents_manager": {
-                "branch_contract_command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-contract --json",
-                "stage_directive_command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-directive --stage <scan|collect|push> --json",
+                "branch_contract_command": "./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py mother-doc-agents-contract --json",
+                "stage_directive_command": "./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py mother-doc-agents-directive --stage <scan|collect|push> --json",
                 "target_contract_command": (
-                    "python3 scripts/Cli_Toolbox.py mother-doc-agents-target-contract "
+                    "./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py mother-doc-agents-target-contract "
                     '--relative-path "octopus_os_root" --file-kind agents --json'
                 ),
                 "runtime_model": [

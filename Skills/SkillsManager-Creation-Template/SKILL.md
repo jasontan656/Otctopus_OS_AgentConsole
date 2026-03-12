@@ -29,7 +29,7 @@ metadata:
 - `basic` 与 `staged_cli_first` 都必须产出可路由、可继续治理的 skill 结构，而不是只生成一份大门面。
 
 ## 2. 必读顺序
-1. 先读取 `python3 scripts/Cli_Toolbox.py runtime-contract --json`。
+1. 先读取 `./.venv_backend_skills/bin/python Skills/SkillsManager-Creation-Template/scripts/Cli_Toolbox.py runtime-contract --json`。
 2. 再读取 `references/routing/TASK_ROUTING.md`，按任务意图分流。
 3. 若任务涉及 profile 选择，再读取 `references/routing/PROFILE_ROUTING.md`。
 4. 若任务涉及新建或治理 skill 结构，必须读取 `references/governance/SKILL_DOCSTRUCTURE_ENFORCEMENT.md`。
@@ -62,14 +62,14 @@ metadata:
 - 不适用于：直接代替目标 skill 编写其业务语义，或替代 mirror / git / installer 职责。
 
 ## 5. 执行入口
-- `python3 scripts/Cli_Toolbox.py runtime-contract --json`
-- `python3 scripts/Cli_Toolbox.py contract-reference --json`
-- `python3 scripts/Cli_Toolbox.py architecture-playbook --json`
-- `python3 scripts/Cli_Toolbox.py staged-skill-reference --json`
-- `python3 scripts/Cli_Toolbox.py skill-template --json`
-- `python3 scripts/Cli_Toolbox.py staged-skill-template --json`
-- `python3 scripts/Cli_Toolbox.py runtime-contract-template --json`
-- `python3 scripts/Cli_Toolbox.py create-skill-from-template --skill-name <name> --target-root <path> --profile <basic|staged_cli_first> --overwrite`
+- `./.venv_backend_skills/bin/python Skills/SkillsManager-Creation-Template/scripts/Cli_Toolbox.py runtime-contract --json`
+- `./.venv_backend_skills/bin/python Skills/SkillsManager-Creation-Template/scripts/Cli_Toolbox.py contract-reference --json`
+- `./.venv_backend_skills/bin/python Skills/SkillsManager-Creation-Template/scripts/Cli_Toolbox.py architecture-playbook --json`
+- `./.venv_backend_skills/bin/python Skills/SkillsManager-Creation-Template/scripts/Cli_Toolbox.py staged-skill-reference --json`
+- `./.venv_backend_skills/bin/python Skills/SkillsManager-Creation-Template/scripts/Cli_Toolbox.py skill-template --json`
+- `./.venv_backend_skills/bin/python Skills/SkillsManager-Creation-Template/scripts/Cli_Toolbox.py staged-skill-template --json`
+- `./.venv_backend_skills/bin/python Skills/SkillsManager-Creation-Template/scripts/Cli_Toolbox.py runtime-contract-template --json`
+- `./.venv_backend_skills/bin/python Skills/SkillsManager-Creation-Template/scripts/Cli_Toolbox.py create-skill-from-template --skill-name <name> --target-root <path> --profile <basic|staged_cli_first> --overwrite`
 
 ## 6. 读取原则
 - `SKILL.md` 只负责把读者送到下一层路由，不重新长回治理正文。

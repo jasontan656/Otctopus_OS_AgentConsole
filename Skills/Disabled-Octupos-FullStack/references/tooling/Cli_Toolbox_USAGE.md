@@ -26,26 +26,26 @@
 
 ## 核心命令
 
-- `python3 scripts/Cli_Toolbox.py skill-runtime-contract --json`
-- `python3 scripts/Cli_Toolbox.py skill-facade-contract --json`
-- `python3 scripts/Cli_Toolbox.py stage-checklist --stage <mother_doc|implementation|evidence> --json`
-- `python3 scripts/Cli_Toolbox.py stage-doc-contract --stage <mother_doc|implementation|evidence> --json`
-- `python3 scripts/Cli_Toolbox.py stage-command-contract --stage <mother_doc|implementation|evidence> --json`
-- `python3 scripts/Cli_Toolbox.py stage-graph-contract --stage <mother_doc|implementation|evidence> --json`
-- `python3 scripts/Cli_Toolbox.py sync-mother-doc-navigation --json`
-- `python3 scripts/Cli_Toolbox.py mother-doc-agents-contract --json`
-- `python3 scripts/Cli_Toolbox.py mother-doc-agents-directive --stage <scan|collect|push> --json`
-- `python3 scripts/Cli_Toolbox.py mother-doc-agents-scan --json`
-- `python3 scripts/Cli_Toolbox.py mother-doc-agents-collect --json`
-- `python3 scripts/Cli_Toolbox.py mother-doc-agents-push --json`
-- `python3 scripts/Cli_Toolbox.py sync-mother-doc-status --stage <mother_doc|implementation|evidence> --path <relative-path> --lifecycle-state <modified|developed|null> --json`
-- `python3 scripts/Cli_Toolbox.py sync-mother-doc-status-from-git --repo-root <root>/Octopus_OS --stage mother_doc --path <relative-path> --json`
-- `python3 scripts/Cli_Toolbox.py append-implementation-log --summary "<git-commit-message>" --doc-path <doc-path> --code-path <code-path> --json`
-- `python3 scripts/Cli_Toolbox.py append-deployment-log --summary "<git-commit-message>" --doc-path <doc-path> --code-path <code-path> --json`
-- `python3 scripts/os_graph_cli.py status`
-- `python3 scripts/os_graph_cli.py sync-doc-bindings`
-- `python3 scripts/os_graph_cli.py sync-evidence`
-- `python3 scripts/os_graph_cli.py <analyze|list|query|context|impact|detect-changes|resource|map|wiki|cypher> [args...]`
+- `./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py skill-runtime-contract --json`
+- `./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py skill-facade-contract --json`
+- `./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py stage-checklist --stage <mother_doc|implementation|evidence> --json`
+- `./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py stage-doc-contract --stage <mother_doc|implementation|evidence> --json`
+- `./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py stage-command-contract --stage <mother_doc|implementation|evidence> --json`
+- `./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py stage-graph-contract --stage <mother_doc|implementation|evidence> --json`
+- `./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py sync-mother-doc-navigation --json`
+- `./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py mother-doc-agents-contract --json`
+- `./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py mother-doc-agents-directive --stage <scan|collect|push> --json`
+- `./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py mother-doc-agents-scan --json`
+- `./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py mother-doc-agents-collect --json`
+- `./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py mother-doc-agents-push --json`
+- `./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py sync-mother-doc-status --stage <mother_doc|implementation|evidence> --path <relative-path> --lifecycle-state <modified|developed|null> --json`
+- `./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py sync-mother-doc-status-from-git --repo-root <root>/Octopus_OS --stage mother_doc --path <relative-path> --json`
+- `./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py append-implementation-log --summary "<git-commit-message>" --doc-path <doc-path> --code-path <code-path> --json`
+- `./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py append-deployment-log --summary "<git-commit-message>" --doc-path <doc-path> --code-path <code-path> --json`
+- `./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/os_graph_cli.py status`
+- `./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/os_graph_cli.py sync-doc-bindings`
+- `./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/os_graph_cli.py sync-evidence`
+- `./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/os_graph_cli.py <analyze|list|query|context|impact|detect-changes|resource|map|wiki|cypher> [args...]`
 
 ## 结构结果
 

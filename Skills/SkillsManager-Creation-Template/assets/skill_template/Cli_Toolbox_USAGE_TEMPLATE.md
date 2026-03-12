@@ -43,12 +43,12 @@ anchors:
 - 最小用途描述：
   - [一句话描述该命令的最小用途]
 - 一行命令（必须满足以下全部约束）：
-  - 必须以 `cd <skill_root> &&` 开头。
+  - 必须以 `cd <repo-root> &&` 开头。
   - 必须为“一行可复制”的完整命令。
   - 必须包含管道（例如 `| sed -n '1,200p'`）以便快速查看结果。
   - 命令必须能一键直达脚本预期参数并得到可复现输出。
 - 示例：
-  - `cd <skill_root> && python3 scripts/<tool_script>.py --arg-a "<value>" --arg-b "<value>" | sed -n '1,200p'`
+  - `cd <repo-root> && ./.venv_backend_skills/bin/python Skills/${skill_name}/scripts/<tool_script>.py --arg-a "<value>" --arg-b "<value>" | sed -n '1,200p'`
 
 ## 参数与结果（供 AI/工程使用）
 - 输入：

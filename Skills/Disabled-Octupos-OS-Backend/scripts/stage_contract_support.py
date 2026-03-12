@@ -49,11 +49,11 @@ def stage_command_contract_payload(stage: str, mother_doc_root: Path, constructi
     commands = {
         "mother_doc": {
             "entry_commands": [
-                f"python3 scripts/Cli_Toolbox.py stage-checklist --stage {stage} --json",
-                f"python3 scripts/Cli_Toolbox.py mother-doc-init --target {mother_doc_root} --json",
+                f"./.venv_backend_skills/bin/python Skills/Disabled-Octupos-OS-Backend/scripts/Cli_Toolbox.py stage-checklist --stage {stage} --json",
+                f"./.venv_backend_skills/bin/python Skills/Disabled-Octupos-OS-Backend/scripts/Cli_Toolbox.py mother-doc-init --target {mother_doc_root} --json",
             ],
-            "gate_commands": [f"python3 scripts/Cli_Toolbox.py mother-doc-lint --path {mother_doc_root} --json"],
-            "optional_commands": [f"python3 scripts/Cli_Toolbox.py graph-preflight --repo {codebase_root} --allow-missing-index --json"],
+            "gate_commands": [f"./.venv_backend_skills/bin/python Skills/Disabled-Octupos-OS-Backend/scripts/Cli_Toolbox.py mother-doc-lint --path {mother_doc_root} --json"],
+            "optional_commands": [f"./.venv_backend_skills/bin/python Skills/Disabled-Octupos-OS-Backend/scripts/Cli_Toolbox.py graph-preflight --repo {codebase_root} --allow-missing-index --json"],
             "required_iteration_actions": [
                 (
                     f"read the latest archived mother_doc iteration at {latest_archive} before writing the new iteration"
@@ -66,23 +66,23 @@ def stage_command_contract_payload(stage: str, mother_doc_root: Path, constructi
         },
         "construction_plan": {
             "entry_commands": [
-                f"python3 scripts/Cli_Toolbox.py stage-checklist --stage {stage} --json",
-                f"python3 scripts/Cli_Toolbox.py construction-plan-init --target {construction_plan_root} --json",
+                f"./.venv_backend_skills/bin/python Skills/Disabled-Octupos-OS-Backend/scripts/Cli_Toolbox.py stage-checklist --stage {stage} --json",
+                f"./.venv_backend_skills/bin/python Skills/Disabled-Octupos-OS-Backend/scripts/Cli_Toolbox.py construction-plan-init --target {construction_plan_root} --json",
             ],
-            "gate_commands": [f"python3 scripts/Cli_Toolbox.py construction-plan-lint --path {construction_plan_root} --json"],
-            "optional_commands": [f"python3 scripts/Cli_Toolbox.py graph-preflight --repo {codebase_root} --allow-missing-index --json"],
+            "gate_commands": [f"./.venv_backend_skills/bin/python Skills/Disabled-Octupos-OS-Backend/scripts/Cli_Toolbox.py construction-plan-lint --path {construction_plan_root} --json"],
+            "optional_commands": [f"./.venv_backend_skills/bin/python Skills/Disabled-Octupos-OS-Backend/scripts/Cli_Toolbox.py graph-preflight --repo {codebase_root} --allow-missing-index --json"],
         },
         "implementation": {
-            "entry_commands": [f"python3 scripts/Cli_Toolbox.py stage-checklist --stage {stage} --json"],
+            "entry_commands": [f"./.venv_backend_skills/bin/python Skills/Disabled-Octupos-OS-Backend/scripts/Cli_Toolbox.py stage-checklist --stage {stage} --json"],
             "gate_commands": [],
             "optional_commands": [],
         },
         "acceptance": {
-            "entry_commands": [f"python3 scripts/Cli_Toolbox.py stage-checklist --stage {stage} --json"],
+            "entry_commands": [f"./.venv_backend_skills/bin/python Skills/Disabled-Octupos-OS-Backend/scripts/Cli_Toolbox.py stage-checklist --stage {stage} --json"],
             "gate_commands": [
-                "python3 scripts/Cli_Toolbox.py acceptance-lint --json",
-                f"python3 scripts/Cli_Toolbox.py graph-postflight --repo {codebase_root} --json",
-                f"python3 scripts/Cli_Toolbox.py mother-doc-archive --target {mother_doc_root} --json",
+                "./.venv_backend_skills/bin/python Skills/Disabled-Octupos-OS-Backend/scripts/Cli_Toolbox.py acceptance-lint --json",
+                f"./.venv_backend_skills/bin/python Skills/Disabled-Octupos-OS-Backend/scripts/Cli_Toolbox.py graph-postflight --repo {codebase_root} --json",
+                f"./.venv_backend_skills/bin/python Skills/Disabled-Octupos-OS-Backend/scripts/Cli_Toolbox.py mother-doc-archive --target {mother_doc_root} --json",
             ],
             "optional_commands": [],
             "required_runtime_actions": [
@@ -104,9 +104,9 @@ def stage_command_contract_payload(stage: str, mother_doc_root: Path, constructi
 def stage_graph_contract_payload(stage: str, codebase_root: Path) -> dict[str, object]:
     graph_role = STAGES[stage]["graph_role"]
     recommended_commands = {
-        "mother_doc": [f"python3 scripts/Cli_Toolbox.py graph-preflight --repo {codebase_root} --allow-missing-index --json"],
-        "construction_plan": [f"python3 scripts/Cli_Toolbox.py graph-preflight --repo {codebase_root} --allow-missing-index --json"],
+        "mother_doc": [f"./.venv_backend_skills/bin/python Skills/Disabled-Octupos-OS-Backend/scripts/Cli_Toolbox.py graph-preflight --repo {codebase_root} --allow-missing-index --json"],
+        "construction_plan": [f"./.venv_backend_skills/bin/python Skills/Disabled-Octupos-OS-Backend/scripts/Cli_Toolbox.py graph-preflight --repo {codebase_root} --allow-missing-index --json"],
         "implementation": [],
-        "acceptance": [f"python3 scripts/Cli_Toolbox.py graph-postflight --repo {codebase_root} --json"],
+        "acceptance": [f"./.venv_backend_skills/bin/python Skills/Disabled-Octupos-OS-Backend/scripts/Cli_Toolbox.py graph-postflight --repo {codebase_root} --json"],
     }
     return {"stage": stage, "graph_role": graph_role, "recommended_commands": recommended_commands[stage]}

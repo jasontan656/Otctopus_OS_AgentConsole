@@ -58,7 +58,7 @@ def stage_command_contract_payload(
     project_agents_path = runtime["project_agents_path"]
     latest_archive = latest_archived_iteration(mother_doc_root)
     target_runtime_cmd_parts = [
-        "python3 scripts/Cli_Toolbox.py target-runtime-contract",
+        "./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py target-runtime-contract",
         f"--target-root {target_root}",
         f"--docs-root {docs_root}",
         f"--module-dir {runtime['module_dir']}",
@@ -73,11 +73,11 @@ def stage_command_contract_payload(
         "mother_doc": {
             "entry_commands": [
                 target_runtime_cmd,
-                f"python3 scripts/Cli_Toolbox.py stage-checklist --stage {stage} --target-root {target_root} --docs-root {docs_root} --module-dir {runtime['module_dir']} --codebase-root {codebase_root} --graph-runtime-root {graph_runtime_root} --json",
-                f"python3 scripts/Cli_Toolbox.py target-scaffold --target-root {target_root} --docs-root {docs_root} --module-dir {runtime['module_dir']} --codebase-root {codebase_root} --graph-runtime-root {graph_runtime_root} --json",
+                f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py stage-checklist --stage {stage} --target-root {target_root} --docs-root {docs_root} --module-dir {runtime['module_dir']} --codebase-root {codebase_root} --graph-runtime-root {graph_runtime_root} --json",
+                f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py target-scaffold --target-root {target_root} --docs-root {docs_root} --module-dir {runtime['module_dir']} --codebase-root {codebase_root} --graph-runtime-root {graph_runtime_root} --json",
             ],
-            "gate_commands": [f"python3 scripts/Cli_Toolbox.py mother-doc-lint --path {mother_doc_root} --json"],
-            "optional_commands": [f"python3 scripts/Cli_Toolbox.py graph-preflight --repo {codebase_root} --graph-runtime-root {graph_runtime_root} --allow-missing-index --json"],
+            "gate_commands": [f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py mother-doc-lint --path {mother_doc_root} --json"],
+            "optional_commands": [f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py graph-preflight --repo {codebase_root} --graph-runtime-root {graph_runtime_root} --allow-missing-index --json"],
             "required_iteration_actions": [
                 (
                     f"read the latest archived mother_doc iteration at {latest_archive} before writing the new iteration"
@@ -92,11 +92,11 @@ def stage_command_contract_payload(
         "construction_plan": {
             "entry_commands": [
                 target_runtime_cmd,
-                f"python3 scripts/Cli_Toolbox.py stage-checklist --stage {stage} --target-root {target_root} --docs-root {docs_root} --module-dir {runtime['module_dir']} --codebase-root {codebase_root} --graph-runtime-root {graph_runtime_root} --json",
-                f"python3 scripts/Cli_Toolbox.py target-scaffold --target-root {target_root} --docs-root {docs_root} --module-dir {runtime['module_dir']} --codebase-root {codebase_root} --graph-runtime-root {graph_runtime_root} --json",
+                f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py stage-checklist --stage {stage} --target-root {target_root} --docs-root {docs_root} --module-dir {runtime['module_dir']} --codebase-root {codebase_root} --graph-runtime-root {graph_runtime_root} --json",
+                f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py target-scaffold --target-root {target_root} --docs-root {docs_root} --module-dir {runtime['module_dir']} --codebase-root {codebase_root} --graph-runtime-root {graph_runtime_root} --json",
             ],
-            "gate_commands": [f"python3 scripts/Cli_Toolbox.py construction-plan-lint --path {construction_plan_root} --json"],
-            "optional_commands": [f"python3 scripts/Cli_Toolbox.py graph-preflight --repo {codebase_root} --graph-runtime-root {graph_runtime_root} --allow-missing-index --json"],
+            "gate_commands": [f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py construction-plan-lint --path {construction_plan_root} --json"],
+            "optional_commands": [f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py graph-preflight --repo {codebase_root} --graph-runtime-root {graph_runtime_root} --allow-missing-index --json"],
             "required_reuse_actions": [
                 "reuse the existing execution_atom_plan_validation_packs root when it is already present",
                 "do not create a second disconnected task-pack tree under a different docs container for the same target",
@@ -105,7 +105,7 @@ def stage_command_contract_payload(
         "implementation": {
             "entry_commands": [
                 target_runtime_cmd,
-                f"python3 scripts/Cli_Toolbox.py stage-checklist --stage {stage} --target-root {target_root} --docs-root {docs_root} --module-dir {runtime['module_dir']} --codebase-root {codebase_root} --graph-runtime-root {graph_runtime_root} --json",
+                f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py stage-checklist --stage {stage} --target-root {target_root} --docs-root {docs_root} --module-dir {runtime['module_dir']} --codebase-root {codebase_root} --graph-runtime-root {graph_runtime_root} --json",
             ],
             "gate_commands": [],
             "optional_commands": [],
@@ -116,12 +116,12 @@ def stage_command_contract_payload(
         "acceptance": {
             "entry_commands": [
                 target_runtime_cmd,
-                f"python3 scripts/Cli_Toolbox.py stage-checklist --stage {stage} --target-root {target_root} --docs-root {docs_root} --module-dir {runtime['module_dir']} --codebase-root {codebase_root} --graph-runtime-root {graph_runtime_root} --json",
+                f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py stage-checklist --stage {stage} --target-root {target_root} --docs-root {docs_root} --module-dir {runtime['module_dir']} --codebase-root {codebase_root} --graph-runtime-root {graph_runtime_root} --json",
             ],
             "gate_commands": [
-                f"python3 scripts/Cli_Toolbox.py acceptance-lint --codebase-root {codebase_root} --target-root {target_root} --docs-root {docs_root} --json",
-                f"python3 scripts/Cli_Toolbox.py graph-postflight --repo {codebase_root} --graph-runtime-root {graph_runtime_root} --json",
-                f"python3 scripts/Cli_Toolbox.py mother-doc-archive --target {mother_doc_root} --json",
+                f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py acceptance-lint --codebase-root {codebase_root} --target-root {target_root} --docs-root {docs_root} --json",
+                f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py graph-postflight --repo {codebase_root} --graph-runtime-root {graph_runtime_root} --json",
+                f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py mother-doc-archive --target {mother_doc_root} --json",
             ],
             "optional_commands": [],
             "required_runtime_actions": [
@@ -144,9 +144,9 @@ def stage_graph_contract_payload(stage: str, codebase_root: Path, graph_runtime_
     graph_role = STAGES[stage]["graph_role"]
     graph_root = graph_runtime_root or resolve_target_runtime(codebase_root=codebase_root)["graph_runtime_root"]
     recommended_commands = {
-        "mother_doc": [f"python3 scripts/Cli_Toolbox.py graph-preflight --repo {codebase_root} --graph-runtime-root {graph_root} --allow-missing-index --json"],
-        "construction_plan": [f"python3 scripts/Cli_Toolbox.py graph-preflight --repo {codebase_root} --graph-runtime-root {graph_root} --allow-missing-index --json"],
+        "mother_doc": [f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py graph-preflight --repo {codebase_root} --graph-runtime-root {graph_root} --allow-missing-index --json"],
+        "construction_plan": [f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py graph-preflight --repo {codebase_root} --graph-runtime-root {graph_root} --allow-missing-index --json"],
         "implementation": [],
-        "acceptance": [f"python3 scripts/Cli_Toolbox.py graph-postflight --repo {codebase_root} --graph-runtime-root {graph_root} --json"],
+        "acceptance": [f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py graph-postflight --repo {codebase_root} --graph-runtime-root {graph_root} --json"],
     }
     return {"stage": stage, "graph_role": graph_role, "recommended_commands": recommended_commands[stage]}

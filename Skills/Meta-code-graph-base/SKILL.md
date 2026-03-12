@@ -38,12 +38,12 @@ description: "维护本地代码图谱底座：统一建图、查图、影响面
 
 1. 先确认目标仓库是否已经建图：
 ```bash
-python3 scripts/meta_code_graph_base.py status
+./.venv_backend_skills/bin/python Skills/Meta-code-graph-base/scripts/meta_code_graph_base.py status
 ```
 
 2. 如果未建图或已过期，先分析：
 ```bash
-python3 scripts/meta_code_graph_base.py analyze /abs/repo/path
+./.venv_backend_skills/bin/python Skills/Meta-code-graph-base/scripts/meta_code_graph_base.py analyze /abs/repo/path
 ```
 
 3. 施工前，至少使用以下能力之一：
@@ -61,7 +61,7 @@ python3 scripts/meta_code_graph_base.py analyze /abs/repo/path
 
 统一入口：
 ```bash
-python3 scripts/meta_code_graph_base.py <subcommand> [args...]
+./.venv_backend_skills/bin/python Skills/Meta-code-graph-base/scripts/meta_code_graph_base.py <subcommand> [args...]
 ```
 
 核心子命令：

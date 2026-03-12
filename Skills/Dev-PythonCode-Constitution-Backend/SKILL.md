@@ -56,7 +56,7 @@ metadata:
 ## 5. 执行入口
 - 规则读取入口：`SKILL.md -> references/routing/TASK_ROUTING.md -> references/governance/SKILL_EXECUTION_RULES.md`
 - Python 胖代码/拆分规则入口：`references/python_rules/PYTHON_FAT_FILE_CONSTITUTION.md`
-- lint 执行入口：`python3 scripts/run_python_code_lints.py --target <target_root>`
+- lint 执行入口：`./.venv_backend_skills/bin/python Skills/Dev-PythonCode-Constitution-Backend/scripts/run_python_code_lints.py --target <target_root>`
 - 若后续新增或改写工具，必须同步更新 `references/tooling/` 全套文档。
 
 ## 6. 读取原则

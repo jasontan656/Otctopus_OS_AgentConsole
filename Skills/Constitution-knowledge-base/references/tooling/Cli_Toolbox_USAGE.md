@@ -26,7 +26,7 @@
 ## 示例命令（强制：一行可复制）
 - 最小用途描述：双语关键词检索机器版宪法 JSONL（始终带 common_core，全程仅控制台输出）。
 - 一行命令：
-  - `cd /home/jasontan656/AI_Projects/octopus-os-agent-console/Skills/Constitution-knowledge-base && python3 scripts/constitution_keyword_query.py --keywords-zh "会话,队列" --keywords-en "session,queue" | cat`
+  - `cd <repo-root> && ./.venv_backend_skills/bin/python Skills/Constitution-knowledge-base/scripts/constitution_keyword_query.py --keywords-zh "会话,队列" --keywords-en "session,queue" | cat`
 - 禁止事项（强制）：
   - 查询命令禁止限制输出行数；禁止使用 `sed -n/head/tail/awk 'NR...'` 等限行命令。
 

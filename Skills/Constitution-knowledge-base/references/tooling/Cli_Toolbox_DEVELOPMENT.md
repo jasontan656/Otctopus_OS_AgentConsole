@@ -34,7 +34,7 @@
 3. 无法稳定静态验证的条款不再进入宪法库 registry。
 
 ## 示例命令（强制：一行可复制）
-- `cd /home/jasontan656/AI_Projects/octopus-os-agent-console/Skills/Constitution-knowledge-base && python3 scripts/constitution_keyword_query.py --keywords-zh "队列,门禁" --keywords-en "queue,gate" | cat`
+- `cd <repo-root> && ./.venv_backend_skills/bin/python Skills/Constitution-knowledge-base/scripts/constitution_keyword_query.py --keywords-zh "队列,门禁" --keywords-en "queue,gate" | cat`
 
 ## 同步维护约束（强制）
 - 工具变更必须同步更新：

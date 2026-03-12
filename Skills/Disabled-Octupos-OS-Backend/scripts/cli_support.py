@@ -68,7 +68,7 @@ def mother_doc_init_payload(target: Path, force: bool) -> tuple[dict, int]:
         "status": "pass",
         "target": str(target),
         "created_files": created_files,
-        "lint_command": f"python3 scripts/Cli_Toolbox.py mother-doc-lint --path {target} --json",
+        "lint_command": f"./.venv_backend_skills/bin/python Skills/Disabled-Octupos-OS-Backend/scripts/Cli_Toolbox.py mother-doc-lint --path {target} --json",
     }, 0
 
 

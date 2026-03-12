@@ -32,7 +32,7 @@
     "facade_constraint": "SKILL.md may route readers and state stable boundaries only; deep governance must live in routing or topic docs."
   },
   "routing_protocol": {
-    "first_command": "python3 scripts/Cli_Toolbox.py runtime-contract --json",
+    "first_command": "./.venv_backend_skills/bin/python Skills/SkillsManager-Creation-Template/scripts/Cli_Toolbox.py runtime-contract --json",
     "task_routing_doc": "references/routing/TASK_ROUTING.md",
     "profile_routing_doc": "references/routing/PROFILE_ROUTING.md",
     "required_read_sequence": [

@@ -1,7 +1,7 @@
 # Browser Total Entry
 
 ## Purpose
-- 本文是 human supplement；模型运行时主入口应先走 `python3 scripts/Cli_Toolbox.py contract --json` 与 `python3 scripts/Cli_Toolbox.py directive --topic fallback-routing --json`。
+- 本文是 human supplement；模型运行时主入口应先走 `./.venv_backend_skills/bin/python Skills/Meta-Agent-Browser/scripts/Cli_Toolbox.py contract --json` 与 `./.venv_backend_skills/bin/python Skills/Meta-Agent-Browser/scripts/Cli_Toolbox.py directive --topic fallback-routing --json`。
 - 提供浏览器任务的统一总入口。
 - 在 runtime 不明确时，先给出稳定主路径，再给出逐级兜底，而不是让模型在多个浏览器方法论之间来回猜。
 

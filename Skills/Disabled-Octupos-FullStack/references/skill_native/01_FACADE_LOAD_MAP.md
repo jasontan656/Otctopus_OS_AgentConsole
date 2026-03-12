@@ -7,8 +7,8 @@
 - This file is a human audit and navigation map behind the lightweight `SKILL.md` facade.
 - Runtime models must not treat this markdown file as the primary rule source.
 - Runtime routing must come from:
-  - `python3 scripts/Cli_Toolbox.py skill-runtime-contract --json`
-  - `python3 scripts/Cli_Toolbox.py skill-facade-contract --json`
+  - `./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py skill-runtime-contract --json`
+  - `./.venv_backend_skills/bin/python Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py skill-facade-contract --json`
 
 ## Runtime First
 

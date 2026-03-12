@@ -15,7 +15,7 @@ description: "runtime 必须维护的语义词池。用于让模型在每个 tur
   - `assets/runtime/semantic_pool_payload.json`
 - 模型在正常执行中不得直接阅读 payload 文件本体；必须通过 CLI 打印 runtime contract 到 console 后再遵守。
 - 统一 CLI 入口：
-  - `python3 scripts/Cli_Toolbox.py runtime-contract --json`
+  - `./.venv_backend_skills/bin/python Skills/Meta-Semantic-Collection/scripts/Cli_Toolbox.py runtime-contract --json`
 - 该命令会把 payload 包进 runtime contract 外壳，输出“本 turn 必须遵守的翻译合同”。
 - payload entry schema 固定为：
   - `collection: list[str]`
@@ -25,8 +25,8 @@ description: "runtime 必须维护的语义词池。用于让模型在每个 tur
   - 一个词不能同时指向多个 `action_semantic_description`
   - prompt 命中词池后，词池语义优先覆盖模型默认理解
 - 维护入口：
-  - `python3 scripts/Cli_Toolbox.py upsert-payload --term "<term>" --term "<term>" --description "<semantic>" --dry-run --json`
-  - `python3 scripts/Cli_Toolbox.py upsert-payload --term "<term>" --term "<term>" --description "<semantic>" --json`
+  - `./.venv_backend_skills/bin/python Skills/Meta-Semantic-Collection/scripts/Cli_Toolbox.py upsert-payload --term "<term>" --term "<term>" --description "<semantic>" --dry-run --json`
+  - `./.venv_backend_skills/bin/python Skills/Meta-Semantic-Collection/scripts/Cli_Toolbox.py upsert-payload --term "<term>" --term "<term>" --description "<semantic>" --json`
 - `dry-run` 只预览 diff 与 runtime contract 结果，不实际回写 JSON。
 - 非 `dry-run` 模式才真正写回 payload 文件，并由脚本保证 JSON 结构合法。
 

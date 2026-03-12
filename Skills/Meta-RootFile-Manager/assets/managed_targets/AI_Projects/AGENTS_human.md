@@ -5,11 +5,11 @@
 <part_A>
 1. 根入口命令
 - 在处理 workspace root 路径规则之前，必须先运行：
-- `python3 /home/jasontan656/AI_Projects/octopus-os-agent-console/Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py target-contract --source-path "/home/jasontan656/AI_Projects/AGENTS.md" --json`
+- `<root>/octopus-os-agent-console/.venv_backend_skills/bin/python <root>/octopus-os-agent-console/Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py target-contract --source-path "/home/jasontan656/AI_Projects/AGENTS.md" --json`
 
 2. 技能类任务附加入口
 - 任何时候只要任务涉及技能、技能镜像、技能安装、技能同步、技能注册、技能治理或技能运行时，必须阅读：
-- `python3 /home/jasontan656/AI_Projects/octopus-os-agent-console/Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py target-contract --source-path "/home/jasontan656/AI_Projects/octopus-os-agent-console/AGENTS.md" --json`
+- `<root>/octopus-os-agent-console/.venv_backend_skills/bin/python <root>/octopus-os-agent-console/Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py target-contract --source-path "/home/jasontan656/AI_Projects/octopus-os-agent-console/AGENTS.md" --json`
 
 3. 语言规范
 - 对话输出必须使用中文为主。
@@ -42,7 +42,7 @@
   },
   "default_meta_skill_order": [
     "$Meta-Semantic-Collection (understand human expressed meaning and update it according to its rule)",
-    "$Meta-prompt-write (strengthen user intent and understand the real need)",
+    "$Meta-Enhance-Prompt (strengthen user intent and understand the real need)",
     "$Meta-Impact-Investigation (ensure the coverage of user request before conclusion or edits)",
     "$Meta-Architect-MindModel (think from the architecture level and reject one-sided thinking)",
     "$Meta-reasoningchain (project the future shape to align the target state)",

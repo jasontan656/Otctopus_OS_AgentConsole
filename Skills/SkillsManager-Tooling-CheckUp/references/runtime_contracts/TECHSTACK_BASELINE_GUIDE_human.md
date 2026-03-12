@@ -3,7 +3,7 @@
 <part_A>
 - 本 guide 只解决一个问题：当前 repo 已经把哪些技能依赖栈治理成必用基线。
 - 人类阅读时应把它当成“可疑重复造轮子”的判断锚点，而不是新增依赖提案。
-- 模型运行时应通过 `python3 scripts/Cli_Toolbox.py directive --topic techstack-baseline --json` 获取 Part B。
+- 模型运行时应通过 `./.venv_backend_skills/bin/python Skills/SkillsManager-Tooling-CheckUp/scripts/Cli_Toolbox.py directive --topic techstack-baseline --json` 获取 Part B。
 </part_A>
 
 <part_B>
