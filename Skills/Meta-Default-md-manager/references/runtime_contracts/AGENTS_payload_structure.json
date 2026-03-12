@@ -128,6 +128,7 @@
         "default_meta_skill_order",
         "peer_summary_policy",
         "language_policy",
+        "skills_required_techstacks",
         "turn_start_actions",
         "runtime_constraints",
         "execution_modes",
@@ -211,6 +212,27 @@
             },
             "git_iteration_logs_for_github": {
               "type": "string"
+            }
+          }
+        },
+        "skills_required_techstacks": {
+          "type": "object",
+          "key_order": [
+            "python_backend",
+            "vue3_typescript_frontend"
+          ],
+          "properties": {
+            "python_backend": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "vue3_typescript_frontend": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             }
           }
         },

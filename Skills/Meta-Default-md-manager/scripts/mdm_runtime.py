@@ -280,6 +280,9 @@ def scaffold_external_agents(external_path: Path) -> str:
         "2. 待治理骨架\n"
         "- 该目录已进入治理范围。\n"
         "- 用户后续应补全该目录所需的具体治理内容。\n"
+        "\n"
+        "3. 治理链约束\n"
+        "- 更新本文件时及相关内容时,必须使用 $Meta-Default-md-manager 更新治理映射模版然后再回推至本文件,或者更新本文件但是必须使用技能的collect来反向更新,避免单点更新治理链断裂.\n"
         f"{PART_A_CLOSE}\n"
     )
 

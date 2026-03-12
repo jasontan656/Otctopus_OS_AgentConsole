@@ -35,6 +35,7 @@ pnpm-debug.log*
 # --- Python virtual envs ---
 .venv/
 .venv*/
+.venv_backend_skills/
 venv/
 env/
 ENV/
@@ -60,12 +61,14 @@ node_modules/
 .pnpm-store/
 .npm/
 .yarn/
+.eslintcache
 .yarn-cache/
 .vite/
 .turbo/
 .parcel-cache/
 .next/cache/
 .nuxt/cache/
+*.tsbuildinfo
 
 # --- General caches ---
 .cache/

@@ -38,4 +38,11 @@
 - 若当前任务需要新增 repo-local 依赖，允许 AI 根据任务内容自行决定所需依赖并直接安装；但安装位置只能是本 repo 的 `*_skills` 环境或其受管 manifest/lock 所在目录。
 - 若后续出现其他类型依赖，也必须优先落在 `octopus-os-agent-console` 目录内的 repo-local `*_skills` 环境或其对应 manifest/lock 文件中，禁止把全局环境当成长期依赖承载层。
 - 当依赖集合发生变化时，必须同时保持 `Meta-Default-md-manager` 内的治理映射模版与外部 `AGENTS.md` 内容同步。
+
+7. Skills 必用 tech stack 基线
+- `Skills/` 目录内若涉及 Python、Vue3、TypeScript、JSON、YAML、Markdown、lint、test、schema、CLI 或文档解析任务，必须优先使用 Part B 中 `skills_required_techstacks` 声明的受管 tech stack，禁止重复造轮子或绕开 repo-local `*_skills` 环境。
+- 新增同类能力时，先判断现有必用 tech stack 是否已覆盖；仅在确有能力缺口时才允许增补依赖，并必须同回合更新 lock/manifest 与治理映射。
+
+8. 治理链约束
+- 更新本文件时及相关内容时,必须使用 $Meta-Default-md-manager 更新治理映射模版然后再回推至本文件,或者更新本文件但是必须使用技能的collect来反向更新,避免单点更新治理链断裂.
 </part_A>

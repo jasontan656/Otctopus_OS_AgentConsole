@@ -38,6 +38,13 @@
 - 若当前任务需要新增 repo-local 依赖，允许 AI 根据任务内容自行决定所需依赖并直接安装；但安装位置只能是本 repo 的 `*_skills` 环境或其受管 manifest/lock 所在目录。
 - 若后续出现其他类型依赖，也必须优先落在 `octopus-os-agent-console` 目录内的 repo-local `*_skills` 环境或其对应 manifest/lock 文件中，禁止把全局环境当成长期依赖承载层。
 - 当依赖集合发生变化时，必须同时保持 `Meta-Default-md-manager` 内的治理映射模版与外部 `AGENTS.md` 内容同步。
+
+7. Skills 必用 tech stack 基线
+- `Skills/` 目录内若涉及 Python、Vue3、TypeScript、JSON、YAML、Markdown、lint、test、schema、CLI 或文档解析任务，必须优先使用 Part B 中 `skills_required_techstacks` 声明的受管 tech stack，禁止重复造轮子或绕开 repo-local `*_skills` 环境。
+- 新增同类能力时，先判断现有必用 tech stack 是否已覆盖；仅在确有能力缺口时才允许增补依赖，并必须同回合更新 lock/manifest 与治理映射。
+
+8. 治理链约束
+- 更新本文件时及相关内容时,必须使用 $Meta-Default-md-manager 更新治理映射模版然后再回推至本文件,或者更新本文件但是必须使用技能的collect来反向更新,避免单点更新治理链断裂.
 </part_A>
 
 <part_B>
@@ -70,12 +77,46 @@
     "internal_skill_core_and_governance_docs": "Chinese allowed for internal iteration",
     "git_iteration_logs_for_github": "English-preferred"
   },
+  "skills_required_techstacks": {
+    "python_backend": [
+      "pytest",
+      "ruff",
+      "PyYAML",
+      "jsonschema",
+      "pydantic",
+      "markdown-it-py",
+      "mdformat",
+      "python-frontmatter",
+      "typer",
+      "rich",
+      "httpx",
+      "watchfiles"
+    ],
+    "vue3_typescript_frontend": [
+      "vue",
+      "typescript",
+      "@types/node",
+      "tsx",
+      "vitest",
+      "eslint",
+      "typescript-eslint",
+      "eslint-plugin-vue",
+      "vue-tsc",
+      "markdownlint-cli2",
+      "ajv",
+      "zod",
+      "gray-matter",
+      "markdown-it",
+      "prettier"
+    ]
+  },
   "turn_start_actions": [
     "use the returned target contract JSON as the runtime rule source",
     "classify the turn as READ_EXEC or WRITE_EXEC",
     "if the turn will write octopus-os-agent-console, plan same-turn Git traceability from the start; if task contents include Python related edits, also plan Dev-PythonCode-Constitution-Backend reading and lint from the start",
     "if the task needs repo-local dependencies, read the backend/frontend skills environment manifests before installing or invoking tooling",
     "if the task needs new repo-local dependencies, the AI may choose them from task evidence and install them into the governed *_skills environments before use",
+    "if the task touches Skills/, read skills_required_techstacks first and treat it as the mandatory baseline before introducing new stacks or writing custom equivalents",
     "if the turn touches language surfaces, enforce outward English docs and inward Chinese development boundaries before editing",
     "if the turn will edit a skill, treat the mirror copy under octopus-os-agent-console/Skills as the only editable source and determine whether downstream sync must be Push or Install",
     "if task contents include Python related edits, read Dev-PythonCode-Constitution-Backend through SKILL.md -> TASK_ROUTING -> SKILL_EXECUTION_RULES before editing"
@@ -92,6 +133,7 @@
     "GitHub-facing product iteration logs and commit subjects should prefer English wording",
     "skills runtime dependencies must be installed into repo-local *_skills environments or their tracked manifest/lock files, not global environments",
     "the AI may decide which repo-local dependencies are needed for the active task, but every installation must stay inside the governed repo-local environments and be reflected in the tracked lock or manifest files",
+    "when the task touches Skills/, treat skills_required_techstacks as the mandatory baseline and do not reinvent equivalent local parsing, lint, markdown, schema, test, CLI, or runtime stacks without an explicit user override",
     "keep requirements-backend_skills.lock.txt in sync with the Python dependencies installed into .venv_backend_skills",
     "keep frontend_skills/package.json and frontend_skills/package-lock.json in sync with the frontend dependency set used by skills tasks",
     "for skill changes, edit the mirror copy under octopus-os-agent-console/Skills and never directly edit the codex installation directory",
@@ -130,6 +172,7 @@
   "turn_end_actions": [
     "if task contents include Python related edits, run Dev-PythonCode-Constitution-Backend lint on the concrete Python-related target scope",
     "if dependency manifests or lock files changed, keep the repo-local skills environments and AGENTS governance mapping synchronized in the same turn",
+    "if the turn updated the mandatory Skills tech stack baseline, keep skills_required_techstacks and the repo-local environment lock or manifest files synchronized in the same turn",
     "if the turn edited a skill, complete skill-mirror-to-codex Push or Install before closing the turn",
     "if the turn wrote octopus-os-agent-console, complete same-turn commit-and-push before closing the turn"
   ],

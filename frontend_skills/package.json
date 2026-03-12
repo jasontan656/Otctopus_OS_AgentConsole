@@ -3,5 +3,28 @@
   "private": true,
   "version": "0.0.0",
   "description": "Repo-local frontend dependency environment for octopus-os-agent-console skills workflows.",
-  "packageManager": "npm@11.7.0"
+  "packageManager": "npm@11.7.0",
+  "scripts": {
+    "lint:eslint": "eslint .",
+    "lint:markdown": "markdownlint-cli2 \"../**/*.md\"",
+    "test": "vitest run",
+    "typecheck": "vue-tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^25.4.0",
+    "ajv": "^8.18.0",
+    "eslint": "^10.0.3",
+    "eslint-plugin-vue": "^10.8.0",
+    "gray-matter": "^4.0.3",
+    "markdown-it": "^14.1.1",
+    "markdownlint-cli2": "^0.21.0",
+    "prettier": "^3.8.1",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.57.0",
+    "vitest": "^4.0.18",
+    "vue": "^3.5.30",
+    "vue-tsc": "^3.2.5",
+    "zod": "^4.3.6"
+  }
 }

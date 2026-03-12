@@ -25,12 +25,46 @@
     "internal_skill_core_and_governance_docs": "Chinese allowed for internal iteration",
     "git_iteration_logs_for_github": "English-preferred"
   },
+  "skills_required_techstacks": {
+    "python_backend": [
+      "pytest",
+      "ruff",
+      "PyYAML",
+      "jsonschema",
+      "pydantic",
+      "markdown-it-py",
+      "mdformat",
+      "python-frontmatter",
+      "typer",
+      "rich",
+      "httpx",
+      "watchfiles"
+    ],
+    "vue3_typescript_frontend": [
+      "vue",
+      "typescript",
+      "@types/node",
+      "tsx",
+      "vitest",
+      "eslint",
+      "typescript-eslint",
+      "eslint-plugin-vue",
+      "vue-tsc",
+      "markdownlint-cli2",
+      "ajv",
+      "zod",
+      "gray-matter",
+      "markdown-it",
+      "prettier"
+    ]
+  },
   "turn_start_actions": [
     "use the returned target contract JSON as the runtime rule source",
     "classify the turn as READ_EXEC or WRITE_EXEC",
     "if the turn will write octopus-os-agent-console, plan same-turn Git traceability from the start; if task contents include Python related edits, also plan Dev-PythonCode-Constitution-Backend reading and lint from the start",
     "if the task needs repo-local dependencies, read the backend/frontend skills environment manifests before installing or invoking tooling",
     "if the task needs new repo-local dependencies, the AI may choose them from task evidence and install them into the governed *_skills environments before use",
+    "if the task touches Skills/, read skills_required_techstacks first and treat it as the mandatory baseline before introducing new stacks or writing custom equivalents",
     "if the turn touches language surfaces, enforce outward English docs and inward Chinese development boundaries before editing",
     "if the turn will edit a skill, treat the mirror copy under octopus-os-agent-console/Skills as the only editable source and determine whether downstream sync must be Push or Install",
     "if task contents include Python related edits, read Dev-PythonCode-Constitution-Backend through SKILL.md -> TASK_ROUTING -> SKILL_EXECUTION_RULES before editing"
@@ -47,6 +81,7 @@
     "GitHub-facing product iteration logs and commit subjects should prefer English wording",
     "skills runtime dependencies must be installed into repo-local *_skills environments or their tracked manifest/lock files, not global environments",
     "the AI may decide which repo-local dependencies are needed for the active task, but every installation must stay inside the governed repo-local environments and be reflected in the tracked lock or manifest files",
+    "when the task touches Skills/, treat skills_required_techstacks as the mandatory baseline and do not reinvent equivalent local parsing, lint, markdown, schema, test, CLI, or runtime stacks without an explicit user override",
     "keep requirements-backend_skills.lock.txt in sync with the Python dependencies installed into .venv_backend_skills",
     "keep frontend_skills/package.json and frontend_skills/package-lock.json in sync with the frontend dependency set used by skills tasks",
     "for skill changes, edit the mirror copy under octopus-os-agent-console/Skills and never directly edit the codex installation directory",
@@ -85,6 +120,7 @@
   "turn_end_actions": [
     "if task contents include Python related edits, run Dev-PythonCode-Constitution-Backend lint on the concrete Python-related target scope",
     "if dependency manifests or lock files changed, keep the repo-local skills environments and AGENTS governance mapping synchronized in the same turn",
+    "if the turn updated the mandatory Skills tech stack baseline, keep skills_required_techstacks and the repo-local environment lock or manifest files synchronized in the same turn",
     "if the turn edited a skill, complete skill-mirror-to-codex Push or Install before closing the turn",
     "if the turn wrote octopus-os-agent-console, complete same-turn commit-and-push before closing the turn"
   ],
