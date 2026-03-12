@@ -1,3 +1,4 @@
-name: Meta-code-graph-base
-entry: SKILL.md
-description: 本地代码图谱技能，提供 analyze/query/context/impact/detect-changes/resource/wiki 等能力。
+interface:
+  display_name: "Meta-code-graph-base"
+  short_description: "维护本地代码图谱底座，提供 analyze/query/context/impact/detect-changes/resource/wiki 等能力。"
+  default_prompt: "先读取 Meta-code-graph-base 的 SKILL.md，按其中的 analyze/query/status 等入口执行，不要把前端展示合同混入代码图谱底座能力。"

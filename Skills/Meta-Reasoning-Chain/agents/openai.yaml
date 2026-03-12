@@ -1,0 +1,4 @@
+interface:
+  display_name: "Meta-Reasoning-Chain"
+  short_description: "常驻 Meta 推理契约，要求在非平凡回合输出单层混合推理链。"
+  default_prompt: "使用 Meta-Reasoning-Chain 时，除非显式出现 NO_FUTURE_PROJECTION，否则必须按命题与边界、假设、证据、替代视角、未来形态、后果回滚、最小试点的顺序输出完整单层推理链。"

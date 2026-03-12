@@ -1,5 +1,5 @@
 ---
-name: "meta-picky-spiky"
+name: "Meta-Picky-Spiky"
 description: "Manual-invoke meta review skill for critiquing a target document or a target document set for unresolved semantics, missing decisions, ambiguous boundaries, and implementation-shaping language drift. Use when the user wants a harsh document quality review focused on anything that is still undecided and could cause downstream model or implementation drift."
 ---
 

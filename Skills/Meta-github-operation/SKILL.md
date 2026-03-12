@@ -1,5 +1,5 @@
 ---
-name: "meta-github-operation"
+name: "Meta-github-operation"
 description: "受限 GitHub control plane：仅服务 Octopus_OS 与 octopus-os-agent-console 两个仓库的状态、提交、推送、远端信息与开发/发布分流约束。"
 ---
 

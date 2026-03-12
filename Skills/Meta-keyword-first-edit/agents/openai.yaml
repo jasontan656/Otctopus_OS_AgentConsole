@@ -1,0 +1,4 @@
+interface:
+  display_name: "Meta-keyword-first-edit"
+  short_description: "常驻编辑方法论：删掉重写优先，其次 keyword first 替换，最后才新增。"
+  default_prompt: "使用 Meta-keyword-first-edit 时，先完整阅读目标对象，再按删掉重写 > keyword first 替换 > 新增的优先级做无痕改写，避免局部补丁式叠加。"
