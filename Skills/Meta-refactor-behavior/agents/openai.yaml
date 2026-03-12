@@ -1,4 +1,4 @@
 interface:
-  display_name: "Meta Refactor Behavior"
+  display_name: "Meta-refactor-behavior"
   short_description: "行为保持型重构与迁移协议入口。"
   default_prompt: "使用 $Meta-refactor-behavior 先选择正确模式并定义 OEC，再继续重构或迁移。"

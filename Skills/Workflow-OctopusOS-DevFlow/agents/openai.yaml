@@ -1,4 +1,4 @@
 interface:
-  display_name: "Workflow OctopusOS DevFlow"
+  display_name: "Workflow-OctopusOS-DevFlow"
   short_description: "开发闭环 workflow 技能；当前先保持原骨架，后续再逐步通用化。"
   default_prompt: "固定按四阶段执行：mother_doc -> construction_plan -> implementation -> acceptance。开始前先运行 target-runtime-contract，确认 target_root、Development_Docs、module_dir、mother_doc_root、execution_atom_plan_validation_packs 与 graph_runtime_root。目标项目的 Development_Docs 和目标模块子目录必须先存在；任一不存在时拒绝服务。若当前模块已具备使用条件但缺少 AGENTS、mother_doc、packs 或 graph，先运行 target-scaffold。模块 AGENTS 必须由本技能模版创建，并通过 Meta-RootFile-Manager collect 收治。若当前模块已经存在编号归档的 NN_slug、execution_atom_plan_validation_packs、pack_registry 或既有 graph，必须先读取并复用当前脉络，不得另起一条脱节的说明书。mother-doc-lint 通过前，不得进入 construction_plan；08_dev_execution_plan.md 只表示设计者规划，不等于 AI 的施工 packs。construction_plan 阶段必须在当前 mother_doc_root 内生成或复用 execution_atom_plan_validation_packs/。implementation 必须严格按当前 active pack 与 inner phase 施工并边施工边分域回填。只有 acceptance/evidence 收口时才允许执行 mother-doc-archive。"
