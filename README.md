@@ -2,6 +2,8 @@
 
 Octopus OS is a natural-language-driven multi-agent console.
 
+More precisely, it is an AI-native method for progressively equipping an agent with the governed skills, workflows, and tool contracts it still lacks, so the agent can grow more capable, more explicit, and more controllable over time.
+
 It is being shaped for a solo operator building a complete AI collaboration stack from the ground up: development, deployment, operations, market work, workflow orchestration, multi-agent collaboration, and natural-language-driven execution.
 
 This repository is the product foundation for Octopus OS. It has two responsibilities at the same time:
@@ -12,12 +14,16 @@ This repository is the product foundation for Octopus OS. It has two responsibil
 ## Current Status
 
 - Stage: Alpha
-- Intended use: learning, testing, and trial runs
+- Intended use: learning, local reuse, testing, and trial runs
 - Not recommended yet for critical production workflows
 - Supported runtime: Codex only
 - Supported host environment: Codex CLI in the author's current Codex CLI + VS Code workflow only
 - Supported model profile: GPT-5.4 with high reasoning effort only
 - Other models are unsupported, untested, and may behave differently
+- Public distribution model: a slower-moving release repository plus a faster-moving dev repository
+- Commercial use is outside the current intended and supported product scope
+- Disabled skills are historical or incomplete and are not part of the recommended operating surface
+- Current implementation and maintenance are AI-produced and AI-maintained
 - No other environment adapters are planned at the current phase
 - A dedicated GitHub repository binding is required for Octopus OS skill evolution and Git automation
 - The repository currently changes at a very high pace, often every 10 to 15 minutes
@@ -29,7 +35,7 @@ This is not just a generic skill mirror.
 
 A better model is:
 
-- `Skills/`: the execution core of Octopus OS and the only syncable skill container
+- `Skills/`: the execution core of Octopus OS, built from atomic capability units, and the only syncable skill container
 - `skill-mirror-to-codex`: the internal bridge that pushes skill roots into `~/.codex/skills`
 - `docs/` and `product_tools/`: product surfaces that must stay outside the codex installation directory
 - Git history: an externalized product iteration log
@@ -43,6 +49,7 @@ A better model is:
 - The target Codex skills directory must be clean before Octopus OS is installed; only Codex initial `.system` entries are allowed
 - A dedicated GitHub skill repository binding is mandatory during installation
 - Octopus OS provides directory-level installation only and does not provide system-level Codex installation
+- The long-term direction is to keep equipping the agent with the missing governed skills, workflows, and tool contracts until more of its behavior becomes explicit, inspectable, and controllable
 - The long-term target is a self-contained stack of skills and workflows owned by the product itself, reducing dependence on third-party skill installs and keeping AI behavior explicit, safe, and controllable
 
 ## Installation Modes

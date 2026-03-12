@@ -1,7 +1,7 @@
 {
   "skill_name": "skill-production-form",
   "display_name": "Skill-Production-Form",
-  "contract_version": "0.3.3",
+  "contract_version": "0.3.4",
   "status": "active_console_product_form",
   "mission": "Continuously maintain the console directory as a product-shaped surface, preserve local design history for skills-as-console productization decisions, and keep the project narrative aligned around an AI-native customizable personal assistant methodology.",
   "current_product_target": {
@@ -33,6 +33,7 @@
   "product_narrative": {
     "assistant_goal": "strengthen the model into a more capable personal assistant by continuously adding norms, skills, skill-management methods, workflows, and governed tooling",
     "design_method": "atomize skills so model behavior can be attached to explicit norms, workflows, and tool contracts",
+    "behavior_governance_goal": "progressively move more agent behavior into governed skills, workflows, and tool contracts instead of leaving large behavior surfaces implicit",
     "multi_agent_direction": "use skills to support daily development and broader work through multi-agent workflows, then continue toward richer multi-agent team collaboration",
     "repo_release_model": {
       "release_repo": "slower-moving public release surface",

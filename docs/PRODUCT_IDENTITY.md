@@ -20,6 +20,7 @@ It is:
 
 - the product-facing shell around the skill system
 - the skill-based foundation for natural-language-driven agent work
+- the governed growth surface for progressively turning an agent into a stronger personalized assistant
 - the future entry point for installation, cleanup, workspace mirroring, and product iteration records
 - the evolving control plane for a solo operator who wants AI collaborators to eventually cover development, deployment, operations, marketing work, and multi-agent orchestration
 - currently scoped to Codex as the supported runtime
@@ -33,7 +34,16 @@ It is:
 Recommended positioning:
 
 > Octopus OS is a natural-language-driven multi-agent console.  
-> It treats skills as capability units and composition as the operating model, allowing a solo operator to progressively build a personalized, end-to-end assistant system from zero to one.
+> It treats skills as atomic capability units and governed composition as the operating model, allowing a solo operator to progressively build a personalized, end-to-end assistant system from zero to one.  
+> The deeper direction is to keep giving the agent the governed skills, workflows, and tool contracts it still lacks, so more of its behavior becomes explicit, controllable, and reusable over time.
+
+Public-facing facts that should stay aligned with that positioning:
+
+- the project is published through a slower-moving release repository and a faster-moving dev repository
+- the current public posture is for learning, local reuse, and testing rather than commercial deployment
+- disabled skills should be treated as incomplete historical surfaces, not recommended default building blocks
+- suggestions are welcome, but direct code collaboration is currently closed
+- the current implementation and maintenance loop is AI-produced and AI-maintained
 
 ## Internal Narrative
 
@@ -52,6 +62,7 @@ The following facts still remain true internally:
 
 - release stage: `alpha`
 - distribution strategy: `local-first`
+- public release shape: `slower release repo + faster dev repo`
 - remote strategy: `the current remote still acts mainly as backup and traceability origin`
 - current development rhythm: `extremely high-frequency iteration`
 - reading warning: `commit-by-commit reading is not currently a useful way to understand the product`

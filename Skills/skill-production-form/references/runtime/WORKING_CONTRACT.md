@@ -18,6 +18,7 @@
 - Positioning: console directory maintained as the product surface for the governed skill stack
 - Current phase: continuous console productization around the Skills directory
 - Product thesis: build a stronger personal assistant by continuously adding atomic skills, governance rules, workflows, and tool contracts
+- Behavior goal: progressively move more agent behavior under governed skills, workflows, and tool contracts instead of leaving large behavior surfaces implicit
 - Runtime strategy: rely on `GPT-5.4` with `high reasoning effort` plus `Codex CLI` native capabilities, keep token cost low, and move durable behavior into skills instead of prompt-heavy orchestration
 - Evolution target: support daily development and broader personal work through multi-agent workflows, then continue toward richer multi-agent team collaboration
 - Source-of-truth boundary: edit in the product repo mirror first, then sync to `~/.codex/skills`
