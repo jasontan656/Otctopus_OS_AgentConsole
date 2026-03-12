@@ -1,0 +1,17 @@
+pack_id: replace_me
+design_step_id: replace_me
+pack_goal: replace_me
+design_plan_refs:
+  - replace_me
+target_requirement_atoms:
+  - replace_me
+implementation_actions:
+  - replace_me
+changed_files_boundary:
+  - replace_me
+stage_acceptance_target:
+  - replace_me
+machine_files:
+  inner_phase_plan: inner_phase_plan.json
+  phase_status_ledger: phase_status.jsonl
+  evidence_registry: evidence_registry.json

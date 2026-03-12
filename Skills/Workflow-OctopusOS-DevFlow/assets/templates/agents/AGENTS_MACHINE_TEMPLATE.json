@@ -1,0 +1,31 @@
+{
+  "entry_role": "devflow_module_docs_entry",
+  "governed_container": {
+    "target_root": "{{target_root}}",
+    "development_docs_root": "{{development_docs_root}}",
+    "module_dir": "{{module_dir}}",
+    "module_docs_root": "{{module_docs_root}}"
+  },
+  "workflow_roots": {
+    "mother_doc_root": "{{mother_doc_root}}",
+    "construction_plan_root": "{{construction_plan_root}}",
+    "graph_runtime_root": "{{graph_runtime_root}}",
+    "acceptance_root": "{{acceptance_root}}"
+  },
+  "workflow_contract": {
+    "required_skill": "Workflow-OctopusOS-DevFlow",
+    "required_preflight": [
+      "target-runtime-contract",
+      "stage-checklist"
+    ],
+    "reuse_policy": [
+      "reuse_existing_mother_doc_when_present",
+      "reuse_existing_execution_packs_when_present",
+      "reuse_existing_graph_when_present"
+    ],
+    "governance_chain": [
+      "Meta-Default-md-manager scaffold/collect/push",
+      "Workflow-OctopusOS-DevFlow four-stage delivery loop"
+    ]
+  }
+}

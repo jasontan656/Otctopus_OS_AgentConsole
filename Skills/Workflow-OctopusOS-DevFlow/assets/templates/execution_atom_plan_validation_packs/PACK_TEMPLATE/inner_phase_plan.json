@@ -1,0 +1,20 @@
+{
+  "pack_id": "replace_me",
+  "design_step_id": "replace_me",
+  "inner_phases": [
+    {
+      "inner_phase_id": "replace_me",
+      "phase_goal": "replace_me",
+      "implementation_slice": [
+        "replace_me"
+      ],
+      "validation_slice": [
+        "replace_me"
+      ],
+      "evidence_writeback_slice": [
+        "replace_me"
+      ],
+      "phase_exit_signal": "replace_me"
+    }
+  ]
+}

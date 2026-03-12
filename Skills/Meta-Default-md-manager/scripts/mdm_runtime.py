@@ -488,8 +488,16 @@ def match_scan_rules(
     source_paths = source_paths or []
     normalized_source_paths = {str(Path(item).expanduser().resolve()) for item in source_paths}
 
+    candidate_files: list[Path]
+    if normalized_source_paths:
+        candidate_files = [Path(item) for item in sorted(normalized_source_paths)]
+    else:
+        candidate_files = list(iter_workspace_files(paths))
+
     results: list[dict[str, Any]] = []
-    for file_path in iter_workspace_files(paths):
+    for file_path in candidate_files:
+        if not file_path.exists() or not file_path.is_file():
+            continue
         text_path = str(file_path)
         if governed_source_paths and text_path not in governed_source_paths:
             continue

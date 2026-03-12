@@ -217,6 +217,19 @@ families:
   - family: "[WorkFlow]"
     description: "各类自动化的工作流统一管理."
     members:
+      - canonical_id: "workflow-octopusos-devflow"
+        display_name: "Workflow-OctopusOS-DevFlow"
+        prefix: "workflow"
+        family: "[WorkFlow]"
+        role_tag: "octopus-devflow"
+        status: "draft"
+        trigger_summary: "当需要使用从 Disabled-Octupos-OS-Backend 复制出的四阶段 mother_doc -> construction_plan -> implementation -> acceptance 闭环 workflow 骨架，并准备后续逐步通用化时使用。"
+        companion_skills:
+          - "skill-naming-manager"
+          - "skill-mirror-to-codex"
+        migrated_from:
+          - "disabled-octupos-os-backend"
+          - "Disabled-Octupos-OS-Backend"
       - canonical_id: "workflow-realstate-posting-web"
         display_name: "WorkFlow-RealState-Posting-Web"
         prefix: "workflow"
