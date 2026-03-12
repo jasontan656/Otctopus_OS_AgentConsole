@@ -1,4 +1,0 @@
-interface:
-  display_name: "Meta-Default-md-manager"
-  short_description: "CLI-first default document manager with audit markdown mirrors"
-  default_prompt: "Use Meta-Default-md-manager by calling Cli_Toolbox.contract first, then Cli_Toolbox.directive for the target stage, and only then run scan, collect, or push. Do not read markdown files as runtime guidance."

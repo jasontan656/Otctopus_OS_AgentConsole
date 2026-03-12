@@ -214,6 +214,20 @@ families:
         migrated_from:
           - "meta-semantic-collection"
           - "Meta Semantic Collection"
+      - canonical_id: "meta-rootfile-manager"
+        display_name: "Meta-RootFile-Manager"
+        prefix: "meta"
+        family: "[Meta]"
+        role_tag: "rootfile-governance"
+        status: "active"
+        trigger_summary: "当需要集中治理 workspace 或 repo root 的默认文件、按文件类型开通独立受管通道、回收或回推出这些 root file 时使用。"
+        companion_skills:
+          - "skill-naming-manager"
+          - "skill-mirror-to-codex"
+          - "workflow-octopusos-devflow"
+        migrated_from:
+          - "meta-default-md-manager"
+          - "Meta-Default-md-manager"
   - family: "[WorkFlow]"
     description: "各类自动化的工作流统一管理."
     members:

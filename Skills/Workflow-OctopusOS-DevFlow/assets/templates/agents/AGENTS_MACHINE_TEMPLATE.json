@@ -24,7 +24,7 @@
       "reuse_existing_graph_when_present"
     ],
     "governance_chain": [
-      "Meta-Default-md-manager scaffold/collect/push",
+      "Meta-RootFile-Manager scaffold/collect/push",
       "Workflow-OctopusOS-DevFlow four-stage delivery loop"
     ]
   }

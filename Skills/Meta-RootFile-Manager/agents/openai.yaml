@@ -1,0 +1,4 @@
+interface:
+  display_name: "Meta-RootFile-Manager"
+  short_description: "CLI-first governed root file manager with per-file-type channels"
+  default_prompt: "Use Meta-RootFile-Manager by reading the channel contract, then run target-contract or scan, and only then execute collect, push, or scaffold for the required root file channel."

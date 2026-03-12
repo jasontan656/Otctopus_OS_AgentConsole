@@ -1,0 +1,11 @@
+{
+  "contract_version": 2,
+  "skill_name": "Meta-RootFile-Manager",
+  "description": "Meta-RootFile-Manager exposes channelized scan, lint, collect, push, scaffold, and target-contract CLI commands for governed root files.",
+  "runtime_kind": "channelized_root_file_governance",
+  "special_channels": [
+    "AGENTS_MD"
+  ],
+  "plain_mapping_rule": "non_agents_channels_store_exact_external_content_in_non_identical_managed_filenames",
+  "registry_source": "rules/scan_rules.json"
+}

@@ -21,10 +21,10 @@
 5. 每个阶段只能做本阶段的事，禁止跨阶段混写；进入新阶段前必须先读取 `stage-checklist --stage <current_stage>`。
 5.1 在进入任一阶段前，必须先运行 `target-runtime-contract`，确认当前目标的 `Development_Docs / module_dir / mother_doc_root / execution_atom_plan_validation_packs / graph_runtime_root`，并检查是否已存在任务包、归档轮次与图谱。
 5.2 `Development_Docs/` 与目标模块子目录必须先存在；任一不存在时，本技能必须拒绝服务，不得私自创建模块容器。
-5.2.1 `target_root` 还必须位于 `AI_Projects` workspace 内；否则 `$Meta-Default-md-manager` 无法收治模块 `AGENTS.md`，本技能必须拒绝服务。
+5.2.1 `target_root` 还必须位于 `AI_Projects` workspace 内；否则 `$Meta-RootFile-Manager` 无法收治模块 `AGENTS.md`，本技能必须拒绝服务。
 5.3 若目标项目已经固定开发文档容器，必须按 `Dev-OctopusOS-Constitution-ProjectStructure` 的判定使用该容器；不得自行改投到另一个 `docs/` 或 sibling 目录。
 5.4 若目标模块文件夹中已经存在 `execution_atom_plan_validation_packs/`、`pack_registry.yaml`、编号归档 `NN_slug` 或既有 graph，必须先复用它们；不得为同一目标另外创建脱节的母文档、pack 树或图谱脉络。
-5.5 目标模块的 `AGENTS.md` 必须使用本技能模版创建，并在创建后立即通过 `$Meta-Default-md-manager collect` 收治；不得在未受管状态下长期存在。
+5.5 目标模块的 `AGENTS.md` 必须使用本技能模版创建，并在创建后立即通过 `$Meta-RootFile-Manager collect` 收治；不得在未受管状态下长期存在。
 6. 阶段切换时只允许保留顶层常驻文档；上一阶段的 checklist、阶段文档、临时 focus、模板填写上下文必须显式丢弃，除非当前阶段合同明确要求重新读取。
 7. `mother_doc` 阶段必须先把需求固化成目录化项目说明与 `requirement_atom`；没有完整说明书，不得进入 `construction_plan`。
 7.0 `mother_doc` 阶段文档只允许包含：`Development_Docs/<module_dir>/mother_doc/*` 与 `assets/templates/mother_doc/*`；不得提前读取 construction packs、implementation 证据或 acceptance artifacts。

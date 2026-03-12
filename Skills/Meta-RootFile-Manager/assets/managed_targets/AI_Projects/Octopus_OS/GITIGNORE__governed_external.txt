@@ -1,0 +1,35 @@
+# OS_graph generated runtime assets stay local under Mother_Doc/graph/runtime.
+Mother_Doc/graph/runtime/registry/*.json
+Mother_Doc/graph/runtime/indexes/*
+!Mother_Doc/graph/runtime/indexes/README.md
+Mother_Doc/graph/runtime/reports/*.json
+Mother_Doc/graph/runtime/frontend_views/*.json
+Mother_Doc/graph/runtime/maps/*
+!Mother_Doc/graph/runtime/maps/README.md
+Mother_Doc/graph/runtime/wiki/*
+!Mother_Doc/graph/runtime/wiki/README.md
+Mother_Doc/graph/runtime/snapshots/*
+!Mother_Doc/graph/runtime/snapshots/README.md
+
+# Common local-only assets
+*.log
+logs/
+log/
+tmp/
+temp/
+.tmp/
+.temp/
+.cache/
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+.venv*/
+venv/
+venv*/
+env/
+env*/
+.env
+.env.*
+.env.example

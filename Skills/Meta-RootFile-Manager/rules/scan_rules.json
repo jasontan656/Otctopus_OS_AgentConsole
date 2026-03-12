@@ -1,0 +1,183 @@
+{
+  "version": 2,
+  "disallowed_path_keywords": [],
+  "channels": {
+    "AGENTS_MD": {
+      "file_kind": "AGENTS.md",
+      "mapping_mode": "agents_ab",
+      "governed_source_paths": [
+        "AGENTS.md",
+        "octopus-os-agent-console/AGENTS.md"
+      ],
+      "managed_files": {
+        "human": "AGENTS_human.md",
+        "machine": "AGENTS_machine.json"
+      },
+      "structure_template": "references/runtime_contracts/AGENTS_content_structure.md"
+    },
+    "README_MD": {
+      "file_kind": "README.md",
+      "mapping_mode": "plain_copy",
+      "governed_source_paths": [
+        "Octopus_OS/README.md",
+        "octopus-os-agent-console/README.md"
+      ],
+      "managed_files": {
+        "mapped": "README_MD__governed_external.md"
+      },
+      "structure_template": "references/runtime_contracts/ROOTFILE_MAPPED_COPY_STRUCTURE.md"
+    },
+    "CHANGELOG_MD": {
+      "file_kind": "CHANGELOG.md",
+      "mapping_mode": "plain_copy",
+      "governed_source_paths": [
+        "octopus-os-agent-console/CHANGELOG.md"
+      ],
+      "managed_files": {
+        "mapped": "CHANGELOG_MD__governed_external.md"
+      },
+      "structure_template": "references/runtime_contracts/ROOTFILE_MAPPED_COPY_STRUCTURE.md"
+    },
+    "CONTRIBUTING_MD": {
+      "file_kind": "CONTRIBUTING.md",
+      "mapping_mode": "plain_copy",
+      "governed_source_paths": [
+        "octopus-os-agent-console/CONTRIBUTING.md"
+      ],
+      "managed_files": {
+        "mapped": "CONTRIBUTING_MD__governed_external.md"
+      },
+      "structure_template": "references/runtime_contracts/ROOTFILE_MAPPED_COPY_STRUCTURE.md"
+    },
+    "SECURITY_MD": {
+      "file_kind": "SECURITY.md",
+      "mapping_mode": "plain_copy",
+      "governed_source_paths": [
+        "octopus-os-agent-console/SECURITY.md"
+      ],
+      "managed_files": {
+        "mapped": "SECURITY_MD__governed_external.md"
+      },
+      "structure_template": "references/runtime_contracts/ROOTFILE_MAPPED_COPY_STRUCTURE.md"
+    },
+    "CODE_OF_CONDUCT_MD": {
+      "file_kind": "CODE_OF_CONDUCT.md",
+      "mapping_mode": "plain_copy",
+      "governed_source_paths": [
+        "octopus-os-agent-console/CODE_OF_CONDUCT.md"
+      ],
+      "managed_files": {
+        "mapped": "CODE_OF_CONDUCT_MD__governed_external.md"
+      },
+      "structure_template": "references/runtime_contracts/ROOTFILE_MAPPED_COPY_STRUCTURE.md"
+    },
+    "LICENSE": {
+      "file_kind": "LICENSE",
+      "mapping_mode": "plain_copy",
+      "governed_source_paths": [
+        "octopus-os-agent-console/LICENSE"
+      ],
+      "managed_files": {
+        "mapped": "LICENSE__governed_external.txt"
+      },
+      "structure_template": "references/runtime_contracts/ROOTFILE_MAPPED_COPY_STRUCTURE.md"
+    },
+    "GITIGNORE": {
+      "file_kind": ".gitignore",
+      "mapping_mode": "plain_copy",
+      "governed_source_paths": [
+        "Octopus_OS/.gitignore",
+        "octopus-os-agent-console/.gitignore"
+      ],
+      "managed_files": {
+        "mapped": "GITIGNORE__governed_external.txt"
+      },
+      "structure_template": "references/runtime_contracts/ROOTFILE_MAPPED_COPY_STRUCTURE.md"
+    },
+    "PYTEST_INI": {
+      "file_kind": "pytest.ini",
+      "mapping_mode": "plain_copy",
+      "governed_source_paths": [
+        "octopus-os-agent-console/pytest.ini"
+      ],
+      "managed_files": {
+        "mapped": "PYTEST_INI__governed_external.ini"
+      },
+      "structure_template": "references/runtime_contracts/ROOTFILE_MAPPED_COPY_STRUCTURE.md"
+    },
+    "DOCKERFILE": {
+      "file_kind": "Dockerfile",
+      "mapping_mode": "plain_copy",
+      "governed_source_paths": [],
+      "managed_files": {
+        "mapped": "DOCKERFILE__governed_external.dockerfile"
+      },
+      "structure_template": "references/runtime_contracts/ROOTFILE_MAPPED_COPY_STRUCTURE.md"
+    },
+    "DOCKERIGNORE": {
+      "file_kind": ".dockerignore",
+      "mapping_mode": "plain_copy",
+      "governed_source_paths": [],
+      "managed_files": {
+        "mapped": "DOCKERIGNORE__governed_external.txt"
+      },
+      "structure_template": "references/runtime_contracts/ROOTFILE_MAPPED_COPY_STRUCTURE.md"
+    },
+    "ENV_EXAMPLE": {
+      "file_kind": ".env.example",
+      "mapping_mode": "plain_copy",
+      "governed_source_paths": [],
+      "managed_files": {
+        "mapped": "ENV_EXAMPLE__governed_external.txt"
+      },
+      "structure_template": "references/runtime_contracts/ROOTFILE_MAPPED_COPY_STRUCTURE.md"
+    },
+    "REQUIREMENTS_TXT": {
+      "file_kind": "requirements.txt",
+      "mapping_mode": "plain_copy",
+      "governed_source_paths": [],
+      "managed_files": {
+        "mapped": "REQUIREMENTS_TXT__governed_external.txt"
+      },
+      "structure_template": "references/runtime_contracts/ROOTFILE_MAPPED_COPY_STRUCTURE.md"
+    },
+    "REQUIREMENTS_BACKEND_SKILLS_LOCK_TXT": {
+      "file_kind": "requirements-backend_skills.lock.txt",
+      "mapping_mode": "plain_copy",
+      "governed_source_paths": [
+        "octopus-os-agent-console/requirements-backend_skills.lock.txt"
+      ],
+      "managed_files": {
+        "mapped": "REQUIREMENTS_BACKEND_SKILLS_LOCK_TXT__governed_external.txt"
+      },
+      "structure_template": "references/runtime_contracts/ROOTFILE_MAPPED_COPY_STRUCTURE.md"
+    },
+    "PYPROJECT_TOML": {
+      "file_kind": "pyproject.toml",
+      "mapping_mode": "plain_copy",
+      "governed_source_paths": [],
+      "managed_files": {
+        "mapped": "PYPROJECT_TOML__governed_external.toml"
+      },
+      "structure_template": "references/runtime_contracts/ROOTFILE_MAPPED_COPY_STRUCTURE.md"
+    },
+    "PACKAGE_JSON": {
+      "file_kind": "package.json",
+      "mapping_mode": "plain_copy",
+      "governed_source_paths": [],
+      "managed_files": {
+        "mapped": "PACKAGE_JSON__governed_external.json"
+      },
+      "structure_template": "references/runtime_contracts/ROOTFILE_MAPPED_COPY_STRUCTURE.md"
+    },
+    "PACKAGE_LOCK_JSON": {
+      "file_kind": "package-lock.json",
+      "mapping_mode": "plain_copy",
+      "governed_source_paths": [],
+      "managed_files": {
+        "mapped": "PACKAGE_LOCK_JSON__governed_external.json"
+      },
+      "structure_template": "references/runtime_contracts/ROOTFILE_MAPPED_COPY_STRUCTURE.md"
+    }
+  }
+}
