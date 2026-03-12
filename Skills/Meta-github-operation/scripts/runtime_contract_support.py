@@ -8,6 +8,16 @@ class CommandSpec(TypedDict):
     role: str
 
 
+class RuntimeGovernancePayload(TypedDict):
+    skill_runtime_root: str
+    claims_dir: str
+    result_root: str
+    runtime_log_policy: str
+    result_policy: str
+    legacy_runtime_fallbacks: list[str]
+    migration_note: str
+
+
 class RemotePolicyEntry(TypedDict):
     role: str
     automation_write_allowed: bool
@@ -39,6 +49,7 @@ class PushContractPayload(TypedDict):
     allowed_repos: list[str]
     commands: list[CommandSpec]
     remote_policy: RemotePolicyMatrix
+    runtime_governance: RuntimeGovernancePayload
     rules: list[str]
 
 
@@ -52,6 +63,7 @@ class RollbackContractPayload(TypedDict):
     purpose: str
     allowed_repos: list[str]
     commands: list[CommandSpec]
+    runtime_governance: RuntimeGovernancePayload
     rules: list[str]
 
 
@@ -66,6 +78,7 @@ class BaselineContractPayload(TypedDict):
     allowed_repos: list[str]
     commands: list[CommandSpec]
     release_publication_state: ReleasePublicationState
+    runtime_governance: RuntimeGovernancePayload
     rules: list[str]
 
 
@@ -196,4 +209,3 @@ RollbackSyncPayload: TypeAlias = RollbackSyncAllPayload | RollbackSyncPathsPaylo
 
 class RollbackPathsPayload(RollbackSyncPathsPayload):
     command: Literal["rollback-paths"]
-

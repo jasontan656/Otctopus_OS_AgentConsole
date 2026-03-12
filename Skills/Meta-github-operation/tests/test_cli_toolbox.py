@@ -45,6 +45,9 @@ class TestMetaGithubOperationCliTests:
             push_payload["remote_policy"]["octopus-os-agent-console"]["origin"]["role"]
             == "private_dev_remote"
         )
+        assert push_payload["runtime_governance"]["skill_runtime_root"].endswith("/meta-github-operation")
+        assert push_payload["runtime_governance"]["claims_dir"].endswith("/meta-github-operation/claims")
+        assert push_payload["runtime_governance"]["result_root"].endswith("/meta-github-operation")
         assert not push_payload["remote_policy"]["octopus-os-agent-console"]["public-release"][
             "automation_write_allowed"
         ]
@@ -52,6 +55,7 @@ class TestMetaGithubOperationCliTests:
         baseline_payload = json.loads(self.run_cli("baseline-contract", "--json").stdout)
         assert baseline_payload["entry"] == "baseline"
         assert [command["name"] for command in baseline_payload["commands"]] == ["baseline-create"]
+        assert baseline_payload["runtime_governance"]["result_policy"].startswith("This skill does not emit")
         assert (
             baseline_payload["release_publication_state"]["octopus-os-agent-console"]["public-release"]["status"]
             == "disabled"
@@ -59,6 +63,9 @@ class TestMetaGithubOperationCliTests:
 
         rollback_payload = json.loads(self.run_cli("rollback-contract", "--json").stdout)
         assert rollback_payload["entry"] == "rollback"
+        assert rollback_payload["runtime_governance"]["legacy_runtime_fallbacks"] == [
+            "/home/jasontan656/AI_Projects/Codex_Skill_Runtime"
+        ]
         assert any(command["name"] == "rollback-sync" for command in rollback_payload["commands"])
         assert not (any(command["name"] == "baseline-create" for command in rollback_payload["commands"]))
 

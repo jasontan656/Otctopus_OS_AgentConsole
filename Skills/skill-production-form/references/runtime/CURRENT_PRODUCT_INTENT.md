@@ -21,6 +21,8 @@
   - 文档边界
   - mirror / install / Git 留痕流程
 - 技能管理面必须服务“把 skill 目录当作 console 产品的一部分来运营”，而不是只维护孤立脚本。
+- active console continuity log 必须写入 `/home/jasontan656/AI_Projects/Codex_Skill_Runtime/skill-production-form/ITERATION_LOG.md`，而不是继续写回 skill 根目录。
+- 未来若本技能新增文件型结果或定向产物，也必须以 `/home/jasontan656/AI_Projects/Codex_Skills_Result/skill-production-form` 为默认结果根。
 
 ## 当前目录边界判断
 - `Skills/` 下的 skill 根应保持可注册、可同步、可验证。

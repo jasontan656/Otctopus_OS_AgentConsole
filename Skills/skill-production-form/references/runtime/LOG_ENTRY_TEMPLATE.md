@@ -2,6 +2,9 @@
 
 Use this shape for every new local console-productization entry:
 
+Active sink:
+- `/home/jasontan656/AI_Projects/Codex_Skill_Runtime/skill-production-form/ITERATION_LOG.md`
+
 ```markdown
 ## 2026-03-12 12:34:56Z - <title>
 

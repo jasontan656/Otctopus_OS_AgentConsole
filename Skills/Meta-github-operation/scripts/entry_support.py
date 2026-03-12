@@ -1,6 +1,40 @@
 from __future__ import annotations
 
-from runtime_contract_support import BaselineContractPayload, CommandSpec, PushContractPayload, ReleasePublicationState, RollbackContractPayload
+from runtime_contract_support import (
+    BaselineContractPayload,
+    CommandSpec,
+    PushContractPayload,
+    ReleasePublicationState,
+    RollbackContractPayload,
+    RuntimeGovernancePayload,
+)
+
+
+SKILL_RUNTIME_ROOT = "/home/jasontan656/AI_Projects/Codex_Skill_Runtime/meta-github-operation"
+CLAIMS_DIR = "/home/jasontan656/AI_Projects/Codex_Skill_Runtime/meta-github-operation/claims"
+SKILL_RESULT_ROOT = "/home/jasontan656/AI_Projects/Codex_Skills_Result/meta-github-operation"
+LEGACY_RUNTIME_FALLBACKS = ["/home/jasontan656/AI_Projects/Codex_Skill_Runtime"]
+
+
+def runtime_governance_payload() -> RuntimeGovernancePayload:
+    return {
+        "skill_runtime_root": SKILL_RUNTIME_ROOT,
+        "claims_dir": CLAIMS_DIR,
+        "result_root": SKILL_RESULT_ROOT,
+        "runtime_log_policy": (
+            "This skill currently emits CLI JSON to stdout and does not persist its own rolling logs; "
+            "runtime-owned claims files must stay under the governed skill runtime root."
+        ),
+        "result_policy": (
+            "This skill does not emit file artifacts by default; future file outputs must accept an explicit target "
+            "path or default under the governed result root."
+        ),
+        "legacy_runtime_fallbacks": LEGACY_RUNTIME_FALLBACKS,
+        "migration_note": (
+            "Legacy thread-owned claims files previously written directly under Codex_Skill_Runtime should be moved "
+            "into the namespaced claims directory; active lookup falls back to the legacy root only for compatibility."
+        ),
+    }
 
 
 def push_contract_payload() -> PushContractPayload:
@@ -38,7 +72,7 @@ def push_contract_payload() -> PushContractPayload:
         "contract_name": "meta_github_operation_push_contract",
         "contract_version": "v1",
         "validation_mode": "static_minimal",
-        "required_fields": ["entry", "purpose", "allowed_repos", "commands", "rules"],
+        "required_fields": ["entry", "purpose", "allowed_repos", "commands", "runtime_governance", "rules"],
         "optional_fields": ["remote_policy"],
         "entry": "push",
         "purpose": "Group push-related Git traceability tools and rules behind one explicit CLI-readable runtime entry.",
@@ -83,6 +117,7 @@ def push_contract_payload() -> PushContractPayload:
             "For octopus-os-agent-console, automatic iteration pushes must go to origin only.",
             "For octopus-os-agent-console, public-release is currently disabled because development has not reached publishable closure and no release workflow is designed yet.",
         ],
+        "runtime_governance": runtime_governance_payload(),
     }
 
 
@@ -113,12 +148,13 @@ def rollback_contract_payload() -> RollbackContractPayload:
         "contract_name": "meta_github_operation_rollback_contract",
         "contract_version": "v1",
         "validation_mode": "static_minimal",
-        "required_fields": ["entry", "purpose", "allowed_repos", "commands", "rules"],
+        "required_fields": ["entry", "purpose", "allowed_repos", "commands", "runtime_governance", "rules"],
         "optional_fields": [],
         "entry": "rollback",
         "purpose": "Group rollback-related Git restore tools and rules behind one explicit CLI-readable runtime entry.",
         "allowed_repos": ["Octopus_OS", "octopus-os-agent-console"],
         "commands": commands,
+        "runtime_governance": runtime_governance_payload(),
         "rules": [
             "Rollback must make the restored scope match the selected backup ref.",
             "If a restored scope contains extra local files not present in the backup ref, delete them.",
@@ -147,13 +183,14 @@ def baseline_contract_payload() -> BaselineContractPayload:
         "contract_name": "meta_github_operation_baseline_contract",
         "contract_version": "v1",
         "validation_mode": "static_minimal",
-        "required_fields": ["entry", "purpose", "allowed_repos", "commands", "rules"],
+        "required_fields": ["entry", "purpose", "allowed_repos", "commands", "runtime_governance", "rules"],
         "optional_fields": ["release_publication_state"],
         "entry": "baseline",
         "purpose": "Create a named rollback anchor without overloading push semantics.",
         "allowed_repos": ["Octopus_OS", "octopus-os-agent-console"],
         "commands": commands,
         "release_publication_state": release_publication_state,
+        "runtime_governance": runtime_governance_payload(),
         "rules": [
             "Baseline is a separate runtime entry from push.",
             "Clean repos should prefer tag-only baselines instead of empty traceability commits.",

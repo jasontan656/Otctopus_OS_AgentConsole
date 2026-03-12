@@ -30,7 +30,8 @@ Applies to skill: `skill-production-form`
 - Human intent:
   - "Show me the latest local console-productization history before we continue."
 - Machine action:
-  - Read the latest section(s) from `references/runtime/ITERATION_LOG.md`.
+  - Read the latest section(s) from `/home/jasontan656/AI_Projects/Codex_Skill_Runtime/skill-production-form/ITERATION_LOG.md`.
+  - If the governed runtime log does not exist yet, seed it from `references/runtime/ITERATION_LOG.md` first.
 - Output:
   - The most recent local design-log entries.
 
@@ -38,9 +39,21 @@ Applies to skill: `skill-production-form`
 - Human intent:
   - "Record the new console-productization decision we just made."
 - Machine action:
-  - Append a structured markdown entry to `references/runtime/ITERATION_LOG.md`.
+  - Append a structured markdown entry to `/home/jasontan656/AI_Projects/Codex_Skill_Runtime/skill-production-form/ITERATION_LOG.md`.
 - Output:
-  - Timestamp, log path, and appended entry title.
+  - Timestamp, runtime root, result root, log path, and appended entry title.
+
+## Runtime And Output Governance
+- Runtime observability root:
+  - `/home/jasontan656/AI_Projects/Codex_Skill_Runtime/skill-production-form`
+- Result root:
+  - `/home/jasontan656/AI_Projects/Codex_Skills_Result/skill-production-form`
+- Legacy seed snapshot:
+  - `references/runtime/ITERATION_LOG.md`
+- Current artifact behavior:
+  - This skill writes its active iteration log under the runtime root.
+  - This skill does not emit file artifacts under the result root yet.
+  - Any future targeted artifact command must accept an explicit output path or default under the governed result root.
 
 ## Example Commands
 - Load working contract:

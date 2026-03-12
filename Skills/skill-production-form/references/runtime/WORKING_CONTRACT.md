@@ -21,8 +21,21 @@
 ## Logging Rule
 - Read the current console intent before making new console productization decisions.
 - Read the latest local iteration log before extending an existing design line.
+- The active local iteration log now lives at `/home/jasontan656/AI_Projects/Codex_Skill_Runtime/skill-production-form/ITERATION_LOG.md`.
+- `references/runtime/ITERATION_LOG.md` is now only a legacy seed snapshot for first-run migration and must not receive new entries.
 - Append a local log entry whenever a real console boundary, naming, or workflow decision is made.
 - Do not use the local log for trivial command noise.
+
+## Runtime And Output Roots
+- Runtime observability root: `/home/jasontan656/AI_Projects/Codex_Skill_Runtime/skill-production-form`
+- Result root: `/home/jasontan656/AI_Projects/Codex_Skills_Result/skill-production-form`
+- Current active runtime artifact: the iteration log markdown under the runtime root.
+- Current default result policy: this skill does not emit file artifacts beyond the runtime log; future file artifacts must accept an explicit target path or default under the governed result root.
+
+## Migration Rule
+- If the governed runtime log does not exist yet, seed it from `references/runtime/ITERATION_LOG.md`.
+- After seeding, all new log appends must stay in the runtime root.
+- Keep the repo-side seed file readable for audit and bootstrap, but treat it as immutable history input rather than the active log sink.
 
 ## Future Switch
 - This skill remains the continuity layer for console productization.

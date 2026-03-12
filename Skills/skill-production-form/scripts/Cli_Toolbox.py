@@ -2,18 +2,32 @@
 from __future__ import annotations
 
 import json
+import os
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Annotated, TypedDict
+from typing import Annotated, NotRequired, TypedDict
 
 import typer
 
 
 SKILL_ROOT = Path(__file__).resolve().parents[1]
-RUNTIME_ROOT = SKILL_ROOT / "references" / "runtime"
-WORKING_CONTRACT_PATH = RUNTIME_ROOT / "WORKING_CONTRACT.json"
-INTENT_PATH = RUNTIME_ROOT / "CURRENT_PRODUCT_INTENT.md"
-LOG_PATH = RUNTIME_ROOT / "ITERATION_LOG.md"
+DEFAULT_SKILL_RUNTIME_ROOT = Path("/home/jasontan656/AI_Projects/Codex_Skill_Runtime")
+DEFAULT_SKILL_RESULT_ROOT = Path("/home/jasontan656/AI_Projects/Codex_Skills_Result")
+REPO_RUNTIME_ROOT = SKILL_ROOT / "references" / "runtime"
+WORKING_CONTRACT_PATH = REPO_RUNTIME_ROOT / "WORKING_CONTRACT.json"
+INTENT_PATH = REPO_RUNTIME_ROOT / "CURRENT_PRODUCT_INTENT.md"
+LEGACY_LOG_PATH = Path(
+    os.environ.get("SKILL_PRODUCTION_FORM_LEGACY_LOG_PATH", str(REPO_RUNTIME_ROOT / "ITERATION_LOG.md"))
+).expanduser().resolve()
+SKILL_RUNTIME_ROOT = (
+    Path(os.environ.get("CODEX_SKILL_RUNTIME_ROOT", str(DEFAULT_SKILL_RUNTIME_ROOT))).expanduser().resolve()
+    / "skill-production-form"
+)
+SKILL_RESULT_ROOT = (
+    Path(os.environ.get("CODEX_SKILLS_RESULT_ROOT", str(DEFAULT_SKILL_RESULT_ROOT))).expanduser().resolve()
+    / "skill-production-form"
+)
+DEFAULT_LOG_PATH = SKILL_RUNTIME_ROOT / "ITERATION_LOG.md"
 
 
 class WorkingContractCommandPayload(TypedDict):
@@ -38,20 +52,26 @@ class LatestLogCommandPayload(TypedDict):
     status: str
     action: str
     log_path: str
+    runtime_root: str
+    result_root: str
     entry_count: int
     entries: list[str]
     summary: str
     details: list[str]
+    migrated_legacy_log: NotRequired[bool]
 
 
 class AppendIterationLogCommandPayload(TypedDict):
     status: str
     action: str
     log_path: str
+    runtime_root: str
+    result_root: str
     title: str
     timestamp: str
     summary: str
     details: list[str]
+    migrated_legacy_log: NotRequired[bool]
 
 
 CliPayload = (
@@ -72,6 +92,16 @@ def _resolve_path(raw: str | None, default: Path) -> Path:
     if raw:
         return Path(raw).expanduser().resolve()
     return default
+
+
+def _seed_runtime_log_if_needed(path: Path) -> bool:
+    if path != DEFAULT_LOG_PATH:
+        return False
+    if path.exists() or not LEGACY_LOG_PATH.exists():
+        return False
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(LEGACY_LOG_PATH.read_text(encoding="utf-8"), encoding="utf-8")
+    return True
 
 
 def _emit(payload: CliPayload, *, as_json: bool) -> None:
@@ -135,18 +165,24 @@ def latest_log_command(
     log_path: Annotated[str | None, typer.Option("--log-path")] = None,
     entry_count: Annotated[int, typer.Option("--entry-count")] = 1,
 ) -> None:
-    resolved_log_path = _resolve_path(log_path, LOG_PATH)
+    resolved_log_path = _resolve_path(log_path, DEFAULT_LOG_PATH)
+    migrated = _seed_runtime_log_if_needed(resolved_log_path)
     entries = _split_log_entries(resolved_log_path.read_text(encoding="utf-8"))
     selected = entries[-entry_count:] if entries else []
     payload: LatestLogCommandPayload = {
         "status": "ok",
         "action": "latest_log",
         "log_path": str(resolved_log_path),
+        "runtime_root": str(SKILL_RUNTIME_ROOT),
+        "result_root": str(SKILL_RESULT_ROOT),
         "entry_count": len(selected),
         "entries": selected,
         "summary": f"loaded {len(selected)} latest log entry(s) from {resolved_log_path}",
-        "details": [entry.splitlines()[0] for entry in selected],
+        "details": [f"- runtime_root: {SKILL_RUNTIME_ROOT}", f"- result_root: {SKILL_RESULT_ROOT}", *[entry.splitlines()[0] for entry in selected]],
     }
+    if migrated:
+        payload["migrated_legacy_log"] = True
+        payload["details"].append(f"- migrated legacy log seed from: {LEGACY_LOG_PATH}")
     _emit(payload, as_json=json_output)
 
 
@@ -200,7 +236,8 @@ def append_iteration_log_command(
     next_steps: Annotated[list[str] | None, typer.Option("--next-step")] = None,
     author: Annotated[str, typer.Option("--author")] = "codex",
 ) -> None:
-    resolved_log_path = _resolve_path(log_path, LOG_PATH)
+    resolved_log_path = _resolve_path(log_path, DEFAULT_LOG_PATH)
+    migrated = _seed_runtime_log_if_needed(resolved_log_path)
     timestamp, lines = _append_markdown_section(
         title=title,
         summary=summary,
@@ -218,11 +255,20 @@ def append_iteration_log_command(
         "status": "ok",
         "action": "append_iteration_log",
         "log_path": str(resolved_log_path),
+        "runtime_root": str(SKILL_RUNTIME_ROOT),
+        "result_root": str(SKILL_RESULT_ROOT),
         "title": title,
         "timestamp": timestamp,
         "summary": f"appended iteration log entry '{title}'",
-        "details": [f"- log_path: {resolved_log_path}"],
+        "details": [
+            f"- runtime_root: {SKILL_RUNTIME_ROOT}",
+            f"- result_root: {SKILL_RESULT_ROOT}",
+            f"- log_path: {resolved_log_path}",
+        ],
     }
+    if migrated:
+        payload["migrated_legacy_log"] = True
+        payload["details"].append(f"- migrated legacy log seed from: {LEGACY_LOG_PATH}")
     _emit(payload, as_json=json_output)
 
 

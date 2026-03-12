@@ -1,7 +1,7 @@
 {
   "skill_name": "skill-production-form",
   "display_name": "Skill-Production-Form",
-  "contract_version": "0.2.0",
+  "contract_version": "0.3.0",
   "status": "active_console_product_form",
   "mission": "Continuously maintain the console directory as a product-shaped surface and preserve local design history for skills-as-console productization decisions.",
   "current_product_target": {
@@ -23,10 +23,20 @@
     "the codex installation directory is a deployment surface, not the authoring surface for console productization"
   ],
   "local_history_contract": {
-    "primary_log_path": "references/runtime/ITERATION_LOG.md",
+    "primary_log_path": "/home/jasontan656/AI_Projects/Codex_Skill_Runtime/skill-production-form/ITERATION_LOG.md",
+    "legacy_seed_log_path": "references/runtime/ITERATION_LOG.md",
     "intent_snapshot_path": "references/runtime/CURRENT_PRODUCT_INTENT.md",
     "log_update_rule": "append a log entry whenever a new console productization decision, directory boundary change, or skill-management convergence is made",
+    "migration_rule": "if the governed runtime log does not exist yet, seed it from references/runtime/ITERATION_LOG.md and continue writing only to the runtime root afterward",
     "future_switch_rule": "once the console product form is stable enough, the main release-facing narrative may move back to GitHub while this local log becomes a narrower continuity aid"
+  },
+  "runtime_observability": {
+    "skill_runtime_root": "/home/jasontan656/AI_Projects/Codex_Skill_Runtime/skill-production-form",
+    "result_root": "/home/jasontan656/AI_Projects/Codex_Skills_Result/skill-production-form",
+    "default_runtime_log_path": "/home/jasontan656/AI_Projects/Codex_Skill_Runtime/skill-production-form/ITERATION_LOG.md",
+    "legacy_seed_log_path": "references/runtime/ITERATION_LOG.md",
+    "runtime_log_policy": "active console-productization logs must append only under the governed runtime root; the repo copy is a read-only migration seed",
+    "result_policy": "this skill currently emits machine-readable stdout and runtime log writes only; future file artifacts must accept an explicit target path or default under the governed result root"
   },
   "tooling": {
     "working_contract_command": "python3 scripts/Cli_Toolbox.py working-contract --json",
