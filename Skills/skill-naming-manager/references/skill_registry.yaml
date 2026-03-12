@@ -86,11 +86,50 @@ families:
         status: "active"
         trigger_summary: "当进行前端开发，需要项目定制 Vue3 组件使用方式、自包含 UI 界面、展厅级可视化效果与前端规范时必须使用。"
         companion_skills:
-          - "4-Octupos-OS-Frontend"
+          - "disabled-octupos-os-frontend"
           - "skill-doc-structure"
         migrated_from:
           - "meta-vue3-webui-frontend"
           - "Meta-VUE3-WebUI-frontend"
+  - family: "[Disabled]"
+    description: "临时关闭不使用的技能，可能会遗弃，可被修改。"
+    members:
+      - canonical_id: "disabled-octupos-fullstack"
+        display_name: "Disabled-Octupos-FullStack"
+        prefix: "disabled"
+        family: "[Disabled]"
+        role_tag: "octopus-fullstack"
+        status: "deprecated"
+        trigger_summary: "默认停用，避免误触发；仅在明确要求查看、迁移、改造或重新启用历史章鱼全栈技能时使用。"
+        companion_skills:
+          - "skill-naming-manager"
+          - "skill-mirror-to-codex"
+        migrated_from:
+          - "2-Octupos-FullStack"
+      - canonical_id: "disabled-octupos-os-backend"
+        display_name: "Disabled-Octupos-OS-Backend"
+        prefix: "disabled"
+        family: "[Disabled]"
+        role_tag: "octopus-backend"
+        status: "deprecated"
+        trigger_summary: "默认停用，避免误触发；仅在明确要求查看、迁移、改造或重新启用历史章鱼后端技能时使用。"
+        companion_skills:
+          - "skill-naming-manager"
+          - "skill-mirror-to-codex"
+        migrated_from:
+          - "3-Octupos-OS-Backend"
+      - canonical_id: "disabled-octupos-os-frontend"
+        display_name: "Disabled-Octupos-OS-Frontend"
+        prefix: "disabled"
+        family: "[Disabled]"
+        role_tag: "octopus-frontend"
+        status: "deprecated"
+        trigger_summary: "默认停用，避免误触发；仅在明确要求查看、迁移、改造或重新启用历史章鱼前端技能时使用。"
+        companion_skills:
+          - "skill-naming-manager"
+          - "skill-mirror-to-codex"
+        migrated_from:
+          - "4-Octupos-OS-Frontend"
   - family: "[Functional]"
     description: "功能化组件技能，用于各个适用域的小任务。"
     members:

@@ -1,0 +1,22 @@
+{
+  "schema_version": "3.0",
+  "skill_name": "Disabled-Octupos-FullStack",
+  "runtime_source_policy": {
+    "skill_runtime_source": "CLI_JSON",
+    "skill_markdown_role": "human_navigation_only",
+    "model_must_prefer_cli_runtime_output": true
+  },
+  "mother_doc_governance": {
+    "octopus_os_agents_mode": "single_root_target_only",
+    "octopus_os_root_agents_path": "${AI_PROJECTS_ROOT:-$HOME/AI_Projects}/Octopus_OS/AGENTS.md",
+    "managed_human_path": "assets/managed_targets/Octopus_OS/AGENTS_human.md",
+    "managed_machine_path": "assets/managed_targets/Octopus_OS/AGENTS_machine.json"
+  },
+  "specialized_runtime_entries": {
+    "mother_doc_agents_manager": {
+      "branch_contract_command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-contract --json",
+      "stage_directive_command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-directive --stage <scan|collect|push> --json",
+      "target_contract_command": "python3 scripts/Cli_Toolbox.py mother-doc-agents-target-contract --relative-path \"octopus_os_root\" --file-kind agents --json"
+    }
+  }
+}
