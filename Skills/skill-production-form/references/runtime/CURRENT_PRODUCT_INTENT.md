@@ -44,7 +44,7 @@
 - 新增技能、治理合同与运行工具，本质上都是在给 AGENT 长出更稳定的“血肉”，而不是只做一次性 prompt patch。
 
 ## 当前运行策略
-- 项目依赖 `GPT-5` 与 `Codex CLI` 的原生能力，尽量不额外堆叠高 token 成本的外围系统。
+- 项目依赖 `GPT-5.4` 与 `Codex CLI` 的原生能力，并明确以 `high reasoning effort` 作为当前核心运行前提，尽量不额外堆叠高 token 成本的外围系统。
 - 当前策略是最大化节省 token，把复杂度优先沉淀在 skills、contracts、workflows 与 governed tools 上。
 - 项目当前希望主要仅靠技能体系完成多 AGENT 工作流，包括：
   - 日常开发

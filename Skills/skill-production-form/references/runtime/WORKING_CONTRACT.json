@@ -1,7 +1,7 @@
 {
   "skill_name": "skill-production-form",
   "display_name": "Skill-Production-Form",
-  "contract_version": "0.3.2",
+  "contract_version": "0.3.3",
   "status": "active_console_product_form",
   "mission": "Continuously maintain the console directory as a product-shaped surface, preserve local design history for skills-as-console productization decisions, and keep the project narrative aligned around an AI-native customizable personal assistant methodology.",
   "current_product_target": {
@@ -11,7 +11,7 @@
     "product_positioning": "console directory maintained as the product surface for the governed skill stack",
     "current_phase": "continuous console productization around the Skills directory",
     "product_role": "advanced personal assistant customization approach built through governed skills, workflows, and tool contracts",
-    "runtime_strategy": "maximize GPT-5 and Codex CLI native capability while minimizing token overhead through skill-first behavior shaping"
+    "runtime_strategy": "maximize GPT-5.4 with high reasoning effort plus Codex CLI native capability while minimizing token overhead through skill-first behavior shaping"
   },
   "hard_boundaries": [
     "the editable source of truth stays inside octopus-os-agent-console/Skills rather than ~/.codex/skills",
