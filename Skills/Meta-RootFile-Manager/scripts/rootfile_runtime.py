@@ -24,6 +24,7 @@ REPO_ROOT_COMPAT_ALIASES = {
     "Codex_Skills_Mirror": REPO_ROOT_CANONICAL_NAME,
     REPO_ROOT_CANONICAL_NAME: REPO_ROOT_CANONICAL_NAME,
 }
+LEGACY_MANAGED_TARGET_DIRS = ("Codex_Skills_Mirror",)
 
 
 @dataclass(frozen=True)
@@ -124,6 +125,21 @@ def sync_file_to_installed(paths: RuntimePaths, mirror_path: Path, dry_run: bool
         shutil.copy2(mirror_path, installed_path)
     elif installed_path.exists():
         installed_path.unlink()
+
+
+def prune_legacy_managed_target_dirs(paths: RuntimePaths, dry_run: bool) -> list[str]:
+    removed: list[str] = []
+    for legacy_dir_name in LEGACY_MANAGED_TARGET_DIRS:
+        for base_root in (paths.managed_targets_root, paths.installed_skill_root / "assets" / "managed_targets" / "AI_Projects"):
+            legacy_dir = base_root / legacy_dir_name
+            if not legacy_dir.exists():
+                continue
+            if any(legacy_dir.iterdir()):
+                continue
+            removed.append(str(legacy_dir))
+            if not dry_run:
+                legacy_dir.rmdir()
+    return removed
 
 
 def load_scan_rules(paths: RuntimePaths) -> dict[str, Any]:

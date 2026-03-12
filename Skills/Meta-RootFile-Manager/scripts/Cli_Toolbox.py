@@ -16,6 +16,7 @@ from rootfile_runtime import (
     lint_managed_entry,
     load_machine_payload,
     match_scan_rules,
+    prune_legacy_managed_target_dirs,
     resolve_target_contract,
     render_internal_agents_human,
     scaffold_external_agents,
@@ -125,6 +126,7 @@ def cmd_lint(args: argparse.Namespace) -> int:
 
 def cmd_collect(args: argparse.Namespace) -> int:
     paths = detect_paths(__file__)
+    removed_legacy_dirs = prune_legacy_managed_target_dirs(paths, args.dry_run)
     entries = match_scan_rules(paths, args.only, args.source_path)
     operations = []
     failures = []
@@ -180,6 +182,7 @@ def cmd_collect(args: argparse.Namespace) -> int:
         "dry_run": args.dry_run,
         "operation_count": len(operations),
         "operations": operations,
+        "removed_legacy_dirs": removed_legacy_dirs,
         "failures": failures,
         "summary": f"collect prepared {len(operations)} managed file(s)",
         "details": [f"- {item['source_path']} [{item['channel_id']}]" for item in operations],
@@ -193,6 +196,7 @@ def cmd_collect(args: argparse.Namespace) -> int:
 
 def cmd_push(args: argparse.Namespace) -> int:
     paths = detect_paths(__file__)
+    removed_legacy_dirs = prune_legacy_managed_target_dirs(paths, args.dry_run)
     entries = match_scan_rules(paths, args.only, args.source_path, include_missing=True)
     operations = []
     failures = []
@@ -245,6 +249,7 @@ def cmd_push(args: argparse.Namespace) -> int:
         "dry_run": args.dry_run,
         "operation_count": len(operations),
         "operations": operations,
+        "removed_legacy_dirs": removed_legacy_dirs,
         "failures": failures,
         "summary": f"push prepared {len(operations)} external file(s)",
         "details": [f"- {item['source_path']} [{item['channel_id']}]" for item in operations],
@@ -270,6 +275,7 @@ def cmd_target_contract(args: argparse.Namespace) -> int:
 
 def cmd_scaffold(args: argparse.Namespace) -> int:
     paths = detect_paths(__file__)
+    removed_legacy_dirs = prune_legacy_managed_target_dirs(paths, args.dry_run)
     target_dirs = [ensure_within_workspace(paths, Path(item)) for item in args.target_dir]
     selected_kinds = sorted(
         set(args.file_kind or ([] if not args.all_governed else [channel["file_kind"] for _, channel in []]))
@@ -350,6 +356,7 @@ def cmd_scaffold(args: argparse.Namespace) -> int:
         "dry_run": args.dry_run,
         "operation_count": len(operations),
         "operations": operations,
+        "removed_legacy_dirs": removed_legacy_dirs,
         "failures": failures,
         "summary": f"scaffold prepared {len(operations)} governed file(s)",
         "details": [f"- {item['external_path']} [{item['channel_id']}]" for item in operations],

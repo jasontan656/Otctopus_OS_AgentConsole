@@ -108,6 +108,14 @@ class TestCliToolbox:
             json.dumps(payload(), ensure_ascii=False, indent=2) + "\n",
         )
 
+    def _seed_legacy_alias_dir(self) -> None:
+        (self.skill_root / "assets" / "managed_targets" / "AI_Projects" / "Codex_Skills_Mirror").mkdir(
+            parents=True, exist_ok=True
+        )
+        (self.installed / "assets" / "managed_targets" / "AI_Projects" / "Codex_Skills_Mirror").mkdir(
+            parents=True, exist_ok=True
+        )
+
     def run_cli(self, *args: str, expect_ok: bool = True) -> dict:
         env = os.environ.copy()
         env["MDM_WORKSPACE_ROOT"] = str(self.workspace)
@@ -225,3 +233,14 @@ class TestCliToolbox:
         result = self.run_cli("target-contract", "--source-path", str(self.repo_root / "AGENTS.md"), "--json")
         assert result["channel_id"] == "AGENTS_MD"
         assert "payload" in result
+
+    def test_collect_prunes_legacy_alias_dir(self) -> None:
+        self._seed_legacy_alias_dir()
+        result = self.run_cli("collect", "--json", "--source-path", str(self.repo_root / "README.md"))
+        assert any(item.endswith("Codex_Skills_Mirror") for item in result["removed_legacy_dirs"])
+        assert not (
+            self.skill_root / "assets" / "managed_targets" / "AI_Projects" / "Codex_Skills_Mirror"
+        ).exists()
+        assert not (
+            self.installed / "assets" / "managed_targets" / "AI_Projects" / "Codex_Skills_Mirror"
+        ).exists()
