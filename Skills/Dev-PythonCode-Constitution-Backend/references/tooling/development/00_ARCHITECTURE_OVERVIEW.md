@@ -29,6 +29,6 @@ anchors:
 ## 额外要求
 - 当前技能的真实执行面由“文档树 + Python lint CLI”共同组成。
 - `run_python_code_lints.py` 只负责 Python 代码治理，不承接宪法查询。
-- `run_python_code_lints.py` 当前 gate 组合同时覆盖结构治理、Python 资产边界与 runtime safety，不应退化成泛文件治理入口；runtime safety 现在包含 typing、data boundary、concurrency、exception、subprocess、HTTP timeout、logging。
+- `run_python_code_lints.py` 当前 gate 组合同时覆盖结构治理、Python 资产边界与 runtime safety，不应退化成泛文件治理入口；runtime safety 现在包含 typing、data boundary、concurrency、io boundary、time/random、import side effect、exception、subprocess、HTTP timeout、logging。
 - `run_python_code_lints.py` 当前 gate 组合还覆盖 project integration：pytest、resource loading、pyproject metadata 与 entrypoint。
 - 若未来新增工具，必须明确它只负责辅助读取、校验或生成，不得绕过 `SKILL.md -> TASK_ROUTING -> governance atom -> python_rules` 的主路径。

@@ -27,3 +27,4 @@ anchors:
   - 新增 `references/python_rules/PYTHON_PROJECT_INTEGRATION_CONSTITUTION.md`，承载 pytest / resource / packaging 原子规则。
   - 新增 `exception_governance_gate` 与 `http_timeout_gate`，把异常治理与外部 HTTP 超时边界纳入 runtime safety。
   - 新增 `data_boundary_gate` 与 `concurrency_boundary_gate`，把 payload/data contract 与并发生命周期边界纳入 runtime safety。
+  - 新增 `io_boundary_gate`、`time_random_boundary_gate`、`import_side_effect_gate`，把副作用边界、时间/随机性边界与 import 时副作用治理纳入 runtime safety。

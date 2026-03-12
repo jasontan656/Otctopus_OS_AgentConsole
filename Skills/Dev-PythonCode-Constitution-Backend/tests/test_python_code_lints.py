@@ -528,3 +528,108 @@ class TestPythonCodeLintTests:
             assert ("bad_concurrency.py", "asyncio_create_task_requires_explicit_task_owner") in reasons
             assert ("bad_concurrency.py", "executor_constructor_requires_context_manager") in reasons
             assert not any(path == "good_concurrency.py" for path, _reason in reasons)
+
+    def test_io_boundary_pushes_io_out_of_pure_layers(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="py_lint_", dir=str(ROOT.parent)) as tmp:
+            root = Path(tmp)
+            (root / "user_domain.py").write_text(
+                "import requests\n"
+                "def load_user() -> dict[str, str]:\n"
+                "    requests.get('https://example.com')\n"
+                "    return {'id': '1'}\n",
+                encoding="utf-8",
+            )
+            (root / "pricing_policy.py").write_text(
+                "from pathlib import Path\n"
+                "def load_rules() -> str:\n"
+                "    return Path('rules.txt').read_text(encoding='utf-8')\n",
+                encoding="utf-8",
+            )
+            (root / "api_adapter.py").write_text(
+                "import requests\n"
+                "def fetch() -> None:\n"
+                "    requests.get('https://example.com')\n",
+                encoding="utf-8",
+            )
+
+            result = self._run_lint(root)
+            assert result.returncode == 1, result.stdout + result.stderr
+            report = json.loads(result.stdout)
+            gate = next(g for g in report["gates"] if g["gate"] == "io_boundary_gate")
+            reasons = {(v["path"], v["reason"]) for v in gate["violations"]}
+            assert ("user_domain.py", "pure_layer_contains_network_io") in reasons
+            assert ("pricing_policy.py", "pure_layer_contains_file_io") in reasons
+            assert not any(path == "api_adapter.py" for path, _reason in reasons)
+
+    def test_time_random_boundary_requires_explicit_providers(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="py_lint_", dir=str(ROOT.parent)) as tmp:
+            root = Path(tmp)
+            (root / "order_service.py").write_text(
+                "from datetime import datetime, date\n"
+                "from uuid import uuid4\n"
+                "import random\n"
+                "\n"
+                "def build_order() -> tuple[str, str, int, str]:\n"
+                "    return datetime.now().isoformat(), str(date.today()), random.randint(1, 9), str(uuid4())\n",
+                encoding="utf-8",
+            )
+            (root / "clock_service.py").write_text(
+                "from typing import Protocol\n"
+                "\n"
+                "class Clock(Protocol):\n"
+                "    def now(self) -> str: ...\n"
+                "\n"
+                "def build_order(clock: Clock, order_id: str, pick: int) -> tuple[str, str, int]:\n"
+                "    return clock.now(), order_id, pick\n",
+                encoding="utf-8",
+            )
+
+            result = self._run_lint(root)
+            assert result.returncode == 1, result.stdout + result.stderr
+            report = json.loads(result.stdout)
+            gate = next(g for g in report["gates"] if g["gate"] == "time_random_boundary_gate")
+            reasons = {(v["path"], v["reason"]) for v in gate["violations"]}
+            assert ("order_service.py", "datetime_now_requires_clock_boundary") in reasons
+            assert ("order_service.py", "date_today_requires_clock_boundary") in reasons
+            assert ("order_service.py", "randomness_requires_explicit_rng_boundary") in reasons
+            assert ("order_service.py", "uuid4_requires_id_provider_boundary") in reasons
+            assert not any(path == "clock_service.py" for path, _reason in reasons)
+
+    def test_import_side_effect_gate_blocks_runtime_work_at_import_time(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="py_lint_", dir=str(ROOT.parent)) as tmp:
+            root = Path(tmp)
+            (root / "bad_imports.py").write_text(
+                "from datetime import datetime\n"
+                "import asyncio\n"
+                "import httpx\n"
+                "from pathlib import Path\n"
+                "\n"
+                "CLIENT = httpx.Client()\n"
+                "CONFIG = Path('settings.json').read_text(encoding='utf-8')\n"
+                "STARTED_AT = datetime.now()\n"
+                "TASK = asyncio.create_task(run())\n",
+                encoding="utf-8",
+            )
+            (root / "good_imports.py").write_text(
+                "from datetime import datetime\n"
+                "import httpx\n"
+                "from pathlib import Path\n"
+                "\n"
+                "def build_runtime() -> tuple[httpx.Client, str, datetime]:\n"
+                "    return httpx.Client(), Path('settings.json').read_text(encoding='utf-8'), datetime.now()\n"
+                "\n"
+                "if __name__ == '__main__':\n"
+                "    build_runtime()\n",
+                encoding="utf-8",
+            )
+
+            result = self._run_lint(root)
+            assert result.returncode == 1, result.stdout + result.stderr
+            report = json.loads(result.stdout)
+            gate = next(g for g in report["gates"] if g["gate"] == "import_side_effect_gate")
+            reasons = {(v["path"], v["reason"]) for v in gate["violations"]}
+            assert ("bad_imports.py", "import_side_effect:pure_layer_constructs_runtime_client") in reasons
+            assert ("bad_imports.py", "import_side_effect:pure_layer_contains_file_io") in reasons
+            assert ("bad_imports.py", "import_side_effect:datetime_now_requires_clock_boundary") in reasons
+            assert ("bad_imports.py", "import_side_effect:module_import_starts_background_task") in reasons
+            assert not any(path == "good_imports.py" for path, _reason in reasons)
