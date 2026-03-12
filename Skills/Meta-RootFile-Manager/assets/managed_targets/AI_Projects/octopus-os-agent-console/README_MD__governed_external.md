@@ -8,7 +8,7 @@ It is being shaped for a solo operator building a complete AI collaboration stac
 
 This repository is the product foundation for Octopus OS. It has two responsibilities at the same time:
 
-- Public product surface: positioning, installation model, workspace mirror, and product-facing documentation.
+- Public product surface: positioning, installation model, target-directory console mirror, and product-facing documentation.
 - Internal skill source of truth: the skill core still evolves here first and can still be pushed into `~/.codex/skills`.
 
 ## Current Status
@@ -36,14 +36,14 @@ This is not just a generic skill mirror.
 A better model is:
 
 - `Skills/`: the execution core of Octopus OS, built from atomic capability units, and the only syncable skill container
-- `skill-mirror-to-codex`: the internal bridge that pushes skill roots into `~/.codex/skills`
+- `SkillsManager-Mirror-To-Codex`: the internal bridge that pushes skill roots into `~/.codex/skills`
 - `docs/` and `product_tools/`: product surfaces that must stay outside the codex installation directory
 - Git history: an externalized product iteration log
 
 ## Hard Boundaries
 
 - Product-facing files may evolve here, but they must not pollute `~/.codex/skills`
-- Skill roots must remain pushable through `skill-mirror-to-codex`
+- Skill roots must remain pushable through `SkillsManager-Mirror-To-Codex`
 - Install and cleanup must stay manifest-driven instead of using guess-based deletion
 - Installation now targets a dedicated Codex install root instead of reusing an arbitrary existing `~/.codex/skills`
 - The target Codex skills directory must be clean before Octopus OS is installed; only Codex initial `.system` entries are allowed
@@ -57,7 +57,7 @@ A better model is:
 Mode 1: direct command-line install into a dedicated target path.
 
 ```bash
-python3 product_tools/octopus_os_agent_console.py install --runtime-target codex-gpt-5.4-high --install-root ~/Octopus_Runtime/codex-home --github-skill-repo git@github.com:YOUR_ACCOUNT/octopus-os-skills.git --github-auth-mode ssh --acknowledge-github-control-risk && HOME=~/Octopus_Runtime/codex-home ~/Octopus_Runtime/codex-home/bin/codex -C ~/Octopus_Runtime/octopus-os-agent-console -m gpt-5.4 -c 'model_reasoning_effort="high"'
+python3 product_tools/octopus_os_agent_console.py install --runtime-target codex-gpt-5.4-high --install-root ~/Octopus_Runtime/codex-home --github-skill-repo git@github.com:YOUR_ACCOUNT/octopus-os-skills.git --github-auth-mode ssh --acknowledge-github-control-risk && HOME=~/Octopus_Runtime/codex-home ~/Octopus_Runtime/codex-home/bin/codex -C ~/Octopus_Runtime/codex-home/console -m gpt-5.4 -c 'model_reasoning_effort="high"'
 ```
 
 Mode 2: use an already system-installed Codex CLI only as the bootstrap tool.
@@ -81,9 +81,11 @@ Install behavior is intentionally narrow:
 - it installs the latest Codex CLI into the dedicated install root by using the official npm package
 - it uses that install root as the Codex home boundary and syncs only real skill roots into `<install-root>/.codex/skills`
 - it removes any accidental root-level `<install-root>/.codex/skills/AGENTS.md`
-- it creates a sibling `octopus-os-agent-console` workspace mirror, including the repository root `AGENTS.md` and `Skills/AGENTS.md`
+- it creates a `console/` workspace mirror inside the target directory, including the repository root `AGENTS.md` and `Skills/AGENTS.md`
+- it creates target-directory runtime roots at `<install-root>/Codex_Skill_Runtime` and `<install-root>/Codex_Skills_Result`
+- it creates an `Octopus_OS/` folder inside the target directory as part of the installed baseline layout
 - it captures a GitHub skill repository binding so Octopus OS can later drive its Git workflow
-- it then launches a new Codex CLI session against the sibling workspace so the installed skill ecosystem is active immediately
+- it then launches a new Codex CLI session against the target-directory `console/` workspace so the installed skill ecosystem is active immediately
 - it does not write a system-level Codex installation for the user
 
 GitHub binding warning:

@@ -1,0 +1,4 @@
+interface:
+  display_name: "SkillsManager-Production-Form"
+  short_description: "持续维护 console 目录的产品形态，并把 active 设计日志收敛到 governed runtime root。"
+  default_prompt: "使用 SkillsManager-Production-Form 先读取当前 console 产品意图与最近设计日志，再推进新的技能产品化判断；若形成新判断，必须把日志追加到 /home/jasontan656/AI_Projects/Codex_Skill_Runtime/SkillsManager-Production-Form/ITERATION_LOG.md，并遵守 governed result root。"

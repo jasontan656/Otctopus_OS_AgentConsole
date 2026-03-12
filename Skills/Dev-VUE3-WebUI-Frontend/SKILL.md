@@ -60,7 +60,7 @@ metadata:
 
 ## 4. 适用域
 - 适用于：项目定制 Vue3 Web UI 组件使用方式、信息层级设计、桌面/移动端布局规范、动效规范、组件组织、代码组织、showroom / workbench 用途设计、SPA menu/canvas 目标定义、多治理域 viewer 规划、文档 graph 与 code graph 统一承载面设计。
-- 不适用于：替代具体业务产品需求、替代纯视觉稿评审、替代 `skill-doc-structure` 的文档结构方法论本体。
+- 不适用于：替代具体业务产品需求、替代纯视觉稿评审、替代 `SkillsManager-Doc-Structure` 的文档结构方法论本体。
 - 本技能消费 doc graph 与 code graph 能力，但自身重点是前端标准、统一工作台展示面，以及前端开发阶段的必用规范入口。
 
 ## 5. 执行入口

@@ -36,14 +36,14 @@ This is not just a generic skill mirror.
 A better model is:
 
 - `Skills/`: the execution core of Octopus OS, built from atomic capability units, and the only syncable skill container
-- `skill-mirror-to-codex`: the internal bridge that pushes skill roots into `~/.codex/skills`
+- `SkillsManager-Mirror-To-Codex`: the internal bridge that pushes skill roots into `~/.codex/skills`
 - `docs/` and `product_tools/`: product surfaces that must stay outside the codex installation directory
 - Git history: an externalized product iteration log
 
 ## Hard Boundaries
 
 - Product-facing files may evolve here, but they must not pollute `~/.codex/skills`
-- Skill roots must remain pushable through `skill-mirror-to-codex`
+- Skill roots must remain pushable through `SkillsManager-Mirror-To-Codex`
 - Install and cleanup must stay manifest-driven instead of using guess-based deletion
 - Installation now targets a dedicated Codex install root instead of reusing an arbitrary existing `~/.codex/skills`
 - The target Codex skills directory must be clean before Octopus OS is installed; only Codex initial `.system` entries are allowed

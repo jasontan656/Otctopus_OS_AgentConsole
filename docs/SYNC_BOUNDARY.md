@@ -26,7 +26,7 @@ Only the skill core is allowed to flow into `~/.codex/skills`.
 
 ## Current Sync Strategy
 
-`skill-mirror-to-codex` with `scope=all` now behaves as follows:
+`SkillsManager-Mirror-To-Codex` with `scope=all` now behaves as follows:
 
 1. scan the repository root
 2. discover only real syncable skill roots

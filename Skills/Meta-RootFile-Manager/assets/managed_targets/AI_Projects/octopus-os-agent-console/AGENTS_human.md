@@ -27,7 +27,7 @@
 - 如果本回合写入 `octopus-os-agent-console`，必须从一开始就纳入 Git traceability；若任务内容涉及 Python 相关编辑，还必须把 `Dev-PythonCode-Constitution-Backend` 的阅读与 lint 纳入同回合范围。
 - skill mirror 根目录固定为 `octopus-os-agent-console/Skills/`；repo 根目录保留给产品文档、产品工具与正常代码库入口。
 - 如果本回合编辑 skill，必须先在 `octopus-os-agent-console/Skills/` 中的 mirror 副本完成编辑，禁止直接编辑 codex 安装目录下的对应 skill。
-- skill 编辑完成后，若目标 skill 已存在于 codex 安装目录，必须同回合执行 `$skill-mirror-to-codex` 的 `Push`；若目标 skill 是新建且 codex 安装目录中尚不存在，必须同回合执行 `$skill-mirror-to-codex` 的 `Install`。
+- skill 编辑完成后，若目标 skill 已存在于 codex 安装目录，必须同回合执行 `$SkillsManager-Mirror-To-Codex` 的 `Push`；若目标 skill 是新建且 codex 安装目录中尚不存在，必须同回合执行 `$SkillsManager-Mirror-To-Codex` 的 `Install`。
 - 若任务内容涉及 Python 相关编辑，结束前必须完成 `Dev-PythonCode-Constitution-Backend` 的 lint。
 - 如果本回合写入了 `octopus-os-agent-console`，必须同回合 commit-and-push。
 
@@ -59,8 +59,8 @@
   },
   "default_meta_skill_order": [
     "$meta-github-operation (after any write to octopus-os-agent-console, commit-and-push the repo for Git traceability; Git push is not a substitute for syncing the codex installation directory)",
-    "$skill-mirror-to-codex (edit skills only in the product repo mirror paths, never directly in the codex installation directory; after editing, use Push for already-installed skills and Install for newly created skills)",
-    "$skill-creation-template ( should be considered to imply if there is no specific user request on how skill should be created (prioritize user request than template) )",
+    "$SkillsManager-Mirror-To-Codex (edit skills only in the product repo mirror paths, never directly in the codex installation directory; after editing, use Push for already-installed skills and Install for newly created skills)",
+    "$SkillsManager-Creation-Template ( should be considered to imply if there is no specific user request on how skill should be created (prioritize user request than template) )",
     "$skill-creator (for skill standard formatter to ensure codex reads it properly, do not use its template for skill creation)",
     "$Dev-PythonCode-Constitution-Backend (for Python-related fat-file checks, split guidance, and lint runs when the task edits Python code)"
   ],
@@ -139,7 +139,7 @@
     "for skill changes, edit the mirror copy under octopus-os-agent-console/Skills and never directly edit the codex installation directory",
     "all product-repo skill roots live under octopus-os-agent-console/Skills and repo root is not a syncable skill container",
     "product-facing docs and product tools must not be pushed into the codex installation directory; only syncable skill roots and .system may flow downstream",
-    "after skill edits, use skill-mirror-to-codex Push for already-installed skills or Install for newly created skills before closing the turn"
+    "after skill edits, use SkillsManager-Mirror-To-Codex Push for already-installed skills or Install for newly created skills before closing the turn"
   ],
   "execution_modes": {
     "READ_EXEC": {
@@ -158,7 +158,7 @@
         "edit the minimal correct scope that matches the user intent",
         "for public product surfaces, keep English-only wording and avoid leaking internal Chinese governance content",
         "for skill edits, write only the mirror copy under octopus-os-agent-console/Skills and do not directly edit the codex installed copy",
-        "after skill edits, run skill-mirror-to-codex Push for existing installed skills or Install for newly created skills",
+        "after skill edits, run SkillsManager-Mirror-To-Codex Push for existing installed skills or Install for newly created skills",
         "if task contents include Python related edits, run Dev-PythonCode-Constitution-Backend lint on the concrete Python-related target scope before closing the turn",
         "complete same-turn commit-and-push when octopus-os-agent-console files are written"
       ]
@@ -173,7 +173,7 @@
     "if task contents include Python related edits, run Dev-PythonCode-Constitution-Backend lint on the concrete Python-related target scope",
     "if dependency manifests or lock files changed, keep the repo-local skills environments and AGENTS governance mapping synchronized in the same turn",
     "if the turn updated the mandatory Skills tech stack baseline, keep skills_required_techstacks and the repo-local environment lock or manifest files synchronized in the same turn",
-    "if the turn edited a skill, complete skill-mirror-to-codex Push or Install before closing the turn",
+    "if the turn edited a skill, complete SkillsManager-Mirror-To-Codex Push or Install before closing the turn",
     "if the turn wrote octopus-os-agent-console, complete same-turn commit-and-push before closing the turn"
   ],
   "repo_name": "octopus-os-agent-console"

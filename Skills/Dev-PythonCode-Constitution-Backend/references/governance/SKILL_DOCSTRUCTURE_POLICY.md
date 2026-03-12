@@ -16,7 +16,7 @@ anchors:
 # Skill Doc-Structure Policy
 
 ## 强制声明
-- `skill-doc-structure` 是创建与治理本技能时必须显式应用的规则。
+- `SkillsManager-Doc-Structure` 是创建与治理本技能时必须显式应用的规则。
 - 若当前结构与 facade / routing / topic atom 原则冲突，优先整体重建结构，而不是局部补丁。
 
 ## 必做项

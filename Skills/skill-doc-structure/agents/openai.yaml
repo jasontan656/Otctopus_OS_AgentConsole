@@ -1,4 +1,0 @@
-interface:
-  display_name: "Skill-Doc-Structure"
-  short_description: "规范 skill 内部文档结构、单 topic 原子文档与锚点图谱。"
-  default_prompt: "Use Skill-Doc-Structure only inside a skill folder. Enforce single-topic markdown atoms, frontmatter anchors, anchor graph JSON, and TypeScript CLI validation. Keep the skill focused on document-structure governance only."

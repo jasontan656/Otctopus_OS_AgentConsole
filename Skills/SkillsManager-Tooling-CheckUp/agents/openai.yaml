@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skills Tooling Checkup"
+  short_description: "检查已安装 skills 的 tooling code 是否绕开 repo 必用依赖栈自造轮子，并治理日志落盘、产物落点与迁移责任。"
+  default_prompt: "Use SkillsManager-Tooling-CheckUp by calling `python3 scripts/Cli_Toolbox.py contract --json` first. If the task is about governing a target skill into CLI-first dual-file form, call `python3 scripts/Cli_Toolbox.py govern-target --target-skill-root <path> --json`; otherwise call `python3 scripts/Cli_Toolbox.py directive --topic <topic> --json`. Treat returned JSON as the primary runtime guidance; only use markdown mirrors as human-facing fallback."

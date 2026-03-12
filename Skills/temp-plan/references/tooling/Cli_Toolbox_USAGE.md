@@ -11,8 +11,8 @@
   - `references/current_intent.md`
   - `references/application_contract.md`
 - 若任务需要真正创建或安装技能，转由其他技能处理：
-  - 模板治理：`$skill-creation-template`
-  - 镜像安装：`$skill-mirror-to-codex`
+  - 模板治理：`$SkillsManager-Creation-Template`
+  - 镜像安装：`$SkillsManager-Mirror-To-Codex`
 
 ## 命令说明
 - 当前无示例命令。

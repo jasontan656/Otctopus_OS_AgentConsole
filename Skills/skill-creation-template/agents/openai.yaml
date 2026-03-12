@@ -1,4 +1,0 @@
-interface:
-  display_name: "Skill-Creation-Template"
-  short_description: "提供受治理技能模板与统一 Cli_Toolbox，用于创建或改造 basic 与 staged skill。"
-  default_prompt: "先读取 Skill-Creation-Template 的 Cli_Toolbox.runtime-contract，按 7 章门面结构与 profile 规则创建或改造技能。默认保持 SKILL.md 为 entry-only；若目标是 staged skill，必须显式建模 resident docs、stage checklist、stage doc/command/graph contracts 与 stage-switch discard policy。"
