@@ -19,12 +19,11 @@
   - `draft`
 - `trigger_summary`
   - 一句话说明它在什么场景下应被调用
-- `companion_skills`
-  - 可选
-  - 记录常见协作技能，而不是复制对方正文
-- `migrated_from`
-  - 可选
-  - 用于记录重命名治理前的旧 canonical 名称或旧展示名
+
+## 明确不纳入 registry 的信息
+- 不记录技能之间的组合或协作关系。
+- 不记录历史迁移来源或旧命名映射。
+- registry 只负责稳定回答：技能当前叫什么、属于哪个 prefix/family、以什么角色参与路由。
 
 ## registry 的使用方式
 - registry 是逻辑主表，不一定要求某个固定文件立刻存在。
@@ -33,7 +32,7 @@
 
 ## 注册写入语义
 - 注册动作默认按 `canonical_id` 执行 upsert。
-- 若 registry 中已存在相同 `canonical_id`，应更新已有条目的 `display_name`、`prefix`、`family`、`role_tag`、`status`、`trigger_summary`、`companion_skills` 与 `migrated_from`，而不是重复新增第二条记录。
+- 若 registry 中已存在相同 `canonical_id`，应更新已有条目的 `display_name`、`prefix`、`family`、`role_tag`、`status` 与 `trigger_summary`，而不是重复新增第二条记录。
 - 只有当 `canonical_id` 在 registry 中不存在时，才应创建新的技能登记。
 - 当用户口头要求“完成注册”，但该技能已经登记时，模型应把请求解释为“完成注册更新”。
 
@@ -56,7 +55,7 @@
 - 显示名
 - prefix / family / role_tag
 - 用户自然语言中常用的系列称呼
-- 与该技能强绑定的 companion skill 说明
+- 若有历史命名说明，允许在其他文档单独维护，但不进入本 registry 模型
 
 ## OK 定义
 - 模型能明确回答一个技能属于哪个 prefix 和 family。

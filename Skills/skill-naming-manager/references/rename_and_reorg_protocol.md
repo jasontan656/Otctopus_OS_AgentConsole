@@ -15,14 +15,13 @@
 1. 先定义新的命名规则。
 2. 再定义新的 registry 结构。
 3. 再明确自然语言调用语义如何迁移。
-4. 最后才批量改技能目录、frontmatter 与伴随说明。
+4. 最后才批量改技能目录与 frontmatter。
 
 ## 必查清单
 - 哪些技能的 `canonical_id` 需要改
 - 哪些技能只是 `display_name` 需要改
 - 哪些 prefix/family 会受影响
 - 哪些自然语言短语会因此产生歧义
-- 哪些 companion skill 关系需要同步调整
 
 ## 风险提醒
 - 只改目录名，不改 registry 语义，会导致安装名与调度语义脱节。
