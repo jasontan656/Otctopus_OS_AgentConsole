@@ -32,3 +32,13 @@ modules:
     responsibilities:
       - "按 topic 输出 contract/workflow/instruction/guide payload"
       - "保证模型先吃 JSON，再按需补 human markdown"
+  - module_id: govern_target
+    entrypoint: scripts/Cli_Toolbox.py
+    tool_aliases:
+      - Cli_Toolbox.govern_target
+    docs:
+      usage: references/tooling/Cli_Toolbox_USAGE.md
+      development: references/tooling/development/modules/mod_govern_target.md
+    responsibilities:
+      - "对目标 skill 输出形态治理审计结果"
+      - "检查 dual-file runtime assets 与 CLI-first facade 是否齐备"

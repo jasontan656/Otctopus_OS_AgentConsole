@@ -24,6 +24,11 @@
       "doc_kind": "guide",
       "json_path": "TOOLING_ENTRY_GUIDE.json",
       "human_path": "TOOLING_ENTRY_GUIDE_human.md"
+    },
+    "target-shape-governance": {
+      "doc_kind": "guide",
+      "json_path": "TARGET_SHAPE_GOVERNANCE_GUIDE.json",
+      "human_path": "TARGET_SHAPE_GOVERNANCE_GUIDE_human.md"
     }
   }
 }

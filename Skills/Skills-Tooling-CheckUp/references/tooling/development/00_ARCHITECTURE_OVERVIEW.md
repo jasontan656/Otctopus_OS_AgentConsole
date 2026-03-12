@@ -30,5 +30,6 @@ anchors:
 
 ## 额外要求
 - 本技能现在拥有 machine-readable runtime contract，并以 CLI JSON 作为主运行时源。
+- 本技能现在也拥有目标技能形态治理入口：`govern-target`。
 - 真正的目标 skill 行为验证仍位于目标 skill 现有命令，而不是本技能自身。
 - 若未来新增新的 runtime-facing contract/workflow/instruction/guide，必须以 `*_human.md + same-name .json` 双文件形态进入 `references/runtime_contracts/`。

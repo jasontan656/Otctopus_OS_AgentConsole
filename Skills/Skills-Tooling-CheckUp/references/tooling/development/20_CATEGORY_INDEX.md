@@ -20,6 +20,7 @@ anchors:
 - 模块清单：`10_MODULE_CATALOG.yaml`
 - 合同模块：`modules/mod_contract.md`
 - directive 模块：`modules/mod_directive.md`
+- 目标治理模块：`modules/mod_govern_target.md`
 - 运行时资产：`../../runtime_contracts/`
 - 运行时与产物落点治理：`../../governance/OBSERVABILITY_AND_OUTPUT_GOVERNANCE.md`
 - 依赖基线：`../../governance/MANDATORY_TECHSTACK_BASELINE.md`
@@ -27,6 +28,6 @@ anchors:
 - 变更记录：`90_CHANGELOG.md`
 
 ## 分类维护规则
-- 本技能当前有两个本地模块：`contract` 与 `directive`。
+- 本技能当前有三个本地模块：`contract`、`directive`、`govern_target`。
 - 若新增本地工具，先更新模块目录，再补模块文档与对应 runtime contract 资产。
 - 新 runtime-facing 合同类资产必须进入 `references/runtime_contracts/`，并保持 human/json 双文件一致。

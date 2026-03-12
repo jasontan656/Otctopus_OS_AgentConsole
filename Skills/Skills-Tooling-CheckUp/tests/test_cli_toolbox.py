@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import subprocess
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -48,6 +49,28 @@ class CliToolboxTests(unittest.TestCase):
         self.assertEqual(completed.returncode, 1)
         payload = json.loads(completed.stdout)
         self.assertEqual(payload["error"], "unknown_directive_topic")
+
+    def test_govern_target_reports_non_compliant_target(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            target_root = Path(tmp_dir) / "Example-Skill"
+            (target_root / "agents").mkdir(parents=True)
+            (target_root / "references" / "runtime_contracts").mkdir(parents=True)
+            (target_root / "references" / "governance").mkdir(parents=True)
+            (target_root / "SKILL.md").write_text("# Example Skill\n", encoding="utf-8")
+            (target_root / "agents" / "openai.yaml").write_text("interface:\n  default_prompt: \"read markdown\"\n", encoding="utf-8")
+            (target_root / "references" / "runtime_contracts" / "EXAMPLE_CONTRACT_human.md").write_text(
+                "<part_A>\ntext\n</part_A>\n\n<part_B>\n\n```json\n{}\n```\n</part_B>\n",
+                encoding="utf-8",
+            )
+            (target_root / "references" / "governance" / "LEGACY_CONTRACT.md").write_text("# legacy\n", encoding="utf-8")
+
+            completed = run_cli("govern-target", "--target-skill-root", str(target_root), "--json")
+            self.assertEqual(completed.returncode, 0, completed.stderr)
+            payload = json.loads(completed.stdout)
+            self.assertFalse(payload["compliant"])
+            self.assertIn("references/runtime_contracts/EXAMPLE_CONTRACT_human.md", payload["audit"]["missing_json_payloads"])
+            self.assertIn("references/governance/LEGACY_CONTRACT.md", payload["audit"]["legacy_markdown_only_assets"])
+            self.assertFalse(payload["audit"]["agent_prompt_cli_first"])
 
     def test_human_and_json_payloads_match(self) -> None:
         for json_path in sorted(RUNTIME_ROOT.glob("*.json")):

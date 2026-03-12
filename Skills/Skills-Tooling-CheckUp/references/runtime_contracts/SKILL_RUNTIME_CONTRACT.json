@@ -12,7 +12,8 @@
     "script": "scripts/Cli_Toolbox.py",
     "commands": {
       "contract": "python3 scripts/Cli_Toolbox.py contract --json",
-      "directive": "python3 scripts/Cli_Toolbox.py directive --topic <topic> --json"
+      "directive": "python3 scripts/Cli_Toolbox.py directive --topic <topic> --json",
+      "govern-target": "python3 scripts/Cli_Toolbox.py govern-target --target-skill-root <path> --json"
     }
   },
   "must_use_sequence": [
@@ -46,6 +47,11 @@
       "topic": "tooling-entry",
       "doc_kind": "guide",
       "use_when": "The task needs the local toolbox surface, command examples, or human/model boundary guidance."
+    },
+    {
+      "topic": "target-shape-governance",
+      "doc_kind": "guide",
+      "use_when": "The task is about governing another skill into the CLI-first dual-file runtime shape."
     }
   ],
   "hard_constraints": [

@@ -26,3 +26,6 @@ anchors:
   - 新增本地 `scripts/Cli_Toolbox.py`，提供 `contract` 与 `directive` 双入口。
   - 新增 `references/runtime_contracts/`，把 runtime-facing contract/workflow/instruction/guide 治理为 `*_human.md + same-name .json`。
   - 将技能门面与 agent prompt 切换为 CLI-first，明确模型必须先吃 JSON payload，不再通过 markdown 路径链寻找规则。
+- `2026-03-12`
+  - 新增 `govern-target` 入口，专门对目标 skill 输出形态治理审计结果。
+  - 新增 `TARGET_SHAPE_GOVERNANCE_GUIDE`，把“如何治理别的 skill 进入 CLI-first dual-file 形态”也变成工具可输出 payload。

@@ -20,6 +20,7 @@ anchors:
 - 模型运行时应先执行：
   - `python3 scripts/Cli_Toolbox.py contract --json`
   - `python3 scripts/Cli_Toolbox.py directive --topic <topic> --json`
+  - 当目标是治理某个具体 skill 的形态时：`python3 scripts/Cli_Toolbox.py govern-target --target-skill-root <path> --json`
 
 ## 当前分叉轴线
 - 本文件只按一个语义轴线分流：当前任务是在做只读定位、实改修正，还是要求变更 repo 技术栈基线本身。
@@ -32,6 +33,7 @@ anchors:
 - 输出应聚焦于：哪些实现是“可能重复造轮子”、日志与产物落盘治理是否闭合、证据是什么、哪些结论仍然未知。
 
 ## 分支二：进入目标 skill 做修正
+- 若当前任务首先是在治理“目标 skill 的运行时形态”，先用 `govern-target --target-skill-root <path> --json` 拿到目标感知审计结果。
 - 先用 `directive --topic remediation`。
 - 再按任务需要补 `directive --topic output-governance` 与 `directive --topic techstack-baseline`。
 - 若需要典型命中样式或 gates 细节，再读 `../governance/COMMON_REDUNDANT_WHEEL_PATTERNS.md` 与 `../governance/REMEDIATION_GATES.md`。
