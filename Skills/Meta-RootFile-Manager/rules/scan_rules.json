@@ -8,6 +8,7 @@
       "governed_source_paths": [
         "AGENTS.md",
         "Octopus_OS/AGENTS.md",
+        "Octopus_OS/Client_Applications/AGENTS.md",
         "octopus-os-agent-console/AGENTS.md"
       ],
       "managed_files": {
