@@ -9,6 +9,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
+from github_bootstrap_support import DEFAULT_IGNORE_PATTERNS, ensure_gitignore_patterns
 from registry_repo import ensure_remote_write_allowed, remote_policy_payload
 
 
@@ -34,17 +35,20 @@ class TestMetaGithubOperationCliTests:
         assert "baseline-contract" in completed.stdout
         assert "baseline-create" in completed.stdout
         assert "push-contract" in completed.stdout
+        assert "repo-bootstrap" in completed.stdout
         assert "rollback-contract" in completed.stdout
         assert "rollback-sync" in completed.stdout
 
         push_payload = json.loads(self.run_cli("push-contract", "--json").stdout)
         assert push_payload["entry"] == "push"
         assert any(command["name"] == "commit-and-push" for command in push_payload["commands"])
+        assert any(command["name"] == "repo-bootstrap" for command in push_payload["commands"])
         assert not (any(command["name"] == "baseline-create" for command in push_payload["commands"]))
         assert (
             push_payload["remote_policy"]["octopus-os-agent-console"]["origin"]["role"]
             == "private_dev_remote"
         )
+        assert push_payload["remote_policy"]["Octopus_OS"]["origin"]["role"] == "private_primary_remote"
         assert push_payload["runtime_governance"]["skill_runtime_root"].endswith("/meta-github-operation")
         assert push_payload["runtime_governance"]["claims_dir"].endswith("/meta-github-operation/claims")
         assert push_payload["runtime_governance"]["result_root"].endswith("/meta-github-operation")
@@ -241,6 +245,36 @@ class TestMetaGithubOperationCliTests:
         assert blocked["role"] == "future_public_release_remote"
         assert not (blocked["manual_publish_allowed"])
         assert "publishable closure" in blocked["disabled_reason"]
+
+    def test_ensure_gitignore_patterns_adds_common_local_only_assets(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            repo_root = Path(tmp) / "repo"
+            repo_root.mkdir()
+            (repo_root / ".gitignore").write_text("tracked.txt\n", encoding="utf-8")
+
+            payload = ensure_gitignore_patterns(repo_root)
+
+            content = (repo_root / ".gitignore").read_text(encoding="utf-8")
+            assert payload["gitignore_path"].endswith("/.gitignore")
+            assert ".env" in content
+            assert ".env.example" in content
+            assert ".venv/" in content
+            assert "__pycache__/" in content
+            assert "*.log" in content
+            assert payload["appended_patterns"]
+
+    def test_ensure_gitignore_patterns_is_idempotent(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            repo_root = Path(tmp) / "repo"
+            repo_root.mkdir()
+            (repo_root / ".gitignore").write_text(
+                "\n".join(["tracked.txt", "# Common local-only assets", *DEFAULT_IGNORE_PATTERNS]) + "\n",
+                encoding="utf-8",
+            )
+
+            payload = ensure_gitignore_patterns(repo_root)
+
+            assert payload["appended_patterns"] == []
 
     def test_rollback_paths_strongly_restores_and_deletes_extra_files(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

@@ -11,6 +11,12 @@ description: "受限 GitHub control plane：仅服务 Octopus_OS 与 octopus-os-
 - `/home/jasontan656/AI_Projects/Octopus_OS`
 - `/home/jasontan656/AI_Projects/octopus-os-agent-console`
 
+对于 `Octopus_OS`：
+- `origin`: 私有主远端 `Octopus_OS`
+- 仓库名应与本地仓库名保持一致
+- 预期保持闭源 / private
+- bootstrap 时需要先补齐常用本地忽略项，再完成远端关联与首次/补推
+
 对于 `octopus-os-agent-console`，当前已进入双远端模型：
 - `origin`: 私有开发仓 `octopus-os-agent-console_AI_dev`
 - `public-release`: 公开发布仓 `octopus-os-agent-console`
@@ -28,6 +34,7 @@ description: "受限 GitHub control plane：仅服务 Octopus_OS 与 octopus-os-
 - 允许：
   - repo registry
   - status / remote-info
+  - repo-bootstrap
   - fetch / pull-rebase
   - push-contract
   - baseline-contract
@@ -49,6 +56,7 @@ description: "受限 GitHub control plane：仅服务 Octopus_OS 与 octopus-os-
   - `Octopus_OS`
   - `octopus-os-agent-console`
 - `remote-info` 与 `push-contract` 应成为 remote policy 的主读取入口
+- `repo-bootstrap` 负责私有仓远端创建/校验、origin 关联、常用忽略项补齐以及首次/补推。
 - 与运行时落盘/结果落点相关的 machine-readable 合同，应以 `push-contract --json`、`baseline-contract --json` 与 `rollback-contract --json` 返回的 `runtime_governance` 字段为准
 
 ## Runtime And Output Governance
@@ -71,7 +79,14 @@ description: "受限 GitHub control plane：仅服务 Octopus_OS 与 octopus-os-
 ## Remote Policy
 
 - `Octopus_OS`
-  - 当前按单远端常规开发仓处理
+  - `origin`
+    - 角色：private primary remote
+    - 用途：闭源主远端、常规迭代、首次/补推 bootstrap
+    - 写入策略：允许
+    - 附加约束：
+      - 远端仓库名应与本地仓库名一致
+      - 默认保持 private
+      - bootstrap 前应补齐日志、临时文件、虚拟环境、缓存目录、`.env` / `.env.example` 等常用忽略项
 - `octopus-os-agent-console`
   - `origin`
     - 角色：private development traceability remote
@@ -85,6 +100,7 @@ description: "受限 GitHub control plane：仅服务 Octopus_OS 与 octopus-os-
 
 ## Current Delivery Rule
 
+- 若用户要求为 `Octopus_OS` 新建或校验闭源远端，优先走 `repo-bootstrap`，并默认使用 private visibility。
 - 若用户要求正常提交并推送 `octopus-os-agent-console`，默认只推 `origin`
 - 若用户明确要求发布到公开仓，必须先声明当前禁用，再解释原因
 - 在发布流程尚未设计完成前，不得把 `public-release` 当成可写远端偷偷使用

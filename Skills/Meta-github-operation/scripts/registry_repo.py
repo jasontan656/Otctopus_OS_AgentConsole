@@ -32,9 +32,13 @@ REPO_REGISTRY: dict[str, RepoSpec] = {
         remotes=(
             RemoteSpec(
                 name="origin",
-                role="standard_primary_remote",
+                role="private_primary_remote",
                 automation_write_allowed=True,
                 status="enabled",
+                notes=(
+                    "Repository is expected to remain closed-source/private.",
+                    "Origin should use the same repository name as the local repo when bootstrapped on GitHub.",
+                ),
             ),
         ),
     ),

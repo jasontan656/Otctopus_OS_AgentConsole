@@ -16,6 +16,7 @@ from git_cli_support import pull_rebase as git_pull_rebase
 from git_cli_support import push as git_push
 from git_cli_support import push_tag
 from git_cli_support import remote_urls, repo_status_payload, resolve_commit_scope, rollback_paths, rollback_sync, run_git, stage_paths
+from github_bootstrap_support import bootstrap_private_origin
 from runtime_contract_support import CommitScope
 from registry_repo import ensure_remote_write_allowed, registry_payload, remote_policy_payload, resolve_repo
 
@@ -243,6 +244,41 @@ def push_command(
             remote=remote,
             branch=branch,
             force_with_lease=force_with_lease,
+        )
+    )
+    _emit(payload, as_json=json_output)
+
+
+@app.command("repo-bootstrap")
+def repo_bootstrap_command(
+    repo: RepoNameOption = None,
+    repo_path: RepoPathOption = None,
+    owner: Annotated[str | None, typer.Option("--owner")] = None,
+    repo_name: Annotated[str | None, typer.Option("--repo-name")] = None,
+    remote: Annotated[str, typer.Option("--remote")] = "origin",
+    visibility: Annotated[Literal["private", "public", "internal"], typer.Option("--visibility")] = "private",
+    message: Annotated[str | None, typer.Option("--message")] = None,
+    use_all: Annotated[bool, typer.Option("--all")] = False,
+    allow_empty: Annotated[bool, typer.Option("--allow-empty")] = False,
+    json_output: JsonOption = False,
+) -> None:
+    repo_name_resolved, repo_root = _resolve_repo_root(repo, repo_path)
+    ensure_remote_write_allowed(repo_name_resolved, remote, operation="repo-bootstrap")
+    payload = {
+        "repo": repo_name_resolved,
+        "repo_root": str(repo_root),
+        "operation": "repo-bootstrap",
+    }
+    payload.update(
+        bootstrap_private_origin(
+            repo_root,
+            owner=owner,
+            repo_name=repo_name,
+            remote_name=remote,
+            visibility=visibility,
+            commit_message=message,
+            use_all=use_all,
+            allow_empty=allow_empty,
         )
     )
     _emit(payload, as_json=json_output)

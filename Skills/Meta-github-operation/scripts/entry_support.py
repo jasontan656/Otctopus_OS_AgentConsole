@@ -67,6 +67,10 @@ def push_contract_payload() -> PushContractPayload:
             "name": "push",
             "role": "push the current branch state without creating a new commit",
         },
+        {
+            "name": "repo-bootstrap",
+            "role": "ensure private GitHub repo bootstrap, origin association, ignore hygiene, and first or follow-up push",
+        },
     ]
     return {
         "contract_name": "meta_github_operation_push_contract",
@@ -81,9 +85,13 @@ def push_contract_payload() -> PushContractPayload:
         "remote_policy": {
             "Octopus_OS": {
                 "origin": {
-                    "role": "standard_primary_remote",
+                    "role": "private_primary_remote",
                     "automation_write_allowed": True,
                     "status": "enabled",
+                    "notes": [
+                        "Repository is expected to remain private/closed-source.",
+                        "Bootstrap flows should keep the remote repository name aligned with the local repository name.",
+                    ],
                 }
             },
             "octopus-os-agent-console": {
@@ -114,6 +122,8 @@ def push_contract_payload() -> PushContractPayload:
             "Push-related runtime guidance must come from CLI JSON, not markdown.",
             "Use explicit scope selection for commits; do not silently widen scope.",
             "Use force-with-lease only when the caller explicitly requests it.",
+            "Bootstrap flows may create or verify private GitHub repositories only for registered repos and should default to private visibility.",
+            "Bootstrap flows should refresh local ignore hygiene for logs, temp files, virtual environments, caches, and .env-like files before the first or follow-up push.",
             "For octopus-os-agent-console, automatic iteration pushes must go to origin only.",
             "For octopus-os-agent-console, public-release is currently disabled because development has not reached publishable closure and no release workflow is designed yet.",
         ],
