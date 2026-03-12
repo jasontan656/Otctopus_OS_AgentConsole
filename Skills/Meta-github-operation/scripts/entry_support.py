@@ -24,6 +24,7 @@ PRODUCT_ROOT = _resolve_product_root()
 SKILL_RUNTIME_ROOT = str((PRODUCT_ROOT / "Codex_Skill_Runtime" / "meta-github-operation").resolve())
 CLAIMS_DIR = str((PRODUCT_ROOT / "Codex_Skill_Runtime" / "meta-github-operation" / "claims").resolve())
 SKILL_RESULT_ROOT = str((PRODUCT_ROOT / "Codex_Skills_Result" / "meta-github-operation").resolve())
+PUSH_LOCK_DIR = str((PRODUCT_ROOT / "Codex_Skill_Runtime" / "meta-github-operation" / "push_locks").resolve())
 LEGACY_RUNTIME_FALLBACKS = [str((PRODUCT_ROOT / "Codex_Skill_Runtime").resolve())]
 
 
@@ -32,6 +33,7 @@ def runtime_governance_payload() -> RuntimeGovernancePayload:
         "skill_runtime_root": SKILL_RUNTIME_ROOT,
         "claims_dir": CLAIMS_DIR,
         "result_root": SKILL_RESULT_ROOT,
+        "push_lock_dir": PUSH_LOCK_DIR,
         "runtime_log_policy": (
             "This skill currently emits CLI JSON to stdout and does not persist its own rolling logs; "
             "runtime-owned claims files must stay under the governed skill runtime root."
@@ -132,7 +134,9 @@ def push_contract_payload() -> PushContractPayload:
             "Do not widen automation beyond the registered repos.",
             "Push-related runtime guidance must come from CLI JSON, not markdown.",
             "Use explicit scope selection for commits; do not silently widen scope.",
+            "Traceability commit messages must use development-log style details and explicitly state the problem solved or risk reduced.",
             "Use force-with-lease only when the caller explicitly requests it.",
+            "Remote write flows must run serially per repo; do not parallelize push, commit-and-push, repo-bootstrap publish, or remote baseline publication.",
             "Bootstrap flows may create or verify private GitHub repositories only for registered repos and should default to private visibility.",
             "Bootstrap flows should refresh local ignore hygiene for logs, temp files, virtual environments, caches, and .env-like files before the first or follow-up push.",
             "For octopus-os-agent-console, automatic iteration pushes must go to origin only.",

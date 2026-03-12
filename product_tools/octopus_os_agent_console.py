@@ -137,6 +137,40 @@ def _build_codex_cli_install_command(install_root: Path) -> str:
     return _shell_join(["npm", "install", "-g", CODEX_CLI_PACKAGE, "--prefix", str(install_root)])
 
 
+def _derive_managed_npm_root(install_root: Path) -> Path:
+    return install_root / PRODUCT_RUNTIME_DIR / "npm"
+
+
+def _prepare_managed_npm_environment(install_root: Path) -> dict[str, str]:
+    npm_root = _derive_managed_npm_root(install_root)
+    cache_root = npm_root / "cache"
+    logs_root = npm_root / "logs"
+    userconfig_path = npm_root / "npmrc"
+
+    cache_root.mkdir(parents=True, exist_ok=True)
+    logs_root.mkdir(parents=True, exist_ok=True)
+    userconfig_path.parent.mkdir(parents=True, exist_ok=True)
+    if not userconfig_path.exists():
+        userconfig_path.write_text("", encoding="utf-8")
+
+    return {
+        **os.environ,
+        "HOME": str(install_root),
+        "NPM_CONFIG_CACHE": str(cache_root),
+        "npm_config_cache": str(cache_root),
+        "NPM_CONFIG_LOGS_DIR": str(logs_root),
+        "npm_config_logs_dir": str(logs_root),
+        "NPM_CONFIG_USERCONFIG": str(userconfig_path),
+        "npm_config_userconfig": str(userconfig_path),
+        "NPM_CONFIG_FUND": "false",
+        "npm_config_fund": "false",
+        "NPM_CONFIG_AUDIT": "false",
+        "npm_config_audit": "false",
+        "NPM_CONFIG_UPDATE_NOTIFIER": "false",
+        "npm_config_update_notifier": "false",
+    }
+
+
 def _normalize_codex_cli_mode(raw: str | None) -> str:
     normalized = str(raw or DEFAULT_CODEX_CLI_MODE).strip().lower()
     if normalized not in {"auto", "attach", "install"}:
@@ -288,6 +322,7 @@ def _install_codex_cli_latest(install_root: Path) -> dict[str, object]:
     install_root.mkdir(parents=True, exist_ok=True)
     mode = os.environ.get(CODEX_CLI_INSTALL_MODE_ENV, "npm").strip().lower()
     codex_bin = _derive_codex_cli_bin(install_root)
+    npm_env = _prepare_managed_npm_environment(install_root)
 
     if mode == "stub":
         codex_bin.parent.mkdir(parents=True, exist_ok=True)
@@ -311,7 +346,7 @@ def _install_codex_cli_latest(install_root: Path) -> dict[str, object]:
         raise FileNotFoundError("npm is required to install the latest Codex CLI")
 
     command = [npm_bin, "install", "-g", CODEX_CLI_PACKAGE, "--prefix", str(install_root)]
-    completed = subprocess.run(command, check=False, capture_output=True, text=True)
+    completed = subprocess.run(command, check=False, capture_output=True, text=True, env=npm_env)
     if completed.returncode != 0:
         raise RuntimeError(completed.stderr.strip() or completed.stdout.strip() or "failed to install Codex CLI")
     if not codex_bin.exists():

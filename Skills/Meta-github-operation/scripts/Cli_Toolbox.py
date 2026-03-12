@@ -17,6 +17,7 @@ from git_cli_support import push as git_push
 from git_cli_support import push_tag
 from git_cli_support import remote_urls, repo_status_payload, resolve_commit_scope, rollback_paths, rollback_sync, run_git, stage_paths
 from github_bootstrap_support import bootstrap_private_origin
+from push_execution_support import normalize_traceability_message, serial_push_lock
 from runtime_contract_support import CommitScope
 from registry_repo import ensure_remote_write_allowed, registry_payload, remote_policy_payload, resolve_repo
 
@@ -172,6 +173,7 @@ def commit_command(
     json_output: JsonOption = False,
 ) -> None:
     repo_name, repo_root = _resolve_repo_root(repo, repo_path)
+    normalized_message = normalize_traceability_message(message)
     scope = _resolve_scope(
         repo_root,
         repo_name=repo_name,
@@ -182,8 +184,8 @@ def commit_command(
         use_all=use_all,
     )
     _apply_scope(repo_root, scope)
-    payload = {"repo": repo_name, "repo_root": str(repo_root), "scope": scope}
-    payload.update(git_commit(repo_root, message, allow_empty=allow_empty))
+    payload = {"repo": repo_name, "repo_root": str(repo_root), "scope": scope, "message": normalized_message}
+    payload.update(git_commit(repo_root, normalized_message, allow_empty=allow_empty))
     _emit(payload, as_json=json_output)
 
 
@@ -204,6 +206,7 @@ def commit_and_push_command(
     json_output: JsonOption = False,
 ) -> None:
     repo_name, repo_root = _resolve_repo_root(repo, repo_path)
+    normalized_message = normalize_traceability_message(message)
     ensure_remote_write_allowed(repo_name, remote, operation="commit-and-push")
     scope = _resolve_scope(
         repo_root,
@@ -215,14 +218,16 @@ def commit_and_push_command(
         use_all=use_all,
     )
     _apply_scope(repo_root, scope)
-    payload = {"repo": repo_name, "repo_root": str(repo_root), "scope": scope}
-    payload.update(git_commit(repo_root, message, allow_empty=allow_empty))
-    payload["push"] = git_push(
-        repo_root,
-        remote=remote,
-        branch=branch,
-        force_with_lease=force_with_lease,
-    )
+    payload = {"repo": repo_name, "repo_root": str(repo_root), "scope": scope, "message": normalized_message}
+    with serial_push_lock(repo_name, "commit-and-push") as push_lock:
+        payload["push_lock"] = push_lock
+        payload.update(git_commit(repo_root, normalized_message, allow_empty=allow_empty))
+        payload["push"] = git_push(
+            repo_root,
+            remote=remote,
+            branch=branch,
+            force_with_lease=force_with_lease,
+        )
     _emit(payload, as_json=json_output)
 
 
@@ -238,14 +243,16 @@ def push_command(
     repo_name, repo_root = _resolve_repo_root(repo, repo_path)
     ensure_remote_write_allowed(repo_name, remote, operation="push")
     payload = {"repo": repo_name, "repo_root": str(repo_root)}
-    payload.update(
-        git_push(
-            repo_root,
-            remote=remote,
-            branch=branch,
-            force_with_lease=force_with_lease,
+    with serial_push_lock(repo_name, "push") as push_lock:
+        payload["push_lock"] = push_lock
+        payload.update(
+            git_push(
+                repo_root,
+                remote=remote,
+                branch=branch,
+                force_with_lease=force_with_lease,
+            )
         )
-    )
     _emit(payload, as_json=json_output)
 
 
@@ -264,23 +271,26 @@ def repo_bootstrap_command(
 ) -> None:
     repo_name_resolved, repo_root = _resolve_repo_root(repo, repo_path)
     ensure_remote_write_allowed(repo_name_resolved, remote, operation="repo-bootstrap")
+    normalized_message = normalize_traceability_message(message) if message else None
     payload = {
         "repo": repo_name_resolved,
         "repo_root": str(repo_root),
         "operation": "repo-bootstrap",
     }
-    payload.update(
-        bootstrap_private_origin(
-            repo_root,
-            owner=owner,
-            repo_name=repo_name,
-            remote_name=remote,
-            visibility=visibility,
-            commit_message=message,
-            use_all=use_all,
-            allow_empty=allow_empty,
+    with serial_push_lock(repo_name_resolved, "repo-bootstrap") as push_lock:
+        payload["push_lock"] = push_lock
+        payload.update(
+            bootstrap_private_origin(
+                repo_root,
+                owner=owner,
+                repo_name=repo_name,
+                remote_name=remote,
+                visibility=visibility,
+                commit_message=normalized_message,
+                use_all=use_all,
+                allow_empty=allow_empty,
+            )
         )
-    )
     _emit(payload, as_json=json_output)
 
 
@@ -335,14 +345,18 @@ def baseline_create_command(
     payload["tag_result"] = create_annotated_tag(repo_root, tag_name=tag_name, message=resolved_message)
     if publish == "remote":
         ensure_remote_write_allowed(repo_name, remote, operation="baseline-create:publish")
-        published: dict[str, object] = {"tag": push_tag(repo_root, remote=remote, tag_name=tag_name)}
-        if dirty:
-            published["branch"] = git_push(
-                repo_root,
-                remote=remote,
-                branch=branch,
-                force_with_lease=False,
-            )
+        with serial_push_lock(repo_name, "baseline-create:publish") as push_lock:
+            published = {
+                "push_lock": push_lock,
+                "tag": push_tag(repo_root, remote=remote, tag_name=tag_name),
+            }
+            if dirty:
+                published["branch"] = git_push(
+                    repo_root,
+                    remote=remote,
+                    branch=branch,
+                    force_with_lease=False,
+                )
         payload["publish_result"] = published
     _emit(payload, as_json=json_output)
 

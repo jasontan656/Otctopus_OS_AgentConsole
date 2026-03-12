@@ -12,6 +12,7 @@ class RuntimeGovernancePayload(TypedDict):
     skill_runtime_root: str
     claims_dir: str
     result_root: str
+    push_lock_dir: str
     runtime_log_policy: str
     result_policy: str
     legacy_runtime_fallbacks: list[str]

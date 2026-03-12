@@ -86,6 +86,7 @@ Install behavior is intentionally narrow:
 - it creates target-directory runtime roots at `<install-root>/Codex_Skill_Runtime` and `<install-root>/Codex_Skills_Result`
 - it creates an `Octopus_OS/` folder inside the target directory as part of the installed baseline layout
 - it captures a GitHub skill repository binding so Octopus OS can later drive its Git workflow
+- when target-local Codex installation is needed, npm cache/log/userconfig traces are redirected into the target directory instead of the operator home
 - it returns a launch command that points Codex at the target-directory `console/` workspace so the installed skill ecosystem is active immediately
 - it does not write a system-level Codex installation for the user
 - uninstall consumes the install manifest and rolls back target-directory Codex artifacts when the installer created them locally

@@ -1,4 +1,4 @@
 interface:
   display_name: "Meta-GitHub-Operation"
   short_description: "受限 GitHub control plane，仅服务 Octopus_OS 与 octopus-os-agent-console，并对开发仓/发布仓分流、runtime claims 落盘与结果根目录施加硬约束。"
-  default_prompt: "仅对 Octopus_OS 与 octopus-os-agent-console 执行 Git / GitHub 自动化操作。对于 octopus-os-agent-console，默认只允许把自动迭代推到 origin 开发仓；public-release 仅保留给未来发布，当前禁止写入，因为开发未闭环且发布流程未设计。优先使用 scripts/Cli_Toolbox.py，并通过 push-contract / baseline-contract / rollback-contract 的 runtime_governance 字段读取 claims、runtime root 与 result root；不要对 workspace 根目录或其他未注册仓库执行 GitHub 自动化。"
+  default_prompt: "仅对 Octopus_OS 与 octopus-os-agent-console 执行 Git / GitHub 自动化操作。对于 octopus-os-agent-console，默认只允许把自动迭代推到 origin 开发仓；public-release 仅保留给未来发布，当前禁止写入，因为开发未闭环且发布流程未设计。优先使用 scripts/Cli_Toolbox.py，并通过 push-contract / baseline-contract / rollback-contract 的 runtime_governance 字段读取 claims、runtime root、result root 与 push lock 目录；不要对 workspace 根目录或其他未注册仓库执行 GitHub 自动化。凡是需要 `--message` 的 traceability 提交，默认写成开发日志风格，至少交代解决了什么问题、降低了什么风险或带来了什么行为变化。凡是 remote write，必须串行，禁止并行 push。"

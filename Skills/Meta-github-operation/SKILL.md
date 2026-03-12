@@ -28,6 +28,8 @@ description: "受限 GitHub control plane：仅服务 Octopus_OS 与 octopus-os-
 
 当前策略：
 - 自动迭代、同回合 Git traceability、日常 `commit-and-push` 只允许走 `origin`
+- `message` 默认必须写成开发日志向 commit message，而不是只有一句短标题；至少应交代本次解决了什么问题、降低了什么风险或带来了什么行为变化
+- 所有 remote write 动作必须串行执行，禁止并行 push / commit-and-push / baseline remote publish / repo-bootstrap push，避免撞上远端或宿主机 Git 锁
 - `public-release` 只保留为未来发布用途
 - 当前阶段禁止向 `public-release` 推送
 - 禁用原因：
@@ -63,6 +65,7 @@ description: "受限 GitHub control plane：仅服务 Octopus_OS 与 octopus-os-
 - `remote-info` 与 `push-contract` 应成为 remote policy 的主读取入口
 - `repo-bootstrap` 负责私有仓远端创建/校验、origin 关联、常用忽略项补齐以及首次/补推。
 - 与运行时落盘/结果落点相关的 machine-readable 合同，应以 `push-contract --json`、`baseline-contract --json` 与 `rollback-contract --json` 返回的 `runtime_governance` 字段为准
+- push 串行锁目录应以 `runtime_governance.push_lock_dir` 为准；需要 remote write 时必须使用受管锁，不得并行触发多个 push
 
 ## Runtime And Output Governance
 
@@ -78,6 +81,7 @@ description: "受限 GitHub control plane：仅服务 Octopus_OS 与 octopus-os-
   - CLI 以 stdout JSON 为主，不持久化滚动日志文件。
   - 若使用 `--use-latest-claims`，应优先读取 namespaced claims 目录；legacy root 仅保留兼容读取，不再作为首选落点。
   - 若未来新增文件型结果或审计导出，必须要求显式目标路径，或默认落入受管 result 根目录。
+  - remote write 相关命令会在 namespaced push lock 目录下获取 repo 级串行锁。
 - 历史迁移责任：
   - 旧的 `Meta-github-operation_thread_owned_paths*.json*` 若仍散落在 `Codex_Skill_Runtime` 根目录，应整理迁移到 namespaced claims 目录。
 
@@ -107,6 +111,7 @@ description: "受限 GitHub control plane：仅服务 Octopus_OS 与 octopus-os-
 
 - 若用户要求为 `Octopus_OS` 新建或校验闭源远端，优先走 `repo-bootstrap`，并默认使用 private visibility。
 - 若用户要求正常提交并推送 `octopus-os-agent-console`，默认只推 `origin`
+- 若用户要求 `commit` / `commit-and-push` / `repo-bootstrap --message`，message 必须写成开发日志向风格，至少包含标题和两条以上细节，并明确说明本次解决的问题或影响
 - 若用户明确要求发布到公开仓，必须先声明当前禁用，再解释原因
 - 在发布流程尚未设计完成前，不得把 `public-release` 当成可写远端偷偷使用
 

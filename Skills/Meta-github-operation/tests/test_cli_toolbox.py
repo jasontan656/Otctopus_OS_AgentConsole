@@ -53,9 +53,12 @@ class TestMetaGithubOperationCliTests:
         assert push_payload["runtime_governance"]["skill_runtime_root"].endswith("/meta-github-operation")
         assert push_payload["runtime_governance"]["claims_dir"].endswith("/meta-github-operation/claims")
         assert push_payload["runtime_governance"]["result_root"].endswith("/meta-github-operation")
+        assert push_payload["runtime_governance"]["push_lock_dir"].endswith("/meta-github-operation/push_locks")
         assert not push_payload["remote_policy"]["octopus-os-agent-console"]["public-release"][
             "automation_write_allowed"
         ]
+        assert any("serially per repo" in rule for rule in push_payload["rules"])
+        assert any("problem solved" in rule for rule in push_payload["rules"])
 
         baseline_payload = json.loads(self.run_cli("baseline-contract", "--json").stdout)
         assert baseline_payload["entry"] == "baseline"
@@ -220,6 +223,69 @@ class TestMetaGithubOperationCliTests:
             assert remote_tag
             assert remote_heads.returncode == 1
             assert remote_heads.stdout.strip() == ""
+            assert payload["publish_result"]["push_lock"]["operation"] == "baseline-create:publish"
+
+    def test_commit_requires_development_log_message_details(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            repo_root = Path(tmp) / "repo"
+            repo_root.mkdir()
+            self.init_repo(repo_root)
+
+            (repo_root / "tracked.txt").write_text("base\n", encoding="utf-8")
+            subprocess.run(["git", "-C", str(repo_root), "add", "."], check=True)
+            subprocess.run(["git", "-C", str(repo_root), "commit", "-qm", "base"], check=True)
+            (repo_root / "tracked.txt").write_text("changed\n", encoding="utf-8")
+
+            completed = self.run_cli(
+                "commit",
+                "--repo-path",
+                str(repo_root),
+                "--all",
+                "--message",
+                "quick fix",
+                "--json",
+                check=False,
+            )
+
+            assert completed.returncode != 0
+            assert "traceability_message_requires_development_log_details" in completed.stderr
+
+    def test_commit_and_push_emits_push_lock_and_accepts_detailed_message(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            remote_root = Path(tmp) / "remote.git"
+            repo_root = Path(tmp) / "repo"
+            subprocess.run(["git", "init", "--bare", "-q", str(remote_root)], check=True)
+            repo_root.mkdir()
+            self.init_repo(repo_root)
+
+            (repo_root / "tracked.txt").write_text("base\n", encoding="utf-8")
+            subprocess.run(["git", "-C", str(repo_root), "add", "."], check=True)
+            subprocess.run(["git", "-C", str(repo_root), "commit", "-qm", "base"], check=True)
+            subprocess.run(["git", "-C", str(repo_root), "remote", "add", "origin", str(remote_root)], check=True)
+            branch_name = subprocess.run(
+                ["git", "-C", str(repo_root), "branch", "--show-current"],
+                check=True,
+                capture_output=True,
+                text=True,
+            ).stdout.strip()
+            subprocess.run(["git", "-C", str(repo_root), "push", "-u", "origin", branch_name], check=True)
+            (repo_root / "tracked.txt").write_text("changed\n", encoding="utf-8")
+
+            payload = json.loads(
+                self.run_cli(
+                    "commit-and-push",
+                    "--repo-path",
+                    str(repo_root),
+                    "--all",
+                    "--message",
+                    "devlog: tighten runtime cleanup\nProblem: uninstall left target-local Codex artifacts behind.\nResolved: manifest now records installer-created paths and rollback removes them.",
+                    "--json",
+                ).stdout
+            )
+
+            assert payload["push_lock"]["operation"] == "commit-and-push"
+            assert payload["push_lock"]["lock_path"].endswith("/meta-github-operation/push_locks/repo.lock")
+            assert payload["push"]["remote"] == "origin"
 
     def test_remote_info_exposes_managed_remote_policy(self) -> None:
         payload = json.loads(self.run_cli("remote-info", "--repo", "octopus-os-agent-console", "--json").stdout)

@@ -91,6 +91,7 @@ The install surface now resolves the Codex CLI in this order:
 The two targets have different contents by design:
 
 - the dedicated install root receives the latest Codex CLI package only when attach mode cannot be used
+- when target-local Codex installation is required, npm cache/log/userconfig traces must stay under `<install-root>/.product_runtime/` instead of leaking into the operator home
 - `<install-root>/.codex/skills` receives only syncable skill roots and `.system/`
 - the target-directory `console/` workspace receives the full product mirror, including the repository root `AGENTS.md` and `Skills/AGENTS.md`
 - `<install-root>/Codex_Skill_Runtime` and `<install-root>/Codex_Skills_Result` are created as governed runtime/result containers
