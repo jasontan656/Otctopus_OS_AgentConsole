@@ -33,6 +33,7 @@ DEFAULT_OCTOPUS_OS_DIR_NAME = "Octopus_OS"
 CODEX_HOME_DIR_NAME = ".codex"
 CODEX_CLI_PACKAGE = "@openai/codex@latest"
 CODEX_CLI_INSTALL_MODE_ENV = "OCTOPUS_OS_CODEX_INSTALL_MODE"
+DEFAULT_CODEX_CLI_MODE = "auto"
 DEFAULT_GITHUB_API_ENV_VAR = "GITHUB_TOKEN"
 PRODUCT_NAME = "Octopus OS - Natural-Language-Driven Multi-Agent Console"
 SUPPORTED_RUNTIME_TARGET = "codex-gpt-5.4-high"
@@ -136,10 +137,49 @@ def _build_codex_cli_install_command(install_root: Path) -> str:
     return _shell_join(["npm", "install", "-g", CODEX_CLI_PACKAGE, "--prefix", str(install_root)])
 
 
-def _build_codex_launch_command(install_root: Path, workspace_root: Path) -> str:
+def _normalize_codex_cli_mode(raw: str | None) -> str:
+    normalized = str(raw or DEFAULT_CODEX_CLI_MODE).strip().lower()
+    if normalized not in {"auto", "attach", "install"}:
+        raise ValueError("--codex-cli-mode must be auto, attach, or install")
+    return normalized
+
+
+def _resolve_existing_codex_cli(raw: str | None) -> tuple[Path | None, str | None]:
+    if raw:
+        candidate = Path(raw).expanduser().resolve()
+        if not candidate.exists():
+            raise FileNotFoundError(f"codex cli binary does not exist: {candidate}")
+        if not os.access(candidate, os.X_OK):
+            raise PermissionError(f"codex cli binary is not executable: {candidate}")
+        return candidate, "explicit"
+
+    detected = shutil.which("codex")
+    if not detected:
+        return None, None
+    candidate = Path(detected).expanduser().resolve()
+    if not candidate.exists():
+        return None, None
+    return candidate, "path"
+
+
+def _inspect_codex_cli_version(codex_cli_bin: Path, *, codex_home: Path | None = None) -> str:
+    env = dict(os.environ)
+    if codex_home is not None:
+        env["HOME"] = str(codex_home)
+    completed = subprocess.run(
+        [str(codex_cli_bin), "--version"],
+        check=False,
+        capture_output=True,
+        text=True,
+        env=env,
+    )
+    return completed.stdout.strip() or completed.stderr.strip() or "unknown"
+
+
+def _build_codex_launch_command(codex_cli_bin: Path, codex_home: Path, workspace_root: Path) -> str:
     command = _shell_join(
         [
-            str(_derive_codex_cli_bin(install_root)),
+            str(codex_cli_bin),
             "-C",
             str(workspace_root),
             "-m",
@@ -148,7 +188,7 @@ def _build_codex_launch_command(install_root: Path, workspace_root: Path) -> str
             'model_reasoning_effort="high"',
         ]
     )
-    return f"HOME={shlex.quote(str(install_root))} {command}"
+    return f"HOME={shlex.quote(str(codex_home))} {command}"
 
 
 def _build_github_binding(args: argparse.Namespace, *, require_complete: bool) -> dict[str, object]:
@@ -277,20 +317,69 @@ def _install_codex_cli_latest(install_root: Path) -> dict[str, object]:
     if not codex_bin.exists():
         raise FileNotFoundError(f"Codex CLI install completed but binary is missing: {codex_bin}")
 
-    version_completed = subprocess.run(
-        [str(codex_bin), "--version"],
-        check=False,
-        capture_output=True,
-        text=True,
-        env={**os.environ, "HOME": str(install_root)},
-    )
-    version = version_completed.stdout.strip() or version_completed.stderr.strip() or "unknown"
+    version = _inspect_codex_cli_version(codex_bin, codex_home=install_root)
     return {
         "mode": "npm",
         "command": command,
         "codex_cli_bin": str(codex_bin),
         "codex_cli_install_command": _build_codex_cli_install_command(install_root),
         "version": version,
+    }
+
+
+def _resolve_codex_cli_strategy(
+    install_root: Path,
+    *,
+    requested_mode: str,
+    provided_bin: str | None,
+    execute_install: bool,
+) -> dict[str, object]:
+    existing_bin, existing_source = _resolve_existing_codex_cli(provided_bin)
+
+    if requested_mode == "attach":
+        if existing_bin is None:
+            raise FileNotFoundError(
+                "attach mode requires an existing codex binary; provide --codex-cli-bin or ensure codex is on PATH"
+            )
+        return {
+            "mode": "attach",
+            "requested_mode": requested_mode,
+            "resolved_from": existing_source,
+            "command": None,
+            "codex_cli_bin": str(existing_bin),
+            "codex_cli_install_command": None,
+            "version": _inspect_codex_cli_version(existing_bin),
+        }
+
+    if requested_mode == "auto" and existing_bin is not None:
+        return {
+            "mode": "attach",
+            "requested_mode": requested_mode,
+            "resolved_from": existing_source,
+            "command": None,
+            "codex_cli_bin": str(existing_bin),
+            "codex_cli_install_command": None,
+            "version": _inspect_codex_cli_version(existing_bin),
+        }
+
+    if not execute_install:
+        codex_bin = _derive_codex_cli_bin(install_root)
+        return {
+            "mode": "install",
+            "requested_mode": requested_mode,
+            "resolved_from": "target-install",
+            "command": None,
+            "codex_cli_bin": str(codex_bin),
+            "codex_cli_install_command": _build_codex_cli_install_command(install_root),
+            "version": None,
+        }
+
+    codex_install = _install_codex_cli_latest(install_root)
+    return {
+        **codex_install,
+        "mode": "install",
+        "requested_mode": requested_mode,
+        "resolved_from": "target-install",
     }
 
 
@@ -414,9 +503,11 @@ def _build_plan(
     install_root: Path,
     workspace_root: Path,
     github_binding: dict[str, object],
+    codex_cli_strategy: dict[str, object],
 ) -> dict[str, object]:
     codex_root = _derive_codex_root(install_root)
-    codex_cli_bin = _derive_codex_cli_bin(install_root)
+    codex_home = _derive_codex_home(install_root)
+    codex_cli_bin = Path(str(codex_cli_strategy["codex_cli_bin"]))
     cleanliness = _summarize_codex_root_cleanliness(codex_root)
     skills: list[dict[str, object]] = []
     overwrite_skills: list[str] = []
@@ -437,9 +528,12 @@ def _build_plan(
         "repo_root": str(repo_root),
         "skills_root": str(_resolve_skills_root(repo_root)),
         "install_root": str(install_root),
-        "codex_home": str(_derive_codex_home(install_root)),
+        "codex_home": str(codex_home),
         "codex_root": str(codex_root),
         "codex_cli_bin": str(codex_cli_bin),
+        "codex_cli_mode": str(codex_cli_strategy["mode"]),
+        "codex_cli_requested_mode": str(codex_cli_strategy["requested_mode"]),
+        "codex_cli_resolved_from": codex_cli_strategy.get("resolved_from"),
         "console_root": str(_derive_console_root(install_root)),
         "workspace_root": str(workspace_root),
         "skill_runtime_root": str(_derive_skill_runtime_root(install_root)),
@@ -448,12 +542,11 @@ def _build_plan(
         "supported_host_env": SUPPORTED_HOST_ENV_LABEL,
         "supported_runtime_target": SUPPORTED_RUNTIME_TARGET,
         "supported_runtime_label": SUPPORTED_RUNTIME_LABEL,
-        "codex_cli_install_command": _build_codex_cli_install_command(install_root),
-        "codex_launch_command": _build_codex_launch_command(install_root, workspace_root),
+        "codex_cli_install_command": codex_cli_strategy["codex_cli_install_command"],
+        "codex_cli_version": codex_cli_strategy.get("version"),
+        "codex_launch_command": _build_codex_launch_command(codex_cli_bin, codex_home, workspace_root),
         "recommended_install_command": install_command,
-        "recommended_install_and_launch_command": (
-            f"{install_command} && {_build_codex_launch_command(install_root, workspace_root)}"
-        ),
+        "recommended_install_and_launch_command": f"{install_command} && {_build_codex_launch_command(codex_cli_bin, codex_home, workspace_root)}",
         "codex_root_cleanliness": cleanliness,
         "skills": skills,
         "overwrite_skills": overwrite_skills,
@@ -570,6 +663,8 @@ def _print_plan_summary(lang: str, plan: dict[str, object]) -> None:
     print(_label(lang, "Skill runtime root:", "技能运行时根目录："), plan["skill_runtime_root"])
     print(_label(lang, "Skill result root:", "技能结果根目录："), plan["skill_result_root"])
     print(_label(lang, "Octopus OS root:", "章鱼 OS 根目录："), plan["octopus_os_root"])
+    print(_label(lang, "Codex CLI mode:", "Codex CLI 模式："), plan["codex_cli_mode"])
+    print(_label(lang, "Codex CLI resolved from:", "Codex CLI 来源："), plan["codex_cli_resolved_from"])
     print(_label(lang, "Codex CLI install command:", "Codex CLI 安装命令："), plan["codex_cli_install_command"])
     print(_label(lang, "Launch command:", "启动命令："), plan["codex_launch_command"])
     print(_label(lang, "Codex root clean state:", "Codex 根目录洁净状态："), cleanliness["state"])
@@ -611,11 +706,17 @@ def plan_command(args: argparse.Namespace) -> int:
     install_root = _resolve_install_root(args.install_root, args.codex_root)
     workspace_root = _resolve_workspace_root(args.workspace_root, install_root)
     github_binding = _build_github_binding(args, require_complete=False)
+    codex_cli_strategy = _resolve_codex_cli_strategy(
+        install_root,
+        requested_mode=_normalize_codex_cli_mode(getattr(args, "codex_cli_mode", None)),
+        provided_bin=getattr(args, "codex_cli_bin", None),
+        execute_install=False,
+    )
     payload = {
         "status": "ok",
         "action": "plan",
         "product_name": PRODUCT_NAME,
-        "plan": _build_plan(repo_root, install_root, workspace_root, github_binding),
+        "plan": _build_plan(repo_root, install_root, workspace_root, github_binding, codex_cli_strategy),
     }
     print(json.dumps(payload, ensure_ascii=False, indent=2))
     return 0
@@ -628,10 +729,15 @@ def install_command(args: argparse.Namespace) -> int:
     state_root = _resolve_state_root(args.state_root)
     runtime_target = _require_supported_runtime_target(getattr(args, "runtime_target", None))
     github_binding = _build_github_binding(args, require_complete=True)
-    codex_install = _install_codex_cli_latest(install_root)
+    codex_install = _resolve_codex_cli_strategy(
+        install_root,
+        requested_mode=_normalize_codex_cli_mode(getattr(args, "codex_cli_mode", None)),
+        provided_bin=getattr(args, "codex_cli_bin", None),
+        execute_install=True,
+    )
     codex_root = _derive_codex_root(install_root)
     clean_summary, removed_forbidden_codex_root_files = _assert_clean_codex_root(codex_root)
-    plan = _build_plan(repo_root, install_root, workspace_root, github_binding)
+    plan = _build_plan(repo_root, install_root, workspace_root, github_binding, codex_install)
 
     if workspace_root.exists() and any(workspace_root.iterdir()) and not args.allow_replace_workspace:
         raise ValueError(
@@ -715,10 +821,17 @@ def install_command(args: argparse.Namespace) -> int:
         "octopus_os_root": str(_derive_octopus_os_root(install_root)),
         "supported_host_env": SUPPORTED_HOST_ENV_LABEL,
         "supported_runtime_target": runtime_target,
+        "codex_cli_mode": codex_install["mode"],
+        "codex_cli_requested_mode": codex_install["requested_mode"],
+        "codex_cli_resolved_from": codex_install.get("resolved_from"),
         "codex_cli_bin": codex_install["codex_cli_bin"],
         "codex_cli_version": codex_install["version"],
         "codex_cli_install_command": codex_install["codex_cli_install_command"],
-        "codex_launch_command": _build_codex_launch_command(install_root, workspace_root),
+        "codex_launch_command": _build_codex_launch_command(
+            Path(str(codex_install["codex_cli_bin"])),
+            _derive_codex_home(install_root),
+            workspace_root,
+        ),
         "recommended_install_and_launch_command": plan["recommended_install_and_launch_command"],
         "removed_forbidden_codex_root_files": removed_forbidden_codex_root_files,
         "codex_root_cleanliness": clean_summary,
@@ -854,7 +967,13 @@ def wizard_command(args: argparse.Namespace) -> int:
 
     runtime_target = _require_supported_runtime_target(getattr(args, "runtime_target", None))
     github_binding = _build_github_binding(args, require_complete=True)
-    plan = _build_plan(repo_root, install_root, workspace_root, github_binding)
+    codex_cli_strategy = _resolve_codex_cli_strategy(
+        install_root,
+        requested_mode=_normalize_codex_cli_mode(getattr(args, "codex_cli_mode", None)),
+        provided_bin=getattr(args, "codex_cli_bin", None),
+        execute_install=False,
+    )
+    plan = _build_plan(repo_root, install_root, workspace_root, github_binding, codex_cli_strategy)
 
     if not args.yes:
         _print_header(lang, "Install Plan", "安装计划")
@@ -896,6 +1015,8 @@ def wizard_command(args: argparse.Namespace) -> int:
         github_auth_mode=github_binding["auth_mode"],
         github_ssh_key_path=github_binding.get("github_ssh_key_path"),
         github_api_env_var=github_binding.get("github_api_env_var"),
+        codex_cli_mode=_normalize_codex_cli_mode(getattr(args, "codex_cli_mode", None)),
+        codex_cli_bin=getattr(args, "codex_cli_bin", None),
         acknowledge_github_control_risk=True,
     )
     result = install_command(install_args)
@@ -922,6 +1043,8 @@ def main() -> int:
     parser.add_argument("--github-auth-mode", choices=["ssh", "api"])
     parser.add_argument("--github-ssh-key-path")
     parser.add_argument("--github-api-env-var")
+    parser.add_argument("--codex-cli-mode", choices=["auto", "attach", "install"], default=DEFAULT_CODEX_CLI_MODE)
+    parser.add_argument("--codex-cli-bin")
     parser.add_argument("--acknowledge-github-control-risk", action="store_true")
     parser.add_argument("--wizard-language", choices=["auto", "en", "zh", "bilingual"], default="auto")
     parser.add_argument("--yes", action="store_true")

@@ -34,14 +34,14 @@ Octopus OS currently exposes two installation modes, but both of them remain dir
 Mode 1: direct one-line install:
 
 ```bash
-python3 product_tools/octopus_os_agent_console.py install --runtime-target codex-gpt-5.4-high --install-root ~/Octopus_Runtime/codex-home --github-skill-repo git@github.com:YOUR_ACCOUNT/octopus-os-skills.git --github-auth-mode ssh --acknowledge-github-control-risk && HOME=~/Octopus_Runtime/codex-home ~/Octopus_Runtime/codex-home/bin/codex -C ~/Octopus_Runtime/codex-home/console -m gpt-5.4 -c 'model_reasoning_effort="high"'
+python3 product_tools/octopus_os_agent_console.py install --runtime-target codex-gpt-5.4-high --install-root ~/Octopus_Runtime/codex-home --github-skill-repo git@github.com:YOUR_ACCOUNT/octopus-os-skills.git --github-auth-mode ssh --acknowledge-github-control-risk
 ```
 
-Mode 2: bootstrap from an already system-installed Codex CLI:
+Mode 2: attach an already available Codex CLI:
 
 1. open Codex inside the repository source directory
 2. ask Codex to follow the repository installation instructions and install into a dedicated target path
-3. after installation, switch to the directory-level Codex CLI under the target path and use that runtime
+3. after installation, use the returned launch command to start Codex against the target-directory `console/` workspace
 
 `wizard` may still exist as a guided TUI, but the canonical product artifact remains the same in both modes: a dedicated install root with a fixed internal Octopus OS directory layout.
 
@@ -61,7 +61,7 @@ If any condition fails, install should stop instead of trying to adapt to anothe
 
 Octopus OS does not provide a system-level Codex installation mode.
 
-Even when the operator already has a system-level Codex CLI, that system install is only treated as a bootstrap tool for driving the guided setup.
+Even when the operator already has a usable Codex CLI, that binary is only treated as an attach target for driving the dedicated Octopus OS runtime under the chosen install root.
 
 The supported end state is still:
 
@@ -82,9 +82,15 @@ The installer has to manage six targets at the same time:
 5. a skill result directory at `<install-root>/Codex_Skills_Result`
 6. an Octopus OS directory at `<install-root>/Octopus_OS`
 
+The install surface now resolves the Codex CLI in this order:
+
+- use `--codex-cli-bin` in attach mode when it is explicitly provided
+- otherwise attach to `codex` when it already exists on `PATH`
+- otherwise install the latest Codex CLI into the chosen install root
+
 The two targets have different contents by design:
 
-- the dedicated install root receives the latest Codex CLI package
+- the dedicated install root receives the latest Codex CLI package only when attach mode cannot be used
 - `<install-root>/.codex/skills` receives only syncable skill roots and `.system/`
 - the target-directory `console/` workspace receives the full product mirror, including the repository root `AGENTS.md` and `Skills/AGENTS.md`
 - `<install-root>/Codex_Skill_Runtime` and `<install-root>/Codex_Skills_Result` are created as governed runtime/result containers
@@ -96,7 +102,7 @@ The two targets have different contents by design:
 
 - which skills will be synced
 - whether the dedicated Codex skills root is still clean
-- where the dedicated Codex CLI will be installed
+- which Codex CLI strategy will be used and which binary path will launch the runtime
 - where the workspace will be created
 - which GitHub repository binding will be written
 - which objects cleanup will remove or restore
@@ -130,7 +136,8 @@ Current capabilities:
 Current behavior already includes:
 
 - skill root discovery
-- dedicated Codex CLI installation into the chosen install root
+- attach to an already available Codex CLI when possible
+- dedicated Codex CLI installation into the chosen install root as a fallback
 - clean-root validation before skill sync
 - workspace mirror creation
 - target-directory creation of `Codex_Skill_Runtime`, `Codex_Skills_Result`, and `Octopus_OS`
