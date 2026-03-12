@@ -7,6 +7,7 @@
       "mapping_mode": "agents_ab",
       "governed_source_paths": [
         "AGENTS.md",
+        "Octopus_OS/AGENTS.md",
         "octopus-os-agent-console/AGENTS.md"
       ],
       "managed_files": {
