@@ -8,6 +8,7 @@
 - Keep the console directory continuously available as a product-shaped skill-management surface.
 - Preserve a local markdown design history for skills-as-console productization decisions.
 - Provide a stable handoff layer between current console product-form work and later GitHub-facing release narratives.
+- When console productization touches rootfile-managed external files, declare the boundary here but route the actual body maintenance to `$Meta-RootFile-Manager`.
 
 ## Current Console Focus
 - Brand: `Octopus OS`
@@ -17,6 +18,7 @@
 - Current phase: continuous console productization around the Skills directory
 - Source-of-truth boundary: edit in the product repo mirror first, then sync to `~/.codex/skills`
 - Deployment boundary: the Codex installation directory is a governed deployment surface, not the authoring surface
+- Rootfile governance boundary: rootfile-managed files must not be directly edited from this skill; use `$Meta-RootFile-Manager` for their governed body updates
 
 ## Logging Rule
 - Read the current console intent before making new console productization decisions.
