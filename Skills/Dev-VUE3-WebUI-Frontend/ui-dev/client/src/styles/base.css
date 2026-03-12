@@ -1,0 +1,39 @@
+:root {
+  font-family: var(--font-family-body);
+  background:
+    radial-gradient(circle at top left, rgba(221, 103, 66, 0.22), transparent 28%),
+    radial-gradient(circle at top right, rgba(14, 165, 233, 0.18), transparent 26%),
+    linear-gradient(180deg, #f7efe7 0%, var(--color-bg-page) 100%);
+  color: var(--text-title);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  min-height: 100vh;
+}
+
+body {
+  margin: 0;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+code {
+  font-family: var(--font-family-code);
+}
+
+a {
+  color: inherit;
+}

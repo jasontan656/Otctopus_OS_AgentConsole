@@ -13,6 +13,10 @@ anchors:
     relation: "pairs_with"
     direction: "cross"
     reason: "Positioning and file organization should be read together."
+  - target: "../code_architecture/00_CODE_ARCHITECTURE_INDEX.md"
+    relation: "refined_by"
+    direction: "downstream"
+    reason: "The code-architecture branch refines this coarse file boundary into an executable frontend topology."
   - target: "../../ui-dev/UI_DEV_ENTRY.md"
     relation: "supports"
     direction: "upstream"
@@ -24,8 +28,10 @@ anchors:
 ## 必须留在 `ui-dev/` 的内容
 - `client/` 页面与组件实现。
 - `client/src/containers/` SPA 容器实现。
+- `client/src/components/<ComponentName>/` folder-first 组件 package。
 - `client/src/composables/` runtime bridge 与派生 view model。
 - `client/src/contracts/` 容器 typed contract、layer registry 与共享前端协议类型。
+- `client/src/styles/` 全局 token、semantic、base、layout 资产。
 - `server/` live payload server。
 - `lib/` viewer payload 适配层。
 - `tests/` UI runtime 相关回归。
@@ -34,6 +40,9 @@ anchors:
 - 前端开发合同索引。
 - `layers/` 下的 layer catalog、locator 协议与命名 lint 工作流。
 - `containers/` 下的容器角色、状态边界、布局权、交互协议和治理规则。
+- `design_system/` 下的 token、semantic style、theme、typography 合同。
+- `component_system/` 下的组件 black-box、API、package shape 与 style isolation 合同。
+- `code_architecture/` 下的 folder topology、style asset placement、导出与复用策略。
 - 组件、布局、运行链与复用边界规范。
 - `rules/` 下的响应式与布局约束。
 

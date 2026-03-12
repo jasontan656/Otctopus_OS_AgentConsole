@@ -15,6 +15,10 @@ anchors:
     relation: "details"
     direction: "downstream"
     reason: "The payload normalization contract defines the runtime bridge input boundary for the showroom."
+  - target: "../../frontend_dev_contracts/rules/UI_PACKAGE_SHAPE_LINT_WORKFLOW.md"
+    relation: "details"
+    direction: "downstream"
+    reason: "The runtime stage also enforces component package shape and export discipline."
   - target: "../../references/tooling/development/modules/mod_showroom_runtime.md"
     relation: "explained_by"
     direction: "downstream"
@@ -29,6 +33,7 @@ anchors:
 - 让人类可以直接看到前端规范如何在真实页面中落地。
 - 让 runtime bridge、workspace 容器、panel 容器按合同分层，不再堆叠在单页面入口。
 - 让 layer / container / component locator 在全局开关下可见，方便 AI 协作定位。
+- 让 design token、semantic style、folder-first component package 和 package lint 成为运行时真实约束。
 
 ## 交付要求
 - `ui-dev` 能独立启动。

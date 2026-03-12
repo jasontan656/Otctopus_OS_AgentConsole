@@ -24,7 +24,12 @@ export interface UiComponentDefinition {
   layerId: UiLayerId
   containerId: UiContainerDefinition['id']
   componentName: string
+  role: 'primitive' | 'composite' | 'visual_engine' | 'dev_support'
   file: string
+  packageDir: string
+  entryFile: string
+  contractFile: string
+  styleFile: string
   surface: 'frame' | 'legend'
 }
 
@@ -135,7 +140,12 @@ export const UI_COMPONENTS = {
     layerId: 'DX',
     containerId: UI_CONTAINERS.locatorOverlay.id,
     componentName: 'LocatorFrame',
-    file: 'ui-dev/client/src/components/LocatorNodeFrame.vue',
+    role: 'dev_support',
+    file: 'ui-dev/client/src/components/LocatorNodeFrame/LocatorNodeFrame.vue',
+    packageDir: 'ui-dev/client/src/components/LocatorNodeFrame',
+    entryFile: 'ui-dev/client/src/components/LocatorNodeFrame/index.ts',
+    contractFile: 'ui-dev/client/src/components/LocatorNodeFrame/LocatorNodeFrame.contract.ts',
+    styleFile: 'ui-dev/client/src/components/LocatorNodeFrame/LocatorNodeFrame.tokens.css',
     surface: 'legend',
   },
   locatorToolbar: {
@@ -145,7 +155,12 @@ export const UI_COMPONENTS = {
     layerId: 'DX',
     containerId: UI_CONTAINERS.locatorOverlay.id,
     componentName: 'LocatorToolbar',
-    file: 'ui-dev/client/src/components/LocatorToolbar.vue',
+    role: 'dev_support',
+    file: 'ui-dev/client/src/components/LocatorToolbar/LocatorToolbar.vue',
+    packageDir: 'ui-dev/client/src/components/LocatorToolbar',
+    entryFile: 'ui-dev/client/src/components/LocatorToolbar/index.ts',
+    contractFile: 'ui-dev/client/src/components/LocatorToolbar/LocatorToolbar.contract.ts',
+    styleFile: 'ui-dev/client/src/components/LocatorToolbar/LocatorToolbar.tokens.css',
     surface: 'frame',
   },
   locatorLegend: {
@@ -155,7 +170,12 @@ export const UI_COMPONENTS = {
     layerId: 'DX',
     containerId: UI_CONTAINERS.locatorOverlay.id,
     componentName: 'LocatorLegend',
-    file: 'ui-dev/client/src/components/LocatorLegend.vue',
+    role: 'dev_support',
+    file: 'ui-dev/client/src/components/LocatorLegend/LocatorLegend.vue',
+    packageDir: 'ui-dev/client/src/components/LocatorLegend',
+    entryFile: 'ui-dev/client/src/components/LocatorLegend/index.ts',
+    contractFile: 'ui-dev/client/src/components/LocatorLegend/LocatorLegend.contract.ts',
+    styleFile: 'ui-dev/client/src/components/LocatorLegend/LocatorLegend.tokens.css',
     surface: 'frame',
   },
   runtimeStatusStatCard: {
@@ -165,7 +185,12 @@ export const UI_COMPONENTS = {
     layerId: 'AT',
     containerId: UI_CONTAINERS.runtimeStatus.id,
     componentName: 'StatCard',
-    file: 'ui-dev/client/src/components/RuntimeStatusStatCard.vue',
+    role: 'primitive',
+    file: 'ui-dev/client/src/components/RuntimeStatusStatCard/RuntimeStatusStatCard.vue',
+    packageDir: 'ui-dev/client/src/components/RuntimeStatusStatCard',
+    entryFile: 'ui-dev/client/src/components/RuntimeStatusStatCard/index.ts',
+    contractFile: 'ui-dev/client/src/components/RuntimeStatusStatCard/RuntimeStatusStatCard.contract.ts',
+    styleFile: 'ui-dev/client/src/components/RuntimeStatusStatCard/RuntimeStatusStatCard.tokens.css',
     surface: 'frame',
   },
   documentNavigatorSearchBox: {
@@ -175,7 +200,12 @@ export const UI_COMPONENTS = {
     layerId: 'AT',
     containerId: UI_CONTAINERS.documentNavigator.id,
     componentName: 'SearchBox',
-    file: 'ui-dev/client/src/components/DocumentNavigatorSearchBox.vue',
+    role: 'primitive',
+    file: 'ui-dev/client/src/components/DocumentNavigatorSearchBox/DocumentNavigatorSearchBox.vue',
+    packageDir: 'ui-dev/client/src/components/DocumentNavigatorSearchBox',
+    entryFile: 'ui-dev/client/src/components/DocumentNavigatorSearchBox/index.ts',
+    contractFile: 'ui-dev/client/src/components/DocumentNavigatorSearchBox/DocumentNavigatorSearchBox.contract.ts',
+    styleFile: 'ui-dev/client/src/components/DocumentNavigatorSearchBox/DocumentNavigatorSearchBox.tokens.css',
     surface: 'frame',
   },
   documentNavigatorDocItem: {
@@ -185,7 +215,12 @@ export const UI_COMPONENTS = {
     layerId: 'AT',
     containerId: UI_CONTAINERS.documentNavigator.id,
     componentName: 'DocItem',
-    file: 'ui-dev/client/src/components/DocumentNavigatorDocItem.vue',
+    role: 'primitive',
+    file: 'ui-dev/client/src/components/DocumentNavigatorDocItem/DocumentNavigatorDocItem.vue',
+    packageDir: 'ui-dev/client/src/components/DocumentNavigatorDocItem',
+    entryFile: 'ui-dev/client/src/components/DocumentNavigatorDocItem/index.ts',
+    contractFile: 'ui-dev/client/src/components/DocumentNavigatorDocItem/DocumentNavigatorDocItem.contract.ts',
+    styleFile: 'ui-dev/client/src/components/DocumentNavigatorDocItem/DocumentNavigatorDocItem.tokens.css',
     surface: 'frame',
   },
   graphPanelGraphCanvas: {
@@ -195,7 +230,12 @@ export const UI_COMPONENTS = {
     layerId: 'GV',
     containerId: UI_CONTAINERS.graphPanel.id,
     componentName: 'GraphCanvas',
-    file: 'ui-dev/client/src/components/GraphCanvas.vue',
+    role: 'visual_engine',
+    file: 'ui-dev/client/src/components/GraphCanvas/GraphCanvas.vue',
+    packageDir: 'ui-dev/client/src/components/GraphCanvas',
+    entryFile: 'ui-dev/client/src/components/GraphCanvas/index.ts',
+    contractFile: 'ui-dev/client/src/components/GraphCanvas/GraphCanvas.contract.ts',
+    styleFile: 'ui-dev/client/src/components/GraphCanvas/GraphCanvas.tokens.css',
     surface: 'frame',
   },
   documentReaderDetailHero: {
@@ -205,7 +245,12 @@ export const UI_COMPONENTS = {
     layerId: 'DC',
     containerId: UI_CONTAINERS.documentReader.id,
     componentName: 'DetailHero',
-    file: 'ui-dev/client/src/components/DocumentReaderDetailHero.vue',
+    role: 'composite',
+    file: 'ui-dev/client/src/components/DocumentReaderDetailHero/DocumentReaderDetailHero.vue',
+    packageDir: 'ui-dev/client/src/components/DocumentReaderDetailHero',
+    entryFile: 'ui-dev/client/src/components/DocumentReaderDetailHero/index.ts',
+    contractFile: 'ui-dev/client/src/components/DocumentReaderDetailHero/DocumentReaderDetailHero.contract.ts',
+    styleFile: 'ui-dev/client/src/components/DocumentReaderDetailHero/DocumentReaderDetailHero.tokens.css',
     surface: 'frame',
   },
   documentReaderAnchorChip: {
@@ -215,7 +260,12 @@ export const UI_COMPONENTS = {
     layerId: 'DC',
     containerId: UI_CONTAINERS.documentReader.id,
     componentName: 'AnchorChip',
-    file: 'ui-dev/client/src/components/DocumentReaderAnchorChip.vue',
+    role: 'primitive',
+    file: 'ui-dev/client/src/components/DocumentReaderAnchorChip/DocumentReaderAnchorChip.vue',
+    packageDir: 'ui-dev/client/src/components/DocumentReaderAnchorChip',
+    entryFile: 'ui-dev/client/src/components/DocumentReaderAnchorChip/index.ts',
+    contractFile: 'ui-dev/client/src/components/DocumentReaderAnchorChip/DocumentReaderAnchorChip.contract.ts',
+    styleFile: 'ui-dev/client/src/components/DocumentReaderAnchorChip/DocumentReaderAnchorChip.tokens.css',
     surface: 'frame',
   },
   documentReaderWarningList: {
@@ -225,7 +275,12 @@ export const UI_COMPONENTS = {
     layerId: 'DC',
     containerId: UI_CONTAINERS.documentReader.id,
     componentName: 'WarningList',
-    file: 'ui-dev/client/src/components/DocumentReaderWarningList.vue',
+    role: 'composite',
+    file: 'ui-dev/client/src/components/DocumentReaderWarningList/DocumentReaderWarningList.vue',
+    packageDir: 'ui-dev/client/src/components/DocumentReaderWarningList',
+    entryFile: 'ui-dev/client/src/components/DocumentReaderWarningList/index.ts',
+    contractFile: 'ui-dev/client/src/components/DocumentReaderWarningList/DocumentReaderWarningList.contract.ts',
+    styleFile: 'ui-dev/client/src/components/DocumentReaderWarningList/DocumentReaderWarningList.tokens.css',
     surface: 'frame',
   },
   documentReaderMarkdownBody: {
@@ -235,7 +290,12 @@ export const UI_COMPONENTS = {
     layerId: 'DC',
     containerId: UI_CONTAINERS.documentReader.id,
     componentName: 'MarkdownBody',
-    file: 'ui-dev/client/src/components/DocumentReaderMarkdownBody.vue',
+    role: 'composite',
+    file: 'ui-dev/client/src/components/DocumentReaderMarkdownBody/DocumentReaderMarkdownBody.vue',
+    packageDir: 'ui-dev/client/src/components/DocumentReaderMarkdownBody',
+    entryFile: 'ui-dev/client/src/components/DocumentReaderMarkdownBody/index.ts',
+    contractFile: 'ui-dev/client/src/components/DocumentReaderMarkdownBody/DocumentReaderMarkdownBody.contract.ts',
+    styleFile: 'ui-dev/client/src/components/DocumentReaderMarkdownBody/DocumentReaderMarkdownBody.tokens.css',
     surface: 'frame',
   },
 } satisfies Record<string, UiComponentDefinition>

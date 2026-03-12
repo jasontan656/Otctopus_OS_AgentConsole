@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import GraphCanvas from '../components/GraphCanvas.vue'
-import LocatorNodeFrame from '../components/LocatorNodeFrame.vue'
+import GraphCanvas from '../components/GraphCanvas'
+import LocatorNodeFrame from '../components/LocatorNodeFrame'
 import { UI_CONTAINERS } from '../contracts/ui-identity-registry'
 import { useUiLocatorNode } from '../composables/useUiLocatorNode'
 import type { GraphEdgeRecord, PreviewDocumentRecord } from '../types'
@@ -22,11 +22,11 @@ const graphPanelNode = useUiLocatorNode(UI_CONTAINERS.graphPanel.id)
 
 <template>
   <LocatorNodeFrame :node="graphPanelNode">
-    <section class="panel graph-panel">
-      <div class="panel-head">
+    <section class="surface-card graph-panel">
+      <div class="surface-card__header">
         <div>
-          <h2>Anchor Graph</h2>
-          <p>{{ targetRoot || 'waiting for workspace' }}</p>
+          <h2 class="surface-card__title">Anchor Graph</h2>
+          <p class="surface-card__copy">{{ targetRoot || 'waiting for workspace' }}</p>
         </div>
         <span class="timestamp">{{ updatedAt || 'loading' }}</span>
       </div>

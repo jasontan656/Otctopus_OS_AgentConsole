@@ -1,0 +1,27 @@
+:root {
+  --surface-page: var(--color-bg-page-warm);
+  --surface-hero: var(--color-bg-surface);
+  --surface-panel: var(--color-bg-surface-strong);
+  --surface-panel-muted: var(--color-bg-surface-muted);
+  --surface-overlay: var(--color-bg-overlay);
+
+  --text-title: var(--color-fg-primary);
+  --text-body: var(--color-fg-secondary);
+  --text-meta: var(--color-fg-muted);
+  --text-inverse: var(--color-fg-inverse);
+
+  --interactive-border: var(--color-border-default);
+  --interactive-border-hover: var(--color-border-strong);
+  --interactive-border-active: var(--color-border-focus);
+
+  --interactive-accent: var(--color-accent-primary);
+  --interactive-accent-soft: var(--color-accent-soft);
+  --interactive-accent-cool: var(--color-accent-cool);
+
+  --status-warning-bg: var(--color-status-warning-soft);
+  --status-warning-text: var(--color-status-warning);
+  --status-success-bg: var(--color-status-success-soft);
+  --status-success-text: var(--color-status-success);
+  --status-danger-bg: var(--color-status-danger-soft);
+  --status-danger-text: var(--color-status-danger);
+}

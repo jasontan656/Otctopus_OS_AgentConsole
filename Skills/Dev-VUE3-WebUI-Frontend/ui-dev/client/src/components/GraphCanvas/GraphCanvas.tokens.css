@@ -1,0 +1,12 @@
+.graph-canvas-shell {
+  width: 100%;
+  min-height: 640px;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(221, 103, 66, 0.1), transparent 24%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(240, 244, 247, 0.96));
+}
+
+.graph-canvas-flow {
+  width: 100%;
+  min-height: 640px;
+}

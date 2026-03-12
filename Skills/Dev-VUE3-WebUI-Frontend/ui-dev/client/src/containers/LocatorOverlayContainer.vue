@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import LocatorLegend from '../components/LocatorLegend.vue'
-import LocatorNodeFrame from '../components/LocatorNodeFrame.vue'
-import LocatorToolbar from '../components/LocatorToolbar.vue'
+import LocatorLegend from '../components/LocatorLegend'
+import LocatorNodeFrame from '../components/LocatorNodeFrame'
+import LocatorToolbar from '../components/LocatorToolbar'
 import { UI_CONTAINERS } from '../contracts/ui-identity-registry'
 import { useUiLocatorNode } from '../composables/useUiLocatorNode'
 import { useUiLocatorState } from '../composables/useUiLocatorState'

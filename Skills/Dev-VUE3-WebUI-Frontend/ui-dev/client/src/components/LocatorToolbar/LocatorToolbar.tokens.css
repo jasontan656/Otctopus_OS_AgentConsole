@@ -1,0 +1,33 @@
+.locator-toolbar {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+  align-items: center;
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid var(--color-border-subtle);
+  box-shadow: var(--shadow-soft);
+}
+
+.locator-toolbar-label {
+  margin: 0 0 2px;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--text-meta);
+}
+
+.locator-toggle {
+  border: 1px solid var(--interactive-border);
+  background: linear-gradient(135deg, var(--color-accent-soft), rgba(255, 255, 255, 0.94));
+  color: var(--text-title);
+  border-radius: var(--radius-pill);
+  padding: 10px 16px;
+  transition: transform var(--duration-fast) var(--ease-standard), border-color var(--duration-fast) var(--ease-standard);
+}
+
+.locator-toggle:hover {
+  transform: translateY(-1px);
+  border-color: var(--interactive-border-active);
+}

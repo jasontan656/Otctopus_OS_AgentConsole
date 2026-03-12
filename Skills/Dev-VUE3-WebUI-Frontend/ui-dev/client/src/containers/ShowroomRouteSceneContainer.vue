@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import LocatorNodeFrame from '../components/LocatorNodeFrame.vue'
+import LocatorNodeFrame from '../components/LocatorNodeFrame'
 import { UI_CONTAINERS } from '../contracts/ui-identity-registry'
 import RuntimeStatusContainer from './RuntimeStatusContainer.vue'
 import { useUiLocatorNode } from '../composables/useUiLocatorNode'

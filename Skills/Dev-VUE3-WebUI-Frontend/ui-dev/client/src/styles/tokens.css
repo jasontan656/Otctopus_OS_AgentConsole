@@ -1,0 +1,68 @@
+:root {
+  color-scheme: light;
+  --font-family-display: "IBM Plex Sans", "Avenir Next", "Segoe UI", sans-serif;
+  --font-family-body: "IBM Plex Sans", "Avenir Next", "Segoe UI", sans-serif;
+  --font-family-code: "IBM Plex Mono", "SFMono-Regular", monospace;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 28px;
+  --space-8: 32px;
+  --space-10: 40px;
+
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
+  --radius-xl: 28px;
+  --radius-pill: 999px;
+
+  --shadow-soft: 0 12px 32px rgba(18, 32, 45, 0.08);
+  --shadow-medium: 0 18px 48px rgba(18, 32, 45, 0.1);
+  --shadow-strong: 0 24px 60px rgba(15, 23, 42, 0.18);
+  --shadow-overlay: 0 24px 72px rgba(15, 23, 42, 0.22);
+
+  --color-bg-page: #f2f5f7;
+  --color-bg-page-warm: rgba(247, 239, 231, 0.94);
+  --color-bg-surface: rgba(255, 255, 255, 0.82);
+  --color-bg-surface-strong: rgba(255, 255, 255, 0.9);
+  --color-bg-surface-muted: rgba(17, 33, 49, 0.06);
+  --color-bg-overlay: rgba(15, 23, 42, 0.92);
+  --color-bg-overlay-soft: rgba(15, 23, 42, 0.82);
+
+  --color-fg-primary: #12202d;
+  --color-fg-secondary: #354251;
+  --color-fg-muted: #52606d;
+  --color-fg-inverse: #f8fafc;
+
+  --color-border-subtle: rgba(18, 32, 45, 0.08);
+  --color-border-default: rgba(18, 32, 45, 0.12);
+  --color-border-strong: rgba(18, 32, 45, 0.18);
+  --color-border-focus: rgba(221, 103, 66, 0.72);
+
+  --color-accent-primary: #cc5f38;
+  --color-accent-strong: #dd6742;
+  --color-accent-soft: rgba(221, 103, 66, 0.14);
+  --color-accent-cool: #0ea5e9;
+  --color-accent-cool-soft: rgba(14, 165, 233, 0.14);
+
+  --color-status-warning: #c2410c;
+  --color-status-warning-soft: rgba(251, 146, 60, 0.18);
+  --color-status-success: #0f766e;
+  --color-status-success-soft: rgba(20, 184, 166, 0.16);
+  --color-status-danger: #b91c1c;
+  --color-status-danger-soft: rgba(239, 68, 68, 0.14);
+
+  --duration-fast: 140ms;
+  --duration-normal: 220ms;
+  --duration-slow: 320ms;
+  --ease-standard: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  --z-base: 1;
+  --z-panel: 10;
+  --z-overlay: 30;
+  --z-locator: 40;
+}

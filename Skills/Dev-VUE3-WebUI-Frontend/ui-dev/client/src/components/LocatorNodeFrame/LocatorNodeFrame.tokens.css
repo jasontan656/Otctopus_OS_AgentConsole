@@ -1,0 +1,37 @@
+.locator-node-frame {
+  position: relative;
+  min-height: 0;
+}
+
+.locator-chip {
+  position: absolute;
+  top: var(--space-3);
+  left: var(--space-3);
+  z-index: var(--z-locator);
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: var(--radius-pill);
+  background: rgba(15, 23, 42, 0.92);
+  color: var(--text-inverse);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  box-shadow: var(--shadow-soft);
+}
+
+.locator-chip-code {
+  font-weight: 700;
+  color: #facc15;
+}
+
+.locator-layer-sh > .locator-chip { background: rgba(180, 83, 9, 0.95); }
+.locator-layer-sc > .locator-chip { background: rgba(2, 132, 199, 0.95); }
+.locator-layer-rt > .locator-chip { background: rgba(12, 74, 110, 0.95); }
+.locator-layer-wk > .locator-chip { background: rgba(14, 116, 144, 0.95); }
+.locator-layer-pn > .locator-chip { background: rgba(31, 41, 55, 0.95); }
+.locator-layer-at > .locator-chip { background: rgba(91, 33, 182, 0.95); }
+.locator-layer-gv > .locator-chip { background: rgba(21, 94, 117, 0.95); }
+.locator-layer-dc > .locator-chip { background: rgba(55, 48, 163, 0.95); }
+.locator-layer-dx > .locator-chip { background: rgba(17, 24, 39, 0.95); }
+.locator-layer-ov > .locator-chip { background: rgba(76, 29, 149, 0.95); }

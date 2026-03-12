@@ -20,9 +20,14 @@ anchors:
 - `ui-dev/client/*`
 - `ui-dev/scripts/install_user_service.sh`
 - `ui-dev/client/src/contracts/ui-identity-registry.ts`
+- `ui-dev/client/src/styles/*`
+- `ui-dev/client/src/components/*/index.ts`
 - `frontend_dev_contracts/showroom_runtime/VIEWER_SERVICE_WORKFLOW.md`
 - `frontend_dev_contracts/containers/*`
 - `frontend_dev_contracts/layers/*`
+- `frontend_dev_contracts/design_system/*`
+- `frontend_dev_contracts/component_system/*`
+- `frontend_dev_contracts/code_architecture/*`
 
 ## 设计意图
 - 让网站既是技能门面，又是前端规范展厅。

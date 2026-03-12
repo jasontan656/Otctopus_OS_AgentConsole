@@ -15,6 +15,18 @@ anchors:
     relation: "implements"
     direction: "downstream"
     reason: "The runnable showroom must realize the container contracts through the SPA UI code."
+  - target: "../frontend_dev_contracts/design_system/00_DESIGN_SYSTEM_INDEX.md"
+    relation: "implements"
+    direction: "downstream"
+    reason: "The runnable showroom must realize the design-system contracts through shared tokens and semantic styles."
+  - target: "../frontend_dev_contracts/component_system/00_COMPONENT_SYSTEM_INDEX.md"
+    relation: "implements"
+    direction: "downstream"
+    reason: "The runnable showroom must realize the reusable component package contracts."
+  - target: "../frontend_dev_contracts/code_architecture/00_CODE_ARCHITECTURE_INDEX.md"
+    relation: "implements"
+    direction: "downstream"
+    reason: "The runnable showroom must realize the folder topology, style placement, and export rules."
   - target: "../frontend_dev_contracts/layers/00_LAYERS_INDEX.md"
     relation: "implements"
     direction: "downstream"
@@ -28,6 +40,8 @@ anchors:
 ## 包含内容
 - Vue3 + Vue Flow 页面代码。
 - app shell、scene、workspace、panel 容器实现。
+- folder-first 组件 package、局部 contract、局部样式 token。
+- design token、semantic style、layout style 全局资产。
 - layer / container / component locator registry 与显式定位开关。
 - viewer payload 装配层与 live server。
 - systemd 安装脚本与运行文档。

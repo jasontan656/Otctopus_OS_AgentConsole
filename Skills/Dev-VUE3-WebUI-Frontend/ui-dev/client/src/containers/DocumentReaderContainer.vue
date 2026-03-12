@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import MarkdownIt from 'markdown-it'
-import DocumentReaderAnchorChip from '../components/DocumentReaderAnchorChip.vue'
-import DocumentReaderDetailHero from '../components/DocumentReaderDetailHero.vue'
-import DocumentReaderMarkdownBody from '../components/DocumentReaderMarkdownBody.vue'
-import DocumentReaderWarningList from '../components/DocumentReaderWarningList.vue'
-import LocatorNodeFrame from '../components/LocatorNodeFrame.vue'
+import DocumentReaderAnchorChip from '../components/DocumentReaderAnchorChip'
+import DocumentReaderDetailHero from '../components/DocumentReaderDetailHero'
+import DocumentReaderMarkdownBody from '../components/DocumentReaderMarkdownBody'
+import DocumentReaderWarningList from '../components/DocumentReaderWarningList'
+import LocatorNodeFrame from '../components/LocatorNodeFrame'
 import { UI_CONTAINERS } from '../contracts/ui-identity-registry'
 import { useUiLocatorNode } from '../composables/useUiLocatorNode'
 import type { PreviewDocumentRecord } from '../types'
@@ -33,12 +33,12 @@ const renderedMarkdown = computed(() => {
 
 <template>
   <LocatorNodeFrame :node="readerNode">
-    <section class="panel detail-panel">
+    <section class="surface-card detail-panel">
       <div v-if="selectedDoc" class="detail-stack">
         <DocumentReaderDetailHero :selected-doc="selectedDoc" />
 
-        <div class="anchor-section">
-          <div>
+        <div class="detail-anchor-grid">
+          <div class="detail-anchor-group">
             <h3>Outgoing Anchors</h3>
             <DocumentReaderAnchorChip
               v-for="edge in selectedDoc.outgoing"
@@ -48,7 +48,7 @@ const renderedMarkdown = computed(() => {
               @follow="emit('follow-anchor', $event)"
             />
           </div>
-          <div>
+          <div class="detail-anchor-group">
             <h3>Incoming Anchors</h3>
             <DocumentReaderAnchorChip
               v-for="edge in selectedDoc.incoming"

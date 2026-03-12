@@ -3,8 +3,8 @@
   "graph_version": "v2",
   "source_skill": "Dev-VUE3-WebUI-Frontend",
   "summary": {
-    "nodeCount": 50,
-    "edgeCount": 140,
+    "nodeCount": 84,
+    "edgeCount": 241,
     "errorCount": 0,
     "warningCount": 0
   },
@@ -78,8 +78,224 @@
       "docType": "ui_dev_index",
       "topic": "Index of frontend development contracts for Dev-VUE3-WebUI-Frontend",
       "title": "Frontend Development Contracts",
-      "anchorCount": 6,
+      "anchorCount": 9,
       "depth": 1
+    },
+    {
+      "path": "frontend_dev_contracts/code_architecture/00_CODE_ARCHITECTURE_INDEX.md",
+      "docId": "ui.dev.code_architecture.index",
+      "docType": "ui_dev_index",
+      "topic": "Index of frontend code architecture contracts for the Dev-VUE3-WebUI-Frontend showroom",
+      "title": "Code Architecture Index",
+      "anchorCount": 4,
+      "depth": 2
+    },
+    {
+      "path": "frontend_dev_contracts/code_architecture/governance/00_CODE_GOVERNANCE_INDEX.md",
+      "docId": "ui.dev.code_architecture.governance.index",
+      "docType": "ui_dev_index",
+      "topic": "Index of code-governance contracts for copy/reuse and package discipline",
+      "title": "Code Governance Index",
+      "anchorCount": 2,
+      "depth": 3
+    },
+    {
+      "path": "frontend_dev_contracts/code_architecture/governance/10_COPY_PASTE_REUSE_GUIDE.md",
+      "docId": "ui.dev.code_architecture.copy_paste_reuse",
+      "docType": "ui_dev_guide",
+      "topic": "Copy-paste versus reuse guide for frontend components and local packages",
+      "title": "Copy Paste Reuse Guide",
+      "anchorCount": 2,
+      "depth": 3
+    },
+    {
+      "path": "frontend_dev_contracts/code_architecture/packages/00_PACKAGE_TEMPLATE_INDEX.md",
+      "docId": "ui.dev.code_architecture.package_template.index",
+      "docType": "ui_dev_index",
+      "topic": "Index of component package template and style placement contracts",
+      "title": "Package Template Index",
+      "anchorCount": 5,
+      "depth": 3
+    },
+    {
+      "path": "frontend_dev_contracts/code_architecture/packages/10_COMPONENT_FOLDER_TEMPLATE.md",
+      "docId": "ui.dev.code_architecture.component_folder_template",
+      "docType": "ui_dev_guide",
+      "topic": "Component folder template for ui-dev reusable packages",
+      "title": "Component Folder Template",
+      "anchorCount": 2,
+      "depth": 3
+    },
+    {
+      "path": "frontend_dev_contracts/code_architecture/packages/20_STYLE_ASSET_PLACEMENT.md",
+      "docId": "ui.dev.code_architecture.style_asset_placement",
+      "docType": "ui_dev_guide",
+      "topic": "Style asset placement rules for global tokens and local package styles",
+      "title": "Style Asset Placement",
+      "anchorCount": 2,
+      "depth": 3
+    },
+    {
+      "path": "frontend_dev_contracts/code_architecture/packages/30_COMPONENT_EXPORT_GUIDE.md",
+      "docId": "ui.dev.code_architecture.export_guide",
+      "docType": "ui_dev_guide",
+      "topic": "Component export guide for ui-dev packages",
+      "title": "Component Export Guide",
+      "anchorCount": 2,
+      "depth": 3
+    },
+    {
+      "path": "frontend_dev_contracts/code_architecture/packages/40_COMPONENT_REGISTRY_GUIDE.md",
+      "docId": "ui.dev.code_architecture.registry_guide",
+      "docType": "ui_dev_guide",
+      "topic": "Component registry guide for ui-dev packages",
+      "title": "Component Registry Guide",
+      "anchorCount": 2,
+      "depth": 3
+    },
+    {
+      "path": "frontend_dev_contracts/code_architecture/topology/00_TOPOLOGY_INDEX.md",
+      "docId": "ui.dev.code_architecture.topology.index",
+      "docType": "ui_dev_index",
+      "topic": "Index of frontend folder topology and dependency direction contracts",
+      "title": "Topology Index",
+      "anchorCount": 3,
+      "depth": 3
+    },
+    {
+      "path": "frontend_dev_contracts/code_architecture/topology/10_FRONTEND_FOLDER_TOPOLOGY.md",
+      "docId": "ui.dev.code_architecture.folder_topology",
+      "docType": "ui_dev_guide",
+      "topic": "Frontend folder topology for the Dev-VUE3-WebUI-Frontend showroom",
+      "title": "Frontend Folder Topology",
+      "anchorCount": 2,
+      "depth": 3
+    },
+    {
+      "path": "frontend_dev_contracts/code_architecture/topology/20_DEPENDENCY_DIRECTION_GUIDE.md",
+      "docId": "ui.dev.code_architecture.dependency_direction",
+      "docType": "ui_dev_guide",
+      "topic": "Dependency direction guide for ui-dev containers, components, composables, and contracts",
+      "title": "Dependency Direction Guide",
+      "anchorCount": 2,
+      "depth": 3
+    },
+    {
+      "path": "frontend_dev_contracts/component_system/00_COMPONENT_SYSTEM_INDEX.md",
+      "docId": "ui.dev.component_system.index",
+      "docType": "ui_dev_index",
+      "topic": "Index of reusable component-system contracts for the Dev-VUE3-WebUI-Frontend showroom",
+      "title": "Component System Index",
+      "anchorCount": 4,
+      "depth": 2
+    },
+    {
+      "path": "frontend_dev_contracts/component_system/governance/00_COMPONENT_GOVERNANCE_INDEX.md",
+      "docId": "ui.dev.component_system.governance.index",
+      "docType": "ui_dev_index",
+      "topic": "Index of component governance contracts",
+      "title": "Component Governance Index",
+      "anchorCount": 4,
+      "depth": 3
+    },
+    {
+      "path": "frontend_dev_contracts/component_system/governance/10_COMPONENT_STYLE_ISOLATION.md",
+      "docId": "ui.dev.component_system.style_isolation",
+      "docType": "ui_dev_guide",
+      "topic": "Style isolation rules for reusable Vue3 component packages",
+      "title": "Component Style Isolation",
+      "anchorCount": 2,
+      "depth": 3
+    },
+    {
+      "path": "frontend_dev_contracts/component_system/governance/20_COMPONENT_TEST_SURFACE.md",
+      "docId": "ui.dev.component_system.test_surface",
+      "docType": "ui_dev_guide",
+      "topic": "Testing surface for reusable component packages",
+      "title": "Component Test Surface",
+      "anchorCount": 1,
+      "depth": 3
+    },
+    {
+      "path": "frontend_dev_contracts/component_system/governance/30_COMPONENT_ACCESSIBILITY_SURFACE.md",
+      "docId": "ui.dev.component_system.accessibility_surface",
+      "docType": "ui_dev_guide",
+      "topic": "Accessibility surface for reusable component packages",
+      "title": "Component Accessibility Surface",
+      "anchorCount": 2,
+      "depth": 3
+    },
+    {
+      "path": "frontend_dev_contracts/component_system/model/00_COMPONENT_MODEL_INDEX.md",
+      "docId": "ui.dev.component_system.model.index",
+      "docType": "ui_dev_index",
+      "topic": "Index of component role and API contracts",
+      "title": "Component Model Index",
+      "anchorCount": 4,
+      "depth": 3
+    },
+    {
+      "path": "frontend_dev_contracts/component_system/model/10_COMPONENT_ROLE_TAXONOMY.md",
+      "docId": "ui.dev.component_system.role_taxonomy",
+      "docType": "ui_dev_guide",
+      "topic": "Component role taxonomy for reusable Vue3 component packages",
+      "title": "Component Role Taxonomy",
+      "anchorCount": 2,
+      "depth": 3
+    },
+    {
+      "path": "frontend_dev_contracts/component_system/model/20_COMPONENT_API_GUIDE.md",
+      "docId": "ui.dev.component_system.api_guide",
+      "docType": "ui_dev_guide",
+      "topic": "Component API guide for reusable component packages",
+      "title": "Component API Guide",
+      "anchorCount": 2,
+      "depth": 3
+    },
+    {
+      "path": "frontend_dev_contracts/component_system/model/30_COMPONENT_VARIANT_GUIDE.md",
+      "docId": "ui.dev.component_system.variant_guide",
+      "docType": "ui_dev_guide",
+      "topic": "Component variant guide for reusable component packages",
+      "title": "Component Variant Guide",
+      "anchorCount": 2,
+      "depth": 3
+    },
+    {
+      "path": "frontend_dev_contracts/component_system/packaging/00_COMPONENT_PACKAGING_INDEX.md",
+      "docId": "ui.dev.component_system.packaging.index",
+      "docType": "ui_dev_index",
+      "topic": "Index of reusable component package-shape contracts",
+      "title": "Component Packaging Index",
+      "anchorCount": 4,
+      "depth": 3
+    },
+    {
+      "path": "frontend_dev_contracts/component_system/packaging/10_COMPONENT_PACKAGE_SHAPE.md",
+      "docId": "ui.dev.component_system.package_shape",
+      "docType": "ui_dev_guide",
+      "topic": "Folder-first package shape for reusable Vue3 components",
+      "title": "Component Package Shape",
+      "anchorCount": 3,
+      "depth": 3
+    },
+    {
+      "path": "frontend_dev_contracts/component_system/packaging/20_COMPONENT_COMPOSITION_GUIDE.md",
+      "docId": "ui.dev.component_system.composition_guide",
+      "docType": "ui_dev_guide",
+      "topic": "Composition guide for reusable component packages",
+      "title": "Component Composition Guide",
+      "anchorCount": 1,
+      "depth": 3
+    },
+    {
+      "path": "frontend_dev_contracts/component_system/packaging/30_COMPONENT_REUSE_GUIDE.md",
+      "docId": "ui.dev.component_system.reuse_guide",
+      "docType": "ui_dev_guide",
+      "topic": "Reuse guide for reusable component packages",
+      "title": "Component Reuse Guide",
+      "anchorCount": 2,
+      "depth": 3
     },
     {
       "path": "frontend_dev_contracts/containers/00_CONTAINERS_INDEX.md",
@@ -199,6 +415,87 @@
       "depth": 3
     },
     {
+      "path": "frontend_dev_contracts/design_system/00_DESIGN_SYSTEM_INDEX.md",
+      "docId": "ui.dev.design_system.index",
+      "docType": "ui_dev_index",
+      "topic": "Index of design-system contracts for the Dev-VUE3-WebUI-Frontend showroom",
+      "title": "Design System Index",
+      "anchorCount": 4,
+      "depth": 2
+    },
+    {
+      "path": "frontend_dev_contracts/design_system/brand/00_BRAND_INDEX.md",
+      "docId": "ui.dev.design_system.brand.index",
+      "docType": "ui_dev_index",
+      "topic": "Index of brand, theme, typography, and iconography contracts",
+      "title": "Brand Index",
+      "anchorCount": 5,
+      "depth": 3
+    },
+    {
+      "path": "frontend_dev_contracts/design_system/brand/10_THEME_GUIDE.md",
+      "docId": "ui.dev.design_system.theme_guide",
+      "docType": "ui_dev_guide",
+      "topic": "Theme guide for the Dev-VUE3-WebUI-Frontend showroom",
+      "title": "Theme Guide",
+      "anchorCount": 1,
+      "depth": 3
+    },
+    {
+      "path": "frontend_dev_contracts/design_system/brand/20_BRAND_DIRECTION_GUIDE.md",
+      "docId": "ui.dev.design_system.brand_direction_guide",
+      "docType": "ui_dev_guide",
+      "topic": "Brand direction guide for the Dev-VUE3-WebUI-Frontend showroom",
+      "title": "Brand Direction Guide",
+      "anchorCount": 2,
+      "depth": 3
+    },
+    {
+      "path": "frontend_dev_contracts/design_system/brand/30_TYPOGRAPHY_GUIDE.md",
+      "docId": "ui.dev.design_system.typography_guide",
+      "docType": "ui_dev_guide",
+      "topic": "Typography guide for the Dev-VUE3-WebUI-Frontend showroom",
+      "title": "Typography Guide",
+      "anchorCount": 2,
+      "depth": 3
+    },
+    {
+      "path": "frontend_dev_contracts/design_system/brand/40_ICONOGRAPHY_GUIDE.md",
+      "docId": "ui.dev.design_system.iconography_guide",
+      "docType": "ui_dev_guide",
+      "topic": "Iconography guide for the Dev-VUE3-WebUI-Frontend showroom",
+      "title": "Iconography Guide",
+      "anchorCount": 2,
+      "depth": 3
+    },
+    {
+      "path": "frontend_dev_contracts/design_system/foundations/00_FOUNDATIONS_INDEX.md",
+      "docId": "ui.dev.design_system.foundations.index",
+      "docType": "ui_dev_index",
+      "topic": "Index of foundational design-system contracts",
+      "title": "Foundations Index",
+      "anchorCount": 3,
+      "depth": 3
+    },
+    {
+      "path": "frontend_dev_contracts/design_system/foundations/10_DESIGN_TOKEN_MODEL.md",
+      "docId": "ui.dev.design_system.token_model",
+      "docType": "ui_dev_guide",
+      "topic": "Design token model for the Dev-VUE3-WebUI-Frontend showroom",
+      "title": "Design Token Model",
+      "anchorCount": 3,
+      "depth": 3
+    },
+    {
+      "path": "frontend_dev_contracts/design_system/foundations/20_SEMANTIC_STYLE_MAPPING.md",
+      "docId": "ui.dev.design_system.semantic_mapping",
+      "docType": "ui_dev_guide",
+      "topic": "Semantic style mapping from tokens to reusable UI surfaces",
+      "title": "Semantic Style Mapping",
+      "anchorCount": 3,
+      "depth": 3
+    },
+    {
       "path": "frontend_dev_contracts/layers/00_LAYERS_INDEX.md",
       "docId": "ui.dev.layers.index",
       "docType": "ui_dev_index",
@@ -249,7 +546,7 @@
       "docType": "ui_dev_guide",
       "topic": "File organization rules for the Dev-VUE3-WebUI-Frontend showroom",
       "title": "UI File Organization",
-      "anchorCount": 3,
+      "anchorCount": 4,
       "depth": 2
     },
     {
@@ -267,7 +564,7 @@
       "docType": "index_doc",
       "topic": "Index of layout and responsive frontend rule contracts",
       "title": "Frontend Rules Index",
-      "anchorCount": 3,
+      "anchorCount": 4,
       "depth": 2
     },
     {
@@ -285,6 +582,15 @@
       "docType": "ui_dev_guide",
       "topic": "Layout adjustment rules for the Dev-VUE3-WebUI-Frontend showroom",
       "title": "UI Layout Adjustment Rules",
+      "anchorCount": 4,
+      "depth": 2
+    },
+    {
+      "path": "frontend_dev_contracts/rules/UI_PACKAGE_SHAPE_LINT_WORKFLOW.md",
+      "docId": "ui.dev.rules.package_shape_lint",
+      "docType": "tooling_usage",
+      "topic": "Lint workflow for reusable component package shape and export discipline",
+      "title": "UI Package Shape Lint Workflow",
       "anchorCount": 4,
       "depth": 2
     },
@@ -375,7 +681,7 @@
       "docType": "stage_doc",
       "topic": "Motion language, reusable component boundaries, and code organization",
       "title": "Stage Motion Component Architecture",
-      "anchorCount": 4,
+      "anchorCount": 6,
       "depth": 2
     },
     {
@@ -384,7 +690,7 @@
       "docType": "stage_doc",
       "topic": "Runnable showroom and runtime delivery stage for the Vue3 web UI frontend skill",
       "title": "Stage Showroom Runtime",
-      "anchorCount": 4,
+      "anchorCount": 5,
       "depth": 2
     },
     {
@@ -456,7 +762,7 @@
       "docType": "ui_dev_entry",
       "topic": "Runnable showroom root for Dev-VUE3-WebUI-Frontend",
       "title": "UI Dev Entry",
-      "anchorCount": 4,
+      "anchorCount": 7,
       "depth": 1
     }
   ],
@@ -568,6 +874,27 @@
     },
     {
       "source": "frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md",
+      "target": "frontend_dev_contracts/design_system/00_DESIGN_SYSTEM_INDEX.md",
+      "relation": "routes_to",
+      "direction": "downstream",
+      "reason": "Design-system contracts define tokens, semantic styles, theming, and typography."
+    },
+    {
+      "source": "frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md",
+      "target": "frontend_dev_contracts/component_system/00_COMPONENT_SYSTEM_INDEX.md",
+      "relation": "routes_to",
+      "direction": "downstream",
+      "reason": "Component-system contracts define reusable black-box component packages and API rules."
+    },
+    {
+      "source": "frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md",
+      "target": "frontend_dev_contracts/code_architecture/00_CODE_ARCHITECTURE_INDEX.md",
+      "relation": "routes_to",
+      "direction": "downstream",
+      "reason": "Code-architecture contracts define folder topology, dependency direction, and package shape placement."
+    },
+    {
+      "source": "frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md",
       "target": "frontend_dev_contracts/layers/00_LAYERS_INDEX.md",
       "relation": "routes_to",
       "direction": "downstream",
@@ -600,6 +927,433 @@
       "relation": "routes_to",
       "direction": "downstream",
       "reason": "Layout and responsive rules form the rule branch of the frontend contract tree."
+    },
+    {
+      "source": "frontend_dev_contracts/code_architecture/00_CODE_ARCHITECTURE_INDEX.md",
+      "target": "frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "The code-architecture branch is one route under the frontend development contract tree."
+    },
+    {
+      "source": "frontend_dev_contracts/code_architecture/00_CODE_ARCHITECTURE_INDEX.md",
+      "target": "frontend_dev_contracts/code_architecture/topology/00_TOPOLOGY_INDEX.md",
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "Topology contracts define the high-level frontend folder layout and dependency direction."
+    },
+    {
+      "source": "frontend_dev_contracts/code_architecture/00_CODE_ARCHITECTURE_INDEX.md",
+      "target": "frontend_dev_contracts/code_architecture/packages/00_PACKAGE_TEMPLATE_INDEX.md",
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "Package template contracts define the folder-first component package layout."
+    },
+    {
+      "source": "frontend_dev_contracts/code_architecture/00_CODE_ARCHITECTURE_INDEX.md",
+      "target": "frontend_dev_contracts/code_architecture/governance/00_CODE_GOVERNANCE_INDEX.md",
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "Governance contracts define copy/reuse and export discipline."
+    },
+    {
+      "source": "frontend_dev_contracts/code_architecture/governance/00_CODE_GOVERNANCE_INDEX.md",
+      "target": "frontend_dev_contracts/code_architecture/00_CODE_ARCHITECTURE_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "This routing index belongs to the code-architecture branch."
+    },
+    {
+      "source": "frontend_dev_contracts/code_architecture/governance/00_CODE_GOVERNANCE_INDEX.md",
+      "target": "frontend_dev_contracts/code_architecture/governance/10_COPY_PASTE_REUSE_GUIDE.md",
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "Copy-vs-reuse policy is the current governance contract."
+    },
+    {
+      "source": "frontend_dev_contracts/code_architecture/governance/10_COPY_PASTE_REUSE_GUIDE.md",
+      "target": "frontend_dev_contracts/code_architecture/governance/00_CODE_GOVERNANCE_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "The copy-vs-reuse policy belongs to the governance branch."
+    },
+    {
+      "source": "frontend_dev_contracts/code_architecture/governance/10_COPY_PASTE_REUSE_GUIDE.md",
+      "target": "frontend_dev_contracts/component_system/packaging/30_COMPONENT_REUSE_GUIDE.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "The packaging branch explains reuse at the component-composition level."
+    },
+    {
+      "source": "frontend_dev_contracts/code_architecture/packages/00_PACKAGE_TEMPLATE_INDEX.md",
+      "target": "frontend_dev_contracts/code_architecture/00_CODE_ARCHITECTURE_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "This routing index belongs to the code-architecture branch."
+    },
+    {
+      "source": "frontend_dev_contracts/code_architecture/packages/00_PACKAGE_TEMPLATE_INDEX.md",
+      "target": "frontend_dev_contracts/code_architecture/packages/10_COMPONENT_FOLDER_TEMPLATE.md",
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "The component folder template is the primary package template contract."
+    },
+    {
+      "source": "frontend_dev_contracts/code_architecture/packages/00_PACKAGE_TEMPLATE_INDEX.md",
+      "target": "frontend_dev_contracts/code_architecture/packages/20_STYLE_ASSET_PLACEMENT.md",
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "Style asset placement defines how global and local styles coexist."
+    },
+    {
+      "source": "frontend_dev_contracts/code_architecture/packages/00_PACKAGE_TEMPLATE_INDEX.md",
+      "target": "frontend_dev_contracts/code_architecture/packages/30_COMPONENT_EXPORT_GUIDE.md",
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "Export rules define the package entry discipline."
+    },
+    {
+      "source": "frontend_dev_contracts/code_architecture/packages/00_PACKAGE_TEMPLATE_INDEX.md",
+      "target": "frontend_dev_contracts/code_architecture/packages/40_COMPONENT_REGISTRY_GUIDE.md",
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "Registry rules define the package-to-registry synchronization contract."
+    },
+    {
+      "source": "frontend_dev_contracts/code_architecture/packages/10_COMPONENT_FOLDER_TEMPLATE.md",
+      "target": "frontend_dev_contracts/code_architecture/packages/00_PACKAGE_TEMPLATE_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "The folder template belongs to the package template branch."
+    },
+    {
+      "source": "frontend_dev_contracts/code_architecture/packages/10_COMPONENT_FOLDER_TEMPLATE.md",
+      "target": "frontend_dev_contracts/component_system/packaging/10_COMPONENT_PACKAGE_SHAPE.md",
+      "relation": "implements",
+      "direction": "upstream",
+      "reason": "This template is the concrete implementation of the package-shape contract."
+    },
+    {
+      "source": "frontend_dev_contracts/code_architecture/packages/20_STYLE_ASSET_PLACEMENT.md",
+      "target": "frontend_dev_contracts/code_architecture/packages/00_PACKAGE_TEMPLATE_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "Style asset placement belongs to the package template branch."
+    },
+    {
+      "source": "frontend_dev_contracts/code_architecture/packages/20_STYLE_ASSET_PLACEMENT.md",
+      "target": "frontend_dev_contracts/design_system/foundations/20_SEMANTIC_STYLE_MAPPING.md",
+      "relation": "depends_on",
+      "direction": "upstream",
+      "reason": "Style placement follows the semantic style mapping."
+    },
+    {
+      "source": "frontend_dev_contracts/code_architecture/packages/30_COMPONENT_EXPORT_GUIDE.md",
+      "target": "frontend_dev_contracts/code_architecture/packages/00_PACKAGE_TEMPLATE_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "Export rules belong to the package template branch."
+    },
+    {
+      "source": "frontend_dev_contracts/code_architecture/packages/30_COMPONENT_EXPORT_GUIDE.md",
+      "target": "frontend_dev_contracts/rules/UI_PACKAGE_SHAPE_LINT_WORKFLOW.md",
+      "relation": "enforced_by",
+      "direction": "downstream",
+      "reason": "Package export rules are enforced by the package-shape lint workflow."
+    },
+    {
+      "source": "frontend_dev_contracts/code_architecture/packages/40_COMPONENT_REGISTRY_GUIDE.md",
+      "target": "frontend_dev_contracts/code_architecture/packages/00_PACKAGE_TEMPLATE_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "Registry rules belong to the package template branch."
+    },
+    {
+      "source": "frontend_dev_contracts/code_architecture/packages/40_COMPONENT_REGISTRY_GUIDE.md",
+      "target": "frontend_dev_contracts/rules/UI_PACKAGE_SHAPE_LINT_WORKFLOW.md",
+      "relation": "enforced_by",
+      "direction": "downstream",
+      "reason": "Package registry rules are enforced by the package-shape lint workflow."
+    },
+    {
+      "source": "frontend_dev_contracts/code_architecture/topology/00_TOPOLOGY_INDEX.md",
+      "target": "frontend_dev_contracts/code_architecture/00_CODE_ARCHITECTURE_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "This routing index belongs to the code-architecture branch."
+    },
+    {
+      "source": "frontend_dev_contracts/code_architecture/topology/00_TOPOLOGY_INDEX.md",
+      "target": "frontend_dev_contracts/code_architecture/topology/10_FRONTEND_FOLDER_TOPOLOGY.md",
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "Folder topology is the first architecture contract."
+    },
+    {
+      "source": "frontend_dev_contracts/code_architecture/topology/00_TOPOLOGY_INDEX.md",
+      "target": "frontend_dev_contracts/code_architecture/topology/20_DEPENDENCY_DIRECTION_GUIDE.md",
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "Dependency direction prevents architecture drift."
+    },
+    {
+      "source": "frontend_dev_contracts/code_architecture/topology/10_FRONTEND_FOLDER_TOPOLOGY.md",
+      "target": "frontend_dev_contracts/code_architecture/topology/00_TOPOLOGY_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "Folder topology belongs to the topology branch."
+    },
+    {
+      "source": "frontend_dev_contracts/code_architecture/topology/10_FRONTEND_FOLDER_TOPOLOGY.md",
+      "target": "frontend_dev_contracts/positioning/UI_FILE_ORGANIZATION.md",
+      "relation": "refines",
+      "direction": "cross",
+      "reason": "This document refines the coarse file-organization contract."
+    },
+    {
+      "source": "frontend_dev_contracts/code_architecture/topology/20_DEPENDENCY_DIRECTION_GUIDE.md",
+      "target": "frontend_dev_contracts/code_architecture/topology/00_TOPOLOGY_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "Dependency direction belongs to the topology branch."
+    },
+    {
+      "source": "frontend_dev_contracts/code_architecture/topology/20_DEPENDENCY_DIRECTION_GUIDE.md",
+      "target": "frontend_dev_contracts/containers/state/10_CONTAINER_STATE_OWNERSHIP.md",
+      "relation": "supports",
+      "direction": "cross",
+      "reason": "State ownership boundaries rely on clean dependency direction."
+    },
+    {
+      "source": "frontend_dev_contracts/component_system/00_COMPONENT_SYSTEM_INDEX.md",
+      "target": "frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "The component-system branch is one route under the frontend development contract tree."
+    },
+    {
+      "source": "frontend_dev_contracts/component_system/00_COMPONENT_SYSTEM_INDEX.md",
+      "target": "frontend_dev_contracts/component_system/model/00_COMPONENT_MODEL_INDEX.md",
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "Component model contracts define roles and API/variant rules."
+    },
+    {
+      "source": "frontend_dev_contracts/component_system/00_COMPONENT_SYSTEM_INDEX.md",
+      "target": "frontend_dev_contracts/component_system/packaging/00_COMPONENT_PACKAGING_INDEX.md",
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "Packaging contracts define the reusable component folder shape."
+    },
+    {
+      "source": "frontend_dev_contracts/component_system/00_COMPONENT_SYSTEM_INDEX.md",
+      "target": "frontend_dev_contracts/component_system/governance/00_COMPONENT_GOVERNANCE_INDEX.md",
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "Governance contracts define style isolation, testing, and accessibility surfaces."
+    },
+    {
+      "source": "frontend_dev_contracts/component_system/governance/00_COMPONENT_GOVERNANCE_INDEX.md",
+      "target": "frontend_dev_contracts/component_system/00_COMPONENT_SYSTEM_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "This routing index belongs to the component-system branch."
+    },
+    {
+      "source": "frontend_dev_contracts/component_system/governance/00_COMPONENT_GOVERNANCE_INDEX.md",
+      "target": "frontend_dev_contracts/component_system/governance/10_COMPONENT_STYLE_ISOLATION.md",
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "Style isolation is the first governance contract."
+    },
+    {
+      "source": "frontend_dev_contracts/component_system/governance/00_COMPONENT_GOVERNANCE_INDEX.md",
+      "target": "frontend_dev_contracts/component_system/governance/20_COMPONENT_TEST_SURFACE.md",
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "Testing surfaces stabilize component quality."
+    },
+    {
+      "source": "frontend_dev_contracts/component_system/governance/00_COMPONENT_GOVERNANCE_INDEX.md",
+      "target": "frontend_dev_contracts/component_system/governance/30_COMPONENT_ACCESSIBILITY_SURFACE.md",
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "Accessibility surfaces define the non-visual usability contract."
+    },
+    {
+      "source": "frontend_dev_contracts/component_system/governance/10_COMPONENT_STYLE_ISOLATION.md",
+      "target": "frontend_dev_contracts/component_system/governance/00_COMPONENT_GOVERNANCE_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "Style isolation belongs to the component governance branch."
+    },
+    {
+      "source": "frontend_dev_contracts/component_system/governance/10_COMPONENT_STYLE_ISOLATION.md",
+      "target": "frontend_dev_contracts/design_system/foundations/10_DESIGN_TOKEN_MODEL.md",
+      "relation": "depends_on",
+      "direction": "upstream",
+      "reason": "Style isolation relies on the shared token model."
+    },
+    {
+      "source": "frontend_dev_contracts/component_system/governance/20_COMPONENT_TEST_SURFACE.md",
+      "target": "frontend_dev_contracts/component_system/governance/00_COMPONENT_GOVERNANCE_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "Testing rules belong to the component governance branch."
+    },
+    {
+      "source": "frontend_dev_contracts/component_system/governance/30_COMPONENT_ACCESSIBILITY_SURFACE.md",
+      "target": "frontend_dev_contracts/component_system/governance/00_COMPONENT_GOVERNANCE_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "Accessibility rules belong to the component governance branch."
+    },
+    {
+      "source": "frontend_dev_contracts/component_system/governance/30_COMPONENT_ACCESSIBILITY_SURFACE.md",
+      "target": "frontend_dev_contracts/layers/30_LOCATOR_AND_IDENTIFIER_PROTOCOL.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "Locator ids complement but do not replace accessibility surfaces."
+    },
+    {
+      "source": "frontend_dev_contracts/component_system/model/00_COMPONENT_MODEL_INDEX.md",
+      "target": "frontend_dev_contracts/component_system/00_COMPONENT_SYSTEM_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "This routing index belongs to the component-system branch."
+    },
+    {
+      "source": "frontend_dev_contracts/component_system/model/00_COMPONENT_MODEL_INDEX.md",
+      "target": "frontend_dev_contracts/component_system/model/10_COMPONENT_ROLE_TAXONOMY.md",
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "Role taxonomy is the first component-model contract."
+    },
+    {
+      "source": "frontend_dev_contracts/component_system/model/00_COMPONENT_MODEL_INDEX.md",
+      "target": "frontend_dev_contracts/component_system/model/20_COMPONENT_API_GUIDE.md",
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "API contracts define the black-box input/output surface."
+    },
+    {
+      "source": "frontend_dev_contracts/component_system/model/00_COMPONENT_MODEL_INDEX.md",
+      "target": "frontend_dev_contracts/component_system/model/30_COMPONENT_VARIANT_GUIDE.md",
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "Variant contracts define stable component state surfaces."
+    },
+    {
+      "source": "frontend_dev_contracts/component_system/model/10_COMPONENT_ROLE_TAXONOMY.md",
+      "target": "frontend_dev_contracts/component_system/model/00_COMPONENT_MODEL_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "Role taxonomy belongs to the component model branch."
+    },
+    {
+      "source": "frontend_dev_contracts/component_system/model/10_COMPONENT_ROLE_TAXONOMY.md",
+      "target": "frontend_dev_contracts/containers/model/10_CONTAINER_ROLE_TAXONOMY.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "Component roles must not overlap or erase container roles."
+    },
+    {
+      "source": "frontend_dev_contracts/component_system/model/20_COMPONENT_API_GUIDE.md",
+      "target": "frontend_dev_contracts/component_system/model/00_COMPONENT_MODEL_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "API contracts belong to the component model branch."
+    },
+    {
+      "source": "frontend_dev_contracts/component_system/model/20_COMPONENT_API_GUIDE.md",
+      "target": "frontend_dev_contracts/component_system/packaging/10_COMPONENT_PACKAGE_SHAPE.md",
+      "relation": "supports",
+      "direction": "cross",
+      "reason": "Package shape must expose stable APIs and contracts."
+    },
+    {
+      "source": "frontend_dev_contracts/component_system/model/30_COMPONENT_VARIANT_GUIDE.md",
+      "target": "frontend_dev_contracts/component_system/model/00_COMPONENT_MODEL_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "Variant contracts belong to the component model branch."
+    },
+    {
+      "source": "frontend_dev_contracts/component_system/model/30_COMPONENT_VARIANT_GUIDE.md",
+      "target": "frontend_dev_contracts/component_system/model/20_COMPONENT_API_GUIDE.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "Stable variant surfaces must be defined after the API surface is clear."
+    },
+    {
+      "source": "frontend_dev_contracts/component_system/packaging/00_COMPONENT_PACKAGING_INDEX.md",
+      "target": "frontend_dev_contracts/component_system/00_COMPONENT_SYSTEM_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "This routing index belongs to the component-system branch."
+    },
+    {
+      "source": "frontend_dev_contracts/component_system/packaging/00_COMPONENT_PACKAGING_INDEX.md",
+      "target": "frontend_dev_contracts/component_system/packaging/10_COMPONENT_PACKAGE_SHAPE.md",
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "Package shape is the primary packaging rule."
+    },
+    {
+      "source": "frontend_dev_contracts/component_system/packaging/00_COMPONENT_PACKAGING_INDEX.md",
+      "target": "frontend_dev_contracts/component_system/packaging/20_COMPONENT_COMPOSITION_GUIDE.md",
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "Composition rules control how packages can be assembled."
+    },
+    {
+      "source": "frontend_dev_contracts/component_system/packaging/00_COMPONENT_PACKAGING_INDEX.md",
+      "target": "frontend_dev_contracts/component_system/packaging/30_COMPONENT_REUSE_GUIDE.md",
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "Reuse policy defines when packages should be reused or copied."
+    },
+    {
+      "source": "frontend_dev_contracts/component_system/packaging/10_COMPONENT_PACKAGE_SHAPE.md",
+      "target": "frontend_dev_contracts/component_system/packaging/00_COMPONENT_PACKAGING_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "Package shape belongs to the packaging branch."
+    },
+    {
+      "source": "frontend_dev_contracts/component_system/packaging/10_COMPONENT_PACKAGE_SHAPE.md",
+      "target": "frontend_dev_contracts/code_architecture/packages/10_COMPONENT_FOLDER_TEMPLATE.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "The architecture branch provides the concrete file-template mapping."
+    },
+    {
+      "source": "frontend_dev_contracts/component_system/packaging/10_COMPONENT_PACKAGE_SHAPE.md",
+      "target": "frontend_dev_contracts/rules/UI_PACKAGE_SHAPE_LINT_WORKFLOW.md",
+      "relation": "enforced_by",
+      "direction": "downstream",
+      "reason": "Package shape is enforced through the package lint workflow."
+    },
+    {
+      "source": "frontend_dev_contracts/component_system/packaging/20_COMPONENT_COMPOSITION_GUIDE.md",
+      "target": "frontend_dev_contracts/component_system/packaging/00_COMPONENT_PACKAGING_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "Composition rules belong to the packaging branch."
+    },
+    {
+      "source": "frontend_dev_contracts/component_system/packaging/30_COMPONENT_REUSE_GUIDE.md",
+      "target": "frontend_dev_contracts/component_system/packaging/00_COMPONENT_PACKAGING_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "Reuse policy belongs to the packaging branch."
+    },
+    {
+      "source": "frontend_dev_contracts/component_system/packaging/30_COMPONENT_REUSE_GUIDE.md",
+      "target": "frontend_dev_contracts/code_architecture/governance/10_COPY_PASTE_REUSE_GUIDE.md",
+      "relation": "supports",
+      "direction": "cross",
+      "reason": "The governance branch explains when copy/paste is acceptable."
     },
     {
       "source": "frontend_dev_contracts/containers/00_CONTAINERS_INDEX.md",
@@ -875,6 +1629,181 @@
       "reason": "Normalized payload is the input boundary for container interaction."
     },
     {
+      "source": "frontend_dev_contracts/design_system/00_DESIGN_SYSTEM_INDEX.md",
+      "target": "frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "The design-system branch is one route under the frontend development contract tree."
+    },
+    {
+      "source": "frontend_dev_contracts/design_system/00_DESIGN_SYSTEM_INDEX.md",
+      "target": "frontend_dev_contracts/design_system/foundations/00_FOUNDATIONS_INDEX.md",
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "Foundations define tokens and semantic style mapping."
+    },
+    {
+      "source": "frontend_dev_contracts/design_system/00_DESIGN_SYSTEM_INDEX.md",
+      "target": "frontend_dev_contracts/design_system/brand/00_BRAND_INDEX.md",
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "Brand contracts define theme, typography, iconography, and visual tone."
+    },
+    {
+      "source": "frontend_dev_contracts/design_system/00_DESIGN_SYSTEM_INDEX.md",
+      "target": "frontend_dev_contracts/component_system/00_COMPONENT_SYSTEM_INDEX.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "Component-system contracts consume the design-system tokens and semantic styles."
+    },
+    {
+      "source": "frontend_dev_contracts/design_system/brand/00_BRAND_INDEX.md",
+      "target": "frontend_dev_contracts/design_system/00_DESIGN_SYSTEM_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "This routing index belongs to the design-system branch."
+    },
+    {
+      "source": "frontend_dev_contracts/design_system/brand/00_BRAND_INDEX.md",
+      "target": "frontend_dev_contracts/design_system/brand/10_THEME_GUIDE.md",
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "Theme rules define the baseline showroom visual environment."
+    },
+    {
+      "source": "frontend_dev_contracts/design_system/brand/00_BRAND_INDEX.md",
+      "target": "frontend_dev_contracts/design_system/brand/20_BRAND_DIRECTION_GUIDE.md",
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "Brand-direction rules define the visual tone and accent posture."
+    },
+    {
+      "source": "frontend_dev_contracts/design_system/brand/00_BRAND_INDEX.md",
+      "target": "frontend_dev_contracts/design_system/brand/30_TYPOGRAPHY_GUIDE.md",
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "Typography rules stabilize readable hierarchy."
+    },
+    {
+      "source": "frontend_dev_contracts/design_system/brand/00_BRAND_INDEX.md",
+      "target": "frontend_dev_contracts/design_system/brand/40_ICONOGRAPHY_GUIDE.md",
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "Iconography rules define optional visual symbols without weakening clarity."
+    },
+    {
+      "source": "frontend_dev_contracts/design_system/brand/10_THEME_GUIDE.md",
+      "target": "frontend_dev_contracts/design_system/brand/00_BRAND_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "Theme rules belong to the brand branch."
+    },
+    {
+      "source": "frontend_dev_contracts/design_system/brand/20_BRAND_DIRECTION_GUIDE.md",
+      "target": "frontend_dev_contracts/design_system/brand/00_BRAND_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "Brand-direction rules belong to the brand branch."
+    },
+    {
+      "source": "frontend_dev_contracts/design_system/brand/20_BRAND_DIRECTION_GUIDE.md",
+      "target": "frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md",
+      "relation": "supports",
+      "direction": "cross",
+      "reason": "The runnable showroom should expose a stable visual language that can be reused as a front-end seed."
+    },
+    {
+      "source": "frontend_dev_contracts/design_system/brand/30_TYPOGRAPHY_GUIDE.md",
+      "target": "frontend_dev_contracts/design_system/brand/00_BRAND_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "Typography rules belong to the brand branch."
+    },
+    {
+      "source": "frontend_dev_contracts/design_system/brand/30_TYPOGRAPHY_GUIDE.md",
+      "target": "frontend_dev_contracts/component_system/governance/30_COMPONENT_ACCESSIBILITY_SURFACE.md",
+      "relation": "supports",
+      "direction": "cross",
+      "reason": "Readable type hierarchy is part of accessibility-surface governance."
+    },
+    {
+      "source": "frontend_dev_contracts/design_system/brand/40_ICONOGRAPHY_GUIDE.md",
+      "target": "frontend_dev_contracts/design_system/brand/00_BRAND_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "Iconography rules belong to the brand branch."
+    },
+    {
+      "source": "frontend_dev_contracts/design_system/brand/40_ICONOGRAPHY_GUIDE.md",
+      "target": "frontend_dev_contracts/component_system/governance/30_COMPONENT_ACCESSIBILITY_SURFACE.md",
+      "relation": "supports",
+      "direction": "cross",
+      "reason": "Optional icons must not weaken accessibility or textual clarity."
+    },
+    {
+      "source": "frontend_dev_contracts/design_system/foundations/00_FOUNDATIONS_INDEX.md",
+      "target": "frontend_dev_contracts/design_system/00_DESIGN_SYSTEM_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "This routing index belongs to the design-system branch."
+    },
+    {
+      "source": "frontend_dev_contracts/design_system/foundations/00_FOUNDATIONS_INDEX.md",
+      "target": "frontend_dev_contracts/design_system/foundations/10_DESIGN_TOKEN_MODEL.md",
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "The token model is the primary foundation document."
+    },
+    {
+      "source": "frontend_dev_contracts/design_system/foundations/00_FOUNDATIONS_INDEX.md",
+      "target": "frontend_dev_contracts/design_system/foundations/20_SEMANTIC_STYLE_MAPPING.md",
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "Semantic style mapping translates raw tokens into reusable UI surfaces."
+    },
+    {
+      "source": "frontend_dev_contracts/design_system/foundations/10_DESIGN_TOKEN_MODEL.md",
+      "target": "frontend_dev_contracts/design_system/foundations/00_FOUNDATIONS_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "The token model belongs to the foundations branch."
+    },
+    {
+      "source": "frontend_dev_contracts/design_system/foundations/10_DESIGN_TOKEN_MODEL.md",
+      "target": "frontend_dev_contracts/design_system/foundations/20_SEMANTIC_STYLE_MAPPING.md",
+      "relation": "precedes",
+      "direction": "downstream",
+      "reason": "Semantic style mapping depends on the token catalog."
+    },
+    {
+      "source": "frontend_dev_contracts/design_system/foundations/10_DESIGN_TOKEN_MODEL.md",
+      "target": "frontend_dev_contracts/component_system/governance/10_COMPONENT_STYLE_ISOLATION.md",
+      "relation": "supports",
+      "direction": "cross",
+      "reason": "Component style isolation consumes the token model instead of hard-coded values."
+    },
+    {
+      "source": "frontend_dev_contracts/design_system/foundations/20_SEMANTIC_STYLE_MAPPING.md",
+      "target": "frontend_dev_contracts/design_system/foundations/00_FOUNDATIONS_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "Semantic style mapping belongs to the foundations branch."
+    },
+    {
+      "source": "frontend_dev_contracts/design_system/foundations/20_SEMANTIC_STYLE_MAPPING.md",
+      "target": "frontend_dev_contracts/design_system/foundations/10_DESIGN_TOKEN_MODEL.md",
+      "relation": "depends_on",
+      "direction": "upstream",
+      "reason": "Semantic styles are derived from the token model."
+    },
+    {
+      "source": "frontend_dev_contracts/design_system/foundations/20_SEMANTIC_STYLE_MAPPING.md",
+      "target": "frontend_dev_contracts/code_architecture/packages/20_STYLE_ASSET_PLACEMENT.md",
+      "relation": "supports",
+      "direction": "cross",
+      "reason": "Style asset placement must separate global semantic styles from local package tokens."
+    },
+    {
       "source": "frontend_dev_contracts/layers/00_LAYERS_INDEX.md",
       "target": "frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md",
       "relation": "belongs_to",
@@ -1002,6 +1931,13 @@
     },
     {
       "source": "frontend_dev_contracts/positioning/UI_FILE_ORGANIZATION.md",
+      "target": "frontend_dev_contracts/code_architecture/00_CODE_ARCHITECTURE_INDEX.md",
+      "relation": "refined_by",
+      "direction": "downstream",
+      "reason": "The code-architecture branch refines this coarse file boundary into an executable frontend topology."
+    },
+    {
+      "source": "frontend_dev_contracts/positioning/UI_FILE_ORGANIZATION.md",
       "target": "ui-dev/UI_DEV_ENTRY.md",
       "relation": "supports",
       "direction": "upstream",
@@ -1048,6 +1984,13 @@
       "relation": "indexes",
       "direction": "downstream",
       "reason": "Identifier lint is the enforcement rule for layer and node naming."
+    },
+    {
+      "source": "frontend_dev_contracts/rules/00_RULES_INDEX.md",
+      "target": "frontend_dev_contracts/rules/UI_PACKAGE_SHAPE_LINT_WORKFLOW.md",
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "Package-shape lint enforces the reusable component folder contract."
     },
     {
       "source": "frontend_dev_contracts/rules/UI_IDENTIFIER_LINT_WORKFLOW.md",
@@ -1097,6 +2040,34 @@
       "relation": "belongs_to",
       "direction": "upstream",
       "reason": "The rule branch is part of the frontend development contract set."
+    },
+    {
+      "source": "frontend_dev_contracts/rules/UI_PACKAGE_SHAPE_LINT_WORKFLOW.md",
+      "target": "frontend_dev_contracts/rules/00_RULES_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "This lint workflow belongs to the frontend rules branch."
+    },
+    {
+      "source": "frontend_dev_contracts/rules/UI_PACKAGE_SHAPE_LINT_WORKFLOW.md",
+      "target": "frontend_dev_contracts/component_system/packaging/10_COMPONENT_PACKAGE_SHAPE.md",
+      "relation": "implements",
+      "direction": "upstream",
+      "reason": "The lint workflow enforces the reusable component package-shape contract."
+    },
+    {
+      "source": "frontend_dev_contracts/rules/UI_PACKAGE_SHAPE_LINT_WORKFLOW.md",
+      "target": "frontend_dev_contracts/code_architecture/packages/30_COMPONENT_EXPORT_GUIDE.md",
+      "relation": "implements",
+      "direction": "upstream",
+      "reason": "The lint workflow also checks export discipline."
+    },
+    {
+      "source": "frontend_dev_contracts/rules/UI_PACKAGE_SHAPE_LINT_WORKFLOW.md",
+      "target": "frontend_dev_contracts/code_architecture/packages/40_COMPONENT_REGISTRY_GUIDE.md",
+      "relation": "implements",
+      "direction": "upstream",
+      "reason": "The lint workflow also checks registry discipline."
     },
     {
       "source": "frontend_dev_contracts/showroom_runtime/00_SHOWROOM_RUNTIME_INDEX.md",
@@ -1282,6 +2253,20 @@
     },
     {
       "source": "references/stages/30_STAGE_MOTION_COMPONENT_ARCHITECTURE.md",
+      "target": "frontend_dev_contracts/component_system/00_COMPONENT_SYSTEM_INDEX.md",
+      "relation": "details",
+      "direction": "downstream",
+      "reason": "The component-system branch defines reusable black-box component packages and API rules."
+    },
+    {
+      "source": "references/stages/30_STAGE_MOTION_COMPONENT_ARCHITECTURE.md",
+      "target": "frontend_dev_contracts/code_architecture/00_CODE_ARCHITECTURE_INDEX.md",
+      "relation": "details",
+      "direction": "downstream",
+      "reason": "The code-architecture branch defines folder topology, style placement, and export discipline."
+    },
+    {
+      "source": "references/stages/30_STAGE_MOTION_COMPONENT_ARCHITECTURE.md",
       "target": "references/tooling/development/modules/mod_stage_contract_runtime.md",
       "relation": "explained_by",
       "direction": "downstream",
@@ -1307,6 +2292,13 @@
       "relation": "details",
       "direction": "downstream",
       "reason": "The payload normalization contract defines the runtime bridge input boundary for the showroom."
+    },
+    {
+      "source": "references/stages/40_STAGE_SHOWROOM_RUNTIME.md",
+      "target": "frontend_dev_contracts/rules/UI_PACKAGE_SHAPE_LINT_WORKFLOW.md",
+      "relation": "details",
+      "direction": "downstream",
+      "reason": "The runtime stage also enforces component package shape and export discipline."
     },
     {
       "source": "references/stages/40_STAGE_SHOWROOM_RUNTIME.md",
@@ -1436,6 +2428,27 @@
     },
     {
       "source": "ui-dev/UI_DEV_ENTRY.md",
+      "target": "frontend_dev_contracts/design_system/00_DESIGN_SYSTEM_INDEX.md",
+      "relation": "implements",
+      "direction": "downstream",
+      "reason": "The runnable showroom must realize the design-system contracts through shared tokens and semantic styles."
+    },
+    {
+      "source": "ui-dev/UI_DEV_ENTRY.md",
+      "target": "frontend_dev_contracts/component_system/00_COMPONENT_SYSTEM_INDEX.md",
+      "relation": "implements",
+      "direction": "downstream",
+      "reason": "The runnable showroom must realize the reusable component package contracts."
+    },
+    {
+      "source": "ui-dev/UI_DEV_ENTRY.md",
+      "target": "frontend_dev_contracts/code_architecture/00_CODE_ARCHITECTURE_INDEX.md",
+      "relation": "implements",
+      "direction": "downstream",
+      "reason": "The runnable showroom must realize the folder topology, style placement, and export rules."
+    },
+    {
+      "source": "ui-dev/UI_DEV_ENTRY.md",
       "target": "frontend_dev_contracts/layers/00_LAYERS_INDEX.md",
       "relation": "implements",
       "direction": "downstream",
@@ -1443,5 +2456,5 @@
     }
   ],
   "warnings": [],
-  "updated_at": "2026-03-11T23:41:52.869Z"
+  "updated_at": "2026-03-12T00:31:50.719Z"
 }

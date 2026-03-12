@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import LocatorNodeFrame from '../components/LocatorNodeFrame.vue'
+import LocatorNodeFrame from '../components/LocatorNodeFrame'
 import { UI_CONTAINERS } from '../contracts/ui-identity-registry'
 import { useUiLocatorNode } from '../composables/useUiLocatorNode'
 import type { PreviewDocumentRecord, PreviewPayload } from '../types'
@@ -49,7 +49,7 @@ watch(() => props.payload, (nextPayload) => {
 
 <template>
   <LocatorNodeFrame :node="workspaceNode">
-    <main class="dashboard-grid">
+    <main class="workspace-grid">
       <DocumentNavigatorContainer
         :docs="filteredDocs"
         :search-keyword="searchKeyword"

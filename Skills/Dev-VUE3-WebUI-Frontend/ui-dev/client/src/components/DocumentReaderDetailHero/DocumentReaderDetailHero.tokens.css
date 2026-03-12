@@ -1,0 +1,19 @@
+.reader-detail-hero {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-5);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.94), rgba(221, 103, 66, 0.08));
+  border: 1px solid var(--color-border-subtle);
+}
+
+.reader-detail-hero h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.reader-detail-hero__topic,
+.reader-detail-hero__path {
+  margin: 0;
+  color: var(--text-meta);
+}

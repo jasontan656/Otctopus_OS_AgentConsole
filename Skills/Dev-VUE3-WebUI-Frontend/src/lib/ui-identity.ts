@@ -5,7 +5,7 @@ import { pathToFileURL } from 'node:url'
 type RegistryModule = typeof import('../../ui-dev/client/src/contracts/ui-identity-registry.js')
 
 interface UiIdentityViolation {
-  scope: 'layer' | 'container' | 'component' | 'file' | 'binding'
+  scope: 'layer' | 'container' | 'component' | 'file' | 'binding' | 'package'
   nodeId?: string
   file?: string
   message: string
@@ -17,6 +17,19 @@ export interface UiIdentityContractPayload {
   components: RegistryModule['UI_COMPONENT_LIST']
 }
 
+export interface UiPackageContractPayload {
+  targetRoot: string
+  components: Array<{
+    id: string
+    role: RegistryModule['UI_COMPONENT_LIST'][number]['role']
+    packageDir: string
+    entryFile: string
+    componentFile: string
+    contractFile: string
+    styleFile: string
+  }>
+}
+
 export interface UiIdentityLintPayload {
   status: 'pass' | 'fail'
   targetRoot: string
@@ -24,6 +37,16 @@ export interface UiIdentityLintPayload {
     layerCount: number
     containerCount: number
     componentCount: number
+    violationCount: number
+  }
+  violations: UiIdentityViolation[]
+}
+
+export interface UiPackageLintPayload {
+  status: 'pass' | 'fail'
+  targetRoot: string
+  summary: {
+    packageCount: number
     violationCount: number
   }
   violations: UiIdentityViolation[]
@@ -72,6 +95,22 @@ export async function loadUiIdentityContract(targetRoot: string): Promise<UiIden
     layers: registry.UI_LAYERS,
     containers: registry.UI_CONTAINER_LIST,
     components: registry.UI_COMPONENT_LIST,
+  }
+}
+
+export async function loadUiPackageContract(targetRoot: string): Promise<UiPackageContractPayload> {
+  const registry = await loadRegistryModule(targetRoot)
+  return {
+    targetRoot,
+    components: registry.UI_COMPONENT_LIST.map((component) => ({
+      id: component.id,
+      role: component.role,
+      packageDir: component.packageDir,
+      entryFile: component.entryFile,
+      componentFile: component.file,
+      contractFile: component.contractFile,
+      styleFile: component.styleFile,
+    })),
   }
 }
 
@@ -154,6 +193,10 @@ export async function lintUiIdentity(targetRoot: string): Promise<UiIdentityLint
       continue
     }
 
+    if (path.dirname(component.file).replaceAll(path.sep, '/') !== component.packageDir) {
+      violations.push({ scope: 'package', nodeId: component.id, file: component.packageDir, message: 'component file must live under its declared packageDir' })
+    }
+
     const content = await fs.readFile(absoluteFile, 'utf8')
     if (!content.includes(`UI_COMPONENTS.${key}.id`)) {
       violations.push({ scope: 'binding', nodeId: component.id, file: component.file, message: 'component file must bind to its own registry entry' })
@@ -189,6 +232,83 @@ export async function lintUiIdentity(targetRoot: string): Promise<UiIdentityLint
       layerCount: registry.UI_LAYERS.length,
       containerCount: registry.UI_CONTAINER_LIST.length,
       componentCount: registry.UI_COMPONENT_LIST.length,
+      violationCount: violations.length,
+    },
+    violations,
+  }
+}
+
+export async function lintUiPackageShape(targetRoot: string): Promise<UiPackageLintPayload> {
+  const registry = await loadRegistryModule(targetRoot)
+  const violations: UiIdentityViolation[] = []
+
+  for (const component of registry.UI_COMPONENT_LIST) {
+    const absolutePackageDir = path.join(targetRoot, component.packageDir)
+    const absoluteEntryFile = path.join(targetRoot, component.entryFile)
+    const absoluteComponentFile = path.join(targetRoot, component.file)
+    const absoluteContractFile = path.join(targetRoot, component.contractFile)
+    const absoluteStyleFile = path.join(targetRoot, component.styleFile)
+
+    if (!await fileExists(absolutePackageDir)) {
+      violations.push({ scope: 'package', nodeId: component.id, file: component.packageDir, message: 'component packageDir does not exist' })
+      continue
+    }
+
+    for (const requiredFile of [
+      component.entryFile,
+      component.file,
+      component.contractFile,
+      component.styleFile,
+    ]) {
+      if (!await fileExists(path.join(targetRoot, requiredFile))) {
+        violations.push({ scope: 'package', nodeId: component.id, file: requiredFile, message: 'required component package file does not exist' })
+      }
+    }
+
+    if (await fileExists(absoluteEntryFile)) {
+      const entryContent = await fs.readFile(absoluteEntryFile, 'utf8')
+      const styleImport = `./${path.basename(component.styleFile)}`
+      const componentExport = `./${path.basename(component.file)}`
+      const contractExport = `./${path.basename(component.contractFile).replace(/\.ts$/, '')}`
+
+      if (!entryContent.includes(styleImport)) {
+        violations.push({ scope: 'package', nodeId: component.id, file: component.entryFile, message: 'index.ts must import the local tokens stylesheet' })
+      }
+      if (!entryContent.includes(componentExport)) {
+        violations.push({ scope: 'package', nodeId: component.id, file: component.entryFile, message: 'index.ts must re-export the local Vue component' })
+      }
+      if (!entryContent.includes(contractExport)) {
+        violations.push({ scope: 'package', nodeId: component.id, file: component.entryFile, message: 'index.ts must re-export the local component contract' })
+      }
+    }
+
+    if (await fileExists(absoluteStyleFile)) {
+      const styleContent = await fs.readFile(absoluteStyleFile, 'utf8')
+      if (/:root/.test(styleContent) || /(^|[\s,{])body(?=\s*[{,:.#[])/m.test(styleContent)) {
+        violations.push({ scope: 'package', nodeId: component.id, file: component.styleFile, message: 'component stylesheet must not redefine global selectors such as :root or body' })
+      }
+    }
+
+    if (await fileExists(absoluteComponentFile)) {
+      const componentContent = await fs.readFile(absoluteComponentFile, 'utf8')
+      if (componentContent.includes('../components/')) {
+        violations.push({ scope: 'package', nodeId: component.id, file: component.file, message: 'component package files should not keep legacy flat-component import paths' })
+      }
+    }
+
+    if (await fileExists(absoluteContractFile)) {
+      const contractContent = await fs.readFile(absoluteContractFile, 'utf8')
+      if (!contractContent.includes('role')) {
+        violations.push({ scope: 'package', nodeId: component.id, file: component.contractFile, message: 'component contract file must declare a role' })
+      }
+    }
+  }
+
+  return {
+    status: violations.length === 0 ? 'pass' : 'fail',
+    targetRoot,
+    summary: {
+      packageCount: registry.UI_COMPONENT_LIST.length,
       violationCount: violations.length,
     },
     violations,

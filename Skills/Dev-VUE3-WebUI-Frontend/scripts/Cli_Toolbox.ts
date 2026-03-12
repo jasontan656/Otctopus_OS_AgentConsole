@@ -9,7 +9,9 @@ import {
 } from '../src/lib/docstructure.js'
 import {
   lintUiIdentity,
+  lintUiPackageShape,
   loadUiIdentityContract,
+  loadUiPackageContract,
 } from '../src/lib/ui-identity.js'
 import {
   RUNTIME_CONTRACT,
@@ -38,6 +40,8 @@ function usage(): never {
     '  npm run cli -- stage-graph-contract --stage <stage> --json',
     '  npm run cli -- ui-identity-contract --json',
     '  npm run cli -- lint-ui-identity --json',
+    '  npm run cli -- ui-package-contract --json',
+    '  npm run cli -- lint-ui-package-shape --json',
     '  npm run cli -- build-anchor-graph --target <skill_root> --json',
     '  npm run cli -- rebuild-self-graph --json',
   ].join('\n'))
@@ -112,6 +116,17 @@ async function main(): Promise<void> {
 
     if (command === 'lint-ui-identity') {
       const payload = await lintUiIdentity(target)
+      printJson(payload)
+      process.exit(payload.status === 'fail' ? 1 : 0)
+    }
+
+    if (command === 'ui-package-contract') {
+      printJson(await loadUiPackageContract(target))
+      return
+    }
+
+    if (command === 'lint-ui-package-shape') {
+      const payload = await lintUiPackageShape(target)
       printJson(payload)
       process.exit(payload.status === 'fail' ? 1 : 0)
     }

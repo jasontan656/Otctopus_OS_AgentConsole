@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import LocatorNodeFrame from '../components/LocatorNodeFrame.vue'
-import RuntimeStatusStatCard from '../components/RuntimeStatusStatCard.vue'
+import LocatorNodeFrame from '../components/LocatorNodeFrame'
+import RuntimeStatusStatCard from '../components/RuntimeStatusStatCard'
 import { UI_CONTAINERS } from '../contracts/ui-identity-registry'
 import type { RuntimeLiveState } from '../contracts/showroom-container-contract'
 import { useUiLocatorNode } from '../composables/useUiLocatorNode'
@@ -18,11 +18,11 @@ const runtimeStatusNode = useUiLocatorNode(UI_CONTAINERS.runtimeStatus.id)
 
 <template>
   <LocatorNodeFrame :node="runtimeStatusNode">
-    <section class="panel runtime-status-panel">
-      <div class="panel-head">
+    <section class="surface-card runtime-status-panel">
+      <div class="surface-card__header">
         <div>
-          <h2>Runtime Status</h2>
-          <p>runtime bridge、payload 健康度与 graph 摘要由 scene 层统一暴露。</p>
+          <h2 class="surface-card__title">Runtime Status</h2>
+          <p class="surface-card__copy">runtime bridge、payload 健康度与 graph 摘要由 scene 层统一暴露。</p>
         </div>
         <span class="timestamp">{{ payload?.updatedAt ?? 'waiting for payload' }}</span>
       </div>

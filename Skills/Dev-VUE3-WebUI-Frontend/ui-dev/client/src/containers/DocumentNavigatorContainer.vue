@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import DocumentNavigatorDocItem from '../components/DocumentNavigatorDocItem.vue'
-import DocumentNavigatorSearchBox from '../components/DocumentNavigatorSearchBox.vue'
-import LocatorNodeFrame from '../components/LocatorNodeFrame.vue'
+import DocumentNavigatorDocItem from '../components/DocumentNavigatorDocItem'
+import DocumentNavigatorSearchBox from '../components/DocumentNavigatorSearchBox'
+import LocatorNodeFrame from '../components/LocatorNodeFrame'
 import { UI_CONTAINERS } from '../contracts/ui-identity-registry'
 import { useUiLocatorNode } from '../composables/useUiLocatorNode'
 import type { PreviewDocumentRecord } from '../types'
@@ -22,11 +22,11 @@ const navigatorNode = useUiLocatorNode(UI_CONTAINERS.documentNavigator.id)
 
 <template>
   <LocatorNodeFrame :node="navigatorNode">
-    <aside class="panel sidebar">
-      <div class="panel-head panel-head-stack">
+    <aside class="surface-card sidebar-panel">
+      <div class="surface-card__header surface-card__header-stack">
         <div>
-          <h2>Document Index</h2>
-          <p>工作区统一持有选择态；导航容器只负责过滤和发出选择意图。</p>
+          <h2 class="surface-card__title">Document Index</h2>
+          <p class="surface-card__copy">工作区统一持有选择态；导航容器只负责过滤和发出选择意图。</p>
         </div>
         <DocumentNavigatorSearchBox
           :model-value="searchKeyword"

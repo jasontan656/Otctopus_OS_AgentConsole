@@ -15,6 +15,14 @@ anchors:
     relation: "details"
     direction: "downstream"
     reason: "The frontend contract stack doc expands the runtime component and layout implications."
+  - target: "../../frontend_dev_contracts/component_system/00_COMPONENT_SYSTEM_INDEX.md"
+    relation: "details"
+    direction: "downstream"
+    reason: "The component-system branch defines reusable black-box component packages and API rules."
+  - target: "../../frontend_dev_contracts/code_architecture/00_CODE_ARCHITECTURE_INDEX.md"
+    relation: "details"
+    direction: "downstream"
+    reason: "The code-architecture branch defines folder topology, style placement, and export discipline."
   - target: "../../references/tooling/development/modules/mod_stage_contract_runtime.md"
     relation: "explained_by"
     direction: "downstream"
@@ -26,6 +34,7 @@ anchors:
 ## 关注点
 - 动效必须服务信息层级，不得抢夺 graph 阅读主线。
 - 页面应逐步沉淀为可复用组件，而不是继续把所有逻辑堆在单文件里。
+- 组件应以 folder-first package 落盘，自带 `.vue/.contract.ts/.tokens.css/index.ts`。
 - 代码组织需要反映：
   - layer catalog
   - app shell 与 route scene
@@ -37,3 +46,4 @@ anchors:
 
 ## 目标
 - 让当前 viewer 进化为前端组件资产和交互准则的展厅。
+- 让 design system、component system、code architecture 三条合同都能直接反向驱动 UI 重构。
