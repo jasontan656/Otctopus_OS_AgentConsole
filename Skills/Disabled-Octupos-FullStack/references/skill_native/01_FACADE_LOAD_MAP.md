@@ -80,12 +80,12 @@
 
 ## Tool Entry
 
-- [Cli_Toolbox 入口](../../scripts/Cli_Toolbox.py)
-- [容器骨架模块](../../scripts/container_scaffold.py)
-- [Mother_Doc 导航模块](../../scripts/mother_doc_navigation.py)
-- [Mother_Doc AGENTS/README 管理模块](../../scripts/mother_doc_agents_manager.py)
-- [阶段合同支持模块](../../scripts/stage_contract_support.py)
-- [OS_graph CLI](../../scripts/os_graph_cli.py)
+- `Cli_Toolbox 入口`: `<repo-root>/Skills/Disabled-Octupos-FullStack/scripts/Cli_Toolbox.py`
+- `容器骨架模块`: `<repo-root>/Skills/Disabled-Octupos-FullStack/scripts/container_scaffold.py`
+- `Mother_Doc 导航模块`: `<repo-root>/Skills/Disabled-Octupos-FullStack/scripts/mother_doc_navigation.py`
+- `Mother_Doc AGENTS/README 管理模块`: `<repo-root>/Skills/Disabled-Octupos-FullStack/scripts/mother_doc_agents_manager.py`
+- `阶段合同支持模块`: `<repo-root>/Skills/Disabled-Octupos-FullStack/scripts/stage_contract_support.py`
+- `OS_graph CLI`: `<repo-root>/Skills/Disabled-Octupos-FullStack/scripts/os_graph_cli.py`
 
 ## Lookup Hints
 
