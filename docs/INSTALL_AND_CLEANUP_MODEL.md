@@ -34,7 +34,7 @@ Octopus OS currently exposes two installation modes, but both of them remain dir
 Mode 1: direct one-line install:
 
 ```bash
-python3 product_tools/octopus_os_agent_console.py install --runtime-target codex-gpt-5.4-high --install-root ~/Octopus_Runtime/codex-home --github-skill-repo git@github.com:YOUR_ACCOUNT/octopus-os-skills.git --github-auth-mode ssh --acknowledge-github-control-risk && HOME=~/Octopus_Runtime/codex-home ~/Octopus_Runtime/codex-home/bin/codex -C ~/Octopus_Runtime/octopus-os-agent-console -m gpt-5.4 -c 'model_reasoning_effort="high"'
+python3 product_tools/octopus_os_agent_console.py install --runtime-target codex-gpt-5.4-high --install-root ~/Octopus_Runtime/codex-home --github-skill-repo git@github.com:YOUR_ACCOUNT/octopus-os-skills.git --github-auth-mode ssh --acknowledge-github-control-risk && HOME=~/Octopus_Runtime/codex-home ~/Octopus_Runtime/codex-home/bin/codex -C ~/Octopus_Runtime/codex-home/console -m gpt-5.4 -c 'model_reasoning_effort="high"'
 ```
 
 Mode 2: bootstrap from an already system-installed Codex CLI:
@@ -43,7 +43,7 @@ Mode 2: bootstrap from an already system-installed Codex CLI:
 2. ask Codex to follow the repository installation instructions and install into a dedicated target path
 3. after installation, switch to the directory-level Codex CLI under the target path and use that runtime
 
-`wizard` may still exist as a guided TUI, but the canonical product artifact remains the same in both modes: a dedicated install root plus a sibling Octopus OS workspace.
+`wizard` may still exist as a guided TUI, but the canonical product artifact remains the same in both modes: a dedicated install root with a fixed internal Octopus OS directory layout.
 
 ## Hard Install Gate
 
@@ -67,23 +67,30 @@ The supported end state is still:
 
 1. a dedicated directory-level Codex install root
 2. a dedicated directory-level Codex skills root under that install root
-3. a sibling Octopus OS workspace mirror
+3. a target-directory `console/` workspace mirror
+4. target-directory runtime roots for skill runtime and skill results
+5. a target-directory `Octopus_OS/` folder
 
 ## Minimum Model
 
-The installer has to manage three targets at the same time:
+The installer has to manage six targets at the same time:
 
 1. a dedicated Codex install root such as `~/Octopus_Runtime/codex-home`
 2. the derived Codex skills directory at `<install-root>/.codex/skills`
-3. a sibling Octopus OS workspace directory such as `~/Octopus_Runtime/octopus-os-agent-console`
+3. a `console/` workspace directory inside the target root, such as `~/Octopus_Runtime/codex-home/console`
+4. a skill runtime directory at `<install-root>/Codex_Skill_Runtime`
+5. a skill result directory at `<install-root>/Codex_Skills_Result`
+6. an Octopus OS directory at `<install-root>/Octopus_OS`
 
 The two targets have different contents by design:
 
 - the dedicated install root receives the latest Codex CLI package
 - `<install-root>/.codex/skills` receives only syncable skill roots and `.system/`
-- the sibling workspace receives the full product mirror, including the repository root `AGENTS.md` and `Skills/AGENTS.md`
+- the target-directory `console/` workspace receives the full product mirror, including the repository root `AGENTS.md` and `Skills/AGENTS.md`
+- `<install-root>/Codex_Skill_Runtime` and `<install-root>/Codex_Skills_Result` are created as governed runtime/result containers
+- `<install-root>/Octopus_OS` is created as part of the installed baseline layout
 - accidental root-level files such as `<install-root>/.codex/skills/AGENTS.md` must be removed instead of preserved
-- the sibling workspace also stores the GitHub repository binding metadata used by Octopus OS
+- the target-directory `console/` workspace also stores the GitHub repository binding metadata used by Octopus OS
 
 ## Required Output Before Install
 
@@ -126,6 +133,7 @@ Current behavior already includes:
 - dedicated Codex CLI installation into the chosen install root
 - clean-root validation before skill sync
 - workspace mirror creation
+- target-directory creation of `Codex_Skill_Runtime`, `Codex_Skills_Result`, and `Octopus_OS`
 - root `AGENTS.md` and `Skills/AGENTS.md` deployment into the workspace mirror
 - GitHub repository binding capture in the workspace runtime area
 - cleanup of forbidden root-level files accidentally present in `<install-root>/.codex/skills`

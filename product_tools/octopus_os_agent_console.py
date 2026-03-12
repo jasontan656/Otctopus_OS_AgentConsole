@@ -26,7 +26,10 @@ SKILLS_DIR_NAME = "Skills"
 WORKSPACE_MARKER = ".octopus_os_workspace_install.json"
 PRODUCT_RUNTIME_DIR = ".product_runtime"
 GITHUB_BINDING_FILE = "github_skill_repo_binding.json"
-DEFAULT_WORKSPACE_DIR_NAME = "octopus-os-agent-console"
+DEFAULT_CONSOLE_DIR_NAME = "console"
+DEFAULT_SKILL_RUNTIME_DIR_NAME = "Codex_Skill_Runtime"
+DEFAULT_SKILL_RESULT_DIR_NAME = "Codex_Skills_Result"
+DEFAULT_OCTOPUS_OS_DIR_NAME = "Octopus_OS"
 CODEX_HOME_DIR_NAME = ".codex"
 CODEX_CLI_PACKAGE = "@openai/codex@latest"
 CODEX_CLI_INSTALL_MODE_ENV = "OCTOPUS_OS_CODEX_INSTALL_MODE"
@@ -79,10 +82,26 @@ def _derive_codex_cli_bin(install_root: Path) -> Path:
     return install_root / "bin" / "codex"
 
 
+def _derive_console_root(install_root: Path) -> Path:
+    return install_root / DEFAULT_CONSOLE_DIR_NAME
+
+
+def _derive_skill_runtime_root(install_root: Path) -> Path:
+    return install_root / DEFAULT_SKILL_RUNTIME_DIR_NAME
+
+
+def _derive_skill_result_root(install_root: Path) -> Path:
+    return install_root / DEFAULT_SKILL_RESULT_DIR_NAME
+
+
+def _derive_octopus_os_root(install_root: Path) -> Path:
+    return install_root / DEFAULT_OCTOPUS_OS_DIR_NAME
+
+
 def _resolve_workspace_root(raw: str | None, install_root: Path) -> Path:
     if raw:
         return Path(raw).expanduser().resolve()
-    return (install_root.parent / DEFAULT_WORKSPACE_DIR_NAME).resolve()
+    return _derive_console_root(install_root).resolve()
 
 
 def _resolve_state_root(raw: str | None) -> Path:
@@ -333,6 +352,31 @@ def _copy_tree(source: Path, destination: Path) -> None:
     shutil.copytree(source, destination)
 
 
+def _ensure_directory(path: Path) -> bool:
+    existed = path.exists()
+    path.mkdir(parents=True, exist_ok=True)
+    return existed
+
+
+def _initialize_product_directories(install_root: Path) -> list[dict[str, object]]:
+    directories = [
+        ("console_root", _derive_console_root(install_root)),
+        ("skill_runtime_root", _derive_skill_runtime_root(install_root)),
+        ("skill_result_root", _derive_skill_result_root(install_root)),
+        ("octopus_os_root", _derive_octopus_os_root(install_root)),
+    ]
+    initialized: list[dict[str, object]] = []
+    for name, path in directories:
+        initialized.append(
+            {
+                "name": name,
+                "path": str(path),
+                "existed_before_install": _ensure_directory(path),
+            }
+        )
+    return initialized
+
+
 def _build_recommended_install_command(
     install_root: Path,
     github_binding: dict[str, object],
@@ -396,7 +440,11 @@ def _build_plan(
         "codex_home": str(_derive_codex_home(install_root)),
         "codex_root": str(codex_root),
         "codex_cli_bin": str(codex_cli_bin),
+        "console_root": str(_derive_console_root(install_root)),
         "workspace_root": str(workspace_root),
+        "skill_runtime_root": str(_derive_skill_runtime_root(install_root)),
+        "skill_result_root": str(_derive_skill_result_root(install_root)),
+        "octopus_os_root": str(_derive_octopus_os_root(install_root)),
         "supported_host_env": SUPPORTED_HOST_ENV_LABEL,
         "supported_runtime_target": SUPPORTED_RUNTIME_TARGET,
         "supported_runtime_label": SUPPORTED_RUNTIME_LABEL,
@@ -517,7 +565,11 @@ def _print_plan_summary(lang: str, plan: dict[str, object]) -> None:
     print(_label(lang, "Install root:", "安装根目录："), plan["install_root"])
     print(_label(lang, "Codex home:", "Codex Home："), plan["codex_home"])
     print(_label(lang, "Codex skills root:", "Codex 技能根目录："), plan["codex_root"])
+    print(_label(lang, "Console root:", "Console 根目录："), plan["console_root"])
     print(_label(lang, "Workspace root:", "工作区根目录："), plan["workspace_root"])
+    print(_label(lang, "Skill runtime root:", "技能运行时根目录："), plan["skill_runtime_root"])
+    print(_label(lang, "Skill result root:", "技能结果根目录："), plan["skill_result_root"])
+    print(_label(lang, "Octopus OS root:", "章鱼 OS 根目录："), plan["octopus_os_root"])
     print(_label(lang, "Codex CLI install command:", "Codex CLI 安装命令："), plan["codex_cli_install_command"])
     print(_label(lang, "Launch command:", "启动命令："), plan["codex_launch_command"])
     print(_label(lang, "Codex root clean state:", "Codex 根目录洁净状态："), cleanliness["state"])
@@ -586,6 +638,7 @@ def install_command(args: argparse.Namespace) -> int:
             "workspace root already exists and is not empty; rerun with --allow-replace-workspace"
         )
 
+    product_directories = _initialize_product_directories(install_root)
     session_id = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
     session_root = state_root / session_id
     backup_root = session_root / "backups"
@@ -637,6 +690,7 @@ def install_command(args: argparse.Namespace) -> int:
         "codex_cli_bin": codex_install["codex_cli_bin"],
         "codex_cli_install": codex_install,
         "workspace_root": str(workspace_root),
+        "product_directories": product_directories,
         "installed_entries": installed_entries,
         "workspace_marker": str(workspace_marker),
         "github_binding_path": str(github_binding_path),
@@ -654,7 +708,11 @@ def install_command(args: argparse.Namespace) -> int:
         "session_id": session_id,
         "install_root": str(install_root),
         "codex_root": str(codex_root),
+        "console_root": str(_derive_console_root(install_root)),
         "workspace_root": str(workspace_root),
+        "skill_runtime_root": str(_derive_skill_runtime_root(install_root)),
+        "skill_result_root": str(_derive_skill_result_root(install_root)),
+        "octopus_os_root": str(_derive_octopus_os_root(install_root)),
         "supported_host_env": SUPPORTED_HOST_ENV_LABEL,
         "supported_runtime_target": runtime_target,
         "codex_cli_bin": codex_install["codex_cli_bin"],
@@ -699,6 +757,20 @@ def uninstall_command(args: argparse.Namespace) -> int:
             shutil.rmtree(workspace_root)
             workspace_removed = True
 
+    removed_product_directories: list[str] = []
+    kept_nonempty_product_directories: list[str] = []
+    for entry in reversed(list(manifest.get("product_directories", []))):
+        if entry.get("existed_before_install"):
+            continue
+        path = Path(str(entry["path"]))
+        if not path.exists():
+            continue
+        try:
+            path.rmdir()
+            removed_product_directories.append(str(path))
+        except OSError:
+            kept_nonempty_product_directories.append(str(path))
+
     payload = {
         "status": "ok",
         "action": "uninstall",
@@ -707,6 +779,8 @@ def uninstall_command(args: argparse.Namespace) -> int:
         "removed_entries": removed_entries,
         "restored_backups": restored_backups,
         "workspace_removed": workspace_removed,
+        "removed_product_directories": removed_product_directories,
+        "kept_nonempty_product_directories": kept_nonempty_product_directories,
     }
     print(json.dumps(payload, ensure_ascii=False, indent=2))
     return 0

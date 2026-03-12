@@ -30,7 +30,7 @@ class TestOctopusOSAgentConsoleTests:
         with tempfile.TemporaryDirectory() as tmp:
             repo_root = Path(tmp) / "repo"
             install_root = Path(tmp) / "codex-home"
-            workspace_root = install_root.parent / "octopus-os-agent-console"
+            workspace_root = install_root / "console"
             skills_root = repo_root / "Skills"
             (skills_root / "Meta-Impact-Investigation").mkdir(parents=True)
             (skills_root / "Meta-Impact-Investigation" / "SKILL.md").write_text("skill\n", encoding="utf-8")
@@ -56,7 +56,11 @@ class TestOctopusOSAgentConsoleTests:
             assert payload["plan"]["install_root"] == str(install_root)
             assert payload["plan"]["codex_home"] == str(install_root / ".codex")
             assert payload["plan"]["codex_root"] == str(install_root / ".codex" / "skills")
+            assert payload["plan"]["console_root"] == str(workspace_root)
             assert payload["plan"]["workspace_root"] == str(workspace_root)
+            assert payload["plan"]["skill_runtime_root"] == str(install_root / "Codex_Skill_Runtime")
+            assert payload["plan"]["skill_result_root"] == str(install_root / "Codex_Skills_Result")
+            assert payload["plan"]["octopus_os_root"] == str(install_root / "Octopus_OS")
             assert [item["name"] for item in payload["plan"]["skills"]] == [
                 ".system",
                 "Meta-Impact-Investigation",
@@ -67,7 +71,7 @@ class TestOctopusOSAgentConsoleTests:
             repo_root = Path(tmp) / "repo"
             install_root = Path(tmp) / "codex-home"
             codex_root = install_root / ".codex" / "skills"
-            workspace_root = install_root.parent / "octopus-os-agent-console"
+            workspace_root = install_root / "console"
             state_root = Path(tmp) / "state"
             skills_root = repo_root / "Skills"
             skill_root = skills_root / "Meta-Impact-Investigation"
@@ -103,9 +107,16 @@ class TestOctopusOSAgentConsoleTests:
             assert (install_root / "bin" / "codex").exists()
             assert (codex_root / "Meta-Impact-Investigation" / "SKILL.md").exists()
             assert not (codex_root / "AGENTS.md").exists()
+            assert (install_root / "Codex_Skill_Runtime").is_dir()
+            assert (install_root / "Codex_Skills_Result").is_dir()
+            assert (install_root / "Octopus_OS").is_dir()
             assert (workspace_root / "AGENTS.md").exists()
             assert (workspace_root / "Skills" / "AGENTS.md").exists()
             assert (workspace_root / ".product_runtime" / "github_skill_repo_binding.json").exists()
+            assert install_payload["console_root"] == str(workspace_root)
+            assert install_payload["skill_runtime_root"] == str(install_root / "Codex_Skill_Runtime")
+            assert install_payload["skill_result_root"] == str(install_root / "Codex_Skills_Result")
+            assert install_payload["octopus_os_root"] == str(install_root / "Octopus_OS")
             assert "HOME=" in install_payload["codex_launch_command"]
 
             uninstall = self.run_cli(
@@ -118,6 +129,9 @@ class TestOctopusOSAgentConsoleTests:
             uninstall_payload = json.loads(uninstall.stdout)
             assert uninstall_payload["status"] == "ok"
             assert not (codex_root / "Meta-Impact-Investigation").exists()
+            assert not (install_root / "Codex_Skill_Runtime").exists()
+            assert not (install_root / "Codex_Skills_Result").exists()
+            assert not (install_root / "Octopus_OS").exists()
             assert not (workspace_root.exists())
 
     def test_wizard_supports_bilingual_non_interactive_install(self) -> None:
@@ -125,7 +139,7 @@ class TestOctopusOSAgentConsoleTests:
             repo_root = Path(tmp) / "repo"
             install_root = Path(tmp) / "codex-home"
             codex_root = install_root / ".codex" / "skills"
-            workspace_root = install_root.parent / "octopus-os-agent-console"
+            workspace_root = install_root / "console"
             state_root = Path(tmp) / "state"
             skills_root = repo_root / "Skills"
             skill_root = skills_root / "Meta-Impact-Investigation"
