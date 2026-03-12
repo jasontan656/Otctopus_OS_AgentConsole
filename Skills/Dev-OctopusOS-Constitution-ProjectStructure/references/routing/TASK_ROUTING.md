@@ -27,8 +27,11 @@ anchors:
 - 先读 `../governance/SKILL_EXECUTION_RULES.md`。
 - 再读 `../project_structure/CAPABILITY_MODULE_HOTPLUG_CONTRACT.md`。
 - 若问题涉及“哪些能力可以作为常驻底座 bundle 一起部署”，再补 `../project_structure/FOUNDATION_CAPABILITY_BUNDLE_BOUNDARY.md`。
+- 若问题涉及“当前阶段技术选型已经定成什么”，再补 `../project_structure/PROJECT_TECHSTACK_BASELINE.md`。
 
 ## 分支三：问目录、容器与部署对象规划
 - 先读 `../governance/SKILL_EXECUTION_RULES.md`。
 - 再读 `../project_structure/FOLDER_CONTAINER_PLANNING_RULES.md`。
+- 再读 `../project_structure/OCTOPUS_OS_TARGET_FOLDER_LAYOUT.md`。
 - 若问题同时涉及对象归属，再补 `../project_structure/DOMAIN_OBJECT_POSITIONING_BOUNDARY.md`。
+- 若问题同时涉及各目录承载的技术对象，再补 `../project_structure/PROJECT_TECHSTACK_BASELINE.md`。

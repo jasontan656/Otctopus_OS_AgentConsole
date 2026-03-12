@@ -35,8 +35,10 @@ metadata:
 5. 若任务在问模块插拔、能力依赖、底座 bundle 或常驻能力边界，再读取：
    - `references/project_structure/CAPABILITY_MODULE_HOTPLUG_CONTRACT.md`
    - `references/project_structure/FOUNDATION_CAPABILITY_BUNDLE_BOUNDARY.md`
+   - `references/project_structure/PROJECT_TECHSTACK_BASELINE.md`
 6. 若任务在问项目目录、容器拆分、部署对象与文件夹规划，再读取：
    - `references/project_structure/FOLDER_CONTAINER_PLANNING_RULES.md`
+   - `references/project_structure/OCTOPUS_OS_TARGET_FOLDER_LAYOUT.md`
 
 ## 3. 分类入口
 - 路由层：
@@ -49,12 +51,15 @@ metadata:
   - `references/project_structure/DOMAIN_OBJECT_POSITIONING_BOUNDARY.md`
   - `references/project_structure/CAPABILITY_MODULE_HOTPLUG_CONTRACT.md`
   - `references/project_structure/FOUNDATION_CAPABILITY_BUNDLE_BOUNDARY.md`
+  - `references/project_structure/PROJECT_TECHSTACK_BASELINE.md`
   - `references/project_structure/FOLDER_CONTAINER_PLANNING_RULES.md`
+  - `references/project_structure/OCTOPUS_OS_TARGET_FOLDER_LAYOUT.md`
 - 工具层：
   - 当前无专属 CLI；`references/tooling/` 只保留“当前无工具”和未来扩展约束。
 
 ## 4. 适用域
 - 适用于：章鱼OS整体架构设计、项目级对象定位、模块热插拔边界、底座能力常驻边界、项目目录/容器规划、未来 lint 门禁的结构性依据。
+- 适用于：固定章鱼OS当前阶段的项目级技术选型，并声明这些技术在系统中的定位与归属。
 - 适用于：判断一个域在章鱼OS中应被视为“完整对象”“底座能力模块”还是“入口/适配层对象”。
 - 不适用于：具体前端实现规范、具体后端域模型设计、具体数据库 schema、具体页面组件架构、具体业务工作流细则。
 - `Meta-Architect-MindModel` 负责更高层的 architect-first 决策镜头；本技能负责把章鱼OS项目结构本身落成稳定的治理合同。

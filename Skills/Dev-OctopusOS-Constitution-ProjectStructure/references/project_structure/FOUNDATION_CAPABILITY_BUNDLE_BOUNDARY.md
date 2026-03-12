@@ -18,17 +18,46 @@ anchors:
 ## 技能本体
 - 章鱼OS允许存在一个“底座能力层”作为常驻 bundle，一起部署、一起运行、一起服务于业务向内容。
 - 这个 bundle 的存在目的是提供所有业务对象必经的底层能力路径，而不是制造新的巨型中枢。
+- 当前底座能力层的固定工程名为 `Foundation_Bundle`，其目录根固定为 `Octopus_OS/Foundation_Bundle/`。
 
 ## 规则说明
-- 底座能力 bundle 可承载的典型子能力包括：
-  - payload normalize / contract reshape
-  - persistence access contract
-  - queue / worker execution path
-  - cache / storage access contract
-  - audit / logging / trace context
+- `Foundation_Bundle` 当前阶段固定包含以下子能力：
+  - `Payload_Runtime`
+    - 作用：统一 request / response / event payload 的规范化、校验、重塑与出口收口。
+  - `Persistence_Runtime`
+    - 作用：统一事务边界、repository adapter、数据库访问合同。
+  - `Event_Task_Runtime`
+    - 作用：统一异步任务投递、worker 执行路径、重试与消费通道。
+  - `Cache_Session_Runtime`
+    - 作用：统一缓存、临时态、会话态和快速读取合同。
+  - `Storage_Access_Runtime`
+    - 作用：统一文件与对象存储的访问合同、元数据桥接与下载上传通道。
+  - `Audit_Observe_Runtime`
+    - 作用：统一日志上下文、trace、审计线索和系统级观测基线。
+- `Foundation_Bundle` 的项目级技术选型固定为：
+  - `Python 3.12`
+  - `FastAPI`
+  - `Pydantic v2`
+  - `SQLAlchemy 2`
+  - `Alembic`
+  - `Celery`
+  - `structlog`
+  - `OpenTelemetry`
+- `Foundation_Bundle` 的外部基础设施依赖固定为：
+  - `PostgreSQL`
+  - `Redis`
+  - `RabbitMQ`
+  - `Object_Storage`
+- 上述四类基础设施是 `Foundation_Bundle` 的依赖对象，不属于 `Foundation_Bundle` 目录本体。
 - 即便当前阶段物理上打成一个 bundle，也必须在逻辑上保留各子能力的边界。
 - 若未来需要拆分，拆分的前提不应是重做语义，而应是把已有能力边界物理外显。
 - 底座能力 bundle 不等于中枢：
   - 中枢负责“控制与编排”
   - 底座 bundle 负责“公共底层能力执行”
 - 若当前项目阶段明确把某些底座能力视为系统级必需，则这些能力可以被定义为常驻且默认一起运行。
+- 当前默认部署裁决为：
+  - `Foundation_Bundle` 是一个逻辑 bundle。
+  - 默认需要同时启动两个运行单元：
+    - `foundation-bundle-api`
+    - `foundation-bundle-worker`
+  - 两个运行单元缺一不可；任一失效都视为 `Foundation_Bundle` 整体失效。

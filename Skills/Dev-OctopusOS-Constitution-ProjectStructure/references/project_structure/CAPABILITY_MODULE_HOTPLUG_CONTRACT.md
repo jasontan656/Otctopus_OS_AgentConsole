@@ -26,6 +26,16 @@ anchors:
   - `health`
   - `degrade_policy`
   - `lifecycle`
+- 每个可插拔对象在项目中的固定根目录应放置一个项目级 manifest 文件，推荐固定名为 `module.yaml`。
+- `module.yaml` 至少声明：
+  - `object_name`
+  - `object_type`
+  - `provides`
+  - `requires`
+  - `deployment_unit`
+  - `healthcheck`
+  - `degrade_policy`
+  - `owner_skill`
 - 中枢应根据模块合同判断：
   - 能否接入
   - 能否启动
@@ -35,3 +45,9 @@ anchors:
 - 模块的“可插拔”优先是逻辑能力上的可插拔，不强制要求第一天就拆成独立容器。
 - 若某模块去掉后只影响部分能力，它应被定义为非核心模块。
 - 若某模块去掉后导致整个系统失效，它要么是中枢，要么是当前阶段被定义成系统级必需 bundle 的能力。
+- 当前阶段的热插拔优先级裁决为：
+  - `Octopus_Hub`：不可拔；拔掉等于系统整体失效。
+  - `Foundation_Bundle`：定义为系统级必需 bundle；停掉等于所有业务链路失效。
+  - `Capability_Modules/*`：默认可拔；拔掉后仅影响所属业务能力。
+  - `Entry_Objects/*`：默认可拔；拔掉后只影响对应入口渠道。
+  - `Infra_Contracts/*`：是否可拔取决于上游依赖，但它们永远不是中枢对象。
