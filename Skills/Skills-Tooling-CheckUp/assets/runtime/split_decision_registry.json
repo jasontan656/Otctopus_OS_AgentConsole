@@ -10,6 +10,15 @@
       "decision": "accepted",
       "note": "This document now holds only the linear remediation flow; examples and gates were split into dedicated topic atoms.",
       "decided_at": "2026-03-12T00:57:01.159Z"
+    },
+    {
+      "doc_path": "references/governance/OBSERVABILITY_AND_OUTPUT_GOVERNANCE.md",
+      "doc_id": "skills_tooling_checkup.governance.observability_and_output_governance",
+      "rule_id": "new_axis_requires_topic_atom",
+      "fingerprint": "b764e4d78fe1b9f5210ba0c07326db80a0d4ca38",
+      "decision": "accepted",
+      "note": "Runtime observability roots, result roots, targeted output defaults, doc declarations, and migration duties were split into a dedicated governance atom instead of being mixed back into the facade or remediation protocol.",
+      "decided_at": "2026-03-12T02:34:00.000Z"
     }
   ]
 }

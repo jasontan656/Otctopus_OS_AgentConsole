@@ -1,4 +1,4 @@
 interface:
   display_name: "Skills Tooling Checkup"
-  short_description: "检查已安装 skills 的 tooling code 是否绕开 repo 必用依赖栈自造轮子，并在必要时推动修正。"
-  default_prompt: "请围绕 Skills-Tooling-CheckUp 的实际目标执行任务；先读取 SKILL.md、TASK_ROUTING、SKILL_EXECUTION_RULES 与 tech stack baseline，再进入目标 skill 的本地合同做语义审查和修正。"
+  short_description: "检查已安装 skills 的 tooling code 是否绕开 repo 必用依赖栈自造轮子，并治理日志落盘、产物落点与迁移责任。"
+  default_prompt: "请围绕 Skills-Tooling-CheckUp 的实际目标执行任务；先读取 SKILL.md、TASK_ROUTING、SKILL_EXECUTION_RULES、OBSERVABILITY_AND_OUTPUT_GOVERNANCE 与 tech stack baseline，再进入目标 skill 的本地合同做语义审查和修正。"

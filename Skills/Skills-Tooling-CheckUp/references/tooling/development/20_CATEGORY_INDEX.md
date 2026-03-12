@@ -18,6 +18,7 @@ anchors:
 ## 分类导航
 - 架构与边界：`00_ARCHITECTURE_OVERVIEW.md`
 - 模块清单：`10_MODULE_CATALOG.yaml`
+- 运行时与产物落点治理：`../../governance/OBSERVABILITY_AND_OUTPUT_GOVERNANCE.md`
 - 依赖基线：`../../governance/MANDATORY_TECHSTACK_BASELINE.md`
 - 修正流程：`../../governance/TOOLING_REMEDIATION_PROTOCOL.md`
 - 变更记录：`90_CHANGELOG.md`

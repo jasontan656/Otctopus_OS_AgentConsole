@@ -22,6 +22,7 @@ anchors:
 ## 必做项
 - 以 `SKILL.md` 入口为 tree root，向下至少补齐一层 routing doc。
 - “依赖基线”和“修正流程”必须维持为两个独立 topic atom，不允许重新糊回门面或 routing。
+- “运行时可观测性 / 产物落点治理”必须维持为独立 topic atom，不允许把路径根约束、文档声明要求和迁移责任零散塞进门面。
 - 所有 markdown 文档都必须补齐 `doc_structure` frontmatter 与 anchors。
 
 ## 双段式约定

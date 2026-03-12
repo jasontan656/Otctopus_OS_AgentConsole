@@ -1,6 +1,6 @@
 ---
 name: "Skills-Tooling-CheckUp"
-description: "治理已安装 skills 内部工具代码是否绕开 repo 既定依赖栈并通过语义审查推动修正的技能。"
+description: "治理已安装 skills 内部工具代码是否绕开 repo 既定依赖栈，并通过语义审查覆盖日志落盘、产物落点与迁移责任的技能。"
 metadata:
   doc_structure:
     doc_id: "Skills-Tooling-CheckUp.entry.facade"
@@ -28,9 +28,10 @@ metadata:
 1. 先读取 `references/routing/TASK_ROUTING.md`。
 2. 再读取 `references/governance/SKILL_DOCSTRUCTURE_POLICY.md`。
 3. 再读取 `references/governance/SKILL_EXECUTION_RULES.md`。
-4. 若任务需要确认 repo 已声明的必用依赖栈，再读取 `references/governance/MANDATORY_TECHSTACK_BASELINE.md`。
-5. 若任务需要真正改写目标 skill 内部 tooling code，再读取 `references/governance/TOOLING_REMEDIATION_PROTOCOL.md`。
-6. 真正进入目标 skill 之前，再按目标 skill 自己的 `SKILL.md -> routing -> execution/tooling docs` 顺序补齐其局部合同。
+4. 若任务涉及技能工具日志、运行时审计信息或产物落点治理，再读取 `references/governance/OBSERVABILITY_AND_OUTPUT_GOVERNANCE.md`。
+5. 若任务需要确认 repo 已声明的必用依赖栈，再读取 `references/governance/MANDATORY_TECHSTACK_BASELINE.md`。
+6. 若任务需要真正改写目标 skill 内部 tooling code，再读取 `references/governance/TOOLING_REMEDIATION_PROTOCOL.md`。
+7. 真正进入目标 skill 之前，再按目标 skill 自己的 `SKILL.md -> routing -> execution/tooling docs` 顺序补齐其局部合同。
 
 ## 3. 分类入口
 - 路由层：
@@ -38,6 +39,7 @@ metadata:
 - 治理层：
   - `references/governance/SKILL_DOCSTRUCTURE_POLICY.md`
   - `references/governance/SKILL_EXECUTION_RULES.md`
+  - `references/governance/OBSERVABILITY_AND_OUTPUT_GOVERNANCE.md`
   - `references/governance/MANDATORY_TECHSTACK_BASELINE.md`
   - `references/governance/TOOLING_REMEDIATION_PROTOCOL.md`
   - `references/governance/COMMON_REDUNDANT_WHEEL_PATTERNS.md`
@@ -49,6 +51,7 @@ metadata:
 ## 4. 适用域
 - 适用于：已安装或已镜像 skill 内部的 Python / TypeScript / Vue tooling code、文档解析代码、schema 校验代码、CLI glue code、lint/test/helper code 的轮子重复实现检查与修正。
 - 适用于：根据 repo 当前 `skills_required_techstacks` 基线，判断某段自实现逻辑是否应该优先替换为现有依赖能力。
+- 适用于：通过代码语义检查目标技能的日志可观测性落盘、默认产物落盘、定向产物落点约束、相关文档声明与历史落盘迁移责任。
 - 不适用于：新增 repo 依赖、发明新的治理工具、替代目标 skill 的 domain 规则源、在证据不足时臆断“所有自写代码都应该被库替换”。
 - 若修正落在 Python 代码，仍要遵守 `Dev-PythonCode-Constitution-Backend`；若修正落在 Vue3 / TypeScript tooling code，仍要遵守目标前端 skill 的既有合同。
 

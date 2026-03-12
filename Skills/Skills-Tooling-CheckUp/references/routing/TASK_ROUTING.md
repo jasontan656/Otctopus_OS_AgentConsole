@@ -21,14 +21,15 @@ anchors:
 ## 分支一：只读检查与问题定位
 - 先读 `../governance/SKILL_DOCSTRUCTURE_POLICY.md`。
 - 再读 `../governance/SKILL_EXECUTION_RULES.md`。
+- 若任务涉及运行时日志、调试痕迹、默认产物或定向产物落点，再读 `../governance/OBSERVABILITY_AND_OUTPUT_GOVERNANCE.md`。
 - 若需要判断现有依赖是否已覆盖目标能力，再读 `../governance/MANDATORY_TECHSTACK_BASELINE.md`。
 - 若需要典型命中样式，再读 `../governance/COMMON_REDUNDANT_WHEEL_PATTERNS.md`。
-- 输出应聚焦于：哪些实现是“可能重复造轮子”、证据是什么、哪些结论仍然未知。
+- 输出应聚焦于：哪些实现是“可能重复造轮子”、日志与产物落盘治理是否闭合、证据是什么、哪些结论仍然未知。
 
 ## 分支二：进入目标 skill 做修正
 - 先读 `../governance/SKILL_DOCSTRUCTURE_POLICY.md`。
 - 再读 `../governance/SKILL_EXECUTION_RULES.md`。
-- 再读 `../governance/MANDATORY_TECHSTACK_BASELINE.md`、`../governance/COMMON_REDUNDANT_WHEEL_PATTERNS.md`、`../governance/REMEDIATION_GATES.md` 与 `../governance/TOOLING_REMEDIATION_PROTOCOL.md`。
+- 再读 `../governance/OBSERVABILITY_AND_OUTPUT_GOVERNANCE.md`、`../governance/MANDATORY_TECHSTACK_BASELINE.md`、`../governance/COMMON_REDUNDANT_WHEEL_PATTERNS.md`、`../governance/REMEDIATION_GATES.md` 与 `../governance/TOOLING_REMEDIATION_PROTOCOL.md`。
 - 然后进入目标 skill 自己的 `SKILL.md -> routing -> execution/tooling docs`，按其局部合同执行改写、测试和 lint。
 - 若改动落在 Python，额外纳入 `Dev-PythonCode-Constitution-Backend` 的阅读与 lint；若落在 Vue3 / TS tooling，额外纳入目标前端 skill 的既有合同。
 

@@ -19,10 +19,11 @@ anchors:
 
 ## 目标
 - 用结构化文档约束“如何审查和修正别的 skill 的 tooling code”，同时明确本技能本身不再额外提供新的工具面。
+- 审查轴线现已包含两部分：既定依赖栈下的重复造轮子修正，以及 runtime 日志 / result 产物 / 定向产物落点的语义治理。
 
 ## 分层结构
 1. 入口层：`references/tooling/Cli_Toolbox_DEVELOPMENT.md`
-2. 治理层：`references/governance/MANDATORY_TECHSTACK_BASELINE.md`、`references/governance/TOOLING_REMEDIATION_PROTOCOL.md`
+2. 治理层：`references/governance/OBSERVABILITY_AND_OUTPUT_GOVERNANCE.md`、`references/governance/MANDATORY_TECHSTACK_BASELINE.md`、`references/governance/TOOLING_REMEDIATION_PROTOCOL.md`
 3. 索引层：`10_MODULE_CATALOG.yaml`、`20_CATEGORY_INDEX.md`
 4. 变更层：`90_CHANGELOG.md`
 
