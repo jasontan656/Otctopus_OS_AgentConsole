@@ -95,7 +95,7 @@ for proxy in "${PROXIES[@]}"; do
     echo "Testing from: $region"
 
     agent-browser --session "$region" open https://example.com
-    agent-browser --session "$region" screenshot "./screenshots/$region.png"
+    agent-browser --session "$region" screenshot "$META_AGENT_BROWSER_RESULT_DIR/screenshots/$region.png"
     agent-browser --session "$region" close
 done
 ```
@@ -124,7 +124,7 @@ for i in "${!URLS[@]}"; do
     export HTTPS_PROXY="${PROXY_LIST[$proxy_index]}"
 
     agent-browser open "${URLS[$i]}"
-    agent-browser get text body > "output-$i.txt"
+    agent-browser get text body > "$META_AGENT_BROWSER_RESULT_DIR/rotating-proxy/output-$i.txt"
     agent-browser close
 
     sleep 1  # Polite delay

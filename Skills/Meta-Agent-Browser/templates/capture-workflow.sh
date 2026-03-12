@@ -13,16 +13,22 @@
 
 set -euo pipefail
 
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=../scripts/meta-agent-browser-env.sh
+source "${script_dir}/../scripts/meta-agent-browser-env.sh"
+meta_agent_browser_prepare_dirs
+"${script_dir}/../scripts/agent-browser-runtime-guard.sh" >/dev/null
+
 TARGET_URL="${1:?Usage: $0 <url> [output-dir]}"
-OUTPUT_DIR="${2:-.}"
+OUTPUT_DIR="${2:-$META_AGENT_BROWSER_RESULT_DIR/capture-workflow}"
 
 echo "Capturing: $TARGET_URL"
 mkdir -p "$OUTPUT_DIR"
 
 # Optional: Load authentication state
-# if [[ -f "./auth-state.json" ]]; then
+# if [[ -f "$META_AGENT_BROWSER_RESULT_DIR/auth-state.json" ]]; then
 #     echo "Loading authentication state..."
-#     agent-browser state load "./auth-state.json"
+#     agent-browser state load "$META_AGENT_BROWSER_RESULT_DIR/auth-state.json"
 # fi
 
 # Navigate to target

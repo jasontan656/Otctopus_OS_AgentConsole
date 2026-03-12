@@ -17,7 +17,7 @@ Capture browser automation as video for debugging, documentation, or verificatio
 
 ```bash
 # Start recording
-agent-browser record start ./demo.webm
+agent-browser record start "$META_AGENT_BROWSER_RESULT_DIR/videos/demo.webm"
 
 # Perform actions
 agent-browser open https://example.com
@@ -33,13 +33,13 @@ agent-browser record stop
 
 ```bash
 # Start recording to file
-agent-browser record start ./output.webm
+agent-browser record start "$META_AGENT_BROWSER_RESULT_DIR/videos/output.webm"
 
 # Stop current recording
 agent-browser record stop
 
 # Restart with new file (stops current + starts new)
-agent-browser record restart ./take2.webm
+agent-browser record restart "$META_AGENT_BROWSER_RESULT_DIR/videos/take2.webm"
 ```
 
 ## Use Cases
@@ -50,7 +50,7 @@ agent-browser record restart ./take2.webm
 #!/bin/bash
 # Record automation for debugging
 
-agent-browser record start ./debug-$(date +%Y%m%d-%H%M%S).webm
+agent-browser record start "$META_AGENT_BROWSER_RESULT_DIR/videos/debug-$(date +%Y%m%d-%H%M%S).webm"
 
 # Run your automation
 agent-browser open https://app.example.com
@@ -70,7 +70,7 @@ agent-browser record stop
 #!/bin/bash
 # Record workflow for documentation
 
-agent-browser record start ./docs/how-to-login.webm
+agent-browser record start "$META_AGENT_BROWSER_RESULT_DIR/videos/how-to-login.webm"
 
 agent-browser open https://app.example.com/login
 agent-browser wait 1000  # Pause for visibility
@@ -96,7 +96,7 @@ agent-browser record stop
 # Record E2E test runs for CI artifacts
 
 TEST_NAME="${1:-e2e-test}"
-RECORDING_DIR="./test-recordings"
+RECORDING_DIR="$META_AGENT_BROWSER_RESULT_DIR/test-recordings"
 mkdir -p "$RECORDING_DIR"
 
 agent-browser record start "$RECORDING_DIR/$TEST_NAME-$(date +%s).webm"
@@ -125,8 +125,8 @@ agent-browser wait 500  # Let viewer see result
 
 ```bash
 # Include context in filename
-agent-browser record start ./recordings/login-flow-2024-01-15.webm
-agent-browser record start ./recordings/checkout-test-run-42.webm
+agent-browser record start "$META_AGENT_BROWSER_RESULT_DIR/videos/login-flow-2024-01-15.webm"
+agent-browser record start "$META_AGENT_BROWSER_RESULT_DIR/videos/checkout-test-run-42.webm"
 ```
 
 ### 3. Handle Recording in Error Cases
@@ -141,7 +141,7 @@ cleanup() {
 }
 trap cleanup EXIT
 
-agent-browser record start ./automation.webm
+agent-browser record start "$META_AGENT_BROWSER_RESULT_DIR/videos/automation.webm"
 # ... automation steps ...
 ```
 
@@ -149,13 +149,13 @@ agent-browser record start ./automation.webm
 
 ```bash
 # Record video AND capture key frames
-agent-browser record start ./flow.webm
+agent-browser record start "$META_AGENT_BROWSER_RESULT_DIR/videos/flow.webm"
 
 agent-browser open https://example.com
-agent-browser screenshot ./screenshots/step1-homepage.png
+agent-browser screenshot "$META_AGENT_BROWSER_RESULT_DIR/screenshots/step1-homepage.png"
 
 agent-browser click @e1
-agent-browser screenshot ./screenshots/step2-after-click.png
+agent-browser screenshot "$META_AGENT_BROWSER_RESULT_DIR/screenshots/step2-after-click.png"
 
 agent-browser record stop
 ```

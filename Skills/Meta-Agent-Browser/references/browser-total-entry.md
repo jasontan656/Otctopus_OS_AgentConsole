@@ -1,6 +1,7 @@
 # Browser Total Entry
 
 ## Purpose
+- 本文是 human supplement；模型运行时主入口应先走 `python3 scripts/Cli_Toolbox.py contract --json` 与 `python3 scripts/Cli_Toolbox.py directive --topic fallback-routing --json`。
 - 提供浏览器任务的统一总入口。
 - 在 runtime 不明确时，先给出稳定主路径，再给出逐级兜底，而不是让模型在多个浏览器方法论之间来回猜。
 
@@ -35,7 +36,7 @@ scripts/agent-browser-stable.sh --session qa snapshot -i
 
 ### Level 2: Headless Browser Fallback
 - Route to:
-  - `$CODEX_HOME/skills/WorkFlow-RealState-Posting-Web/subskills/workflow-realstate-posting-web-headless/CONTRACT.md`
+  - `WorkFlow-RealState-Posting-Web` 的 headless branch contract/runtime entry
 - Use when:
   - 需要 WSL 内稳定执行
   - `agent-browser` 失效但 headless MCP/Playwright 正常

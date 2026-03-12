@@ -1,0 +1,19 @@
+{
+  "topics": {
+    "runtime-entry": {
+      "doc_kind": "instruction",
+      "json_path": "RUNTIME_ENTRY_INSTRUCTION.json",
+      "human_path": "RUNTIME_ENTRY_INSTRUCTION_human.md"
+    },
+    "fallback-routing": {
+      "doc_kind": "guide",
+      "json_path": "FALLBACK_ROUTING_GUIDE.json",
+      "human_path": "FALLBACK_ROUTING_GUIDE_human.md"
+    },
+    "output-governance": {
+      "doc_kind": "guide",
+      "json_path": "OUTPUT_GOVERNANCE_GUIDE.json",
+      "human_path": "OUTPUT_GOVERNANCE_GUIDE_human.md"
+    }
+  }
+}

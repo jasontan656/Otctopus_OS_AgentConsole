@@ -13,8 +13,14 @@
 
 set -euo pipefail
 
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=../scripts/meta-agent-browser-env.sh
+source "${script_dir}/../scripts/meta-agent-browser-env.sh"
+meta_agent_browser_prepare_dirs
+"${script_dir}/../scripts/agent-browser-runtime-guard.sh" >/dev/null
+
 FORM_URL="${1:?Usage: $0 <form-url>}"
-ARTIFACT_DIR="${ARTIFACT_DIR:-${TMPDIR:-.}/agent-browser-artifacts}"
+ARTIFACT_DIR="${ARTIFACT_DIR:-$META_AGENT_BROWSER_RESULT_DIR/form-automation}"
 RESULT_SCREENSHOT="$ARTIFACT_DIR/form-result.png"
 
 mkdir -p "$ARTIFACT_DIR"

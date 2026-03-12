@@ -75,18 +75,18 @@ agent-browser is checked @e1      # Check if checked
 
 ```bash
 agent-browser screenshot          # Save to temporary directory
-agent-browser screenshot path.png # Save to specific path
+agent-browser screenshot "$META_AGENT_BROWSER_RESULT_DIR/page.png" # Save to governed result path
 agent-browser screenshot --full   # Full page
-agent-browser pdf output.pdf      # Save as PDF
+agent-browser pdf "$META_AGENT_BROWSER_RESULT_DIR/page.pdf"        # Save as PDF
 ```
 
 ## Video Recording
 
 ```bash
-agent-browser record start ./demo.webm    # Start recording
-agent-browser click @e1                   # Perform actions
-agent-browser record stop                 # Stop and save video
-agent-browser record restart ./take2.webm # Stop current + start new
+agent-browser record start "$META_AGENT_BROWSER_RESULT_DIR/videos/demo.webm"     # Start recording
+agent-browser click @e1                                                      # Perform actions
+agent-browser record stop                                                    # Stop and save video
+agent-browser record restart "$META_AGENT_BROWSER_RESULT_DIR/videos/take2.webm" # Stop current + start new
 ```
 
 ## Wait
@@ -210,8 +210,8 @@ EOF
 ## State Management
 
 ```bash
-agent-browser state save auth.json    # Save cookies, storage, auth state
-agent-browser state load auth.json    # Restore saved state
+agent-browser state save "$META_AGENT_BROWSER_RESULT_DIR/auth.json"    # Save cookies, storage, auth state
+agent-browser state load "$META_AGENT_BROWSER_RESULT_DIR/auth.json"    # Restore saved state
 ```
 
 ## Global Options
@@ -248,7 +248,7 @@ agent-browser highlight @e1               # Highlight element
 agent-browser trace start                 # Start recording trace
 agent-browser trace stop trace.zip        # Stop and save trace
 agent-browser profiler start              # Start Chrome DevTools profiling
-agent-browser profiler stop trace.json    # Stop and save profile
+agent-browser profiler stop "$META_AGENT_BROWSER_RESULT_DIR/profiles/trace.json"    # Stop and save profile
 ```
 
 ## Environment Variables

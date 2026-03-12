@@ -24,9 +24,15 @@
 
 set -euo pipefail
 
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=../scripts/meta-agent-browser-env.sh
+source "${script_dir}/../scripts/meta-agent-browser-env.sh"
+meta_agent_browser_prepare_dirs
+"${script_dir}/../scripts/agent-browser-runtime-guard.sh" >/dev/null
+
 LOGIN_URL="${1:?Usage: $0 <login-url> [state-file]}"
-STATE_FILE="${2:-./auth-state.json}"
-ARTIFACT_DIR="${ARTIFACT_DIR:-${TMPDIR:-.}/agent-browser-artifacts}"
+STATE_FILE="${2:-$META_AGENT_BROWSER_RESULT_DIR/auth-state.json}"
+ARTIFACT_DIR="${ARTIFACT_DIR:-$META_AGENT_BROWSER_RESULT_DIR/authenticated-session}"
 LOGIN_FAILED_SCREENSHOT="$ARTIFACT_DIR/login-failed.png"
 
 mkdir -p "$ARTIFACT_DIR"

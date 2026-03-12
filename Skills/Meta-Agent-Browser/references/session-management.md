@@ -78,7 +78,7 @@ agent-browser open https://app.example.com/dashboard
 #!/bin/bash
 # Save login state once, reuse many times
 
-STATE_FILE="/tmp/auth-state.json"
+STATE_FILE="$META_AGENT_BROWSER_RESULT_DIR/auth-state.json"
 
 # Check if we have saved state
 if [[ -f "$STATE_FILE" ]]; then
@@ -111,9 +111,9 @@ agent-browser --session site3 open https://site3.com &
 wait
 
 # Extract from each
-agent-browser --session site1 get text body > site1.txt
-agent-browser --session site2 get text body > site2.txt
-agent-browser --session site3 get text body > site3.txt
+agent-browser --session site1 get text body > "$META_AGENT_BROWSER_RESULT_DIR/site1.txt"
+agent-browser --session site2 get text body > "$META_AGENT_BROWSER_RESULT_DIR/site2.txt"
+agent-browser --session site3 get text body > "$META_AGENT_BROWSER_RESULT_DIR/site3.txt"
 
 # Cleanup
 agent-browser --session site1 close
@@ -129,8 +129,8 @@ agent-browser --session variant-a open "https://app.com?variant=a"
 agent-browser --session variant-b open "https://app.com?variant=b"
 
 # Compare
-agent-browser --session variant-a screenshot /tmp/variant-a.png
-agent-browser --session variant-b screenshot /tmp/variant-b.png
+agent-browser --session variant-a screenshot "$META_AGENT_BROWSER_RESULT_DIR/screenshots/variant-a.png"
+agent-browser --session variant-b screenshot "$META_AGENT_BROWSER_RESULT_DIR/screenshots/variant-b.png"
 ```
 
 ## Default Session
@@ -178,11 +178,10 @@ agent-browser --session scrape close
 ### 3. Handle State Files Securely
 
 ```bash
-# Don't commit state files (contain auth tokens!)
-echo "*.auth-state.json" >> .gitignore
+# Governed state files stay outside the repo tree, so no .gitignore change is needed.
 
 # Delete after use
-rm /tmp/auth-state.json
+rm -f "$META_AGENT_BROWSER_RESULT_DIR/auth-state.json"
 ```
 
 ### 4. Timeout Long Sessions

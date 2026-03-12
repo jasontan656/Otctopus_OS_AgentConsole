@@ -1,10 +1,15 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# shellcheck source=./meta-agent-browser-env.sh
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/meta-agent-browser-env.sh"
+meta_agent_browser_prepare_dirs
+
 runtime_dir="/run/user/$(id -u)/agent-browser"
+chrome_headless_shell_path="${HOME}/.cache/ms-playwright"
 
 if ! command -v agent-browser >/dev/null 2>&1; then
-  echo "ERROR: agent-browser is not installed globally or not in PATH" >&2
+  echo "ERROR: external prerequisite missing: agent-browser is not installed or not in PATH" >&2
   exit 1
 fi
 
@@ -24,8 +29,10 @@ if [[ -d "$runtime_dir" ]]; then
   shopt -u nullglob
 fi
 
-if ! find "${HOME}/.cache/ms-playwright" -path '*chrome-headless-shell-linux64/chrome-headless-shell' -type f | grep -q .; then
-  agent-browser install
+if ! find "$chrome_headless_shell_path" -path '*chrome-headless-shell-linux64/chrome-headless-shell' -type f | grep -q .; then
+  echo "ERROR: external prerequisite missing: agent-browser browser assets are not installed" >&2
+  echo "HINT: install the required browser assets outside Meta-Agent-Browser, then rerun this skill." >&2
+  exit 1
 fi
 
 agent-browser --version >/dev/null

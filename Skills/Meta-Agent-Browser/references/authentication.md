@@ -63,7 +63,7 @@ agent-browser click @e3
 agent-browser wait --url "**/dashboard"
 
 # Save authenticated state
-agent-browser state save ./auth-state.json
+agent-browser state save "$META_AGENT_BROWSER_RESULT_DIR/auth-state.json"
 ```
 
 ## Restoring Authentication
@@ -72,7 +72,7 @@ Skip login by loading saved state:
 
 ```bash
 # Load saved auth state
-agent-browser state load ./auth-state.json
+agent-browser state load "$META_AGENT_BROWSER_RESULT_DIR/auth-state.json"
 
 # Navigate directly to protected page
 agent-browser open https://app.example.com/dashboard
@@ -103,7 +103,7 @@ agent-browser click @e4  # Sign in
 
 # Wait for redirect back
 agent-browser wait --url "**/app.example.com**"
-agent-browser state save ./oauth-state.json
+agent-browser state save "$META_AGENT_BROWSER_RESULT_DIR/oauth-state.json"
 ```
 
 ## Two-Factor Authentication
@@ -123,7 +123,7 @@ echo "Complete 2FA in the browser window..."
 agent-browser wait --url "**/dashboard" --timeout 120000
 
 # Save state after 2FA
-agent-browser state save ./2fa-state.json
+agent-browser state save "$META_AGENT_BROWSER_RESULT_DIR/2fa-state.json"
 ```
 
 ## HTTP Basic Auth
@@ -158,7 +158,7 @@ For sessions with expiring tokens:
 #!/bin/bash
 # Wrapper that handles token refresh
 
-STATE_FILE="./auth-state.json"
+STATE_FILE="$META_AGENT_BROWSER_RESULT_DIR/auth-state.json"
 
 # Try loading existing state
 if [[ -f "$STATE_FILE" ]]; then
@@ -188,7 +188,7 @@ fi
 
 1. **Never commit state files** - They contain session tokens
    ```bash
-   echo "*.auth-state.json" >> .gitignore
+   # Governed result paths stay outside the repo tree, so no .gitignore change is needed.
    ```
 
 2. **Use environment variables for credentials**
@@ -200,7 +200,7 @@ fi
 3. **Clean up after automation**
    ```bash
    agent-browser cookies clear
-   rm -f ./auth-state.json
+   rm -f "$META_AGENT_BROWSER_RESULT_DIR/auth-state.json"
    ```
 
 4. **Use short-lived sessions for CI/CD**
