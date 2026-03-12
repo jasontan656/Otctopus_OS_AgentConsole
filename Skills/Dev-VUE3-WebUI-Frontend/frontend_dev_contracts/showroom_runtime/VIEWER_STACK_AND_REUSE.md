@@ -32,11 +32,15 @@ anchors:
 ## 当前定位
 - showroom 当前先以开发文档形态存在，不再保留旧 runnable UI。
 - 本文定义的是下一轮重建时必须遵守的目标 runtime 形态，而不是描述当前存量代码。
+- 该 runtime 已收敛为“统一治理工作台”，而不是只服务单一 skill 文档。
 
 ## 复用方向
 - showroom 的目标形态必须是 `SPA shell + expandable menu + canvas workspace`。
 - 菜单不是固定三栏中的一列，而是可展开、可收起、可继续扩展的导航入口。
 - canvas workspace 不是静态排版区，而是用于承载已打开 panel 的活动组织面。
 - panel 必须支持新增到 canvas、关闭、聚焦，以及后续扩展交互。
-- graph、document library、document reader、runtime summary 都属于可装载到 canvas 的 panel 类型。
+- graph、document library、document reader、repo library、code reference、AI workspace、runtime summary 都属于可装载到 canvas 的 panel 类型。
+- 文档 graph 与 code graph 必须在同一个前端壳中共存，但要保留各自治理域 legend、过滤器和关系语义。
+- code graph 视图应继承 GitNexus 前端中经过验证的核心展示能力，例如 graph canvas、repo selector、reference side panel、process/context 入口与图上聚焦交互；但视觉语言、menu/canvas 布局与组件风格必须回收到本技能既有合同。
+- UI 应通过受治理目录结构与 projection adapter 发现内容，不得为每个文档包或 repo 写死专用页面。
 - 页面可见文案必须全部使用 English；代码、命名与注释也必须全部使用 English。

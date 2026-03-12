@@ -3,8 +3,8 @@
   "graph_version": "v2",
   "source_skill": "Dev-VUE3-WebUI-Frontend",
   "summary": {
-    "nodeCount": 93,
-    "edgeCount": 268,
+    "nodeCount": 98,
+    "edgeCount": 294,
     "errorCount": 0,
     "warningCount": 0
   },
@@ -609,7 +609,7 @@
       "docType": "index_doc",
       "topic": "Index of showroom redevelopment and future runtime contracts",
       "title": "Showroom Runtime Contracts",
-      "anchorCount": 2,
+      "anchorCount": 3,
       "depth": 2
     },
     {
@@ -618,7 +618,7 @@
       "docType": "tooling_usage",
       "topic": "Dev, build, and systemd workflow for the Dev-VUE3-WebUI-Frontend showroom",
       "title": "Viewer Service Workflow",
-      "anchorCount": 4,
+      "anchorCount": 5,
       "depth": 2
     },
     {
@@ -780,7 +780,7 @@
       "docType": "index_doc",
       "topic": "Index of showroom-specific development docs for Dev-VUE3-WebUI-Frontend",
       "title": "UI Dev Docs Index",
-      "anchorCount": 6,
+      "anchorCount": 7,
       "depth": 2
     },
     {
@@ -789,7 +789,7 @@
       "docType": "topic_atom",
       "topic": "Purpose boundary for the showroom redevelopment",
       "title": "Showroom Purpose Boundary",
-      "anchorCount": 4,
+      "anchorCount": 5,
       "depth": 2
     },
     {
@@ -807,7 +807,34 @@
       "docType": "topic_atom",
       "topic": "Canvas workspace model for showroom panels",
       "title": "Canvas Workspace Model",
-      "anchorCount": 2,
+      "anchorCount": 3,
+      "depth": 3
+    },
+    {
+      "path": "ui-dev/docs/domains/00_GOVERNANCE_DOMAIN_INDEX.md",
+      "docId": "ui.dev.docs.domains.index",
+      "docType": "index_doc",
+      "topic": "Index of governance-domain docs for the unified frontend workbench",
+      "title": "Governance Domain Index",
+      "anchorCount": 3,
+      "depth": 3
+    },
+    {
+      "path": "ui-dev/docs/domains/10_UNIFIED_GOVERNANCE_WORKBENCH_MODEL.md",
+      "docId": "ui.dev.docs.domains.workbench_model",
+      "docType": "topic_atom",
+      "topic": "Unified governance workbench model for document and code graph domains",
+      "title": "Unified Governance Workbench Model",
+      "anchorCount": 3,
+      "depth": 3
+    },
+    {
+      "path": "ui-dev/docs/domains/20_DISCOVERY_AND_RENDERING_PROTOCOL.md",
+      "docId": "ui.dev.docs.domains.discovery_protocol",
+      "docType": "topic_atom",
+      "topic": "Discovery protocol for rendering governed sources inside the workbench",
+      "title": "Discovery Protocol For Rendering Governed Sources",
+      "anchorCount": 4,
       "depth": 3
     },
     {
@@ -825,7 +852,7 @@
       "docType": "topic_atom",
       "topic": "Expandable SPA menu model for the showroom",
       "title": "Menu Navigation Model",
-      "anchorCount": 2,
+      "anchorCount": 3,
       "depth": 3
     },
     {
@@ -834,7 +861,7 @@
       "docType": "index_doc",
       "topic": "Index of showroom panel catalog docs",
       "title": "Panel Catalog Index",
-      "anchorCount": 2,
+      "anchorCount": 4,
       "depth": 3
     },
     {
@@ -843,7 +870,25 @@
       "docType": "topic_atom",
       "topic": "Panel catalog for the future showroom canvas",
       "title": "Showroom Panel Catalog",
-      "anchorCount": 2,
+      "anchorCount": 4,
+      "depth": 3
+    },
+    {
+      "path": "ui-dev/docs/panels/20_DOCUMENT_GRAPH_PANEL_PROTOCOL.md",
+      "docId": "ui.dev.docs.panels.document_graph_protocol",
+      "docType": "topic_atom",
+      "topic": "Document graph panel protocol for governed doc packages inside the workbench",
+      "title": "Document Graph Panel Protocol",
+      "anchorCount": 3,
+      "depth": 3
+    },
+    {
+      "path": "ui-dev/docs/panels/30_CODEGRAPH_PANEL_PROTOCOL.md",
+      "docId": "ui.dev.docs.panels.codegraph_protocol",
+      "docType": "topic_atom",
+      "topic": "Code graph panel protocol derived from GitNexus viewer capabilities and local workbench constraints",
+      "title": "Code Graph Panel Protocol",
+      "anchorCount": 3,
       "depth": 3
     }
   ],
@@ -2200,6 +2245,13 @@
       "reason": "Viewer stack and reuse is the primary architecture contract of this branch."
     },
     {
+      "source": "frontend_dev_contracts/showroom_runtime/00_SHOWROOM_RUNTIME_INDEX.md",
+      "target": "frontend_dev_contracts/showroom_runtime/VIEWER_SERVICE_WORKFLOW.md",
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "Viewer service workflow defines the docs-first restore boundary for the unified workbench."
+    },
+    {
       "source": "frontend_dev_contracts/showroom_runtime/VIEWER_SERVICE_WORKFLOW.md",
       "target": "frontend_dev_contracts/showroom_runtime/00_SHOWROOM_RUNTIME_INDEX.md",
       "relation": "belongs_to",
@@ -2226,6 +2278,13 @@
       "relation": "supports",
       "direction": "upstream",
       "reason": "This workflow drives the runnable showroom entry."
+    },
+    {
+      "source": "frontend_dev_contracts/showroom_runtime/VIEWER_SERVICE_WORKFLOW.md",
+      "target": "ui-dev/docs/domains/20_DISCOVERY_AND_RENDERING_PROTOCOL.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "The runtime restore workflow depends on a stable discovery and rendering protocol."
     },
     {
       "source": "frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md",
@@ -2586,6 +2645,13 @@
     },
     {
       "source": "ui-dev/docs/00_UI_DEV_DOCS_INDEX.md",
+      "target": "ui-dev/docs/domains/00_GOVERNANCE_DOMAIN_INDEX.md",
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "Domain docs define how the unified workbench distinguishes and renders governed sources."
+    },
+    {
+      "source": "ui-dev/docs/00_UI_DEV_DOCS_INDEX.md",
       "target": "ui-dev/docs/navigation/00_NAVIGATION_INDEX.md",
       "relation": "indexes",
       "direction": "downstream",
@@ -2625,6 +2691,13 @@
       "relation": "pairs_with",
       "direction": "cross",
       "reason": "The generic showroom stack contract and the showroom-specific purpose must stay aligned."
+    },
+    {
+      "source": "ui-dev/docs/10_SHOWROOM_PURPOSE_AND_SCOPE.md",
+      "target": "ui-dev/docs/domains/00_GOVERNANCE_DOMAIN_INDEX.md",
+      "relation": "routes_to",
+      "direction": "downstream",
+      "reason": "The workbench purpose must hand readers into domain-aware rendering docs."
     },
     {
       "source": "ui-dev/docs/10_SHOWROOM_PURPOSE_AND_SCOPE.md",
@@ -2669,6 +2742,83 @@
       "reason": "The canvas model must align with the generic panel interaction protocol."
     },
     {
+      "source": "ui-dev/docs/canvas/10_CANVAS_WORKSPACE_MODEL.md",
+      "target": "ui-dev/docs/panels/10_SHOWROOM_PANEL_CATALOG.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "Canvas lifecycle must be able to host the full panel catalog of the unified workbench."
+    },
+    {
+      "source": "ui-dev/docs/domains/00_GOVERNANCE_DOMAIN_INDEX.md",
+      "target": "ui-dev/docs/00_UI_DEV_DOCS_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "This domain branch belongs to the showroom docs tree."
+    },
+    {
+      "source": "ui-dev/docs/domains/00_GOVERNANCE_DOMAIN_INDEX.md",
+      "target": "ui-dev/docs/domains/10_UNIFIED_GOVERNANCE_WORKBENCH_MODEL.md",
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "The domain model is the first branch-specific contract."
+    },
+    {
+      "source": "ui-dev/docs/domains/00_GOVERNANCE_DOMAIN_INDEX.md",
+      "target": "ui-dev/docs/domains/20_DISCOVERY_AND_RENDERING_PROTOCOL.md",
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "The discovery protocol defines how governed sources become UI-readable."
+    },
+    {
+      "source": "ui-dev/docs/domains/10_UNIFIED_GOVERNANCE_WORKBENCH_MODEL.md",
+      "target": "ui-dev/docs/domains/00_GOVERNANCE_DOMAIN_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "This workbench model belongs to the domain branch."
+    },
+    {
+      "source": "ui-dev/docs/domains/10_UNIFIED_GOVERNANCE_WORKBENCH_MODEL.md",
+      "target": "ui-dev/docs/panels/10_SHOWROOM_PANEL_CATALOG.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "The workbench domain model constrains which panels the shell must provide."
+    },
+    {
+      "source": "ui-dev/docs/domains/10_UNIFIED_GOVERNANCE_WORKBENCH_MODEL.md",
+      "target": "frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "The generic showroom stack contract must stay aligned with the domain-aware workbench model."
+    },
+    {
+      "source": "ui-dev/docs/domains/20_DISCOVERY_AND_RENDERING_PROTOCOL.md",
+      "target": "ui-dev/docs/domains/00_GOVERNANCE_DOMAIN_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "This discovery protocol belongs to the domain branch."
+    },
+    {
+      "source": "ui-dev/docs/domains/20_DISCOVERY_AND_RENDERING_PROTOCOL.md",
+      "target": "ui-dev/docs/navigation/10_MENU_NAVIGATION_MODEL.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "Discovered sources must appear through the stable menu taxonomy."
+    },
+    {
+      "source": "ui-dev/docs/domains/20_DISCOVERY_AND_RENDERING_PROTOCOL.md",
+      "target": "ui-dev/docs/panels/20_DOCUMENT_GRAPH_PANEL_PROTOCOL.md",
+      "relation": "details",
+      "direction": "downstream",
+      "reason": "Document panels are one consumer of the discovery protocol."
+    },
+    {
+      "source": "ui-dev/docs/domains/20_DISCOVERY_AND_RENDERING_PROTOCOL.md",
+      "target": "ui-dev/docs/panels/30_CODEGRAPH_PANEL_PROTOCOL.md",
+      "relation": "details",
+      "direction": "downstream",
+      "reason": "Code graph panels are another consumer of the discovery protocol."
+    },
+    {
       "source": "ui-dev/docs/navigation/00_NAVIGATION_INDEX.md",
       "target": "ui-dev/docs/00_UI_DEV_DOCS_INDEX.md",
       "relation": "belongs_to",
@@ -2697,6 +2847,13 @@
       "reason": "The menu model must align with the generic layout-authority contract."
     },
     {
+      "source": "ui-dev/docs/navigation/10_MENU_NAVIGATION_MODEL.md",
+      "target": "ui-dev/docs/domains/10_UNIFIED_GOVERNANCE_WORKBENCH_MODEL.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "Navigation groups must reflect the workbench domain model instead of ad hoc pages."
+    },
+    {
       "source": "ui-dev/docs/panels/00_PANEL_CATALOG_INDEX.md",
       "target": "ui-dev/docs/00_UI_DEV_DOCS_INDEX.md",
       "relation": "belongs_to",
@@ -2711,6 +2868,20 @@
       "reason": "The panel catalog defines the required showroom panels."
     },
     {
+      "source": "ui-dev/docs/panels/00_PANEL_CATALOG_INDEX.md",
+      "target": "ui-dev/docs/panels/20_DOCUMENT_GRAPH_PANEL_PROTOCOL.md",
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "The document graph protocol defines how doc packages and doc readers cooperate."
+    },
+    {
+      "source": "ui-dev/docs/panels/00_PANEL_CATALOG_INDEX.md",
+      "target": "ui-dev/docs/panels/30_CODEGRAPH_PANEL_PROTOCOL.md",
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "The code graph protocol defines which GitNexus-derived behaviors must survive in the new workbench."
+    },
+    {
       "source": "ui-dev/docs/panels/10_SHOWROOM_PANEL_CATALOG.md",
       "target": "ui-dev/docs/panels/00_PANEL_CATALOG_INDEX.md",
       "relation": "belongs_to",
@@ -2723,8 +2894,64 @@
       "relation": "pairs_with",
       "direction": "cross",
       "reason": "The panel catalog must align with the generic showroom stack contract."
+    },
+    {
+      "source": "ui-dev/docs/panels/10_SHOWROOM_PANEL_CATALOG.md",
+      "target": "ui-dev/docs/panels/20_DOCUMENT_GRAPH_PANEL_PROTOCOL.md",
+      "relation": "details",
+      "direction": "downstream",
+      "reason": "Document graph panels need a narrower protocol than the top-level panel catalog."
+    },
+    {
+      "source": "ui-dev/docs/panels/10_SHOWROOM_PANEL_CATALOG.md",
+      "target": "ui-dev/docs/panels/30_CODEGRAPH_PANEL_PROTOCOL.md",
+      "relation": "details",
+      "direction": "downstream",
+      "reason": "Code graph panels need a narrower protocol than the top-level panel catalog."
+    },
+    {
+      "source": "ui-dev/docs/panels/20_DOCUMENT_GRAPH_PANEL_PROTOCOL.md",
+      "target": "ui-dev/docs/panels/00_PANEL_CATALOG_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "This protocol belongs to the panel branch."
+    },
+    {
+      "source": "ui-dev/docs/panels/20_DOCUMENT_GRAPH_PANEL_PROTOCOL.md",
+      "target": "ui-dev/docs/domains/20_DISCOVERY_AND_RENDERING_PROTOCOL.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "Document graph panels consume the shared discovery protocol."
+    },
+    {
+      "source": "ui-dev/docs/panels/20_DOCUMENT_GRAPH_PANEL_PROTOCOL.md",
+      "target": "ui-dev/docs/panels/10_SHOWROOM_PANEL_CATALOG.md",
+      "relation": "details",
+      "direction": "upstream",
+      "reason": "This document expands the document-facing panel portion of the catalog."
+    },
+    {
+      "source": "ui-dev/docs/panels/30_CODEGRAPH_PANEL_PROTOCOL.md",
+      "target": "ui-dev/docs/panels/00_PANEL_CATALOG_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "This protocol belongs to the panel branch."
+    },
+    {
+      "source": "ui-dev/docs/panels/30_CODEGRAPH_PANEL_PROTOCOL.md",
+      "target": "ui-dev/docs/domains/20_DISCOVERY_AND_RENDERING_PROTOCOL.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "Code graph panels consume the shared discovery protocol."
+    },
+    {
+      "source": "ui-dev/docs/panels/30_CODEGRAPH_PANEL_PROTOCOL.md",
+      "target": "ui-dev/docs/panels/10_SHOWROOM_PANEL_CATALOG.md",
+      "relation": "details",
+      "direction": "upstream",
+      "reason": "This document expands the code-graph-facing panel portion of the catalog."
     }
   ],
   "warnings": [],
-  "updated_at": "2026-03-12T01:23:27.686Z"
+  "updated_at": "2026-03-12T10:04:57.734Z"
 }

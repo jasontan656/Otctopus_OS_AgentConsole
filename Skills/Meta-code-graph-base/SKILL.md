@@ -8,6 +8,7 @@ description: "维护本地代码图谱底座：统一建图、查图、影响面
 ## Overview
 
 这个技能负责维护一个可持续更新的本地代码图谱系统，供章鱼OS与其他技能在施工前后读取。
+它负责代码图谱的数据面、资源面与分析面，不再承担最终前端界面的宿主角色。
 
 它覆盖的能力面：
 - 仓库扫描与索引持久化
@@ -21,6 +22,11 @@ description: "维护本地代码图谱底座：统一建图、查图、影响面
 
 运行产物固定落在：
 - `/home/jasontan656/AI_Projects/OctuposOS_Runtime_Backend/code_graph_runtime`
+
+当前前端承载关系：
+- 最终 UI / workbench 由 `Dev-VUE3-WebUI-Frontend` 承载。
+- 本技能提供 repo registry、resource URI、map/wiki bundle 与本地运行产物，供前端技能读取或投影。
+- code graph 展示规范、panel 组织、canvas 交互与视觉合同以 `Dev-VUE3-WebUI-Frontend` 为准。
 
 ## Workflow
 
@@ -43,6 +49,7 @@ python3 /home/jasontan656/AI_Projects/octopus-os-agent-console/Skills/Meta-code-
 4. 施工后，至少运行：
 - `detect-changes`
 - 需要时生成 `wiki`
+- 若任务涉及 code graph 前端承载或 viewer 规划，继续参考 `Dev-VUE3-WebUI-Frontend` 的 `ui-dev/` 与 `frontend_dev_contracts/showroom_runtime/` 文档，而不是在本技能内重复发明 UI 合同。
 
 ## Commands
 
@@ -83,9 +90,11 @@ python3 /home/jasontan656/AI_Projects/octopus-os-agent-console/Skills/Meta-code-
 - 不生成外部安装壳、Web UI、MCP transport。
 - 不接入任何额外 LLM API 或交互式 provider 配置。
 - 不把图谱能力简化成只会 `impact` 的最小试用品。
+- 不在本技能内部另起一套独立前端产品合同；代码图谱的最终界面由受治理的统一前端工作台承载。
 - 如果某项能力仍未完整实现，要显式标明，不伪装完成。
 
 ## References
 
 - `references/migration_map.md`
 - `references/runtime_layout.md`
+- `references/viewer_handoff.md`

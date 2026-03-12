@@ -21,6 +21,10 @@ anchors:
     relation: "supports"
     direction: "upstream"
     reason: "This workflow drives the runnable showroom entry."
+  - target: "../../ui-dev/docs/domains/20_DISCOVERY_AND_RENDERING_PROTOCOL.md"
+    relation: "pairs_with"
+    direction: "cross"
+    reason: "The runtime restore workflow depends on a stable discovery and rendering protocol."
 ---
 
 # Viewer Service Workflow
@@ -29,12 +33,15 @@ anchors:
 - `ui-dev/` 当前处于 docs-first redevelopment 状态。
 - 旧 viewer runtime、前端依赖、build 产物和 service 安装链已经清空，不应继续被当成可运行入口。
 - 在新的 SPA menu + canvas 实现落地前，本分支只定义未来恢复 runtime 时必须满足的工作流边界。
+- code graph 数据面仍由 `Meta-code-graph-base` 生成，但最终界面承载方已经固定为本技能定义的统一工作台。
 
 ## 未来恢复条件
-- 先完成 `ui-dev/docs/` 中的 showroom purpose、menu navigation、canvas workspace、panel catalog 文档。
+- 先完成 `ui-dev/docs/` 中的 showroom purpose、domain model、discovery protocol、menu navigation、canvas workspace、panel catalog 文档。
 - 再完成对应的前端合同收敛，尤其是 container hierarchy、layout authority、interaction protocol 与 English-only 语言规则。
+- 再确认 `document_graph` 与 `code_graph` 两类治理域都能通过 projection adapter 被同一前端壳读取。
 - 最后才允许重新引入 dev/build/service 运行链。
 
 ## 恢复后约束
 - 恢复 runtime 时仍只能消费归一化后的 `PreviewPayload`。
 - 恢复 runtime 时必须先把 dev/build/service 命令重新写回 `ui-dev/UI_DEV_ENTRY.md`、`SKILL.md` 与 stage command contract。
+- 恢复 runtime 时不得把 GitNexus 原前端直接嵌回 skill；只能提炼其交互能力并回收到本技能 menu/canvas/panel 架构之下。

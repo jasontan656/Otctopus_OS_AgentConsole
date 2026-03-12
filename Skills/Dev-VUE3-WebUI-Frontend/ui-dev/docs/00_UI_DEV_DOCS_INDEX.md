@@ -11,6 +11,10 @@ anchors:
     relation: "indexes"
     direction: "downstream"
     reason: "Showroom purpose and scope is the first showroom-specific document."
+  - target: "domains/00_GOVERNANCE_DOMAIN_INDEX.md"
+    relation: "indexes"
+    direction: "downstream"
+    reason: "Domain docs define how the unified workbench distinguishes and renders governed sources."
   - target: "navigation/00_NAVIGATION_INDEX.md"
     relation: "indexes"
     direction: "downstream"
@@ -34,6 +38,8 @@ anchors:
 ## 本分支负责
 - `10_SHOWROOM_PURPOSE_AND_SCOPE.md`
   - 定义这个展厅的用途边界和展示范围。
+- `domains/00_GOVERNANCE_DOMAIN_INDEX.md`
+  - 定义多治理域如何在同一个 workbench 中被发现、区分和渲染。
 - `navigation/00_NAVIGATION_INDEX.md`
   - 定义 SPA 菜单导航、可展开入口与菜单分组。
 - `canvas/00_CANVAS_INDEX.md`
@@ -43,6 +49,7 @@ anchors:
 
 ## 读取顺序
 1. `10_SHOWROOM_PURPOSE_AND_SCOPE.md`
-2. `navigation/00_NAVIGATION_INDEX.md`
-3. `canvas/00_CANVAS_INDEX.md`
-4. `panels/00_PANEL_CATALOG_INDEX.md`
+2. `domains/00_GOVERNANCE_DOMAIN_INDEX.md`
+3. `navigation/00_NAVIGATION_INDEX.md`
+4. `canvas/00_CANVAS_INDEX.md`
+5. `panels/00_PANEL_CATALOG_INDEX.md`

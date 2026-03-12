@@ -42,6 +42,8 @@ anchors:
   - showroom 自身开发文档入口。
 - `docs/10_SHOWROOM_PURPOSE_AND_SCOPE.md`
   - 定义这个展厅要展示什么、不展示什么。
+- `docs/domains/`
+  - 定义多治理域如何在同一个 workbench 中被识别、发现和渲染。
 - `docs/navigation/`
   - 定义 SPA 菜单导航与可扩展入口。
 - `docs/canvas/`
@@ -55,4 +57,5 @@ anchors:
 - 当前读取方式：
   1. 先读 `docs/00_UI_DEV_DOCS_INDEX.md`
   2. 再回到 `../frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md` 对齐通用合同
+- 当任务落到统一工作台目标定义时，应优先读 `docs/domains/` 与 `docs/panels/`，避免把“单一 showroom”假设带入 runtime 设计。
 - 只有当新的 UI 代码被重建后，`ui-dev/` 才会重新恢复 dev/build/runtime 入口。
