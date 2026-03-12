@@ -11,6 +11,11 @@ description: "受限 GitHub control plane：仅服务 Octopus_OS 与 octopus-os-
 - `/home/jasontan656/AI_Projects/Octopus_OS`
 - `/home/jasontan656/AI_Projects/octopus-os-agent-console`
 
+本技能当前是按产品安装后的 repo 形态、远端命名与权限模型配置的受管 Git control plane：
+- 默认同时覆盖私有开发远端与公开发布远端的治理约束
+- 其中 `octopus-os-agent-console` 已纳入开源发布仓 `public-release` 的管理位，但当前仍保持禁推
+- 若其他用户希望复用本技能，应将 registry、repo 根、remote 命名、可写策略与权限前提改造成自己机器上的目标形态；AI 可以直接基于当前技能结构继续修改
+
 对于 `Octopus_OS`：
 - `origin`: 私有主远端 `Octopus_OS`
 - 仓库名应与本地仓库名保持一致
