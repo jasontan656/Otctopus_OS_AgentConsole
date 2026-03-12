@@ -59,7 +59,7 @@ anchors:
 python3 scripts/create_skill_from_template.py --help
 python3 scripts/create_skill_from_template.py --skill-name basic-sandbox --target-root /tmp/meta-skill-template --profile basic --overwrite
 python3 scripts/create_skill_from_template.py --skill-name staged-sandbox --target-root /tmp/meta-skill-template --profile staged_cli_first --overwrite
-python3 -m unittest discover -s tests
+python3 -m pytest tests
 ```
 
 ## 文档同步

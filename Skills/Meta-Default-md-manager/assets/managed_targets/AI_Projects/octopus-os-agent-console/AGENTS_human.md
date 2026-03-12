@@ -35,6 +35,7 @@
 - 与 skills 执行相关的 Python 依赖，必须安装到 repo 根目录下的 `./.venv_backend_skills`，禁止依赖全局 Python site-packages。
 - `./requirements-backend_skills.lock.txt` 是 Python 依赖锁定清单；当新增、升级、删除 Python 依赖时，必须同回合同步更新它。
 - 与 skills 执行相关的前端依赖，必须安装并锁定在 repo 根目录下的 `./frontend_skills/` 中；该目录下的 `package.json` 与 `package-lock.json` 是前端依赖真源。
+- 若当前任务需要新增 repo-local 依赖，允许 AI 根据任务内容自行决定所需依赖并直接安装；但安装位置只能是本 repo 的 `*_skills` 环境或其受管 manifest/lock 所在目录。
 - 若后续出现其他类型依赖，也必须优先落在 `octopus-os-agent-console` 目录内的 repo-local `*_skills` 环境或其对应 manifest/lock 文件中，禁止把全局环境当成长期依赖承载层。
 - 当依赖集合发生变化时，必须同时保持 `Meta-Default-md-manager` 内的治理映射模版与外部 `AGENTS.md` 内容同步。
 </part_A>
@@ -74,6 +75,7 @@
     "classify the turn as READ_EXEC or WRITE_EXEC",
     "if the turn will write octopus-os-agent-console, plan same-turn Git traceability from the start; if task contents include Python related edits, also plan Dev-PythonCode-Constitution-Backend reading and lint from the start",
     "if the task needs repo-local dependencies, read the backend/frontend skills environment manifests before installing or invoking tooling",
+    "if the task needs new repo-local dependencies, the AI may choose them from task evidence and install them into the governed *_skills environments before use",
     "if the turn touches language surfaces, enforce outward English docs and inward Chinese development boundaries before editing",
     "if the turn will edit a skill, treat the mirror copy under octopus-os-agent-console/Skills as the only editable source and determine whether downstream sync must be Push or Install",
     "if task contents include Python related edits, read Dev-PythonCode-Constitution-Backend through SKILL.md -> TASK_ROUTING -> SKILL_EXECUTION_RULES before editing"
@@ -89,6 +91,7 @@
     "skill core docs, governance contracts, and internal iteration artifacts may remain Chinese-first",
     "GitHub-facing product iteration logs and commit subjects should prefer English wording",
     "skills runtime dependencies must be installed into repo-local *_skills environments or their tracked manifest/lock files, not global environments",
+    "the AI may decide which repo-local dependencies are needed for the active task, but every installation must stay inside the governed repo-local environments and be reflected in the tracked lock or manifest files",
     "keep requirements-backend_skills.lock.txt in sync with the Python dependencies installed into .venv_backend_skills",
     "keep frontend_skills/package.json and frontend_skills/package-lock.json in sync with the frontend dependency set used by skills tasks",
     "for skill changes, edit the mirror copy under octopus-os-agent-console/Skills and never directly edit the codex installation directory",

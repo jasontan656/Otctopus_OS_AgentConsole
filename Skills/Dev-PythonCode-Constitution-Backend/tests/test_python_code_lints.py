@@ -3,13 +3,12 @@ from __future__ import annotations
 import json
 import subprocess
 import tempfile
-import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
-class PythonCodeLintTests(unittest.TestCase):
+class TestPythonCodeLintTests:
     def _run_lint(self, target: Path) -> subprocess.CompletedProcess[str]:
         return subprocess.run(
             ["python3", str(ROOT / "scripts/run_python_code_lints.py"), "--target", str(target)],
@@ -19,10 +18,10 @@ class PythonCodeLintTests(unittest.TestCase):
         )
 
     def _assert_enhanced_report_shape(self, report: dict[str, object]) -> None:
-        self.assertIn("summary_enhanced", report)
-        self.assertIn("gate_diagnostics", report)
-        self.assertIn("violation_details", report)
-        self.assertIn("clusters", report)
+        assert "summary_enhanced" in report
+        assert "gate_diagnostics" in report
+        assert "violation_details" in report
+        assert "clusters" in report
 
     def test_static_lints_detect_and_pass(self) -> None:
         with tempfile.TemporaryDirectory(prefix="py_lint_", dir=str(ROOT.parent)) as tmp:
@@ -34,16 +33,16 @@ class PythonCodeLintTests(unittest.TestCase):
                 encoding="utf-8",
             )
             bad_result = self._run_lint(bad)
-            self.assertEqual(bad_result.returncode, 1, bad_result.stdout + bad_result.stderr)
+            assert bad_result.returncode == 1, bad_result.stdout + bad_result.stderr
             bad_report = json.loads(bad_result.stdout)
             self._assert_enhanced_report_shape(bad_report)
-            self.assertTrue(any(g["gate"] == "modularity_gate" and g["status"] == "fail" for g in bad_report["gates"]))
+            assert any(g["gate"] == "modularity_gate" and g["status"] == "fail" for g in bad_report["gates"])
 
             good = root / "good"
             good.mkdir()
             (good / "user_orchestrator.py").write_text("def run() -> None:\n    pass\n", encoding="utf-8")
             good_result = self._run_lint(good)
-            self.assertEqual(good_result.returncode, 0, good_result.stdout + good_result.stderr)
+            assert good_result.returncode == 0, good_result.stdout + good_result.stderr
 
     def test_hardcoded_asset_gate_detects_inline_prompt_and_allows_external_asset(self) -> None:
         with tempfile.TemporaryDirectory(prefix="py_lint_", dir=str(ROOT.parent)) as tmp:
@@ -64,10 +63,10 @@ class PythonCodeLintTests(unittest.TestCase):
                 encoding="utf-8",
             )
             result = self._run_lint(root)
-            self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+            assert result.returncode == 1, result.stdout + result.stderr
             report = json.loads(result.stdout)
             gate = next(g for g in report["gates"] if g["gate"] == "hardcoded_asset_gate")
-            self.assertTrue(any(v["path"] == "bad_prompt.py" for v in gate["violations"]))
+            assert any(v["path"] == "bad_prompt.py" for v in gate["violations"])
 
             assets = root / "assets"
             assets.mkdir(exist_ok=True)
@@ -80,7 +79,7 @@ class PythonCodeLintTests(unittest.TestCase):
             result = self._run_lint(root)
             report = json.loads(result.stdout)
             gate = next(g for g in report["gates"] if g["gate"] == "hardcoded_asset_gate")
-            self.assertFalse(any(v["path"] == "loader.py" for v in gate["violations"]))
+            assert not (any(v["path"] == "loader.py" for v in gate["violations"]))
 
     def test_absolute_path_gate_respects_repo_boundaries(self) -> None:
         with tempfile.TemporaryDirectory(prefix="py_lint_", dir=str(ROOT.parent)) as tmp:
@@ -92,11 +91,11 @@ class PythonCodeLintTests(unittest.TestCase):
                 encoding="utf-8",
             )
             result = self._run_lint(octopus_root)
-            self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+            assert result.returncode == 1, result.stdout + result.stderr
             report = json.loads(result.stdout)
             reasons = {v["reason"] for v in next(g for g in report["gates"] if g["gate"] == "absolute_path_gate")["violations"]}
-            self.assertIn("octopus_os_forbids_unix_absolute_paths", reasons)
-            self.assertIn("octopus_os_forbids_repo_escape_relative_paths", reasons)
+            assert "octopus_os_forbids_unix_absolute_paths" in reasons
+            assert "octopus_os_forbids_repo_escape_relative_paths" in reasons
 
     def test_fat_file_distinguishes_contract_support_from_real_cli(self) -> None:
         with tempfile.TemporaryDirectory(prefix="py_lint_", dir=str(ROOT.parent)) as tmp:
@@ -114,13 +113,10 @@ class PythonCodeLintTests(unittest.TestCase):
             )
 
             result = self._run_lint(root)
-            self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+            assert result.returncode == 1, result.stdout + result.stderr
             report = json.loads(result.stdout)
             fat_gate = next(g for g in report["gates"] if g["gate"] == "fat_file_gate")
             violations = {v["path"]: v["reason"] for v in fat_gate["violations"]}
-            self.assertNotIn("scripts/workflow_stage_contract.py", violations)
-            self.assertEqual(violations.get("scripts/run_cli.py"), "cli_or_task_script>420")
+            assert "scripts/workflow_stage_contract.py" not in violations
+            assert violations.get("scripts/run_cli.py") == "cli_or_task_script>420"
 
-
-if __name__ == "__main__":
-    unittest.main()

@@ -1,16 +1,17 @@
 from __future__ import annotations
 
 import json
+import pytest
 import re
 import subprocess
 import sys
 import tempfile
-import unittest
 from pathlib import Path
 
 
 SKILL_ROOT = Path(__file__).resolve().parents[1]
 CLI = SKILL_ROOT / "scripts" / "Cli_Toolbox.py"
+RUNTIME_DOCS_ROOT = Path("/home/jasontan656/AI_Projects/OctuposOS_Runtime_Backend/docs")
 sys.path.insert(0, str(SKILL_ROOT / "scripts"))
 
 
@@ -44,133 +45,142 @@ def fill_directory_placeholders(root: Path) -> None:
         path.write_text(content + "\n", encoding="utf-8")
 
 
-class CliToolboxRegressionTest(unittest.TestCase):
+def require_runtime_docs_root() -> None:
+    if not RUNTIME_DOCS_ROOT.exists():
+        pytest.skip(f"requires runtime docs root: {RUNTIME_DOCS_ROOT}")
+
+
+class TestCliToolboxRegressionTest:
     def test_workflow_contract_exposes_construction_plan_model(self) -> None:
         payload = run_cli("workflow-contract")
-        self.assertEqual(payload["stage_order"], ["mother_doc", "construction_plan", "implementation", "acceptance"])
-        self.assertIn("rules/OCTOPUS_SKILL_HARD_RULES.md", payload["top_level_resident_docs"])
-        self.assertIn("/home/jasontan656/AI_Projects/Octopus_CodeBase_Backend/AGENTS.md", payload["top_level_resident_docs"])
-        self.assertEqual(
-            payload["stage_specific_contract_tools"],
-            ["stage-checklist", "stage-doc-contract", "stage-command-contract", "stage-graph-contract", "template-index"],
+        assert payload["stage_order"] == ["mother_doc", "construction_plan", "implementation", "acceptance"]
+        assert "rules/OCTOPUS_SKILL_HARD_RULES.md" in payload["top_level_resident_docs"]
+        assert "/home/jasontan656/AI_Projects/Octopus_CodeBase_Backend/AGENTS.md" in payload["top_level_resident_docs"]
+        assert payload["stage_specific_contract_tools"] == [
+            "stage-checklist",
+            "stage-doc-contract",
+            "stage-command-contract",
+            "stage-graph-contract",
+            "template-index",
+        ]
+        assert payload["discovery_scope_policy"]["required_startup_sequence"] == [
+            "read_mother_doc_index_or_directory",
+            "inspect_latest_archived_mother_doc_if_present",
+            "run_mother_doc_lint",
+            "read_graph_context_for_current_code_reality_when_available",
+            "only_then_read_concrete_codebase_files_if_construction_plan_or_implementation_requires_them",
+        ]
+        assert (
+            payload["phase_read_policy"]["single_stage_rule"]
+            == "read only the current stage checklist and the artifacts required by that stage"
         )
-        self.assertEqual(
-            payload["discovery_scope_policy"]["required_startup_sequence"],
-            [
-                "read_mother_doc_index_or_directory",
-                "inspect_latest_archived_mother_doc_if_present",
-                "run_mother_doc_lint",
-                "read_graph_context_for_current_code_reality_when_available",
-                "only_then_read_concrete_codebase_files_if_construction_plan_or_implementation_requires_them",
-            ],
+        assert payload["stage_switch_protocol"][0] == "keep only top_level_resident_docs across stage switches"
+        assert "resident_docs" in payload["stage_read_boundaries"]["implementation"]
+        assert "stage_docs" in payload["stage_read_boundaries"]["implementation"]
+        assert "graph_role" in payload["stage_read_boundaries"]["implementation"]
+        assert "drop_on_stage_switch" in payload["stage_read_boundaries"]["implementation"]
+        assert "reconcile existing code reality" in payload["stage_graph_roles"]["mother_doc"]["read_policy"]
+        assert "decompose execution atom packs" in payload["stage_graph_roles"]["construction_plan"]["read_policy"]
+        assert (
+            payload["stage_graph_roles"]["implementation"]["read_policy"]
+            == "do_not_read_graph_as_a_stage_artifact; implementation must read concrete code directly"
         )
-        self.assertEqual(
-            payload["phase_read_policy"]["single_stage_rule"],
-            "read only the current stage checklist and the artifacts required by that stage",
-        )
-        self.assertEqual(
-            payload["stage_switch_protocol"][0],
-            "keep only top_level_resident_docs across stage switches",
-        )
-        self.assertIn("resident_docs", payload["stage_read_boundaries"]["implementation"])
-        self.assertIn("stage_docs", payload["stage_read_boundaries"]["implementation"])
-        self.assertIn("graph_role", payload["stage_read_boundaries"]["implementation"])
-        self.assertIn("drop_on_stage_switch", payload["stage_read_boundaries"]["implementation"])
-        self.assertIn("reconcile existing code reality", payload["stage_graph_roles"]["mother_doc"]["read_policy"])
-        self.assertIn("decompose execution atom packs", payload["stage_graph_roles"]["construction_plan"]["read_policy"])
-        self.assertEqual(
-            payload["stage_graph_roles"]["implementation"]["read_policy"],
-            "do_not_read_graph_as_a_stage_artifact; implementation must read concrete code directly",
-        )
-        self.assertIn("run graph-postflight", payload["stage_graph_roles"]["acceptance"]["update_policy"])
-        self.assertIn("08_dev_execution_plan.md", payload["mother_doc_required_files"])
-        self.assertIn("阶段断言", payload["mother_doc_required_signals"])
-        self.assertIn("requirement_atom_id", payload["requirement_atom_required_fields"])
-        self.assertIn("design_step_id", payload["design_phase_plan_required_sections"])
-        self.assertIn("00_index.md", payload["construction_plan_required_sections"])
-        self.assertIn("phase_status.jsonl", payload["construction_plan_required_sections"])
-        self.assertIn("plan_step_id", payload["acceptance_required_fields"])
-        self.assertTrue(payload["construction_plan_root"].endswith("docs/mother_doc/execution_atom_plan_validation_packs"))
-        self.assertTrue(payload["construction_plan_index"].endswith("docs/mother_doc/execution_atom_plan_validation_packs/00_index.md"))
-        self.assertTrue(
-            payload["required_templates"]["mother_doc_root"].endswith("assets/templates/mother_doc")
-        )
-        self.assertTrue(
-            payload["required_templates"]["construction_plan_root"].endswith("assets/templates/execution_atom_plan_validation_packs")
+        assert "run graph-postflight" in payload["stage_graph_roles"]["acceptance"]["update_policy"]
+        assert "08_dev_execution_plan.md" in payload["mother_doc_required_files"]
+        assert "阶段断言" in payload["mother_doc_required_signals"]
+        assert "requirement_atom_id" in payload["requirement_atom_required_fields"]
+        assert "design_step_id" in payload["design_phase_plan_required_sections"]
+        assert "00_index.md" in payload["construction_plan_required_sections"]
+        assert "phase_status.jsonl" in payload["construction_plan_required_sections"]
+        assert "plan_step_id" in payload["acceptance_required_fields"]
+        assert payload["construction_plan_root"].endswith("docs/mother_doc/execution_atom_plan_validation_packs")
+        assert payload["construction_plan_index"].endswith("docs/mother_doc/execution_atom_plan_validation_packs/00_index.md")
+        assert payload["required_templates"]["mother_doc_root"].endswith("assets/templates/mother_doc")
+        assert payload["required_templates"]["construction_plan_root"].endswith(
+            "assets/templates/execution_atom_plan_validation_packs"
         )
 
     def test_stage_checklist_for_construction_plan_focuses_on_separate_execution_plan(self) -> None:
         payload = run_cli("stage-checklist", "--stage", "construction_plan")
-        self.assertEqual(payload["stage"], "construction_plan")
-        self.assertIn("docs/mother_doc/execution_atom_plan_validation_packs/ directory", payload["required_outputs"][0])
-        self.assertIn("rules/OCTOPUS_SKILL_HARD_RULES.md", payload["resident_docs"])
-        self.assertIn("docs/mother_doc/08_dev_execution_plan.md", payload["stage_docs"])
-        self.assertIn("graph context", payload["graph_role"]["read_policy"])
-        self.assertTrue(any("construction-plan-init" in item for item in payload["stage_entry_actions"]))
-        self.assertIn("separate from mother doc design plan", payload["stage_exit_gate"][0])
-        self.assertIn("machine files", payload["stage_exit_gate"][1])
-        self.assertIn("mother_doc drafting focus", payload["drop_on_stage_switch"][0])
+        assert payload["stage"] == "construction_plan"
+        assert "docs/mother_doc/execution_atom_plan_validation_packs/ directory" in payload["required_outputs"][0]
+        assert "rules/OCTOPUS_SKILL_HARD_RULES.md" in payload["resident_docs"]
+        assert "docs/mother_doc/08_dev_execution_plan.md" in payload["stage_docs"]
+        assert "graph context" in payload["graph_role"]["read_policy"]
+        assert any("construction-plan-init" in item for item in payload["stage_entry_actions"])
+        assert "separate from mother doc design plan" in payload["stage_exit_gate"][0]
+        assert "machine files" in payload["stage_exit_gate"][1]
+        assert "mother_doc drafting focus" in payload["drop_on_stage_switch"][0]
 
     def test_stage_doc_command_and_graph_contracts_are_stage_scoped(self) -> None:
+        require_runtime_docs_root()
         doc_payload = run_cli("stage-doc-contract", "--stage", "implementation")
         command_payload = run_cli("stage-command-contract", "--stage", "acceptance")
         graph_payload = run_cli("stage-graph-contract", "--stage", "mother_doc")
-        self.assertEqual(doc_payload["stage"], "implementation")
-        self.assertIn("docs/mother_doc/execution_atom_plan_validation_packs/<active_pack>/*", doc_payload["stage_docs"])
-        self.assertIn("acceptance-lint", command_payload["gate_commands"][0])
-        self.assertIn("mother-doc-archive", command_payload["gate_commands"][2])
-        self.assertIn("read 07_env_and_deploy.md", command_payload["required_runtime_actions"][0])
-        self.assertIn("resolve secrets from local ignored env files", command_payload["required_runtime_actions"][1])
-        self.assertIn("simulate at least one human interaction", command_payload["required_runtime_actions"][4])
-        self.assertIn("only after local config, service bring-up, health checks, and simulated human usage", command_payload["needs_real_env_threshold"][0])
-        self.assertIn("reconcile existing code reality", graph_payload["graph_role"]["read_policy"])
-        self.assertIn("graph-preflight", graph_payload["recommended_commands"][0])
+        assert doc_payload["stage"] == "implementation"
+        assert "docs/mother_doc/execution_atom_plan_validation_packs/<active_pack>/*" in doc_payload["stage_docs"]
+        assert "acceptance-lint" in command_payload["gate_commands"][0]
+        assert "mother-doc-archive" in command_payload["gate_commands"][2]
+        assert "read 07_env_and_deploy.md" in command_payload["required_runtime_actions"][0]
+        assert "resolve secrets from local ignored env files" in command_payload["required_runtime_actions"][1]
+        assert "simulate at least one human interaction" in command_payload["required_runtime_actions"][4]
+        assert (
+            "only after local config, service bring-up, health checks, and simulated human usage"
+            in command_payload["needs_real_env_threshold"][0]
+        )
+        assert "reconcile existing code reality" in graph_payload["graph_role"]["read_policy"]
+        assert "graph-preflight" in graph_payload["recommended_commands"][0]
 
     def test_mother_doc_contracts_require_latest_archive_review_before_refill(self) -> None:
+        require_runtime_docs_root()
         doc_payload = run_cli("stage-doc-contract", "--stage", "mother_doc")
         command_payload = run_cli("stage-command-contract", "--stage", "mother_doc")
         checklist_payload = run_cli("stage-checklist", "--stage", "mother_doc")
-        self.assertIn("docs/<latest_NN_slug>/* when present", checklist_payload["stage_docs"])
-        self.assertIn("iteration_context_root", doc_payload)
-        self.assertIsNone(doc_payload["iteration_context_root"])
-        self.assertIn("if a numbered archived mother_doc iteration exists", command_payload["required_iteration_actions"][0])
-        self.assertIn("extract inherited target state", command_payload["required_iteration_actions"][1])
-        self.assertIn("read graph context after archive review", command_payload["required_iteration_actions"][2])
+        assert "docs/<latest_NN_slug>/* when present" in checklist_payload["stage_docs"]
+        assert "iteration_context_root" in doc_payload
+        assert doc_payload["iteration_context_root"] is None
+        assert "if a numbered archived mother_doc iteration exists" in command_payload["required_iteration_actions"][0]
+        assert "extract inherited target state" in command_payload["required_iteration_actions"][1]
+        assert "read graph context after archive review" in command_payload["required_iteration_actions"][2]
 
     def test_acceptance_lint_defaults_to_mother_doc_acceptance_container(self) -> None:
         import cli_support  # type: ignore
 
-        self.assertTrue(str(cli_support.ACCEPTANCE_ROOT).endswith("docs/mother_doc/acceptance"))
-        self.assertTrue(str(cli_support.ACCEPTANCE_MATRIX_PATH).endswith("docs/mother_doc/acceptance/acceptance_matrix.md"))
-        self.assertTrue(str(cli_support.ACCEPTANCE_REPORT_PATH).endswith("docs/mother_doc/acceptance/acceptance_report.md"))
+        assert str(cli_support.ACCEPTANCE_ROOT).endswith("docs/mother_doc/acceptance")
+        assert str(cli_support.ACCEPTANCE_MATRIX_PATH).endswith(
+            "docs/mother_doc/acceptance/acceptance_matrix.md"
+        )
+        assert str(cli_support.ACCEPTANCE_REPORT_PATH).endswith(
+            "docs/mother_doc/acceptance/acceptance_report.md"
+        )
 
     def test_template_index_lists_directory_templates(self) -> None:
         payload = run_cli("template-index")
-        self.assertTrue(payload["mother_doc_root"].endswith("assets/templates/mother_doc"))
-        self.assertTrue(payload["mother_doc_index"].endswith("00_index.md"))
-        self.assertTrue(payload["mother_doc_dev_execution_plan"].endswith("08_dev_execution_plan.md"))
-        self.assertTrue(payload["construction_plan_root"].endswith("execution_atom_plan_validation_packs"))
-        self.assertTrue(payload["execution_atom_pack_template_root"].endswith("PACK_TEMPLATE"))
-        self.assertTrue(payload["adr_record"].endswith("12_adrs/ADR_TEMPLATE.md"))
-        self.assertTrue(payload["acceptance_report"].endswith("ACCEPTANCE_REPORT_TEMPLATE.md"))
+        assert payload["mother_doc_root"].endswith("assets/templates/mother_doc")
+        assert payload["mother_doc_index"].endswith("00_index.md")
+        assert payload["mother_doc_dev_execution_plan"].endswith("08_dev_execution_plan.md")
+        assert payload["construction_plan_root"].endswith("execution_atom_plan_validation_packs")
+        assert payload["execution_atom_pack_template_root"].endswith("PACK_TEMPLATE")
+        assert payload["adr_record"].endswith("12_adrs/ADR_TEMPLATE.md")
+        assert payload["acceptance_report"].endswith("ACCEPTANCE_REPORT_TEMPLATE.md")
 
     def test_mother_doc_init_creates_directory_skeleton(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             target = Path(temp_dir) / "docs" / "mother_doc"
             payload = run_cli("mother-doc-init", "--target", str(target))
-            self.assertEqual(payload["status"], "pass")
-            self.assertTrue((target / "00_index.md").exists())
-            self.assertTrue((target / "08_dev_execution_plan.md").exists())
-            self.assertTrue((target / "12_adrs" / "ADR_TEMPLATE.md").exists())
+            assert payload["status"] == "pass"
+            assert (target / "00_index.md").exists()
+            assert (target / "08_dev_execution_plan.md").exists()
+            assert (target / "12_adrs" / "ADR_TEMPLATE.md").exists()
 
     def test_construction_plan_init_creates_plan_skeleton(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             target = Path(temp_dir) / "docs" / "mother_doc" / "execution_atom_plan_validation_packs"
             payload = run_cli("construction-plan-init", "--target", str(target))
-            self.assertEqual(payload["status"], "pass")
-            self.assertTrue((target / "00_index.md").exists())
-            self.assertTrue((target / "pack_registry.yaml").exists())
-            self.assertTrue((target / "01_design_01").exists())
+            assert payload["status"] == "pass"
+            assert (target / "00_index.md").exists()
+            assert (target / "pack_registry.yaml").exists()
+            assert (target / "01_design_01").exists()
 
     def test_construction_plan_lint_passes_for_filled_directory_contract(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -178,10 +188,10 @@ class CliToolboxRegressionTest(unittest.TestCase):
             run_cli("construction-plan-init", "--target", str(target))
             fill_directory_placeholders(target)
             completed = run_cli_raw("construction-plan-lint", "--path", str(target))
-            self.assertEqual(completed.returncode, 0)
+            assert completed.returncode == 0
             payload = json.loads(completed.stdout)
-            self.assertEqual(payload["status"], "pass")
-            self.assertTrue(payload["construction_plan_gate_allowed"])
+            assert payload["status"] == "pass"
+            assert payload["construction_plan_gate_allowed"]
 
     def test_construction_plan_lint_fails_for_invalid_pack_manifest_schema(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -214,12 +224,12 @@ class CliToolboxRegressionTest(unittest.TestCase):
                 encoding="utf-8",
             )
             completed = run_cli_raw("construction-plan-lint", "--path", str(target))
-            self.assertNotEqual(completed.returncode, 0)
+            assert completed.returncode != 0
             payload = json.loads(completed.stdout)
-            self.assertEqual(payload["status"], "fail")
-            self.assertTrue(payload["machine_schema_violations"])
-            self.assertIn("pack_id must match PACK-NN", "\n".join(payload["machine_schema_violations"]))
-            self.assertIn("machine_files missing keys ['evidence_registry']", "\n".join(payload["machine_schema_violations"]))
+            assert payload["status"] == "fail"
+            assert payload["machine_schema_violations"]
+            assert "pack_id must match PACK-NN" in "\n".join(payload["machine_schema_violations"])
+            assert "machine_files missing keys ['evidence_registry']" in "\n".join(payload["machine_schema_violations"])
 
     def test_construction_plan_lint_fails_for_invalid_inner_phase_schema(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -258,15 +268,15 @@ class CliToolboxRegressionTest(unittest.TestCase):
                 encoding="utf-8",
             )
             completed = run_cli_raw("construction-plan-lint", "--path", str(target))
-            self.assertNotEqual(completed.returncode, 0)
+            assert completed.returncode != 0
             payload = json.loads(completed.stdout)
-            self.assertEqual(payload["status"], "fail")
-            self.assertTrue(payload["machine_schema_violations"])
+            assert payload["status"] == "fail"
+            assert payload["machine_schema_violations"]
             violations = "\n".join(payload["machine_schema_violations"])
-            self.assertIn("phase_goal must be a non-empty string", violations)
-            self.assertIn("evidence_writeback_slice has unsupported refs ['unknown.txt']", violations)
-            self.assertIn("inner_phase_id must be unique", violations)
-            self.assertIn("implementation_slice must be a non-empty string list", violations)
+            assert "phase_goal must be a non-empty string" in violations
+            assert "evidence_writeback_slice has unsupported refs ['unknown.txt']" in violations
+            assert "inner_phase_id must be unique" in violations
+            assert "implementation_slice must be a non-empty string list" in violations
 
     def test_mother_doc_archive_renames_to_next_sequence_and_reinits(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -277,20 +287,20 @@ class CliToolboxRegressionTest(unittest.TestCase):
             run_cli("mother-doc-init", "--target", str(active_root))
             fill_directory_placeholders(active_root)
             payload = run_cli("mother-doc-archive", "--target", str(active_root), "--archive-slug", "demo-project")
-            self.assertEqual(payload["status"], "pass")
-            self.assertTrue((docs_root / "02_demo_project").exists())
-            self.assertTrue((active_root / "00_index.md").exists())
+            assert payload["status"] == "pass"
+            assert (docs_root / "02_demo_project").exists()
+            assert (active_root / "00_index.md").exists()
 
     def test_mother_doc_lint_fails_when_replace_me_or_guidance_remains(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             target = Path(temp_dir) / "docs" / "mother_doc"
             run_cli("mother-doc-init", "--target", str(target))
             completed = run_cli_raw("mother-doc-lint", "--path", str(target))
-            self.assertNotEqual(completed.returncode, 0)
+            assert completed.returncode != 0
             payload = json.loads(completed.stdout)
-            self.assertEqual(payload["status"], "fail")
-            self.assertIn("00_index.md", payload["files_with_replace_me"])
-            self.assertIn("08_dev_execution_plan.md", payload["files_with_replace_me"])
+            assert payload["status"] == "fail"
+            assert "00_index.md" in payload["files_with_replace_me"]
+            assert "08_dev_execution_plan.md" in payload["files_with_replace_me"]
 
     def test_mother_doc_lint_passes_for_filled_directory_contract(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -298,20 +308,20 @@ class CliToolboxRegressionTest(unittest.TestCase):
             run_cli("mother-doc-init", "--target", str(target))
             fill_directory_placeholders(target)
             completed = run_cli_raw("mother-doc-lint", "--path", str(target))
-            self.assertEqual(completed.returncode, 0)
+            assert completed.returncode == 0
             payload = json.loads(completed.stdout)
-            self.assertEqual(payload["status"], "pass")
-            self.assertTrue(payload["construction_plan_gate_allowed"])
+            assert payload["status"] == "pass"
+            assert payload["construction_plan_gate_allowed"]
 
     def test_mother_doc_lint_rejects_single_file_input(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             target = Path(temp_dir) / "mother_doc.md"
             target.write_text("# single file\n", encoding="utf-8")
             completed = run_cli_raw("mother-doc-lint", "--path", str(target))
-            self.assertNotEqual(completed.returncode, 0)
+            assert completed.returncode != 0
             payload = json.loads(completed.stdout)
-            self.assertTrue(payload["single_file_input_detected"])
-            self.assertIn("single-file mother_doc.md is not accepted", payload["single_file_rejection_hint"])
+            assert payload["single_file_input_detected"]
+            assert "single-file mother_doc.md is not accepted" in payload["single_file_rejection_hint"]
 
     def test_mother_doc_lint_detects_forbidden_terms_even_after_fill(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -322,24 +332,23 @@ class CliToolboxRegressionTest(unittest.TestCase):
             content = problem_file.read_text(encoding="utf-8")
             problem_file.write_text(content + "\n这是一个 mvp。\n", encoding="utf-8")
             completed = run_cli_raw("mother-doc-lint", "--path", str(target))
-            self.assertNotEqual(completed.returncode, 0)
+            assert completed.returncode != 0
             payload = json.loads(completed.stdout)
-            self.assertIn("mvp", payload["forbidden_term_hits"])
+            assert "mvp" in payload["forbidden_term_hits"]
 
     def test_graph_preflight_skips_missing_index_for_empty_repo(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             repo = Path(temp_dir) / "empty_repo"
             repo.mkdir()
             payload = run_cli("graph-preflight", "--repo", str(repo), "--allow-missing-index")
-            self.assertFalse(payload["indexed"])
-            self.assertFalse(payload["substantial_codebase"])
-            self.assertEqual(payload["recommended_action"], "skip_non_blocking")
-            self.assertEqual(payload["default_baseline_mode"], "empty_baseline")
-            self.assertEqual(payload["implementation_source_scope"], "current_worktree_only")
-            self.assertIn(
-                "reading non-worktree source artifacts as implementation material",
-                payload["forbidden_non_worktree_actions"],
-            )
+            assert not (payload["indexed"])
+            assert not (payload["substantial_codebase"])
+            assert payload["recommended_action"] == "skip_non_blocking"
+            assert payload["default_baseline_mode"] == "empty_baseline"
+            assert payload["implementation_source_scope"] == "current_worktree_only"
+            assert "reading non-worktree source artifacts as implementation material" in payload[
+                "forbidden_non_worktree_actions"
+            ]
 
     def test_graph_preflight_recommends_analyze_for_existing_codebase(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -348,10 +357,10 @@ class CliToolboxRegressionTest(unittest.TestCase):
             for index in range(5):
                 (repo / f"mod_{index}.py").write_text("print('ok')\n", encoding="utf-8")
             payload = run_cli("graph-preflight", "--repo", str(repo), "--allow-missing-index")
-            self.assertFalse(payload["indexed"])
-            self.assertTrue(payload["substantial_codebase"])
-            self.assertEqual(payload["recommended_action"], "run_analyze")
-            self.assertEqual(payload["default_baseline_mode"], "real_codebase")
+            assert not (payload["indexed"])
+            assert payload["substantial_codebase"]
+            assert payload["recommended_action"] == "run_analyze"
+            assert payload["default_baseline_mode"] == "real_codebase"
 
     def test_acceptance_lint_fails_when_docs_claim_success_before_files_exist(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -384,12 +393,12 @@ class CliToolboxRegressionTest(unittest.TestCase):
                 encoding="utf-8",
             )
             completed = run_cli_raw("acceptance-lint", "--matrix-path", str(matrix), "--report-path", str(report))
-            self.assertNotEqual(completed.returncode, 0)
+            assert completed.returncode != 0
             payload = json.loads(completed.stdout)
-            self.assertEqual(payload["status"], "fail")
+            assert payload["status"] == "fail"
             reasons = {item["reason"] for item in payload["violations"]}
-            self.assertIn("implemented_true_without_existing_non_doc_evidence", reasons)
-            self.assertIn("tested_true_without_existing_test_evidence", reasons)
+            assert "implemented_true_without_existing_non_doc_evidence" in reasons
+            assert "tested_true_without_existing_test_evidence" in reasons
 
     def test_acceptance_lint_passes_when_paths_exist_and_states_match(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -428,11 +437,7 @@ class CliToolboxRegressionTest(unittest.TestCase):
                 encoding="utf-8",
             )
             completed = run_cli_raw("acceptance-lint", "--matrix-path", str(matrix), "--report-path", str(report))
-            self.assertEqual(completed.returncode, 0)
+            assert completed.returncode == 0
             payload = json.loads(completed.stdout)
-            self.assertEqual(payload["status"], "pass")
-            self.assertTrue(payload["acceptance_gate_allowed"])
-
-
-if __name__ == "__main__":
-    unittest.main()
+            assert payload["status"] == "pass"
+            assert payload["acceptance_gate_allowed"]

@@ -3,14 +3,13 @@ from __future__ import annotations
 import json
 import subprocess
 import tempfile
-import unittest
 from pathlib import Path
 
 
 SCRIPT = Path(__file__).resolve().parents[1] / "scripts" / "Cli_Toolbox.py"
 
 
-class MetaSkillMirrorCliTests(unittest.TestCase):
+class TestMetaSkillMirrorCliTests:
     def run_cli(self, *args: str, check: bool = True) -> subprocess.CompletedProcess[str]:
         return subprocess.run(
             ["python3", str(SCRIPT), *args],
@@ -43,13 +42,13 @@ class MetaSkillMirrorCliTests(unittest.TestCase):
             )
 
             payload = json.loads(completed.stdout)
-            self.assertEqual(payload["status"], "ok")
-            self.assertEqual(payload["resolved_mode"], "push")
-            self.assertEqual(payload["skill_name"], ".system/skill-creator")
-            self.assertEqual(payload["source_skill_name"], ".system/Skill-creator")
-            self.assertEqual(payload["destination_skill_name"], ".system/skill-creator")
-            self.assertEqual(payload["source"], str(source_skill))
-            self.assertEqual(payload["destination"], str(destination_skill))
+            assert payload["status"] == "ok"
+            assert payload["resolved_mode"] == "push"
+            assert payload["skill_name"] == ".system/skill-creator"
+            assert payload["source_skill_name"] == ".system/Skill-creator"
+            assert payload["destination_skill_name"] == ".system/skill-creator"
+            assert payload["source"] == str(source_skill)
+            assert payload["destination"] == str(destination_skill)
 
     def test_install_mode_routes_nested_system_skill_to_lowercase_codex_destination(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -72,11 +71,11 @@ class MetaSkillMirrorCliTests(unittest.TestCase):
             )
 
             payload = json.loads(completed.stdout)
-            self.assertEqual(payload["status"], "route_required")
-            self.assertEqual(payload["resolved_mode"], "install")
-            self.assertEqual(payload["source_skill_name"], ".system/Skill-installer")
-            self.assertEqual(payload["destination_skill_name"], ".system/skill-installer")
-            self.assertEqual(payload["destination"], str(codex_root / ".system" / "skill-installer"))
+            assert payload["status"] == "route_required"
+            assert payload["resolved_mode"] == "install"
+            assert payload["source_skill_name"] == ".system/Skill-installer"
+            assert payload["destination_skill_name"] == ".system/skill-installer"
+            assert payload["destination"] == str(codex_root / ".system" / "skill-installer")
 
     def test_nested_non_system_skill_path_keeps_original_destination_shape(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -102,9 +101,9 @@ class MetaSkillMirrorCliTests(unittest.TestCase):
             )
 
             payload = json.loads(completed.stdout)
-            self.assertEqual(payload["resolved_mode"], "push")
-            self.assertEqual(payload["source_skill_name"], "families/Custom-Skill")
-            self.assertEqual(payload["destination_skill_name"], "families/Custom-Skill")
+            assert payload["resolved_mode"] == "push"
+            assert payload["source_skill_name"] == "families/Custom-Skill"
+            assert payload["destination_skill_name"] == "families/Custom-Skill"
 
     def test_rejects_path_traversal_skill_name(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -125,10 +124,10 @@ class MetaSkillMirrorCliTests(unittest.TestCase):
                 check=False,
             )
 
-            self.assertNotEqual(completed.returncode, 0)
+            assert completed.returncode != 0
             payload = json.loads(completed.stdout)
-            self.assertEqual(payload["status"], "error")
-            self.assertIn("dot traversal", payload["error"])
+            assert payload["status"] == "error"
+            assert "dot traversal" in payload["error"]
 
     def test_all_scope_push_only_syncs_skill_roots(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -165,20 +164,17 @@ class MetaSkillMirrorCliTests(unittest.TestCase):
             )
 
             payload = json.loads(completed.stdout)
-            self.assertEqual(payload["status"], "ok")
-            self.assertEqual(payload["resolved_mode"], "push")
-            self.assertEqual(payload["scope"], "all")
-            self.assertEqual(payload["skills_root"], str(skills_root))
-            self.assertEqual(
-                [entry["root_name"] for entry in payload["synced_entries"]],
-                [".system", "Meta-Impact-Investigation"],
-            )
-            self.assertTrue(all("docs" not in " ".join(command) for command in payload["commands"]))
-            self.assertTrue(all("product_tools" not in " ".join(command) for command in payload["commands"]))
-            self.assertEqual(
-                payload["removed_forbidden_entries"],
-                [str(codex_root / "AGENTS.md")],
-            )
+            assert payload["status"] == "ok"
+            assert payload["resolved_mode"] == "push"
+            assert payload["scope"] == "all"
+            assert payload["skills_root"] == str(skills_root)
+            assert [entry["root_name"] for entry in payload["synced_entries"]] == [
+                ".system",
+                "Meta-Impact-Investigation",
+            ]
+            assert all("docs" not in " ".join(command) for command in payload["commands"])
+            assert all("product_tools" not in " ".join(command) for command in payload["commands"])
+            assert payload["removed_forbidden_entries"] == [str(codex_root / "AGENTS.md")]
 
     def test_all_scope_push_removes_stale_codex_root_agents(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -201,12 +197,9 @@ class MetaSkillMirrorCliTests(unittest.TestCase):
             )
 
             payload = json.loads(completed.stdout)
-            self.assertEqual(payload["status"], "ok")
-            self.assertFalse((codex_root / "AGENTS.md").exists())
-            self.assertEqual(
-                payload["removed_forbidden_entries"],
-                [str(codex_root / "AGENTS.md")],
-            )
+            assert payload["status"] == "ok"
+            assert not (codex_root / "AGENTS.md").exists()
+            assert payload["removed_forbidden_entries"] == [str(codex_root / "AGENTS.md")]
 
     def test_rename_mode_replaces_old_destination_and_renames_folder(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -239,15 +232,15 @@ class MetaSkillMirrorCliTests(unittest.TestCase):
 
             payload = json.loads(completed.stdout)
             new_destination = codex_root / "WorkFlow-RealState-Posting-Web"
-            self.assertEqual(payload["status"], "ok")
-            self.assertEqual(payload["resolved_mode"], "rename")
-            self.assertEqual(payload["rename_from"], "Meta-browser-operation")
-            self.assertEqual(payload["destination"], str(new_destination))
-            self.assertTrue(payload["renamed_path"])
-            self.assertFalse(old_destination.exists())
-            self.assertTrue(new_destination.exists())
-            self.assertEqual((new_destination / "SKILL.md").read_text(encoding="utf-8"), "new-skill\n")
-            self.assertFalse((new_destination / "stale.txt").exists())
+            assert payload["status"] == "ok"
+            assert payload["resolved_mode"] == "rename"
+            assert payload["rename_from"] == "Meta-browser-operation"
+            assert payload["destination"] == str(new_destination)
+            assert payload["renamed_path"]
+            assert not (old_destination.exists())
+            assert new_destination.exists()
+            assert (new_destination / "SKILL.md").read_text(encoding="utf-8") == "new-skill\n"
+            assert not (new_destination / "stale.txt").exists()
 
     def test_rename_mode_requires_rename_from(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -272,11 +265,7 @@ class MetaSkillMirrorCliTests(unittest.TestCase):
                 check=False,
             )
 
-            self.assertNotEqual(completed.returncode, 0)
+            assert completed.returncode != 0
             payload = json.loads(completed.stdout)
-            self.assertEqual(payload["status"], "error")
-            self.assertIn("--rename-from", payload["error"])
-
-
-if __name__ == "__main__":
-    unittest.main()
+            assert payload["status"] == "error"
+            assert "--rename-from" in payload["error"]

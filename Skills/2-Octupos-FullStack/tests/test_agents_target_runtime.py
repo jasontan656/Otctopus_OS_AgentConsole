@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import json
 import tempfile
-import unittest
 from pathlib import Path
 
 import sys
@@ -25,7 +24,7 @@ from mother_doc_agents_manager import (
 )
 
 
-class AgentsTargetRuntimeTests(unittest.TestCase):
+class TestAgentsTargetRuntimeTests:
     def _prepare_workspace(self, tmp: str) -> tuple[Path, Path]:
         skill_root = Path(tmp) / "skill"
         workspace_root = Path(tmp) / "Octopus_OS"
@@ -41,10 +40,10 @@ class AgentsTargetRuntimeTests(unittest.TestCase):
             skill_root, workspace_root = self._prepare_workspace(tmp)
             collect_from_scan(skill_root)
             payload = load_target_contract(skill_root, ROOT_RELATIVE_PATH, "agents")
-            self.assertEqual(payload["source_path"], str(workspace_root / "AGENTS.md"))
-            self.assertEqual(payload["managed_human_path"], str(managed_human_path(skill_root)))
-            self.assertEqual(payload["managed_machine_path"], str(managed_machine_path(skill_root)))
-            self.assertNotIn("branch_registry_cli", payload["payload_navigation"])
+            assert payload["source_path"] == str(workspace_root / "AGENTS.md")
+            assert payload["managed_human_path"] == str(managed_human_path(skill_root))
+            assert payload["managed_machine_path"] == str(managed_machine_path(skill_root))
+            assert "branch_registry_cli" not in payload["payload_navigation"]
 
     def test_scan_reports_forbidden_extra_agents(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -53,8 +52,8 @@ class AgentsTargetRuntimeTests(unittest.TestCase):
             extra.parent.mkdir(parents=True, exist_ok=True)
             extra.write_text("legacy", encoding="utf-8")
             payload = scan_agents_tree(skill_root, workspace_root / "Mother_Doc" / "docs")
-            self.assertEqual(payload["managed_external_target"], str(workspace_root / "AGENTS.md"))
-            self.assertEqual(payload["extra_agents"], [str(extra)])
+            assert payload["managed_external_target"] == str(workspace_root / "AGENTS.md")
+            assert payload["extra_agents"] == [str(extra)]
 
     def test_collect_removes_registry_and_index_governance_assets(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -64,16 +63,16 @@ class AgentsTargetRuntimeTests(unittest.TestCase):
             (obsolete_dir / "registry.json").write_text("{}", encoding="utf-8")
             (obsolete_dir / "index.md").write_text("legacy", encoding="utf-8")
             payload = collect_from_scan(skill_root)
-            self.assertFalse((obsolete_dir / "registry.json").exists())
-            self.assertFalse((obsolete_dir / "index.md").exists())
-            self.assertEqual(payload["source_path"], str(workspace_root / "AGENTS.md"))
+            assert not (obsolete_dir / "registry.json").exists()
+            assert not (obsolete_dir / "index.md").exists()
+            assert payload["source_path"] == str(workspace_root / "AGENTS.md")
 
     def test_branch_contract_no_longer_declares_registry_or_index(self) -> None:
         skill_root = Path(__file__).resolve().parents[1]
         payload = load_branch_runtime_contract(skill_root)
-        self.assertNotIn("machine_branch_index", payload["runtime_source_policy"])
-        self.assertNotIn("branch_registry_command", payload["runtime_entry_commands"])
-        self.assertEqual(payload["managed_asset_model"]["managed_human_path"], "assets/managed_targets/Octopus_OS/AGENTS_human.md")
+        assert "machine_branch_index" not in payload["runtime_source_policy"]
+        assert "branch_registry_command" not in payload["runtime_entry_commands"]
+        assert payload["managed_asset_model"]["managed_human_path"] == "assets/managed_targets/Octopus_OS/AGENTS_human.md"
 
     def test_push_deletes_extra_agents_and_obsolete_branch_assets(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -98,10 +97,6 @@ class AgentsTargetRuntimeTests(unittest.TestCase):
             )
 
             payload = push_agents_tree(skill_root, workspace_root / "Mother_Doc" / "docs", dry_run=False)
-            self.assertFalse(legacy_extra.exists())
-            self.assertFalse((obsolete_dir / "registry.json").exists())
-            self.assertEqual(payload["pushed_root_agents"], str(workspace_root / "AGENTS.md"))
-
-
-if __name__ == "__main__":
-    unittest.main()
+            assert not (legacy_extra.exists())
+            assert not (obsolete_dir / "registry.json").exists()
+            assert payload["pushed_root_agents"] == str(workspace_root / "AGENTS.md")

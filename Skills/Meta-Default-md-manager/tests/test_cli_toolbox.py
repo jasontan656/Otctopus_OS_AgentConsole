@@ -4,7 +4,6 @@ import json
 import os
 import subprocess
 import tempfile
-import unittest
 from pathlib import Path
 
 
@@ -221,8 +220,8 @@ def legacy_repo_payload() -> dict:
     }
 
 
-class CliToolboxTests(unittest.TestCase):
-    def setUp(self) -> None:
+class TestCliToolboxTests:
+    def setup_method(self, method=None) -> None:
         self.tempdir = tempfile.TemporaryDirectory()
         self.root = Path(self.tempdir.name)
         self.workspace = self.root / "AI_Projects"
@@ -281,7 +280,7 @@ class CliToolboxTests(unittest.TestCase):
             render_external_agents("excluded"),
         )
 
-    def tearDown(self) -> None:
+    def teardown_method(self, method=None) -> None:
         self.tempdir.cleanup()
 
     def run_cli(self, *args: str) -> subprocess.CompletedProcess[str]:
@@ -300,28 +299,28 @@ class CliToolboxTests(unittest.TestCase):
 
     def test_scan_finds_governed_agents_and_excludes_octopus_os(self) -> None:
         result = self.run_cli("scan", "--json", "--write-runtime-report")
-        self.assertEqual(result.returncode, 0, result.stderr)
+        assert result.returncode == 0, result.stderr
         payload = json.loads(result.stdout)
         paths = [item["relative_path"] for item in payload["entries"]]
-        self.assertIn("AGENTS.md", paths)
-        self.assertIn("octopus-os-agent-console/AGENTS.md", paths)
-        self.assertNotIn("Octopus_OS/AGENTS.md", paths)
-        self.assertEqual(sorted(paths), ["AGENTS.md", "octopus-os-agent-console/AGENTS.md"])
-        self.assertTrue((self.runtime / "scan" / "latest.json").exists())
+        assert "AGENTS.md" in paths
+        assert "octopus-os-agent-console/AGENTS.md" in paths
+        assert "Octopus_OS/AGENTS.md" not in paths
+        assert sorted(paths) == ["AGENTS.md", "octopus-os-agent-console/AGENTS.md"]
+        assert (self.runtime / "scan" / "latest.json").exists()
 
     def test_collect_creates_internal_human_and_syncs_installed(self) -> None:
         result = self.run_cli("collect", "--json")
-        self.assertEqual(result.returncode, 0, result.stderr)
+        assert result.returncode == 0, result.stderr
         mirror_human = self.mirror / "assets" / "managed_targets" / "AI_Projects" / "octopus-os-agent-console" / "AGENTS_human.md"
         installed_human = self.installed / "assets" / "managed_targets" / "AI_Projects" / "octopus-os-agent-console" / "AGENTS_human.md"
-        self.assertTrue(mirror_human.exists())
-        self.assertEqual(mirror_human.read_text(encoding="utf-8"), installed_human.read_text(encoding="utf-8"))
+        assert mirror_human.exists()
+        assert mirror_human.read_text(encoding="utf-8") == installed_human.read_text(encoding="utf-8")
         human_text = mirror_human.read_text(encoding="utf-8")
-        self.assertIn("<part_A>", human_text)
-        self.assertIn("<part_B>", human_text)
-        self.assertIn("```json", human_text)
+        assert "<part_A>" in human_text
+        assert "<part_B>" in human_text
+        assert "```json" in human_text
         payload = json.loads(result.stdout)
-        self.assertNotIn("legacy_part_a_marker_detected", payload["operations"][0])
+        assert "legacy_part_a_marker_detected" not in payload["operations"][0]
 
     def test_push_exports_only_part_a(self) -> None:
         human = self.mirror / "assets" / "managed_targets" / "AI_Projects" / "octopus-os-agent-console" / "AGENTS_human.md"
@@ -331,11 +330,11 @@ class CliToolboxTests(unittest.TestCase):
             json.dumps(repo_payload(), ensure_ascii=False, indent=2),
         )
         result = self.run_cli("push", "--json")
-        self.assertEqual(result.returncode, 0, result.stderr)
+        assert result.returncode == 0, result.stderr
         external = (self.repo_root / "AGENTS.md").read_text(encoding="utf-8")
-        self.assertIn("repo updated", external)
-        self.assertIn("<part_A>", external)
-        self.assertNotIn("<part_B>", external)
+        assert "repo updated" in external
+        assert "<part_A>" in external
+        assert "<part_B>" not in external
 
     def test_target_contract_reads_machine_payload(self) -> None:
         result = self.run_cli(
@@ -344,10 +343,10 @@ class CliToolboxTests(unittest.TestCase):
             str(self.repo_root / "AGENTS.md"),
             "--json",
         )
-        self.assertEqual(result.returncode, 0, result.stderr)
+        assert result.returncode == 0, result.stderr
         payload = json.loads(result.stdout)
-        self.assertEqual(payload["payload"]["repo_name"], "octopus-os-agent-console")
-        self.assertEqual(payload["payload"]["language_policy"]["public_product_readme_and_docs"], "English-only")
+        assert payload["payload"]["repo_name"] == "octopus-os-agent-console"
+        assert payload["payload"]["language_policy"]["public_product_readme_and_docs"] == "English-only"
 
     def test_scan_can_filter_exact_source_path(self) -> None:
         result = self.run_cli(
@@ -356,9 +355,9 @@ class CliToolboxTests(unittest.TestCase):
             "--source-path",
             str(self.repo_root / "AGENTS.md"),
         )
-        self.assertEqual(result.returncode, 0, result.stderr)
+        assert result.returncode == 0, result.stderr
         payload = json.loads(result.stdout)
-        self.assertEqual([item["relative_path"] for item in payload["entries"]], ["octopus-os-agent-console/AGENTS.md"])
+        assert [item["relative_path"] for item in payload["entries"]] == ["octopus-os-agent-console/AGENTS.md"]
 
     def test_scaffold_creates_external_and_internal_agents_skeletons(self) -> None:
         target_dir = self.workspace / "New_Module"
@@ -369,19 +368,19 @@ class CliToolboxTests(unittest.TestCase):
             str(target_dir),
             "--all-governed",
         )
-        self.assertEqual(result.returncode, 0, result.stderr)
+        assert result.returncode == 0, result.stderr
         external = target_dir / "AGENTS.md"
         human = self.mirror / "assets" / "managed_targets" / "AI_Projects" / "New_Module" / "AGENTS_human.md"
         machine = self.mirror / "assets" / "managed_targets" / "AI_Projects" / "New_Module" / "AGENTS_machine.json"
-        self.assertTrue(external.exists())
-        self.assertTrue(human.exists())
-        self.assertTrue(machine.exists())
-        self.assertIn("<part_A>", external.read_text(encoding="utf-8"))
-        self.assertNotIn("<part_B>", external.read_text(encoding="utf-8"))
-        self.assertIn("<part_B>", human.read_text(encoding="utf-8"))
-        self.assertEqual(json.loads(machine.read_text(encoding="utf-8")), {})
+        assert external.exists()
+        assert human.exists()
+        assert machine.exists()
+        assert "<part_A>" in external.read_text(encoding="utf-8")
+        assert "<part_B>" not in external.read_text(encoding="utf-8")
+        assert "<part_B>" in human.read_text(encoding="utf-8")
+        assert json.loads(machine.read_text(encoding="utf-8")) == {}
         updated_rules = json.loads((self.mirror / "rules" / "scan_rules.json").read_text(encoding="utf-8"))
-        self.assertIn("New_Module/AGENTS.md", updated_rules["governed_source_paths"])
+        assert "New_Module/AGENTS.md" in updated_rules["governed_source_paths"]
 
     def test_lint_accepts_current_locked_structure(self) -> None:
         repo_human = self.mirror / "assets" / "managed_targets" / "AI_Projects" / "octopus-os-agent-console" / "AGENTS_human.md"
@@ -389,7 +388,7 @@ class CliToolboxTests(unittest.TestCase):
         write(repo_human, render_internal_human("repo", repo_payload()))
         write(root_human, render_internal_human("root", root_payload()))
         result = self.run_cli("lint", "--json")
-        self.assertEqual(result.returncode, 0, result.stderr)
+        assert result.returncode == 0, result.stderr
 
     def test_lint_rejects_legacy_external_shape(self) -> None:
         write(
@@ -401,14 +400,12 @@ class CliToolboxTests(unittest.TestCase):
         write(repo_human, render_internal_human("repo", repo_payload()))
         write(root_human, render_internal_human("root", root_payload()))
         result = self.run_cli("lint", "--json")
-        self.assertEqual(result.returncode, 1)
+        assert result.returncode == 1
         payload = json.loads(result.stdout)
-        self.assertTrue(
-            any(
-                "legacy_part_a_marker_forbidden" in error
-                for failure in payload["failures"]
-                for error in failure["errors"]
-            )
+        assert any(
+            "legacy_part_a_marker_forbidden" in error
+            for failure in payload["failures"]
+            for error in failure["errors"]
         )
 
     def test_lint_rejects_repo_machine_payload_structure_drift(self) -> None:
@@ -421,15 +418,13 @@ class CliToolboxTests(unittest.TestCase):
             json.dumps(legacy_repo_payload(), ensure_ascii=False, indent=2),
         )
         result = self.run_cli("lint", "--json")
-        self.assertEqual(result.returncode, 1)
+        assert result.returncode == 1
         payload = json.loads(result.stdout)
-        self.assertTrue(
-            any(
-                "payload_extra_key:$.document_semantic_standard" in error
-                or "payload_missing_key:$.default_meta_skill_order" in error
-                for failure in payload["failures"]
-                for error in failure["errors"]
-            )
+        assert any(
+            "payload_extra_key:$.document_semantic_standard" in error
+            or "payload_missing_key:$.default_meta_skill_order" in error
+            for failure in payload["failures"]
+            for error in failure["errors"]
         )
 
     def test_lint_rejects_repo_human_payload_structure_drift(self) -> None:
@@ -438,15 +433,13 @@ class CliToolboxTests(unittest.TestCase):
         write(repo_human, render_internal_human("repo", legacy_repo_payload()))
         write(root_human, render_internal_human("root", root_payload()))
         result = self.run_cli("lint", "--json")
-        self.assertEqual(result.returncode, 1)
+        assert result.returncode == 1
         payload = json.loads(result.stdout)
-        self.assertTrue(
-            any(
-                "payload_extra_key:$.document_semantic_standard" in error
-                or "payload_missing_key:$.default_meta_skill_order" in error
-                for failure in payload["failures"]
-                for error in failure["errors"]
-            )
+        assert any(
+            "payload_extra_key:$.document_semantic_standard" in error
+            or "payload_missing_key:$.default_meta_skill_order" in error
+            for failure in payload["failures"]
+            for error in failure["errors"]
         )
 
     def test_target_contract_accepts_legacy_repo_alias_source_path(self) -> None:
@@ -456,14 +449,8 @@ class CliToolboxTests(unittest.TestCase):
             str(self.workspace / "Codex_Skills_Mirror" / "AGENTS.md"),
             "--json",
         )
-        self.assertEqual(result.returncode, 0, result.stderr)
+        assert result.returncode == 0, result.stderr
         payload = json.loads(result.stdout)
-        self.assertTrue(
-            payload["managed_machine_path"].endswith(
-                "assets/managed_targets/AI_Projects/octopus-os-agent-console/AGENTS_machine.json"
-            )
+        assert payload["managed_machine_path"].endswith(
+            "assets/managed_targets/AI_Projects/octopus-os-agent-console/AGENTS_machine.json"
         )
-
-
-if __name__ == "__main__":
-    unittest.main()

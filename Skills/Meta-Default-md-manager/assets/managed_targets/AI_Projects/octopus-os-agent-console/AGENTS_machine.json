@@ -30,6 +30,7 @@
     "classify the turn as READ_EXEC or WRITE_EXEC",
     "if the turn will write octopus-os-agent-console, plan same-turn Git traceability from the start; if task contents include Python related edits, also plan Dev-PythonCode-Constitution-Backend reading and lint from the start",
     "if the task needs repo-local dependencies, read the backend/frontend skills environment manifests before installing or invoking tooling",
+    "if the task needs new repo-local dependencies, the AI may choose them from task evidence and install them into the governed *_skills environments before use",
     "if the turn touches language surfaces, enforce outward English docs and inward Chinese development boundaries before editing",
     "if the turn will edit a skill, treat the mirror copy under octopus-os-agent-console/Skills as the only editable source and determine whether downstream sync must be Push or Install",
     "if task contents include Python related edits, read Dev-PythonCode-Constitution-Backend through SKILL.md -> TASK_ROUTING -> SKILL_EXECUTION_RULES before editing"
@@ -45,6 +46,7 @@
     "skill core docs, governance contracts, and internal iteration artifacts may remain Chinese-first",
     "GitHub-facing product iteration logs and commit subjects should prefer English wording",
     "skills runtime dependencies must be installed into repo-local *_skills environments or their tracked manifest/lock files, not global environments",
+    "the AI may decide which repo-local dependencies are needed for the active task, but every installation must stay inside the governed repo-local environments and be reflected in the tracked lock or manifest files",
     "keep requirements-backend_skills.lock.txt in sync with the Python dependencies installed into .venv_backend_skills",
     "keep frontend_skills/package.json and frontend_skills/package-lock.json in sync with the frontend dependency set used by skills tasks",
     "for skill changes, edit the mirror copy under octopus-os-agent-console/Skills and never directly edit the codex installation directory",

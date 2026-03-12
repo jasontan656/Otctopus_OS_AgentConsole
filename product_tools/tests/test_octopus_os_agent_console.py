@@ -4,14 +4,13 @@ import json
 import os
 import subprocess
 import tempfile
-import unittest
 from pathlib import Path
 
 
 SCRIPT = Path(__file__).resolve().parents[1] / "octopus_os_agent_console.py"
 
 
-class OctopusOSAgentConsoleTests(unittest.TestCase):
+class TestOctopusOSAgentConsoleTests:
     supported_runtime_target = "codex-gpt-5.4-high"
 
     def run_cli(self, *args: str, check: bool = True) -> subprocess.CompletedProcess[str]:
@@ -53,15 +52,15 @@ class OctopusOSAgentConsoleTests(unittest.TestCase):
             )
 
             payload = json.loads(completed.stdout)
-            self.assertEqual(payload["status"], "ok")
-            self.assertEqual(payload["plan"]["install_root"], str(install_root))
-            self.assertEqual(payload["plan"]["codex_home"], str(install_root / ".codex"))
-            self.assertEqual(payload["plan"]["codex_root"], str(install_root / ".codex" / "skills"))
-            self.assertEqual(payload["plan"]["workspace_root"], str(workspace_root))
-            self.assertEqual(
-                [item["name"] for item in payload["plan"]["skills"]],
-                [".system", "Meta-Impact-Investigation"],
-            )
+            assert payload["status"] == "ok"
+            assert payload["plan"]["install_root"] == str(install_root)
+            assert payload["plan"]["codex_home"] == str(install_root / ".codex")
+            assert payload["plan"]["codex_root"] == str(install_root / ".codex" / "skills")
+            assert payload["plan"]["workspace_root"] == str(workspace_root)
+            assert [item["name"] for item in payload["plan"]["skills"]] == [
+                ".system",
+                "Meta-Impact-Investigation",
+            ]
 
     def test_install_and_uninstall_round_trip(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -98,16 +97,16 @@ class OctopusOSAgentConsoleTests(unittest.TestCase):
                 "--acknowledge-github-control-risk",
             )
             install_payload = json.loads(install.stdout)
-            self.assertEqual(install_payload["status"], "ok")
-            self.assertEqual(install_payload["supported_runtime_target"], self.supported_runtime_target)
-            self.assertEqual(install_payload["supported_host_env"], "Codex CLI + VS Code")
-            self.assertTrue((install_root / "bin" / "codex").exists())
-            self.assertTrue((codex_root / "Meta-Impact-Investigation" / "SKILL.md").exists())
-            self.assertFalse((codex_root / "AGENTS.md").exists())
-            self.assertTrue((workspace_root / "AGENTS.md").exists())
-            self.assertTrue((workspace_root / "Skills" / "AGENTS.md").exists())
-            self.assertTrue((workspace_root / ".product_runtime" / "github_skill_repo_binding.json").exists())
-            self.assertIn("HOME=", install_payload["codex_launch_command"])
+            assert install_payload["status"] == "ok"
+            assert install_payload["supported_runtime_target"] == self.supported_runtime_target
+            assert install_payload["supported_host_env"] == "Codex CLI + VS Code"
+            assert (install_root / "bin" / "codex").exists()
+            assert (codex_root / "Meta-Impact-Investigation" / "SKILL.md").exists()
+            assert not (codex_root / "AGENTS.md").exists()
+            assert (workspace_root / "AGENTS.md").exists()
+            assert (workspace_root / "Skills" / "AGENTS.md").exists()
+            assert (workspace_root / ".product_runtime" / "github_skill_repo_binding.json").exists()
+            assert "HOME=" in install_payload["codex_launch_command"]
 
             uninstall = self.run_cli(
                 "uninstall",
@@ -117,9 +116,9 @@ class OctopusOSAgentConsoleTests(unittest.TestCase):
                 install_payload["session_id"],
             )
             uninstall_payload = json.loads(uninstall.stdout)
-            self.assertEqual(uninstall_payload["status"], "ok")
-            self.assertFalse((codex_root / "Meta-Impact-Investigation").exists())
-            self.assertFalse(workspace_root.exists())
+            assert uninstall_payload["status"] == "ok"
+            assert not (codex_root / "Meta-Impact-Investigation").exists()
+            assert not (workspace_root.exists())
 
     def test_wizard_supports_bilingual_non_interactive_install(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -157,11 +156,11 @@ class OctopusOSAgentConsoleTests(unittest.TestCase):
             )
 
             payload = json.loads(wizard.stdout)
-            self.assertEqual(payload["status"], "ok")
-            self.assertTrue((codex_root / "Meta-Impact-Investigation" / "SKILL.md").exists())
-            self.assertTrue(workspace_root.exists())
-            self.assertTrue((workspace_root / "AGENTS.md").exists())
-            self.assertTrue((workspace_root / "Skills" / "AGENTS.md").exists())
+            assert payload["status"] == "ok"
+            assert (codex_root / "Meta-Impact-Investigation" / "SKILL.md").exists()
+            assert workspace_root.exists()
+            assert (workspace_root / "AGENTS.md").exists()
+            assert (workspace_root / "Skills" / "AGENTS.md").exists()
 
     def test_install_rejects_dirty_codex_root(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -194,10 +193,10 @@ class OctopusOSAgentConsoleTests(unittest.TestCase):
                 check=False,
             )
 
-            self.assertNotEqual(install.returncode, 0)
+            assert install.returncode != 0
             payload = json.loads(install.stdout)
-            self.assertEqual(payload["status"], "error")
-            self.assertIn("not clean", payload["error"])
+            assert payload["status"] == "error"
+            assert "not clean" in payload["error"]
 
     def test_install_requires_supported_runtime_target(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -225,10 +224,10 @@ class OctopusOSAgentConsoleTests(unittest.TestCase):
                 check=False,
             )
 
-            self.assertNotEqual(install.returncode, 0)
+            assert install.returncode != 0
             payload = json.loads(install.stdout)
-            self.assertEqual(payload["status"], "error")
-            self.assertIn(self.supported_runtime_target, payload["error"])
+            assert payload["status"] == "error"
+            assert self.supported_runtime_target in payload["error"]
 
     def test_install_requires_github_binding(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -253,11 +252,7 @@ class OctopusOSAgentConsoleTests(unittest.TestCase):
                 check=False,
             )
 
-            self.assertNotEqual(install.returncode, 0)
+            assert install.returncode != 0
             payload = json.loads(install.stdout)
-            self.assertEqual(payload["status"], "error")
-            self.assertIn("--github-skill-repo", payload["error"])
-
-
-if __name__ == "__main__":
-    unittest.main()
+            assert payload["status"] == "error"
+            assert "--github-skill-repo" in payload["error"]
