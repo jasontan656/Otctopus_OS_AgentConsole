@@ -4,7 +4,7 @@ from pathlib import Path
 import re
 
 from python_code_lint_rules.shared import (
-    IGNORE_DIRS,
+    iter_files,
     is_nested_scope_path,
     is_test_fixture_path,
     line_hits_from_span,
@@ -13,7 +13,6 @@ from python_code_lint_rules.shared import (
     preview_from_span,
     read_text,
     rel,
-    should_skip,
 )
 
 SCAN_EXTS = {".py", ".sh", ".bash", ".yaml", ".yml", ".json", ".toml"}
@@ -24,19 +23,6 @@ FILE_URI_RE = re.compile(r'file:///[^\s"\'`]+')
 OCTOPUS_ESCAPE_RE = re.compile(r'["\'`](?:\.\./){2,}[^"\'`\n]*["\'`]')
 WORKSPACE_MANAGER_ROOTS = {"Codex_Skills_Mirror", "octopus-os-agent-console", "AI_Projects"}
 RULE_FILE = "Dev-PythonCode-Constitution-Backend/scripts/python_code_lint_rules/modules/absolute_path.py"
-
-
-def _iter_scan_files(root: Path):
-    for path in root.rglob("*"):
-        if not path.is_file():
-            continue
-        if path.suffix.lower() not in SCAN_EXTS:
-            continue
-        if any(part in IGNORE_DIRS for part in path.parts) or should_skip(path, root):
-            continue
-        yield path
-
-
 def _has_ai_projects_prefix(text: str) -> bool:
     return "AI_Projects/" in text or "/AI_Projects/" in text or "AI_Projects\\" in text
 
@@ -128,7 +114,7 @@ def lint(root: Path) -> dict[str, object]:
     is_octopus_root = repo_name == "Octopus_OS"
     is_workspace_manager = repo_name in WORKSPACE_MANAGER_ROOTS
 
-    for path in _iter_scan_files(root):
+    for path in iter_files(root, SCAN_EXTS):
         checked += 1
         text = read_text(path)
         if any(marker in text for marker in ALLOW_MARKERS):

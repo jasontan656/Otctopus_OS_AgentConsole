@@ -28,6 +28,7 @@ anchors:
 - 输入：`--target <target_root>`
 - 输出：单个 JSON 对象，包含 `target/gates/summary/summary_enhanced/gate_diagnostics/violation_details/clusters`
 - 失败模式：任一 gate 失败或参数非法时返回非零退出码
+- 扫描边界：显式排除虚拟环境、构建/缓存与临时目录，避免对 `.venv*`、`venv*`、`node_modules/`、`build/`、`dist/`、`coverage/`、`tmp/`、`temp/`、`.tmp*`、`.temp*` 等非治理源码目录误报
 
 ## 回归检查
 ```bash

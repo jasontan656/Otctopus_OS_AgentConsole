@@ -31,6 +31,7 @@ anchors:
   - `cd /home/jasontan656/AI_Projects/octopus-os-agent-console/Skills/Dev-PythonCode-Constitution-Backend && python3 scripts/run_python_code_lints.py --target /home/jasontan656/AI_Projects/octopus-os-agent-console/Skills/Dev-PythonCode-Constitution-Backend | cat`
 - 当前 CLI 只接受 `--target`。
 - lint 输出为单个 JSON 对象；任一 gate 失败时返回非零退出码。
+- lint 会显式排除虚拟环境、构建产物、缓存与临时目录，例如 `.venv*`、`venv*`、`node_modules/`、`dist/`、`build/`、`coverage/`、`tmp/`、`temp/`、`.tmp*`、`.temp*`、`__pycache__/`、`.pytest_cache/`、`.mypy_cache/`、`.ruff_cache/`。
 
 ## 同步维护要求
 - 修改工具行为后，必须同步更新本文件与 `Cli_Toolbox_DEVELOPMENT.md`。

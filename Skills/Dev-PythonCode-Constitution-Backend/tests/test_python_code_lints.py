@@ -120,3 +120,48 @@ class TestPythonCodeLintTests:
             assert "scripts/workflow_stage_contract.py" not in violations
             assert violations.get("scripts/run_cli.py") == "cli_or_task_script>420"
 
+    def test_lint_ignores_virtualenv_and_temp_like_directories(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="py_lint_", dir=str(ROOT.parent)) as tmp:
+            root = Path(tmp)
+
+            venv_pkg = root / ".venv_backend_skills" / "lib" / "python3.12" / "site-packages"
+            venv_pkg.mkdir(parents=True)
+            (venv_pkg / "bad_domain.py").write_text(
+                "import requests\nrequests.get('https://example.com')\n",
+                encoding="utf-8",
+            )
+
+            temp_runtime = root / ".tmp_runtime"
+            temp_runtime.mkdir()
+            (temp_runtime / "bad_prompt.py").write_text(
+                'PROMPT = """\n'
+                "You are an audit assistant.\n"
+                "## 1. Goal\n"
+                "- 必须读取规则\n"
+                "- 禁止跳过验证\n"
+                "- 输出契约固定\n"
+                "- workflow 需要完整\n"
+                "- name: inline\n"
+                "- description: inline\n"
+                "- 必须遵守 assets/rules\n"
+                '"""\n',
+                encoding="utf-8",
+            )
+
+            build_dir = root / "build" / "generated"
+            build_dir.mkdir(parents=True)
+            (build_dir / "bad_controller.py").write_text(
+                "from some_repo import UserRepository\n"
+                "def run() -> None:\n"
+                "    Repository('x')\n",
+                encoding="utf-8",
+            )
+
+            src = root / "src"
+            src.mkdir()
+            (src / "user_orchestrator.py").write_text("def run() -> None:\n    pass\n", encoding="utf-8")
+
+            result = self._run_lint(root)
+            assert result.returncode == 0, result.stdout + result.stderr
+            report = json.loads(result.stdout)
+            assert all(g["status"] == "pass" for g in report["gates"])

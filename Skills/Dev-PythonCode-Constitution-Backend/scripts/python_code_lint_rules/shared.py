@@ -3,13 +3,72 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Iterable, Iterator
 
-IGNORE_DIRS = {".git", ".venv", ".venv-wsl", "node_modules", "dist", "build", "coverage", "__pycache__", ".pytest_cache"}
+IGNORE_DIRS = {
+    ".git",
+    ".hg",
+    ".svn",
+    ".venv",
+    ".venv-wsl",
+    "venv",
+    "env",
+    "node_modules",
+    "dist",
+    "build",
+    "coverage",
+    "htmlcov",
+    "tmp",
+    "temp",
+    "__pycache__",
+    ".pytest_cache",
+    ".mypy_cache",
+    ".ruff_cache",
+    ".cache",
+    ".tox",
+    ".nox",
+    ".eggs",
+    ".idea",
+    ".vscode",
+    ".turbo",
+    ".next",
+    ".nuxt",
+    ".parcel-cache",
+    ".sass-cache",
+}
+IGNORE_DIR_PREFIXES = (
+    ".venv",
+    "venv-",
+    "venv_",
+    ".tmp",
+    "tmp-",
+    "tmp_",
+    ".temp",
+    "temp-",
+    "temp_",
+)
+IGNORE_DIR_SUFFIXES = (".egg-info",)
 TEXT_EXTS = {".py", ".json", ".yaml", ".yml", ".md", ".sql", ".toml", ".sh", ".bash"}
 SOURCE_EXTS = {".py", ".sql", ".yaml", ".yml", ".json", ".md", ".toml"}
 SKIP_PREFIXES = {("references",), ("assets",), ("tests",), ("scripts", "python_code_lint_rules")}
 NESTED_SKIP_DIRS = {"references", "assets", "tests"}
 IO_PATTERNS = ("requests.", "httpx.", "fetch(", "axios(", "sqlalchemy", "psycopg", "redis.", "pymongo", "subprocess", "socket", "aiohttp", "requests.get(", "httpx.get(")
 RAW_PAYLOAD_PATTERNS = ("telegram_update", "callback_query", "webapp_data", "raw_payload", "raw_update", "incoming_update")
+
+
+def is_ignored_dir_name(name: str) -> bool:
+    lowered = name.lower()
+    return (
+        lowered in IGNORE_DIRS
+        or any(lowered.startswith(prefix) for prefix in IGNORE_DIR_PREFIXES)
+        or any(lowered.endswith(suffix) for suffix in IGNORE_DIR_SUFFIXES)
+    )
+
+
+def is_ignored_path(path: Path, root: Path) -> bool:
+    parts = path.relative_to(root).parts
+    if not parts:
+        return False
+    directory_parts = parts if path.is_dir() else parts[:-1]
+    return any(is_ignored_dir_name(part) for part in directory_parts)
 
 
 def should_skip(path: Path, root: Path) -> bool:
@@ -19,12 +78,17 @@ def should_skip(path: Path, root: Path) -> bool:
     return any(part in NESTED_SKIP_DIRS for part in parts[:-1])
 
 
+def iter_tree(root: Path) -> Iterator[Path]:
+    for path in root.rglob("*"):
+        if is_ignored_path(path, root) or should_skip(path, root):
+            continue
+        yield path
+
+
 def iter_files(root: Path, exts: Iterable[str] | None = None) -> Iterator[Path]:
     allowed = set(exts or TEXT_EXTS)
-    for path in root.rglob("*"):
+    for path in iter_tree(root):
         if not path.is_file():
-            continue
-        if any(part in IGNORE_DIRS for part in path.parts) or should_skip(path, root):
             continue
         if allowed and path.suffix.lower() not in allowed:
             continue

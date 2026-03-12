@@ -4,7 +4,7 @@ from pathlib import Path
 import re
 
 from python_code_lint_rules.shared import (
-    IGNORE_DIRS,
+    iter_files,
     is_nested_scope_path,
     is_test_fixture_path,
     line_hits_from_span,
@@ -13,7 +13,6 @@ from python_code_lint_rules.shared import (
     preview_from_span,
     read_text,
     rel,
-    should_skip,
 )
 
 EXEC_EXTS = {".py", ".sh", ".bash"}
@@ -35,19 +34,6 @@ ASSET_TOKENS = (
     "description:",
 )
 RULE_FILE = "Dev-PythonCode-Constitution-Backend/scripts/python_code_lint_rules/modules/hardcoded_asset.py"
-
-
-def _iter_exec_files(root: Path):
-    for path in root.rglob("*"):
-        if not path.is_file():
-            continue
-        if path.suffix.lower() not in EXEC_EXTS:
-            continue
-        if any(part in IGNORE_DIRS for part in path.parts) or should_skip(path, root):
-            continue
-        yield path
-
-
 def _iter_string_blocks(text: str):
     for match in TRIPLE_QUOTE_RE.finditer(text):
         yield match.group(2), match.start(2), match.end(2)
@@ -101,7 +87,7 @@ def _suggested_fix(path_text: str) -> str:
 def lint(root: Path) -> dict[str, object]:
     violations = []
     checked = 0
-    for path in _iter_exec_files(root):
+    for path in iter_files(root, EXEC_EXTS):
         checked += 1
         text = read_text(path)
         if any(marker in text for marker in ALLOW_MARKERS):
