@@ -118,9 +118,12 @@ It must rely on an install-time manifest that records:
 - codex root
 - workspace root
 - codex CLI install details
+- target-local Codex CLI filesystem entries created during install
 - installed skill list
 - GitHub repository binding details
 - overwritten skill backups if any legacy state had to be preserved
+
+When install had to place Codex CLI artifacts into the target root, uninstall should consume that manifest and remove those recorded artifacts as part of the rollback instead of leaving `bin/`, `lib/`, or other target-local Codex remnants behind.
 
 ## Current Implementation Status
 

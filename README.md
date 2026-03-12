@@ -88,6 +88,7 @@ Install behavior is intentionally narrow:
 - it captures a GitHub skill repository binding so Octopus OS can later drive its Git workflow
 - it returns a launch command that points Codex at the target-directory `console/` workspace so the installed skill ecosystem is active immediately
 - it does not write a system-level Codex installation for the user
+- uninstall consumes the install manifest and rolls back target-directory Codex artifacts when the installer created them locally
 
 GitHub binding warning:
 

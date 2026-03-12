@@ -447,6 +447,34 @@ def _ensure_directory(path: Path) -> bool:
     return existed
 
 
+def _snapshot_relative_tree(root: Path) -> dict[str, str]:
+    if not root.exists():
+        return {}
+
+    snapshot: dict[str, str] = {}
+    for path in sorted(root.rglob("*")):
+        relative = path.relative_to(root).as_posix()
+        if path.is_symlink():
+            snapshot[relative] = "symlink"
+        elif path.is_dir():
+            snapshot[relative] = "dir"
+        else:
+            snapshot[relative] = "file"
+    return snapshot
+
+
+def _collect_created_entries(
+    before_snapshot: dict[str, str],
+    after_snapshot: dict[str, str],
+) -> list[dict[str, str]]:
+    created_entries: list[dict[str, str]] = []
+    for relative_path, kind in after_snapshot.items():
+        if relative_path in before_snapshot:
+            continue
+        created_entries.append({"path": relative_path, "kind": kind})
+    return created_entries
+
+
 def _initialize_product_directories(install_root: Path) -> list[dict[str, object]]:
     directories = [
         ("console_root", _derive_console_root(install_root)),
@@ -729,13 +757,24 @@ def install_command(args: argparse.Namespace) -> int:
     state_root = _resolve_state_root(args.state_root)
     runtime_target = _require_supported_runtime_target(getattr(args, "runtime_target", None))
     github_binding = _build_github_binding(args, require_complete=True)
+    install_root_existed_before_install = install_root.exists()
+    codex_home = _derive_codex_home(install_root)
+    codex_home_existed_before_install = codex_home.exists()
+    codex_root = _derive_codex_root(install_root)
+    codex_root_existed_before_install = codex_root.exists()
+    install_root_snapshot_before_codex = _snapshot_relative_tree(install_root)
     codex_install = _resolve_codex_cli_strategy(
         install_root,
         requested_mode=_normalize_codex_cli_mode(getattr(args, "codex_cli_mode", None)),
         provided_bin=getattr(args, "codex_cli_bin", None),
         execute_install=True,
     )
-    codex_root = _derive_codex_root(install_root)
+    install_root_snapshot_after_codex = _snapshot_relative_tree(install_root)
+    codex_install["created_entries"] = (
+        _collect_created_entries(install_root_snapshot_before_codex, install_root_snapshot_after_codex)
+        if codex_install["mode"] == "install"
+        else []
+    )
     clean_summary, removed_forbidden_codex_root_files = _assert_clean_codex_root(codex_root)
     plan = _build_plan(repo_root, install_root, workspace_root, github_binding, codex_install)
 
@@ -791,8 +830,11 @@ def install_command(args: argparse.Namespace) -> int:
         "supported_runtime_target": runtime_target,
         "repo_root": str(repo_root),
         "install_root": str(install_root),
-        "codex_home": str(_derive_codex_home(install_root)),
+        "install_root_existed_before_install": install_root_existed_before_install,
+        "codex_home": str(codex_home),
+        "codex_home_existed_before_install": codex_home_existed_before_install,
         "codex_root": str(codex_root),
+        "codex_root_existed_before_install": codex_root_existed_before_install,
         "codex_cli_bin": codex_install["codex_cli_bin"],
         "codex_cli_install": codex_install,
         "workspace_root": str(workspace_root),
@@ -845,6 +887,9 @@ def install_command(args: argparse.Namespace) -> int:
 def uninstall_command(args: argparse.Namespace) -> int:
     state_root = _resolve_state_root(args.state_root)
     manifest_path, manifest = _load_manifest(state_root, args.session_id)
+    install_root = Path(str(manifest["install_root"]))
+    codex_home = Path(str(manifest["codex_home"]))
+    codex_root = Path(str(manifest["codex_root"]))
     workspace_root = Path(str(manifest["workspace_root"]))
 
     restored_backups: list[str] = []
@@ -884,6 +929,41 @@ def uninstall_command(args: argparse.Namespace) -> int:
         except OSError:
             kept_nonempty_product_directories.append(str(path))
 
+    codex_cli_install = manifest.get("codex_cli_install", {})
+    removed_codex_cli_entries: list[str] = []
+    kept_nonempty_codex_cli_entries: list[str] = []
+    for entry in reversed(list(codex_cli_install.get("created_entries", []))):
+        target = install_root / str(entry["path"])
+        kind = str(entry.get("kind") or "")
+        if not target.exists():
+            continue
+        if kind in {"file", "symlink"}:
+            target.unlink()
+            removed_codex_cli_entries.append(str(target))
+            continue
+        if kind == "dir":
+            try:
+                target.rmdir()
+                removed_codex_cli_entries.append(str(target))
+            except OSError:
+                kept_nonempty_codex_cli_entries.append(str(target))
+
+    removed_runtime_roots: list[str] = []
+    kept_nonempty_runtime_roots: list[str] = []
+    root_cleanup_candidates = [
+        (codex_root, bool(manifest.get("codex_root_existed_before_install"))),
+        (codex_home, bool(manifest.get("codex_home_existed_before_install"))),
+        (install_root, bool(manifest.get("install_root_existed_before_install"))),
+    ]
+    for path, existed_before_install in root_cleanup_candidates:
+        if existed_before_install or not path.exists():
+            continue
+        try:
+            path.rmdir()
+            removed_runtime_roots.append(str(path))
+        except OSError:
+            kept_nonempty_runtime_roots.append(str(path))
+
     payload = {
         "status": "ok",
         "action": "uninstall",
@@ -894,6 +974,10 @@ def uninstall_command(args: argparse.Namespace) -> int:
         "workspace_removed": workspace_removed,
         "removed_product_directories": removed_product_directories,
         "kept_nonempty_product_directories": kept_nonempty_product_directories,
+        "removed_codex_cli_entries": removed_codex_cli_entries,
+        "kept_nonempty_codex_cli_entries": kept_nonempty_codex_cli_entries,
+        "removed_runtime_roots": removed_runtime_roots,
+        "kept_nonempty_runtime_roots": kept_nonempty_runtime_roots,
     }
     print(json.dumps(payload, ensure_ascii=False, indent=2))
     return 0

@@ -158,6 +158,7 @@ class TestOctopusOSAgentConsoleTests:
             uninstall_payload = json.loads(uninstall.stdout)
             assert uninstall_payload["status"] == "ok"
             assert not (codex_root / "Meta-Impact-Investigation").exists()
+            assert not (install_root / "bin" / "codex").exists()
             assert not (install_root / "Codex_Skill_Runtime").exists()
             assert not (install_root / "Codex_Skills_Result").exists()
             assert not (install_root / "Octopus_OS").exists()
@@ -257,6 +258,67 @@ class TestOctopusOSAgentConsoleTests:
             assert workspace_root.exists()
             assert f"HOME={install_root}" in payload["codex_launch_command"]
             assert str(fake_codex_bin) in payload["codex_launch_command"]
+
+            uninstall = self.run_cli(
+                "uninstall",
+                "--state-root",
+                str(state_root),
+                "--session-id",
+                payload["session_id"],
+            )
+            uninstall_payload = json.loads(uninstall.stdout)
+            assert uninstall_payload["status"] == "ok"
+            assert fake_codex_bin.exists()
+            assert not workspace_root.exists()
+
+    def test_uninstall_removes_target_local_codex_runtime_when_created_by_install(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            repo_root = Path(tmp) / "repo"
+            install_root = Path(tmp) / "codex-home"
+            state_root = Path(tmp) / "state"
+            skills_root = repo_root / "Skills"
+            skill_root = skills_root / "Meta-Impact-Investigation"
+            skill_root.mkdir(parents=True)
+            (skill_root / "SKILL.md").write_text("skill\n", encoding="utf-8")
+            (skills_root / "AGENTS.md").write_text("skills agents\n", encoding="utf-8")
+            (repo_root / "AGENTS.md").write_text("root agents\n", encoding="utf-8")
+            (repo_root / "README.md").write_text("product\n", encoding="utf-8")
+
+            install = self.run_cli(
+                "install",
+                "--repo-root",
+                str(repo_root),
+                "--install-root",
+                str(install_root),
+                "--state-root",
+                str(state_root),
+                "--codex-cli-mode",
+                "install",
+                "--runtime-target",
+                self.supported_runtime_target,
+                "--github-skill-repo",
+                "git@github.com:test/octopus-os-skills.git",
+                "--github-auth-mode",
+                "ssh",
+                "--acknowledge-github-control-risk",
+            )
+
+            payload = json.loads(install.stdout)
+            assert payload["status"] == "ok"
+            assert (install_root / "bin" / "codex").exists()
+            assert (install_root / ".codex" / "skills" / "Meta-Impact-Investigation" / "SKILL.md").exists()
+
+            uninstall = self.run_cli(
+                "uninstall",
+                "--state-root",
+                str(state_root),
+                "--session-id",
+                payload["session_id"],
+            )
+            uninstall_payload = json.loads(uninstall.stdout)
+            assert uninstall_payload["status"] == "ok"
+            assert not install_root.exists()
+            assert str(install_root) in uninstall_payload["removed_runtime_roots"]
 
     def test_install_rejects_dirty_codex_root(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
