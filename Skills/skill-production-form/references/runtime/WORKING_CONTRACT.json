@@ -1,28 +1,54 @@
 {
   "skill_name": "skill-production-form",
   "display_name": "Skill-Production-Form",
-  "contract_version": "0.3.1",
+  "contract_version": "0.3.2",
   "status": "active_console_product_form",
-  "mission": "Continuously maintain the console directory as a product-shaped surface and preserve local design history for skills-as-console productization decisions.",
+  "mission": "Continuously maintain the console directory as a product-shaped surface, preserve local design history for skills-as-console productization decisions, and keep the project narrative aligned around an AI-native customizable personal assistant methodology.",
   "current_product_target": {
     "brand_name": "Octopus OS",
     "engineering_repo": "octopus-os-agent-console",
     "console_root": "Skills/",
     "product_positioning": "console directory maintained as the product surface for the governed skill stack",
-    "current_phase": "continuous console productization around the Skills directory"
+    "current_phase": "continuous console productization around the Skills directory",
+    "product_role": "advanced personal assistant customization approach built through governed skills, workflows, and tool contracts",
+    "runtime_strategy": "maximize GPT-5 and Codex CLI native capability while minimizing token overhead through skill-first behavior shaping"
   },
   "hard_boundaries": [
     "the editable source of truth stays inside octopus-os-agent-console/Skills rather than ~/.codex/skills",
     "the Skills directory should be maintained as a coherent console product surface instead of a loose scratch area",
     "when console productization touches rootfile-managed files, their body changes must go through Meta-RootFile-Manager rather than direct external edits",
+    "the project should express behavior through atomic skills, workflows, governance contracts, and tool entrypoints rather than ad-hoc prompt patches",
     "public product README and docs stay English-only",
     "end-user wizard and TUI surfaces stay bilingual English/Chinese",
     "internal skill core and governance docs may stay Chinese-first",
     "product-facing docs and product tools must not be pushed into the codex installation directory",
     "console productization decisions should prefer governed skill roots, registry, and runtime contracts over ad-hoc notes",
     "skill roots still evolve here first and then flow to ~/.codex/skills through the governed sync path",
-    "the codex installation directory is a deployment surface, not the authoring surface for console productization"
+    "the codex installation directory is a deployment surface, not the authoring surface for console productization",
+    "disabled skills are incomplete and should not be recommended for normal use",
+    "the current product narrative is for learning, local reuse, and testing rather than commercial use",
+    "external suggestions are acceptable, but external code collaboration is currently out of scope",
+    "the project maintenance narrative should state that implementation and maintenance are AI-driven rather than based on human code contribution"
   ],
+  "product_narrative": {
+    "assistant_goal": "strengthen the model into a more capable personal assistant by continuously adding norms, skills, skill-management methods, workflows, and governed tooling",
+    "design_method": "atomize skills so model behavior can be attached to explicit norms, workflows, and tool contracts",
+    "multi_agent_direction": "use skills to support daily development and broader work through multi-agent workflows, then continue toward richer multi-agent team collaboration",
+    "repo_release_model": {
+      "release_repo": "slower-moving public release surface",
+      "dev_repo": "fast-moving public development surface with frequent and larger changes"
+    },
+    "usage_policy": {
+      "allowed": [
+        "learning",
+        "local reuse",
+        "testing"
+      ],
+      "disallowed": [
+        "commercial use"
+      ]
+    }
+  },
   "local_history_contract": {
     "primary_log_path": "/home/jasontan656/AI_Projects/Codex_Skill_Runtime/skill-production-form/ITERATION_LOG.md",
     "legacy_seed_log_path": "references/runtime/ITERATION_LOG.md",

@@ -9,6 +9,7 @@
 - Preserve a local markdown design history for skills-as-console productization decisions.
 - Provide a stable handoff layer between current console product-form work and later GitHub-facing release narratives.
 - When console productization touches rootfile-managed external files, declare the boundary here but route the actual body maintenance to `$Meta-RootFile-Manager`.
+- Keep the product narrative aligned around an AI-native, customizable personal-assistant methodology rather than a generic skill dump.
 
 ## Current Console Focus
 - Brand: `Octopus OS`
@@ -16,9 +17,16 @@
 - Console root: `Skills/`
 - Positioning: console directory maintained as the product surface for the governed skill stack
 - Current phase: continuous console productization around the Skills directory
+- Product thesis: build a stronger personal assistant by continuously adding atomic skills, governance rules, workflows, and tool contracts
+- Runtime strategy: rely on `GPT-5` and `Codex CLI` native capabilities, keep token cost low, and move durable behavior into skills instead of prompt-heavy orchestration
+- Evolution target: support daily development and broader personal work through multi-agent workflows, then continue toward richer multi-agent team collaboration
 - Source-of-truth boundary: edit in the product repo mirror first, then sync to `~/.codex/skills`
 - Deployment boundary: the Codex installation directory is a governed deployment surface, not the authoring surface
 - Rootfile governance boundary: rootfile-managed files must not be directly edited from this skill; use `$Meta-RootFile-Manager` for their governed body updates
+- Release split: one slower-moving release repo and one fast-moving dev repo can coexist as separate public surfaces
+- Collaboration boundary: suggestions are welcome, code collaboration is currently closed, and disabled skills should be treated as incomplete and not recommended for normal use
+- Usage boundary: current positioning is for learning, local reuse, and testing only, with no commercial-use allowance in the product narrative
+- Maintenance identity: the project is maintained and developed by AI rather than human code contribution
 
 ## Logging Rule
 - Read the current console intent before making new console productization decisions.
