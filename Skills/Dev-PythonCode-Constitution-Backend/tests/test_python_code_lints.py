@@ -296,3 +296,79 @@ class TestPythonCodeLintTests:
             assert ("bad_service.py", "logging_basicconfig_forbidden_in_library_code") in reasons
             assert ("bad_service.py", "root_logger_call_forbidden") in reasons
             assert not any(path == "good_service.py" for path, _reason in reasons)
+
+    def test_pytest_governance_requires_importlib_mode_and_strict_markers(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="py_lint_", dir=str(ROOT.parent)) as tmp:
+            root = Path(tmp)
+            tests = root / "tests"
+            tests.mkdir()
+            (tests / "test_api.py").write_text(
+                "import pytest\n"
+                "@pytest.mark.slow\n"
+                "def test_api() -> None:\n"
+                "    assert True\n",
+                encoding="utf-8",
+            )
+            (root / "pytest.ini").write_text(
+                "[pytest]\n"
+                "addopts = -q\n",
+                encoding="utf-8",
+            )
+
+            result = self._run_lint(root)
+            assert result.returncode == 1, result.stdout + result.stderr
+            report = json.loads(result.stdout)
+            gate = next(g for g in report["gates"] if g["gate"] == "pytest_governance_gate")
+            reasons = {v["reason"] for v in gate["violations"]}
+            assert "pytest_importlib_mode_required" in reasons
+            assert "pytest_strict_markers_required:slow" in reasons
+
+    def test_resource_loading_prefers_importlib_resources(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="py_lint_", dir=str(ROOT.parent)) as tmp:
+            root = Path(tmp)
+            pkg = root / "src" / "demo_pkg"
+            pkg.mkdir(parents=True)
+            (pkg / "__init__.py").write_text("", encoding="utf-8")
+            (pkg / "reader.py").write_text(
+                "from pathlib import Path\n"
+                "def load_prompt() -> str:\n"
+                "    return Path(__file__).with_name('prompt.txt').read_text(encoding='utf-8')\n",
+                encoding="utf-8",
+            )
+            (pkg / "good_reader.py").write_text(
+                "from importlib import resources\n"
+                "def load_prompt() -> str:\n"
+                "    return resources.files(__package__).joinpath('prompt.txt').read_text(encoding='utf-8')\n",
+                encoding="utf-8",
+            )
+
+            result = self._run_lint(root)
+            assert result.returncode == 1, result.stdout + result.stderr
+            report = json.loads(result.stdout)
+            gate = next(g for g in report["gates"] if g["gate"] == "resource_loading_gate")
+            reasons = {(v["path"], v["reason"]) for v in gate["violations"]}
+            assert ("src/demo_pkg/reader.py", "package_resource_should_use_importlib_resources") in reasons
+            assert not any(path == "src/demo_pkg/good_reader.py" for path, _reason in reasons)
+
+    def test_packaging_entrypoint_requires_pyproject_metadata(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="py_lint_", dir=str(ROOT.parent)) as tmp:
+            root = Path(tmp)
+            pkg = root / "src" / "demo_pkg"
+            pkg.mkdir(parents=True)
+            (pkg / "__init__.py").write_text("", encoding="utf-8")
+            (pkg / "__main__.py").write_text("def main() -> None:\n    pass\n", encoding="utf-8")
+            (root / "pyproject.toml").write_text(
+                "[project]\n"
+                "name = 'demo-pkg'\n"
+                "version = '0.1.0'\n",
+                encoding="utf-8",
+            )
+
+            result = self._run_lint(root)
+            assert result.returncode == 1, result.stdout + result.stderr
+            report = json.loads(result.stdout)
+            gate = next(g for g in report["gates"] if g["gate"] == "packaging_entrypoint_gate")
+            reasons = {v["reason"] for v in gate["violations"]}
+            assert "pyproject_missing_build_system" in reasons
+            assert "pyproject_requires_python_missing" in reasons
+            assert "pyproject_project_scripts_missing" in reasons

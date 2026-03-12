@@ -23,3 +23,5 @@ anchors:
   - 移除 runner 中的泛目录结构 gate，避免越界治理非 Python 文件结构。
   - 新增 `typing_governance_gate`、`subprocess_safety_gate`、`logging_boundary_gate`，把 Python runtime safety 纳入技能治理面。
   - 新增 `references/python_rules/PYTHON_RUNTIME_SAFETY_CONSTITUTION.md`，承载 typing / subprocess / logging 原子规则。
+  - 新增 `pytest_governance_gate`、`resource_loading_gate`、`packaging_entrypoint_gate`，把 Python 项目集成治理纳入技能治理面。
+  - 新增 `references/python_rules/PYTHON_PROJECT_INTEGRATION_CONSTITUTION.md`，承载 pytest / resource / packaging 原子规则。

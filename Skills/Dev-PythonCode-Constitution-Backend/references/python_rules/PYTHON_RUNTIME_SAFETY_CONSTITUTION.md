@@ -19,6 +19,7 @@ anchors:
 - 为 Python 工程中的类型边界、子进程调用边界、日志边界提供明确可执行的治理规则。
 - 把“建议”收敛为可被 lint 自动检查的硬规则，避免在 review 阶段反复口头提醒。
 - 与胖文件治理互补：胖文件解决结构膨胀，本文件解决运行时安全与工程契约失真。
+- pytest、package resource、`pyproject.toml`、entrypoint 等项目集成边界由配套文档 `PYTHON_PROJECT_INTEGRATION_CONSTITUTION.md` 承担，不在本文件混写。
 
 ## 适用范围
 - 适用于：`.py` 文件本体。

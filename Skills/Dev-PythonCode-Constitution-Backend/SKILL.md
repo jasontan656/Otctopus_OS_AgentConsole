@@ -31,7 +31,8 @@ metadata:
 3. 再读取 `references/governance/SKILL_EXECUTION_RULES.md`。
 4. 若任务涉及胖代码阈值、拆分落点，再读取 `references/python_rules/PYTHON_FAT_FILE_CONSTITUTION.md`。
 5. 若任务涉及 typing、logging、subprocess 或 Python 工程安全边界，再读取 `references/python_rules/PYTHON_RUNTIME_SAFETY_CONSTITUTION.md`。
-6. 若任务涉及 lint 执行或工具维护，再进入 `references/tooling/`。
+6. 若任务涉及 pytest、package resource、`pyproject.toml`、entrypoint 或 Python 项目集成边界，再读取 `references/python_rules/PYTHON_PROJECT_INTEGRATION_CONSTITUTION.md`。
+7. 若任务涉及 lint 执行或工具维护，再进入 `references/tooling/`。
 
 ## 3. 分类入口
 - 路由层：
@@ -42,6 +43,7 @@ metadata:
 - Python 规则层：
   - `references/python_rules/PYTHON_FAT_FILE_CONSTITUTION.md`
   - `references/python_rules/PYTHON_RUNTIME_SAFETY_CONSTITUTION.md`
+  - `references/python_rules/PYTHON_PROJECT_INTEGRATION_CONSTITUTION.md`
 - 工具层：
   - `references/tooling/Cli_Toolbox_USAGE.md`
   - `references/tooling/Cli_Toolbox_DEVELOPMENT.md`

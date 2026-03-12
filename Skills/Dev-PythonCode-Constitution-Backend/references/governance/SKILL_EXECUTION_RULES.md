@@ -35,6 +35,8 @@ anchors:
 - 通用目录命名、泛文件结构整治这类与 Python 语义无直接关系的规则，不应继续挂在本技能 lint 下。
 - 若任务涉及 typing、logging、subprocess 或 Python 运行时安全边界，应同步读取 `../python_rules/PYTHON_RUNTIME_SAFETY_CONSTITUTION.md`。
 - 当前 lint 还负责三类 Python 工程安全规则：公共函数类型注解边界、`subprocess` 调用安全边界、`logging` 命名 logger 边界。
+- 若任务涉及 pytest、package resource、`pyproject.toml` 或 CLI entrypoint 集成边界，应同步读取 `../python_rules/PYTHON_PROJECT_INTEGRATION_CONSTITUTION.md`。
+- 当前 lint 还负责三类 Python 项目集成规则：pytest importlib/strict markers、package resource loading、`pyproject.toml` packaging metadata 与 `project.scripts`。
 - 对胖文件问题，必须同时给出“为什么超限”与“应该拆到哪里”；不能只报告行数，不给固定拆分落点。
 
 ## 例外与门禁

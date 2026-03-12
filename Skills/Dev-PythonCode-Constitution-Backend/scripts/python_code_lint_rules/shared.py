@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import ast
+import configparser
 from functools import lru_cache
 from pathlib import Path
+import tomllib
 from typing import Any, Iterable, Iterator
 
 IGNORE_DIRS = {
@@ -179,6 +181,22 @@ def parse_python_ast(path: Path) -> tuple[ast.AST | None, str]:
         return None, text
 
 
+def load_toml(path: Path) -> dict[str, Any] | None:
+    try:
+        return tomllib.loads(read_text(path))
+    except tomllib.TOMLDecodeError:
+        return None
+
+
+def load_ini_sections(path: Path) -> configparser.ConfigParser | None:
+    parser = configparser.ConfigParser()
+    try:
+        parser.read_string(read_text(path))
+    except (configparser.Error, OSError):
+        return None
+    return parser
+
+
 def rel(path: Path, root: Path) -> str:
     return str(path.relative_to(root))
 
@@ -221,6 +239,15 @@ def preview_from_node(text: str, node: ast.AST, *, limit: int = 160) -> str:
     if len(compact) <= limit:
         return compact
     return compact[: limit - 3] + "..."
+
+
+def has_package_ancestor(path: Path, root: Path) -> bool:
+    current = path.parent
+    while current != root and current != current.parent:
+        if (current / "__init__.py").exists():
+            return True
+        current = current.parent
+    return False
 
 
 def is_nested_scope_path(path_text: str) -> bool:

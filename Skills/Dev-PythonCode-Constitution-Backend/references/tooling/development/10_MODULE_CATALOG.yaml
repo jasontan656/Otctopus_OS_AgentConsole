@@ -21,3 +21,4 @@ modules:
       - structural_governance
       - python_asset_boundary
       - runtime_safety
+      - project_integration
