@@ -372,3 +372,91 @@ class TestPythonCodeLintTests:
             assert "pyproject_missing_build_system" in reasons
             assert "pyproject_requires_python_missing" in reasons
             assert "pyproject_project_scripts_missing" in reasons
+
+    def test_exception_governance_blocks_bare_and_swallowed_broad_handlers(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="py_lint_", dir=str(ROOT.parent)) as tmp:
+            root = Path(tmp)
+            (root / "bad_handler.py").write_text(
+                "def run() -> None:\n"
+                "    try:\n"
+                "        work()\n"
+                "    except:\n"
+                "        return\n"
+                "\n"
+                "def other() -> None:\n"
+                "    try:\n"
+                "        work()\n"
+                "    except Exception:\n"
+                "        return\n"
+                "\n"
+                "def base() -> None:\n"
+                "    try:\n"
+                "        work()\n"
+                "    except BaseException:\n"
+                "        raise\n",
+                encoding="utf-8",
+            )
+            (root / "good_handler.py").write_text(
+                "def run() -> None:\n"
+                "    try:\n"
+                "        work()\n"
+                "    except ValueError:\n"
+                "        raise\n"
+                "\n"
+                "def other() -> None:\n"
+                "    try:\n"
+                "        work()\n"
+                "    except Exception as exc:\n"
+                "        raise RuntimeError('failed') from exc\n",
+                encoding="utf-8",
+            )
+
+            result = self._run_lint(root)
+            assert result.returncode == 1, result.stdout + result.stderr
+            report = json.loads(result.stdout)
+            gate = next(g for g in report["gates"] if g["gate"] == "exception_governance_gate")
+            reasons = {(v["path"], v["reason"]) for v in gate["violations"]}
+            assert ("bad_handler.py", "bare_except_forbidden") in reasons
+            assert ("bad_handler.py", "broad_exception_without_reraise") in reasons
+            assert ("bad_handler.py", "baseexception_handler_forbidden") in reasons
+            assert not any(path == "good_handler.py" for path, _reason in reasons)
+
+    def test_http_timeout_gate_requires_requests_timeout_and_preserves_httpx_defaults(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="py_lint_", dir=str(ROOT.parent)) as tmp:
+            root = Path(tmp)
+            (root / "bad_http.py").write_text(
+                "import requests\n"
+                "import httpx\n"
+                "\n"
+                "def fetch() -> None:\n"
+                "    requests.get('https://example.com')\n"
+                "    requests.post('https://example.com', timeout=None)\n"
+                "    session = requests.Session()\n"
+                "    session.get('https://example.com')\n"
+                "    httpx.get('https://example.com', timeout=None)\n"
+                "    client = httpx.Client(timeout=None)\n"
+                "    client.get('https://example.com')\n",
+                encoding="utf-8",
+            )
+            (root / "good_http.py").write_text(
+                "import requests\n"
+                "import httpx\n"
+                "\n"
+                "def fetch() -> None:\n"
+                "    requests.get('https://example.com', timeout=(3.05, 10))\n"
+                "    client = httpx.Client()\n"
+                "    client.get('https://example.com')\n"
+                "    httpx.get('https://example.com')\n",
+                encoding="utf-8",
+            )
+
+            result = self._run_lint(root)
+            assert result.returncode == 1, result.stdout + result.stderr
+            report = json.loads(result.stdout)
+            gate = next(g for g in report["gates"] if g["gate"] == "http_timeout_gate")
+            reasons = {(v["path"], v["reason"]) for v in gate["violations"]}
+            assert ("bad_http.py", "requests_timeout_required") in reasons
+            assert ("bad_http.py", "requests_timeout_none_forbidden") in reasons
+            assert ("bad_http.py", "httpx_timeout_none_forbidden") in reasons
+            assert ("bad_http.py", "httpx_client_timeout_none_forbidden") in reasons
+            assert not any(path == "good_http.py" for path, _reason in reasons)

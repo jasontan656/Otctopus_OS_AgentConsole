@@ -25,3 +25,4 @@ anchors:
   - 新增 `references/python_rules/PYTHON_RUNTIME_SAFETY_CONSTITUTION.md`，承载 typing / subprocess / logging 原子规则。
   - 新增 `pytest_governance_gate`、`resource_loading_gate`、`packaging_entrypoint_gate`，把 Python 项目集成治理纳入技能治理面。
   - 新增 `references/python_rules/PYTHON_PROJECT_INTEGRATION_CONSTITUTION.md`，承载 pytest / resource / packaging 原子规则。
+  - 新增 `exception_governance_gate` 与 `http_timeout_gate`，把异常治理与外部 HTTP 超时边界纳入 runtime safety。
