@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import subprocess
+import sys
 import tempfile
 from pathlib import Path
 
@@ -9,10 +10,10 @@ from pathlib import Path
 SCRIPT = Path(__file__).resolve().parents[1] / "scripts" / "Cli_Toolbox.py"
 
 
-class TestProductionFormCliTests:
+class TestSkillProductionFormCliTests:
     def run_cli(self, *args: str) -> subprocess.CompletedProcess[str]:
         return subprocess.run(
-            ["python3", str(SCRIPT), *args],
+            [sys.executable, str(SCRIPT), *args],
             text=True,
             capture_output=True,
             check=False,
@@ -23,14 +24,15 @@ class TestProductionFormCliTests:
         assert result.returncode == 0, result.stderr
         payload = json.loads(result.stdout)
         assert payload["status"] == "ok"
-        assert payload["payload"]["skill_name"] == "production-form"
+        assert payload["payload"]["skill_name"] == "skill-production-form"
+        assert payload["payload"]["display_name"] == "Skill-Production-Form"
 
     def test_intent_snapshot_reads_markdown(self) -> None:
         result = self.run_cli("intent-snapshot", "--json")
         assert result.returncode == 0, result.stderr
         payload = json.loads(result.stdout)
-        assert "Octopus OS" in payload["content"]
-        assert "自然语言驱动的多 Agent 控制台" in payload["content"]
+        assert "console 产品意图" in payload["content"]
+        assert "Skills/" in payload["content"]
 
     def test_append_iteration_log_appends_structured_entry(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -43,23 +45,23 @@ class TestProductionFormCliTests:
                 "--log-path",
                 str(log_path),
                 "--title",
-                "Refine current form",
+                "Refine console product form",
                 "--summary",
-                "Locked the temporary skill role.",
+                "Locked the console productization boundary.",
                 "--decision",
-                "Use a local markdown log during the transition stage.",
+                "Keep the skill root as the mirror authoring source.",
                 "--affected-path",
-                "production-form/SKILL.md",
+                "skill-production-form/SKILL.md",
                 "--next-step",
-                "Keep the log updated after each real product decision.",
+                "Keep the registry and runtime contract aligned.",
             )
 
             assert result.returncode == 0, result.stderr
             payload = json.loads(result.stdout)
             assert payload["status"] == "ok"
             text = log_path.read_text(encoding="utf-8")
-            assert "Refine current form" in text
-            assert "production-form/SKILL.md" in text
+            assert "Refine console product form" in text
+            assert "skill-production-form/SKILL.md" in text
 
     def test_latest_log_reads_latest_entry(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -73,4 +75,3 @@ class TestProductionFormCliTests:
             payload = json.loads(result.stdout)
             assert payload["entry_count"] == 1
             assert "Second" in payload["entries"][0]
-

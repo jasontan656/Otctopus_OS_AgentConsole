@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skill-Production-Form"
+  short_description: "持续维护 console 目录的产品形态，并维护 Skills 目录产品化相关的本地设计历史。"
+  default_prompt: "使用 Skill-Production-Form 先读取当前 console 产品意图与最近设计日志，再推进新的技能产品化判断；若形成新判断，必须追加本地迭代日志。"

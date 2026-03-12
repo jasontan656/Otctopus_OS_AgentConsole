@@ -59,6 +59,22 @@ families:
           - "skill-doc-structure"
           - "Dev-PythonCode-Constitution-Backend"
           - "Dev-VUE3-WebUI-Frontend"
+  - family: "[Skill_prod]"
+    description: "围绕 console 产品化、Skills 目录产品形态与相关 continuity 技能管理的技能族。"
+    members:
+      - canonical_id: "skill-production-form"
+        display_name: "Skill-Production-Form"
+        prefix: "skill"
+        family: "[Skill_prod]"
+        role_tag: "console-product-form"
+        status: "active"
+        trigger_summary: "当需要持续维护 console 目录的产品形态、沉淀 Skills 目录产品化历史，并为后续技能治理提供稳定连续性上下文时使用。"
+        companion_skills:
+          - "skill-mirror-to-codex"
+          - "skills-tooling-checkup"
+        migrated_from:
+          - "production-form"
+          - "Production-Form"
   - family: "[DEV]"
     description: "开发相关的技能收敛在一起管理。"
     members:

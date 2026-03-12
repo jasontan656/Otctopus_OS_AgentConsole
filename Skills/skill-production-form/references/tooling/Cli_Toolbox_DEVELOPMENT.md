@@ -11,9 +11,10 @@
 
 ## Design Rules
 - Keep CLI output deterministic and compact.
+- Use `typer` as the CLI framework baseline for Python tooling commands.
 - `working-contract` must keep reading the machine-readable JSON contract instead of reconstructing it in code.
 - `append-iteration-log` must only append structured markdown entries and must not rewrite earlier history.
-- The local design log is temporary product infrastructure; keep it easy to migrate later.
+- The local design log is console-productization infrastructure; keep it easy to migrate later.
 
 ## Sync Requirements
 - When the CLI changes, update:

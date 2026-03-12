@@ -30,6 +30,10 @@
 - 代表专门治理技能命名、注册、模板、镜像同步与同类治理动作的技能族。
 - 当用户说“使用 `[SKILL-GOV]` 技能族”时，解析为 registry 中 `family=[SKILL-GOV]` 且 `status=active` 的技能集合。
 
+## `[Skill_prod]` 的当前含义
+- 代表围绕 console 产品化、`Skills/` 目录产品形态与 continuity 上下文维护的技能族。
+- 当用户说“使用 `[Skill_prod]` 技能族”时，解析为 registry 中 `family=[Skill_prod]` 且 `status=active` 的技能集合。
+
 ## 对你提出的句式的解释
 - `使用 skill prefix 系列全技能 完成本次任务`
   - 正常化理解应为：调用某个 prefix 族下所有已注册且 active 的技能。

@@ -1,8 +1,8 @@
-# Production-Form Iteration Log
+# Skill-Production-Form Iteration Log
 
-This file is the temporary local design history for the current Octopus OS product-shaping phase.
+This file is the local design history for the current console-productization phase.
 
-It exists so AI can keep reading the recent product evolution before the main iteration narrative moves back to GitHub.
+It exists so AI can keep reading the recent console-productization evolution before the main release-facing narrative moves back to GitHub.
 
 ## 2026-03-11 00:00:00Z - Initialize production-form skill
 
@@ -141,3 +141,24 @@ It exists so AI can keep reading the recent product evolution before the main it
   - `/home/jasontan656/AI_Projects/octopus-os-agent-console/.github`
 - next_steps:
   - Run Constitution lint, sync updated skills, and keep refining the public repo governance surface as release readiness improves.
+
+## 2026-03-12 00:00:00Z - Rename production-form into skill-production-form
+
+- author: `codex`
+- summary: Renamed the skill to `Skill-Production-Form`, narrowed its mission to console-directory productization, and aligned the CLI/runtime/tooling surface with that new identity.
+- decisions:
+  - Use `skill-production-form` as the canonical skill id and `Skill-Production-Form` as the display name.
+  - Treat family `[Skill_prod]` as the registry home for this console-productization continuity skill.
+  - Keep the skill focused on maintaining `Skills/` as a product-shaped console source surface rather than a general temporary product-shaping bucket.
+  - Replace the handwritten `argparse` CLI shell with the repo Python baseline `typer`.
+- affected_paths:
+  - `skill-production-form/SKILL.md`
+  - `skill-production-form/scripts/Cli_Toolbox.py`
+  - `skill-production-form/references/runtime/WORKING_CONTRACT.json`
+  - `skill-production-form/references/runtime/CURRENT_PRODUCT_INTENT.md`
+  - `skill-production-form/references/tooling/`
+  - `skill-naming-manager/references/skill_registry.yaml`
+- risks:
+  - Historical log entries still mention `production-form` paths because they describe past states before the rename.
+- next_steps:
+  - Keep runtime contracts, registry, mirror sync paths, and console-facing skill docs aligned with the renamed identity.

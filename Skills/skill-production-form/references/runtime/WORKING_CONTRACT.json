@@ -1,0 +1,37 @@
+{
+  "skill_name": "skill-production-form",
+  "display_name": "Skill-Production-Form",
+  "contract_version": "0.2.0",
+  "status": "active_console_product_form",
+  "mission": "Continuously maintain the console directory as a product-shaped surface and preserve local design history for skills-as-console productization decisions.",
+  "current_product_target": {
+    "brand_name": "Octopus OS",
+    "engineering_repo": "octopus-os-agent-console",
+    "console_root": "Skills/",
+    "product_positioning": "console directory maintained as the product surface for the governed skill stack",
+    "current_phase": "continuous console productization around the Skills directory"
+  },
+  "hard_boundaries": [
+    "the editable source of truth stays inside octopus-os-agent-console/Skills rather than ~/.codex/skills",
+    "the Skills directory should be maintained as a coherent console product surface instead of a loose scratch area",
+    "public product README and docs stay English-only",
+    "end-user wizard and TUI surfaces stay bilingual English/Chinese",
+    "internal skill core and governance docs may stay Chinese-first",
+    "product-facing docs and product tools must not be pushed into the codex installation directory",
+    "console productization decisions should prefer governed skill roots, registry, and runtime contracts over ad-hoc notes",
+    "skill roots still evolve here first and then flow to ~/.codex/skills through the governed sync path",
+    "the codex installation directory is a deployment surface, not the authoring surface for console productization"
+  ],
+  "local_history_contract": {
+    "primary_log_path": "references/runtime/ITERATION_LOG.md",
+    "intent_snapshot_path": "references/runtime/CURRENT_PRODUCT_INTENT.md",
+    "log_update_rule": "append a log entry whenever a new console productization decision, directory boundary change, or skill-management convergence is made",
+    "future_switch_rule": "once the console product form is stable enough, the main release-facing narrative may move back to GitHub while this local log becomes a narrower continuity aid"
+  },
+  "tooling": {
+    "working_contract_command": "python3 scripts/Cli_Toolbox.py working-contract --json",
+    "intent_snapshot_command": "python3 scripts/Cli_Toolbox.py intent-snapshot --json",
+    "latest_log_command": "python3 scripts/Cli_Toolbox.py latest-log --json",
+    "append_log_command": "python3 scripts/Cli_Toolbox.py append-iteration-log --title \"<title>\" --summary \"<summary>\" --decision \"<decision>\" --affected-path \"<path>\" --next-step \"<next>\""
+  }
+}

@@ -1,4 +1,0 @@
-interface:
-  display_name: "Production Form"
-  short_description: "持续承载当前 Octopus OS 产品塑形任务，并维护本地设计变更历史。"
-  default_prompt: "使用 Production-Form 先读取当前产品意图与最近设计日志，再推进新的产品决策；若形成新判断，必须追加本地迭代日志。"
