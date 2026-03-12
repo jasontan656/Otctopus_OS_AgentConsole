@@ -11,6 +11,21 @@ from pathlib import Path
 from string import Template
 DEFAULT_RESOURCES = ("scripts", "references", "assets", "tests")
 HEADING_TAG_RE = re.compile(r"^(##\s+[1-7]\.\s+[^\n（(]+?)\s*[（(][^）)\n]+[）)]\s*$", re.MULTILINE)
+
+
+def _default_target_root() -> Path:
+    script_path = Path(__file__).resolve()
+    repo_root = next((parent for parent in script_path.parents if parent.name == "octopus-os-agent-console"), None)
+    if repo_root is not None:
+        local_skills_root = (repo_root.parent / ".codex" / "skills").resolve()
+        if local_skills_root.exists():
+            return local_skills_root
+    env_home = os.environ.get("CODEX_HOME", "").strip()
+    if env_home:
+        return (Path(env_home).expanduser().resolve() / "skills").resolve()
+    return (Path.home() / ".codex" / "skills").resolve()
+
+
 def load_text(path: Path) -> str:
     return path.read_text(encoding="utf-8")
 
@@ -55,7 +70,7 @@ def main() -> int:
     _ = (trace_id, run_id)
     parser = argparse.ArgumentParser(description="基于模板创建或更新技能骨架。")
     parser.add_argument("--skill-name", required=True, help="目标技能目录名称。")
-    parser.add_argument("--target-root", default=str(Path.home() / ".codex" / "skills"))
+    parser.add_argument("--target-root", default=str(_default_target_root()))
     parser.add_argument("--resources", default="scripts,references,assets,tests")
     parser.add_argument("--description", default="")
     parser.add_argument("--profile", default="basic", choices=("basic", "staged_cli_first"))

@@ -27,12 +27,27 @@ SKILLS_DIR_NAME = "Skills"
 CANONICAL_MIRROR_REPO_NAME = "octopus-os-agent-console"
 LEGACY_MIRROR_REPO_NAME = "Codex_Skills_Mirror"
 FORBIDDEN_CODEX_ROOT_FILES = ("AGENTS.md",)
+
+
+def _detect_repo_root() -> Path | None:
+    script_path = Path(__file__).resolve()
+    return next((parent for parent in script_path.parents if parent.name == CANONICAL_MIRROR_REPO_NAME), None)
+
+
 def _resolve_codex_root(raw: str | None) -> Path:
     if raw:
         return Path(raw).expanduser().resolve()
+    repo_root = _detect_repo_root()
+    if repo_root is not None:
+        local_codex_root = (repo_root.parent / ".codex" / "skills").resolve()
+        if local_codex_root.exists():
+            return local_codex_root
     env_root = os.environ.get("CODEX_SKILLS_ROOT")
     if env_root:
         return Path(env_root).expanduser().resolve()
+    env_home = os.environ.get("CODEX_HOME")
+    if env_home:
+        return (Path(env_home).expanduser().resolve() / "skills").resolve()
     return (Path.home() / ".codex" / "skills").resolve()
 def _discover_visible_mirror() -> Path | None:
     env_root = os.environ.get("CODEX_SKILLS_MIRROR_ROOT")
@@ -58,6 +73,9 @@ def _migrate_hidden_mirror_if_present() -> Path | None:
 def _resolve_mirror_root(raw: str | None) -> Path:
     if raw:
         return Path(raw).expanduser().resolve()
+    repo_root = _detect_repo_root()
+    if repo_root is not None:
+        return repo_root.resolve()
 
     visible = _discover_visible_mirror()
     if visible is not None:

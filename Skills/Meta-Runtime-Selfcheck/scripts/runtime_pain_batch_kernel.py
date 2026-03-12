@@ -36,7 +36,22 @@ from runtime_pain_repair import (
 
 REPAIR_TOKEN = "修复"
 DIAGNOSE_TOKEN = ">"
-CODEX_HOME = Path(os.environ.get("CODEX_HOME", str(Path.home() / ".codex"))).expanduser()
+
+
+def _default_codex_home() -> Path:
+    script_path = Path(__file__).resolve()
+    repo_root = next((parent for parent in script_path.parents if parent.name == "octopus-os-agent-console"), None)
+    if repo_root is not None:
+        local_codex_home = (repo_root.parent / ".codex").resolve()
+        if local_codex_home.exists():
+            return local_codex_home
+    env_home = os.environ.get("CODEX_HOME", "").strip()
+    if env_home:
+        return Path(env_home).expanduser().resolve()
+    return (Path.home() / ".codex").resolve()
+
+
+CODEX_HOME = _default_codex_home()
 DEFAULT_MEMORY_RUNTIME = str(os.environ.get("CODEX_RUNTIME_PAIN_PROVIDER", "")).strip()
 DEFAULT_HISTORY = (CODEX_HOME / "history.jsonl").resolve()
 FORCED_SCOPE_MODE = "all_threads"

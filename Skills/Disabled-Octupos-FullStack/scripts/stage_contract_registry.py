@@ -4,7 +4,24 @@ from __future__ import annotations
 # validation_mode: static_minimal
 # required_fields: top_level_resident_docs,stage_order,stage_scopes,stage_docs,stage_commands,stage_graph_contracts,stage_checklists
 
+from pathlib import Path
+
 from stage_contract_graph_data import EVIDENCE_GRAPH_COMMANDS, EVIDENCE_GRAPH_DOCS
+
+
+def _resolve_product_root() -> Path:
+    script_path = Path(__file__).resolve()
+    repo_root = next((parent for parent in script_path.parents if parent.name == "octopus-os-agent-console"), None)
+    if repo_root is None:
+        raise RuntimeError("cannot resolve product root from Disabled-Octupos-FullStack script path")
+    return repo_root.parent
+
+
+PRODUCT_ROOT = _resolve_product_root()
+ROOT_AGENTS_PATH = (PRODUCT_ROOT / "AGENTS.md").resolve()
+OCTOPUS_OS_ROOT = (PRODUCT_ROOT / "Octopus_OS").resolve()
+OCTOPUS_OS_DOCS_ROOT = (OCTOPUS_OS_ROOT / "Mother_Doc" / "docs").resolve()
+LOCAL_CODEX_HOME = (PRODUCT_ROOT / ".codex").resolve()
 
 TOP_LEVEL_RESIDENT_DOCS = [
     "rules/FULLSTACK_SKILL_HARD_RULES.md",
@@ -13,7 +30,7 @@ TOP_LEVEL_RESIDENT_DOCS = [
     "references/skill_native/10_PROJECT_BASELINE_INDEX.md",
     "references/authored_domains/00_DOMAIN_INDEX.md",
     "references/tooling/SKILL_TOOLING_WORKFLOW_CONTRACT.md",
-    "${AI_PROJECTS_ROOT:-$HOME/AI_Projects}/AGENTS.md",
+    str(ROOT_AGENTS_PATH),
 ]
 
 STAGE_ORDER = ["mother_doc", "implementation", "evidence"]
@@ -61,7 +78,11 @@ STAGE_COMMANDS = {
         ],
         "stage_commands": [
             {
-                "command": "python3 ${CODEX_HOME:-$HOME/.codex}/skills/Meta-prompt-write/scripts/filter_active_invoke_output.py --mode active_invoke --input-text \"<RAW_PROMPT_OUTPUT>\"",
+                "command": (
+                    f"python3 ${{CODEX_HOME:-{LOCAL_CODEX_HOME}}}/skills/"
+                    "Meta-prompt-write/scripts/filter_active_invoke_output.py "
+                    '--mode active_invoke --input-text "<RAW_PROMPT_OUTPUT>"'
+                ),
                 "purpose": "strengthen the current user prompt with full repo context before selecting Mother_Doc scope",
             },
             {
@@ -93,7 +114,10 @@ STAGE_COMMANDS = {
                 "purpose": "push the managed root AGENTS payload back to Octopus_OS and delete forbidden extra AGENTS.md files",
             },
             {
-                "command": "python3 scripts/Cli_Toolbox.py sync-mother-doc-status-from-git --repo-root ${AI_PROJECTS_ROOT:-$HOME/AI_Projects}/Octopus_OS --stage mother_doc --path <relative-path> --json",
+                "command": (
+                    f"python3 scripts/Cli_Toolbox.py sync-mother-doc-status-from-git "
+                    f"--repo-root {OCTOPUS_OS_ROOT} --stage mother_doc --path <relative-path> --json"
+                ),
                 "purpose": "derive modified / developed / null lifecycle states from local git-backed diff after mother_doc writeback",
             },
         ],
@@ -111,7 +135,7 @@ STAGE_COMMANDS = {
                 "purpose": "print the implementation-stage contract with independent developer obligations and delivery expectations",
             },
             {
-                "command": "rg -n \"<target>\" ${AI_PROJECTS_ROOT:-$HOME/AI_Projects}/Octopus_OS ${AI_PROJECTS_ROOT:-$HOME/AI_Projects}/Octopus_OS/Mother_Doc/docs",
+                "command": f'rg -n "<target>" {OCTOPUS_OS_ROOT} {OCTOPUS_OS_DOCS_ROOT}',
                 "purpose": "inspect doc-code drift and locate implementation slices without scanning unrelated sibling repositories",
             },
             {

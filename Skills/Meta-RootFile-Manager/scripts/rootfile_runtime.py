@@ -78,7 +78,14 @@ def detect_paths(script_file: str) -> RuntimePaths:
 
     installed_skill_root = _env_path("MDM_INSTALLED_SKILL_ROOT")
     if installed_skill_root is None:
-        installed_skill_root = (Path.home() / ".codex" / "skills" / SKILL_NAME).resolve()
+        local_installed_root = (workspace_root / ".codex" / "skills" / SKILL_NAME).resolve()
+        if local_installed_root.exists():
+            installed_skill_root = local_installed_root
+        else:
+            codex_home = _env_path("CODEX_HOME")
+            if codex_home is None:
+                codex_home = (Path.home() / ".codex").resolve()
+            installed_skill_root = (codex_home / "skills" / SKILL_NAME).resolve()
 
     runtime_root = _env_path("MDM_RUNTIME_ROOT")
     if runtime_root is None:
@@ -531,9 +538,12 @@ def add_governed_source_path(
 
 
 def scaffold_external_agents(external_path: Path) -> str:
+    script_path = Path(__file__).resolve()
+    repo_root = next((parent for parent in script_path.parents if parent.name == REPO_ROOT_CANONICAL_NAME), None)
+    if repo_root is None:
+        raise RuntimeError("cannot resolve Meta-RootFile-Manager repo root")
     command = (
-        "python3 /home/jasontan656/AI_Projects/octopus-os-agent-console/"
-        "Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py "
+        f"python3 {repo_root / 'Skills' / 'Meta-RootFile-Manager' / 'scripts' / 'Cli_Toolbox.py'} "
         f'target-contract --source-path "{external_path}" --json'
     )
     return (

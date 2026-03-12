@@ -6,9 +6,10 @@ from pathlib import Path
 
 
 SKILL_ROOT = Path(__file__).resolve().parents[1]
-META_DEFAULT_MD_MANAGER_CLI = Path(
-    "/home/jasontan656/AI_Projects/octopus-os-agent-console/Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py"
-)
+REPO_ROOT = SKILL_ROOT.parents[1]
+META_DEFAULT_MD_MANAGER_CLI = (
+    REPO_ROOT / "Skills" / "Meta-RootFile-Manager" / "scripts" / "Cli_Toolbox.py"
+).resolve()
 EXTERNAL_AGENTS_TEMPLATE = SKILL_ROOT / "assets" / "templates" / "agents" / "EXTERNAL_AGENTS.md"
 MACHINE_AGENTS_TEMPLATE = SKILL_ROOT / "assets" / "templates" / "agents" / "AGENTS_MACHINE_TEMPLATE.json"
 

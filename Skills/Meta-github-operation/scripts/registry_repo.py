@@ -24,11 +24,24 @@ class RepoSpec:
     remotes: tuple[RemoteSpec, ...] = ()
 
 
+def _resolve_product_root() -> Path:
+    script_path = Path(__file__).resolve()
+    repo_root = next((parent for parent in script_path.parents if parent.name == "octopus-os-agent-console"), None)
+    if repo_root is None:
+        raise RuntimeError("cannot resolve product root from Meta-github-operation script path")
+    return repo_root.parent
+
+
+PRODUCT_ROOT = _resolve_product_root()
+OCTOPUS_OS_REPO_ROOT = (PRODUCT_ROOT / "Octopus_OS").resolve()
+PRODUCT_REPO_ROOT = (PRODUCT_ROOT / "octopus-os-agent-console").resolve()
+
+
 REPO_REGISTRY: dict[str, RepoSpec] = {}
 REPO_REGISTRY: dict[str, RepoSpec] = {
     "Octopus_OS": RepoSpec(
         name="Octopus_OS",
-        path=Path("/home/jasontan656/AI_Projects/Octopus_OS"),
+        path=OCTOPUS_OS_REPO_ROOT,
         remotes=(
             RemoteSpec(
                 name="origin",
@@ -44,7 +57,7 @@ REPO_REGISTRY: dict[str, RepoSpec] = {
     ),
     "octopus-os-agent-console": RepoSpec(
         name="octopus-os-agent-console",
-        path=Path("/home/jasontan656/AI_Projects/octopus-os-agent-console"),
+        path=PRODUCT_REPO_ROOT,
         remotes=(
             RemoteSpec(
                 name="origin",

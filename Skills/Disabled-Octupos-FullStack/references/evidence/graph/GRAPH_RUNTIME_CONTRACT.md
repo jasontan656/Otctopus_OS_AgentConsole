@@ -16,9 +16,9 @@
 
 ## Roots
 
-- graph asset root: `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/graph/`
-- runtime root: `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/graph/runtime/`
-- document root: `/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs/`
+- graph asset root: `<root>/Octopus_OS/Mother_Doc/graph/`
+- runtime root: `<root>/Octopus_OS/Mother_Doc/graph/runtime/`
+- document root: `<root>/Octopus_OS/Mother_Doc/docs/`
 
 ## Runtime Scopes
 

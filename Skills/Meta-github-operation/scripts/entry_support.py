@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 from runtime_contract_support import (
     BaselineContractPayload,
     CommandSpec,
@@ -10,10 +12,19 @@ from runtime_contract_support import (
 )
 
 
-SKILL_RUNTIME_ROOT = "/home/jasontan656/AI_Projects/Codex_Skill_Runtime/meta-github-operation"
-CLAIMS_DIR = "/home/jasontan656/AI_Projects/Codex_Skill_Runtime/meta-github-operation/claims"
-SKILL_RESULT_ROOT = "/home/jasontan656/AI_Projects/Codex_Skills_Result/meta-github-operation"
-LEGACY_RUNTIME_FALLBACKS = ["/home/jasontan656/AI_Projects/Codex_Skill_Runtime"]
+def _resolve_product_root() -> Path:
+    script_path = Path(__file__).resolve()
+    repo_root = next((parent for parent in script_path.parents if parent.name == "octopus-os-agent-console"), None)
+    if repo_root is None:
+        raise RuntimeError("cannot resolve product root from Meta-github-operation script path")
+    return repo_root.parent
+
+
+PRODUCT_ROOT = _resolve_product_root()
+SKILL_RUNTIME_ROOT = str((PRODUCT_ROOT / "Codex_Skill_Runtime" / "meta-github-operation").resolve())
+CLAIMS_DIR = str((PRODUCT_ROOT / "Codex_Skill_Runtime" / "meta-github-operation" / "claims").resolve())
+SKILL_RESULT_ROOT = str((PRODUCT_ROOT / "Codex_Skills_Result" / "meta-github-operation").resolve())
+LEGACY_RUNTIME_FALLBACKS = [str((PRODUCT_ROOT / "Codex_Skill_Runtime").resolve())]
 
 
 def runtime_governance_payload() -> RuntimeGovernancePayload:

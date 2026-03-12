@@ -19,7 +19,7 @@
 - 人类叙事版输入：
   - 我给你一个 `resume_id/session_id`，请先确认这段历史会话日志到底在哪个文件。
 - 电脑动作发生了什么：
-  - 运行 `locate-session` 子命令；工具会按优先级解析 Codex 目录（`--codex-home` > `$CODEX_HOME` > `~/.codex`），在 `sessions/` 下递归查找 `*<session_id>*.jsonl`。
+  - 运行 `locate-session` 子命令；工具会按优先级解析 Codex 目录（`--codex-home` > `<root>/.codex` > `$CODEX_HOME` > `~/.codex`），在 `sessions/` 下递归查找 `*<session_id>*.jsonl`。
 - 人类叙事版输出：
   - 返回命中的日志文件路径列表和数量，你可以直接看到后续读取来源。
 

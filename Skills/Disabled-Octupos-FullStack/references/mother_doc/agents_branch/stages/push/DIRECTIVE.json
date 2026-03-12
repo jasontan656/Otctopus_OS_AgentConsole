@@ -3,7 +3,7 @@
   "stage": "push",
   "goal": "write the managed root AGENTS back to Octopus_OS and delete forbidden extra AGENTS.md files plus obsolete governance assets",
   "primary_outputs": [
-    "${AI_PROJECTS_ROOT:-$HOME/AI_Projects}/Octopus_OS/AGENTS.md"
+    "<root>/Octopus_OS/AGENTS.md"
   ],
   "must_cleanup": [
     "all extra Octopus_OS/**/AGENTS.md except the root target",

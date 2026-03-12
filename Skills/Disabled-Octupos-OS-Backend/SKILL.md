@@ -12,20 +12,20 @@ description: "暂时不启用，避免被误触发；仅保留为可修改的历
 - 第一阶段先创建目录化项目说明骨架并回填；第二阶段把 mother doc 内的设计规划转成 AI 自用的 `Execution_atom_plan&validation_packs`；第三阶段按当前 active pack 施工并回填证据；第四阶段用真实 witness 做交付裁决，并在需要收口时把 `mother_doc` 顺序归档。
 - 若 `docs/` 下已经存在编号归档的 `NN_slug`，新一轮 `mother_doc` 不是空白起手；必须先从最近一轮归档与当前 code graph/context 抽取仍然有效的设计与增量，再开始回填。
 - 详细规则必须从下方入口文档读取，不得只凭本门面自行发挥。
-- 固定路径：
-  - mother doc root：`/home/jasontan656/AI_Projects/OctuposOS_Runtime_Backend/docs/mother_doc`
-  - mother doc index：`/home/jasontan656/AI_Projects/OctuposOS_Runtime_Backend/docs/mother_doc/00_index.md`
-  - construction packs root：`/home/jasontan656/AI_Projects/OctuposOS_Runtime_Backend/docs/mother_doc/execution_atom_plan_validation_packs`
-  - construction packs index：`/home/jasontan656/AI_Projects/OctuposOS_Runtime_Backend/docs/mother_doc/execution_atom_plan_validation_packs/00_index.md`
-  - runtime：`/home/jasontan656/AI_Projects/OctuposOS_Runtime_Backend`
-  - codebase：`/home/jasontan656/AI_Projects/Octopus_CodeBase_Backend`
+- root-first 路径：
+  - mother doc root：`<root>/OctuposOS_Runtime_Backend/docs/mother_doc`
+  - mother doc index：`<root>/OctuposOS_Runtime_Backend/docs/mother_doc/00_index.md`
+  - construction packs root：`<root>/OctuposOS_Runtime_Backend/docs/mother_doc/execution_atom_plan_validation_packs`
+  - construction packs index：`<root>/OctuposOS_Runtime_Backend/docs/mother_doc/execution_atom_plan_validation_packs/00_index.md`
+  - runtime：`<root>/OctuposOS_Runtime_Backend`
+  - codebase：`<root>/Octopus_CodeBase_Backend`
 
 ## 2. 必读顺序
 1. 顶层常驻文档只保留：
    - `rules/OCTOPUS_SKILL_HARD_RULES.md`
    - `references/tooling/SKILL_TOOLING_WORKFLOW_CONTRACT.md`
-   - `/home/jasontan656/AI_Projects/AGENTS.md`
-   - `/home/jasontan656/AI_Projects/Octopus_CodeBase_Backend/AGENTS.md`
+   - `<root>/AGENTS.md`
+   - `<root>/Octopus_CodeBase_Backend/AGENTS.md`
 2. 进入任一阶段前，必须先读取：
    - `python3 scripts/Cli_Toolbox.py stage-checklist --stage <mother_doc|construction_plan|implementation|acceptance> --json`
 3. 当前阶段的读物边界只从工具取：
@@ -51,11 +51,11 @@ description: "暂时不启用，避免被误触发；仅保留为可修改的历
 - 工具层：
   - `scripts/Cli_Toolbox.py`
 - 外部辅助层：
-  - `/home/jasontan656/AI_Projects/octopus-os-agent-console/Skills/Meta-code-graph-base/SKILL.md`
-  - `/home/jasontan656/AI_Projects/octopus-os-agent-console/Skills/Meta-code-graph-base/scripts/meta_code_graph_base.py`
+  - `<root>/octopus-os-agent-console/Skills/Meta-code-graph-base/SKILL.md`
+  - `<root>/octopus-os-agent-console/Skills/Meta-code-graph-base/scripts/meta_code_graph_base.py`
 - 运行边界层：
-  - `/home/jasontan656/AI_Projects/AGENTS.md`
-  - `/home/jasontan656/AI_Projects/Octopus_CodeBase_Backend/AGENTS.md`
+  - `<root>/AGENTS.md`
+  - `<root>/Octopus_CodeBase_Backend/AGENTS.md`
 
 ## 4. 适用域
 - 适用于：后端项目说明驱动的规划、施工、验收闭环。

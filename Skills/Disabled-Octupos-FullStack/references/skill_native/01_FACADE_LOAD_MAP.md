@@ -23,7 +23,7 @@
 - [项目统一目标基线](10_PROJECT_BASELINE_INDEX.md)
 - [workflow contract](../tooling/SKILL_TOOLING_WORKFLOW_CONTRACT.md)
 - [authored domains 索引](../authored_domains/00_DOMAIN_INDEX.md)
-- `/home/jasontan656/AI_Projects/AGENTS.md`
+- `<root>/AGENTS.md`
 
 ## Project Baseline Entry
 
@@ -96,3 +96,4 @@
 - Human audit path:
   - use the indexes and links below to inspect the authored markdown structure
 - If you need actual product-side authored content, move from the skill into `Octopus_OS/Mother_Doc/docs/<Container_Name>/`.
+- `<root>` is the only product path anchor. Resolve real authored content as `<root>/Octopus_OS/Mother_Doc/docs/<Container_Name>/`.

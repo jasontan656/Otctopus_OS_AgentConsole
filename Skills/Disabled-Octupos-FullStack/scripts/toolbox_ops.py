@@ -19,7 +19,15 @@ from mother_doc_navigation import sync_navigation_tree
 from mother_doc_status import sync_status_tree, sync_status_tree_from_git
 
 
-DEFAULT_WORKSPACE_ROOT = Path("/home/jasontan656/AI_Projects/Octopus_OS")
+def _resolve_product_root() -> Path:
+    script_path = Path(__file__).resolve()
+    repo_root = next((parent for parent in script_path.parents if parent.name == "octopus-os-agent-console"), None)
+    if repo_root is None:
+        raise RuntimeError("cannot resolve product root from Disabled-Octupos-FullStack script path")
+    return repo_root.parent
+
+
+DEFAULT_WORKSPACE_ROOT = (_resolve_product_root() / "Octopus_OS").resolve()
 DEFAULT_DOCUMENT_ROOT = DEFAULT_WORKSPACE_ROOT / "Mother_Doc" / "docs"
 
 

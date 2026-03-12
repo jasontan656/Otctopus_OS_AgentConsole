@@ -46,7 +46,21 @@ def _discover_runtime_root_from_cwd() -> Path | None:
     return None
 
 
+def _discover_runtime_root_from_repo() -> Path | None:
+    script_path = Path(__file__).resolve()
+    repo_root = next((parent for parent in script_path.parents if parent.name == "octopus-os-agent-console"), None)
+    if repo_root is None:
+        return None
+    candidate = (repo_root.parent / "Codex_Skill_Runtime").resolve()
+    if _is_blocked_runtime_parent(candidate.parent):
+        return None
+    return candidate
+
+
 def _default_runtime_root() -> Path:
+    repo_runtime_root = _discover_runtime_root_from_repo()
+    if repo_runtime_root is not None:
+        return repo_runtime_root
     discovered = _discover_runtime_root_from_cwd()
     if discovered is not None:
         return discovered

@@ -11,7 +11,8 @@ from pathlib import Path
 
 SKILL_ROOT = Path(__file__).resolve().parents[1]
 CLI = SKILL_ROOT / "scripts" / "Cli_Toolbox.py"
-RUNTIME_DOCS_ROOT = Path("/home/jasontan656/AI_Projects/OctuposOS_Runtime_Backend/docs")
+PRODUCT_ROOT = SKILL_ROOT.parents[2]
+RUNTIME_DOCS_ROOT = PRODUCT_ROOT / "OctuposOS_Runtime_Backend" / "docs"
 sys.path.insert(0, str(SKILL_ROOT / "scripts"))
 
 
@@ -55,7 +56,7 @@ class TestCliToolboxRegressionTest:
         payload = run_cli("workflow-contract")
         assert payload["stage_order"] == ["mother_doc", "construction_plan", "implementation", "acceptance"]
         assert "rules/OCTOPUS_SKILL_HARD_RULES.md" in payload["top_level_resident_docs"]
-        assert "/home/jasontan656/AI_Projects/Octopus_CodeBase_Backend/AGENTS.md" in payload["top_level_resident_docs"]
+        assert str(PRODUCT_ROOT / "Octopus_CodeBase_Backend" / "AGENTS.md") in payload["top_level_resident_docs"]
         assert payload["stage_specific_contract_tools"] == [
             "stage-checklist",
             "stage-doc-contract",

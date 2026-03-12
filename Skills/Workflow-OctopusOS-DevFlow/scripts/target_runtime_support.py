@@ -1,14 +1,37 @@
 from __future__ import annotations
 
+import os
 import re
 from pathlib import Path
 
 from runtime_context_support import is_indexed, repo_has_substantial_code
 
-ROOT_AGENTS_PATH = Path("/home/jasontan656/AI_Projects/AGENTS.md")
-WORKSPACE_ROOT = Path("/home/jasontan656/AI_Projects")
-PROJECT_STRUCTURE_SKILL_PATH = Path(
-    "/home/jasontan656/.codex/skills/Dev-OctopusOS-Constitution-ProjectStructure/SKILL.md"
+
+def _resolve_repo_root() -> Path:
+    script_path = Path(__file__).resolve()
+    repo_root = next((parent for parent in script_path.parents if parent.name == "octopus-os-agent-console"), None)
+    if repo_root is None:
+        raise RuntimeError("cannot resolve repo root from Workflow-OctopusOS-DevFlow script path")
+    return repo_root
+
+
+REPO_ROOT = _resolve_repo_root()
+WORKSPACE_ROOT = REPO_ROOT.parent
+ROOT_AGENTS_PATH = (WORKSPACE_ROOT / "AGENTS.md").resolve()
+
+
+def _resolve_codex_home() -> Path:
+    local_codex_home = (WORKSPACE_ROOT / ".codex").resolve()
+    if local_codex_home.exists():
+        return local_codex_home
+    env_home = os.environ.get("CODEX_HOME", "").strip()
+    if env_home:
+        return Path(env_home).expanduser().resolve()
+    return (Path.home() / ".codex").resolve()
+
+
+PROJECT_STRUCTURE_SKILL_PATH = (
+    _resolve_codex_home() / "skills" / "Dev-OctopusOS-Constitution-ProjectStructure" / "SKILL.md"
 )
 DEVELOPMENT_DOCS_DIRNAME = "Development_Docs"
 
@@ -105,10 +128,6 @@ def resolve_target_runtime(
     missing_prerequisites: list[str] = []
     if not resolved_target_root.exists():
         missing_prerequisites.append("target_root_missing")
-    try:
-        resolved_target_root.relative_to(WORKSPACE_ROOT)
-    except ValueError:
-        missing_prerequisites.append("target_root_outside_workspace")
     if not development_docs_root.exists():
         missing_prerequisites.append("development_docs_root_missing")
     if not inferred_module_dir:

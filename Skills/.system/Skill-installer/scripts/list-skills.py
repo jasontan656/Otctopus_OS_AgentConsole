@@ -8,6 +8,7 @@ import json
 import os
 import sys
 import urllib.error
+from pathlib import Path
 
 from github_utils import github_api_contents_url, github_request
 
@@ -32,6 +33,12 @@ def _request(url: str) -> bytes:
 
 
 def _codex_home() -> str:
+    script_path = Path(__file__).resolve()
+    repo_root = next((parent for parent in script_path.parents if parent.name == "octopus-os-agent-console"), None)
+    if repo_root is not None:
+        local_codex_home = (repo_root.parent / ".codex").resolve()
+        if local_codex_home.exists():
+            return str(local_codex_home)
     return os.environ.get("CODEX_HOME", os.path.expanduser("~/.codex"))
 
 

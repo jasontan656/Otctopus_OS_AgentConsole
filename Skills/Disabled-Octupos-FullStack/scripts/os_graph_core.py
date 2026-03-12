@@ -12,9 +12,20 @@ from datetime import datetime, timezone
 SKILL_ROOT = Path(__file__).resolve().parents[1]
 ENGINE_ROOT = SKILL_ROOT / "assets" / "os_graph_engine" / "gitnexus_core"
 DIST_ENTRY = ENGINE_ROOT / "dist" / "cli" / "index.js"
-GRAPH_ROOT = Path("/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/graph")
+
+
+def _resolve_product_root() -> Path:
+    script_path = Path(__file__).resolve()
+    repo_root = next((parent for parent in script_path.parents if parent.name == "octopus-os-agent-console"), None)
+    if repo_root is None:
+        raise RuntimeError("cannot resolve product root from Disabled-Octupos-FullStack script path")
+    return repo_root.parent
+
+
+OCTOPUS_OS_ROOT = (_resolve_product_root() / "Octopus_OS").resolve()
+GRAPH_ROOT = (OCTOPUS_OS_ROOT / "Mother_Doc" / "graph").resolve()
 RUNTIME_ROOT = GRAPH_ROOT / "runtime"
-DOC_ROOT = Path("/home/jasontan656/AI_Projects/Octopus_OS/Mother_Doc/docs")
+DOC_ROOT = (OCTOPUS_OS_ROOT / "Mother_Doc" / "docs").resolve()
 LOG_ROOT = DOC_ROOT / "Mother_Doc" / "common" / "development_logs"
 RUNTIME_DIRS = (
     "registry",

@@ -21,7 +21,7 @@ description: "维护本地代码图谱底座：统一建图、查图、影响面
 - 本地 wiki / map bundle 生成
 
 运行产物固定落在：
-- `/home/jasontan656/AI_Projects/OctuposOS_Runtime_Backend/code_graph_runtime`
+- `<root>/OctuposOS_Runtime_Backend/code_graph_runtime`
 
 当前前端承载关系：
 - 最终 UI / workbench 由 `Dev-VUE3-WebUI-Frontend` 承载。
@@ -32,12 +32,12 @@ description: "维护本地代码图谱底座：统一建图、查图、影响面
 
 1. 先确认目标仓库是否已经建图：
 ```bash
-python3 /home/jasontan656/AI_Projects/octopus-os-agent-console/Skills/Meta-code-graph-base/scripts/meta_code_graph_base.py status
+python3 scripts/meta_code_graph_base.py status
 ```
 
 2. 如果未建图或已过期，先分析：
 ```bash
-python3 /home/jasontan656/AI_Projects/octopus-os-agent-console/Skills/Meta-code-graph-base/scripts/meta_code_graph_base.py analyze /abs/repo/path
+python3 scripts/meta_code_graph_base.py analyze /abs/repo/path
 ```
 
 3. 施工前，至少使用以下能力之一：
@@ -55,7 +55,7 @@ python3 /home/jasontan656/AI_Projects/octopus-os-agent-console/Skills/Meta-code-
 
 统一入口：
 ```bash
-python3 /home/jasontan656/AI_Projects/octopus-os-agent-console/Skills/Meta-code-graph-base/scripts/meta_code_graph_base.py <subcommand> [args...]
+python3 scripts/meta_code_graph_base.py <subcommand> [args...]
 ```
 
 核心子命令：

@@ -54,6 +54,7 @@ class TestCliToolboxRegressionTest:
         assert "rules/OCTOPUS_SKILL_HARD_RULES.md" in payload["top_level_resident_docs"]
         assert payload["stage_specific_contract_tools"] == [
             "target-runtime-contract",
+            "target-scaffold",
             "stage-checklist",
             "stage-doc-contract",
             "stage-command-contract",
@@ -63,17 +64,9 @@ class TestCliToolboxRegressionTest:
         assert payload["target_runtime_contract"]["target_root"] == str(Path(temp_dir).resolve())
         assert payload["target_runtime_contract"]["docs_root"].endswith("/Development_Docs/sample_module")
         assert payload["target_runtime_contract"]["construction_plan_root"].endswith(
-            "docs/mother_doc/execution_atom_plan_validation_packs"
+            "Development_Docs/sample_module/mother_doc/execution_atom_plan_validation_packs"
         )
         assert "Dev-OctopusOS-Constitution-ProjectStructure" in payload["top_level_resident_docs"][-1]
-        assert payload["stage_specific_contract_tools"] == [
-            "target-runtime-contract",
-            "stage-checklist",
-            "stage-doc-contract",
-            "stage-command-contract",
-            "stage-graph-contract",
-            "template-index",
-        ]
         assert payload["discovery_scope_policy"]["required_startup_sequence"] == [
             "run_target_runtime_contract_for_current_target",
             "confirm_or_override_docs_root_before_any_write",
@@ -119,9 +112,9 @@ class TestCliToolboxRegressionTest:
             (Path(temp_dir) / "Development_Docs" / "sample_module").mkdir(parents=True)
             payload = run_cli("stage-checklist", "--stage", "construction_plan", "--target-root", temp_dir, "--module-dir", "sample_module")
         assert payload["stage"] == "construction_plan"
-        assert "docs/mother_doc/execution_atom_plan_validation_packs/ directory" in payload["required_outputs"][0]
+        assert "Development_Docs/<module_dir>/mother_doc/execution_atom_plan_validation_packs/ directory" in payload["required_outputs"][0]
         assert "rules/OCTOPUS_SKILL_HARD_RULES.md" in payload["resident_docs"]
-        assert "docs/mother_doc/08_dev_execution_plan.md" in payload["stage_docs"]
+        assert "Development_Docs/<module_dir>/mother_doc/08_dev_execution_plan.md" in payload["stage_docs"]
         assert payload["target_runtime_precheck_required"] is True
         assert payload["resolved_paths"]["target_root"] == str(Path(temp_dir).resolve())
         assert "graph context" in payload["graph_role"]["read_policy"]
@@ -137,7 +130,7 @@ class TestCliToolboxRegressionTest:
             command_payload = run_cli("stage-command-contract", "--stage", "acceptance", "--target-root", temp_dir, "--module-dir", "sample_module")
             graph_payload = run_cli("stage-graph-contract", "--stage", "mother_doc", "--target-root", temp_dir, "--module-dir", "sample_module")
         assert doc_payload["stage"] == "implementation"
-        assert "docs/mother_doc/execution_atom_plan_validation_packs/<active_pack>/*" in doc_payload["stage_docs"]
+        assert "Development_Docs/<module_dir>/mother_doc/execution_atom_plan_validation_packs/<active_pack>/*" in doc_payload["stage_docs"]
         assert doc_payload["target_root"] == str(Path(temp_dir).resolve())
         assert "acceptance-lint" in command_payload["gate_commands"][0]
         assert "mother-doc-archive" in command_payload["gate_commands"][2]
@@ -158,7 +151,7 @@ class TestCliToolboxRegressionTest:
             doc_payload = run_cli("stage-doc-contract", "--stage", "mother_doc", "--target-root", temp_dir, "--module-dir", "sample_module")
             command_payload = run_cli("stage-command-contract", "--stage", "mother_doc", "--target-root", temp_dir, "--module-dir", "sample_module")
             checklist_payload = run_cli("stage-checklist", "--stage", "mother_doc", "--target-root", temp_dir, "--module-dir", "sample_module")
-        assert "docs/<latest_NN_slug>/* when present" in checklist_payload["stage_docs"]
+        assert "Development_Docs/<module_dir>/<latest_NN_slug>/* when present" in checklist_payload["stage_docs"]
         assert "iteration_context_root" in doc_payload
         assert doc_payload["iteration_context_root"] is None
         assert "if a numbered archived mother_doc iteration exists" in command_payload["required_iteration_actions"][0]

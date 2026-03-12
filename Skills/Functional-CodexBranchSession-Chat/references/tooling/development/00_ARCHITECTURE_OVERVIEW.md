@@ -17,6 +17,6 @@
 3. `answer_responder` 在 `keyword_match/topic_evidence` 两种模式下汇总证据并生成可直接答疑的 answer packet。
 
 ## 边界约束
-- 默认只读 `~/.codex/sessions`。
+- 默认优先只读 `<root>/.codex/sessions`；若 `<root>/.codex` 不存在，再回退到 `$CODEX_HOME/sessions` 或 `~/.codex/sessions`。
 - 不修改源日志，不做会话回写。
 - 错误必须结构化输出，保证上游可自动处理。

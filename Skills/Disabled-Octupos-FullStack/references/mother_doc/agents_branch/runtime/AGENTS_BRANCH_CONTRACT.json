@@ -6,7 +6,7 @@
     "target_runtime_source": "target_contract_json"
   },
   "scope_policy": {
-    "managed_external_target": "${AI_PROJECTS_ROOT:-$HOME/AI_Projects}/Octopus_OS/AGENTS.md",
+    "managed_external_target": "<root>/Octopus_OS/AGENTS.md",
     "managed_target_count": 1,
     "forbidden_extra_agents": true
   },

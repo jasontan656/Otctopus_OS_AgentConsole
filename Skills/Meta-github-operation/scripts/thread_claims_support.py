@@ -5,7 +5,15 @@ import os
 from pathlib import Path
 
 
-DEFAULT_RUNTIME_ROOT = Path("/home/jasontan656/AI_Projects/Codex_Skill_Runtime")
+def _resolve_product_root() -> Path:
+    script_path = Path(__file__).resolve()
+    repo_root = next((parent for parent in script_path.parents if parent.name == "octopus-os-agent-console"), None)
+    if repo_root is None:
+        raise RuntimeError("cannot resolve product root from Meta-github-operation script path")
+    return repo_root.parent
+
+
+DEFAULT_RUNTIME_ROOT = (_resolve_product_root() / "Codex_Skill_Runtime").resolve()
 SKILL_RUNTIME_ROOT = (
     Path(os.environ.get("CODEX_SKILL_RUNTIME_ROOT", str(DEFAULT_RUNTIME_ROOT))).expanduser().resolve()
     / "meta-github-operation"

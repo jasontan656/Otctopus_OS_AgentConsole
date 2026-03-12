@@ -14,7 +14,7 @@ description: 接收 resume/session id 与问题（可选关键词）定位会话
 - 命名规则：工具统一命名为 `Cli_Toolbox.<tool_name>`。
 - `Cli_Toolbox.locate_session`
   - 入口：`python3 scripts/branch_chat_toolbox.py locate-session --session-id <session_id>`（或 `--resume-id <resume_id>`）
-  - 作用：自动发现 Codex 安装目录（优先 `$CODEX_HOME`，回退 `~/.codex`），并在 `sessions/` 下定位对应 session 日志文件。
+  - 作用：自动发现 Codex 安装目录（优先 `--codex-home`，其次 `<root>/.codex`，再到 `$CODEX_HOME`，最后回退 `~/.codex`），并在 `sessions/` 下定位对应 session 日志文件。
 - `Cli_Toolbox.extract_assistant_final_reply`
   - 入口：`python3 scripts/branch_chat_toolbox.py extract-final-reply --session-id <session_id> --keyword "<keyword>"`（或 `--resume-id <resume_id>`）
   - 作用：读取 session 日志中的 assistant 消息，按关键词匹配并返回最终命中的 assistant reply（默认取时间上最后一条命中）。
@@ -55,7 +55,7 @@ description: 接收 resume/session id 与问题（可选关键词）定位会话
 
 ## 4. 规则约束
 - 只读边界：
-  - 默认只读取 `~/.codex/sessions/**` 日志，不修改会话原始文件。
+  - 默认只读取 `<root>/.codex/sessions/**`；若 `<root>/.codex` 不存在，则回退到 `$CODEX_HOME/sessions/**` 或 `~/.codex/sessions/**`，不修改会话原始文件。
 - 关键词匹配策略：
   - 默认大小写不敏感；命中多条时选择时间上最后一条（closest to final reply）。
 - 失败门禁：
@@ -66,7 +66,7 @@ description: 接收 resume/session id 与问题（可选关键词）定位会话
   - 技能实现仅落地于 `octopus-os-agent-console/Skills/Functional-CodexBranchSession-Chat`。
 - 运行观测契约：
   - 必须保留双通道日志：`machine.jsonl`（机器可解析）与 `human.log`（人类可读）。
-  - 日志根目录锚点：`Codex_Skill_Runtime/Functional-CodexBranchSession-Chat/`。
+  - 日志根目录锚点：`<root>/Codex_Skill_Runtime/Functional-CodexBranchSession-Chat/`。
 
 ## 5. 方法论约束
 - 何时使用：

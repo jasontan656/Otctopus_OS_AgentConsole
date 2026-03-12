@@ -18,8 +18,18 @@ from workflow_contract_data import EXECUTION_ATOM_PACK_ROOT_FILES, EXECUTION_ATO
 from workflow_contract_data import IMPLEMENTATION_SOURCE_POLICY
 from workflow_contract_data import REQUIREMENT_ATOM_FIELDS, STAGES, TEMPLATES
 
-RUNTIME_ROOT = Path("/home/jasontan656/AI_Projects/OctuposOS_Runtime_Backend")
-CODEBASE_ROOT = Path("/home/jasontan656/AI_Projects/Octopus_CodeBase_Backend")
+
+def _resolve_product_root() -> Path:
+    script_path = Path(__file__).resolve()
+    repo_root = next((parent for parent in script_path.parents if parent.name == "octopus-os-agent-console"), None)
+    if repo_root is None:
+        raise RuntimeError("cannot resolve product root from Disabled-Octupos-OS-Backend script path")
+    return repo_root.parent
+
+
+PRODUCT_ROOT = _resolve_product_root()
+RUNTIME_ROOT = (PRODUCT_ROOT / "OctuposOS_Runtime_Backend").resolve()
+CODEBASE_ROOT = (PRODUCT_ROOT / "Octopus_CodeBase_Backend").resolve()
 GRAPH_RUNTIME_ROOT = RUNTIME_ROOT / "code_graph_runtime"
 MOTHER_DOC_ROOT = RUNTIME_ROOT / "docs" / "mother_doc"
 MOTHER_DOC_PATH = MOTHER_DOC_ROOT / "00_index.md"

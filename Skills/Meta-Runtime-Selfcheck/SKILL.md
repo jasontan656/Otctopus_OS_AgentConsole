@@ -85,7 +85,7 @@ description: "Manual-invoke-only post-task runtime selfcheck. 在任务运行结
 
 默认诊断：
 ```bash
-python3 /home/jasontan656/.codex/skills/Meta-Runtime-Selfcheck/scripts/runtime_pain_batch.py \
+python3 scripts/runtime_pain_batch.py \
   ">" \
   --session-scope-mode all_threads \
   --max-results 200
@@ -93,7 +93,7 @@ python3 /home/jasontan656/.codex/skills/Meta-Runtime-Selfcheck/scripts/runtime_p
 
 显式修复回写：
 ```bash
-python3 /home/jasontan656/.codex/skills/Meta-Runtime-Selfcheck/scripts/runtime_pain_batch.py \
+python3 scripts/runtime_pain_batch.py \
   修复 \
   --manual-repair-applied \
   --manual-repair-path /abs/path/to/changed_file.py \

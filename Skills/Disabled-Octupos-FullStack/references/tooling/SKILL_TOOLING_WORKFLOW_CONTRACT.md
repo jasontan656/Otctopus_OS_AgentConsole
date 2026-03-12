@@ -20,7 +20,7 @@
 - `rules/FULLSTACK_SKILL_HARD_RULES.md`
 - `references/runtime/SKILL_RUNTIME_CONTRACT.md`
 - `references/tooling/SKILL_TOOLING_WORKFLOW_CONTRACT.md`
-- `/home/jasontan656/AI_Projects/AGENTS.md`
+- `<root>/AGENTS.md`
 
 ## Phase Read Policy
 

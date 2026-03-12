@@ -11,8 +11,10 @@ import typer
 
 
 SKILL_ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_SKILL_RUNTIME_ROOT = Path("/home/jasontan656/AI_Projects/Codex_Skill_Runtime")
-DEFAULT_SKILL_RESULT_ROOT = Path("/home/jasontan656/AI_Projects/Codex_Skills_Result")
+REPO_ROOT = SKILL_ROOT.parents[1]
+PRODUCT_ROOT = REPO_ROOT.parent
+DEFAULT_SKILL_RUNTIME_ROOT = (PRODUCT_ROOT / "Codex_Skill_Runtime").resolve()
+DEFAULT_SKILL_RESULT_ROOT = (PRODUCT_ROOT / "Codex_Skills_Result").resolve()
 REPO_RUNTIME_ROOT = SKILL_ROOT / "references" / "runtime"
 WORKING_CONTRACT_PATH = REPO_RUNTIME_ROOT / "WORKING_CONTRACT.json"
 INTENT_PATH = REPO_RUNTIME_ROOT / "CURRENT_PRODUCT_INTENT.md"

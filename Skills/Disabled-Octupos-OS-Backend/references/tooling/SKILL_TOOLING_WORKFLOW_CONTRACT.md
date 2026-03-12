@@ -30,13 +30,13 @@
 
 ## 1.1 Discovery Scope Policy
 - 发现范围只允许包含：
-  - `/home/jasontan656/AI_Projects/Octopus_CodeBase_Backend`
-  - `/home/jasontan656/AI_Projects/OctuposOS_Runtime_Backend`
-  - `/home/jasontan656/AI_Projects/OctuposOS_Runtime_Backend/docs`
-  - `/home/jasontan656/AI_Projects/OctuposOS_Runtime_Backend/docs/mother_doc`
+  - `<root>/Octopus_CodeBase_Backend`
+  - `<root>/OctuposOS_Runtime_Backend`
+  - `<root>/OctuposOS_Runtime_Backend/docs`
+  - `<root>/OctuposOS_Runtime_Backend/docs/mother_doc`
   - 当前技能文件与必要图谱技能入口
-- 若启动 cwd 是 `/home/jasontan656/AI_Projects`，它只是容器根与钩子根，不是 discoverable repo。
-- 禁止为了找需求或上下文而扫描整个 `/home/jasontan656/AI_Projects`。
+- 若启动 cwd 是 `<root>`，它只是容器根与钩子根，不是 discoverable repo。
+- 禁止为了找需求或上下文而扫描整个 `<root>`。
 - 禁止读取 `Human_Work_Zone`、`GoogleDriveDump` 等 sibling 区域，除非 mother doc 显式引用。
 - 极简 prompt 启动时，第一批动作固定为：
   - 若需要则执行 `mother-doc-init`
@@ -51,8 +51,8 @@
 - 跨四阶段唯一允许常驻的文档只有：
   - `rules/OCTOPUS_SKILL_HARD_RULES.md`
   - `references/tooling/SKILL_TOOLING_WORKFLOW_CONTRACT.md`
-  - `/home/jasontan656/AI_Projects/AGENTS.md`
-  - `/home/jasontan656/AI_Projects/Octopus_CodeBase_Backend/AGENTS.md`
+  - `<root>/AGENTS.md`
+  - `<root>/Octopus_CodeBase_Backend/AGENTS.md`
 
 ## 1.3 Phase Read Policy
 - 单阶段执行时，只读取当前阶段 checklist 与当前阶段直接需要的文档/模板。

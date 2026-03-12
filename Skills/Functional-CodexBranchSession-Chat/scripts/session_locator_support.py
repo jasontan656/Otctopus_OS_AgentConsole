@@ -17,6 +17,10 @@ def resolve_codex_home(override: str | None) -> Path:
     candidates = []
     if override:
         candidates.append(Path(os.path.expanduser(override)))
+    script_path = Path(__file__).resolve()
+    repo_root = next((parent for parent in script_path.parents if parent.name == "octopus-os-agent-console"), None)
+    if repo_root is not None:
+        candidates.append((repo_root.parent / ".codex").resolve())
     env_home = os.getenv("CODEX_HOME")
     if env_home:
         candidates.append(Path(os.path.expanduser(env_home)))
@@ -25,7 +29,9 @@ def resolve_codex_home(override: str | None) -> Path:
     for candidate in candidates:
         if candidate.exists() and candidate.is_dir():
             return candidate
-    raise FileNotFoundError("Cannot resolve Codex home. Checked --codex-home, $CODEX_HOME, ~/.codex")
+    raise FileNotFoundError(
+        "Cannot resolve Codex home. Checked --codex-home, <root>/.codex, $CODEX_HOME, ~/.codex"
+    )
 
 
 def find_session_files(codex_home: Path, session_id: str) -> List[Path]:

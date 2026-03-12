@@ -8,7 +8,7 @@
   },
   "mother_doc_governance": {
     "octopus_os_agents_mode": "single_root_target_only",
-    "octopus_os_root_agents_path": "${AI_PROJECTS_ROOT:-$HOME/AI_Projects}/Octopus_OS/AGENTS.md",
+    "octopus_os_root_agents_path": "<root>/Octopus_OS/AGENTS.md",
     "managed_human_path": "assets/managed_targets/Octopus_OS/AGENTS_human.md",
     "managed_machine_path": "assets/managed_targets/Octopus_OS/AGENTS_machine.json"
   },

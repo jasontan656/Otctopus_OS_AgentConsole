@@ -10,7 +10,17 @@ PART_B_OPEN = "<part_B>"
 PART_B_CLOSE = "</part_B>"
 
 ROOT_RELATIVE_PATH = "octopus_os_root"
-DEFAULT_WORKSPACE_ROOT = Path("/home/jasontan656/AI_Projects/Octopus_OS")
+
+
+def _resolve_product_root() -> Path:
+    script_path = Path(__file__).resolve()
+    repo_root = next((parent for parent in script_path.parents if parent.name == "octopus-os-agent-console"), None)
+    if repo_root is None:
+        raise RuntimeError("cannot resolve product root from Disabled-Octupos-FullStack script path")
+    return repo_root.parent
+
+
+DEFAULT_WORKSPACE_ROOT = (_resolve_product_root() / "Octopus_OS").resolve()
 
 
 def managed_target_dir(skill_root: Path) -> Path:

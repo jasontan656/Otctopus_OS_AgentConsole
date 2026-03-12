@@ -11,7 +11,9 @@ from pathlib import Path
 
 SKILL_ROOT = Path(__file__).resolve().parents[1]
 ENGINE_ROOT = SKILL_ROOT / "assets" / "gitnexus_core"
-RUNTIME_ROOT = Path("/home/jasontan656/AI_Projects/OctuposOS_Runtime_Backend/code_graph_runtime")
+REPO_ROOT = SKILL_ROOT.parents[1]
+PRODUCT_ROOT = REPO_ROOT.parent
+RUNTIME_ROOT = (PRODUCT_ROOT / "OctuposOS_Runtime_Backend" / "code_graph_runtime").resolve()
 DIST_ENTRY = ENGINE_ROOT / "dist" / "cli" / "index.js"
 
 

@@ -15,8 +15,8 @@
 4. 顶层常驻文档固定为：
 - `rules/OCTOPUS_SKILL_HARD_RULES.md`
 - `references/tooling/SKILL_TOOLING_WORKFLOW_CONTRACT.md`
-- `/home/jasontan656/AI_Projects/AGENTS.md`
-- `/home/jasontan656/AI_Projects/Octopus_CodeBase_Backend/AGENTS.md`
+- `<root>/AGENTS.md`
+- `<root>/Octopus_CodeBase_Backend/AGENTS.md`
 5. 每个阶段只能做本阶段的事，禁止跨阶段混写；进入新阶段前必须先读取 `stage-checklist --stage <current_stage>`。
 6. 阶段切换时只允许保留顶层常驻文档；上一阶段的 checklist、阶段文档、临时 focus、模板填写上下文必须显式丢弃，除非当前阶段合同明确要求重新读取。
 7. `mother_doc` 阶段必须先把需求固化成目录化项目说明与 `requirement_atom`；没有完整说明书，不得进入 `construction_plan`。
@@ -24,8 +24,8 @@
 7.0.1 若 `docs/` 下已经存在编号归档的 `NN_slug` 目录，`mother_doc` 阶段必须先读取最新一轮归档，并抽取仍然有效的目标、架构决策、blocker 与交付增量；不得把新 mother_doc 当成与历史脱钩的空白起点。
 7.1 `mother_doc` 在进入 `construction_plan` 前必须通过 `mother-doc-lint`；若结构缺失、仍有 `replace_me`、缺少阶段断言/阶段测试/阶段验收，或出现 `最小闭环`、`最小实现`、`mvp`、`test profile` 等降级语义，必须先修正文档。
 7.2 发现范围固定限制为：`Octopus_CodeBase_Backend`、`OctuposOS_Runtime_Backend`、固定 `docs/` 与 `docs/mother_doc/` 路径，以及必要 skill 文件。
-7.3 若启动 cwd 恰好是 `/home/jasontan656/AI_Projects`，它只是容器根/钩子根，不得被视为 discoverable repo。
-7.4 禁止为了找上下文扫描整个 `/home/jasontan656/AI_Projects`，也不得读取 `Human_Work_Zone`、`GoogleDriveDump` 等 sibling 区域，除非 mother doc 显式引用。
+7.3 若启动 cwd 恰好是 `<root>`，它只是容器根/钩子根，不得被视为 discoverable repo。
+7.4 禁止为了找上下文扫描整个 `<root>`，也不得读取 `Human_Work_Zone`、`GoogleDriveDump` 等 sibling 区域，除非 mother doc 显式引用。
 7.5 极简 prompt 启动时，第一批动作必须固定为：直接读取固定 `docs/mother_doc/00_index.md` 或执行 `mother-doc-init` 创建骨架；若已存在编号归档的 `docs/NN_slug`，先读取最新一轮归档；运行 `mother-doc-lint`；在 `mother_doc` 阶段若已有图谱必须读取它来校准现有代码现实；不得先用 `rg/find/ls` 在 workspace 根定位需求或仓库。
 6. `baseline_mode` 必须显式判定：
 - `empty_baseline`

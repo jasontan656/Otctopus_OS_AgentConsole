@@ -3,10 +3,11 @@ import subprocess
 from pathlib import Path
 
 
-SKILL_ROOT = Path("/home/jasontan656/AI_Projects/octopus-os-agent-console/Skills/Meta-code-graph-base")
+SKILL_ROOT = Path(__file__).resolve().parents[1]
+PRODUCT_ROOT = SKILL_ROOT.parents[2]
 WRAPPER = SKILL_ROOT / "scripts" / "meta_code_graph_base.py"
-RUNTIME_ROOT = Path("/home/jasontan656/AI_Projects/OctuposOS_Runtime_Backend/code_graph_runtime")
-TARGET_REPO = Path("/home/jasontan656/AI_Projects/Human_Work_Zone/GitNexus")
+RUNTIME_ROOT = PRODUCT_ROOT / "OctuposOS_Runtime_Backend" / "code_graph_runtime"
+TARGET_REPO = PRODUCT_ROOT / "Human_Work_Zone" / "GitNexus"
 TARGET_REPO_NAME = "GitNexus"
 TARGET_REPO_KEY = "GitNexus-ed2fb3eb9c1d"
 

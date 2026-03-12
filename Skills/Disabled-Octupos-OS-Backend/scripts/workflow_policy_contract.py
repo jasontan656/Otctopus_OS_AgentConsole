@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 # contract_name: octopus_backend_workflow_policy_contract
 # contract_version: 1.1.0
 # validation_mode: strict
@@ -27,23 +29,39 @@ from __future__ import annotations
 #   - deny_code
 #   - policy_version
 
+def _resolve_product_root() -> Path:
+    script_path = Path(__file__).resolve()
+    repo_root = next((parent for parent in script_path.parents if parent.name == "octopus-os-agent-console"), None)
+    if repo_root is None:
+        raise RuntimeError("cannot resolve product root from Disabled-Octupos-OS-Backend script path")
+    return repo_root.parent
+
+
+PRODUCT_ROOT = _resolve_product_root()
+CODEBASE_ROOT = (PRODUCT_ROOT / "Octopus_CodeBase_Backend").resolve()
+RUNTIME_ROOT = (PRODUCT_ROOT / "OctuposOS_Runtime_Backend").resolve()
+RUNTIME_DOCS_ROOT = (RUNTIME_ROOT / "docs").resolve()
+MOTHER_DOC_ROOT = (RUNTIME_DOCS_ROOT / "mother_doc").resolve()
+ROOT_AGENTS_PATH = (PRODUCT_ROOT / "AGENTS.md").resolve()
+CODEBASE_AGENTS_PATH = (CODEBASE_ROOT / "AGENTS.md").resolve()
+
 
 DISCOVERY_SCOPE_POLICY = {
     "allowed_roots": [
-        "/home/jasontan656/AI_Projects/Octopus_CodeBase_Backend",
-        "/home/jasontan656/AI_Projects/OctuposOS_Runtime_Backend",
-        "/home/jasontan656/AI_Projects/OctuposOS_Runtime_Backend/docs",
-        "/home/jasontan656/AI_Projects/OctuposOS_Runtime_Backend/docs/mother_doc",
+        str(CODEBASE_ROOT),
+        str(RUNTIME_ROOT),
+        str(RUNTIME_DOCS_ROOT),
+        str(MOTHER_DOC_ROOT),
         "current_skill_files",
         "required_graph_skill_files",
     ],
-    "workspace_container_root": "/home/jasontan656/AI_Projects",
+    "workspace_container_root": str(PRODUCT_ROOT),
     "workspace_container_root_is_discovery_target": False,
     "fixed_startup_paths": [
-        "/home/jasontan656/AI_Projects/OctuposOS_Runtime_Backend/docs/mother_doc/00_index.md",
-        "/home/jasontan656/AI_Projects/Octopus_CodeBase_Backend/AGENTS.md",
-        "/home/jasontan656/AI_Projects/Octopus_CodeBase_Backend/README.md",
-        "/home/jasontan656/AI_Projects/Octopus_CodeBase_Backend/Deployment_Guide.md",
+        str(MOTHER_DOC_ROOT / "00_index.md"),
+        str(CODEBASE_AGENTS_PATH),
+        str(CODEBASE_ROOT / "README.md"),
+        str(CODEBASE_ROOT / "Deployment_Guide.md"),
     ],
     "required_startup_sequence": [
         "read_mother_doc_index_or_directory",
@@ -53,8 +71,8 @@ DISCOVERY_SCOPE_POLICY = {
         "only_then_read_concrete_codebase_files_if_construction_plan_or_implementation_requires_them",
     ],
     "forbidden_roots": [
-        "/home/jasontan656/AI_Projects/Human_Work_Zone",
-        "/home/jasontan656/AI_Projects/GoogleDriveDump",
+        str((PRODUCT_ROOT / "Human_Work_Zone").resolve()),
+        str((PRODUCT_ROOT / "GoogleDriveDump").resolve()),
     ],
     "repo_wide_container_scan_allowed": False,
 }
@@ -63,8 +81,8 @@ PHASE_READ_POLICY = {
     "top_level_resident_docs": [
         "rules/OCTOPUS_SKILL_HARD_RULES.md",
         "references/tooling/SKILL_TOOLING_WORKFLOW_CONTRACT.md",
-        "/home/jasontan656/AI_Projects/AGENTS.md",
-        "/home/jasontan656/AI_Projects/Octopus_CodeBase_Backend/AGENTS.md",
+        str(ROOT_AGENTS_PATH),
+        str(CODEBASE_AGENTS_PATH),
     ],
     "single_stage_rule": "read only the current stage checklist and the artifacts required by that stage",
     "multi_stage_rule": "when switching stages, reload the new stage checklist and discard the previous stage instruction focus",

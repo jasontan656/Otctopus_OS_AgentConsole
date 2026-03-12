@@ -123,17 +123,19 @@ def _cmd_stage_contract(args: argparse.Namespace, kind: str) -> int:
     return print_payload(factories[kind](), args.json)
 def cmd_graph_preflight(args: argparse.Namespace) -> int:
     runtime = _resolve_runtime(args)
-    if not runtime["ready_for_service"]:
+    if not runtime["ready_for_service"] and args.repo is None:
         return _emit_runtime_not_ready(runtime, args.json)
     repo = args.repo or str(runtime["codebase_root"])
-    payload = graph_preflight_payload(Path(repo).resolve(), args.allow_missing_index, Path(runtime["graph_runtime_root"]))
+    graph_runtime_root = Path(args.graph_runtime_root or runtime["graph_runtime_root"]).resolve()
+    payload = graph_preflight_payload(Path(repo).resolve(), args.allow_missing_index, graph_runtime_root)
     return print_payload(payload, args.json)
 def cmd_graph_postflight(args: argparse.Namespace) -> int:
     runtime = _resolve_runtime(args)
-    if not runtime["ready_for_service"]:
+    if not runtime["ready_for_service"] and args.repo is None:
         return _emit_runtime_not_ready(runtime, args.json)
     repo = args.repo or str(runtime["codebase_root"])
-    payload = graph_postflight_payload(Path(repo).resolve(), Path(runtime["graph_runtime_root"]))
+    graph_runtime_root = Path(args.graph_runtime_root or runtime["graph_runtime_root"]).resolve()
+    payload = graph_postflight_payload(Path(repo).resolve(), graph_runtime_root)
     return print_payload(payload, args.json)
 def cmd_target_scaffold(args: argparse.Namespace) -> int:
     runtime = _resolve_runtime(args)
