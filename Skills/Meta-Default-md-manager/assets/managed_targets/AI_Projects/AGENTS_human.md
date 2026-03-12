@@ -7,22 +7,26 @@
 - 在处理 workspace root 路径规则之前，必须先运行：
 - `python3 /home/jasontan656/AI_Projects/octopus-os-agent-console/Skills/Meta-Default-md-manager/scripts/Cli_Toolbox.py target-contract --source-path "/home/jasontan656/AI_Projects/AGENTS.md" --json`
 
-2. 语言规范
+2. 技能类任务附加入口
+- 任何时候只要任务涉及技能、技能镜像、技能安装、技能同步、技能注册、技能治理或技能运行时，必须阅读：
+- `python3 /home/jasontan656/AI_Projects/octopus-os-agent-console/Skills/Meta-Default-md-manager/scripts/Cli_Toolbox.py target-contract --source-path "/home/jasontan656/AI_Projects/octopus-os-agent-console/AGENTS.md" --json`
+
+3. 语言规范
 - 对话输出必须使用中文为主。
 - 起草与写回文档时默认使用中文为主，英文为辅。
 - 英文只用于技术栈、路径、命令、环境变量、API 名、函数名、类名与其他工程向标识符。
 
-3. 当前受管 repo 边界
+4. 当前受管 repo 边界
 - `$meta-github-operation` 当前仅管理以下 repo：
 - `Octopus_OS`
 - `octopus-os-agent-console`
 - `octopus-os-agent-console` 仍承担与 `~/.codex/skills` 的受控映射关系
 
-4. Multi-AGENT 工作模式
+5. Multi-AGENT 工作模式
 - Multi-AGENT work mode 下，同一文件夹在工作过程中可能出现未预期的并行改动。
 - 当出现与当前任务无关的并行变更时，应忽略这些无关变更，只关注与当前任务直接相关的文件。
 
-5. 治理链约束
+6. 治理链约束
 - 更新本文件时及相关内容时,必须使用 $Meta-Default-md-manager 更新治理映射模版然后再回推至本文件,或者更新本文件但是必须使用技能的collect来反向更新,避免单点更新治理链断裂.
 </part_A>
 
