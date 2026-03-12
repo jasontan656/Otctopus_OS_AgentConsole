@@ -49,6 +49,72 @@ class TestOctopusOSAgentConsoleTests:
         codex_bin.chmod(codex_bin.stat().st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
         return codex_bin
 
+    def write_meta_agent_browser_dependency_manifest(self, skill_root: Path) -> None:
+        manifest_path = (
+            skill_root / "references" / "runtime_contracts" / "EXTERNAL_RUNTIME_DEPENDENCIES.json"
+        )
+        manifest_path.parent.mkdir(parents=True, exist_ok=True)
+        manifest_path.write_text(
+            json.dumps(
+                {
+                    "dependency_contract_name": "meta_agent_browser_external_runtime_dependencies",
+                    "contract_version": "1.0.0",
+                    "skill_name": "__SKILL_NAME__",
+                    "dependencies": [
+                        {
+                            "dependency_id": "agent-browser",
+                            "display_name": "agent-browser",
+                            "install_type": "npm_global_package",
+                            "install_root": "__WORKSPACE_ROOT__/.product_runtime/external_runtime_dependencies/agent-browser",
+                            "binary_name": "agent-browser",
+                            "binary_path": "__WORKSPACE_ROOT__/.product_runtime/external_runtime_dependencies/agent-browser/npm/bin/agent-browser",
+                            "runtime_env": {
+                                "PATH_prepend": [
+                                    "__WORKSPACE_ROOT__/.product_runtime/external_runtime_dependencies/agent-browser/npm/bin"
+                                ],
+                                "PLAYWRIGHT_BROWSERS_PATH": "__WORKSPACE_ROOT__/.product_runtime/external_runtime_dependencies/agent-browser/ms-playwright",
+                                "HOME": "__PRODUCT_ROOT__",
+                            },
+                            "install_commands": [
+                                {
+                                    "argv": [
+                                        "__WORKSPACE_ROOT__/.product_runtime/external_runtime_dependencies/agent-browser/npm/bin/agent-browser",
+                                        "install",
+                                    ]
+                                }
+                            ],
+                            "validate_commands": [
+                                {
+                                    "argv": [
+                                        "__WORKSPACE_ROOT__/.product_runtime/external_runtime_dependencies/agent-browser/npm/bin/agent-browser",
+                                        "--version",
+                                    ]
+                                }
+                            ],
+                            "required_artifacts": [
+                                {
+                                    "path": "__WORKSPACE_ROOT__/.product_runtime/external_runtime_dependencies/agent-browser",
+                                    "kind": "dir",
+                                },
+                                {
+                                    "path": "__WORKSPACE_ROOT__/.product_runtime/external_runtime_dependencies/agent-browser/npm/bin/agent-browser",
+                                    "kind": "file",
+                                },
+                                {
+                                    "path": "__WORKSPACE_ROOT__/.product_runtime/external_runtime_dependencies/agent-browser/ms-playwright",
+                                    "kind": "nonempty_dir",
+                                },
+                            ],
+                        }
+                    ],
+                },
+                ensure_ascii=False,
+                indent=2,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+
     def test_plan_derives_install_root_codex_home_and_workspace(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             repo_root = Path(tmp) / "repo"
@@ -91,6 +157,41 @@ class TestOctopusOSAgentConsoleTests:
                 ".system",
                 "Meta-Impact-Investigation",
             ]
+            assert payload["plan"]["external_runtime_dependencies"] == []
+
+    def test_plan_lists_product_managed_external_runtime_dependencies(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            repo_root = Path(tmp) / "repo"
+            install_root = Path(tmp) / "codex-home"
+            skills_root = repo_root / "Skills"
+            skill_root = skills_root / "Meta-Agent-Browser"
+            skill_root.mkdir(parents=True)
+            (skill_root / "SKILL.md").write_text("skill\n", encoding="utf-8")
+            self.write_meta_agent_browser_dependency_manifest(skill_root)
+
+            completed = self.run_cli(
+                "plan",
+                "--repo-root",
+                str(repo_root),
+                "--install-root",
+                str(install_root),
+                "--codex-cli-mode",
+                "install",
+                "--github-skill-repo",
+                "git@github.com:test/octopus-os-skills.git",
+                "--github-auth-mode",
+                "ssh",
+            )
+
+            payload = json.loads(completed.stdout)
+            dependencies = payload["plan"]["external_runtime_dependencies"]
+            assert len(dependencies) == 1
+            dependency = dependencies[0]
+            assert dependency["dependency_id"] == "agent-browser"
+            assert dependency["required_by_skills"] == ["Meta-Agent-Browser"]
+            assert dependency["install_root"] == str(
+                install_root / ".product_runtime" / "external_runtime_dependencies" / "agent-browser"
+            )
 
     def test_install_and_uninstall_round_trip(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -163,6 +264,62 @@ class TestOctopusOSAgentConsoleTests:
             assert not (install_root / "Codex_Skills_Result").exists()
             assert not (install_root / "Octopus_OS").exists()
             assert not (workspace_root.exists())
+
+    def test_install_and_uninstall_manage_external_runtime_dependencies(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            repo_root = Path(tmp) / "repo"
+            install_root = Path(tmp) / "codex-home"
+            codex_root = install_root / ".codex" / "skills"
+            state_root = Path(tmp) / "state"
+            skills_root = repo_root / "Skills"
+            skill_root = skills_root / "Meta-Agent-Browser"
+            skill_root.mkdir(parents=True)
+            (skill_root / "SKILL.md").write_text("skill\n", encoding="utf-8")
+            self.write_meta_agent_browser_dependency_manifest(skill_root)
+            (skills_root / "AGENTS.md").write_text("skills agents\n", encoding="utf-8")
+            (repo_root / "AGENTS.md").write_text("root agents\n", encoding="utf-8")
+            (repo_root / "README.md").write_text("product\n", encoding="utf-8")
+            (codex_root / ".system").mkdir(parents=True)
+            (codex_root / ".system" / ".codex-system-skills.marker").write_text("marker\n", encoding="utf-8")
+
+            install = self.run_cli(
+                "install",
+                "--repo-root",
+                str(repo_root),
+                "--install-root",
+                str(install_root),
+                "--state-root",
+                str(state_root),
+                "--codex-cli-mode",
+                "install",
+                "--runtime-target",
+                self.supported_runtime_target,
+                "--github-skill-repo",
+                "git@github.com:test/octopus-os-skills.git",
+                "--github-auth-mode",
+                "ssh",
+                "--acknowledge-github-control-risk",
+                env_overrides={"OCTOPUS_OS_EXTERNAL_DEPENDENCY_MODE": "stub"},
+            )
+
+            payload = json.loads(install.stdout)
+            dependency_root = install_root / ".product_runtime" / "external_runtime_dependencies" / "agent-browser"
+            assert payload["status"] == "ok"
+            assert payload["external_runtime_dependencies"][0]["dependency_id"] == "agent-browser"
+            assert (dependency_root / "npm" / "bin" / "agent-browser").exists()
+            assert (dependency_root / "ms-playwright").is_dir()
+
+            uninstall = self.run_cli(
+                "uninstall",
+                "--state-root",
+                str(state_root),
+                "--session-id",
+                payload["session_id"],
+            )
+            uninstall_payload = json.loads(uninstall.stdout)
+            assert uninstall_payload["status"] == "ok"
+            assert str(dependency_root) in uninstall_payload["removed_external_runtime_dependencies"]
+            assert not dependency_root.exists()
 
     def test_wizard_supports_bilingual_non_interactive_install(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

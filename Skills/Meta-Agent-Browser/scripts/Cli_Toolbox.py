@@ -14,9 +14,16 @@ WORKSPACE_ROOT = PRODUCT_ROOT.parent
 RUNTIME_CONTRACTS_ROOT = SKILL_ROOT / "references" / "runtime_contracts"
 CONTRACT_PATH = RUNTIME_CONTRACTS_ROOT / "SKILL_RUNTIME_CONTRACT.json"
 DIRECTIVE_INDEX_PATH = RUNTIME_CONTRACTS_ROOT / "DIRECTIVE_INDEX.json"
+DEPENDENCIES_PATH = RUNTIME_CONTRACTS_ROOT / "EXTERNAL_RUNTIME_DEPENDENCIES.json"
 SKILL_NAME = SKILL_ROOT.name
 RUNTIME_DIR = WORKSPACE_ROOT / "Codex_Skill_Runtime" / SKILL_NAME
 RESULT_DIR = WORKSPACE_ROOT / "Codex_Skills_Result" / SKILL_NAME
+AGENT_BROWSER_DEPENDENCY_ROOT = (
+    WORKSPACE_ROOT / ".product_runtime" / "external_runtime_dependencies" / "agent-browser"
+)
+AGENT_BROWSER_BIN_DIR = AGENT_BROWSER_DEPENDENCY_ROOT / "npm" / "bin"
+AGENT_BROWSER_BIN = AGENT_BROWSER_BIN_DIR / "agent-browser"
+PLAYWRIGHT_BROWSERS_PATH = AGENT_BROWSER_DEPENDENCY_ROOT / "ms-playwright"
 
 PLACEHOLDERS = {
     "__SKILL_NAME__": SKILL_NAME,
@@ -73,6 +80,13 @@ def _emit(payload: dict[str, Any], as_json: bool) -> int:
             print(f"{key}: {value}")
         return 0
 
+    if "dependencies" in payload:
+        print(payload["dependency_contract_name"])
+        print(f"version: {payload['contract_version']}")
+        for item in payload["dependencies"]:
+            print(f"- {item['dependency_id']}: {item['install_root']}")
+        return 0
+
     print(payload["contract_name"])
     print(f"version: {payload['contract_version']}")
     print("tool_entry:")
@@ -107,13 +121,25 @@ def _command_paths(args: argparse.Namespace) -> int:
             "workspace_root": str(WORKSPACE_ROOT),
             "runtime_dir": str(RUNTIME_DIR),
             "result_dir": str(RESULT_DIR),
+            "agent_browser_dependency_root": str(AGENT_BROWSER_DEPENDENCY_ROOT),
+            "agent_browser_bin_dir": str(AGENT_BROWSER_BIN_DIR),
+            "agent_browser_bin": str(AGENT_BROWSER_BIN),
+            "playwright_browsers_path": str(PLAYWRIGHT_BROWSERS_PATH),
         },
         "environment_variables": {
             "META_AGENT_BROWSER_RUNTIME_DIR": str(RUNTIME_DIR),
             "META_AGENT_BROWSER_RESULT_DIR": str(RESULT_DIR),
+            "META_AGENT_BROWSER_DEPENDENCY_ROOT": str(AGENT_BROWSER_DEPENDENCY_ROOT),
+            "META_AGENT_BROWSER_AGENT_BROWSER_BIN": str(AGENT_BROWSER_BIN),
+            "META_AGENT_BROWSER_PLAYWRIGHT_BROWSERS_PATH": str(PLAYWRIGHT_BROWSERS_PATH),
+            "PLAYWRIGHT_BROWSERS_PATH": str(PLAYWRIGHT_BROWSERS_PATH),
         },
     }
     return _emit(payload, args.json)
+
+
+def _command_dependencies(args: argparse.Namespace) -> int:
+    return _emit(_read_json_payload(DEPENDENCIES_PATH), args.json)
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -132,6 +158,13 @@ def build_parser() -> argparse.ArgumentParser:
     paths_parser = subparsers.add_parser("paths", help="Resolve governed skill paths")
     paths_parser.add_argument("--json", action="store_true", help="Emit structured JSON")
     paths_parser.set_defaults(func=_command_paths)
+
+    dependencies_parser = subparsers.add_parser(
+        "dependencies",
+        help="Emit the product-managed external dependency contract",
+    )
+    dependencies_parser.add_argument("--json", action="store_true", help="Emit structured JSON")
+    dependencies_parser.set_defaults(func=_command_dependencies)
     return parser
 
 

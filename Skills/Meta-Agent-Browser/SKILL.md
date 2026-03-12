@@ -11,6 +11,7 @@ allowed-tools: Bash(agent-browser:*), Bash(./.venv_backend_skills/bin/python Ski
   - `./.venv_backend_skills/bin/python Skills/Meta-Agent-Browser/scripts/Cli_Toolbox.py contract --json`
   - `./.venv_backend_skills/bin/python Skills/Meta-Agent-Browser/scripts/Cli_Toolbox.py directive --topic <topic> --json`
   - `./.venv_backend_skills/bin/python Skills/Meta-Agent-Browser/scripts/Cli_Toolbox.py paths --json`
+  - `./.venv_backend_skills/bin/python Skills/Meta-Agent-Browser/scripts/Cli_Toolbox.py dependencies --json`
 - 可选的 skill-local wrapper：
   - `scripts/agent-browser-runtime-guard.sh`
   - `scripts/agent-browser-stable.sh`
@@ -28,10 +29,12 @@ allowed-tools: Bash(agent-browser:*), Bash(./.venv_backend_skills/bin/python Ski
    - runtime 选择与 fallback：`./.venv_backend_skills/bin/python Skills/Meta-Agent-Browser/scripts/Cli_Toolbox.py directive --topic fallback-routing --json`
    - 截图、PDF、auth state、trace、下载等产物：`./.venv_backend_skills/bin/python Skills/Meta-Agent-Browser/scripts/Cli_Toolbox.py directive --topic output-governance --json`
 3. 当任务涉及任何文件产物时，再执行 `./.venv_backend_skills/bin/python Skills/Meta-Agent-Browser/scripts/Cli_Toolbox.py paths --json` 获取当前仓内解析结果。
-4. 只有当 CLI JSON 仍留下真实语义缺口时，才打开 human mirror 或 `references/browser-total-entry.md`、`references/windows-headed-bridge.md` 等补充文档。
+4. 当任务涉及产品安装面、target-local 依赖安装路径或 browser asset 落点时，再执行 `./.venv_backend_skills/bin/python Skills/Meta-Agent-Browser/scripts/Cli_Toolbox.py dependencies --json`。
+5. 只有当 CLI JSON 仍留下真实语义缺口时，才打开 human mirror 或 `references/browser-total-entry.md`、`references/windows-headed-bridge.md` 等补充文档。
 
 ## 4. 外部工具边界
 - `agent-browser` 是外部前置工具，不属于本 skill 管辖面。
+- 该前置工具的 target-local 安装与回滚应交给 Octopus OS product installer 消费 `EXTERNAL_RUNTIME_DEPENDENCIES.json` 完成。
 - 本 skill 只负责：
   - 受控入口
   - skill-local wrapper

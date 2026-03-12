@@ -4,6 +4,7 @@
 - 先走 `contract --json`，再按需读取 `runtime-entry`。
 - `agent-browser-runtime-guard.sh` 只做验证与清理，不负责安装外部工具。
 - `agent-browser-stable.sh` 是 skill 自己的稳定包装入口，不是上游工具替代品。
+- 如果 target-local `agent-browser` 依赖不存在，应回到 Octopus OS product installer 补装，而不是在 skill 内部临时安装。
 </part_A>
 
 <part_B>
@@ -16,7 +17,8 @@
   "instruction": [
     "Treat `./.venv_backend_skills/bin/python Skills/Meta-Agent-Browser/scripts/Cli_Toolbox.py contract --json` as the first runtime entry for this skill.",
     "Use `scripts/agent-browser-runtime-guard.sh` only to validate the external prerequisite and clean skill-local stale runtime state.",
-    "Use `scripts/agent-browser-stable.sh` for stable multi-step sessions after the runtime guard succeeds."
+    "Use `scripts/agent-browser-stable.sh` for stable multi-step sessions after the runtime guard succeeds.",
+    "If the target-local agent-browser dependency is missing, route installation back to the Octopus OS product installer rather than installing from inside this skill."
   ],
   "workflow": [
     "Call contract --json.",

@@ -11,6 +11,7 @@ import subprocess
 from datetime import UTC, datetime
 from pathlib import Path
 from types import SimpleNamespace
+from typing import Any
 
 
 RSYNC_EXCLUDES = (
@@ -33,7 +34,9 @@ DEFAULT_OCTOPUS_OS_DIR_NAME = "Octopus_OS"
 CODEX_HOME_DIR_NAME = ".codex"
 CODEX_CLI_PACKAGE = "@openai/codex@latest"
 CODEX_CLI_INSTALL_MODE_ENV = "OCTOPUS_OS_CODEX_INSTALL_MODE"
+EXTERNAL_DEPENDENCY_INSTALL_MODE_ENV = "OCTOPUS_OS_EXTERNAL_DEPENDENCY_MODE"
 DEFAULT_CODEX_CLI_MODE = "auto"
+DEFAULT_EXTERNAL_DEPENDENCY_MODE = "auto"
 DEFAULT_GITHUB_API_ENV_VAR = "GITHUB_TOKEN"
 PRODUCT_NAME = "Octopus OS - Natural-Language-Driven Multi-Agent Console"
 SUPPORTED_RUNTIME_TARGET = "codex-gpt-5.4-high"
@@ -41,6 +44,10 @@ SUPPORTED_RUNTIME_LABEL = "Codex + GPT-5.4 high reasoning effort"
 SUPPORTED_HOST_ENV_LABEL = "Codex CLI + VS Code"
 FORBIDDEN_CODEX_ROOT_FILES = ("AGENTS.md",)
 ALLOWED_CLEAN_CODEX_ROOT_ENTRIES = {SYSTEM_SKILL_NAMESPACE}
+EXTERNAL_RUNTIME_DEPENDENCY_MANIFEST_RELATIVE_PATH = Path(
+    "references/runtime_contracts/EXTERNAL_RUNTIME_DEPENDENCIES.json"
+)
+EXTERNAL_RUNTIME_DEPENDENCY_ROOT_DIR_NAME = "external_runtime_dependencies"
 
 
 def _shell_join(parts: list[str]) -> str:
@@ -99,6 +106,10 @@ def _derive_octopus_os_root(install_root: Path) -> Path:
     return install_root / DEFAULT_OCTOPUS_OS_DIR_NAME
 
 
+def _derive_external_runtime_dependency_root(install_root: Path) -> Path:
+    return install_root / PRODUCT_RUNTIME_DIR / EXTERNAL_RUNTIME_DEPENDENCY_ROOT_DIR_NAME
+
+
 def _resolve_workspace_root(raw: str | None, install_root: Path) -> Path:
     if raw:
         return Path(raw).expanduser().resolve()
@@ -133,6 +144,26 @@ def _normalize_optional_text(raw: str | None) -> str | None:
     return value or None
 
 
+def _replace_placeholders(value: Any, replacements: dict[str, str]) -> Any:
+    if isinstance(value, str):
+        rendered = value
+        for placeholder, replacement in replacements.items():
+            rendered = rendered.replace(placeholder, replacement)
+        return rendered
+    if isinstance(value, list):
+        return [_replace_placeholders(item, replacements) for item in value]
+    if isinstance(value, dict):
+        return {key: _replace_placeholders(item, replacements) for key, item in value.items()}
+    return value
+
+
+def _path_with_prepend(existing_path: str | None, prepend_items: list[str]) -> str:
+    filtered_items = [item for item in prepend_items if item]
+    if existing_path:
+        filtered_items.append(existing_path)
+    return os.pathsep.join(filtered_items)
+
+
 def _build_codex_cli_install_command(install_root: Path) -> str:
     return _shell_join(["npm", "install", "-g", CODEX_CLI_PACKAGE, "--prefix", str(install_root)])
 
@@ -141,8 +172,13 @@ def _derive_managed_npm_root(install_root: Path) -> Path:
     return install_root / PRODUCT_RUNTIME_DIR / "npm"
 
 
-def _prepare_managed_npm_environment(install_root: Path) -> dict[str, str]:
-    npm_root = _derive_managed_npm_root(install_root)
+def _prepare_managed_npm_environment(
+    install_root: Path,
+    *,
+    home_root: Path | None = None,
+    namespace: str = "npm",
+) -> dict[str, str]:
+    npm_root = install_root / PRODUCT_RUNTIME_DIR / namespace
     cache_root = npm_root / "cache"
     logs_root = npm_root / "logs"
     userconfig_path = npm_root / "npmrc"
@@ -155,7 +191,7 @@ def _prepare_managed_npm_environment(install_root: Path) -> dict[str, str]:
 
     return {
         **os.environ,
-        "HOME": str(install_root),
+        "HOME": str(home_root or install_root),
         "NPM_CONFIG_CACHE": str(cache_root),
         "npm_config_cache": str(cache_root),
         "NPM_CONFIG_LOGS_DIR": str(logs_root),
@@ -169,6 +205,33 @@ def _prepare_managed_npm_environment(install_root: Path) -> dict[str, str]:
         "NPM_CONFIG_UPDATE_NOTIFIER": "false",
         "npm_config_update_notifier": "false",
     }
+
+
+def _apply_environment_overrides(
+    base_env: dict[str, str],
+    overrides: dict[str, Any] | None,
+) -> dict[str, str]:
+    env = dict(base_env)
+    if not overrides:
+        return env
+
+    path_prepend_raw = overrides.get("PATH_prepend", [])
+    if path_prepend_raw:
+        path_prepend = [str(item) for item in path_prepend_raw]
+        env["PATH"] = _path_with_prepend(env.get("PATH"), path_prepend)
+
+    for key, value in overrides.items():
+        if key == "PATH_prepend":
+            continue
+        env[str(key)] = str(value)
+    return env
+
+
+def _run_command(command: list[str], *, env: dict[str, str]) -> subprocess.CompletedProcess[str]:
+    completed = subprocess.run(command, check=False, capture_output=True, text=True, env=env)
+    if completed.returncode != 0:
+        raise RuntimeError(completed.stderr.strip() or completed.stdout.strip() or f"command failed: {command}")
+    return completed
 
 
 def _normalize_codex_cli_mode(raw: str | None) -> str:
@@ -458,6 +521,112 @@ def _discover_skill_roots(repo_root: Path) -> list[dict[str, str]]:
     return skills
 
 
+def _load_external_runtime_dependencies_for_skill(
+    skill: dict[str, object],
+    *,
+    install_root: Path,
+    codex_home: Path,
+) -> list[dict[str, object]]:
+    skill_source_root = Path(str(skill["source"]))
+    manifest_path = skill_source_root / EXTERNAL_RUNTIME_DEPENDENCY_MANIFEST_RELATIVE_PATH
+    if not manifest_path.exists():
+        return []
+
+    replacements = {
+        "__SKILL_NAME__": str(skill["name"]),
+        "__SKILL_ROOT__": str(skill_source_root),
+        "__PRODUCT_ROOT__": str(codex_home),
+        "__WORKSPACE_ROOT__": str(install_root),
+        "__RUNTIME_DIR__": str(_derive_skill_runtime_root(install_root) / str(skill["name"])),
+        "__RESULT_DIR__": str(_derive_skill_result_root(install_root) / str(skill["name"])),
+    }
+    payload = _replace_placeholders(
+        json.loads(manifest_path.read_text(encoding="utf-8")),
+        replacements,
+    )
+    dependencies = payload.get("dependencies", [])
+    if not isinstance(dependencies, list):
+        raise ValueError(f"external dependency manifest must contain a dependency list: {manifest_path}")
+
+    normalized: list[dict[str, object]] = []
+    for dependency in dependencies:
+        dependency_id = str(dependency["dependency_id"])
+        normalized.append(
+            {
+                "dependency_id": dependency_id,
+                "display_name": str(dependency.get("display_name") or dependency_id),
+                "install_type": str(dependency["install_type"]),
+                "install_root": str(dependency["install_root"]),
+                "binary_name": str(dependency["binary_name"]),
+                "binary_path": str(dependency["binary_path"]),
+                "runtime_env": dict(dependency.get("runtime_env") or {}),
+                "install_commands": list(dependency.get("install_commands") or []),
+                "validate_commands": list(dependency.get("validate_commands") or []),
+                "required_artifacts": list(dependency.get("required_artifacts") or []),
+                "host_requirements": list(dependency.get("host_requirements") or []),
+                "install_help": _normalize_optional_text(dependency.get("install_help")),
+                "manifest_path": str(manifest_path),
+                "required_by_skills": [str(skill["name"])],
+            }
+        )
+    return normalized
+
+
+def _merge_external_runtime_dependencies(
+    dependencies: list[dict[str, object]],
+) -> list[dict[str, object]]:
+    merged: dict[str, dict[str, object]] = {}
+    for dependency in dependencies:
+        dependency_id = str(dependency["dependency_id"])
+        existing = merged.get(dependency_id)
+        if existing is None:
+            merged[dependency_id] = dependency
+            continue
+
+        comparable_fields = (
+            "display_name",
+            "install_type",
+            "install_root",
+            "binary_name",
+            "binary_path",
+            "runtime_env",
+            "install_commands",
+            "validate_commands",
+            "required_artifacts",
+            "host_requirements",
+            "install_help",
+        )
+        if any(existing[field] != dependency[field] for field in comparable_fields):
+            raise ValueError(
+                "conflicting external runtime dependency declarations detected for "
+                f"{dependency_id}: {existing['manifest_path']} vs {dependency['manifest_path']}"
+            )
+
+        for skill_name in dependency["required_by_skills"]:
+            if skill_name not in existing["required_by_skills"]:
+                existing["required_by_skills"].append(skill_name)
+
+    return [merged[key] for key in sorted(merged)]
+
+
+def _discover_external_runtime_dependencies(
+    skills: list[dict[str, object]],
+    *,
+    install_root: Path,
+    codex_home: Path,
+) -> list[dict[str, object]]:
+    discovered: list[dict[str, object]] = []
+    for skill in skills:
+        discovered.extend(
+            _load_external_runtime_dependencies_for_skill(
+                skill,
+                install_root=install_root,
+                codex_home=codex_home,
+            )
+        )
+    return _merge_external_runtime_dependencies(discovered)
+
+
 def _rsync(src: Path, dst: Path) -> list[str]:
     dst.parent.mkdir(parents=True, exist_ok=True)
     cmd = ["rsync", "-a", "--delete"]
@@ -473,6 +642,7 @@ def _rsync(src: Path, dst: Path) -> list[str]:
 def _copy_tree(source: Path, destination: Path) -> None:
     if destination.exists():
         shutil.rmtree(destination)
+    destination.parent.mkdir(parents=True, exist_ok=True)
     shutil.copytree(source, destination)
 
 
@@ -508,6 +678,168 @@ def _collect_created_entries(
             continue
         created_entries.append({"path": relative_path, "kind": kind})
     return created_entries
+
+
+def _normalize_external_dependency_mode() -> str:
+    normalized = os.environ.get(
+        EXTERNAL_DEPENDENCY_INSTALL_MODE_ENV,
+        DEFAULT_EXTERNAL_DEPENDENCY_MODE,
+    ).strip().lower()
+    if normalized not in {"auto", "stub"}:
+        raise ValueError(
+            f"{EXTERNAL_DEPENDENCY_INSTALL_MODE_ENV} must be auto or stub; got: {normalized}"
+        )
+    return normalized
+
+
+def _validate_required_artifacts(
+    dependency: dict[str, object],
+    *,
+    artifacts: list[dict[str, object]],
+) -> None:
+    for artifact in artifacts:
+        path = Path(str(artifact["path"]))
+        kind = str(artifact.get("kind") or "path")
+        if kind == "file":
+            if not path.is_file():
+                raise FileNotFoundError(
+                    f"required external dependency file is missing for {dependency['dependency_id']}: {path}"
+                )
+            continue
+        if kind == "dir":
+            if not path.is_dir():
+                raise FileNotFoundError(
+                    f"required external dependency directory is missing for {dependency['dependency_id']}: {path}"
+                )
+            continue
+        if kind == "nonempty_dir":
+            if not path.is_dir() or not any(path.iterdir()):
+                raise FileNotFoundError(
+                    f"required external dependency directory is empty for {dependency['dependency_id']}: {path}"
+                )
+            continue
+        raise ValueError(f"unsupported required artifact kind: {kind}")
+
+
+def _install_external_dependency_stub(
+    dependency: dict[str, object],
+    *,
+    install_root: Path,
+) -> None:
+    dependency_root = Path(str(dependency["install_root"]))
+    dependency_root.mkdir(parents=True, exist_ok=True)
+
+    binary_path = Path(str(dependency["binary_path"]))
+    binary_path.parent.mkdir(parents=True, exist_ok=True)
+    binary_name = str(dependency["binary_name"])
+    default_browser_root = dependency_root / "ms-playwright"
+    stub_script = (
+        "#!/bin/sh\n"
+        "if [ \"$1\" = \"--version\" ]; then\n"
+        f"  echo '{binary_name} stub 1.0.0'\n"
+        "  exit 0\n"
+        "fi\n"
+        "if [ \"$1\" = \"install\" ]; then\n"
+        f"  target_dir=\"${{PLAYWRIGHT_BROWSERS_PATH:-{default_browser_root}}}\"\n"
+        "  mkdir -p \"$target_dir/chrome-headless-shell-linux64\"\n"
+        "  touch \"$target_dir/chrome-headless-shell-linux64/chrome-headless-shell\"\n"
+        "  exit 0\n"
+        "fi\n"
+        "exit 0\n"
+    )
+    binary_path.write_text(stub_script, encoding="utf-8")
+    binary_path.chmod(binary_path.stat().st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
+
+    for artifact in dependency["required_artifacts"]:
+        path = Path(str(artifact["path"]))
+        kind = str(artifact.get("kind") or "path")
+        if kind in {"dir", "nonempty_dir"}:
+            path.mkdir(parents=True, exist_ok=True)
+            if kind == "nonempty_dir":
+                placeholder = path / ".octopus-os-placeholder"
+                placeholder.write_text("placeholder\n", encoding="utf-8")
+        elif kind == "file":
+            path.parent.mkdir(parents=True, exist_ok=True)
+            if not path.exists():
+                path.write_text("placeholder\n", encoding="utf-8")
+
+    stub_env = _apply_environment_overrides(
+        dict(os.environ),
+        dict(dependency.get("runtime_env") or {}),
+    )
+    for command_entry in dependency["install_commands"]:
+        env = _apply_environment_overrides(stub_env, dict(command_entry.get("env") or {}))
+        _run_command([str(item) for item in command_entry["argv"]], env=env)
+
+    _validate_required_artifacts(
+        dependency,
+        artifacts=list(dependency.get("required_artifacts") or []),
+    )
+
+
+def _install_external_runtime_dependencies(
+    dependencies: list[dict[str, object]],
+    *,
+    install_root: Path,
+    codex_home: Path,
+    backup_root: Path,
+) -> list[dict[str, object]]:
+    if not dependencies:
+        return []
+
+    install_mode = _normalize_external_dependency_mode()
+    npm_env = _prepare_managed_npm_environment(
+        install_root,
+        home_root=codex_home,
+        namespace="npm_external_runtime_dependencies",
+    )
+    installed_dependencies: list[dict[str, object]] = []
+
+    for dependency in dependencies:
+        dependency_root = Path(str(dependency["install_root"]))
+        backup_path = None
+        if dependency_root.exists():
+            backup_path = backup_root / str(dependency["dependency_id"])
+            _copy_tree(dependency_root, backup_path)
+            shutil.rmtree(dependency_root)
+
+        if install_mode == "stub":
+            _install_external_dependency_stub(dependency, install_root=install_root)
+        else:
+            base_env = _apply_environment_overrides(
+                npm_env,
+                dict(dependency.get("runtime_env") or {}),
+            )
+            for command_entry in dependency["install_commands"]:
+                env = _apply_environment_overrides(base_env, dict(command_entry.get("env") or {}))
+                _run_command([str(item) for item in command_entry["argv"]], env=env)
+
+            for command_entry in dependency["validate_commands"]:
+                env = _apply_environment_overrides(base_env, dict(command_entry.get("env") or {}))
+                _run_command([str(item) for item in command_entry["argv"]], env=env)
+
+            _validate_required_artifacts(
+                dependency,
+                artifacts=list(dependency.get("required_artifacts") or []),
+            )
+
+        installed_dependencies.append(
+            {
+                "dependency_id": dependency["dependency_id"],
+                "display_name": dependency["display_name"],
+                "install_type": dependency["install_type"],
+                "install_root": str(dependency_root),
+                "binary_path": str(dependency["binary_path"]),
+                "manifest_path": dependency["manifest_path"],
+                "required_by_skills": list(dependency["required_by_skills"]),
+                "runtime_env": dict(dependency.get("runtime_env") or {}),
+                "required_artifacts": list(dependency.get("required_artifacts") or []),
+                "host_requirements": list(dependency.get("host_requirements") or []),
+                "backup_path": str(backup_path) if backup_path else None,
+            }
+        )
+
+    return installed_dependencies
 
 
 def _initialize_product_directories(install_root: Path) -> list[dict[str, object]]:
@@ -586,6 +918,11 @@ def _build_plan(
                 "destination_exists": exists,
             }
         )
+    external_runtime_dependencies = _discover_external_runtime_dependencies(
+        skills,
+        install_root=install_root,
+        codex_home=codex_home,
+    )
     install_command = _build_recommended_install_command(install_root, github_binding)
     return {
         "repo_root": str(repo_root),
@@ -613,6 +950,7 @@ def _build_plan(
         "codex_root_cleanliness": cleanliness,
         "skills": skills,
         "overwrite_skills": overwrite_skills,
+        "external_runtime_dependencies": external_runtime_dependencies,
         "workspace_exists": workspace_root.exists(),
         "github_binding": github_binding,
     }
@@ -712,6 +1050,7 @@ def _select_wizard_language(args: argparse.Namespace) -> str:
 
 def _print_plan_summary(lang: str, plan: dict[str, object]) -> None:
     skills = plan["skills"]
+    external_runtime_dependencies = plan["external_runtime_dependencies"]
     workspace_exists = plan["workspace_exists"]
     cleanliness = plan["codex_root_cleanliness"]
     github_binding = plan["github_binding"]
@@ -737,6 +1076,10 @@ def _print_plan_summary(lang: str, plan: dict[str, object]) -> None:
     print(_label(lang, "Syncable skills:", "可同步技能："), len(skills))
     for skill in skills:
         print(f"  - {skill['name']} -> {skill['destination']}")
+    print(_label(lang, "External runtime dependencies:", "外部运行时依赖："), len(external_runtime_dependencies))
+    for dependency in external_runtime_dependencies:
+        required_by = ", ".join(dependency["required_by_skills"])
+        print(f"  - {dependency['dependency_id']} -> {dependency['install_root']} [{required_by}]")
     print()
     if workspace_exists:
         print(_label(lang, "The workspace root already exists.", "工作区根目录已存在。"))
@@ -818,10 +1161,17 @@ def install_command(args: argparse.Namespace) -> int:
             "workspace root already exists and is not empty; rerun with --allow-replace-workspace"
         )
 
-    product_directories = _initialize_product_directories(install_root)
     session_id = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
     session_root = state_root / session_id
     backup_root = session_root / "backups"
+    external_dependency_backup_root = session_root / "external_dependency_backups"
+    product_directories = _initialize_product_directories(install_root)
+    installed_external_runtime_dependencies = _install_external_runtime_dependencies(
+        list(plan["external_runtime_dependencies"]),
+        install_root=install_root,
+        codex_home=codex_home,
+        backup_root=external_dependency_backup_root,
+    )
 
     installed_entries: list[dict[str, object]] = []
     for skill in plan["skills"]:
@@ -880,6 +1230,7 @@ def install_command(args: argparse.Namespace) -> int:
         "github_binding": github_binding,
         "codex_root_cleanliness": clean_summary,
         "removed_forbidden_codex_root_files": removed_forbidden_codex_root_files,
+        "external_runtime_dependencies": installed_external_runtime_dependencies,
     }
     manifest_path = session_root / "install_manifest.json"
     _write_json(manifest_path, manifest)
@@ -914,6 +1265,7 @@ def install_command(args: argparse.Namespace) -> int:
         "codex_root_cleanliness": clean_summary,
         "github_binding_path": str(github_binding_path),
         "github_binding": github_binding,
+        "external_runtime_dependencies": installed_external_runtime_dependencies,
     }
     print(json.dumps(payload, ensure_ascii=False, indent=2))
     return 0
@@ -929,6 +1281,8 @@ def uninstall_command(args: argparse.Namespace) -> int:
 
     restored_backups: list[str] = []
     removed_entries: list[str] = []
+    restored_external_runtime_dependency_backups: list[str] = []
+    removed_external_runtime_dependencies: list[str] = []
 
     for entry in reversed(list(manifest["installed_entries"])):
         destination = Path(str(entry["destination"]))
@@ -941,6 +1295,18 @@ def uninstall_command(args: argparse.Namespace) -> int:
             if backup_path.exists():
                 _copy_tree(backup_path, destination)
                 restored_backups.append(str(destination))
+
+    for entry in reversed(list(manifest.get("external_runtime_dependencies", []))):
+        dependency_root = Path(str(entry["install_root"]))
+        backup_path_raw = entry.get("backup_path")
+        if dependency_root.exists():
+            shutil.rmtree(dependency_root)
+            removed_external_runtime_dependencies.append(str(dependency_root))
+        if backup_path_raw:
+            backup_path = Path(str(backup_path_raw))
+            if backup_path.exists():
+                _copy_tree(backup_path, dependency_root)
+                restored_external_runtime_dependency_backups.append(str(dependency_root))
 
     workspace_removed = False
     marker_path = workspace_root / WORKSPACE_MARKER
@@ -1006,6 +1372,8 @@ def uninstall_command(args: argparse.Namespace) -> int:
         "session_id": manifest["session_id"],
         "removed_entries": removed_entries,
         "restored_backups": restored_backups,
+        "removed_external_runtime_dependencies": removed_external_runtime_dependencies,
+        "restored_external_runtime_dependency_backups": restored_external_runtime_dependency_backups,
         "workspace_removed": workspace_removed,
         "removed_product_directories": removed_product_directories,
         "kept_nonempty_product_directories": kept_nonempty_product_directories,

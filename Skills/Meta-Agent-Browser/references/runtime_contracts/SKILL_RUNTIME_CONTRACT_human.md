@@ -4,6 +4,7 @@
 - 本文件是给人看的镜像；模型运行时主入口仍然是 `./.venv_backend_skills/bin/python Skills/Meta-Agent-Browser/scripts/Cli_Toolbox.py contract --json`。
 - 本技能只治理 `Meta-Agent-Browser` 自己的包装层，不接管外部 `agent-browser` 安装与上游实现。
 - 需要输出路径时，再调用 `./.venv_backend_skills/bin/python Skills/Meta-Agent-Browser/scripts/Cli_Toolbox.py paths --json` 获取当前仓内解析结果。
+- 需要确认 product-managed target-local 依赖安装路径时，再调用 `./.venv_backend_skills/bin/python Skills/Meta-Agent-Browser/scripts/Cli_Toolbox.py dependencies --json`。
 </part_A>
 
 <part_B>
@@ -22,13 +23,15 @@
     "commands": {
       "contract": "./.venv_backend_skills/bin/python Skills/Meta-Agent-Browser/scripts/Cli_Toolbox.py contract --json",
       "directive": "./.venv_backend_skills/bin/python Skills/Meta-Agent-Browser/scripts/Cli_Toolbox.py directive --topic <topic> --json",
-      "paths": "./.venv_backend_skills/bin/python Skills/Meta-Agent-Browser/scripts/Cli_Toolbox.py paths --json"
+      "paths": "./.venv_backend_skills/bin/python Skills/Meta-Agent-Browser/scripts/Cli_Toolbox.py paths --json",
+      "dependencies": "./.venv_backend_skills/bin/python Skills/Meta-Agent-Browser/scripts/Cli_Toolbox.py dependencies --json"
     }
   },
   "must_use_sequence": [
     "Call contract before consuming runtime guidance for this skill.",
     "Choose the directive topic by actual task intent.",
     "When output files, state files, traces, screenshots, or downloads are involved, also call paths --json before writing artifacts.",
+    "When install-time target-local dependency roots or browser asset locations matter, call dependencies --json.",
     "Open human mirrors or legacy reference docs only when the direct JSON payload still leaves a real gap."
   ],
   "directive_topics": [
@@ -50,7 +53,8 @@
   ],
   "external_dependency_boundary": [
     "agent-browser is an external prerequisite tool.",
-    "This skill may validate and wrap agent-browser usage but must not install, patch, or manage the upstream package inside the skill workflow."
+    "This skill may validate and wrap agent-browser usage but must not install, patch, or manage the upstream package inside the skill workflow.",
+    "Target-local install and rollback are delegated to the Octopus OS product installer through EXTERNAL_RUNTIME_DEPENDENCIES.json."
   ],
   "path_policy": {
     "runtime_dir_rule": "Derive runtime logs and audit artifacts from product_root.parent / Codex_Skill_Runtime / __SKILL_NAME__.",

@@ -92,6 +92,7 @@ The two targets have different contents by design:
 
 - the dedicated install root receives the latest Codex CLI package only when attach mode cannot be used
 - when target-local Codex installation is required, npm cache/log/userconfig traces must stay under `<install-root>/.product_runtime/` instead of leaking into the operator home
+- skill-declared external runtime dependencies are also installed into target-local roots under `<install-root>/.product_runtime/external_runtime_dependencies/`
 - `<install-root>/.codex/skills` receives only syncable skill roots and `.system/`
 - the target-directory `console/` workspace receives the full product mirror, including the repository root `AGENTS.md` and `Skills/AGENTS.md`
 - `<install-root>/Codex_Skill_Runtime` and `<install-root>/Codex_Skills_Result` are created as governed runtime/result containers
@@ -103,6 +104,7 @@ The two targets have different contents by design:
 
 - which skills will be synced
 - whether the dedicated Codex skills root is still clean
+- which external runtime dependencies will be installed, and which skills require them
 - which Codex CLI strategy will be used and which binary path will launch the runtime
 - where the workspace will be created
 - which GitHub repository binding will be written
@@ -121,6 +123,7 @@ It must rely on an install-time manifest that records:
 - codex CLI install details
 - target-local Codex CLI filesystem entries created during install
 - installed skill list
+- installed external runtime dependencies, their target-local roots, and any rollback backups
 - GitHub repository binding details
 - overwritten skill backups if any legacy state had to be preserved
 
@@ -140,9 +143,11 @@ Current capabilities:
 Current behavior already includes:
 
 - skill root discovery
+- skill-level discovery of product-managed external runtime dependency manifests
 - attach to an already available Codex CLI when possible
 - dedicated Codex CLI installation into the chosen install root as a fallback
 - clean-root validation before skill sync
+- target-local install and manifest recording for declared external runtime dependencies
 - workspace mirror creation
 - target-directory creation of `Codex_Skill_Runtime`, `Codex_Skills_Result`, and `Octopus_OS`
 - root `AGENTS.md` and `Skills/AGENTS.md` deployment into the workspace mirror
