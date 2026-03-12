@@ -1,0 +1,4 @@
+interface:
+  display_name: "Dev-OctopusOS-Constitution-ProjectStructure"
+  short_description: "Project-level governance skill for OctopusOS architecture, project structure, module positioning, and hot-plug boundaries."
+  default_prompt: "Use Dev-OctopusOS-Constitution-ProjectStructure for OctopusOS project-level architecture, module positioning, hot-plug boundaries, and folder/container planning. Read SKILL.md first, then task routing, then only the specific project_structure topic docs needed for the current decision."

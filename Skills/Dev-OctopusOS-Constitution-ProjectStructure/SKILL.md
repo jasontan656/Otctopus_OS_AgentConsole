@@ -1,0 +1,88 @@
+---
+name: "Dev-OctopusOS-Constitution-ProjectStructure"
+description: "治理整个章鱼OS项目的整体架构、项目结构与模块插拔定位，不负责具体域内实现细节。"
+metadata:
+  doc_structure:
+    doc_id: "dev_octopusos_constitution_projectstructure.entry.facade"
+    doc_type: "skill_facade"
+    topic: "Entry facade for the OctopusOS project-structure constitution skill"
+    anchors:
+      - target: "references/routing/TASK_ROUTING.md"
+        relation: "routes_to"
+        direction: "downstream"
+        reason: "The facade routes readers into the first project-structure branch."
+      - target: "references/governance/SKILL_DOCSTRUCTURE_POLICY.md"
+        relation: "governed_by"
+        direction: "downstream"
+        reason: "Doc-structure policy is the mandatory governance branch."
+---
+
+# Dev-OctopusOS-Constitution-ProjectStructure
+
+## 1. 技能定位
+- 本文件只做门面入口，不承载深规则正文。
+- 本技能负责治理整个章鱼OS项目的整体架构、项目结构、模块定位与热插拔边界。
+- 本技能只处理项目级结构，不治理某个域内部的具体实现架构；例如前端在章鱼OS中的系统定位、依赖关系、插拔方式归本技能，但前端域内组件分层、页面结构与具体前端规范不归本技能。
+- 本技能当前是静态治理技能，没有专属 runtime contract，也没有本地 CLI；有效规则以下沉文档为准。
+
+## 2. 必读顺序
+1. 先读取 `references/routing/TASK_ROUTING.md`。
+2. 再读取 `references/governance/SKILL_DOCSTRUCTURE_POLICY.md`。
+3. 再读取 `references/governance/SKILL_EXECUTION_RULES.md`。
+4. 若任务在问章鱼OS整体定位、中枢边界或对象归属，再读取：
+   - `references/project_structure/OCTOPUS_OS_HUB_POSITIONING_MODEL.md`
+   - `references/project_structure/DOMAIN_OBJECT_POSITIONING_BOUNDARY.md`
+5. 若任务在问模块插拔、能力依赖、底座 bundle 或常驻能力边界，再读取：
+   - `references/project_structure/CAPABILITY_MODULE_HOTPLUG_CONTRACT.md`
+   - `references/project_structure/FOUNDATION_CAPABILITY_BUNDLE_BOUNDARY.md`
+6. 若任务在问项目目录、容器拆分、部署对象与文件夹规划，再读取：
+   - `references/project_structure/FOLDER_CONTAINER_PLANNING_RULES.md`
+
+## 3. 分类入口
+- 路由层：
+  - `references/routing/TASK_ROUTING.md`
+- 治理层：
+  - `references/governance/SKILL_DOCSTRUCTURE_POLICY.md`
+  - `references/governance/SKILL_EXECUTION_RULES.md`
+- 项目结构层：
+  - `references/project_structure/OCTOPUS_OS_HUB_POSITIONING_MODEL.md`
+  - `references/project_structure/DOMAIN_OBJECT_POSITIONING_BOUNDARY.md`
+  - `references/project_structure/CAPABILITY_MODULE_HOTPLUG_CONTRACT.md`
+  - `references/project_structure/FOUNDATION_CAPABILITY_BUNDLE_BOUNDARY.md`
+  - `references/project_structure/FOLDER_CONTAINER_PLANNING_RULES.md`
+- 工具层：
+  - 当前无专属 CLI；`references/tooling/` 只保留“当前无工具”和未来扩展约束。
+
+## 4. 适用域
+- 适用于：章鱼OS整体架构设计、项目级对象定位、模块热插拔边界、底座能力常驻边界、项目目录/容器规划、未来 lint 门禁的结构性依据。
+- 适用于：判断一个域在章鱼OS中应被视为“完整对象”“底座能力模块”还是“入口/适配层对象”。
+- 不适用于：具体前端实现规范、具体后端域模型设计、具体数据库 schema、具体页面组件架构、具体业务工作流细则。
+- `Meta-Architect-MindModel` 负责更高层的 architect-first 决策镜头；本技能负责把章鱼OS项目结构本身落成稳定的治理合同。
+
+## 5. 执行入口
+- 当前无专属 CLI。
+- 当前入口即：`SKILL.md -> references/routing/TASK_ROUTING.md -> 对应 project_structure 原子文档`。
+- 若未来新增 lint、目录规划检查或模块注册检查工具，必须同步更新 `references/tooling/` 全套文档。
+
+## 6. 读取原则
+- 门面只负责路由，不重新长回规则正文。
+- `skill-doc-structure` 是创建与治理本技能时必须应用的显式规则。
+- 若某条规则只属于单一 topic，应下沉到原子文档；不要继续堆在门面里。
+- 项目级结构规则优先于局部域偏好；先确定对象在章鱼OS中的系统位置，再进入域内实现。
+- 逻辑解耦优先于物理拆分；本技能允许“逻辑上可插拔、物理上先 bundle 部署”的过渡形态。
+
+## 7. 结构索引
+```text
+Dev-OctopusOS-Constitution-ProjectStructure/
+├── SKILL.md
+├── agents/
+│   └── openai.yaml
+├── references/
+│   ├── governance/
+│   ├── project_structure/
+│   ├── routing/
+│   └── tooling/
+├── scripts/
+├── assets/
+└── tests/
+```

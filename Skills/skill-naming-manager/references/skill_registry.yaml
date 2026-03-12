@@ -91,6 +91,16 @@ families:
         migrated_from:
           - "meta-vue3-webui-frontend"
           - "Meta-VUE3-WebUI-frontend"
+      - canonical_id: "dev-octopusos-constitution-projectstructure"
+        display_name: "Dev-OctopusOS-Constitution-ProjectStructure"
+        prefix: "dev"
+        family: "[DEV]"
+        role_tag: "project-structure-governance"
+        status: "active"
+        trigger_summary: "当需要定义或查询章鱼OS整体架构、项目结构、模块热插拔边界、底座能力 bundle 边界，或为目录/容器规划与未来 lint 门禁提供项目级治理依据时使用。"
+        companion_skills:
+          - "Meta-Architect-MindModel"
+          - "skill-doc-structure"
   - family: "[Disabled]"
     description: "临时关闭不使用的技能，可能会遗弃，可被修改。"
     members:
