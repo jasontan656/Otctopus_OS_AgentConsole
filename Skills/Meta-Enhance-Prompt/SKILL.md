@@ -1,9 +1,9 @@
 ---
-name: "Meta-prompt-write"
-description: "将用户提示词强化为固定模板的结构化执行合同。先完整调研当前 repo 与用户目标的关系、影响面与覆盖面，再补足目标、输入、输出、边界与验证，最后仅通过固定 CLI tool 输出最终 prompt。Manual invoke: $Meta-prompt-write."
+name: "Meta-Enhance-Prompt"
+description: "将用户提示词强化为固定模板的结构化执行合同。先完整调研当前 repo 与用户目标的关系、影响面与覆盖面，再补足目标、输入、输出、边界与验证，最后仅通过固定 CLI tool 输出最终 prompt。Manual invoke: $Meta-Enhance-Prompt."
 ---
 
-# Meta Prompt Write
+# Meta Enhance Prompt
 
 ## Overview
 
@@ -21,7 +21,7 @@ description: "将用户提示词强化为固定模板的结构化执行合同。
 ## Two Uses
 
 1. AGENTS / runtime 自动强化用户需求  
-2. 手动 `$Meta-prompt-write`，要求强化某段 prompt
+2. 手动 `$Meta-Enhance-Prompt`，要求强化某段 prompt
 
 无论是哪一种，都必须遵守同一条主链路：
 - 先调研当前 repo
@@ -92,7 +92,7 @@ description: "将用户提示词强化为固定模板的结构化执行合同。
 
 手动强化 prompt：
 ```bash
-python3 /home/jasontan656/.codex/skills/Meta-prompt-write/scripts/filter_active_invoke_output.py \
+python3 /home/jasontan656/.codex/skills/Meta-Enhance-Prompt/scripts/filter_active_invoke_output.py \
   --mode active_invoke \
   --input-text "<RAW_PROMPT_OUTPUT>"
 ```
@@ -103,7 +103,7 @@ python3 /home/jasontan656/.codex/skills/Meta-prompt-write/scripts/filter_active_
 
 给 AGENTS / runtime 使用：
 ```bash
-python3 /home/jasontan656/.codex/skills/Meta-prompt-write/scripts/filter_active_invoke_output.py \
+python3 /home/jasontan656/.codex/skills/Meta-Enhance-Prompt/scripts/filter_active_invoke_output.py \
   --mode skill_directive \
   --input-text "<USER_INTENT_TEXT>"
 ```

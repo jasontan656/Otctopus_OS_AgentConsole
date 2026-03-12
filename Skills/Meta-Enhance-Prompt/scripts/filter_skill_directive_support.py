@@ -8,7 +8,7 @@ EXIT_SUCCESS = 0
 EXIT_INVALID_OUTPUT = 11
 EXIT_EMPTY_AFTER_FILTER = 12
 EXIT_SKILL_SOURCE_MISSING = 13
-DEFAULT_SKILL_NAME = "Meta-prompt-write"
+DEFAULT_SKILL_NAME = "Meta-Enhance-Prompt"
 
 
 def sanitize_inline(text: str) -> str:
