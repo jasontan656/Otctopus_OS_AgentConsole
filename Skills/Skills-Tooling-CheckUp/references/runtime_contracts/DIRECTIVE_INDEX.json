@@ -1,0 +1,29 @@
+{
+  "topics": {
+    "read-audit": {
+      "doc_kind": "instruction",
+      "json_path": "READ_AUDIT_DIRECTIVE.json",
+      "human_path": "READ_AUDIT_DIRECTIVE_human.md"
+    },
+    "remediation": {
+      "doc_kind": "workflow",
+      "json_path": "REMEDIATION_WORKFLOW.json",
+      "human_path": "REMEDIATION_WORKFLOW_human.md"
+    },
+    "output-governance": {
+      "doc_kind": "contract",
+      "json_path": "OUTPUT_GOVERNANCE_CONTRACT.json",
+      "human_path": "OUTPUT_GOVERNANCE_CONTRACT_human.md"
+    },
+    "techstack-baseline": {
+      "doc_kind": "guide",
+      "json_path": "TECHSTACK_BASELINE_GUIDE.json",
+      "human_path": "TECHSTACK_BASELINE_GUIDE_human.md"
+    },
+    "tooling-entry": {
+      "doc_kind": "guide",
+      "json_path": "TOOLING_ENTRY_GUIDE.json",
+      "human_path": "TOOLING_ENTRY_GUIDE_human.md"
+    }
+  }
+}

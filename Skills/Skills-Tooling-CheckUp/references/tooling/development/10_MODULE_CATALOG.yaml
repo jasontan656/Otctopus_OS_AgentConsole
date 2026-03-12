@@ -1,6 +1,6 @@
 catalog_version: v1
 toolbox_name: Cli_Toolbox
-has_local_toolbox: false
+has_local_toolbox: true
 maintain_rules:
   naming: "Cli_Toolbox.<tool_name>"
   docs_sync_required: true
@@ -8,6 +8,27 @@ maintain_rules:
     - references/tooling/Cli_Toolbox_USAGE.md
     - references/tooling/Cli_Toolbox_DEVELOPMENT.md
     - references/tooling/development/20_CATEGORY_INDEX.md
+    - references/runtime_contracts/
 profile_support:
   - basic
-modules: []
+modules:
+  - module_id: contract
+    entrypoint: scripts/Cli_Toolbox.py
+    tool_aliases:
+      - Cli_Toolbox.contract
+    docs:
+      usage: references/tooling/Cli_Toolbox_USAGE.md
+      development: references/tooling/development/modules/mod_contract.md
+    responsibilities:
+      - "输出 skills runtime contract JSON"
+      - "暴露 directive topic 索引与主运行时约束"
+  - module_id: directive
+    entrypoint: scripts/Cli_Toolbox.py
+    tool_aliases:
+      - Cli_Toolbox.directive
+    docs:
+      usage: references/tooling/Cli_Toolbox_USAGE.md
+      development: references/tooling/development/modules/mod_directive.md
+    responsibilities:
+      - "按 topic 输出 contract/workflow/instruction/guide payload"
+      - "保证模型先吃 JSON，再按需补 human markdown"

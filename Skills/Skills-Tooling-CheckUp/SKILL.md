@@ -10,71 +10,78 @@ metadata:
       - target: "references/routing/TASK_ROUTING.md"
         relation: "routes_to"
         direction: "downstream"
-        reason: "The facade must route readers into the first task branch."
+        reason: "The human facade still keeps a routing mirror for audit readability."
       - target: "references/governance/SKILL_DOCSTRUCTURE_POLICY.md"
         relation: "governed_by"
         direction: "downstream"
-        reason: "Doc-structure policy is a mandatory governance branch."
+        reason: "Doc-structure policy remains a mandatory governance branch."
 ---
 
 # Skills-Tooling-CheckUp
 
-## 1. 技能定位
-- 本文件只做门面入口，不承载深规则正文。
-- 本技能唯一主轴是：检查当前已安装或已镜像的 skills 内部工具代码，识别哪些实现绕开了 repo 已声明的必用依赖栈而重复自造轮子，并推动代码修正。
-- 本技能不提供本地 `Cli_Toolbox.py`、不提供独立运行时合同；它依赖语义阅读、目标 skill 现有工具链，以及 repo 已治理的依赖基线来完成判断与修正。
+## 1. 工具入口
+- 本技能提供本地 CLI：
+  - `contract`
+  - `directive`
+- 运行时统一入口：
+  - `python3 scripts/Cli_Toolbox.py contract --json`
+  - `python3 scripts/Cli_Toolbox.py directive --topic <topic> --json`
+- 模型读取合同、workflow、instruction、guide 时必须走 CLI JSON；human markdown 只作为人类叙事镜像。
 
-## 2. 必读顺序
-1. 先读取 `references/routing/TASK_ROUTING.md`。
-2. 再读取 `references/governance/SKILL_DOCSTRUCTURE_POLICY.md`。
-3. 再读取 `references/governance/SKILL_EXECUTION_RULES.md`。
-4. 若任务涉及技能工具日志、运行时审计信息或产物落点治理，再读取 `references/governance/OBSERVABILITY_AND_OUTPUT_GOVERNANCE.md`。
-5. 若任务需要确认 repo 已声明的必用依赖栈，再读取 `references/governance/MANDATORY_TECHSTACK_BASELINE.md`。
-6. 若任务需要真正改写目标 skill 内部 tooling code，再读取 `references/governance/TOOLING_REMEDIATION_PROTOCOL.md`。
-7. 真正进入目标 skill 之前，再按目标 skill 自己的 `SKILL.md -> routing -> execution/tooling docs` 顺序补齐其局部合同。
-
-## 3. 分类入口
-- 路由层：
-  - `references/routing/TASK_ROUTING.md`
-- 治理层：
-  - `references/governance/SKILL_DOCSTRUCTURE_POLICY.md`
-  - `references/governance/SKILL_EXECUTION_RULES.md`
-  - `references/governance/OBSERVABILITY_AND_OUTPUT_GOVERNANCE.md`
-  - `references/governance/MANDATORY_TECHSTACK_BASELINE.md`
-  - `references/governance/TOOLING_REMEDIATION_PROTOCOL.md`
-  - `references/governance/COMMON_REDUNDANT_WHEEL_PATTERNS.md`
-  - `references/governance/REMEDIATION_GATES.md`
-- 工具层：
-  - `references/tooling/Cli_Toolbox_USAGE.md`
-  - `references/tooling/Cli_Toolbox_DEVELOPMENT.md`
-
-## 4. 适用域
+## 2. 适用域
 - 适用于：已安装或已镜像 skill 内部的 Python / TypeScript / Vue tooling code、文档解析代码、schema 校验代码、CLI glue code、lint/test/helper code 的轮子重复实现检查与修正。
 - 适用于：根据 repo 当前 `skills_required_techstacks` 基线，判断某段自实现逻辑是否应该优先替换为现有依赖能力。
 - 适用于：通过代码语义检查目标技能的日志可观测性落盘、默认产物落盘、定向产物落点约束、相关文档声明与历史落盘迁移责任。
 - 不适用于：新增 repo 依赖、发明新的治理工具、替代目标 skill 的 domain 规则源、在证据不足时臆断“所有自写代码都应该被库替换”。
 - 若修正落在 Python 代码，仍要遵守 `Dev-PythonCode-Constitution-Backend`；若修正落在 Vue3 / TypeScript tooling code，仍要遵守目标前端 skill 的既有合同。
 
-## 5. 执行入口
-- 本技能无本地 CLI 入口；执行入口固定为：
-  - `SKILL.md -> references/routing/TASK_ROUTING.md -> references/governance/*`
-- 真正的改写、测试与 lint 必须通过目标 skill 已有命令完成，而不是为本技能再造一套工具。
+## 3. 必读顺序
+1. 先执行 `python3 scripts/Cli_Toolbox.py contract --json`。
+2. 按任务意图选择 directive：
+   - 只读检查：`--topic read-audit`
+   - 进入修正：`--topic remediation`
+   - 日志/产物治理：`--topic output-governance`
+   - 依赖基线判断：`--topic techstack-baseline`
+   - 本技能工具面：`--topic tooling-entry`
+3. 真正进入目标 skill 前，再按目标 skill 自己的 CLI-first/runtime contract 入口补齐其局部合同。
+4. 只有当 CLI JSON 仍留下真实语义缺口时，才打开 human markdown mirror 或 legacy reference docs。
+
+## 4. 运行时资产治理模型
+- 所有面向模型运行时的 contract/workflow/instruction/guide 资产，必须同时存在：
+  - `*_human.md`
+  - 同名 `.json`
+- `*_human.md` 必须使用：
+  - `<part_A> ... </part_A>` 作为人类叙事层
+  - `<part_B> ... </part_B>` 作为 JSON payload 镜像层
+- CLI 输出必须直接返回 payload 本体，而不是仅返回“去读哪个文件”的路径元数据。
+
+## 5. 维护入口
+- 门面不再把模型主入口路由为 markdown 文件链。
+- 真正的改写、测试与 lint 仍通过目标 skill 已有命令完成，而不是把本技能扩张成目标 skill 的替代执行器。
 - 若任务涉及 Python 代码修改，回合末必须对具体 Python 目标范围执行 `Dev-PythonCode-Constitution-Backend` lint。
 
-## 6. 读取原则
-- 门面只负责路由，不重新长回规则正文。
-- `skill-doc-structure` 是创建与治理本技能时必须应用的显式规则。
-- 若某条规则只属于单一 topic，应下沉到原子文档；不要继续堆在门面里。
+## 6. 参考入口
+- Runtime 合同：`references/runtime_contracts/SKILL_RUNTIME_CONTRACT.json`
+- Directive 索引：`references/runtime_contracts/DIRECTIVE_INDEX.json`
+- Human mirrors：`references/runtime_contracts/*_human.md`
+- Legacy reference docs：`references/routing/`、`references/governance/`、`references/tooling/`
+
+## 7. 约束
+- `skill-doc-structure` 仍是创建与治理本技能时必须应用的显式规则。
 - 本技能判断“是否自造轮子”时必须基于语义与依赖能力边界，而不是只凭函数名或文件名做机械替换。
 - 若某段实现是否可被既有依赖替换仍然未知，应保持未知，不进行脑补式整改。
+- 新增任何 runtime-facing contract/workflow/instruction/guide 时，必须继续遵守 `*_human.md + same-name .json` 双文件形态。
 
-## 7. 结构索引
+## 8. 结构索引
 ```text
 Skills-Tooling-CheckUp/
 ├── SKILL.md
 ├── agents/
 │   └── openai.yaml
+├── scripts/
+│   └── Cli_Toolbox.py
 ├── references/
+│   ├── runtime_contracts/
 │   ├── governance/
 │   ├── routing/
 │   └── tooling/
