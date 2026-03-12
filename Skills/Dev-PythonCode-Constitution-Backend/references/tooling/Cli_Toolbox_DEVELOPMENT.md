@@ -20,6 +20,7 @@ anchors:
 ## 当前状态
 - 当前已有一个真实 CLI：`run_python_code_lints.py`。
 - 当前工具面只服务 Python 相关 lint；不再借用 `Constitution-knowledge-base` 的 lint 入口。
+- 当前 lint 边界已收紧为“Python 文件 + 已确认的 Python 资产”，并移除了泛目录结构治理职责。
 
 ## 内联索引（阅读顺序）
 1. 架构总览：`references/tooling/development/00_ARCHITECTURE_OVERVIEW.md`

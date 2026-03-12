@@ -11,14 +11,13 @@ WORKSPACE_ROOT = SCRIPT_DIR.parent.parent
 if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
 
-from python_code_lint_rules.modules import absolute_path, code_governance, fat_file, file_structure, folder_structure, hardcoded_asset, modularity, payload_normalize, permission_boundary, typed_contract
+from python_code_lint_rules.modules import absolute_path, code_governance, fat_file, file_structure, hardcoded_asset, modularity, payload_normalize, permission_boundary, typed_contract
 from python_code_lint_rules.reporting import build_report
 
 MODULES = [
     code_governance,
     fat_file,
     file_structure,
-    folder_structure,
     modularity,
     typed_contract,
     payload_normalize,

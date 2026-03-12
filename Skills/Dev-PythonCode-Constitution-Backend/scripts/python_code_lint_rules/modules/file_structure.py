@@ -22,21 +22,22 @@ def lint(root: Path) -> dict[str, object]:
         name = path.name
         lower = name.lower()
         tokens = _name_tokens(name)
-        if "controller" in lower and not lower.endswith("_controller.py"):
+        is_python_file = path.suffix.lower() == ".py"
+        if is_python_file and "controller" in lower and not lower.endswith("_controller.py"):
             violations.append({"path": rel(path, root), "reason": "controller_name_must_end_with__controller.py"})
-        if "orchestrator" in lower and not lower.endswith("_orchestrator.py"):
+        if is_python_file and "orchestrator" in lower and not lower.endswith("_orchestrator.py"):
             violations.append({"path": rel(path, root), "reason": "orchestrator_name_must_end_with__orchestrator.py"})
-        if lower.endswith(".py") and "domain" in tokens and not lower.endswith("_domain.py"):
+        if is_python_file and "domain" in tokens and not lower.endswith("_domain.py"):
             violations.append({"path": rel(path, root), "reason": "domain_name_must_end_with__domain.py"})
-        if lower.endswith(".py") and ("repo" in tokens or "repository" in tokens) and not lower.endswith("_repo.py"):
+        if is_python_file and ("repo" in tokens or "repository" in tokens) and not lower.endswith("_repo.py"):
             violations.append({"path": rel(path, root), "reason": "repo_name_must_end_with__repo.py"})
-        if "helper" in lower and not lower.endswith("_helper.py"):
+        if is_python_file and "helper" in lower and not lower.endswith("_helper.py"):
             violations.append({"path": rel(path, root), "reason": "helper_name_must_use_helper_suffix"})
         in_reference_docs = "references" in path.parts
         is_stage_template_rule = path.name == "RULES.md" and "assets" in path.parts and "stages" in path.parts
         if (
             path.suffix.lower() in RULE_EXTS
-            and any(token in lower for token in RULE_SUFFIXES)
+            and any(token in tokens for token in RULE_SUFFIXES)
             and "rules" not in path.parts
             and not in_reference_docs
             and not is_stage_template_rule

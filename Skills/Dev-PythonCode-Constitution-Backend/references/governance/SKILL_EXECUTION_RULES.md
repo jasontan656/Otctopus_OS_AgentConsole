@@ -30,6 +30,9 @@ anchors:
 - 涉及第三方库、框架、lint、typing、测试工具等时效性规则时，应以当时官方文档为准，本技能不缓存实时真相。
 - 若任务内容包含 Python 相关编辑，且需要在回合末执行结构/边界校验，应运行 `python3 scripts/run_python_code_lints.py --target <target_root>`。
 - 运行 lint 前，先确认目标范围与 Python 相关；不要把非 Python 任务或纯文档任务强行套进本技能的 lint 链路。
+- lint 的治理对象只包括两类：`.py` 文件本体，以及已被 Python 文件引用或在内容/路径上具备明确 Python 证据的非 `.py` 资产。
+- 仅因文件名包含 `contract`、`rule`、`rules`、`constitution`、`lint`，不足以判定该文件受本技能治理；必须先确认它属于 Python 资产或 Python 语境。
+- 通用目录命名、泛文件结构整治这类与 Python 语义无直接关系的规则，不应继续挂在本技能 lint 下。
 - 对胖文件问题，必须同时给出“为什么超限”与“应该拆到哪里”；不能只报告行数，不给固定拆分落点。
 
 ## 例外与门禁

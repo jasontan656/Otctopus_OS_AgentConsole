@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from functools import lru_cache
 from pathlib import Path
 from typing import Any, Iterable, Iterator
 
@@ -48,10 +49,41 @@ IGNORE_DIR_PREFIXES = (
 IGNORE_DIR_SUFFIXES = (".egg-info",)
 TEXT_EXTS = {".py", ".json", ".yaml", ".yml", ".md", ".sql", ".toml", ".sh", ".bash"}
 SOURCE_EXTS = {".py", ".sql", ".yaml", ".yml", ".json", ".md", ".toml"}
-SKIP_PREFIXES = {("references",), ("assets",), ("tests",), ("scripts", "python_code_lint_rules")}
-NESTED_SKIP_DIRS = {"references", "assets", "tests"}
+SKIP_PREFIXES = {("references",), ("tests",), ("scripts", "python_code_lint_rules")}
+NESTED_SKIP_DIRS = {"references", "tests"}
 IO_PATTERNS = ("requests.", "httpx.", "fetch(", "axios(", "sqlalchemy", "psycopg", "redis.", "pymongo", "subprocess", "socket", "aiohttp", "requests.get(", "httpx.get(")
 RAW_PAYLOAD_PATTERNS = ("telegram_update", "callback_query", "webapp_data", "raw_payload", "raw_update", "incoming_update")
+PYTHON_PATH_HINTS = (
+    "python",
+    "pyproject",
+    "pytest",
+    "ruff",
+    "mypy",
+    "pydantic",
+    "fastapi",
+    "django",
+    "flask",
+    "sqlalchemy",
+    "alembic",
+    "typer",
+)
+PYTHON_TEXT_HINTS = (
+    "python",
+    ".py",
+    "pytest",
+    "ruff",
+    "mypy",
+    "pydantic",
+    "fastapi",
+    "django",
+    "flask",
+    "sqlalchemy",
+    "alembic",
+    "typer",
+    "async def ",
+    "from ",
+    "import ",
+)
 
 
 def is_ignored_dir_name(name: str) -> bool:
@@ -85,12 +117,48 @@ def iter_tree(root: Path) -> Iterator[Path]:
         yield path
 
 
+@lru_cache(maxsize=None)
+def _python_reference_texts(root_text: str) -> tuple[str, ...]:
+    root = Path(root_text)
+    references = []
+    for path in iter_tree(root):
+        if not path.is_file() or path.suffix.lower() != ".py":
+            continue
+        references.append(read_text(path))
+    return tuple(references)
+
+
+def _has_python_scope_hint(path: Path, root: Path, text: str | None = None) -> bool:
+    rel_text = rel(path, root).replace("\\", "/").lower()
+    if any(token in rel_text for token in PYTHON_PATH_HINTS):
+        return True
+    payload = (text if text is not None else read_text(path)).lower()
+    return any(token in payload for token in PYTHON_TEXT_HINTS)
+
+
+def _is_referenced_by_python(path: Path, root: Path) -> bool:
+    rel_text = rel(path, root).replace("\\", "/")
+    basename = path.name
+    candidates = {rel_text, basename}
+    return any(candidate in text for text in _python_reference_texts(str(root)) for candidate in candidates)
+
+
+def is_python_governed_file(path: Path, root: Path, *, text: str | None = None) -> bool:
+    if path.suffix.lower() == ".py":
+        return True
+    if _has_python_scope_hint(path, root, text):
+        return True
+    return _is_referenced_by_python(path, root)
+
+
 def iter_files(root: Path, exts: Iterable[str] | None = None) -> Iterator[Path]:
     allowed = set(exts or TEXT_EXTS)
     for path in iter_tree(root):
         if not path.is_file():
             continue
         if allowed and path.suffix.lower() not in allowed:
+            continue
+        if not is_python_governed_file(path, root):
             continue
         yield path
 

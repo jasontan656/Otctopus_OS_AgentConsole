@@ -35,26 +35,41 @@ def _text_signals_cli(path: Path) -> bool:
     )
 
 
+def _is_python_source(path: Path) -> bool:
+    return path.suffix.lower() == ".py"
+
+
+def _is_config_file(path: Path) -> bool:
+    return path.suffix.lower() in {".yaml", ".yml", ".json", ".toml"}
+
+
+def _is_db_migration_file(path: Path) -> bool:
+    return path.suffix.lower() in {".py", ".sql"} and _name_has(path, "migration", "migrate")
+
+
 THRESHOLDS = [
     ("rule_definition_file", 1000, lambda p: "rules" in p.parts or _name_has(p, "rule", "constitution", "lint")),
     ("integration_e2e_test_file", 420, lambda p: "tests" in p.parts and _name_has(p, "integration", "e2e")),
     ("unit_test_file", 260, lambda p: "tests" in p.parts),
-    ("runtime_config_file", 180, lambda p: p.suffix in {".yaml", ".yml", ".json", ".toml"} and _name_has(p, "config", "settings", "env")),
+    ("runtime_config_file", 180, lambda p: _is_config_file(p) and _name_has(p, "config", "settings", "env")),
     ("schema_or_contract_file", 300, lambda p: _name_has(p, "schema", "contract", "dto", "payload")),
-    ("workflow_or_contract_support", 240, lambda p: "scripts" in p.parts and _name_has(p, "workflow", "policy", "support")),
-    ("registry_or_contract_data", 280, lambda p: "scripts" in p.parts and _name_has(p, "registry", "data")),
-    ("db_migration_file", 180, lambda p: _name_has(p, "migration", "migrate")),
-    ("backend_helper", 140, lambda p: _name_has(p, "helper")),
-    ("backend_adapter_client", 220, lambda p: _name_has(p, "adapter", "client")),
-    ("backend_repository_or_model", 220, lambda p: _name_has(p, "repo", "repository", "model")),
-    ("backend_domain_service", 260, lambda p: _name_has(p, "domain", "service")),
-    ("backend_orchestrator", 180, lambda p: _name_has_flow_role(p)),
-    ("backend_api_controller", 220, lambda p: _name_has(p, "controller", "route", "handler", "api")),
+    ("workflow_or_contract_support", 240, lambda p: _is_python_source(p) and "scripts" in p.parts and _name_has(p, "workflow", "policy", "support")),
+    ("registry_or_contract_data", 280, lambda p: _is_python_source(p) and "scripts" in p.parts and _name_has(p, "registry", "data")),
+    ("db_migration_file", 180, _is_db_migration_file),
+    ("backend_helper", 140, lambda p: _is_python_source(p) and _name_has(p, "helper")),
+    ("backend_adapter_client", 220, lambda p: _is_python_source(p) and _name_has(p, "adapter", "client")),
+    ("backend_repository_or_model", 220, lambda p: _is_python_source(p) and _name_has(p, "repo", "repository", "model")),
+    ("backend_domain_service", 260, lambda p: _is_python_source(p) and _name_has(p, "domain", "service")),
+    ("backend_orchestrator", 180, lambda p: _is_python_source(p) and _name_has_flow_role(p)),
+    ("backend_api_controller", 220, lambda p: _is_python_source(p) and _name_has(p, "controller", "route", "handler", "api")),
     (
         "cli_or_task_script",
         420,
-        lambda p: ("tests" not in p.parts and _name_has(p, "cli", "task", "runner"))
-        or ("scripts" in p.parts and _text_signals_cli(p)),
+        lambda p: _is_python_source(p)
+        and (
+            ("tests" not in p.parts and _name_has(p, "cli", "task", "runner"))
+            or ("scripts" in p.parts and _text_signals_cli(p))
+        ),
     ),
 ]
 

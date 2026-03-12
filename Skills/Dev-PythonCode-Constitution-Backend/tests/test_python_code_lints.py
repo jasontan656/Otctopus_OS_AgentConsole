@@ -165,3 +165,57 @@ class TestPythonCodeLintTests:
             assert result.returncode == 0, result.stdout + result.stderr
             report = json.loads(result.stdout)
             assert all(g["status"] == "pass" for g in report["gates"])
+
+    def test_non_python_contract_and_rules_assets_stay_out_of_scope(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="py_lint_", dir=str(ROOT.parent)) as tmp:
+            root = Path(tmp)
+            (root / "main.py").write_text("def run() -> None:\n    pass\n", encoding="utf-8")
+
+            docs = root / "docs"
+            docs.mkdir()
+            (docs / "workflow_rules.md").write_text("# Workflow Rules\n- keep this generic\n", encoding="utf-8")
+
+            contracts = root / "contracts"
+            contracts.mkdir()
+            (contracts / "app_contract.yaml").write_text("name: generic-contract\n", encoding="utf-8")
+
+            result = self._run_lint(root)
+            assert result.returncode == 0, result.stdout + result.stderr
+            report = json.loads(result.stdout)
+
+            typed_gate = next(g for g in report["gates"] if g["gate"] == "typed_contract_gate")
+            file_gate = next(g for g in report["gates"] if g["gate"] == "file_structure_gate")
+
+            assert not typed_gate["violations"]
+            assert not file_gate["violations"]
+            assert all(g["gate"] != "folder_structure_gate" for g in report["gates"])
+
+    def test_python_related_contract_and_rule_assets_remain_governed(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="py_lint_", dir=str(ROOT.parent)) as tmp:
+            root = Path(tmp)
+            contracts = root / "assets" / "contracts"
+            contracts.mkdir(parents=True)
+            docs = root / "docs"
+            docs.mkdir()
+
+            (root / "loader.py").write_text(
+                "from pathlib import Path\n"
+                "CONFIG = (Path(__file__).parent / 'assets' / 'contracts' / 'runtime_contract.yaml').read_text(encoding='utf-8')\n"
+                "RULES = (Path(__file__).parent / 'docs' / 'python_rule.md').read_text(encoding='utf-8')\n",
+                encoding="utf-8",
+            )
+            (contracts / "runtime_contract.yaml").write_text("name: runtime-contract\n", encoding="utf-8")
+            (docs / "python_rule.md").write_text("# Python Rule\n- keep runtime aligned\n", encoding="utf-8")
+
+            result = self._run_lint(root)
+            assert result.returncode == 1, result.stdout + result.stderr
+            report = json.loads(result.stdout)
+
+            typed_gate = next(g for g in report["gates"] if g["gate"] == "typed_contract_gate")
+            file_gate = next(g for g in report["gates"] if g["gate"] == "file_structure_gate")
+
+            typed_paths = {v["path"] for v in typed_gate["violations"]}
+            file_paths = {v["path"] for v in file_gate["violations"]}
+
+            assert "assets/contracts/runtime_contract.yaml" in typed_paths
+            assert "docs/python_rule.md" in file_paths

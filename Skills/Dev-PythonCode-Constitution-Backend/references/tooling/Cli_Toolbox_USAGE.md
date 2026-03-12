@@ -32,6 +32,8 @@ anchors:
 - 当前 CLI 只接受 `--target`。
 - lint 输出为单个 JSON 对象；任一 gate 失败时返回非零退出码。
 - lint 会显式排除虚拟环境、构建产物、缓存与临时目录，例如 `.venv*`、`venv*`、`node_modules/`、`dist/`、`build/`、`coverage/`、`tmp/`、`temp/`、`.tmp*`、`.temp*`、`__pycache__/`、`.pytest_cache/`、`.mypy_cache/`、`.ruff_cache/`。
+- lint 默认只扫描 `.py` 文件与已确认属于 Python 资产的非 `.py` 文件；未被 Python 引用、且没有明确 Python 语境的 `contract` / `rules` / `policy` 文档不会被纳入治理。
+- 通用目录命名与泛文件结构检查已退出该 CLI，不再作为 Python lint 的默认职责。
 
 ## 同步维护要求
 - 修改工具行为后，必须同步更新本文件与 `Cli_Toolbox_DEVELOPMENT.md`。

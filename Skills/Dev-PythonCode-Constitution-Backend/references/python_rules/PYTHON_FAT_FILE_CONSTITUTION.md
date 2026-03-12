@@ -27,7 +27,12 @@ anchors:
 | `backend` | `.py` 业务实现、API、worker、repository、adapter |
 | `database` | Python repository、model、migration、schema |
 | `tooling` | Python CLI 脚本、构建脚本、校验脚本 |
-| `rule_files` | Python 相关 lint/rule/policy/constitution 规则类定义文件 |
+| `rule_files` | 已确认属于 Python 资产的 lint/rule/policy/constitution 规则类定义文件 |
+
+补充边界：
+- 非 `.py` 文件只有在“被某个 Python 文件引用”或“路径/内容存在明确 Python 证据”时，才进入本合同治理。
+- 单靠文件名出现 `contract`、`rule`、`rules`、`constitution`、`lint`，不能直接判定为 Python 资产。
+- 泛目录命名与通用文件结构整治不属于本合同职责。
 
 ## 写法风格（命令式）
 - 先写文件类别，再写上限，再写超限动作。
@@ -104,6 +109,7 @@ anchors:
 3. 拆分必须按固定职责模板落地。
 4. Python 相关回合若触发 lint，必须执行 `python3 scripts/run_python_code_lints.py --target <target_root>` 并以非零退出码阻断失败项。
 5. 规则类文件必须显式标记为 `rule_definition_file` 才能享受 1000 行上限。
+6. 非 `.py` 的 contract/rule 资产，必须先完成 Python 归属确认后，才允许进入对应类别治理。
 
 ## 不要做（Don't）
 1. 不要在 controller/handler 中堆叠业务规则与外部调用。

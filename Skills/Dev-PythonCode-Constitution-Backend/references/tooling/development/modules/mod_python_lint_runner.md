@@ -29,6 +29,8 @@ anchors:
 - 输出：单个 JSON 对象，包含 `target/gates/summary/summary_enhanced/gate_diagnostics/violation_details/clusters`
 - 失败模式：任一 gate 失败或参数非法时返回非零退出码
 - 扫描边界：显式排除虚拟环境、构建/缓存与临时目录，避免对 `.venv*`、`venv*`、`node_modules/`、`build/`、`dist/`、`coverage/`、`tmp/`、`temp/`、`.tmp*`、`.temp*` 等非治理源码目录误报
+- 治理边界：只纳入 `.py` 文件与已确认属于 Python 资产的非 `.py` 文件；仅凭 `contract` / `rules` 等命名不会自动归入本技能
+- 职责收敛：通用目录命名与泛文件结构 gate 已从 runner 移除，避免越界到非 Python 治理
 
 ## 回归检查
 ```bash
