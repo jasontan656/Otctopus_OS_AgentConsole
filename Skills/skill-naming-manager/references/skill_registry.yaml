@@ -82,13 +82,6 @@ families:
         role_tag: "octopus-backend"
         status: "deprecated"
         trigger_summary: "默认停用，避免误触发；仅在明确要求查看、迁移、改造或重新启用历史章鱼后端技能时使用。"
-      - canonical_id: "disabled-octupos-os-frontend"
-        display_name: "Disabled-Octupos-OS-Frontend"
-        prefix: "disabled"
-        family: "[Disabled]"
-        role_tag: "octopus-frontend"
-        status: "deprecated"
-        trigger_summary: "默认停用，避免误触发；仅在明确要求查看、迁移、改造或重新启用历史章鱼前端技能时使用。"
   - family: "[Functional]"
     description: "功能化组件技能，用于各个适用域的小任务。"
     members:
