@@ -3,6 +3,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
+from runtime_contract_support import RegistryAlias, RegistryPayload, RemoteDescriptor, RemotePolicyPayload
+
 
 @dataclass(frozen=True)
 class RemoteSpec:
@@ -75,31 +77,33 @@ REPO_ALIASES: dict[str, str] = {
 }
 
 
-def registry_payload() -> dict[str, object]:
+def _remote_descriptor(remote: RemoteSpec) -> RemoteDescriptor:
+    return {
+        "name": remote.name,
+        "role": remote.role,
+        "automation_write_allowed": remote.automation_write_allowed,
+        "manual_publish_allowed": remote.manual_publish_allowed,
+        "status": remote.status,
+        "disabled_reason": remote.disabled_reason,
+        "notes": list(remote.notes),
+    }
+
+
+def registry_payload() -> RegistryPayload:
+    aliases: list[RegistryAlias] = [
+        {"alias": alias, "repo": canonical}
+        for alias, canonical in sorted(REPO_ALIASES.items())
+    ]
     return {
         "repos": [
             {
                 "repo": spec.name,
                 "path": str(spec.path),
-                "remotes": [
-                    {
-                        "name": remote.name,
-                        "role": remote.role,
-                        "automation_write_allowed": remote.automation_write_allowed,
-                        "manual_publish_allowed": remote.manual_publish_allowed,
-                        "status": remote.status,
-                        "disabled_reason": remote.disabled_reason,
-                        "notes": list(remote.notes),
-                    }
-                    for remote in spec.remotes
-                ],
+                "remotes": [_remote_descriptor(remote) for remote in spec.remotes],
             }
             for spec in REPO_REGISTRY.values()
         ],
-        "aliases": [
-            {"alias": alias, "repo": canonical}
-            for alias, canonical in sorted(REPO_ALIASES.items())
-        ],
+        "aliases": aliases,
     }
 
 
@@ -126,23 +130,12 @@ def repo_spec_for_name(repo_name: str) -> RepoSpec:
     return spec
 
 
-def remote_policy_payload(repo_name: str) -> dict[str, object]:
+def remote_policy_payload(repo_name: str) -> RemotePolicyPayload:
     spec = repo_spec_for_name(repo_name)
     return {
         "repo": spec.name,
         "repo_root": str(spec.path),
-        "remotes": [
-            {
-                "name": remote.name,
-                "role": remote.role,
-                "automation_write_allowed": remote.automation_write_allowed,
-                "manual_publish_allowed": remote.manual_publish_allowed,
-                "status": remote.status,
-                "disabled_reason": remote.disabled_reason,
-                "notes": list(remote.notes),
-            }
-            for remote in spec.remotes
-        ],
+        "remotes": [_remote_descriptor(remote) for remote in spec.remotes],
     }
 
 

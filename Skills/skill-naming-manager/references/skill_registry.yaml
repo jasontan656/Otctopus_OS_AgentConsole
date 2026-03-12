@@ -126,6 +126,16 @@ families:
         trigger_summary: "当任务或运行结束后，需要复盘上一回合中的犹豫、工具失败、脚本失败、引导不足、模型 confused 与迷宫式流程时使用。"
         migrated_from:
           - "7-Task-runtime-selfcheck"
+      - canonical_id: "meta-github-operation"
+        display_name: "Meta-github-operation"
+        prefix: "meta"
+        family: "[Meta]"
+        role_tag: "github-control-plane"
+        status: "active"
+        trigger_summary: "当需要在受限仓库范围内执行 Git 状态检查、提交、推送、baseline 或 rollback 合同时使用。"
+        companion_skills:
+          - "skill-mirror-to-codex"
+          - "Dev-PythonCode-Constitution-Backend"
       - canonical_id: "meta-semantic-collection"
         display_name: "Meta-Semantic-Collection"
         prefix: "meta"

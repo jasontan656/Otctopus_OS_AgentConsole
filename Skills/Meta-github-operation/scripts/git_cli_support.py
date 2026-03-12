@@ -5,6 +5,23 @@ import subprocess
 from pathlib import Path
 
 from rollback_support import normalize_explicit_paths, path_exists_in_ref, prune_empty_path_ancestors, remove_explicit_path
+from runtime_contract_support import (
+    AheadBehindPayload,
+    CommitResult,
+    CommitScope,
+    FetchResult,
+    GitRemoteUrl,
+    PullRebaseResult,
+    PushResult,
+    PushTagResult,
+    RepoStatusPayload,
+    RollbackPathsPayload,
+    RollbackSyncAllPayload,
+    RollbackSyncPayload,
+    RollbackSyncPathsPayload,
+    StatusEntry,
+    TagResult,
+)
 from thread_claims_support import latest_claims_file, load_claim_paths
 
 
@@ -20,9 +37,9 @@ def run_git(repo_root: Path, *args: str, check: bool = True) -> subprocess.Compl
     return completed
 
 
-def list_status_entries(repo_root: Path) -> list[dict[str, str]]:
+def list_status_entries(repo_root: Path) -> list[StatusEntry]:
     completed = run_git(repo_root, "status", "--porcelain", check=True)
-    entries: list[dict[str, str]] = []
+    entries: list[StatusEntry] = []
     for raw_line in completed.stdout.splitlines():
         if not raw_line:
             continue
@@ -53,9 +70,9 @@ def upstream_branch(repo_root: Path) -> str | None:
     return value or None
 
 
-def remote_urls(repo_root: Path) -> list[dict[str, str]]:
+def remote_urls(repo_root: Path) -> list[GitRemoteUrl]:
     completed = run_git(repo_root, "remote", "-v", check=True)
-    rows: list[dict[str, str]] = []
+    rows: list[GitRemoteUrl] = []
     for line in completed.stdout.splitlines():
         parts = line.split()
         if len(parts) >= 3:
@@ -63,7 +80,7 @@ def remote_urls(repo_root: Path) -> list[dict[str, str]]:
     return rows
 
 
-def ahead_behind(repo_root: Path, upstream: str | None) -> dict[str, int] | None:
+def ahead_behind(repo_root: Path, upstream: str | None) -> AheadBehindPayload | None:
     if not upstream:
         return None
     completed = run_git(repo_root, "rev-list", "--left-right", "--count", f"{upstream}...HEAD", check=True)
@@ -71,7 +88,7 @@ def ahead_behind(repo_root: Path, upstream: str | None) -> dict[str, int] | None
     return {"behind": int(left), "ahead": int(right)}
 
 
-def repo_status_payload(repo_root: Path, *, fetch_first: bool = False) -> dict[str, object]:
+def repo_status_payload(repo_root: Path, *, fetch_first: bool = False) -> RepoStatusPayload:
     if fetch_first:
         run_git(repo_root, "fetch", "--all", "--prune", check=False)
     entries = list_status_entries(repo_root)
@@ -95,7 +112,7 @@ def stage_paths(repo_root: Path, paths: list[str]) -> None:
     run_git(repo_root, "add", "--", *paths, check=True)
 
 
-def commit(repo_root: Path, message: str, *, allow_empty: bool = False) -> dict[str, object]:
+def commit(repo_root: Path, message: str, *, allow_empty: bool = False) -> CommitResult:
     args = ["commit", "-m", message]
     if allow_empty:
         args.insert(1, "--allow-empty")
@@ -106,7 +123,7 @@ def commit(repo_root: Path, message: str, *, allow_empty: bool = False) -> dict[
     return {"commit": sha}
 
 
-def push(repo_root: Path, *, remote: str = "origin", branch: str | None = None, force_with_lease: bool = False) -> dict[str, object]:
+def push(repo_root: Path, *, remote: str = "origin", branch: str | None = None, force_with_lease: bool = False) -> PushResult:
     branch_name = branch or current_branch(repo_root)
     args = ["push"]
     if force_with_lease:
@@ -120,12 +137,12 @@ def push(repo_root: Path, *, remote: str = "origin", branch: str | None = None, 
     return {"remote": remote, "branch": branch_name, "force_with_lease": force_with_lease}
 
 
-def fetch(repo_root: Path, *, remote: str = "origin") -> dict[str, object]:
+def fetch(repo_root: Path, *, remote: str = "origin") -> FetchResult:
     run_git(repo_root, "fetch", remote, "--prune", check=True)
     return {"remote": remote}
 
 
-def pull_rebase(repo_root: Path, *, remote: str = "origin", branch: str | None = None) -> dict[str, object]:
+def pull_rebase(repo_root: Path, *, remote: str = "origin", branch: str | None = None) -> PullRebaseResult:
     args = ["pull", "--rebase", remote]
     if branch:
         args.append(branch)
@@ -147,7 +164,7 @@ def tag_exists(repo_root: Path, tag_name: str) -> bool:
     return completed.returncode == 0
 
 
-def create_annotated_tag(repo_root: Path, *, tag_name: str, message: str) -> dict[str, str]:
+def create_annotated_tag(repo_root: Path, *, tag_name: str, message: str) -> TagResult:
     if tag_exists(repo_root, tag_name):
         raise RuntimeError(f"baseline tag already exists: {tag_name}")
     run_git(repo_root, "tag", "-a", tag_name, "-m", message, check=True)
@@ -155,16 +172,16 @@ def create_annotated_tag(repo_root: Path, *, tag_name: str, message: str) -> dic
     return {"tag": tag_name, "target_commit": sha}
 
 
-def push_tag(repo_root: Path, *, remote: str, tag_name: str) -> dict[str, str]:
+def push_tag(repo_root: Path, *, remote: str, tag_name: str) -> PushTagResult:
     run_git(repo_root, "push", remote, f"refs/tags/{tag_name}", check=True)
     return {"remote": remote, "tag": tag_name}
 
 
-def rollback_sync(repo_root: Path, *, to_ref: str, paths: list[str] | None = None, use_all: bool = False) -> dict[str, object]:
+def rollback_sync(repo_root: Path, *, to_ref: str, paths: list[str] | None = None, use_all: bool = False) -> RollbackSyncPayload:
     if use_all:
         run_git(repo_root, "restore", "--source", to_ref, "--staged", "--worktree", "--", ".", check=True)
         run_git(repo_root, "clean", "-fdx", "--", ".", check=True)
-        return {
+        payload: RollbackSyncAllPayload = {
             "to_ref": to_ref,
             "mode": "all",
             "paths": ["."],
@@ -172,6 +189,7 @@ def rollback_sync(repo_root: Path, *, to_ref: str, paths: list[str] | None = Non
             "removed_paths": [],
             "pruned_empty_dirs": [],
         }
+        return payload
 
     normalized_paths = normalize_explicit_paths(repo_root, list(paths or []))
     restore_paths: list[str] = []
@@ -187,7 +205,7 @@ def rollback_sync(repo_root: Path, *, to_ref: str, paths: list[str] | None = Non
     pruned_dirs: list[str] = []
     for raw_path in normalized_paths:
         pruned_dirs.extend(prune_empty_path_ancestors(repo_root, raw_path))
-    return {
+    payload: RollbackSyncPathsPayload = {
         "to_ref": to_ref,
         "mode": "paths",
         "paths": normalized_paths,
@@ -195,9 +213,10 @@ def rollback_sync(repo_root: Path, *, to_ref: str, paths: list[str] | None = Non
         "removed_paths": removed_paths,
         "pruned_empty_dirs": sorted(set(pruned_dirs)),
     }
+    return payload
 
 
-def rollback_paths(repo_root: Path, *, to_ref: str, paths: list[str]) -> dict[str, object]:
+def rollback_paths(repo_root: Path, *, to_ref: str, paths: list[str]) -> RollbackPathsPayload:
     payload = rollback_sync(repo_root, to_ref=to_ref, paths=paths, use_all=False)
     payload["command"] = "rollback-paths"
     return payload
@@ -212,7 +231,7 @@ def resolve_commit_scope(
     use_latest_claims: bool,
     auto_scope: bool,
     use_all: bool,
-) -> dict[str, object]:
+) -> CommitScope:
     if use_all:
         return {"mode": "all"}
     if explicit_paths:

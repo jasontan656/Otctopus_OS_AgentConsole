@@ -3,8 +3,10 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from typing import Annotated, Literal
 
-from cli_parser_support import build_parser
+import typer
+
 from entry_support import baseline_contract_payload, push_contract_payload, rollback_contract_payload
 from git_cli_support import commit as git_commit
 from git_cli_support import create_annotated_tag
@@ -14,76 +16,36 @@ from git_cli_support import pull_rebase as git_pull_rebase
 from git_cli_support import push as git_push
 from git_cli_support import push_tag
 from git_cli_support import remote_urls, repo_status_payload, resolve_commit_scope, rollback_paths, rollback_sync, run_git, stage_paths
+from runtime_contract_support import CommitScope
 from registry_repo import ensure_remote_write_allowed, registry_payload, remote_policy_payload, resolve_repo
 
 
-def emit(payload: dict[str, object], *, as_json: bool = False) -> int:
+app = typer.Typer(add_completion=False, pretty_exceptions_enable=False)
+
+RepoNameOption = Annotated[str | None, typer.Option("--repo")]
+RepoPathOption = Annotated[str | None, typer.Option("--repo-path")]
+JsonOption = Annotated[bool, typer.Option("--json")]
+PathListOption = Annotated[list[str] | None, typer.Option("--path")]
+
+
+def _emit(payload: object, *, as_json: bool = False) -> None:
+    if not isinstance(payload, dict):
+        raise TypeError("runtime payload must be a dictionary-backed object")
     if as_json:
         print(json.dumps(payload, ensure_ascii=False, indent=2))
-        return 0
+        return
     for key, value in payload.items():
         print(f"{key}: {value}")
-    return 0
 
 
-def resolve_repo_root(args) -> tuple[str, Path]:
-    repo_name, repo_root = resolve_repo(args.repo, args.repo_path)
+def _resolve_repo_root(repo: str | None, repo_path: str | None) -> tuple[str, Path]:
+    repo_name, repo_root = resolve_repo(repo, repo_path)
     if not repo_root.exists():
         raise ValueError(f"repo path does not exist: {repo_root}")
     return repo_name, repo_root
 
 
-def cmd_registry(args) -> int:
-    return emit(registry_payload(), as_json=args.json)
-
-
-def cmd_push_contract(args) -> int:
-    return emit(push_contract_payload(), as_json=args.json)
-
-
-def cmd_baseline_contract(args) -> int:
-    return emit(baseline_contract_payload(), as_json=args.json)
-
-
-def cmd_rollback_contract(args) -> int:
-    return emit(rollback_contract_payload(), as_json=args.json)
-
-
-def cmd_status(args) -> int:
-    repo_name, repo_root = resolve_repo_root(args)
-    payload = repo_status_payload(repo_root, fetch_first=bool(args.fetch))
-    payload["repo"] = repo_name
-    return emit(payload, as_json=args.json)
-
-
-def cmd_remote_info(args) -> int:
-    repo_name, repo_root = resolve_repo_root(args)
-    payload = {
-        "repo": repo_name,
-        "repo_root": str(repo_root),
-        "remotes": remote_urls(repo_root),
-        "managed_remote_policy": remote_policy_payload(repo_name),
-    }
-    return emit(payload, as_json=args.json)
-
-
-def cmd_fetch(args) -> int:
-    repo_name, repo_root = resolve_repo_root(args)
-    payload = git_fetch(repo_root, remote=args.remote)
-    payload["repo"] = repo_name
-    payload["repo_root"] = str(repo_root)
-    return emit(payload, as_json=args.json)
-
-
-def cmd_pull_rebase(args) -> int:
-    repo_name, repo_root = resolve_repo_root(args)
-    payload = git_pull_rebase(repo_root, remote=args.remote, branch=args.branch)
-    payload["repo"] = repo_name
-    payload["repo_root"] = str(repo_root)
-    return emit(payload, as_json=args.json)
-
-
-def apply_scope(repo_root: Path, scope: dict[str, object]) -> None:
+def _apply_scope(repo_root: Path, scope: CommitScope) -> None:
     mode = scope["mode"]
     if mode == "all":
         run_git(repo_root, "add", "-A", check=True)
@@ -96,152 +58,302 @@ def apply_scope(repo_root: Path, scope: dict[str, object]) -> None:
     raise ValueError(f"unsupported scope mode: {mode}")
 
 
-def cmd_commit(args) -> int:
-    repo_name, repo_root = resolve_repo_root(args)
-    scope = resolve_commit_scope(
-        repo_root,
-        explicit_paths=list(args.path or []),
-        repo_name=repo_name,
-        claims_file=args.claims_file,
-        use_latest_claims=bool(args.use_latest_claims),
-        auto_scope=bool(args.auto_scope),
-        use_all=bool(args.all),
-    )
-    apply_scope(repo_root, scope)
-    payload = {"repo": repo_name, "repo_root": str(repo_root), "scope": scope}
-    payload.update(git_commit(repo_root, args.message, allow_empty=bool(args.allow_empty)))
-    return emit(payload, as_json=args.json)
+@app.command("registry")
+def registry_command(json_output: JsonOption = False) -> None:
+    _emit(registry_payload(), as_json=json_output)
 
 
-def cmd_commit_and_push(args) -> int:
-    repo_name, repo_root = resolve_repo_root(args)
-    ensure_remote_write_allowed(repo_name, args.remote, operation="commit-and-push")
-    scope = resolve_commit_scope(
+@app.command("push-contract")
+def push_contract_command(json_output: JsonOption = False) -> None:
+    _emit(push_contract_payload(), as_json=json_output)
+
+
+@app.command("baseline-contract")
+def baseline_contract_command(json_output: JsonOption = False) -> None:
+    _emit(baseline_contract_payload(), as_json=json_output)
+
+
+@app.command("rollback-contract")
+def rollback_contract_command(json_output: JsonOption = False) -> None:
+    _emit(rollback_contract_payload(), as_json=json_output)
+
+
+@app.command("status")
+def status_command(
+    repo: RepoNameOption = None,
+    repo_path: RepoPathOption = None,
+    fetch: Annotated[bool, typer.Option("--fetch")] = False,
+    json_output: JsonOption = False,
+) -> None:
+    repo_name, repo_root = _resolve_repo_root(repo, repo_path)
+    payload = dict(repo_status_payload(repo_root, fetch_first=fetch))
+    payload["repo"] = repo_name
+    _emit(payload, as_json=json_output)
+
+
+@app.command("remote-info")
+def remote_info_command(
+    repo: RepoNameOption = None,
+    repo_path: RepoPathOption = None,
+    json_output: JsonOption = False,
+) -> None:
+    repo_name, repo_root = _resolve_repo_root(repo, repo_path)
+    payload = {
+        "repo": repo_name,
+        "repo_root": str(repo_root),
+        "remotes": remote_urls(repo_root),
+        "managed_remote_policy": remote_policy_payload(repo_name),
+    }
+    _emit(payload, as_json=json_output)
+
+
+@app.command("fetch")
+def fetch_command(
+    repo: RepoNameOption = None,
+    repo_path: RepoPathOption = None,
+    remote: Annotated[str, typer.Option("--remote")] = "origin",
+    json_output: JsonOption = False,
+) -> None:
+    repo_name, repo_root = _resolve_repo_root(repo, repo_path)
+    payload = dict(git_fetch(repo_root, remote=remote))
+    payload["repo"] = repo_name
+    payload["repo_root"] = str(repo_root)
+    _emit(payload, as_json=json_output)
+
+
+@app.command("pull-rebase")
+def pull_rebase_command(
+    repo: RepoNameOption = None,
+    repo_path: RepoPathOption = None,
+    remote: Annotated[str, typer.Option("--remote")] = "origin",
+    branch: Annotated[str | None, typer.Option("--branch")] = None,
+    json_output: JsonOption = False,
+) -> None:
+    repo_name, repo_root = _resolve_repo_root(repo, repo_path)
+    payload = dict(git_pull_rebase(repo_root, remote=remote, branch=branch))
+    payload["repo"] = repo_name
+    payload["repo_root"] = str(repo_root)
+    _emit(payload, as_json=json_output)
+
+
+def _resolve_scope(
+    repo_root: Path,
+    *,
+    repo_name: str,
+    paths: list[str] | None,
+    claims_file: str | None,
+    use_latest_claims: bool,
+    auto_scope: bool,
+    use_all: bool,
+) -> CommitScope:
+    return resolve_commit_scope(
         repo_root,
-        explicit_paths=list(args.path or []),
+        explicit_paths=list(paths or []),
         repo_name=repo_name,
-        claims_file=args.claims_file,
-        use_latest_claims=bool(args.use_latest_claims),
-        auto_scope=bool(args.auto_scope),
-        use_all=bool(args.all),
+        claims_file=claims_file,
+        use_latest_claims=use_latest_claims,
+        auto_scope=auto_scope,
+        use_all=use_all,
     )
-    apply_scope(repo_root, scope)
+
+
+@app.command("commit")
+def commit_command(
+    repo: RepoNameOption = None,
+    repo_path: RepoPathOption = None,
+    message: Annotated[str, typer.Option("--message")] = ...,
+    paths: PathListOption = None,
+    claims_file: Annotated[str | None, typer.Option("--claims-file")] = None,
+    use_latest_claims: Annotated[bool, typer.Option("--use-latest-claims")] = False,
+    auto_scope: Annotated[bool, typer.Option("--auto-scope")] = False,
+    use_all: Annotated[bool, typer.Option("--all")] = False,
+    allow_empty: Annotated[bool, typer.Option("--allow-empty")] = False,
+    json_output: JsonOption = False,
+) -> None:
+    repo_name, repo_root = _resolve_repo_root(repo, repo_path)
+    scope = _resolve_scope(
+        repo_root,
+        repo_name=repo_name,
+        paths=paths,
+        claims_file=claims_file,
+        use_latest_claims=use_latest_claims,
+        auto_scope=auto_scope,
+        use_all=use_all,
+    )
+    _apply_scope(repo_root, scope)
     payload = {"repo": repo_name, "repo_root": str(repo_root), "scope": scope}
-    payload.update(git_commit(repo_root, args.message, allow_empty=bool(args.allow_empty)))
+    payload.update(git_commit(repo_root, message, allow_empty=allow_empty))
+    _emit(payload, as_json=json_output)
+
+
+@app.command("commit-and-push")
+def commit_and_push_command(
+    repo: RepoNameOption = None,
+    repo_path: RepoPathOption = None,
+    message: Annotated[str, typer.Option("--message")] = ...,
+    paths: PathListOption = None,
+    claims_file: Annotated[str | None, typer.Option("--claims-file")] = None,
+    use_latest_claims: Annotated[bool, typer.Option("--use-latest-claims")] = False,
+    auto_scope: Annotated[bool, typer.Option("--auto-scope")] = False,
+    use_all: Annotated[bool, typer.Option("--all")] = False,
+    allow_empty: Annotated[bool, typer.Option("--allow-empty")] = False,
+    remote: Annotated[str, typer.Option("--remote")] = "origin",
+    branch: Annotated[str | None, typer.Option("--branch")] = None,
+    force_with_lease: Annotated[bool, typer.Option("--force-with-lease")] = False,
+    json_output: JsonOption = False,
+) -> None:
+    repo_name, repo_root = _resolve_repo_root(repo, repo_path)
+    ensure_remote_write_allowed(repo_name, remote, operation="commit-and-push")
+    scope = _resolve_scope(
+        repo_root,
+        repo_name=repo_name,
+        paths=paths,
+        claims_file=claims_file,
+        use_latest_claims=use_latest_claims,
+        auto_scope=auto_scope,
+        use_all=use_all,
+    )
+    _apply_scope(repo_root, scope)
+    payload = {"repo": repo_name, "repo_root": str(repo_root), "scope": scope}
+    payload.update(git_commit(repo_root, message, allow_empty=allow_empty))
     payload["push"] = git_push(
         repo_root,
-        remote=args.remote,
-        branch=args.branch,
-        force_with_lease=bool(args.force_with_lease),
+        remote=remote,
+        branch=branch,
+        force_with_lease=force_with_lease,
     )
-    return emit(payload, as_json=args.json)
+    _emit(payload, as_json=json_output)
 
 
-def cmd_push(args) -> int:
-    repo_name, repo_root = resolve_repo_root(args)
-    ensure_remote_write_allowed(repo_name, args.remote, operation="push")
+@app.command("push")
+def push_command(
+    repo: RepoNameOption = None,
+    repo_path: RepoPathOption = None,
+    remote: Annotated[str, typer.Option("--remote")] = "origin",
+    branch: Annotated[str | None, typer.Option("--branch")] = None,
+    force_with_lease: Annotated[bool, typer.Option("--force-with-lease")] = False,
+    json_output: JsonOption = False,
+) -> None:
+    repo_name, repo_root = _resolve_repo_root(repo, repo_path)
+    ensure_remote_write_allowed(repo_name, remote, operation="push")
     payload = {"repo": repo_name, "repo_root": str(repo_root)}
     payload.update(
         git_push(
             repo_root,
-            remote=args.remote,
-            branch=args.branch,
-            force_with_lease=bool(args.force_with_lease),
+            remote=remote,
+            branch=branch,
+            force_with_lease=force_with_lease,
         )
     )
-    return emit(payload, as_json=args.json)
+    _emit(payload, as_json=json_output)
 
 
-def cmd_baseline_create(args) -> int:
-    repo_name, repo_root = resolve_repo_root(args)
+@app.command("baseline-create")
+def baseline_create_command(
+    repo: RepoNameOption = None,
+    repo_path: RepoPathOption = None,
+    name: Annotated[str, typer.Option("--name")] = ...,
+    message: Annotated[str | None, typer.Option("--message")] = None,
+    publish: Annotated[Literal["local", "remote"], typer.Option("--publish")] = "local",
+    paths: PathListOption = None,
+    claims_file: Annotated[str | None, typer.Option("--claims-file")] = None,
+    use_latest_claims: Annotated[bool, typer.Option("--use-latest-claims")] = False,
+    auto_scope: Annotated[bool, typer.Option("--auto-scope")] = False,
+    use_all: Annotated[bool, typer.Option("--all")] = False,
+    remote: Annotated[str, typer.Option("--remote")] = "origin",
+    branch: Annotated[str | None, typer.Option("--branch")] = None,
+    json_output: JsonOption = False,
+) -> None:
+    repo_name, repo_root = _resolve_repo_root(repo, repo_path)
     status_payload = repo_status_payload(repo_root)
     dirty = bool(status_payload["dirty"])
-    tag_name = normalize_baseline_tag(args.name)
-    message = args.message or f"baseline: {args.name}"
+    tag_name = normalize_baseline_tag(name)
+    resolved_message = message or f"baseline: {name}"
 
-    payload: dict[str, object] = {
+    payload = {
         "repo": repo_name,
         "repo_root": str(repo_root),
-        "baseline_name": args.name,
+        "baseline_name": name,
         "tag": tag_name,
-        "publish": args.publish,
+        "publish": publish,
         "dirty_before": dirty,
     }
 
     if dirty:
-        scope = resolve_commit_scope(
+        scope = _resolve_scope(
             repo_root,
-            explicit_paths=list(args.path or []),
             repo_name=repo_name,
-            claims_file=args.claims_file,
-            use_latest_claims=bool(args.use_latest_claims),
-            auto_scope=bool(args.auto_scope),
-            use_all=bool(args.all),
+            paths=paths,
+            claims_file=claims_file,
+            use_latest_claims=use_latest_claims,
+            auto_scope=auto_scope,
+            use_all=use_all,
         )
-        apply_scope(repo_root, scope)
+        _apply_scope(repo_root, scope)
         payload["scope"] = scope
-        payload.update(git_commit(repo_root, message, allow_empty=False))
+        payload.update(git_commit(repo_root, resolved_message, allow_empty=False))
         payload["baseline_mode"] = "commit_plus_tag"
     else:
         payload["baseline_mode"] = "tag_only"
 
-    payload["tag_result"] = create_annotated_tag(repo_root, tag_name=tag_name, message=message)
-    if args.publish == "remote":
-        ensure_remote_write_allowed(repo_name, args.remote, operation="baseline-create:publish")
-        published: dict[str, object] = {"tag": push_tag(repo_root, remote=args.remote, tag_name=tag_name)}
+    payload["tag_result"] = create_annotated_tag(repo_root, tag_name=tag_name, message=resolved_message)
+    if publish == "remote":
+        ensure_remote_write_allowed(repo_name, remote, operation="baseline-create:publish")
+        published: dict[str, object] = {"tag": push_tag(repo_root, remote=remote, tag_name=tag_name)}
         if dirty:
             published["branch"] = git_push(
                 repo_root,
-                remote=args.remote,
-                branch=args.branch,
+                remote=remote,
+                branch=branch,
                 force_with_lease=False,
             )
         payload["publish_result"] = published
-    return emit(payload, as_json=args.json)
+    _emit(payload, as_json=json_output)
 
 
-def cmd_rollback_paths(args) -> int:
-    repo_name, repo_root = resolve_repo_root(args)
-    payload = rollback_paths(repo_root, to_ref=args.to_ref, paths=list(args.path))
+@app.command("rollback-paths")
+def rollback_paths_command(
+    repo: RepoNameOption = None,
+    repo_path: RepoPathOption = None,
+    to_ref: Annotated[str, typer.Option("--to-ref")] = ...,
+    paths: Annotated[list[str], typer.Option("--path")] = ...,
+    json_output: JsonOption = False,
+) -> None:
+    repo_name, repo_root = _resolve_repo_root(repo, repo_path)
+    payload = dict(rollback_paths(repo_root, to_ref=to_ref, paths=list(paths)))
     payload["repo"] = repo_name
     payload["repo_root"] = str(repo_root)
-    return emit(payload, as_json=args.json)
+    _emit(payload, as_json=json_output)
 
 
-def cmd_rollback_sync(args) -> int:
-    if bool(args.all) == bool(args.path):
+@app.command("rollback-sync")
+def rollback_sync_command(
+    repo: RepoNameOption = None,
+    repo_path: RepoPathOption = None,
+    to_ref: Annotated[str, typer.Option("--to-ref")] = ...,
+    paths: PathListOption = None,
+    use_all: Annotated[bool, typer.Option("--all")] = False,
+    json_output: JsonOption = False,
+) -> None:
+    if use_all == bool(paths):
         raise ValueError("pass exactly one of --all or at least one --path")
-    repo_name, repo_root = resolve_repo_root(args)
-    payload = rollback_sync(
-        repo_root,
-        to_ref=args.to_ref,
-        paths=list(args.path or []),
-        use_all=bool(args.all),
+    repo_name, repo_root = _resolve_repo_root(repo, repo_path)
+    payload = dict(
+        rollback_sync(
+            repo_root,
+            to_ref=to_ref,
+            paths=list(paths or []),
+            use_all=use_all,
+        )
     )
     payload["repo"] = repo_name
     payload["repo_root"] = str(repo_root)
-    return emit(payload, as_json=args.json)
+    _emit(payload, as_json=json_output)
 
 
 def main() -> int:
-    parser = build_parser(
-        cmd_registry=cmd_registry,
-        cmd_status=cmd_status,
-        cmd_remote_info=cmd_remote_info,
-        cmd_fetch=cmd_fetch,
-        cmd_pull_rebase=cmd_pull_rebase,
-        cmd_commit=cmd_commit,
-        cmd_commit_and_push=cmd_commit_and_push,
-        cmd_push=cmd_push,
-        cmd_push_contract=cmd_push_contract,
-        cmd_baseline_contract=cmd_baseline_contract,
-        cmd_baseline_create=cmd_baseline_create,
-        cmd_rollback_contract=cmd_rollback_contract,
-        cmd_rollback_paths=cmd_rollback_paths,
-        cmd_rollback_sync=cmd_rollback_sync,
-    )
-    args = parser.parse_args()
-    return args.func(args)
+    app()
+    return 0
 
 
 if __name__ == "__main__":

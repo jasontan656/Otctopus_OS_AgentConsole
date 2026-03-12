@@ -18,7 +18,7 @@ SCRIPT = Path(__file__).resolve().parents[1] / "scripts" / "Cli_Toolbox.py"
 class TestMetaGithubOperationCliTests:
     def run_cli(self, *args: str, check: bool = True) -> subprocess.CompletedProcess[str]:
         return subprocess.run(
-            ["python3", str(SCRIPT), *args],
+            [sys.executable, str(SCRIPT), *args],
             check=check,
             capture_output=True,
             text=True,

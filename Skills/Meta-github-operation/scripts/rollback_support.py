@@ -1,6 +1,13 @@
 from __future__ import annotations
 
 from pathlib import Path
+from subprocess import CompletedProcess
+from typing import Protocol
+
+
+class GitRunner(Protocol):
+    def __call__(self, repo_root: Path, *args: str, check: bool = True) -> CompletedProcess[str]:
+        ...
 
 
 def normalize_explicit_paths(repo_root: Path, raw_paths: list[str]) -> list[str]:
@@ -28,7 +35,7 @@ def normalize_explicit_paths(repo_root: Path, raw_paths: list[str]) -> list[str]
     return collapsed
 
 
-def path_exists_in_ref(run_git, repo_root: Path, to_ref: str, raw_path: str) -> bool:
+def path_exists_in_ref(run_git: GitRunner, repo_root: Path, to_ref: str, raw_path: str) -> bool:
     completed = run_git(repo_root, "cat-file", "-e", f"{to_ref}:{raw_path}", check=False)
     return completed.returncode == 0
 
