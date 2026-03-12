@@ -19,6 +19,7 @@ anchors:
 - 强制把实现拆成小职责文件，避免“巨无霸文件”吞掉可维护性。
 - 固定工程拆分形态：orchestrator + domain + adapter + helper，不允许随意混写。
 - 将“行数限制”从建议升级为发布阻断条件。
+- typing、logging、subprocess 这类运行时安全边界由配套文档 `PYTHON_RUNTIME_SAFETY_CONSTITUTION.md` 承担，不在本文件混写。
 
 ## 适用范围（必须全覆盖）
 

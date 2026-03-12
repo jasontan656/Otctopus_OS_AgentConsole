@@ -219,3 +219,80 @@ class TestPythonCodeLintTests:
 
             assert "assets/contracts/runtime_contract.yaml" in typed_paths
             assert "docs/python_rule.md" in file_paths
+
+    def test_typing_governance_requires_public_annotations(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="py_lint_", dir=str(ROOT.parent)) as tmp:
+            root = Path(tmp)
+            (root / "bad_service.py").write_text(
+                "def process(payload):\n"
+                "    return payload\n",
+                encoding="utf-8",
+            )
+            (root / "good_service.py").write_text(
+                "def process(payload: dict[str, str]) -> dict[str, str]:\n"
+                "    return payload\n",
+                encoding="utf-8",
+            )
+
+            result = self._run_lint(root)
+            assert result.returncode == 1, result.stdout + result.stderr
+            report = json.loads(result.stdout)
+            gate = next(g for g in report["gates"] if g["gate"] == "typing_governance_gate")
+            violations = {v["path"]: v["reason"] for v in gate["violations"]}
+            assert violations.get("bad_service.py", "").startswith("public_function_missing_type_hints:")
+            assert "good_service.py" not in violations
+
+    def test_subprocess_safety_flags_popen_and_shell_true(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="py_lint_", dir=str(ROOT.parent)) as tmp:
+            root = Path(tmp)
+            (root / "bad_task.py").write_text(
+                "import subprocess\n"
+                "def run_task() -> None:\n"
+                "    subprocess.Popen(['echo', 'x'])\n"
+                "    subprocess.run('echo x', shell=True)\n",
+                encoding="utf-8",
+            )
+            (root / "good_task.py").write_text(
+                "import subprocess\n"
+                "def run_task() -> None:\n"
+                "    subprocess.run(['echo', 'x'], check=False)\n",
+                encoding="utf-8",
+            )
+
+            result = self._run_lint(root)
+            assert result.returncode == 1, result.stdout + result.stderr
+            report = json.loads(result.stdout)
+            gate = next(g for g in report["gates"] if g["gate"] == "subprocess_safety_gate")
+            reasons = {(v["path"], v["reason"]) for v in gate["violations"]}
+            assert ("bad_task.py", "prefer_subprocess_run_over_popen") in reasons
+            assert ("bad_task.py", "subprocess_shell_true_forbidden") in reasons
+            assert not any(path == "good_task.py" for path, _reason in reasons)
+
+    def test_logging_boundary_prefers_named_loggers(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="py_lint_", dir=str(ROOT.parent)) as tmp:
+            root = Path(tmp)
+            (root / "bad_service.py").write_text(
+                "import logging\n"
+                "logger = logging.getLogger()\n"
+                "logging.basicConfig(level=logging.INFO)\n"
+                "def run() -> None:\n"
+                "    logging.info('hello')\n",
+                encoding="utf-8",
+            )
+            (root / "good_service.py").write_text(
+                "import logging\n"
+                "logger = logging.getLogger(__name__)\n"
+                "def run() -> None:\n"
+                "    logger.info('hello')\n",
+                encoding="utf-8",
+            )
+
+            result = self._run_lint(root)
+            assert result.returncode == 1, result.stdout + result.stderr
+            report = json.loads(result.stdout)
+            gate = next(g for g in report["gates"] if g["gate"] == "logging_boundary_gate")
+            reasons = {(v["path"], v["reason"]) for v in gate["violations"]}
+            assert ("bad_service.py", "logging_getlogger_requires_explicit_name") in reasons
+            assert ("bad_service.py", "logging_basicconfig_forbidden_in_library_code") in reasons
+            assert ("bad_service.py", "root_logger_call_forbidden") in reasons
+            assert not any(path == "good_service.py" for path, _reason in reasons)

@@ -21,3 +21,5 @@ anchors:
   - 接管 Python 胖代码治理与拆分指引，不再由 `Constitution-knowledge-base` 承担。
   - 收紧 lint 治理边界：非 `.py` 文件需先确认属于 Python 资产，不能仅凭 `contract` / `rules` 命名纳管。
   - 移除 runner 中的泛目录结构 gate，避免越界治理非 Python 文件结构。
+  - 新增 `typing_governance_gate`、`subprocess_safety_gate`、`logging_boundary_gate`，把 Python runtime safety 纳入技能治理面。
+  - 新增 `references/python_rules/PYTHON_RUNTIME_SAFETY_CONSTITUTION.md`，承载 typing / subprocess / logging 原子规则。

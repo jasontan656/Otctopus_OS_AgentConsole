@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import ast
 from functools import lru_cache
 from pathlib import Path
 from typing import Any, Iterable, Iterator
@@ -170,6 +171,14 @@ def read_text(path: Path) -> str:
         return path.read_text(encoding="utf-8", errors="ignore")
 
 
+def parse_python_ast(path: Path) -> tuple[ast.AST | None, str]:
+    text = read_text(path)
+    try:
+        return ast.parse(text), text
+    except SyntaxError:
+        return None, text
+
+
 def rel(path: Path, root: Path) -> str:
     return str(path.relative_to(root))
 
@@ -189,6 +198,26 @@ def preview_from_span(text: str, start: int, end: int, *, limit: int = 160) -> s
     if not snippet:
         return ""
     compact = " ".join(snippet.split())
+    if len(compact) <= limit:
+        return compact
+    return compact[: limit - 3] + "..."
+
+
+def line_hits_from_node(node: ast.AST) -> list[int]:
+    start_line = getattr(node, "lineno", None)
+    end_line = getattr(node, "end_lineno", start_line)
+    if not isinstance(start_line, int):
+        return []
+    if not isinstance(end_line, int) or end_line < start_line:
+        end_line = start_line
+    return list(range(start_line, end_line + 1))
+
+
+def preview_from_node(text: str, node: ast.AST, *, limit: int = 160) -> str:
+    snippet = ast.get_source_segment(text, node) or ""
+    compact = " ".join(snippet.split())
+    if not compact:
+        return ""
     if len(compact) <= limit:
         return compact
     return compact[: limit - 3] + "..."

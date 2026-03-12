@@ -17,3 +17,7 @@ modules:
     entrypoint: scripts/run_python_code_lints.py
     status: active
     doc: references/tooling/development/modules/mod_python_lint_runner.md
+    gate_families:
+      - structural_governance
+      - python_asset_boundary
+      - runtime_safety

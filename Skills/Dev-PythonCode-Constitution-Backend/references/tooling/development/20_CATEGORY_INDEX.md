@@ -19,7 +19,7 @@ anchors:
 - 架构与边界：`00_ARCHITECTURE_OVERVIEW.md`
 - 模块清单与映射：`10_MODULE_CATALOG.yaml`
 - 路由与治理：`references/routing/` 与 `references/governance/`
-- Python 规则：`references/python_rules/`
+- Python 规则：`references/python_rules/`（当前包含 fat-file 与 runtime-safety 两个原子规则面）
 - 模块文档：`modules/`
 - 变更记录：`90_CHANGELOG.md`
 
