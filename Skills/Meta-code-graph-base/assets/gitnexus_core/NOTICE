@@ -1,0 +1,10 @@
+This directory contains vendored and modified core code migrated from the upstream GitNexus project.
+
+Upstream project: GitNexus
+Upstream repository: https://github.com/abhigyanpatwari/GitNexus
+Upstream source base used for migration: gitnexus/
+
+Required Notice: Copyright Abhigyan Patwari (https://github.com/abhigyanpatwari/GitNexus)
+
+This vendored component keeps its separate upstream license boundary under PolyForm Noncommercial 1.0.0.
+See the accompanying LICENSE file in this directory.

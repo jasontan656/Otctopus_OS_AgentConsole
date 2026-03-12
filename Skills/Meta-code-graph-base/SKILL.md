@@ -28,6 +28,12 @@ description: "维护本地代码图谱底座：统一建图、查图、影响面
 - 本技能提供 repo registry、resource URI、map/wiki bundle 与本地运行产物，供前端技能读取或投影。
 - code graph 展示规范、panel 组织、canvas 交互与视觉合同以 `Dev-VUE3-WebUI-Frontend` 为准。
 
+实现来源声明：
+- 当前 `assets/gitnexus_core` 并非从零独立重写，而是基于 `GitNexus` 的 `gitnexus/` 核心代码迁移后做本地裁剪与补丁。
+- 现阶段的 Python 入口主要是 wrapper；底层核心引擎仍以上游迁移来的 TypeScript engine 为主。
+- 对外说明、仓库发布与后续治理时，必须明确 `Meta-code-graph-base` 含有来自 `GitNexus` 的迁移/修改代码，而不是把整套 code graph core 描述成纯原创实现。
+- `assets/gitnexus_core` 下必须保留独立的上游许可证与 notice；仓库根说明也必须同步声明该来源边界。
+
 ## Workflow
 
 1. 先确认目标仓库是否已经建图：

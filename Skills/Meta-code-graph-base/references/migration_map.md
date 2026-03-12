@@ -1,5 +1,16 @@
 # Migration Map
 
+## Upstream Origin
+
+- upstream project: `GitNexus`
+- upstream core path used as migration base: `Human_Work_Zone/GitNexus/gitnexus`
+- current vendored core path: `assets/gitnexus_core`
+- current license boundary:
+  - repository root content remains under the repo root license
+  - vendored `gitnexus_core` keeps its separate upstream license and notice requirements
+- current attribution requirement:
+  - any public release or repository description must explicitly state that `Meta-code-graph-base` contains migrated and modified core code from `GitNexus`
+
 ## Retained Core
 
 - `src/core/graph/*`

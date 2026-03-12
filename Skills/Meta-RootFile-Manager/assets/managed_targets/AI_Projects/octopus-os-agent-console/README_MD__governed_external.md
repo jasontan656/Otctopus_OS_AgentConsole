@@ -57,15 +57,15 @@ A better model is:
 Mode 1: direct command-line install into a dedicated target path.
 
 ```bash
-python3 product_tools/octopus_os_agent_console.py install --runtime-target codex-gpt-5.4-high --install-root ~/Octopus_Runtime/codex-home --github-skill-repo git@github.com:YOUR_ACCOUNT/octopus-os-skills.git --github-auth-mode ssh --acknowledge-github-control-risk && HOME=~/Octopus_Runtime/codex-home ~/Octopus_Runtime/codex-home/bin/codex -C ~/Octopus_Runtime/codex-home/console -m gpt-5.4 -c 'model_reasoning_effort="high"'
+python3 product_tools/octopus_os_agent_console.py install --runtime-target codex-gpt-5.4-high --install-root ~/Octopus_Runtime/codex-home --github-skill-repo git@github.com:YOUR_ACCOUNT/octopus-os-skills.git --github-auth-mode ssh --acknowledge-github-control-risk
 ```
 
-Mode 2: use an already system-installed Codex CLI only as the bootstrap tool.
+Mode 2: use an already available Codex CLI as the attach target.
 
 1. Clone or pull this repository into a source directory.
 2. Open Codex in that source directory.
 3. Ask Codex to run the guided installation flow into your chosen dedicated target path.
-4. After installation, enter the dedicated target path and use the directory-level Codex CLI from there.
+4. After installation, launch Codex against the target-directory `console/` workspace by using the resolved launch command from the installer output.
 
 The second mode still produces a directory-level Octopus OS runtime. It does not convert Octopus OS into a system-level install.
 
@@ -78,15 +78,18 @@ The installer will refuse to continue if:
 
 Install behavior is intentionally narrow:
 
-- it installs the latest Codex CLI into the dedicated install root by using the official npm package
+- it first tries to attach an already available `codex` binary from `--codex-cli-bin` or `PATH`
+- if no usable Codex CLI is available, it installs the latest Codex CLI into the dedicated install root by using the official npm package
 - it uses that install root as the Codex home boundary and syncs only real skill roots into `<install-root>/.codex/skills`
 - it removes any accidental root-level `<install-root>/.codex/skills/AGENTS.md`
 - it creates a `console/` workspace mirror inside the target directory, including the repository root `AGENTS.md` and `Skills/AGENTS.md`
 - it creates target-directory runtime roots at `<install-root>/Codex_Skill_Runtime` and `<install-root>/Codex_Skills_Result`
 - it creates an `Octopus_OS/` folder inside the target directory as part of the installed baseline layout
 - it captures a GitHub skill repository binding so Octopus OS can later drive its Git workflow
-- it then launches a new Codex CLI session against the target-directory `console/` workspace so the installed skill ecosystem is active immediately
+- when target-local Codex installation is needed, npm cache/log/userconfig traces are redirected into the target directory instead of the operator home
+- it returns a launch command that points Codex at the target-directory `console/` workspace so the installed skill ecosystem is active immediately
 - it does not write a system-level Codex installation for the user
+- uninstall consumes the install manifest and rolls back target-directory Codex artifacts when the installer created them locally
 
 GitHub binding warning:
 
@@ -109,6 +112,15 @@ GitHub binding warning:
 - `CODE_OF_CONDUCT.md`
 - `CHANGELOG.md`
 - `.github/`
+
+## Third-Party Derived Code
+
+This repository includes a third-party-derived code component inside `Skills/Meta-code-graph-base/assets/gitnexus_core`.
+
+- `Meta-code-graph-base` vendors and modifies core code migrated from the `GitNexus` project.
+- That migrated component is not covered only by the repository root MIT license.
+- Its separate upstream license notices and attribution requirements are preserved inside the vendored directory.
+- See `docs/THIRD_PARTY_COMPONENTS.md` for the current scope, source path, and licensing summary.
 
 ## Directory Transition
 

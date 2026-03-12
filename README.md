@@ -113,6 +113,15 @@ GitHub binding warning:
 - `CHANGELOG.md`
 - `.github/`
 
+## Third-Party Derived Code
+
+This repository includes a third-party-derived code component inside `Skills/Meta-code-graph-base/assets/gitnexus_core`.
+
+- `Meta-code-graph-base` vendors and modifies core code migrated from the `GitNexus` project.
+- That migrated component is not covered only by the repository root MIT license.
+- Its separate upstream license notices and attribution requirements are preserved inside the vendored directory.
+- See `docs/THIRD_PARTY_COMPONENTS.md` for the current scope, source path, and licensing summary.
+
 ## Directory Transition
 
 The product engineering name is now `octopus-os-agent-console`.
