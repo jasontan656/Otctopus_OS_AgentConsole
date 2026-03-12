@@ -276,11 +276,6 @@ def dotted_name(node: ast.AST | None) -> str | None:
     return None
 
 
-def path_looks_like_boundary_layer(path: Path, root: Path, tokens: Iterable[str]) -> bool:
-    rel_text = rel(path, root).replace("\\", "/").lower()
-    return any(token in rel_text for token in tokens)
-
-
 def make_violation(path: str, reason: str, **extra: Any) -> dict[str, Any]:
     payload: dict[str, Any] = {"path": path, "reason": reason}
     payload.update(extra)

@@ -33,8 +33,8 @@ anchors:
 - lint 的治理对象只包括两类：`.py` 文件本体，以及已被 Python 文件引用或在内容/路径上具备明确 Python 证据的非 `.py` 资产。
 - 仅因文件名包含 `contract`、`rule`、`rules`、`constitution`、`lint`，不足以判定该文件受本技能治理；必须先确认它属于 Python 资产或 Python 语境。
 - 通用目录命名、泛文件结构整治这类与 Python 语义无直接关系的规则，不应继续挂在本技能 lint 下。
-- 若任务涉及 typing、data boundary、concurrency、io boundary、time/random、import side effect、exception、logging、subprocess、HTTP timeout 或 Python 运行时安全边界，应同步读取 `../python_rules/PYTHON_RUNTIME_SAFETY_CONSTITUTION.md`。
-- 当前 lint 还负责十类 Python 工程安全规则：公共函数类型注解边界、payload/data contract 边界、并发生命周期边界、I/O 副作用边界、时间/随机性边界、import 时副作用边界、异常治理边界、`subprocess` 调用安全边界、HTTP timeout 边界、`logging` 命名 logger 边界。
+- 若任务涉及 typing、data boundary、concurrency、import side effect、exception、logging、subprocess、HTTP timeout 或 Python 运行时安全边界，应同步读取 `../python_rules/PYTHON_RUNTIME_SAFETY_CONSTITUTION.md`。
+- 当前 lint 还负责八类 Python 工程安全规则：公共函数类型注解边界、payload/data contract 边界、并发生命周期边界、import 时副作用边界、异常治理边界、`subprocess` 调用安全边界、HTTP timeout 边界、`logging` 命名 logger 边界。
 - 若任务涉及 pytest、package resource、`pyproject.toml` 或 CLI entrypoint 集成边界，应同步读取 `../python_rules/PYTHON_PROJECT_INTEGRATION_CONSTITUTION.md`。
 - 当前 lint 还负责三类 Python 项目集成规则：pytest importlib/strict markers、package resource loading、`pyproject.toml` packaging metadata 与 `project.scripts`。
 - 对胖文件问题，必须同时给出“为什么超限”与“应该拆到哪里”；不能只报告行数，不给固定拆分落点。
