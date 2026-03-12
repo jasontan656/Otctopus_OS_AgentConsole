@@ -14,6 +14,8 @@ if str(SCRIPT_DIR) not in sys.path:
 from python_code_lint_rules.modules import (
     absolute_path,
     code_governance,
+    concurrency_boundary,
+    data_boundary,
     exception_governance,
     fat_file,
     file_structure,
@@ -37,6 +39,8 @@ MODULES = [
     fat_file,
     file_structure,
     modularity,
+    data_boundary,
+    concurrency_boundary,
     exception_governance,
     typing_governance,
     subprocess_safety,

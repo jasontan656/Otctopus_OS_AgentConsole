@@ -21,7 +21,7 @@ anchors:
 - 当前已有一个真实 CLI：`run_python_code_lints.py`。
 - 当前工具面只服务 Python 相关 lint；不再借用 `Constitution-knowledge-base` 的 lint 入口。
 - 当前 lint 边界已收紧为“Python 文件 + 已确认的 Python 资产”，并移除了泛目录结构治理职责。
-- 当前 lint 已扩展为“结构治理 + runtime safety”双轴：除胖文件与资产边界外，还包含 typing、exception、subprocess、HTTP timeout、logging 五类 Python 工程安全 gate。
+- 当前 lint 已扩展为“结构治理 + runtime safety”双轴：除胖文件与资产边界外，还包含 typing、data boundary、concurrency、exception、subprocess、HTTP timeout、logging 七类 Python 工程安全 gate。
 - 当前 lint 已进一步扩展到“project integration”轴：pytest、package resource 与 `pyproject.toml` / entrypoint 现在也由本技能治理。
 
 ## 内联索引（阅读顺序）

@@ -460,3 +460,71 @@ class TestPythonCodeLintTests:
             assert ("bad_http.py", "httpx_timeout_none_forbidden") in reasons
             assert ("bad_http.py", "httpx_client_timeout_none_forbidden") in reasons
             assert not any(path == "good_http.py" for path, _reason in reasons)
+
+    def test_data_boundary_prefers_explicit_payload_contracts(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="py_lint_", dir=str(ROOT.parent)) as tmp:
+            root = Path(tmp)
+            (root / "bad_payload.py").write_text(
+                "def handle_event(payload: dict[str, str]) -> None:\n"
+                "    pass\n"
+                "\n"
+                "def build_payload() -> dict[str, str]:\n"
+                "    return {'kind': 'demo'}\n",
+                encoding="utf-8",
+            )
+            (root / "good_payload.py").write_text(
+                "from typing import TypedDict\n"
+                "\n"
+                "class EventPayload(TypedDict):\n"
+                "    kind: str\n"
+                "\n"
+                "def handle_event(payload: EventPayload) -> None:\n"
+                "    pass\n"
+                "\n"
+                "def build_payload() -> EventPayload:\n"
+                "    return {'kind': 'demo'}\n",
+                encoding="utf-8",
+            )
+
+            result = self._run_lint(root)
+            assert result.returncode == 1, result.stdout + result.stderr
+            report = json.loads(result.stdout)
+            gate = next(g for g in report["gates"] if g["gate"] == "data_boundary_gate")
+            reasons = {(v["path"], v["reason"]) for v in gate["violations"]}
+            assert ("bad_payload.py", "payload_like_argument_uses_mapping_contract:payload") in reasons
+            assert ("bad_payload.py", "payload_like_return_uses_mapping_contract") in reasons
+            assert not any(path == "good_payload.py" for path, _reason in reasons)
+
+    def test_concurrency_boundary_requires_task_ownership_and_managed_executors(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="py_lint_", dir=str(ROOT.parent)) as tmp:
+            root = Path(tmp)
+            (root / "bad_concurrency.py").write_text(
+                "from asyncio import create_task as spawn_task\n"
+                "import concurrent.futures as futures\n"
+                "\n"
+                "async def run() -> None:\n"
+                "    spawn_task(work())\n"
+                "    executor = futures.ThreadPoolExecutor(max_workers=2)\n"
+                "    executor.submit(blocking_work)\n",
+                encoding="utf-8",
+            )
+            (root / "good_concurrency.py").write_text(
+                "import asyncio\n"
+                "import concurrent.futures as futures\n"
+                "\n"
+                "async def run() -> None:\n"
+                "    task = asyncio.create_task(work())\n"
+                "    await task\n"
+                "    with futures.ThreadPoolExecutor(max_workers=2) as executor:\n"
+                "        executor.submit(blocking_work)\n",
+                encoding="utf-8",
+            )
+
+            result = self._run_lint(root)
+            assert result.returncode == 1, result.stdout + result.stderr
+            report = json.loads(result.stdout)
+            gate = next(g for g in report["gates"] if g["gate"] == "concurrency_boundary_gate")
+            reasons = {(v["path"], v["reason"]) for v in gate["violations"]}
+            assert ("bad_concurrency.py", "asyncio_create_task_requires_explicit_task_owner") in reasons
+            assert ("bad_concurrency.py", "executor_constructor_requires_context_manager") in reasons
+            assert not any(path == "good_concurrency.py" for path, _reason in reasons)

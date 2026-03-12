@@ -265,6 +265,17 @@ def is_test_fixture_path(path_text: str) -> bool:
     return lowered.endswith("_test.py") or lowered.endswith("test_.py") or lowered.endswith(".spec.py")
 
 
+def dotted_name(node: ast.AST | None) -> str | None:
+    if isinstance(node, ast.Name):
+        return node.id
+    if isinstance(node, ast.Attribute):
+        parent = dotted_name(node.value)
+        if parent is None:
+            return None
+        return f"{parent}.{node.attr}"
+    return None
+
+
 def make_violation(path: str, reason: str, **extra: Any) -> dict[str, Any]:
     payload: dict[str, Any] = {"path": path, "reason": reason}
     payload.update(extra)
