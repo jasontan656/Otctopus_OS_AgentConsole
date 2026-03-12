@@ -48,6 +48,17 @@ families:
           - "skill-mirror-to-codex"
         migrated_from:
           - "Meta-Skill-Template"
+      - canonical_id: "skills-tooling-checkup"
+        display_name: "Skills-Tooling-CheckUp"
+        prefix: "skill"
+        family: "[SKILL-GOV]"
+        role_tag: "tooling-checkup"
+        status: "active"
+        trigger_summary: "当需要按 repo 已声明的必用依赖栈检查已安装 skills 内部 tooling code 是否自造轮子，并在必要时推动修正时使用。"
+        companion_skills:
+          - "skill-doc-structure"
+          - "Dev-PythonCode-Constitution-Backend"
+          - "Dev-VUE3-WebUI-Frontend"
   - family: "[DEV]"
     description: "开发相关的技能收敛在一起管理。"
     members:

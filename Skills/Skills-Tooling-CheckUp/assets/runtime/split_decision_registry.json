@@ -1,0 +1,15 @@
+{
+  "registry_name": "META_SKILL_DOCSTRUCTURE_SPLIT_DECISION_REGISTRY",
+  "registry_version": "v1",
+  "entries": [
+    {
+      "doc_path": "references/governance/TOOLING_REMEDIATION_PROTOCOL.md",
+      "doc_id": "skills_tooling_checkup.governance.tooling_remediation_protocol",
+      "rule_id": "body_axis_overload",
+      "fingerprint": "bde81fb6ab74a0b89477df2e6e04d1858750ad76",
+      "decision": "accepted",
+      "note": "This document now holds only the linear remediation flow; examples and gates were split into dedicated topic atoms.",
+      "decided_at": "2026-03-12T00:57:01.159Z"
+    }
+  ]
+}

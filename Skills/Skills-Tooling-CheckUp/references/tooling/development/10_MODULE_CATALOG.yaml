@@ -1,0 +1,13 @@
+catalog_version: v1
+toolbox_name: Cli_Toolbox
+has_local_toolbox: false
+maintain_rules:
+  naming: "Cli_Toolbox.<tool_name>"
+  docs_sync_required: true
+  required_docs:
+    - references/tooling/Cli_Toolbox_USAGE.md
+    - references/tooling/Cli_Toolbox_DEVELOPMENT.md
+    - references/tooling/development/20_CATEGORY_INDEX.md
+profile_support:
+  - basic
+modules: []
