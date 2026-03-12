@@ -25,16 +25,16 @@ anchors:
 ```text
 AppShellContainer
 └── ShowroomRouteSceneContainer
-    ├── RuntimeStatusContainer
-    └── ShowroomWorkspaceContainer
-        ├── DocumentNavigatorContainer
-        ├── GraphPanelContainer
-        └── DocumentReaderContainer
+    ├── MenuDrawerContainer
+    ├── CanvasWorkspaceContainer
+    │   └── CanvasPanelContainer*
+    └── LocatorOverlayContainer
 ```
 
 ## 嵌套要求
-- `AppShellContainer` 只承载顶层页面骨架与 route scene 入口，不直接拥有文档筛选或正文渲染逻辑。
-- `ShowroomRouteSceneContainer` 连接 runtime bridge 与 workspace，不直接承担 graph 节点渲染。
-- `ShowroomWorkspaceContainer` 作为工作区级父容器，拥有当前选中文档路径和搜索关键字。
-- `DocumentNavigatorContainer`、`GraphPanelContainer`、`DocumentReaderContainer` 都从工作区读取共享选择态，不允许兄弟容器直接改写彼此内部状态。
-- `RuntimeStatusContainer` 读取 runtime 摘要，但不控制 workspace 布局。
+- `AppShellContainer` 只承载顶层骨架与 scene 入口，不直接承担 panel 内容。
+- `ShowroomRouteSceneContainer` 连接未来 runtime bridge、menu 与 canvas，不直接渲染具体 panel 内容。
+- `MenuDrawerContainer` 只负责暴露可打开的 panel 入口，不直接拥有 panel 生命周期。
+- `CanvasWorkspaceContainer` 统一拥有当前打开 panel 集合、活动 panel 顺序和共享选择态。
+- `CanvasPanelContainer` 是可重复实例节点，每个实例只承载一个 panel 内容。
+- graph、document library、document reader、runtime summary 都必须作为 panel 内容挂入 canvas，而不是固定挂在页面栅格里。

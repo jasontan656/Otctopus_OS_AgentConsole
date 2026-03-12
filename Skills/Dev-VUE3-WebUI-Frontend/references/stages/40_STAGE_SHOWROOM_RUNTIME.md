@@ -28,14 +28,12 @@ anchors:
 # Stage Showroom Runtime
 
 ## 本阶段负责
-- dev server、production build、user-level service、live payload 刷新。
-- 展厅页面与真实技能文档变化保持同步。
-- 让人类可以直接看到前端规范如何在真实页面中落地。
-- 让 runtime bridge、workspace 容器、panel 容器按合同分层，不再堆叠在单页面入口。
-- 让 layer / container / component locator 在全局开关下可见，方便 AI 协作定位。
-- 让 design token、semantic style、folder-first component package 和 package lint 成为运行时真实约束。
+- 定义 showroom 自身的用途、菜单导航、canvas 工作区与 panel catalog。
+- 保持 `ui-dev/` 作为 showroom redevelopment docs root，而不是保留一套已经偏离目标的旧 UI 代码。
+- 让人类先通过文档确认展厅应该展示什么，再进入下一轮代码重建。
+- 保留未来 runtime bridge、workspace 容器、panel 容器与 locator 协议的目标叙事，但不假装当前已经落地。
 
 ## 交付要求
-- `ui-dev` 能独立启动。
-- 页面默认进入 `SKILL.md`。
-- 文档变化、删除、新增都能在页面中实时体现。
+- `ui-dev/UI_DEV_ENTRY.md` 成为 showroom docs 的稳定入口。
+- `ui-dev/docs/` 明确说明 SPA menu、canvas workspace、panel catalog 与语言规则。
+- 当前 skill 内不再保留会误导读者的旧 runnable UI 代码与依赖。

@@ -19,28 +19,24 @@ describe('Dev-VUE3-WebUI-Frontend stage contracts', () => {
   it('exposes ui-dev docs in the showroom runtime stage', () => {
     const showroom = getStageDefinition('showroom_runtime_delivery')
     expect(showroom.docContract.doc_boundary).toContain('ui-dev/UI_DEV_ENTRY.md')
+    expect(showroom.docContract.doc_boundary).toContain('ui-dev/docs/00_UI_DEV_DOCS_INDEX.md')
     expect(showroom.docContract.doc_boundary).toContain('frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md')
     expect(showroom.docContract.doc_boundary).toContain('frontend_dev_contracts/design_system/00_DESIGN_SYSTEM_INDEX.md')
     expect(showroom.docContract.doc_boundary).toContain('frontend_dev_contracts/component_system/00_COMPONENT_SYSTEM_INDEX.md')
-    expect(showroom.docContract.doc_boundary).toContain(
-      'frontend_dev_contracts/layers/30_LOCATOR_AND_IDENTIFIER_PROTOCOL.md',
-    )
-    expect(showroom.docContract.doc_boundary).toContain(
-      'frontend_dev_contracts/rules/UI_PACKAGE_SHAPE_LINT_WORKFLOW.md',
-    )
+    expect(showroom.docContract.doc_boundary).toContain('frontend_dev_contracts/rules/UI_LANGUAGE_AND_COPY_RULES.md')
     expect(showroom.docContract.doc_boundary).toContain(
       'frontend_dev_contracts/containers/state/20_CONTAINER_PAYLOAD_NORMALIZATION.md',
     )
     expect(showroom.docContract.doc_boundary).toContain(
       'frontend_dev_contracts/showroom_runtime/VIEWER_SERVICE_WORKFLOW.md',
     )
-    expect(showroom.commandContract.gate_commands).toContain('cd ui-dev && npm run build')
+    expect(showroom.commandContract.gate_commands).toContain('npm run cli -- rebuild-self-graph --json')
   })
 
   it('exposes container taxonomy in the motion architecture stage', () => {
     const motion = getStageDefinition('motion_component_architecture')
-    expect(motion.commandContract.gate_commands).toContain('npm run cli -- lint-ui-identity --json')
-    expect(motion.commandContract.gate_commands).toContain('npm run cli -- lint-ui-package-shape --json')
+    expect(motion.commandContract.gate_commands).toContain('npm run typecheck')
+    expect(motion.commandContract.gate_commands).toContain('npm test')
     expect(motion.docContract.doc_boundary).toContain(
       'frontend_dev_contracts/containers/model/10_CONTAINER_ROLE_TAXONOMY.md',
     )

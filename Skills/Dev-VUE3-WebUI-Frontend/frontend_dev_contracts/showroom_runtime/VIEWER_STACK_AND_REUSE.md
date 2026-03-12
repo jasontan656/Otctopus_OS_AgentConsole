@@ -29,16 +29,14 @@ anchors:
 
 # Viewer Stack Reuse Contract
 
-## 技术栈
-- `TypeScript`
-- `Vue3`
-- `Vue Flow`
-- `Vite`
-- `express + ws + chokidar`
+## 当前定位
+- showroom 当前先以开发文档形态存在，不再保留旧 runnable UI。
+- 本文定义的是下一轮重建时必须遵守的目标 runtime 形态，而不是描述当前存量代码。
 
 ## 复用方向
-- 当前 viewer 是未来前端组件库与设计标准的试验母体。
-- graph、文档列表、正文阅读流都是可复用的展厅母板，但它们应被工作区容器正确承载。
-- 后续组件若稳定，应从页面实现中抽离成可复用单元。
-- 页面入口不再直接承担全部状态和布局权，而应下沉到 app shell、scene、workspace、panel 容器。
-- 所有容器与组件都应显式暴露 locator id，方便 AI / human 协作定位。
+- showroom 的目标形态必须是 `SPA shell + expandable menu + canvas workspace`。
+- 菜单不是固定三栏中的一列，而是可展开、可收起、可继续扩展的导航入口。
+- canvas workspace 不是静态排版区，而是用于承载已打开 panel 的活动组织面。
+- panel 必须支持新增到 canvas、关闭、聚焦，以及后续扩展交互。
+- graph、document library、document reader、runtime summary 都属于可装载到 canvas 的 panel 类型。
+- 页面可见文案必须全部使用 English；代码、命名与注释也必须全部使用 English。

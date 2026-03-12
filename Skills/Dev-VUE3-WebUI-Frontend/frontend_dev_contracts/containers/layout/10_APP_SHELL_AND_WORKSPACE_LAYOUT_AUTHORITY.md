@@ -23,17 +23,15 @@ anchors:
 
 ## 布局裁决权
 - `AppShellContainer`
-  - 决定 page shell、hero、顶层信息块与场景外边距。
+  - 决定 page shell、顶层品牌区、菜单入口位置与 canvas 外边距。
 - `ShowroomRouteSceneContainer`
-  - 决定 runtime status 区和 workspace 区的上下编排。
-- `ShowroomWorkspaceContainer`
-  - 决定导航栏、graph panel、reader panel 的三栏布局，以及窄屏下退化为单列顺序。
-- `DocumentNavigatorContainer`
-  - 只决定搜索框和文档列表内部排布。
-- `GraphPanelContainer`
-  - 只决定 graph 区头部与图谱画布区域分配。
-- `DocumentReaderContainer`
-  - 只决定正文、anchors、warning 区的内部排布。
+  - 决定 menu drawer、canvas workspace 与 overlay 的场景级编排。
+- `MenuDrawerContainer`
+  - 只决定菜单折叠态、展开态与 section 组织，不直接拥有 canvas 内部布局权。
+- `CanvasWorkspaceContainer`
+  - 决定 panel 在 canvas 中的排列、活动态与空态。
+- `CanvasPanelContainer`
+  - 只决定单个 panel header、close affordance 和 panel body 的内部排布。
 
 ## 裁决记录字段
 - 当布局权需要被表达成可审计合同记录时，使用以下字段：
@@ -45,5 +43,5 @@ anchors:
   - `policy_version`: 当前容器布局治理版本
 
 ## 响应式退化要求
-- 当视口不足以承载三栏时，由 `ShowroomWorkspaceContainer` 统一降级为单列，而不是让每个 panel 自行漂移。
-- graph 仍是工作区一等公民；移动端可下沉，但不应从信息架构中消失。
+- 当视口不足以同时承载 menu 与 canvas 时，由 `ShowroomRouteSceneContainer` 统一把菜单切成 overlay drawer。
+- canvas 中的 panel 可以改变排列，但不能退化成固定三栏遗留布局。

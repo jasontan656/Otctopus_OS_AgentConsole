@@ -17,18 +17,19 @@ anchors:
 
 # Frontend Folder Topology
 
-## `ui-dev/client/src` 推荐拓扑
+## 未来实现推荐拓扑
 ```text
-client/src/
-├── containers/
-├── components/
-│   └── ComponentName/
-├── composables/
-├── contracts/
-├── styles/
-├── App.vue
-├── main.ts
-└── types.ts
+ui-dev/
+└── src/
+    ├── containers/
+    ├── components/
+    │   └── ComponentName/
+    ├── composables/
+    ├── contracts/
+    ├── styles/
+    ├── App.vue
+    ├── main.ts
+    └── types.ts
 ```
 
 ## 各目录职责
@@ -42,6 +43,10 @@ client/src/
   - registry、typed contract、lint 可消费元数据。
 - `styles/`
   - 全局 token、semantic、base、layout 资产。
+
+## 当前状态
+- 当前 `ui-dev/` 先保留开发文档，不保留旧代码实现。
+- 因此本文档描述的是下一轮代码重建目标，而不是当前文件系统实况。
 
 ## 禁止事项
 - 不新增 `misc/`, `helpers/`, `shared-junk/` 一类杂散目录。

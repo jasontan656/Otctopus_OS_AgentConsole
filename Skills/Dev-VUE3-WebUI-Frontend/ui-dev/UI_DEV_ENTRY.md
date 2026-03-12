@@ -1,56 +1,58 @@
 ---
 doc_id: "ui.dev.entry"
 doc_type: "ui_dev_entry"
-topic: "Runnable showroom root for Dev-VUE3-WebUI-Frontend"
+topic: "Showroom redevelopment root for Dev-VUE3-WebUI-Frontend"
 anchors:
   - target: "../references/stages/40_STAGE_SHOWROOM_RUNTIME.md"
     relation: "belongs_to"
     direction: "upstream"
-    reason: "The ui-dev root is the concrete surface of the showroom runtime stage."
+    reason: "The ui-dev root is the concrete surface of the showroom redevelopment stage."
   - target: "../frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md"
     relation: "routes_to"
     direction: "downstream"
     reason: "The frontend contract index defines the official UI development reading path."
-  - target: "../frontend_dev_contracts/containers/00_CONTAINERS_INDEX.md"
-    relation: "implements"
+  - target: "docs/00_UI_DEV_DOCS_INDEX.md"
+    relation: "routes_to"
     direction: "downstream"
-    reason: "The runnable showroom must realize the container contracts through the SPA UI code."
+    reason: "The ui-dev docs index defines the showroom-specific purpose, menu, canvas, and panel scope."
   - target: "../frontend_dev_contracts/design_system/00_DESIGN_SYSTEM_INDEX.md"
-    relation: "implements"
+    relation: "pairs_with"
     direction: "downstream"
-    reason: "The runnable showroom must realize the design-system contracts through shared tokens and semantic styles."
+    reason: "The showroom docs must stay aligned with the generic design-system contracts."
   - target: "../frontend_dev_contracts/component_system/00_COMPONENT_SYSTEM_INDEX.md"
-    relation: "implements"
+    relation: "pairs_with"
     direction: "downstream"
-    reason: "The runnable showroom must realize the reusable component package contracts."
+    reason: "The future showroom implementation must stay aligned with the generic component-system contracts."
   - target: "../frontend_dev_contracts/code_architecture/00_CODE_ARCHITECTURE_INDEX.md"
-    relation: "implements"
+    relation: "pairs_with"
     direction: "downstream"
-    reason: "The runnable showroom must realize the folder topology, style placement, and export rules."
+    reason: "The future showroom implementation must stay aligned with the generic code-architecture contracts."
   - target: "../frontend_dev_contracts/layers/00_LAYERS_INDEX.md"
-    relation: "implements"
+    relation: "pairs_with"
     direction: "downstream"
-    reason: "The runnable showroom must realize the layer catalog and visible locator protocol."
+    reason: "The future showroom implementation must stay aligned with the generic layer catalog and locator protocol."
 ---
 
 # UI Dev Entry
 
-`ui-dev/` 是本技能的 runnable showroom 根目录，也是前端实现、组件实验和 live graph 展示的唯一官方代码面。
+`ui-dev/` 是本技能的 showroom redevelopment 根目录。当前这里不再保留旧 runnable UI 代码，而是只保留门面入口与展厅自身开发文档。
 
 ## 包含内容
-- Vue3 + Vue Flow 页面代码。
-- app shell、scene、workspace、panel 容器实现。
-- folder-first 组件 package、局部 contract、局部样式 token。
-- design token、semantic style、layout style 全局资产。
-- layer / container / component locator registry 与显式定位开关。
-- viewer payload 装配层与 live server。
-- systemd 安装脚本与运行文档。
-- 消费 `frontend_dev_contracts/` 中定义的前端开发合同。
+- `docs/00_UI_DEV_DOCS_INDEX.md`
+  - showroom 自身开发文档入口。
+- `docs/10_SHOWROOM_PURPOSE_AND_SCOPE.md`
+  - 定义这个展厅要展示什么、不展示什么。
+- `docs/navigation/`
+  - 定义 SPA 菜单导航与可扩展入口。
+- `docs/canvas/`
+  - 定义 canvas workspace、panel 生命周期与关闭交互。
+- `docs/panels/`
+  - 定义应该存在的 panel catalog。
+- `frontend_dev_contracts/`
+  - 继续承载通用前端规则，不承担 showroom 自身的内容目录。
 
 ## 使用方式
-- 开发：
-  - `npm run dev`
-- 构建：
-  - `npm run build`
-- 常驻：
-  - `npm run service:install`
+- 当前读取方式：
+  1. 先读 `docs/00_UI_DEV_DOCS_INDEX.md`
+  2. 再回到 `../frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md` 对齐通用合同
+- 只有当新的 UI 代码被重建后，`ui-dev/` 才会重新恢复 dev/build/runtime 入口。

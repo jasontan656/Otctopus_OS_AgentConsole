@@ -25,17 +25,16 @@ anchors:
 
 # Viewer Service Workflow
 
-## Dev 模式
-- `npm install`
-- `npm run dev`
-- 修改 skill 内 markdown、json、yaml 后，watcher 会推送新 payload。
-- viewer 运行时只读 skill 内容，不负责写回 root 规则文档。
-- browser 端容器只消费已经归一化的 `PreviewPayload`，不直接消费 watcher raw channel。
+## 当前状态
+- `ui-dev/` 当前处于 docs-first redevelopment 状态。
+- 旧 viewer runtime、前端依赖、build 产物和 service 安装链已经清空，不应继续被当成可运行入口。
+- 在新的 SPA menu + canvas 实现落地前，本分支只定义未来恢复 runtime 时必须满足的工作流边界。
 
-## Prod 模式
-- `npm run build`
-- `npm run start`
+## 未来恢复条件
+- 先完成 `ui-dev/docs/` 中的 showroom purpose、menu navigation、canvas workspace、panel catalog 文档。
+- 再完成对应的前端合同收敛，尤其是 container hierarchy、layout authority、interaction protocol 与 English-only 语言规则。
+- 最后才允许重新引入 dev/build/service 运行链。
 
-## systemd
-- `npm run service:install`
-- 默认安装 user-level service：`dev-vue3-webui-frontend-viewer.service`
+## 恢复后约束
+- 恢复 runtime 时仍只能消费归一化后的 `PreviewPayload`。
+- 恢复 runtime 时必须先把 dev/build/service 命令重新写回 `ui-dev/UI_DEV_ENTRY.md`、`SKILL.md` 与 stage command contract。

@@ -21,6 +21,10 @@ anchors:
     relation: "indexes"
     direction: "downstream"
     reason: "Package-shape lint enforces the reusable component folder contract."
+  - target: "UI_LANGUAGE_AND_COPY_RULES.md"
+    relation: "indexes"
+    direction: "downstream"
+    reason: "Language rules constrain UI copy, code comments, and implementation text."
 ---
 
 # Frontend Rules Index
@@ -32,8 +36,11 @@ anchors:
   - 定义 layer、container、component 标识的 lint 工作流。
 - `UI_PACKAGE_SHAPE_LINT_WORKFLOW.md`
   - 定义组件 package 目录形状、局部样式、导出与 registry 一致性的 lint 工作流。
+- `UI_LANGUAGE_AND_COPY_RULES.md`
+  - 定义页面文案、代码和注释必须统一使用 English 的规则。
 
 ## 读取顺序
 1. `UI_LAYOUT_ADJUSTMENT_RULES.md`
-2. `UI_IDENTIFIER_LINT_WORKFLOW.md`
-3. `UI_PACKAGE_SHAPE_LINT_WORKFLOW.md`
+2. `UI_LANGUAGE_AND_COPY_RULES.md`
+3. `UI_IDENTIFIER_LINT_WORKFLOW.md`
+4. `UI_PACKAGE_SHAPE_LINT_WORKFLOW.md`

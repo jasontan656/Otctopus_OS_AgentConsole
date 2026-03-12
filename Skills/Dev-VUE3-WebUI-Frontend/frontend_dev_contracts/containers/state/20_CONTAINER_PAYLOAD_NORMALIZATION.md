@@ -22,9 +22,10 @@ anchors:
 # Container Payload Normalization
 
 ## 归一化边界
-- `ui-dev/server/viewer-server.ts` 提供 raw runtime channel。
-- `ui-dev/lib/viewer-payload.ts` 负责把 graph workspace 归一化成 `PreviewPayload`。
-- `ui-dev/client/src/composables/useShowroomRuntimeBridge.ts` 负责消费 `PreviewPayload`，不在容器内部重新拼装 raw channel 数据。
+- 当前 runtime 代码已删除，但未来恢复时仍必须保留清晰的归一化边界。
+- 未来 runtime source 负责提供 raw runtime channel。
+- 未来 payload adapter 负责把 graph workspace 归一化成 `PreviewPayload`。
+- 未来 scene-level runtime bridge 负责消费 `PreviewPayload`，不在容器内部重新拼装 raw channel 数据。
 
 ## 容器消费规则
 - 所有视觉容器只消费已经归一化的 `PreviewPayload` 或其派生只读数据。

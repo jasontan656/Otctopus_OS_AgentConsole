@@ -25,16 +25,15 @@ anchors:
 
 # UI Package Shape Lint Workflow
 
-## Lint 负责的检查
+## 当前状态
+- 当前 `ui-dev/` 已经移除旧代码与依赖，因此本 workflow 只保留 future package-shape 约束，不再假装当前可以执行。
+
+## 未来恢复时负责的检查
 - component 是否拥有独立 package 目录。
 - package 内是否存在 `ComponentName.vue`、`ComponentName.contract.ts`、`ComponentName.tokens.css`、`index.ts`。
 - `index.ts` 是否导入局部样式并导出默认组件与 contract。
 - registry 中声明的 package 路径是否与文件系统一致。
 
-## 必用命令
-- `npm run cli -- ui-package-contract --json`
-- `npm run cli -- lint-ui-package-shape --json`
-
-## 使用时机
-- 新增或迁移组件 package 后立即运行。
-- 修改 `ui-dev/client/src/components/` 结构后必须运行。
+## 恢复条件
+- 只有在新的 UI 代码根被重新引入后，本 workflow 才恢复成真实 gate。
+- 在此之前，本文件只定义未来组件 package 的目标形状。

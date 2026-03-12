@@ -26,7 +26,7 @@ anchors:
 # Code Architecture Index
 
 ## 本分支负责
-- `ui-dev/client/src` 的目录拓扑
+- 未来 `ui-dev/` 代码根的目录拓扑
 - container / component / composable / contract / styles / tokens 的依赖方向
 - 组件 package 模板与导出规则
 - 样式资产的全局/局部落点

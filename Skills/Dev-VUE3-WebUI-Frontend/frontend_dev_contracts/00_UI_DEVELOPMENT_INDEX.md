@@ -9,6 +9,10 @@ anchors:
     relation: "supports"
     direction: "upstream"
     reason: "The showroom consumes this frontend contract index as its official reading path."
+  - target: "../ui-dev/docs/00_UI_DEV_DOCS_INDEX.md"
+    relation: "pairs_with"
+    direction: "cross"
+    reason: "Showroom-specific development docs complement the generic frontend contract tree."
   - target: "design_system/00_DESIGN_SYSTEM_INDEX.md"
     relation: "routes_to"
     direction: "downstream"
@@ -59,9 +63,11 @@ anchors:
 - `positioning/00_POSITIONING_INDEX.md`
   - 负责合同定位、目录边界、文件组织。
 - `showroom_runtime/00_SHOWROOM_RUNTIME_INDEX.md`
-  - 负责 viewer stack、运行链、服务工作流。
+  - 负责 SPA menu/canvas 目标、showroom runtime 恢复门禁与未来运行链。
 - `rules/00_RULES_INDEX.md`
   - 负责布局调整与响应式约束。
+- `../ui-dev/docs/00_UI_DEV_DOCS_INDEX.md`
+  - 负责这个 showroom 自己要展示什么、菜单怎么组织、canvas 怎么承载 panel。
 
 ## 最小读取路径
 1. 先读 `design_system/00_DESIGN_SYSTEM_INDEX.md`，确认 tokens、语义样式和主题基线。

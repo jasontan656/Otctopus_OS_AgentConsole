@@ -41,16 +41,14 @@ anchors:
   - 记录当前前端容器权限合同版本。
 
 ## 代码落点
-- `ui-dev/client/src/containers/`
-  - 放置应用壳层、scene、workspace、panel 等容器。
-- `ui-dev/client/src/components/`
-  - 放置如 `GraphCanvas` 这类无全局状态所有权的展示组件。
-- `ui-dev/client/src/composables/`
-  - 放置 runtime bridge、derived view model 一类组合逻辑。
-- `ui-dev/client/src/contracts/`
-  - 放置前端容器 typed contract 与共享 UI 协议类型。
+- 下一轮代码重建时，预期代码根仍落在 `ui-dev/` 下。
+- 未来实现应至少区分：
+  - `containers/`
+  - `components/`
+  - `composables/`
+  - `contracts/`
+- 当前轮次不保留旧代码目录，避免把失效实现误读成正式落点。
 
 ## 测试面
-- payload 归一化继续由 `ui-dev/tests/test_viewer_payload.spec.ts` 保障。
 - stage 合同与合同路由继续由 `tests/test_cli_toolbox.spec.ts` 保障。
-- 容器拆分后的 UI 行为应优先通过 typecheck、build 和已有 runtime 测试守住。
+- 当前轮次先以合同和文档 graph 约束为主；新的 UI 代码落地后再补回实现级测试面。

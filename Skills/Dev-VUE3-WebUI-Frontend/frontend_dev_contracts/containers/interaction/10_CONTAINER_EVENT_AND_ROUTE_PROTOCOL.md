@@ -23,17 +23,21 @@ anchors:
 
 ## 输入协议
 - `ShowroomRouteSceneContainer` 从 runtime bridge 接收 `payload` 与 `liveState`。
-- `ShowroomWorkspaceContainer` 从 scene 接收 `payload`，并向下分发只读 docs、edges、selectedDoc。
+- `CanvasWorkspaceContainer` 从 scene 接收 `payload`，并统一裁决 panel open / close / focus / select。
 
 ## 输出协议
-- `DocumentNavigatorContainer` 发出：
-  - `updateSearch(keyword)`
+- `MenuDrawerContainer` 发出：
+  - `openPanel(panelKind)`
+  - `toggleMenu()`
+- `CanvasPanelContainer` 发出：
+  - `focusPanel(panelId)`
+  - `closePanel(panelId)`
+- panel 内容发出：
   - `selectDoc(path)`
-- `GraphPanelContainer` 发出：
-  - `selectDoc(path)`
-- `DocumentReaderContainer` 发出：
   - `followAnchor(path)`
+  - `requestPanel(panelKind)`
 
 ## 协议约束
 - 兄弟容器之间不直接互改状态。
-- 当前 viewer 尚未把选中路径编码进 URL；因此 route scene 负责场景入口，但具体选择协议仍由 workspace 统一裁决。
+- 任何 panel 的打开、关闭和活动态切换都必须经过 `CanvasWorkspaceContainer`。
+- 当前 showroom 仍未把 panel 状态编码进 URL；因此 scene 负责入口，workspace 负责交互裁决。

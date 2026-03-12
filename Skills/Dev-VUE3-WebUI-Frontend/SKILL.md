@@ -23,9 +23,9 @@ metadata:
 - 本文件只做门面入口，不承载多 stage 规则正文。
 - 本技能同时承担三种角色：
   - 项目定制 Vue3 组件与使用方式规范库
-  - 自包含 UI 界面与前端架构最佳实践
-  - 以真实 doc graph 驱动、可肉眼观察效果的可运行展厅
-- 技能主轴是 `resident docs -> staged standards -> runnable showroom`。
+  - 自包含 UI 展厅开发文档与前端架构最佳实践
+  - 未来可重建的 showroom runtime 目标定义
+- 技能主轴是 `resident docs -> staged standards -> showroom redevelopment docs -> future runtime`。
 
 ## 2. 必读顺序
 1. 先读取运行合同：
@@ -38,7 +38,7 @@ metadata:
    - `npm run cli -- stage-doc-contract --stage <stage> --json`
    - `npm run cli -- stage-command-contract --stage <stage> --json`
    - `npm run cli -- stage-graph-contract --stage <stage> --json`
-4. 若任务落到 runnable showroom，再进入：
+4. 若任务落到 showroom 自身开发文档，再进入：
    - `ui-dev/UI_DEV_ENTRY.md`
 
 ## 3. 分类入口
@@ -53,12 +53,13 @@ metadata:
   - `references/stages/40_STAGE_SHOWROOM_RUNTIME.md`
 - UI 展厅层：
   - `ui-dev/UI_DEV_ENTRY.md`
+  - `ui-dev/docs/`
   - `frontend_dev_contracts/`
 - 工具层：
   - `scripts/Cli_Toolbox.ts`
 
 ## 4. 适用域
-- 适用于：项目定制 Vue3 Web UI 组件使用方式、信息层级设计、桌面/移动端布局规范、动效规范、组件组织、代码组织、图谱展示、前端展厅运行链。
+- 适用于：项目定制 Vue3 Web UI 组件使用方式、信息层级设计、桌面/移动端布局规范、动效规范、组件组织、代码组织、showroom 用途设计、SPA menu/canvas 目标定义。
 - 不适用于：替代具体业务产品需求、替代纯视觉稿评审、替代 `skill-doc-structure` 的文档结构方法论本体。
 - 本技能消费 doc graph 能力，但自身重点是前端标准、可运行展示面，以及前端开发阶段的必用规范入口。
 
@@ -73,16 +74,16 @@ metadata:
 - graph 校验：
   - `npm run cli -- build-anchor-graph --json`
   - `npm run cli -- rebuild-self-graph --json`
-- UI 运行：
-  - `cd ui-dev && npm run dev`
-  - `cd ui-dev && npm run build`
+- UI 文档入口：
+  - `ui-dev/UI_DEV_ENTRY.md`
+  - `ui-dev/docs/00_UI_DEV_DOCS_INDEX.md`
 
 ## 6. 读取原则
 - `SKILL.md` 只负责路由，不承担阶段正文。
 - 顶层常驻文档只维持长期边界、目标与 stage 顺序。
 - 阶段切换后必须丢弃上一阶段的局部 focus，只保留 resident docs。
-- UI 展厅不是静态 demo，而是当前技能真实 doc graph 的人类可视化门面。
-- 组件、动效、布局、运行链都应先写入文档，再进入代码修改。
+- `ui-dev/` 当前先作为 showroom redevelopment docs root，不再假装已经有一套合格的可运行 UI。
+- 组件、动效、布局、语言规则、menu/canvas 架构都应先写入文档，再进入下一轮代码重建。
 - 只要任务进入前端开发，就应优先使用本技能收敛组件、界面与规范语义。
 
 ## 7. 结构索引

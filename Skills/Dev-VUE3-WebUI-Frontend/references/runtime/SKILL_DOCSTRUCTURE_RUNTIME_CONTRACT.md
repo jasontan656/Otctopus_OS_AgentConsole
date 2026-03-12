@@ -10,15 +10,15 @@ anchors:
   - target: "../../ui-dev/UI_DEV_ENTRY.md"
     relation: "implements"
     direction: "downstream"
-    reason: "The showroom UI consumes the graph defined by this internal contract."
+    reason: "The showroom redevelopment docs define how future UI surfaces will consume the graph."
 ---
 
 # Embedded Doc Graph Contract
 
 ## 作用
-- 为 `ui-dev` 提供稳定的 markdown graph 数据输入。
+- 为 `ui-dev` 的 showroom redevelopment docs 与未来 runtime 提供稳定的 markdown graph 数据输入。
 - 要求技能内 markdown 文档具备 frontmatter anchors。
-- 让 runnable showroom 能把当前技能自身渲染成可读的 graph。
+- 让未来的 showroom runtime 能把当前技能自身渲染成可读的 graph。
 
 ## 最小合同
 - 每个 markdown 文档至少一个 anchor。

@@ -16,12 +16,8 @@ anchors:
 # Showroom Runtime Module
 
 ## 负责内容
-- `ui-dev/server/viewer-server.ts`
-- `ui-dev/client/*`
-- `ui-dev/scripts/install_user_service.sh`
-- `ui-dev/client/src/contracts/ui-identity-registry.ts`
-- `ui-dev/client/src/styles/*`
-- `ui-dev/client/src/components/*/index.ts`
+- `ui-dev/UI_DEV_ENTRY.md`
+- `ui-dev/docs/*`
 - `frontend_dev_contracts/showroom_runtime/VIEWER_SERVICE_WORKFLOW.md`
 - `frontend_dev_contracts/containers/*`
 - `frontend_dev_contracts/layers/*`
@@ -30,5 +26,5 @@ anchors:
 - `frontend_dev_contracts/code_architecture/*`
 
 ## 设计意图
-- 让网站既是技能门面，又是前端规范展厅。
-- 让 graph 读取真实文档，而不是静态演示数据。
+- 让 `ui-dev/` 先作为 showroom redevelopment docs root，避免旧 runnable UI 持续误导读者。
+- 让 graph、menu、canvas、panel catalog 的目标形态先在文档里收敛，再进入下一轮代码重建。

@@ -21,7 +21,11 @@ anchors:
 
 # UI Identifier Lint Workflow
 
-## Lint 负责的检查
+## 当前状态
+- 当前 `ui-dev/` 已回退到 docs-first redevelopment 状态，因此本 workflow 处于 future-only 阶段。
+- 在新的 UI 代码根重新引入前，不应把本文件误读成“当前已有可执行 lint”。
+
+## 未来恢复时负责的检查
 - layer id 是否属于固定 catalog。
 - 容器 id 是否符合 `layerId-containerName`。
 - 组件 id 是否符合 `layerId-containerName-componentName`。
@@ -29,10 +33,6 @@ anchors:
 - registry 中声明的文件是否存在。
 - 容器 / 组件文件是否正确绑定自身 id。
 
-## 必用命令
-- `npm run cli -- ui-identity-contract --json`
-- `npm run cli -- lint-ui-identity --json`
-
-## 使用时机
-- 新增 layer、container、component 前先读 contract。
-- 修改 `ui-dev/client/src/containers/*` 或 `ui-dev/client/src/components/*` 后必须重跑 lint。
+## 恢复条件
+- 只有当新的 SPA menu + canvas UI 实现重新落到 `ui-dev/` 后，本 workflow 才能重新绑定真实 CLI。
+- 在此之前，命名协议只作为开发文档与未来实现约束存在。

@@ -61,17 +61,15 @@
   },
   "governance_rules": [
     "SKILL.md must stay entry-only.",
-    "The skill doubles as a frontend standards system and a human-readable live showroom.",
+    "The skill doubles as a frontend standards system and a showroom redevelopment-doc system.",
     "Runtime rules must be consumed from machine-readable contracts instead of markdown.",
     "The graph display remains a first-class narrative surface across desktop and mobile variants.",
-    "Reusable component, motion, architecture, and runtime rules must stay document-first before code changes."
+    "Reusable component, motion, architecture, and runtime rules must stay document-first before code changes.",
+    "No contract may claim that ui-dev is runnable while the legacy UI code has been removed."
   ],
   "validation_closure": [
     "npm run typecheck",
     "npm test",
-    "cd ui-dev && npm run typecheck",
-    "cd ui-dev && npm test",
-    "cd ui-dev && npm run build",
     "npm run cli -- rebuild-self-graph --json"
   ]
 }
