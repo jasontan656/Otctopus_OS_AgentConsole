@@ -31,7 +31,7 @@ metadata:
 - 目标项目根还必须位于 `AI_Projects` workspace 内；否则 `$Meta-RootFile-Manager` 无法收治目标模块 `AGENTS.md`，本技能必须拒绝服务。
 - 目标代码对象的 `docs_root` 必须先存在；不存在时，本技能必须拒绝服务。
 - 仅在项目结构初始化阶段，`Development_Docs/` 容器允许为空；一旦本技能介入具体开发闭环，`docs_root` 就必须已经是可用的真实目录。
-- 开发文档的落盘容器必须先由 `Dev-OctopusOS-Constitution-ProjectStructure` 判定；若目标项目尚未固定其他特殊容器，则默认容器是 `<codebase_root>/Development_Docs/`，并且该目录本身就是当前 `docs_root`，不再额外要求 `<module_dir>` 物理子目录。
+- 开发文档的落盘容器必须先由 `Dev-ProjectStructure-Constitution` 判定；若目标项目尚未固定其他特殊容器，则默认容器是 `<codebase_root>/Development_Docs/`，并且该目录本身就是当前 `docs_root`，不再额外要求 `<module_dir>` 物理子目录。
 - 若目标模块下已经存在编号归档的 `NN_slug`，新一轮 `mother_doc` 不是空白起手；必须先从最近一轮归档与当前 code graph/context 抽取仍然有效的设计与增量，再开始回填。
 - 若目标文件夹中已经存在 `execution_atom_plan_validation_packs/`、`pack_registry.yaml` 或既有 graph，必须先判定现有 pack 树是否合法：`preview_skeleton` 只能展示不能执行，`accepted/retired` 的旧 official plan 不能复用为新一轮 construction plan；只有当前轮仍合法的 official plan 才能继续作为执行输入。
 - 目标模块的外部 `AGENTS.md` 必须由本技能模版创建，并由 `$Meta-RootFile-Manager` 收治；创建后必须立即执行 `collect`，使外部 `AGENTS.md` 与技能内治理映射形成闭环。
@@ -52,7 +52,7 @@ metadata:
    - `references/tooling/SKILL_TOOLING_EXECUTION_PLAYBOOK.md`
    - `/home/jasontan656/AI_Projects/AGENTS.md`
    - `<docs_root>/AGENTS.md`（若存在）
-   - `/home/jasontan656/.codex/skills/Dev-OctopusOS-Constitution-ProjectStructure/SKILL.md`（当 `docs_root` 尚未固定时）
+   - `/home/jasontan656/.codex/skills/Dev-ProjectStructure-Constitution/SKILL.md`（当 `docs_root` 尚未固定时）
 2. 进入任一阶段前，必须先读取目标位置预检：
    - `./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py target-runtime-contract --target-root <target_root> --docs-root <docs_root> [--development-docs-root <docs_root>] [--module-dir <logical_topic_id>] [--codebase-root <codebase_root>] [--graph-runtime-root <graph_runtime_root>] --json`
 3. 进入任一阶段前，必须先读取：
@@ -84,7 +84,7 @@ metadata:
   - `Skills/Meta-code-graph-base/scripts/meta_code_graph_base.py`
   - `Skills/Meta-RootFile-Manager/SKILL.md`
   - `Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py`
-  - `/home/jasontan656/.codex/skills/Dev-OctopusOS-Constitution-ProjectStructure/SKILL.md`
+  - `/home/jasontan656/.codex/skills/Dev-ProjectStructure-Constitution/SKILL.md`
 - 运行边界层：
   - `/home/jasontan656/AI_Projects/AGENTS.md`
   - `<docs_root>/AGENTS.md`（若存在）
@@ -92,7 +92,7 @@ metadata:
 ## 4. 适用域
 - 适用于：任何需要“开发文档驱动规划 -> 施工 -> evidence -> acceptance”闭环的软件开发任务。
 - 适用于：后端、前端、CLI、服务编排、自动化脚本、运行时 bring-up，以及其他需要任务包和 graph 持续复用的开发位置。
-- 不适用于：项目级结构治理本体；开发文档应落在哪里，应先由 `Dev-OctopusOS-Constitution-ProjectStructure` 判定。
+- 不适用于：项目级结构治理本体；开发文档应落在哪里，应先由 `Dev-ProjectStructure-Constitution` 判定。
 - `Meta-code-graph-base` 负责生成与更新图谱；本技能只消费图谱产物和上下文。
 
 ## 5. 执行入口

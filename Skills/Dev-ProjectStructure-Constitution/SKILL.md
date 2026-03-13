@@ -1,11 +1,11 @@
 ---
-name: Dev-OctopusOS-Constitution-ProjectStructure
+name: Dev-ProjectStructure-Constitution
 description: 治理整个章鱼OS项目的整体架构、项目结构与模块插拔定位，不负责具体域内实现细节。
 metadata:
   doc_structure:
-    doc_id: dev_octopusos_constitution_projectstructure.entry.facade
+    doc_id: dev_projectstructure_constitution.entry.facade
     doc_type: skill_facade
-    topic: Entry facade for the Dev-OctopusOS-Constitution-ProjectStructure skill
+    topic: Entry facade for the Dev-ProjectStructure-Constitution skill
     anchors:
     - target: ./references/runtime_contracts/SKILL_RUNTIME_CONTRACT_human.md
       relation: routes_to
@@ -13,10 +13,10 @@ metadata:
       reason: The facade routes runtime execution to the CLI-first contract.
 ---
 
-# Dev-OctopusOS-Constitution-ProjectStructure
+# Dev-ProjectStructure-Constitution
 
 ## Runtime Entry
-- Primary runtime entry: `./.venv_backend_skills/bin/python Skills/Dev-OctopusOS-Constitution-ProjectStructure/scripts/Cli_Toolbox.py contract --json`
+- Primary runtime entry: `./.venv_backend_skills/bin/python Skills/Dev-ProjectStructure-Constitution/scripts/Cli_Toolbox.py contract --json`
 - CLI JSON is the primary runtime source; `SKILL.md` only remains as a facade and routing narrative.
 
 
@@ -68,7 +68,7 @@ metadata:
 - `Meta-Architect-MindModel` 负责更高层的 architect-first 决策镜头；本技能负责把章鱼OS项目结构本身落成稳定的治理合同。
 
 ## 5. 执行入口
-- 先执行 `./.venv_backend_skills/bin/python Skills/Dev-OctopusOS-Constitution-ProjectStructure/scripts/Cli_Toolbox.py contract --json`。
+- 先执行 `./.venv_backend_skills/bin/python Skills/Dev-ProjectStructure-Constitution/scripts/Cli_Toolbox.py contract --json`。
 - 再按 `SKILL.md -> references/routing/TASK_ROUTING.md -> 对应 project_structure 原子文档` 深读。
 - 若未来新增 lint、目录规划检查或模块注册检查工具，必须同步更新 `references/runtime_contracts/` 与 `references/tooling/` 全套文档。
 
@@ -84,7 +84,7 @@ metadata:
 
 ## 7. 结构索引
 ```text
-Dev-OctopusOS-Constitution-ProjectStructure/
+Dev-ProjectStructure-Constitution/
 ├── SKILL.md
 ├── agents/
 │   └── openai.yaml

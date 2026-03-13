@@ -45,7 +45,7 @@ STAGES = {
         "graph_role": GRAPH_STAGE_ROLES["mother_doc"],
         "stage_entry_actions": [
             "run target-runtime-contract before reading or writing stage artifacts",
-            "confirm docs_root through Dev-OctopusOS-Constitution-ProjectStructure when the project has already fixed a custom development-doc container",
+            "confirm docs_root through Dev-ProjectStructure-Constitution when the project has already fixed a custom development-doc container",
             "if <docs_root>/mother_doc is missing, run target-scaffold",
             "read <docs_root>/mother_doc/00_index.md",
             "if numbered archived docs directories exist, inspect the latest archived sibling before drafting the new iteration",

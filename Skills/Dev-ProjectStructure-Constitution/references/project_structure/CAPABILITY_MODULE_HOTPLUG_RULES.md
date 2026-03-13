@@ -1,5 +1,5 @@
 ---
-doc_id: dev_octopusos_constitution_projectstructure.project_structure.capability_module_hotplug_contract
+doc_id: dev_projectstructure_constitution.project_structure.capability_module_hotplug_contract
 doc_type: topic_atom
 topic: Capability-module hot-plug contract for OctopusOS
 anchors:

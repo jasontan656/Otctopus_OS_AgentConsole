@@ -1,5 +1,5 @@
 ---
-doc_id: dev_octopusos_constitution_projectstructure.project_structure.octopus_os_target_folder_layout
+doc_id: dev_projectstructure_constitution.project_structure.octopus_os_target_folder_layout
 doc_type: topic_atom
 topic: Concrete target folder layout for the Octopus_OS repository
 anchors:

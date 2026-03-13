@@ -1,5 +1,5 @@
 ---
-doc_id: dev_octopusos_constitution_projectstructure.governance.doc_structure_policy
+doc_id: dev_projectstructure_constitution.governance.doc_structure_policy
 doc_type: topic_atom
 topic: Doc-structure policy for the OctopusOS project-structure constitution skill
 anchors:

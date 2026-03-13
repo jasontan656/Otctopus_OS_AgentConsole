@@ -1,7 +1,7 @@
 {
-  "contract_name": "dev_octopusos_constitution_projectstructure_runtime_contract",
+  "contract_name": "dev_projectstructure_constitution_runtime_contract",
   "contract_version": "3.1.0",
-  "skill_name": "Dev-OctopusOS-Constitution-ProjectStructure",
+  "skill_name": "Dev-ProjectStructure-Constitution",
   "runtime_source_policy": {
     "primary_runtime_source": "CLI_JSON",
     "human_markdown_role": "narrative_mirror",
@@ -10,7 +10,7 @@
   "tool_entry": {
     "script": "scripts/Cli_Toolbox.py",
     "commands": {
-      "contract": "./.venv_backend_skills/bin/python Skills/Dev-OctopusOS-Constitution-ProjectStructure/scripts/Cli_Toolbox.py contract --json"
+      "contract": "./.venv_backend_skills/bin/python Skills/Dev-ProjectStructure-Constitution/scripts/Cli_Toolbox.py contract --json"
     }
   },
   "must_use_sequence": [

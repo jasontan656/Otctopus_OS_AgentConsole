@@ -35,7 +35,7 @@ def _resolve_codex_home() -> Path:
 
 
 PROJECT_STRUCTURE_SKILL_PATH = (
-    _resolve_codex_home() / "skills" / "Dev-OctopusOS-Constitution-ProjectStructure" / "SKILL.md"
+    _resolve_codex_home() / "skills" / "Dev-ProjectStructure-Constitution" / "SKILL.md"
 )
 DEVELOPMENT_DOCS_DIRNAME = "Development_Docs"
 

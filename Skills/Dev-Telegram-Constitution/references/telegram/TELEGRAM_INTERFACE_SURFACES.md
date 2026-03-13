@@ -74,4 +74,4 @@ anchors:
 
 ## 例外与门禁
 - 若任务目标本质上是“复杂前端产品 UI”，必须联动 `Dev-VUE3-WebUI-Frontend`，本技能只负责 Telegram 容器边界。
-- 若任务开始讨论项目目录、模块归属、部署对象，必须切换到 `Dev-OctopusOS-Constitution-ProjectStructure`。
+- 若任务开始讨论项目目录、模块归属、部署对象，必须切换到 `Dev-ProjectStructure-Constitution`。

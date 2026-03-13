@@ -1,5 +1,5 @@
 ---
-doc_id: dev_octopusos_constitution_projectstructure.tooling.category_index
+doc_id: dev_projectstructure_constitution.tooling.category_index
 doc_type: index_doc
 topic: Category index for future tooling of the OctopusOS project-structure constitution skill
 anchors:

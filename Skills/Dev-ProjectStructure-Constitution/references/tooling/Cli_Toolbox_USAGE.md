@@ -1,5 +1,5 @@
 ---
-doc_id: dev_octopusos_constitution_projectstructure.tooling.toolbox_usage
+doc_id: dev_projectstructure_constitution.tooling.toolbox_usage
 doc_type: topic_atom
 topic: Tooling usage status for the OctopusOS project-structure constitution skill
 anchors:
@@ -15,7 +15,7 @@ anchors:
 - 本技能当前提供静态 `scripts/Cli_Toolbox.py`。
 - 当前唯一命令是 `contract`，用途是输出 runtime contract JSON，供模型在深读治理文档前先获得统一入口和命名宪法。
 - 当前读取顺序固定为：
-  - `./.venv_backend_skills/bin/python Skills/Dev-OctopusOS-Constitution-ProjectStructure/scripts/Cli_Toolbox.py contract --json`
+  - `./.venv_backend_skills/bin/python Skills/Dev-ProjectStructure-Constitution/scripts/Cli_Toolbox.py contract --json`
   - `SKILL.md`
   - `references/routing/TASK_ROUTING.md`
   - 对应 `references/project_structure/*`

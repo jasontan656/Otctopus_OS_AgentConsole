@@ -1,5 +1,5 @@
 ---
-doc_id: dev_octopusos_constitution_projectstructure.routing.task_routing
+doc_id: dev_projectstructure_constitution.routing.task_routing
 doc_type: routing_doc
 topic: Route readers by OctopusOS project-structure task intent
 anchors:

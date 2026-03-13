@@ -68,7 +68,7 @@ metadata:
 - 适用于：判断一个 Telegram 需求必须落在 Bot 消息流、Inline Keyboard、Reply Keyboard、Mini App、LoginUrl 或后台异步通知中的哪一种交互面。
 - 适用于：管理 Python、TypeScript 或前端实现的当前已裁决栈与待裁决候选集。
 - 不适用于：具体前端组件实现与视觉规范，这部分归 `Dev-VUE3-WebUI-Frontend`。
-- 不适用于：项目级目录、部署对象、模块定位与系统结构，这部分归 `Dev-OctopusOS-Constitution-ProjectStructure`。
+- 不适用于：项目级目录、部署对象、模块定位与系统结构，这部分归 `Dev-ProjectStructure-Constitution`。
 - 不适用于：Python 代码落地、lint 与具体实现细则，这部分归 `Dev-PythonCode-Constitution`。
 
 ## 5. 执行入口

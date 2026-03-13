@@ -1,4 +1,0 @@
-interface:
-  display_name: Dev-OctopusOS-Constitution-ProjectStructure
-  short_description: Project-level governance skill for OctopusOS architecture, project structure, module positioning, and hot-plug boundaries.
-  default_prompt: Use $Dev-OctopusOS-Constitution-ProjectStructure. First run `./.venv_backend_skills/bin/python Skills/Dev-OctopusOS-Constitution-ProjectStructure/scripts/Cli_Toolbox.py contract --json`. Treat CLI JSON as the primary runtime source and use markdown mirrors only when the contract still leaves a real gap.

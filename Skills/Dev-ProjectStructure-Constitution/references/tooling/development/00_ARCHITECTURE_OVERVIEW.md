@@ -1,5 +1,5 @@
 ---
-doc_id: dev_octopusos_constitution_projectstructure.tooling.architecture_overview
+doc_id: dev_projectstructure_constitution.tooling.architecture_overview
 doc_type: topic_atom
 topic: Tooling architecture overview for the OctopusOS project-structure constitution skill
 anchors:

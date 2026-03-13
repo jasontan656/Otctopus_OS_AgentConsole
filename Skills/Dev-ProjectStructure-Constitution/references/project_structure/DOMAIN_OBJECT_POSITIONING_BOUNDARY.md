@@ -1,5 +1,5 @@
 ---
-doc_id: dev_octopusos_constitution_projectstructure.project_structure.domain_object_positioning_boundary
+doc_id: dev_projectstructure_constitution.project_structure.domain_object_positioning_boundary
 doc_type: topic_atom
 topic: Project-level positioning boundary for domain objects inside OctopusOS
 anchors:

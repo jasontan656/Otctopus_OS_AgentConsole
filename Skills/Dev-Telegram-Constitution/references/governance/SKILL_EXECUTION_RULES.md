@@ -32,7 +32,7 @@ anchors:
 - 若任务开始进入具体语言实现，必须切到对应 domain skill：
   - Python -> `Dev-PythonCode-Constitution`
   - 前端 UI -> `Dev-VUE3-WebUI-Frontend`
-  - 项目结构 -> `Dev-OctopusOS-Constitution-ProjectStructure`
+  - 项目结构 -> `Dev-ProjectStructure-Constitution`
 
 ## 例外与门禁
 - 若问题本质上是“写代码”而不是“定 Telegram 规范”，本技能只能先给边界，再路由到实现技能。

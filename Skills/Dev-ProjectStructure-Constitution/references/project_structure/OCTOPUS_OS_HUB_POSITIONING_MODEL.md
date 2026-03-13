@@ -1,5 +1,5 @@
 ---
-doc_id: dev_octopusos_constitution_projectstructure.project_structure.hub_positioning_model
+doc_id: dev_projectstructure_constitution.project_structure.hub_positioning_model
 doc_type: topic_atom
 topic: System-level hub positioning model of OctopusOS
 anchors:

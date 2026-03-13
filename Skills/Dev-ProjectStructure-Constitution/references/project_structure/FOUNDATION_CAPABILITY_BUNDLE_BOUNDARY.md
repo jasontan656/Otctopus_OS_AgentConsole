@@ -1,5 +1,5 @@
 ---
-doc_id: dev_octopusos_constitution_projectstructure.project_structure.foundation_capability_bundle_boundary
+doc_id: dev_projectstructure_constitution.project_structure.foundation_capability_bundle_boundary
 doc_type: topic_atom
 topic: Boundary of the always-on foundation capability bundle in OctopusOS
 anchors:

@@ -28,13 +28,13 @@ anchors:
 - `references/tooling/SKILL_TOOLING_EXECUTION_PLAYBOOK.md`
 - `/home/jasontan656/AI_Projects/AGENTS.md`
 - `<docs_root>/AGENTS.md`（若存在）
-- `/home/jasontan656/.codex/skills/Dev-OctopusOS-Constitution-ProjectStructure/SKILL.md`（当 `docs_root` 尚未固定时）
+- `/home/jasontan656/.codex/skills/Dev-ProjectStructure-Constitution/SKILL.md`（当 `docs_root` 尚未固定时）
 5. 每个阶段只能做本阶段的事，禁止跨阶段混写；进入新阶段前必须先读取 `stage-checklist --stage <current_stage>`。
 5.1 在进入任一阶段前，必须先运行 `target-runtime-contract`，确认当前 `target_root` 只是 `AI_Projects` 内的 repo/workspace 根边界，并以 `docs_root / mother_doc_root / execution_atom_plan_validation_packs / graph_runtime_root` 解析实际工作目标。
 5.2 当前代码对象自己的 `docs_root` 必须先存在；不存在时，本技能必须拒绝服务，不得私自创建主题容器。
 5.2.0 仅完成项目结构初始化时，`Development_Docs/` 本身允许为空；但一旦进入本技能的开发闭环，`docs_root` 必须已经是当前代码对象真实存在的开发文档根，而不是再重复下一层对象目录。
 5.2.1 `target_root` 还必须位于 `AI_Projects` workspace 内；否则 `$Meta-RootFile-Manager` 无法收治模块 `AGENTS.md`，本技能必须拒绝服务。
-5.3 若目标项目已经固定开发文档容器，必须按 `Dev-OctopusOS-Constitution-ProjectStructure` 的判定使用该容器；不得自行改投到另一个 `docs/` 或 sibling 目录。
+5.3 若目标项目已经固定开发文档容器，必须按 `Dev-ProjectStructure-Constitution` 的判定使用该容器；不得自行改投到另一个 `docs/` 或 sibling 目录。
 5.4 若目标模块文件夹中已经存在 `execution_atom_plan_validation_packs/`、`pack_registry.yaml`、编号归档 `NN_slug` 或既有 graph，必须先判定它们的生命周期与合法性；不得把 `preview_skeleton` 或 `accepted/retired` 的旧 official plan 当成当前轮 construction input 复用，也不得为同一目标另外创建脱节的母文档、pack 树或图谱脉络。
 5.5 目标模块的 `AGENTS.md` 必须使用本技能模版创建，并在创建后立即通过 `$Meta-RootFile-Manager collect` 收治；不得在未受管状态下长期存在。
 6. 阶段切换时只允许保留顶层常驻文档；上一阶段的 checklist、阶段文档、临时 focus、模板填写上下文必须显式丢弃，除非当前阶段合同明确要求重新读取。
@@ -47,7 +47,7 @@ anchors:
 7.2 发现范围固定限制为：当前 `target_root` 边界、已判定的 `docs_root`、`mother_doc/`、当前 `codebase_root`、必要 skill 文件与必要 graph 文件。
 7.3 若启动 cwd 恰好是 `/home/jasontan656/AI_Projects`，它只是容器根/钩子根，不得被视为 discoverable repo。
 7.4 禁止为了找上下文扫描整个 `/home/jasontan656/AI_Projects`，也不得读取 `Human_Work_Zone`、`GoogleDriveDump` 等 sibling 区域，除非 mother doc 显式引用。
-7.5 极简 prompt 启动时，第一批动作必须固定为：先运行 `target-runtime-contract`；必要时读取 `Dev-OctopusOS-Constitution-ProjectStructure` 以确认模块文档容器；若模块容器可用但骨架未齐，先运行 `target-scaffold`；再读取当前 `mother_doc/00_index.md`；若已存在编号归档的 `NN_slug`，先读取最新一轮归档；若已存在任务包，先读取并复用当前任务包；运行 `mother-doc-lint`；在 `mother_doc` 阶段若已有图谱必须读取它来校准现有代码现实；不得先用 `rg/find/ls` 在 workspace 根盲扫需求或仓库。
+7.5 极简 prompt 启动时，第一批动作必须固定为：先运行 `target-runtime-contract`；必要时读取 `Dev-ProjectStructure-Constitution` 以确认模块文档容器；若模块容器可用但骨架未齐，先运行 `target-scaffold`；再读取当前 `mother_doc/00_index.md`；若已存在编号归档的 `NN_slug`，先读取最新一轮归档；若已存在任务包，先读取并复用当前任务包；运行 `mother-doc-lint`；在 `mother_doc` 阶段若已有图谱必须读取它来校准现有代码现实；不得先用 `rg/find/ls` 在 workspace 根盲扫需求或仓库。
 6. `baseline_mode` 必须显式判定：
 - `empty_baseline`
 - `real_codebase`

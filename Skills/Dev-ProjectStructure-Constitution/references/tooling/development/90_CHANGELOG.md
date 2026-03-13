@@ -1,5 +1,5 @@
 ---
-doc_id: dev_octopusos_constitution_projectstructure.tooling.changelog
+doc_id: dev_projectstructure_constitution.tooling.changelog
 doc_type: index_doc
 topic: Tooling changelog for the OctopusOS project-structure constitution skill
 anchors:

@@ -1,5 +1,5 @@
 ---
-doc_id: dev_octopusos_constitution_projectstructure.project_structure.folder_container_planning_rules
+doc_id: dev_projectstructure_constitution.project_structure.folder_container_planning_rules
 doc_type: topic_atom
 topic: Folder and deployment-container planning rules for OctopusOS
 anchors:

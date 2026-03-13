@@ -1,5 +1,5 @@
 ---
-doc_id: dev_octopusos_constitution_projectstructure.governance.execution_rules
+doc_id: dev_projectstructure_constitution.governance.execution_rules
 doc_type: topic_atom
 topic: Execution rules for OctopusOS project-structure governance
 anchors:

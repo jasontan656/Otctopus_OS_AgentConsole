@@ -46,7 +46,7 @@ anchors:
   - 当前模块 `mother_doc`
   - 当前 `codebase_root`
   - 当前技能文件与必要图谱技能入口
-- 若项目尚未固定开发文档容器，必须先读取 `Dev-OctopusOS-Constitution-ProjectStructure`，确认应把开发文档落在哪个容器。
+- 若项目尚未固定开发文档容器，必须先读取 `Dev-ProjectStructure-Constitution`，确认应把开发文档落在哪个容器。
 - `docs_root` 在本合同里始终表示“当前代码对象唯一受管的 `Development_Docs/` 根”。
 - `development_docs_root` 在本合同里与 `docs_root` 指向同一物理目录，只作为 CLI/runtime 元数据保留。
 - `module_dir` 在本合同里只保留为可选逻辑主题标识，不参与物理路径拼接。
@@ -72,7 +72,7 @@ anchors:
   - `references/tooling/SKILL_TOOLING_EXECUTION_PLAYBOOK.md`
   - `/home/jasontan656/AI_Projects/AGENTS.md`
   - `<docs_root>/AGENTS.md`（若存在）
-  - `Dev-OctopusOS-Constitution-ProjectStructure/SKILL.md`（当 `docs_root` 尚未固定时）
+  - `Dev-ProjectStructure-Constitution/SKILL.md`（当 `docs_root` 尚未固定时）
 
 ## 1.3 Phase Read Policy
 - 单阶段执行时，只读取当前阶段 checklist 与当前阶段直接需要的文档/模板。

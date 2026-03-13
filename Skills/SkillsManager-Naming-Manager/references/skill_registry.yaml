@@ -145,8 +145,8 @@ families:
   - family: "[DEV]"
     description: "开发与工程约束相关的技能集合。"
     members:
-      - canonical_id: "Dev-OctopusOS-Constitution-ProjectStructure"
-        display_name: "Dev-OctopusOS-Constitution-ProjectStructure"
+      - canonical_id: "Dev-ProjectStructure-Constitution"
+        display_name: "Dev-ProjectStructure-Constitution"
         prefix: "Dev"
         family: "[DEV]"
         role_tag: "project-structure-governance"

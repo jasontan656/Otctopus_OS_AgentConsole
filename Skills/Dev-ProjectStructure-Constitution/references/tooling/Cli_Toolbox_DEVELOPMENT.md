@@ -1,5 +1,5 @@
 ---
-doc_id: dev_octopusos_constitution_projectstructure.tooling.toolbox_development
+doc_id: dev_projectstructure_constitution.tooling.toolbox_development
 doc_type: topic_atom
 topic: Tooling development status for the OctopusOS project-structure constitution skill
 anchors:

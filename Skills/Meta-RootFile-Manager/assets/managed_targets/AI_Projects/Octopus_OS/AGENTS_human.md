@@ -31,7 +31,7 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `Octopus_OS` repository root contain
   },
   "default_meta_skill_order": [
     "$meta-github-operation (Git traceability for Octopus_OS writes)",
-    "$Dev-OctopusOS-Constitution-ProjectStructure (Octopus_OS structure governance)",
+    "$Dev-ProjectStructure-Constitution (Octopus_OS structure governance)",
     "$Dev-PythonCode-Constitution (non-frontend Python governance)",
     "$Meta-RootFile-Manager (AGENTS governance mapping flow)"
   ],
