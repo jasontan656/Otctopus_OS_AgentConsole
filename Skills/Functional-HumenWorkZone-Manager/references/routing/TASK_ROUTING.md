@@ -31,6 +31,10 @@ anchors:
   relation: routes_to
   direction: downstream
   reason: Temporary project management is a fifth stable branch of this skill.
+- target: ../runtime/COMPANY_DOCUMENTS_ZONE_POLICY.md
+  relation: routes_to
+  direction: downstream
+  reason: Company and document management is a sixth stable branch of this skill.
 ---
 
 # Task Routing
@@ -115,3 +119,17 @@ anchors:
 
 ## 分支二十二：核对临时项目命名
 - 当任务需要决定临时项目目录名，或判断是否保留现有项目名时，先读 `../runtime/TEMP_PROJECT_NAMING_RULE.md`。
+
+## 分支二十三：管理公司&文档集中区
+- 当任务涉及公司资料、公司文档、公司图片视频或以公司名命名的资料目录时，先读 `../runtime/COMPANY_DOCUMENTS_ZONE_POLICY.md`。
+- 该分支负责公司资料承载目录、统一命名和中央 README 导航。
+
+## 分支二十四：执行公司资料迁移与收纳
+- 当任务涉及把公司目录从其他地方迁入 `Human_Work_Zone` 时，先读 `../runtime/ORGANIZE_COMPANY_DOCUMENTS_FLOW.md`。
+- 该分支负责整目录迁移、必要重命名和迁入后的第一轮登记。
+
+## 分支二十五：维护公司清单 README
+- 当任务涉及补公司清单、更新公司说明或调整状态时，先读 `../runtime/COMPANY_DOCUMENTS_README_MAINTENANCE_FLOW.md`。
+
+## 分支二十六：核对公司目录命名
+- 当任务需要决定公司目录名，或判断某个目录是否符合统一公司命名规则时，先读 `../runtime/COMPANY_FOLDER_NAMING_RULE.md`。

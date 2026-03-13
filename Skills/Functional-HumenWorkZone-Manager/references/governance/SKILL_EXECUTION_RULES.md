@@ -31,6 +31,10 @@ anchors:
   relation: routes_to
   direction: downstream
   reason: Temporary project handling needs a dedicated governed branch.
+- target: ../runtime/COMPANY_DOCUMENTS_ZONE_POLICY.md
+  relation: routes_to
+  direction: downstream
+  reason: Company-document handling needs a dedicated governed branch.
 ---
 
 # Skill Execution Rules
@@ -46,11 +50,13 @@ anchors:
 - `Human_Work_Zone/Open_Source_Project_Analysis` 是开源项目分析集中区。
 - `Human_Work_Zone/Books_and_Readings` 是书籍与阅读物集中管理区。
 - `Human_Work_Zone/Temporary_Projects` 是临时项目集中管理区。
+- `Human_Work_Zone/Company_Documents` 是公司&文档集中管理区。
 - 开源项目相关动作必须优先落到集中管理区规则，不再把“开源 repo 随手散放”视为目标形态。
 - 备份相关动作必须优先落到备份区规则，不再把“随手复制一份放任意位置”视为目标形态。
 - 开源项目分析相关动作必须优先落到分析区规则，不再把“只在对话里说答案、不留上下文和证据”视为目标形态。
 - 书籍与阅读物相关动作必须优先落到书籍区规则，不再把“零散散放在学习目录里”视为目标形态。
 - 临时项目相关动作必须优先落到临时项目区规则，不再把“先丢在 workspace 根层，之后再说”视为目标形态。
+- 公司资料相关动作必须优先落到公司文档区规则，不再把“分散放在 GoogleDriveDump 或根层某个旧文件夹里”视为目标形态。
 
 ## 局部规则
 - 若用户明确点名 `Functional-HumenWorkZone-Manager`，默认不要越过 `Human_Work_Zone` 去操作其他目录。
@@ -78,6 +84,11 @@ anchors:
   - 项目目录名是否符合临时项目命名规则
   - `Temporary_Projects/README.md` 是否已经追加条目
   - 条目是否写清基础作用、项目 README 链接和当前状态
+- 若任务涉及公司资料，至少要同步考虑：
+  - 是否迁入了 `Company_Documents`
+  - 公司目录名是否符合统一命名规则
+  - `Company_Documents/README.md` 是否已经追加条目
+  - 条目是否写清公司名、目录路径、资料作用和当前状态
 - 现有散落在 `Human_Work_Zone` 根层的开源 repo 视为 legacy placement；先纳入 inventory，再决定是否显式迁移。
 
 ## 例外与门禁
@@ -88,6 +99,7 @@ anchors:
 - 若用户针对开源项目提问，默认需要把答案沉淀成可追溯报告，而不是只在当轮对话给一句结论。
 - 若用户要求整理书籍或阅读物，默认允许批量迁移和重命名，但应保持内容本体不变。
 - 若用户要求收纳某个临时项目，默认允许整体迁移到 `Temporary_Projects`；除非用户明确要求，不自动删减内部内容。
+- 若用户要求收纳公司资料，默认允许整体迁移到 `Company_Documents`；这一步只做收纳和命名，不提前替代未来的公司专属管理技能。
 
 ## 下沉执行文档
 - 开源项目集中区规则：`../runtime/OPEN_SOURCE_PROJECTS_ZONE_POLICY.md`
@@ -110,3 +122,7 @@ anchors:
 - 临时项目迁移流程：`../runtime/ORGANIZE_TEMPORARY_PROJECT_FLOW.md`
 - 临时项目清单维护流程：`../runtime/TEMP_PROJECT_README_MAINTENANCE_FLOW.md`
 - 临时项目命名规则：`../runtime/TEMP_PROJECT_NAMING_RULE.md`
+- 公司文档区规则：`../runtime/COMPANY_DOCUMENTS_ZONE_POLICY.md`
+- 公司资料迁移流程：`../runtime/ORGANIZE_COMPANY_DOCUMENTS_FLOW.md`
+- 公司清单维护流程：`../runtime/COMPANY_DOCUMENTS_README_MAINTENANCE_FLOW.md`
+- 公司目录命名规则：`../runtime/COMPANY_FOLDER_NAMING_RULE.md`
