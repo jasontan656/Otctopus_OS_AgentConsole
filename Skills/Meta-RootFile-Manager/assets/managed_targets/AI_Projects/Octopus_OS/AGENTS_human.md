@@ -37,17 +37,9 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `Octopus_OS` repository root contain
   ],
   "turn_start_actions": [
     "load the returned target-contract JSON before following Octopus_OS local runtime rules",
-    "classify the turn as READ_EXEC or WRITE_EXEC",
-    "if the turn is not read-only, plan same-turn Git traceability from the start",
-    "if the task changes Octopus_OS structure, route through the active structure governance before editing",
-    "if the task changes Python code outside frontend work, route through the active Python governance before editing",
-    "if the task governs this AGENTS.md, use the governed collect/push flow instead of directly editing the external file"
+    "classify the turn as READ_EXEC or WRITE_EXEC"
   ],
   "runtime_constraints": [
-    "any non-read-only change in Octopus_OS must leave same-turn Git traceability",
-    "Octopus_OS structure governance must keep artifact shape plus structure-side descriptions or registrations bidirectionally synchronized",
-    "all non-frontend code work must obey the active Python governance for this repo",
-    "this AGENTS.md is governed and must not be directly edited as an external file",
     "treat CLI JSON as the primary runtime rule source"
   ],
   "execution_modes": {
@@ -61,28 +53,18 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `Octopus_OS` repository root contain
     "WRITE_EXEC": {
       "goal": "change Octopus_OS artifacts under governed runtime rules",
       "default_actions": [
-        "complete same-turn commit-and-push traceability when Octopus_OS is written",
-        "keep structure-level changes synchronized with product artifacts plus structure-side registrations",
-        "apply the repo's non-frontend Python governance before Python edits",
-        "when governing this AGENTS.md, finish the collect/push loop"
+        "edit the minimal correct scope that matches the user intent"
       ]
     }
   },
   "repo_local_contract_handoff": [
-    "for structure-level planning, load the current structure governance contract before editing",
-    "for Python code work outside frontend, load the current Python governance contract before editing",
-    "for AGENTS governance, keep the internal managed pair and the external AGENTS.md synchronized through the governed mapping flow"
+    "when another governed sub-container becomes active, load its local contract before following sub-container-specific rules"
   ],
   "forbidden_primary_runtime_pattern": [
-    "Do not directly edit the external Octopus_OS/AGENTS.md without going through Meta-RootFile-Manager.",
-    "Do not perform write changes in Octopus_OS without same-turn Git traceability.",
-    "Do not change Octopus_OS structure while leaving the project-structure skill descriptions or registrations stale."
+    "Do not treat audit markdown paths as the main runtime instructions.",
+    "Do not bypass the returned target-contract JSON when local runtime rules are required."
   ],
-  "turn_end_actions": [
-    "if the turn changed Octopus_OS, complete same-turn commit-and-push traceability",
-    "if the turn changed Octopus_OS structure, confirm the product artifact shape and the structure-side descriptions or registrations were updated together",
-    "if the turn governed this AGENTS.md, complete the governed collect/push loop before closing"
-  ],
+  "turn_end_actions": [],
   "repo_name": "Octopus_OS"
 }
 ```

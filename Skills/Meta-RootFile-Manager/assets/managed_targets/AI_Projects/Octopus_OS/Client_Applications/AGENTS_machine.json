@@ -12,42 +12,32 @@
   ],
   "turn_start_actions": [
     "load the returned target-contract JSON before following Client_Applications local runtime rules",
-    "classify the turn as READ_EXEC or WRITE_EXEC",
-    "if the task enters frontend development under Client_Applications, use the active frontend governance standard",
-    "if the task governs this AGENTS.md, use the governed collect/push flow instead of directly editing the external file"
+    "classify the turn as READ_EXEC or WRITE_EXEC"
   ],
   "runtime_constraints": [
-    "Client_Applications frontend work must follow the active frontend governance standard",
-    "this AGENTS.md is governed and must not be directly edited as an external file",
     "treat CLI JSON as the primary runtime rule source"
   ],
   "execution_modes": {
     "READ_EXEC": {
       "goal": "inspect or answer without changing Client_Applications files",
       "default_actions": [
-        "prefer the target-contract JSON as the primary runtime entry",
-        "load the active frontend governance only when the task enters actual frontend work"
+        "prefer the target-contract JSON as the primary runtime entry"
       ]
     },
     "WRITE_EXEC": {
       "goal": "change Client_Applications artifacts under governed frontend rules",
       "default_actions": [
-        "use the active frontend governance as the mandatory development standard",
-        "when governing this AGENTS.md, finish the collect/push loop"
+        "edit the minimal correct scope that matches the user intent"
       ]
     }
   },
   "repo_local_contract_handoff": [
-    "for frontend development under Client_Applications, load and follow the active frontend governance before editing",
-    "for AGENTS governance, keep the internal managed pair and the external AGENTS.md synchronized through the governed mapping flow"
+    "when another governed sub-container becomes active, load its local contract before following sub-container-specific rules"
   ],
   "forbidden_primary_runtime_pattern": [
-    "Do not perform Client_Applications frontend work while ignoring the active frontend governance.",
-    "Do not directly edit the external Client_Applications/AGENTS.md outside the governed mapping flow."
+    "Do not treat audit markdown paths as the main runtime instructions.",
+    "Do not bypass the returned target-contract JSON when local runtime rules are required."
   ],
-  "turn_end_actions": [
-    "if the turn changed Client_Applications frontend artifacts, confirm the active frontend governance was used as the governing standard",
-    "if the turn governed this AGENTS.md, complete the governed collect/push loop before closing"
-  ],
+  "turn_end_actions": [],
   "repo_name": "Octopus_OS"
 }

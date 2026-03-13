@@ -83,7 +83,8 @@ anchors:
 - free-form human entry prose that belongs in `Part A`
 - duplicated copies of the direct human entry instructions unless they are intentionally normalized into payload fields
 - content that should only exist as a shell command or a plain-language entry note
-- repeating any skill name from `default_meta_skill_order` inside other action-oriented payload fields just to restate the same routing or obligation
+- repeating any skill name from `default_meta_skill_order` inside other action-oriented payload fields
+- paraphrasing the same skill-scoped routing or obligation in other payload fields after it has already been recorded in `default_meta_skill_order`
 
 ## Adjacent Contract References
 - `scan` semantics are defined in `references/runtime_contracts/SCAN_STAGE_CONTRACT.md`.
