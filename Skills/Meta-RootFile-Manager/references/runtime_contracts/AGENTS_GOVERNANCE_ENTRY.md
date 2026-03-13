@@ -49,3 +49,4 @@ anchors:
   - if parent `AGENTS.md` or parent payload already contains a phrase-equivalent semantic, child `AGENTS` surfaces must not repeat it
   - the check applies across `Part A` and payload in both directions
   - skill entries are excluded from this parent-child duplicate gate because the same skill may appear in different containers for different purposes
+  - the fixed `execution_modes.WRITE_EXEC` standard reminder is also excluded because it is intentionally repeated across governed payloads

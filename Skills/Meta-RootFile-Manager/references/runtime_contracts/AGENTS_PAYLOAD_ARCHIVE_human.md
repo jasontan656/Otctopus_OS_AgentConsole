@@ -87,12 +87,9 @@ Human mirror for `AGENTS_PAYLOAD_ARCHIVE.json`.
         ]
       },
       "WRITE_EXEC": {
-        "goal": "edit files or trigger manager-owned write flows",
+        "goal": "default to full-coverage edits for the intended change",
         "default_actions": [
-          "apply the default meta sequence before editing",
-          "state the intended write scope before editing",
-          "edit the minimal correct scope that matches the user intent",
-          "do not trigger Git automation unless the active repo-local contract or the user explicitly requires it"
+          "Default to full-coverage edits, proactively explore to avoid omissions, and use the meta skill stack to strengthen the result."
         ]
       }
     },
@@ -151,13 +148,9 @@ Human mirror for `AGENTS_PAYLOAD_ARCHIVE.json`.
           ]
         },
         "WRITE_EXEC": {
-          "goal": "edit files or trigger manager-owned write flows",
+          "goal": "default to full-coverage edits for the intended change",
           "default_actions": [
-            "apply the default meta sequence before editing",
-            "state the intended write scope before editing",
-            "edit the minimal correct scope that matches the user intent",
-            "run repo-specific lint or delivery duties before closing the turn when required",
-            "complete repo-specific Git traceability duties in the same turn when required"
+            "Default to full-coverage edits, proactively explore to avoid omissions, and use the meta skill stack to strengthen the result."
           ]
         }
       },
@@ -215,15 +208,9 @@ Human mirror for `AGENTS_PAYLOAD_ARCHIVE.json`.
           ]
         },
         "WRITE_EXEC": {
-          "goal": "edit files or trigger manager-owned write flows",
+          "goal": "default to full-coverage edits for the intended change",
           "default_actions": [
-            "apply the default meta sequence before editing",
-            "state the intended write scope before editing",
-            "edit the minimal correct scope that matches the user intent",
-            "for skill edits, write only the mirror copy under Codex_Skills_Mirror and do not directly edit the codex installed copy",
-            "after skill edits, run SkillsManager-Mirror-To-Codex Push for existing installed skills or Install for newly created skills",
-            "run Constitution lint on Codex_Skills_Mirror before closing the turn",
-            "complete same-turn commit-and-push when Codex_Skills_Mirror files are written"
+            "Default to full-coverage edits, proactively explore to avoid omissions, and use the meta skill stack to strengthen the result."
           ]
         }
       },

@@ -84,11 +84,9 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `AI_Projects` workspace root 的 run
       ]
     },
     "WRITE_EXEC": {
-      "goal": "edit files or trigger manager-owned write flows",
+      "goal": "default to full-coverage edits for the intended change",
       "default_actions": [
-        "apply the default meta sequence before editing",
-        "state the intended write scope before editing",
-        "edit the minimal correct scope that matches the user intent"
+        "Default to full-coverage edits, proactively explore to avoid omissions, and use the meta skill stack to strengthen the result."
       ]
     }
   },

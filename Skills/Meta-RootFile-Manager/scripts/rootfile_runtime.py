@@ -35,6 +35,15 @@ PARENT_DUPLICATE_MIN_TOKEN_WINDOW = 4
 PARENT_DUPLICATE_MIN_EXACT_CHARS = 18
 PARENT_DUPLICATE_EXCLUDED_PAYLOAD_KEYS = {"owner", "entry_role", "repo_name", "default_meta_skill_order"}
 PARENT_DUPLICATE_EXCLUDED_PAYLOAD_PREFIXES = ("$.governed_container", "$.workflow_roots")
+STANDARD_WRITE_EXEC_GOAL = "default to full-coverage edits for the intended change"
+STANDARD_WRITE_EXEC_ACTION = (
+    "Default to full-coverage edits, proactively explore to avoid omissions, "
+    "and use the meta skill stack to strengthen the result."
+)
+PARENT_DUPLICATE_ALLOWED_NORMALIZED_STRINGS = {
+    " ".join(TEXT_TOKEN_PATTERN.findall(_text)).lower()
+    for _text in (STANDARD_WRITE_EXEC_GOAL, STANDARD_WRITE_EXEC_ACTION)
+}
 
 
 @dataclass(frozen=True)
@@ -690,6 +699,25 @@ def _validate_default_meta_skill_uniqueness(payload: object) -> list[str]:
     return errors
 
 
+def _validate_standard_write_exec(payload: object) -> list[str]:
+    if not isinstance(payload, dict):
+        return []
+    execution_modes = payload.get("execution_modes")
+    if not isinstance(execution_modes, dict):
+        return []
+    write_exec = execution_modes.get("WRITE_EXEC")
+    if not isinstance(write_exec, dict):
+        return []
+
+    errors: list[str] = []
+    if write_exec.get("goal") != STANDARD_WRITE_EXEC_GOAL:
+        errors.append("write_exec_goal_must_match_standard")
+    default_actions = write_exec.get("default_actions")
+    if default_actions != [STANDARD_WRITE_EXEC_ACTION]:
+        errors.append("write_exec_default_actions_must_match_standard")
+    return errors
+
+
 def _normalize_duplicate_text(text: str) -> str:
     without_skills = SKILL_TOKEN_PATTERN.sub(" ", text)
     lowered = without_skills.lower()
@@ -735,6 +763,11 @@ def _duplicate_phrase(child_text: str, parent_text: str) -> str | None:
     parent_normalized = _normalize_duplicate_text(parent_text)
     if not child_normalized or not parent_normalized:
         return None
+    if (
+        child_normalized in PARENT_DUPLICATE_ALLOWED_NORMALIZED_STRINGS
+        and parent_normalized == child_normalized
+    ):
+        return None
     if child_normalized == parent_normalized and len(child_normalized) >= PARENT_DUPLICATE_MIN_EXACT_CHARS:
         return child_normalized
 
@@ -750,6 +783,17 @@ def _duplicate_phrase(child_text: str, parent_text: str) -> str | None:
             if window in parent_windows:
                 return " ".join(window)
     return None
+
+
+def _is_allowed_standard_write_exec_surface(path: str, text: str) -> bool:
+    if not path.startswith("$.execution_modes.WRITE_EXEC."):
+        return False
+    normalized = _normalize_duplicate_text(text)
+    if normalized in PARENT_DUPLICATE_ALLOWED_NORMALIZED_STRINGS:
+        return True
+    if normalized.startswith(_normalize_duplicate_text(STANDARD_WRITE_EXEC_GOAL)):
+        return True
+    return False
 
 
 def _iter_part_a_strings(text: str) -> Iterable[tuple[str, str]]:
@@ -830,6 +874,8 @@ def _validate_parent_agents_duplicates(
     parent_relative = _relative_source_key(paths, parent_source_path)
     for child_path, child_text in child_strings:
         for parent_path, parent_text in parent_strings:
+            if _is_allowed_standard_write_exec_surface(child_path, child_text) and _is_allowed_standard_write_exec_surface(parent_path, parent_text):
+                continue
             phrase = _duplicate_phrase(child_text, parent_text)
             if phrase is None:
                 continue
@@ -884,6 +930,7 @@ def validate_internal_human_agents(
         errors.extend(_validate_payload_value(payload, payload_schema, "$"))
     if payload is not None:
         errors.extend(_validate_default_meta_skill_uniqueness(payload))
+        errors.extend(_validate_standard_write_exec(payload))
     errors.extend(validate_markdown_owner(text, expected_owner))
     return errors
 
@@ -906,6 +953,7 @@ def validate_machine_json(
     if payload.get("owner") != expected_owner:
         return ["owner_field_mismatch"]
     errors = _validate_default_meta_skill_uniqueness(payload)
+    errors.extend(_validate_standard_write_exec(payload))
     if payload_schema is None:
         return errors
     errors.extend(_validate_payload_value(payload, payload_schema, "$"))

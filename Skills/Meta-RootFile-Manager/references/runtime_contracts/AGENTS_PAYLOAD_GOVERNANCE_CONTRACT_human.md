@@ -27,3 +27,7 @@ anchors:
 - Do not treat oral wording as permission to expand hidden intent.
 - If the intended shape is still unclear after normalization, inspect sibling payload entries for style only; do not invent new semantics.
 - If a skill name plus minimal description is already recorded in `default_meta_skill_order`, do not repeat or paraphrase that reminder in other payload fields.
+- For any payload that carries `execution_modes.WRITE_EXEC`, keep the standard fixed block:
+  - `goal`: `default to full-coverage edits for the intended change`
+  - `default_actions`: `["Default to full-coverage edits, proactively explore to avoid omissions, and use the meta skill stack to strengthen the result."]`
+  - This repeated reminder is intentional and is exempt from the parent-child duplicate gate.

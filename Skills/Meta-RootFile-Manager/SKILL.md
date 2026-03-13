@@ -85,6 +85,7 @@ metadata:
   - 说明：治理 `AGENTS_machine.json` payload 的专用入口合同。
   - 强制工作流：`$Meta-Enhance-Prompt 提取用户意图 -> 压缩为最小精确语义 -> 回写 AGENTS_machine.json -> collect 重渲染 AGENTS_human.md -> lint`
   - 强门禁：上一级 `AGENTS.md` 与其 payload 已出现的语义，不得在下一级 `AGENTS` surface 中重复；`lint` 必须拦截这类父子重复，技能名条目除外。
+  - 固定例外：`execution_modes.WRITE_EXEC` 的标准固定提醒允许在各级 payload 中重复，且 `lint` 必须赦免这条刻意重复。
   - 阅读入口：`references/runtime_contracts/AGENTS_GOVERNANCE_ENTRY.md`
 
 ## 6. 参考入口

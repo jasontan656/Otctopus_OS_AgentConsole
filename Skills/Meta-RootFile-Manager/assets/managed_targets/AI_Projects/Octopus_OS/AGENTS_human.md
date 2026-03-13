@@ -42,8 +42,10 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `Octopus_OS` repository root contain
       ]
     },
     "WRITE_EXEC": {
-      "goal": "change Octopus_OS artifacts under governed runtime rules",
-      "default_actions": []
+      "goal": "default to full-coverage edits for the intended change",
+      "default_actions": [
+        "Default to full-coverage edits, proactively explore to avoid omissions, and use the meta skill stack to strengthen the result."
+      ]
     }
   },
   "repo_local_contract_handoff": [],

@@ -98,8 +98,10 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `Otctopus_OS_AgentConsole` repositor
       "default_actions": []
     },
     "WRITE_EXEC": {
-      "goal": "edit console repo artifacts or invoke repo-owned manager write flows",
-      "default_actions": []
+      "goal": "default to full-coverage edits for the intended change",
+      "default_actions": [
+        "Default to full-coverage edits, proactively explore to avoid omissions, and use the meta skill stack to strengthen the result."
+      ]
     }
   },
   "forbidden_primary_runtime_pattern": [],

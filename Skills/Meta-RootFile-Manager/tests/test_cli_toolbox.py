@@ -386,6 +386,62 @@ class TestCliToolbox:
         assert "parent_agents_duplicate_phrase:Octopus_OS/AGENTS.md:part_a" in error_text
         assert "parent_agents_duplicate_phrase:Octopus_OS/AGENTS.md:$.runtime_constraints[0]" in error_text
 
+    def test_lint_rejects_nonstandard_write_exec_block(self) -> None:
+        managed_machine = (
+            self.skill_root
+            / "assets"
+            / "managed_targets"
+            / "AI_Projects"
+            / "AGENTS_machine.json"
+        )
+        managed_human = managed_machine.with_name("AGENTS_human.md")
+        invalid_payload = {
+            "owner": self.run_cli(
+                "target-contract",
+                "--source-path",
+                str(self.workspace / "AGENTS.md"),
+                "--json",
+            )["owner"],
+            "entry_role": "workspace_root_runtime_entry",
+            "runtime_source_policy": {
+                "runtime_rule_source": "CLI_JSON",
+                "audit_fields_are_not_primary_runtime_instructions": True,
+                "path_metadata_is_not_action_guidance": True,
+            },
+            "default_meta_skill_order": [],
+            "turn_start_actions": [],
+            "runtime_constraints": [],
+            "execution_modes": {
+                "READ_EXEC": {
+                    "goal": "answer, inspect, classify, or route without changing files",
+                    "default_actions": [],
+                },
+                "WRITE_EXEC": {
+            "goal": "edit files or trigger manager-owned write flows",
+            "default_actions": [
+                "edit the minimal correct scope that matches the user intent",
+            ],
+                },
+            },
+            "repo_local_contract_handoff": [],
+            "forbidden_primary_runtime_pattern": [],
+            "turn_end_actions": [],
+        }
+        write(managed_machine, json.dumps(invalid_payload, ensure_ascii=False, indent=2) + "\n")
+        write(managed_human, render_internal_human("workspace root", invalid_payload))
+
+        result = self.run_cli(
+            "lint",
+            "--json",
+            "--source-path",
+            str(self.workspace / "AGENTS.md"),
+            expect_ok=False,
+        )
+
+        error_text = "\n".join(result["failures"][0]["errors"])
+        assert "write_exec_goal_must_match_standard" in error_text
+        assert "write_exec_default_actions_must_match_standard" in error_text
+
     def test_collect_prunes_legacy_alias_dir(self) -> None:
         self._seed_legacy_alias_dir()
         result = self.run_cli("collect", "--json", "--source-path", str(self.repo_root / "README.md"))
