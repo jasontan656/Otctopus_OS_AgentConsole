@@ -38,6 +38,7 @@ anchors:
 - 本文件属于 `Meta-RootFile-Manager` 的受管外部 `AGENTS.md`，外部文件只允许承载 `Part A`。
 - 更新本文件时，必须使用 `$Meta-RootFile-Manager` 的 `collect` / `push` / `scaffold` 流程，避免治理链断裂。
 - 本模块下的开发文档、任务包、graph、evidence 回写和 acceptance 收口，必须同时遵守 `$Workflow-OctopusOS-DevFlow` 的阶段合同。
+- 若内部 `Part B` 启用了高抽象合同回流 hook，则 turn end 必须分析被修改的 mother doc 原子文档是否需要反向同步到指定 skill。
 </part_A>
 
 <part_B>
@@ -73,6 +74,29 @@ anchors:
       "Meta-RootFile-Manager scaffold/collect/push",
       "Workflow-OctopusOS-DevFlow four-stage delivery loop"
     ]
+  },
+  "turn_end_contract_hooks": {
+    "frontend_skill_backflow": {
+      "enabled": true,
+      "target_skill": "Dev-VUE3-WebUI-Frontend",
+      "scope_root": "/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs/mother_doc/04_frontend_contract_layer",
+      "required_frontmatter_keys": [
+        "skill_sync_target",
+        "skill_sync_mode",
+        "abstraction_level",
+        "backflow_candidate"
+      ],
+      "qualifying_abstraction_levels": [
+        "high",
+        "framework"
+      ],
+      "required_turn_end_actions": [
+        "analyze whether edited mother doc atoms changed framework-level frontend contracts",
+        "if the edited atoms are marked for Dev-VUE3-WebUI-Frontend backflow, classify them into project-only or skill-worthy abstractions",
+        "preserve product mother doc precedence; skill sync is a projection step, not the active requirement source"
+      ],
+      "product_contract_precedence": true
+    }
   }
 }
 ```

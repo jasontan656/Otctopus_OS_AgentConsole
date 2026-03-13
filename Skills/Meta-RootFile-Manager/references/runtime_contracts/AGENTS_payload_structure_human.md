@@ -571,6 +571,155 @@ Human mirror for `AGENTS_payload_structure.json`.
           "type": "string"
         }
       }
+    },
+    "Octopus_OS/Client_Applications/Unified_Portal/Development_Docs/AGENTS.md": {
+      "type": "object",
+      "key_order": [
+        "entry_role",
+        "governed_container",
+        "workflow_roots",
+        "workflow_contract",
+        "turn_end_contract_hooks"
+      ],
+      "properties": {
+        "entry_role": {
+          "type": "string"
+        },
+        "governed_container": {
+          "type": "object",
+          "key_order": [
+            "target_root",
+            "development_docs_root",
+            "codebase_root",
+            "module_dir",
+            "module_docs_root"
+          ],
+          "properties": {
+            "target_root": {
+              "type": "string"
+            },
+            "development_docs_root": {
+              "type": "string"
+            },
+            "codebase_root": {
+              "type": "string"
+            },
+            "module_dir": {
+              "type": "string"
+            },
+            "module_docs_root": {
+              "type": "string"
+            }
+          }
+        },
+        "workflow_roots": {
+          "type": "object",
+          "key_order": [
+            "mother_doc_root",
+            "construction_plan_root",
+            "graph_runtime_root",
+            "acceptance_root"
+          ],
+          "properties": {
+            "mother_doc_root": {
+              "type": "string"
+            },
+            "construction_plan_root": {
+              "type": "string"
+            },
+            "graph_runtime_root": {
+              "type": "string"
+            },
+            "acceptance_root": {
+              "type": "string"
+            }
+          }
+        },
+        "workflow_contract": {
+          "type": "object",
+          "key_order": [
+            "required_skill",
+            "required_preflight",
+            "reuse_policy",
+            "governance_chain"
+          ],
+          "properties": {
+            "required_skill": {
+              "type": "string"
+            },
+            "required_preflight": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "reuse_policy": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "governance_chain": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "turn_end_contract_hooks": {
+          "type": "object",
+          "key_order": [
+            "frontend_skill_backflow"
+          ],
+          "properties": {
+            "frontend_skill_backflow": {
+              "type": "object",
+              "key_order": [
+                "enabled",
+                "target_skill",
+                "scope_root",
+                "required_frontmatter_keys",
+                "qualifying_abstraction_levels",
+                "required_turn_end_actions",
+                "product_contract_precedence"
+              ],
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                },
+                "target_skill": {
+                  "type": "string"
+                },
+                "scope_root": {
+                  "type": "string"
+                },
+                "required_frontmatter_keys": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "qualifying_abstraction_levels": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "required_turn_end_actions": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "product_contract_precedence": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

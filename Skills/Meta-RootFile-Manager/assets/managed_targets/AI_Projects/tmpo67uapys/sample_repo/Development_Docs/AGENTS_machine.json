@@ -1,17 +1,17 @@
 {
   "entry_role": "devflow_module_docs_entry",
   "governed_container": {
-    "target_root": "/home/jasontan656/AI_Projects",
-    "development_docs_root": "/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs",
-    "codebase_root": "/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal",
-    "module_dir": "Unified_Portal",
-    "module_docs_root": "/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs"
+    "target_root": "/home/jasontan656/AI_Projects/tmpo67uapys",
+    "development_docs_root": "/home/jasontan656/AI_Projects/tmpo67uapys/sample_repo/Development_Docs",
+    "codebase_root": "/home/jasontan656/AI_Projects/tmpo67uapys/sample_repo",
+    "module_dir": "sample_repo",
+    "module_docs_root": "/home/jasontan656/AI_Projects/tmpo67uapys/sample_repo/Development_Docs"
   },
   "workflow_roots": {
-    "mother_doc_root": "/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs/mother_doc",
-    "construction_plan_root": "/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs/mother_doc/execution_atom_plan_validation_packs",
-    "graph_runtime_root": "/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs/graph",
-    "acceptance_root": "/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs/mother_doc/acceptance"
+    "mother_doc_root": "/home/jasontan656/AI_Projects/tmpo67uapys/sample_repo/Development_Docs/mother_doc",
+    "construction_plan_root": "/home/jasontan656/AI_Projects/tmpo67uapys/sample_repo/Development_Docs/mother_doc/execution_atom_plan_validation_packs",
+    "graph_runtime_root": "/home/jasontan656/AI_Projects/tmpo67uapys/sample_repo/Development_Docs/graph",
+    "acceptance_root": "/home/jasontan656/AI_Projects/tmpo67uapys/sample_repo/Development_Docs/mother_doc/acceptance"
   },
   "workflow_contract": {
     "required_skill": "Workflow-OctopusOS-DevFlow",
@@ -31,9 +31,9 @@
   },
   "turn_end_contract_hooks": {
     "frontend_skill_backflow": {
-      "enabled": true,
+      "enabled": false,
       "target_skill": "Dev-VUE3-WebUI-Frontend",
-      "scope_root": "/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs/mother_doc/04_frontend_contract_layer",
+      "scope_root": "/home/jasontan656/AI_Projects/tmpo67uapys/sample_repo/Development_Docs/mother_doc/04_frontend_contract_layer",
       "required_frontmatter_keys": [
         "skill_sync_target",
         "skill_sync_mode",

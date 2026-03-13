@@ -38,4 +38,5 @@ anchors:
 - 本文件属于 `Meta-RootFile-Manager` 的受管外部 `AGENTS.md`，外部文件只允许承载 `Part A`。
 - 更新本文件时，必须使用 `$Meta-RootFile-Manager` 的 `collect` / `push` / `scaffold` 流程，避免治理链断裂。
 - 本模块下的开发文档、任务包、graph、evidence 回写和 acceptance 收口，必须同时遵守 `$Workflow-OctopusOS-DevFlow` 的阶段合同。
+- 若当前目标的内部 `Part B` 启用了高抽象合同回流 hook，则 turn end 必须分析被修改的 mother doc 原子文档是否需要反向同步到对应 skill。
 </part_A>

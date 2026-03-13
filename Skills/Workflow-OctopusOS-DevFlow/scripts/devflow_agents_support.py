@@ -16,15 +16,11 @@ MACHINE_AGENTS_TEMPLATE = SKILL_ROOT / "assets" / "templates" / "agents" / "AGEN
 
 
 class MachineAgentsPayload(TypedDict):
-    target_root: str
-    development_docs_root: str
-    codebase_root: str
-    module_dir: str
-    module_docs_root: str
-    mother_doc_root: str
-    construction_plan_root: str
-    graph_runtime_root: str
-    acceptance_root: str
+    entry_role: str
+    governed_container: dict[str, str]
+    workflow_roots: dict[str, str]
+    workflow_contract: dict[str, object]
+    turn_end_contract_hooks: dict[str, object]
 
 
 def _render_template(path: Path, replacements: dict[str, str]) -> str:

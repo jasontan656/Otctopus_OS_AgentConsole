@@ -106,6 +106,7 @@ metadata:
 - 若本轮会改 mother_doc，模型应先判断需要改动的原子文档，再优先执行：
   - `mother-doc-mark-modified --path <mother_doc_root> --doc-ref <selected_doc>... --auto-from-git --json`
 - `mother-doc-mark-modified` 的主语义是“模型显式给 doc_ref，Git diff/impact 自动兜底补齐”，不是完全放弃模型选择。
+- 若 `<docs_root>/AGENTS` 的 internal `Part B` 启用了 `turn_end_contract_hooks`，turn end 还必须分析被修改的高抽象合同文档是否需要回流到指定 skill。
 - 具体 init/lint/archive/graph 命令以 `stage-command-contract` 与 `stage-graph-contract` 输出为准。
 
 ## 6. 读取原则
