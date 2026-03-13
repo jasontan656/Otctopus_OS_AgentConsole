@@ -25,6 +25,8 @@ anchors:
 
 ## Scope
 - Use this entry for governed `AGENTS.md` work inside `Meta-RootFile-Manager`.
+- `AGENTS.md` is the special dual-surface channel in this skill.
+- Its governed mapping is formed by `AGENTS_human.md + AGENTS_machine.json`.
 - It covers three AGENTS-specific slices only:
   - asset governance
   - payload governance
@@ -41,3 +43,4 @@ anchors:
 ## Executable Entry
 - If the task changes `AGENTS_machine.json` payload content, start from:
   `./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py agents-payload-contract --source-path "<external AGENTS path>" --json`
+- That entry is mandatory and must load `$Meta-Enhance-Prompt` first, compress the user request into the smallest precise payload semantics, then write back payload -> collect -> lint.
