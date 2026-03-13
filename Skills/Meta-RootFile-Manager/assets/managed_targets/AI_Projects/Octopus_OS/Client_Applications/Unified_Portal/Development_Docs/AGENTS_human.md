@@ -49,23 +49,12 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `Octopus_OS/Client_Applications/Unif
   "owner": "由 `$Meta-RootFile-Manager` 作为 `Octopus_OS/Client_Applications/Unified_Portal/Development_Docs` container 的 runtime entry owner 负责治理；当前通过 `AGENTS_MD` 通道受管并同步这个入口文件。",
   "entry_role": "devflow_module_docs_entry",
   "governed_container": {
-    "target_root": "/home/jasontan656/AI_Projects",
     "development_docs_root": "/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs",
     "codebase_root": "/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal",
-    "module_dir": "Unified_Portal",
-    "module_docs_root": "/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs"
-  },
-  "workflow_roots": {
-    "mother_doc_root": "/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs/mother_doc",
-    "construction_plan_root": "/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs/mother_doc/execution_atom_plan_validation_packs",
-    "graph_runtime_root": "/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs/graph",
-    "acceptance_root": "/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs/mother_doc/acceptance"
+    "module_dir": "Unified_Portal"
   },
   "workflow_contract": {
-    "required_skill": "Workflow-OctopusOS-DevFlow",
-    "required_preflight": [],
-    "reuse_policy": [],
-    "governance_chain": []
+    "required_skill": "Workflow-OctopusOS-DevFlow"
   },
   "turn_end_contract_hooks": {
     "frontend_skill_backflow": {

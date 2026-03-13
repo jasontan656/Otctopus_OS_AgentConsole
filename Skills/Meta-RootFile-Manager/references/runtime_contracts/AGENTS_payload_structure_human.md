@@ -566,7 +566,6 @@ Human mirror for `AGENTS_payload_structure.json`.
         "owner",
         "entry_role",
         "governed_container",
-        "workflow_roots",
         "workflow_contract",
         "turn_end_contract_hooks"
       ],
@@ -580,16 +579,11 @@ Human mirror for `AGENTS_payload_structure.json`.
         "governed_container": {
           "type": "object",
           "key_order": [
-            "target_root",
             "development_docs_root",
             "codebase_root",
-            "module_dir",
-            "module_docs_root"
+            "module_dir"
           ],
           "properties": {
-            "target_root": {
-              "type": "string"
-            },
             "development_docs_root": {
               "type": "string"
             },
@@ -598,64 +592,17 @@ Human mirror for `AGENTS_payload_structure.json`.
             },
             "module_dir": {
               "type": "string"
-            },
-            "module_docs_root": {
-              "type": "string"
-            }
-          }
-        },
-        "workflow_roots": {
-          "type": "object",
-          "key_order": [
-            "mother_doc_root",
-            "construction_plan_root",
-            "graph_runtime_root",
-            "acceptance_root"
-          ],
-          "properties": {
-            "mother_doc_root": {
-              "type": "string"
-            },
-            "construction_plan_root": {
-              "type": "string"
-            },
-            "graph_runtime_root": {
-              "type": "string"
-            },
-            "acceptance_root": {
-              "type": "string"
             }
           }
         },
         "workflow_contract": {
           "type": "object",
           "key_order": [
-            "required_skill",
-            "required_preflight",
-            "reuse_policy",
-            "governance_chain"
+            "required_skill"
           ],
           "properties": {
             "required_skill": {
               "type": "string"
-            },
-            "required_preflight": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            "reuse_policy": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            "governance_chain": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
             }
           }
         },
