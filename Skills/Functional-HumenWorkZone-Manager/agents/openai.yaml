@@ -1,4 +1,4 @@
 interface:
   display_name: "Functional-HumenWorkZone-Manager"
   short_description: "管理 Human_Work_Zone 文件夹的固定技能入口。"
-  default_prompt: "当用户要收纳、整理或维护 `/home/jasontan656/AI_Projects/Human_Work_Zone` 时使用此技能。先读取 `SKILL.md`，再进入 `references/routing/TASK_ROUTING.md` 与 `references/governance/SKILL_EXECUTION_RULES.md`，默认把任务范围锁定到 Human_Work_Zone 本身。"
+  default_prompt: "当用户要收纳、整理或维护 `/home/jasontan656/AI_Projects/Human_Work_Zone` 时使用此技能。先读取 `SKILL.md`，再进入 `references/routing/TASK_ROUTING.md` 与 `references/governance/SKILL_EXECUTION_RULES.md`。若任务涉及开源项目拉取、本地落位、命名或 inventory README 维护，继续进入 `references/runtime/` 下的对应原子流程文档，默认把任务范围锁定到 Human_Work_Zone 本身。"

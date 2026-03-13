@@ -23,3 +23,5 @@ anchors:
 - 以 `SKILL.md` 入口为 tree root，向下至少补齐一层 routing doc。
 - 深规则继续下沉到单 topic 原子文档，不要重新堆回门面。
 - 所有 markdown 文档补齐 `doc_structure` frontmatter 与 anchors。
+- 只要 `Human_Work_Zone` 下出现稳定子域，就应为该子域建立独立 routing 或 topic atom。
+- 对“开源项目落位”“目录命名”“inventory README 维护”这类长期动作，必须一事一文档，不允许混成一篇大规则。

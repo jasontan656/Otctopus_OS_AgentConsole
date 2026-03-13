@@ -11,6 +11,10 @@ anchors:
   relation: routes_to
   direction: downstream
   reason: Doc-structure policy remains the mandatory governance branch.
+- target: ../runtime/OPEN_SOURCE_PROJECTS_ZONE_POLICY.md
+  relation: routes_to
+  direction: downstream
+  reason: Open-source project management is now a stable branch of this skill.
 ---
 
 # Task Routing
@@ -26,5 +30,16 @@ anchors:
 - 当用户说“收纳”“整理”“归位”“归档”时，先读 `../governance/SKILL_EXECUTION_RULES.md`。
 - 当前先使用最小规则集执行，不预设复杂目录法。
 
-## 分支三：后续扩展
-- 若未来补充命名规范、分类法、清单规则或专属 CLI，再从这里新增更细的下沉文档。
+## 分支三：管理开源项目集中区
+- 当任务涉及 `Human_Work_Zone` 内的开源项目时，先读 `../runtime/OPEN_SOURCE_PROJECTS_ZONE_POLICY.md`。
+- 该分支负责开源项目专用文件夹、长期 inventory README 与 legacy repo 的挂钩方式。
+
+## 分支四：拉取新的开源项目回本地
+- 当任务涉及 clone、下载、保存开源 repo 到本地时，先读 `../runtime/PULL_OPEN_SOURCE_PROJECT_FLOW.md`。
+- 该分支负责命名格式、落位目录与拉取后的第一轮登记动作。
+
+## 分支五：维护 inventory README
+- 当任务涉及更新项目清单、补基础作用说明或挂钩项目本体 README 时，先读 `../runtime/OPEN_SOURCE_PROJECT_README_MAINTENANCE_FLOW.md`。
+
+## 分支六：给项目目录命名
+- 当任务只是在决定项目目录名，或需要核对 `<项目名>_<2-3word加强>` 规则时，先读 `../runtime/OPEN_SOURCE_PROJECT_NAMING_RULE.md`。
