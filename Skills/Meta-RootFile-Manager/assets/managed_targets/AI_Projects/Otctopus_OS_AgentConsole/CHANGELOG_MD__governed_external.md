@@ -1,14 +1,6 @@
 ---
-doc_id: meta_rootfile_manager.assets_managed_targets_ai_projects_otctopus_os_agentconsole_changelog_md_governed_external
-doc_type: index_doc
-topic: Changelog
-anchors:
-- target: ../../../../SKILL.md
-  relation: implements
-  direction: upstream
-  reason: This document belongs to the governed skill tree under the main facade.
+owner: "由 `Otctopus_OS_AgentConsole` repository root container 所代表的 版本与迭代记录面 负责；当前通过 `$Meta-RootFile-Manager` 的 `CHANGELOG_MD` 通道受管并同步。"
 ---
-
 # Changelog
 
 All notable public-release changes to Octopus OS should be documented in this file.

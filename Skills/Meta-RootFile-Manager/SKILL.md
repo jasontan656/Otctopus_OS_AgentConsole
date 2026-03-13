@@ -16,7 +16,7 @@ metadata:
 # Meta-RootFile-Manager
 
 ## Runtime Entry
-- Primary runtime entry: `./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py contract --json`
+- Primary runtime entry: `./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py target-contract --source-path "<governed external path>" --json`
 - CLI JSON is the primary runtime source; `SKILL.md` only remains as a facade and routing narrative.
 
 
@@ -42,11 +42,14 @@ metadata:
 - `AGENTS_MD`
   - 仍使用 `Part A / Part B` 双承载治理模型。
   - 内部治理映射由 `AGENTS_human.md + AGENTS_machine.json` 共同组成。
+  - `owner` 必须进入 external/internal human frontmatter、machine payload 与 owner meta。
 - 其他 root file channel
   - 不使用 `A/B` 分段。
-  - 技能内部只保存“外部文件内容的映射版本”。
+  - 技能内部保存“外部文件内容的治理映射版本”。
   - 映射版本文件名必须显式带有 `__governed_external` 语义，避免与外部真实文件同名导致误扫描。
-  - 映射版本文件内容应与外部文件正文保持一致，不额外包裹注释头。
+  - 所有受管 target 都必须额外生成一个 owner meta 文件。
+  - 对可人类直读的 markdown channel，内部映射版本必须显式带 `owner` 字段，便于直接阅读时知道“谁是它的爹、受谁治理”。
+  - `owner` 的值不是固定枚举，而是根据受管目录语义自动推导出的描述性内容。
 
 ## 4. 当前已开通文件类型
 - `AGENTS.md`
@@ -100,5 +103,6 @@ metadata:
 - 默认文件正文的回收与推出必须通过本技能完成，避免单点直接编辑导致治理链断裂。
 - `scan` 规则必须外置在 `rules/scan_rules.json`，不得把 channel 注册表重新硬编码进 CLI。
 - 非 `AGENTS.md` 文件的技能内映射文件不得与外部真实文件同名。
+- `target-contract`、`scan`、`collect`、`push`、`scaffold` 的输出都必须暴露 `owner`。
 - `collect` 必须以外部源为真源覆盖技能内映射。
 - `push` 必须以技能内映射为真源覆盖外部目标。

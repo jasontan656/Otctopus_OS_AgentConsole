@@ -1,14 +1,6 @@
 ---
-doc_id: meta_rootfile_manager.assets_managed_targets_ai_projects_otctopus_os_agentconsole_security_md_governed_external
-doc_type: topic_atom
-topic: Security Policy
-anchors:
-- target: ../../../../SKILL.md
-  relation: implements
-  direction: upstream
-  reason: This document belongs to the governed skill tree under the main facade.
+owner: "由 `Otctopus_OS_AgentConsole` repository root container 所代表的 安全披露与响应面 负责；当前通过 `$Meta-RootFile-Manager` 的 `SECURITY_MD` 通道受管并同步。"
 ---
-
 # Security Policy
 
 ## Current Risk Posture

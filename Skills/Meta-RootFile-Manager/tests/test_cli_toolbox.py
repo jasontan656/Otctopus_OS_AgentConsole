@@ -15,14 +15,17 @@ def write(path: Path, content: str) -> None:
     path.write_text(content, encoding="utf-8")
 
 
-def render_external_agents(part_a_body: str) -> str:
-    return (
+def render_external_agents(part_a_body: str, owner: str | None = None) -> str:
+    content = (
         "[AGENT RUNTIME HOOK - ABSOLUTE ENFORCEMENT]\n\n"
         "`HOOK_LOAD`: Apply this AGENTS contract.\n\n"
         "<part_A>\n"
         f"{part_a_body}\n"
         "</part_A>\n"
     )
+    if owner is None:
+        return content
+    return f"---\nowner: {json.dumps(owner, ensure_ascii=False)}\n---\n{content}"
 
 
 def render_internal_human(part_a_body: str, payload: dict) -> str:
@@ -146,6 +149,7 @@ class TestCliToolbox:
     def test_collect_syncs_plain_mapping_and_installed_copy(self) -> None:
         result = self.run_cli("collect", "--json", "--source-path", str(self.repo_root / "README.md"))
         assert result["operation_count"] == 1
+        owner = result["operations"][0]["owner"]
         managed = (
             self.skill_root
             / "assets"
@@ -162,8 +166,19 @@ class TestCliToolbox:
             / "Otctopus_OS_AgentConsole"
             / "README_MD__governed_external.md"
         )
-        assert managed.read_text(encoding="utf-8") == "# Console\n"
-        assert installed.read_text(encoding="utf-8") == "# Console\n"
+        owner_meta = (
+            self.skill_root
+            / "assets"
+            / "managed_targets"
+            / "AI_Projects"
+            / "Otctopus_OS_AgentConsole"
+            / "README_MD__owner_meta.json"
+        )
+        assert managed.read_text(encoding="utf-8").startswith("---\nowner: ")
+        assert managed.read_text(encoding="utf-8").endswith("# Console\n")
+        assert installed.read_text(encoding="utf-8").startswith("---\nowner: ")
+        assert installed.read_text(encoding="utf-8").endswith("# Console\n")
+        assert json.loads(owner_meta.read_text(encoding="utf-8"))["owner"] == owner
 
     def test_push_writes_plain_mapping_back_to_external(self) -> None:
         managed = (
@@ -184,7 +199,9 @@ class TestCliToolbox:
         result = self.run_cli("target-contract", "--source-path", str(self.repo_root / "README.md"), "--json")
         assert result["channel_id"] == "README_MD"
         assert result["mapping_mode"] == "plain_copy"
+        assert "owner" in result
         assert result["managed_files"]["mapped"].endswith("README_MD__governed_external.md")
+        assert result["managed_files"]["owner_meta"].endswith("README_MD__owner_meta.json")
 
     def test_scaffold_can_open_non_agents_channel(self) -> None:
         target_dir = self.workspace / "NewRepo"
@@ -232,6 +249,7 @@ class TestCliToolbox:
     def test_target_contract_keeps_agents_payload(self) -> None:
         result = self.run_cli("target-contract", "--source-path", str(self.repo_root / "AGENTS.md"), "--json")
         assert result["channel_id"] == "AGENTS_MD"
+        assert "owner" in result
         assert "payload" in result
 
     def test_collect_prunes_legacy_alias_dir(self) -> None:
@@ -293,7 +311,8 @@ class TestCliToolbox:
         write(
             external_path,
             render_external_agents(
-                "1. 根入口命令\n- 在处理当前目录路径规则之前，必须先运行：\n- `placeholder`\n"
+                "1. 根入口命令\n- 在处理当前目录路径规则之前，必须先运行：\n- `placeholder`\n",
+                owner=self.run_cli("target-contract", "--source-path", str(external_path), "--json")["owner"],
             ),
         )
         result = self.run_cli("collect", "--json", "--source-path", str(external_path))
@@ -306,5 +325,14 @@ class TestCliToolbox:
             / "Development_Docs"
             / "AGENTS_human.md"
         )
+        owner_meta = (
+            self.runtime
+            / "managed_targets"
+            / "sandbox"
+            / "sample_repo"
+            / "Development_Docs"
+            / "AGENTS_MD__owner_meta.json"
+        )
         assert managed_human.exists()
         assert "placeholder" in managed_human.read_text(encoding="utf-8")
+        assert json.loads(owner_meta.read_text(encoding="utf-8"))["owner"] == result["operations"][0]["owner"]

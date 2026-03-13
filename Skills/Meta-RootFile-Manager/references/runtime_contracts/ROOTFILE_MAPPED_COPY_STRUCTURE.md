@@ -25,17 +25,23 @@ anchors:
   - or an equivalent channel-specific filename declared in the channel registry
 
 ## Content Rule
-- Internal mapped copy content must equal the external root file content byte-for-byte at the text level.
-- No wrapper header may be injected for these non-`AGENTS.md` mapped copies.
+- Internal mapped copy remains the manager-owned source of truth for `push`.
+- Every governed target must also have an owner meta payload carrying at least one field: `owner`.
+- `owner` is derived from the governed directory meaning plus the current channel semantics; it is descriptive text, not a fixed enum.
+- Markdown-facing channels may inject `owner` into the managed copy itself for direct reading.
+- Non-markdown or structure-sensitive channels may keep raw body content in the managed copy, but still must carry owner through the paired owner meta payload.
 - The “this is an internal governed mapping version” meaning is expressed by:
   - the channel registry
   - the managed asset path
   - the managed filename
+  - the paired owner meta payload
 
 ## Lint Rule
 - `lint` must fail when the mapped copy is missing.
-- `lint` must fail when the mapped copy content drifts from the external file content.
+- `lint` must fail when the owner meta payload is missing.
+- `lint` must fail when the mapped copy content drifts from the external file content after stripping manager-owned owner metadata from markdown managed copies.
+- `lint` must fail when the stored `owner` no longer matches the path-derived owner description.
 
 ## Push / Collect Rule
-- `collect` reads the external file and overwrites the internal mapped copy.
-- `push` reads the internal mapped copy and overwrites the external file.
+- `collect` reads the external file, derives `owner`, refreshes the internal mapped copy, and refreshes the paired owner meta payload.
+- `push` reads the internal mapped copy and overwrites the external file; manager-owned owner metadata may stay internal-only for non-`AGENTS.md` markdown channels.

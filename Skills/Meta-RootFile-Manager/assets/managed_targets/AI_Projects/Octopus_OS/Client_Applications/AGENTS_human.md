@@ -1,14 +1,6 @@
 ---
-doc_id: meta_rootfile_manager.assets_managed_targets_ai_projects_octopus_os_client_applications_agents
-doc_type: topic_atom
-topic: Agents
-anchors:
-- target: ../../../../../SKILL.md
-  relation: implements
-  direction: upstream
-  reason: This document belongs to the governed skill tree under the main facade.
+owner: "由 `$Meta-RootFile-Manager` 作为 `Octopus_OS/Client_Applications` container 的 runtime entry owner 负责治理；当前通过 `AGENTS_MD` 通道受管并同步这个入口文件。"
 ---
-
 [AGENT RUNTIME HOOK - ABSOLUTE ENFORCEMENT]
 
 `HOOK_LOAD`: Apply this AGENTS contract.
@@ -30,6 +22,7 @@ anchors:
 
 ```json
 {
+  "owner": "由 `$Meta-RootFile-Manager` 作为 `Octopus_OS/Client_Applications` container 的 runtime entry owner 负责治理；当前通过 `AGENTS_MD` 通道受管并同步这个入口文件。",
   "entry_role": "repo_runtime_entry",
   "runtime_source_policy": {
     "runtime_rule_source": "CLI_JSON",

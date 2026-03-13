@@ -7,6 +7,7 @@ anchors:
   relation: implements
   direction: upstream
   reason: This document belongs to the governed skill tree under the main facade.
+owner: "由 `$Meta-RootFile-Manager` 作为 `AI_Projects` workspace root 的 runtime entry owner 负责治理；当前通过 `AGENTS_MD` 通道受管并同步这个入口文件。"
 ---
 
 [AGENT RUNTIME HOOK - ABSOLUTE ENFORCEMENT]
@@ -45,6 +46,7 @@ anchors:
 
 ```json
 {
+  "owner": "由 `$Meta-RootFile-Manager` 作为 `AI_Projects` workspace root 的 runtime entry owner 负责治理；当前通过 `AGENTS_MD` 通道受管并同步这个入口文件。",
   "entry_role": "workspace_root_runtime_entry",
   "runtime_source_policy": {
     "runtime_rule_source": "CLI_JSON",

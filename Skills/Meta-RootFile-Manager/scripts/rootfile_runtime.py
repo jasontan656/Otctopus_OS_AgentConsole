@@ -25,6 +25,14 @@ REPO_ROOT_COMPAT_ALIASES = {
 }
 LEGACY_MANAGED_TARGET_DIRS = ("Codex_Skills_Mirror",)
 RUNTIME_MANAGED_TARGETS_DIRNAME = "managed_targets"
+ROOTFILE_MANAGER_NAME = "$Meta-RootFile-Manager"
+MARKDOWN_MANAGED_OWNER_FILE_KINDS = {
+    "README.md",
+    "CHANGELOG.md",
+    "CONTRIBUTING.md",
+    "SECURITY.md",
+    "CODE_OF_CONDUCT.md",
+}
 
 
 @dataclass(frozen=True)
@@ -35,6 +43,22 @@ class RuntimePaths:
     runtime_root: Path
     managed_targets_root: Path
     scan_rules_path: Path
+
+
+@dataclass(frozen=True)
+class OwnerMetadata:
+    owner: str
+
+
+@dataclass(frozen=True)
+class OwnerInjectedMachinePayload:
+    owner: str
+    payload: dict[str, object]
+
+    def as_dict(self) -> dict[str, object]:
+        normalized = {"owner": self.owner}
+        normalized.update(self.payload)
+        return normalized
 
 
 def _env_path(name: str) -> Path | None:
@@ -257,8 +281,157 @@ def derive_managed_dir(paths: RuntimePaths, source_path: Path) -> Path:
     return paths.managed_targets_root / parent
 
 
+def owner_meta_filename(channel_id: str) -> str:
+    return f"{channel_id}__owner_meta.json"
+
+
 def _relative_source_key(paths: RuntimePaths, source_path: Path) -> str:
     return str(_canonical_relative_path(paths, source_path))
+
+
+def describe_governed_container(paths: RuntimePaths, source_path: Path) -> str:
+    relative = _canonical_relative_path(paths, source_path)
+    parent = relative.parent
+    if str(parent) == ".":
+        return "`AI_Projects` workspace root"
+    if len(parent.parts) == 1:
+        return f"`{parent.name}` repository root container"
+    return f"`{parent.as_posix()}` container"
+
+
+def derive_owner_text(
+    paths: RuntimePaths,
+    source_path: Path,
+    channel_id: str,
+    file_kind: str,
+) -> str:
+    container = describe_governed_container(paths, source_path)
+    surface_map = {
+        "README.md": "公共说明面",
+        "CHANGELOG.md": "版本与迭代记录面",
+        "CONTRIBUTING.md": "协作入口说明面",
+        "SECURITY.md": "安全披露与响应面",
+        "CODE_OF_CONDUCT.md": "协作行为边界面",
+        "LICENSE": "授权与法律边界面",
+        ".gitignore": "本地噪音过滤边界面",
+        "pytest.ini": "Python 测试运行配置面",
+        "Dockerfile": "容器构建入口面",
+        ".dockerignore": "容器构建忽略边界面",
+        ".env.example": "环境变量样例面",
+        "requirements.txt": "Python 依赖声明面",
+        "requirements-backend_skills.lock.txt": "skills Python 依赖锁定面",
+        "pyproject.toml": "Python 项目集成配置面",
+        "package.json": "Node package runtime 声明面",
+        "package-lock.json": "Node package lock 面",
+    }
+    if file_kind == "AGENTS.md":
+        return (
+            f"由 `{ROOTFILE_MANAGER_NAME}` 作为 {container} 的 runtime entry owner 负责治理；"
+            f"当前通过 `{channel_id}` 通道受管并同步这个入口文件。"
+        )
+    surface = surface_map.get(file_kind, f"`{file_kind}` 默认治理面")
+    return (
+        f"由 {container} 所代表的 {surface} 负责；"
+        f"当前通过 `{ROOTFILE_MANAGER_NAME}` 的 `{channel_id}` 通道受管并同步。"
+    )
+
+
+def build_owner_payload(
+    paths: RuntimePaths,
+    source_path: Path,
+    channel_id: str,
+    file_kind: str,
+) -> OwnerMetadata:
+    return OwnerMetadata(owner=derive_owner_text(paths, source_path, channel_id, file_kind))
+
+
+def _split_markdown_frontmatter(text: str) -> tuple[str | None, str]:
+    if not text.startswith("---\n"):
+        return None, text
+    end = text.find("\n---\n", 4)
+    if end == -1:
+        return None, text
+    return text[4:end], text[end + len("\n---\n") :]
+
+
+def extract_markdown_owner(text: str) -> str | None:
+    frontmatter, _ = _split_markdown_frontmatter(text)
+    if frontmatter is None:
+        return None
+    for line in frontmatter.splitlines():
+        if line.startswith("owner:"):
+            value = line.split(":", 1)[1].strip()
+            if value.startswith('"') and value.endswith('"'):
+                try:
+                    return json.loads(value)
+                except json.JSONDecodeError:
+                    return value.strip('"')
+            return value
+    return None
+
+
+def upsert_markdown_owner(text: str, owner: str) -> str:
+    owner_line = f"owner: {json.dumps(owner, ensure_ascii=False)}"
+    frontmatter, body = _split_markdown_frontmatter(text)
+    if frontmatter is None:
+        return f"---\n{owner_line}\n---\n{text}"
+    lines = frontmatter.splitlines()
+    for index, line in enumerate(lines):
+        if line.startswith("owner:"):
+            lines[index] = owner_line
+            break
+    else:
+        lines.append(owner_line)
+    joined_lines = "\n".join(lines)
+    return f"---\n{joined_lines}\n---\n{body}"
+
+
+def strip_markdown_owner(text: str) -> str:
+    frontmatter, body = _split_markdown_frontmatter(text)
+    if frontmatter is None:
+        return text
+    lines = [line for line in frontmatter.splitlines() if not line.startswith("owner:")]
+    if not lines:
+        return body
+    joined_lines = "\n".join(lines)
+    return f"---\n{joined_lines}\n---\n{body}"
+
+
+def is_markdown_owner_managed(file_kind: str) -> bool:
+    return file_kind in MARKDOWN_MANAGED_OWNER_FILE_KINDS
+
+
+def inject_owner_into_machine_payload(payload: object, owner: str) -> OwnerInjectedMachinePayload:
+    if not isinstance(payload, dict):
+        return OwnerInjectedMachinePayload(owner=owner, payload={})
+    normalized = {key: value for key, value in payload.items() if key != "owner"}
+    return OwnerInjectedMachinePayload(owner=owner, payload=normalized)
+
+
+def validate_owner_meta_file(meta_path: Path, expected_owner: str) -> list[str]:
+    if not meta_path.exists():
+        return ["missing_owner_meta"]
+    try:
+        payload = read_json(meta_path)
+    except json.JSONDecodeError as exc:
+        return [f"invalid_owner_meta_json:{exc.msg}"]
+    if not isinstance(payload, dict):
+        return ["owner_meta_payload_type_invalid"]
+    actual_owner = payload.get("owner")
+    if actual_owner is None:
+        return ["missing_owner_field"]
+    if actual_owner != expected_owner:
+        return ["owner_field_mismatch"]
+    return []
+
+
+def validate_markdown_owner(text: str, expected_owner: str) -> list[str]:
+    owner = extract_markdown_owner(text)
+    if owner is None:
+        return ["missing_owner_field"]
+    if owner != expected_owner:
+        return ["owner_field_mismatch"]
+    return []
 
 
 def _payload_schema_for_source(paths: RuntimePaths, source_path: Path) -> dict[str, object] | None:
@@ -296,10 +469,12 @@ def build_entry(
     channel: dict[str, object],
 ) -> dict[str, object]:
     managed_dir = derive_managed_dir(paths, source_path)
+    owner_payload = build_owner_payload(paths, source_path, channel_id, channel["file_kind"])
     managed_files = {
         key: str((managed_dir / filename).resolve())
         for key, filename in channel.get("managed_files", {}).items()
     }
+    managed_files["owner_meta"] = str((managed_dir / owner_meta_filename(channel_id)).resolve())
     entry = {
         "source_path": str(source_path.resolve()),
         "relative_path": _relative_source_key(paths, source_path),
@@ -310,6 +485,7 @@ def build_entry(
         "managed_files": managed_files,
         "structure_template": channel.get("structure_template"),
         "match_reasons": [f"channel:{channel_id}"],
+        "owner": owner_payload.owner,
     }
     if "human" in managed_files:
         entry["managed_human_path"] = managed_files["human"]
@@ -317,6 +493,7 @@ def build_entry(
         entry["managed_machine_path"] = managed_files["machine"]
     if "mapped" in managed_files:
         entry["managed_mapped_path"] = managed_files["mapped"]
+    entry["managed_owner_meta_path"] = managed_files["owner_meta"]
     return entry
 
 
@@ -431,7 +608,7 @@ def _validate_payload_value(payload: object, schema: dict[str, object], path: st
     return errors
 
 
-def validate_external_agents(text: str) -> list[str]:
+def validate_external_agents(text: str, expected_owner: str) -> list[str]:
     errors: list[str] = []
     if HOOK_HEADER not in text:
         errors.append("missing_hook_header")
@@ -444,10 +621,15 @@ def validate_external_agents(text: str) -> list[str]:
         errors.append("legacy_part_b_marker_forbidden")
     if PART_B_OPEN in text or PART_B_CLOSE in text:
         errors.append("external_agents_forbids_part_b")
+    errors.extend(validate_markdown_owner(text, expected_owner))
     return errors
 
 
-def validate_internal_human_agents(text: str, payload_schema: dict[str, object] | None = None) -> list[str]:
+def validate_internal_human_agents(
+    text: str,
+    expected_owner: str,
+    payload_schema: dict[str, object] | None = None,
+) -> list[str]:
     errors: list[str] = []
     if HOOK_HEADER not in text:
         errors.append("missing_hook_header")
@@ -467,16 +649,27 @@ def validate_internal_human_agents(text: str, payload_schema: dict[str, object] 
     errors.extend(payload_errors)
     if payload_schema is not None and payload is not None:
         errors.extend(_validate_payload_value(payload, payload_schema, "$"))
+    errors.extend(validate_markdown_owner(text, expected_owner))
     return errors
 
 
-def validate_machine_json(machine_path: Path, payload_schema: dict[str, object] | None = None) -> list[str]:
+def validate_machine_json(
+    machine_path: Path,
+    expected_owner: str,
+    payload_schema: dict[str, object] | None = None,
+) -> list[str]:
     if not machine_path.exists():
         return ["missing_machine_json"]
     try:
         payload = read_json(machine_path)
     except json.JSONDecodeError as exc:
         return [f"invalid_machine_json:{exc.msg}"]
+    if not isinstance(payload, dict):
+        return ["machine_payload_type_invalid"]
+    if payload.get("owner") is None:
+        return ["missing_owner_field"]
+    if payload.get("owner") != expected_owner:
+        return ["owner_field_mismatch"]
     if payload_schema is None:
         return []
     return _validate_payload_value(payload, payload_schema, "$")
@@ -487,28 +680,44 @@ def validate_managed_agents_pair(
     source_path: Path,
     human_path: Path,
     machine_path: Path,
+    owner_meta_path: Path,
 ) -> list[str]:
     errors: list[str] = []
     payload_schema = _payload_schema_for_source(paths, source_path)
+    expected_owner = derive_owner_text(paths, source_path, "AGENTS_MD", "AGENTS.md")
     if payload_schema is None and not is_runtime_local_source(paths, source_path):
         return [f"missing_payload_structure_schema:{_relative_source_key(paths, source_path)}"]
     if not human_path.exists():
         errors.append("missing_managed_human")
     else:
         errors.extend(
-            validate_internal_human_agents(human_path.read_text(encoding="utf-8"), payload_schema)
+            validate_internal_human_agents(
+                human_path.read_text(encoding="utf-8"),
+                expected_owner,
+                payload_schema,
+            )
         )
-    errors.extend(validate_machine_json(machine_path, payload_schema))
+    errors.extend(validate_machine_json(machine_path, expected_owner, payload_schema))
+    errors.extend(validate_owner_meta_file(owner_meta_path, expected_owner))
     return errors
 
 
-def validate_plain_mapping(source_path: Path, mapped_path: Path) -> list[str]:
+def validate_plain_mapping(entry: dict[str, object]) -> list[str]:
+    source_path = Path(entry["source_path"])
+    mapped_path = Path(entry["managed_mapped_path"])
+    owner_meta_path = Path(entry["managed_owner_meta_path"])
+    expected_owner = str(entry["owner"])
     errors: list[str] = []
+    errors.extend(validate_owner_meta_file(owner_meta_path, expected_owner))
     if not mapped_path.exists():
         return ["missing_managed_mapping"]
     if not source_path.exists():
         return ["missing_external_source"]
-    if mapped_path.read_text(encoding="utf-8") != source_path.read_text(encoding="utf-8"):
+    managed_text = mapped_path.read_text(encoding="utf-8")
+    if is_markdown_owner_managed(str(entry["file_kind"])):
+        errors.extend(validate_markdown_owner(managed_text, expected_owner))
+        managed_text = strip_markdown_owner(managed_text)
+    if managed_text != source_path.read_text(encoding="utf-8"):
         errors.append("managed_mapping_content_drift")
     return errors
 
@@ -518,13 +727,18 @@ def lint_external_entry(paths: RuntimePaths, entry: dict[str, object]) -> list[s
     if not source_path.exists():
         return ["missing_external_source"]
     if entry["mapping_mode"] == "agents_ab":
-        return validate_external_agents(source_path.read_text(encoding="utf-8"))
+        return validate_external_agents(source_path.read_text(encoding="utf-8"), str(entry["owner"]))
     return []
 
 
-def lint_managed_entry(paths: RuntimePaths, entry: dict[str, object]) -> list[str]:
+def lint_managed_entry(
+    paths: RuntimePaths,
+    entry: dict[str, object],
+    *,
+    include_external: bool = True,
+) -> list[str]:
     source_path = Path(entry["source_path"])
-    errors = lint_external_entry(paths, entry)
+    errors = lint_external_entry(paths, entry) if include_external else []
     if entry["mapping_mode"] == "agents_ab":
         errors.extend(
             validate_managed_agents_pair(
@@ -532,10 +746,11 @@ def lint_managed_entry(paths: RuntimePaths, entry: dict[str, object]) -> list[st
                 source_path,
                 Path(entry["managed_human_path"]),
                 Path(entry["managed_machine_path"]),
+                Path(entry["managed_owner_meta_path"]),
             )
         )
         return errors
-    errors.extend(validate_plain_mapping(source_path, Path(entry["managed_mapped_path"])))
+    errors.extend(validate_plain_mapping(entry))
     return errors
 
 
@@ -586,7 +801,7 @@ def add_governed_source_path(
         sync_file_to_installed(paths, paths.scan_rules_path, dry_run)
 
 
-def scaffold_external_agents(external_path: Path) -> str:
+def scaffold_external_agents(external_path: Path, owner: str) -> str:
     script_path = Path(__file__).resolve()
     repo_root = next((parent for parent in script_path.parents if parent.name == REPO_ROOT_CANONICAL_NAME), None)
     if repo_root is None:
@@ -595,7 +810,7 @@ def scaffold_external_agents(external_path: Path) -> str:
         f"python3 {repo_root / 'Skills' / 'Meta-RootFile-Manager' / 'scripts' / 'Cli_Toolbox.py'} "
         f'target-contract --source-path "{external_path}" --json'
     )
-    return (
+    content = (
         f"{HOOK_HEADER}\n\n"
         "`HOOK_LOAD`: Apply this AGENTS contract.\n\n"
         f"{PART_A_OPEN}\n"
@@ -609,10 +824,11 @@ def scaffold_external_agents(external_path: Path) -> str:
         "- 更新本文件时及相关内容时,必须使用 $Meta-RootFile-Manager 更新治理映射模版然后再回推至本文件,或者更新本文件但是必须使用技能的collect来反向更新,避免单点更新治理链断裂.\n"
         f"{PART_A_CLOSE}\n"
     )
+    return upsert_markdown_owner(content, owner)
 
 
-def scaffold_internal_agents_human(external_path: Path) -> str:
-    return render_internal_agents_human(scaffold_external_agents(external_path), {})
+def scaffold_internal_agents_human(external_path: Path, owner: str) -> str:
+    return render_internal_agents_human(scaffold_external_agents(external_path, owner), {"owner": owner})
 
 
 def scaffold_plain_external(_file_kind: str) -> str:
@@ -631,6 +847,7 @@ def resolve_target_contract(paths: RuntimePaths, source_path: Path) -> dict[str,
         "channel_id": entry["channel_id"],
         "file_kind": entry["file_kind"],
         "mapping_mode": entry["mapping_mode"],
+        "owner": entry["owner"],
         "managed_dir": entry["managed_dir"],
         "managed_files": entry["managed_files"],
         "structure_template": entry.get("structure_template"),

@@ -1,14 +1,6 @@
 ---
-doc_id: meta_rootfile_manager.assets_managed_targets_ai_projects_otctopus_os_agentconsole_readme_md_governed_external
-doc_type: topic_atom
-topic: Octopus OS
-anchors:
-- target: ../../../../SKILL.md
-  relation: implements
-  direction: upstream
-  reason: This document belongs to the governed skill tree under the main facade.
+owner: "由 `Otctopus_OS_AgentConsole` repository root container 所代表的 公共说明面 负责；当前通过 `$Meta-RootFile-Manager` 的 `README_MD` 通道受管并同步。"
 ---
-
 # Octopus OS
 
 Octopus OS is a natural-language-driven multi-agent console.

@@ -28,6 +28,7 @@ anchors:
 - External `AGENTS.md` must contain `Part A only`.
 - External `AGENTS.md` must use the explicit `<part_A> ... </part_A>` wrapper in the target shape.
 - External `AGENTS.md` must not contain `<part_B> ... </part_B>`.
+- External `AGENTS.md` must carry an `owner` field in its readable metadata surface so the file can explain who owns the entry and that it is governed by `$Meta-RootFile-Manager`.
 - `Part A` must be human-readable and directly useful without reading raw json.
 - `Part A` may contain:
   - entry commands
@@ -56,11 +57,13 @@ anchors:
 - Internal `AGENTS_human.md` must contain both `Part A` and `Part B`.
 - `Part A` mirrors the external entry content.
 - `Part B` mirrors the machine payload in readable markdown form.
+- Internal `AGENTS_human.md` must also carry the same path-derived `owner` field.
 
 ## Internal `AGENTS_machine.json` Structure
 - `AGENTS_machine.json` must contain `Part B only`.
 - It must not duplicate `Part A`.
 - It must remain valid json.
+- It must carry an `owner` field.
 - It must satisfy the source-path-specific payload structure contract in `AGENTS_payload_structure.json`.
 
 ## Lint Rule

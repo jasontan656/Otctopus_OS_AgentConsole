@@ -7,6 +7,7 @@ anchors:
   relation: implements
   direction: upstream
   reason: This document belongs to the governed skill tree under the main facade.
+owner: "由 `$Meta-RootFile-Manager` 作为 `Octopus_OS/Client_Applications/Unified_Portal/Development_Docs` container 的 runtime entry owner 负责治理；当前通过 `AGENTS_MD` 通道受管并同步这个入口文件。"
 ---
 
 [AGENT RUNTIME HOOK - ABSOLUTE ENFORCEMENT]
@@ -45,6 +46,7 @@ anchors:
 
 ```json
 {
+  "owner": "由 `$Meta-RootFile-Manager` 作为 `Octopus_OS/Client_Applications/Unified_Portal/Development_Docs` container 的 runtime entry owner 负责治理；当前通过 `AGENTS_MD` 通道受管并同步这个入口文件。",
   "entry_role": "devflow_module_docs_entry",
   "governed_container": {
     "target_root": "/home/jasontan656/AI_Projects",
