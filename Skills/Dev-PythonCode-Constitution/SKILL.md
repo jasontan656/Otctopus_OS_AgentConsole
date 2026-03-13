@@ -23,7 +23,7 @@ metadata:
 - 本文件只做门面入口，不承载深规则正文。
 - 本技能用于收敛“关于 Python 代码的规范和指引”这一单一主轴，默认面向 Python 工程代码语境。
 - 当前职责已经扩展为两类且仅两类：Python 代码规范/拆分指引，以及 Python 相关静态 lint。
-- 从 `Constitution-knowledge-base` 迁出的胖代码检查、拆分指引与 Python 专属 lint 工具，统一由本技能接管。
+- Python 胖代码检查、拆分指引与 Python 专属 lint 工具统一由本技能接管。
 
 ## 2. 必读顺序
 1. 先读取 `references/routing/TASK_ROUTING.md`。

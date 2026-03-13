@@ -173,16 +173,6 @@ families:
         role_tag: "frontend-standards-showroom"
         status: "active"
         trigger_summary: "当进行前端开发，需要项目定制 Vue3 组件、UI 展厅与前端规范时使用。"
-  - family: "[Knowledge]"
-    description: "知识库与检索增强类技能。"
-    members:
-      - canonical_id: "Constitution-knowledge-base"
-        display_name: "Constitution-knowledge-base"
-        prefix: "Constitution"
-        family: "[Knowledge]"
-        role_tag: "constitution-knowledge-base"
-        status: "active"
-        trigger_summary: "当需要通过关键字检索相关规范并遵守基线入口时使用。"
   - family: "[Disabled]"
     description: "默认停用、仅在历史查看、迁移或重启用场景下使用的技能。"
     members:
