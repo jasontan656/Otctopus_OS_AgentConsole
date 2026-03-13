@@ -19,27 +19,17 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `Octopus_OS/Client_Applications/Unif
 - 在处理当前模块开发文档与施工闭环之前，必须先运行：
 - `<root>/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python <root>/Otctopus_OS_AgentConsole/Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py target-contract --source-path "/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs/AGENTS.md" --json`
 
-2. 模块开发文档容器
-- 当前 repo/workspace 根边界：`/home/jasontan656/AI_Projects`
-- 当前开发文档根：`/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs`
-- 当前代码对象根：`/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal`
-- 当前受管 docs root：`/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs`
-- 当前逻辑主题标识：`Unified_Portal`
-- mother doc root：`/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs/mother_doc`
-- execution packs root：`/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs/mother_doc/execution_atom_plan_validation_packs`
-- graph root：`/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs/graph`
+2. 当前容器定位
+- 当前对象是 `Unified_Portal` 的 `Development_Docs` 受管入口。
+- 具体 docs/codebase roots、逻辑主题标识与 hook 锚点以 `Part B` machine payload 为准。
 
 3. DevFlow 闭环入口
-- 当前模块的开发文档、任务包、evidence 与 acceptance 闭环由 `$Workflow-OctopusOS-DevFlow` 治理。
-- 进入任何阶段前，必须先运行：
-- `<root>/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python <root>/Otctopus_OS_AgentConsole/Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py target-runtime-contract --target-root "/home/jasontan656/AI_Projects" --development-docs-root "/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs" --docs-root "/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs" --module-dir "Unified_Portal" --json`
-- 若当前模块已经存在 mother_doc、编号归档、execution packs 或 graph，必须先复用当前脉络；禁止另起脱节文档线。
+- 当前模块开发闭环由 `$Workflow-OctopusOS-DevFlow` 驱动。
+- 阶段前置检查、读物边界、命令入口与 graph 角色，不在本文件重复展开；一律从该 skill 的 CLI JSON contract 读取。
 
 4. 治理链约束
-- 本文件属于 `Meta-RootFile-Manager` 的受管外部 `AGENTS.md`，外部文件只允许承载 `Part A`。
-- 更新本文件时，必须使用 `$Meta-RootFile-Manager` 的 `collect` / `push` / `scaffold` 流程，避免治理链断裂。
-- 本模块下的开发文档、任务包、graph、evidence 回写和 acceptance 收口，必须同时遵守 `$Workflow-OctopusOS-DevFlow` 的阶段合同。
-- 若内部 `Part B` 启用了高抽象合同回流 hook，则 turn end 必须分析被修改的 mother doc 原子文档是否需要反向同步到指定 skill。
+- 本文件只承载外部 `Part A`。
+- 更新本文件必须通过 `$Meta-RootFile-Manager` 的 `collect` / `push` / `scaffold` 闭环。
 </part_A>
 
 <part_B>
