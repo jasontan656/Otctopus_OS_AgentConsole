@@ -18,9 +18,19 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `Otctopus_OS_AgentConsole` repositor
 
 3. Runtime Rule Source
 - CLI JSON 输出是该路径的运行时规则源。
+- skill 内部 markdown 审计文件仅供人类审计，不可替代 CLI JSON。
 - `Part B` 负责 machine payload；skills 治理顺序与最小语义入口以 `default_meta_skill_order` 为准。
 - 路径、语言、依赖、tech stack、mirror/install、Git traceability 等具体规则若已在 `Part B` 或对应 `SkillsManager` 技能内声明，不在 `Part A` 重复展开。
 
-4. 治理链约束
+4. Repo-local skills 依赖环境
+- 与 skills 执行相关的 Python 依赖环境固定为 `./.venv_backend_skills`；对应锁文件为 `./requirements-backend_skills.lock.txt`。
+- 与 skills 执行相关的前端依赖环境固定为 `./frontend_skills/`；对应真源为 `package.json` 与 `package-lock.json`。
+- 若需要新增 repo-local 依赖，安装位置只能是本 repo 的 `*_skills` 环境或其受管 manifest/lock 所在目录，不得把全局环境当长期依赖承载层。
+
+5. 同回合收口
+- 如果本回合写入 `Otctopus_OS_AgentConsole`，必须同回合完成 Git traceability。
+- 若任务内容涉及 Python 相关编辑，结束前必须完成 `Dev-PythonCode-Constitution` 的 lint。
+
+6. 治理链约束
 - 更新本文件时及相关内容时,必须使用 $Meta-RootFile-Manager 更新治理映射模版然后再回推至本文件,或者更新本文件但是必须使用技能的collect来反向更新,避免单点更新治理链断裂.
 </part_A>
