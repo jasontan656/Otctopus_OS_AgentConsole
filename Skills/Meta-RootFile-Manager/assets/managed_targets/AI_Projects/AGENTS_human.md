@@ -18,6 +18,7 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `AI_Projects` workspace root 的 run
 1. 根入口命令
 - 在处理 workspace root 路径规则之前，必须先运行：
 - `<root>/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python <root>/Otctopus_OS_AgentConsole/Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py target-contract --source-path "/home/jasontan656/AI_Projects/AGENTS.md" --json`
+- 当前环境为 `WSL`；若需要调用系统 Python，使用 `python3`。
 
 2. 技能类任务附加入口
 - 任何时候只要任务涉及技能、技能镜像、技能安装、技能同步、技能注册、技能治理或技能运行时，必须阅读：
