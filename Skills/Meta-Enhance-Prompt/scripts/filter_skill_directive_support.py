@@ -19,6 +19,10 @@ def skills_root() -> pathlib.Path:
     return pathlib.Path(__file__).resolve().parents[2]
 
 
+def toolbox_command(skill_name: str, command: str) -> str:
+    return f"./.venv_backend_skills/bin/python Skills/{skill_name}/scripts/Cli_Toolbox.py {command} --json"
+
+
 def extract_explicit_skill_names(text: str) -> list[str]:
     ordered: list[str] = []
     seen: set[str] = set()
@@ -78,18 +82,29 @@ def build_skill_directive(raw_text: str) -> tuple[int, str, dict[str, object]]:
             if skill_name != DEFAULT_SKILL_NAME
             else f"prompt/instruction/workflow routing for `{intent_summary}`"
         )
+        contract_command = toolbox_command(skill_name, "contract")
+        active_invoke_command = toolbox_command(skill_name, "directive --topic active-invoke")
+        output_governance_command = toolbox_command(skill_name, "directive --topic output-governance")
         directives.append(
             "\n".join(
                 [
-                    f"read `{skill_name}` skill for {purpose}.",
-                    "this is the guideline of how you should apply it:",
-                    f"- read `{skill_file}`",
-                    "- apply the workflow from the skill source directly",
-                    "- do not rely on this directive as a substitute for the skill content",
+                    f"call `{contract_command}` for {purpose}.",
+                    "then continue with the runtime payload instead of reading SKILL.md as the primary source:",
+                    f"- `{active_invoke_command}`",
+                    f"- `{output_governance_command}`",
                 ]
             )
         )
-        resolved_skills.append({"skill_name": skill_name, "skill_file": str(skill_file), "purpose": purpose})
+        resolved_skills.append(
+            {
+                "skill_name": skill_name,
+                "skill_file": str(skill_file),
+                "purpose": purpose,
+                "contract_command": contract_command,
+                "active_invoke_command": active_invoke_command,
+                "output_governance_command": output_governance_command,
+            }
+        )
 
     if missing:
         return EXIT_SKILL_SOURCE_MISSING, f"skill_source_missing: {', '.join(missing)}", {

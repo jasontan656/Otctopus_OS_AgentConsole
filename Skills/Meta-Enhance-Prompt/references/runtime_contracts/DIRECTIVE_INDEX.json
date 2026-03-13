@@ -1,0 +1,19 @@
+{
+  "topics": {
+    "active-invoke": {
+      "doc_kind": "workflow",
+      "json_path": "ACTIVE_INVOKE_DIRECTIVE.json",
+      "human_path": "ACTIVE_INVOKE_DIRECTIVE_human.md"
+    },
+    "skill-directive": {
+      "doc_kind": "instruction",
+      "json_path": "SKILL_DIRECTIVE_DIRECTIVE.json",
+      "human_path": "SKILL_DIRECTIVE_DIRECTIVE_human.md"
+    },
+    "output-governance": {
+      "doc_kind": "contract",
+      "json_path": "OUTPUT_GOVERNANCE_CONTRACT.json",
+      "human_path": "OUTPUT_GOVERNANCE_CONTRACT_human.md"
+    }
+  }
+}

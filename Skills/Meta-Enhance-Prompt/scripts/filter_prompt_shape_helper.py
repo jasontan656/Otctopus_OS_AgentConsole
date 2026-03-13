@@ -4,8 +4,6 @@ from __future__ import annotations
 import pathlib
 import re
 
-EXIT_TEMPLATE_MISSING = 10
-
 FORBIDDEN_TOKENS = [
     "[ACTIVATION]",
     "[IMPACT_MATRIX]",
@@ -28,12 +26,13 @@ SECTION_ALIASES = {
     "boundaries": {"boundaries", "boundary", "constraints", "边界", "约束"},
     "validation": {"validation", "acceptance", "acceptance checks", "验证", "验收"},
 }
-DEFAULT_LINES = {
-    "repo_context": ["- Survey the current repo and state the affected surfaces before execution."],
-    "inputs": ["- User request", "- Relevant repository context and affected files"],
-    "outputs": ["- A concrete task result aligned with the user goal"],
-    "boundaries": ["- Preserve the user's real goal", "- Do not invent unrelated scope", "- Respect repository boundaries and existing contracts"],
-    "validation": ["- Output matches the stated goal", "- Output is consistent with repository evidence", "- Acceptance can be checked directly"],
+CANONICAL_HEADERS = {
+    "goal": "GOAL",
+    "repo_context": "REPO_CONTEXT_AND_IMPACT",
+    "inputs": "INPUTS",
+    "outputs": "OUTPUTS",
+    "boundaries": "BOUNDARIES",
+    "validation": "VALIDATION",
 }
 
 
@@ -83,12 +82,20 @@ def parse_contract_sections(text: str) -> dict[str, list[str] | str]:
             sections["goal"] = f"{goal} {cleaned}".strip() if goal else cleaned
         elif current:
             sections[current].append(f"- {cleaned}")  # type: ignore[index]
-    if not str(sections["goal"] or "").strip():
-        sections["goal"] = sanitize_inline(text)
-    for key, default_lines in DEFAULT_LINES.items():
-        if not sections[key]:
-            sections[key] = list(default_lines)
     return sections
+
+
+def missing_required_sections(sections: dict[str, list[str] | str]) -> list[str]:
+    missing: list[str] = []
+    for key, header in CANONICAL_HEADERS.items():
+        value = sections[key]
+        if isinstance(value, str):
+            if not value.strip():
+                missing.append(header)
+            continue
+        if not value:
+            missing.append(header)
+    return missing
 
 
 def load_template(template_file: pathlib.Path) -> str:
