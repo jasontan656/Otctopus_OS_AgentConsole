@@ -61,18 +61,13 @@
   },
   "turn_start_actions": [
     "use the returned target contract JSON as the runtime rule source",
-    "classify the turn as READ_EXEC or WRITE_EXEC",
-    "when task contents include skill/runtime/product path usage, identify the concrete product root first and derive governed runtime paths from that root before editing",
     "if the task needs repo-local dependencies, read the backend/frontend skills environment manifests before installing or invoking tooling",
     "if the task needs new repo-local dependencies, the AI may choose them from task evidence and install them into the governed *_skills environments before use",
     "if the task touches Skills/, read skills_required_techstacks first and treat it as the mandatory baseline before introducing new stacks or writing custom equivalents",
     "if the turn touches language surfaces, enforce outward English docs and inward Chinese development boundaries before editing"
   ],
   "runtime_constraints": [
-    "treat CLI JSON as the primary runtime rule source",
-    "do not use audit markdown as the primary execution guide",
     "stay within the concrete repo-local boundary defined by this payload",
-    "choose READ_EXEC or WRITE_EXEC by actual write intent, not by file type alone",
     "product/runtime paths must resolve from the product root; do not hardcode author-machine absolute paths or treat AI_Projects literals as the only valid install root",
     "skill-local resources may resolve from current skill roots, but repo mirrors, codex runtime paths, result paths, and product workspaces must use root-first derivation",
     "when <root>/.codex is absent, only Codex home lookup may fall back to explicit CODEX_HOME or an attached existing Codex installation; other governed product paths remain root-first",
