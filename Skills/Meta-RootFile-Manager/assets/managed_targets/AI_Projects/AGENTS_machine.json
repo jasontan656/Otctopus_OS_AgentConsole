@@ -26,8 +26,8 @@
     "choose READ_EXEC or WRITE_EXEC by actual write intent, not by file type alone",
     "for any skill-related task, load the Otctopus_OS_AgentConsole repo-local contract before skill-specific reads, writes, sync, install, registry, lint, or Git actions",
     "when a concrete repo path becomes active, load that repo-local contract before repo-specific write, lint, or Git actions",
-    "before every final reply, hard-execute the Meta-Runtime-Selfcheck turn-end hook instead of treating selfcheck as optional narration",
-    "the turn-end hook itself must run every turn for analysis; only the extra selfcheck output may be skipped when the run is smooth"
+    "treat Meta-Runtime-Selfcheck as a default turn hook across the active turn instead of a final-reply-only narration step",
+    "the hook must stay available throughout the turn for analysis and repair; only the extra user-facing hook output may be skipped when the run is smooth"
   ],
   "execution_modes": {
     "READ_EXEC": {
@@ -59,12 +59,12 @@
   ],
   "turn_end_actions": [
     "print TURN_END guardrails",
-    "hard-execute the $Meta-Runtime-Selfcheck turn-end hook before final reply",
-    "run the turn-end hook analysis on every turn; do not skip the hook itself just because the run looks smooth",
-    "call runtime-contract --json first, then read directive --topic turn-end-selfcheck --json as the default branch",
-    "if the run is smooth, skip only the extra selfcheck output and continue to the normal final reply",
-    "if issues are present, classify them into immediate same-turn repair, optimization guidance, and unresolved risk",
-    "when a bounded fix is safe within the active repo boundary, repair first; otherwise merge concise selfcheck findings into the same final reply",
+    "keep Meta-Runtime-Selfcheck active as a default turn hook throughout the turn and run a final closure pass before final reply",
+    "do not skip the hook itself just because the run looks smooth; only skip extra user-facing hook output when no repair happened",
+    "call runtime-contract --json first, then read directive --topic turn-hook-self-repair --json as the default branch when issue evidence appears",
+    "if the run stays smooth, continue directly to the normal final reply without extra hook text",
+    "if issues are present, repair the minimal verifiable scope first, then merge repaired items and residual risk into the same final reply",
+    "when a bounded fix is safe within the active repo boundary, repair first; do not downgrade directly into advice while a local repair still exists",
     "defer repo-specific lint or Git duties to the concrete repo-local contract when applicable"
   ]
 }

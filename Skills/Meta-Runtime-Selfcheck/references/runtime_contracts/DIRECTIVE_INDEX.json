@@ -1,5 +1,10 @@
 {
   "topics": {
+    "turn-hook-self-repair": {
+      "doc_kind": "workflow",
+      "json_path": "DIAGNOSE_WORKFLOW.json",
+      "human_path": "DIAGNOSE_WORKFLOW_human.md"
+    },
     "turn-end-selfcheck": {
       "doc_kind": "workflow",
       "json_path": "DIAGNOSE_WORKFLOW.json",

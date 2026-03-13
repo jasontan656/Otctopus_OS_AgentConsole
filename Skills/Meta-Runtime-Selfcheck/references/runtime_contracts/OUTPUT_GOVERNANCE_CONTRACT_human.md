@@ -12,7 +12,7 @@ anchors:
   - target: "DIAGNOSE_WORKFLOW_human.md"
     relation: "supports"
     direction: "cross"
-    reason: "Turn-end selfcheck output still needs governed runtime logging."
+    reason: "Turn-hook repair output still needs governed runtime logging."
 ---
 
 # OUTPUT_GOVERNANCE_CONTRACT

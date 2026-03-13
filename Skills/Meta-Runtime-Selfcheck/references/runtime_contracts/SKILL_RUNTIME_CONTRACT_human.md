@@ -12,7 +12,7 @@ anchors:
   - target: "DIAGNOSE_WORKFLOW_human.md"
     relation: "routes_to"
     direction: "downstream"
-    reason: "Turn-end selfcheck selection follows the runtime contract."
+    reason: "Turn-hook self-repair selection follows the runtime contract."
   - target: "FINAL_REPLY_MERGE_CONTRACT_human.md"
     relation: "routes_to"
     direction: "downstream"
@@ -23,8 +23,8 @@ anchors:
 
 <part_A>
 - 人类阅读时可用本文件理解 `Meta-Runtime-Selfcheck` 的 CLI-first 入口。
-- 本技能当前不是“只有手动点名才进入”的后置复盘器，而是默认 `turn end` 自检合同。
-- 当任务进入具体自检、自修或 final reply 合并语境时，再读取对应 directive。
+- 本技能当前不是“只有临近最终回复才进入”的后置复盘器，而是默认贯穿整个回合的 `turn hook` 修复合同。
+- 当任务进入具体 hook、自修或 final reply 合并语境时，再读取对应 directive。
 </part_A>
 
 <part_B>
@@ -41,9 +41,11 @@ anchors:
     "markdown_is_not_primary_instruction_source": true
   },
   "trigger_policy": {
-    "default_trigger": "turn_end",
+    "default_trigger": "turn_hook",
     "manual_invoke_still_allowed": true,
-    "skip_when_smooth": true,
+    "start_when_issue_detected": true,
+    "run_final_closure_before_reply": true,
+    "skip_extra_output_when_smooth": true,
     "allow_implicit_invocation": true
   },
   "tool_entry": {
@@ -57,22 +59,23 @@ anchors:
     }
   },
   "must_use_sequence": [
-    "Near turn end, call runtime-contract before consuming runtime guidance for this skill.",
-    "Read the turn-end-selfcheck directive as the default branch.",
-    "If issues are detected, decide whether same-turn self-repair is safe; otherwise downgrade the item into final-reply optimization guidance.",
+    "At turn start, call runtime-contract before consuming runtime guidance for this skill.",
+    "When issue evidence appears anywhere in the active turn, immediately read the turn-hook-self-repair directive.",
+    "If the issue is local and verifiable inside the active boundary, repair first before continuing the main task.",
+    "Before the final reply, read the final-reply-merge directive and disclose repaired items, verification evidence, and residual risk.",
     "Call paths --json when governed runtime or result paths matter.",
     "Open human mirrors only when the direct JSON payload still leaves a real gap."
   ],
   "directive_topics": [
     {
-      "topic": "turn-end-selfcheck",
+      "topic": "turn-hook-self-repair",
       "doc_kind": "workflow",
-      "use_when": "Every turn end before final reply; skip output if the run is smooth."
+      "use_when": "Whenever issue evidence appears in the active turn, and again before the final reply if closure is needed."
     },
     {
       "topic": "self-repair-writeback",
       "doc_kind": "contract",
-      "use_when": "Turn-end selfcheck found a bounded issue that can be safely repaired and verified in the same turn."
+      "use_when": "Turn hook found a bounded issue that must be repaired and verified inside the same turn."
     },
     {
       "topic": "output-governance",
@@ -82,7 +85,7 @@ anchors:
     {
       "topic": "final-reply-merge",
       "doc_kind": "contract",
-      "use_when": "The turn found optimization items or self-repair outcomes that must be merged into the same final reply."
+      "use_when": "The turn repaired issues or retained residual risk that must be merged into the same final reply."
     }
   ],
   "runtime_dependencies": {
@@ -106,8 +109,9 @@ anchors:
     "resolved_paths_command": "./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py paths --json"
   },
   "hard_constraints": [
-    "Use this skill near turn end by default, not only when the user manually invokes it.",
-    "Skip selfcheck output when the turn was smooth and the extra section would be noise.",
+    "Use this skill as a default turn hook across the active turn, not only near final reply.",
+    "When issue evidence is concrete and locally repairable, repair first instead of downgrading directly into advice.",
+    "Skip extra hook output only when the turn stayed smooth and no repair happened.",
     "Do not treat SKILL.md as the primary runtime instruction source.",
     "Do not perform speculative broad auto-repairs under the name of selfcheck.",
     "Do not default logs or result artifacts to the current working directory."

@@ -35,7 +35,7 @@ class TestMetaRuntimeSelfcheckSmoke:
     def test_runtime_pain_batch_help_starts(self) -> None:
         result = self.run_python(BATCH_SCRIPT, "--help")
         assert result.returncode == 0, result.stderr
-        assert "Turn-end runtime selfcheck" in result.stdout
+        assert "Turn hook runtime self-repair" in result.stdout
         assert "--memory-runtime" in result.stdout
 
     def test_runtime_pain_batch_reports_missing_provider_as_json(self) -> None:
@@ -61,6 +61,17 @@ class TestMetaRuntimeSelfcheckSmoke:
         payload = json.loads(result.stdout)
         assert payload["skill_name"] == "Meta-Runtime-Selfcheck"
         assert "runtime-contract" in payload["tool_entry"]["commands"]
+        assert payload["trigger_policy"]["default_trigger"] == "turn_hook"
+
+    def test_turn_hook_directive_aliases_share_same_payload(self) -> None:
+        new_result = self.run_python(TOOLBOX, "directive", "--topic", "turn-hook-self-repair", "--json")
+        legacy_result = self.run_python(TOOLBOX, "directive", "--topic", "turn-end-selfcheck", "--json")
+        assert new_result.returncode == 0, new_result.stderr
+        assert legacy_result.returncode == 0, legacy_result.stderr
+        new_payload = json.loads(new_result.stdout)
+        legacy_payload = json.loads(legacy_result.stdout)
+        assert new_payload["topic"] == "turn-hook-self-repair"
+        assert legacy_payload["purpose"] == new_payload["purpose"]
 
     def test_observability_logs_follow_runtime_root_override(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

@@ -10,12 +10,12 @@ from runtime_pain_batch_support import DEFAULT_HISTORY, DEFAULT_MEMORY_RUNTIME, 
 
 def build_parser() -> argparse.ArgumentParser:
     ap = argparse.ArgumentParser(
-        description="Turn-end runtime selfcheck: inspect current-turn or recent-run pain points from an external provider, skip noisy output when the run is smooth, and support same-turn verified repair writeback for bounded issues."
+        description="Turn hook runtime self-repair: monitor current-turn or recent-run pain points from an external provider, start when issue evidence appears, and support same-turn verified repair writeback for bounded issues."
     )
     ap.add_argument(
         "mode_token",
         nargs="*",
-        help="Use `>` (or omit mode) for turn-end selfcheck. Use `修复` only when a bounded fix is already applied and verification-backed writeback is intended.",
+        help="Use `>` (or omit mode) for the default turn hook diagnose branch. Use `修复` only when a bounded fix is already applied and verification-backed writeback is intended.",
     )
     ap.add_argument("--mode", default="auto", choices=["auto", "diagnose", "repair"])
     ap.add_argument(
