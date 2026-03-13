@@ -38,6 +38,8 @@ anchors:
 - `npm run cli -- stage-doc-contract --stage <stage> --json`
 - `npm run cli -- stage-command-contract --stage <stage> --json`
 - `npm run cli -- stage-graph-contract --stage <stage> --json`
+- `npm run cli -- build-product-doc-graph --docs-root <development_docs_root> [--write-assets] --json`
+- `npm run cli -- lint-product-mother-doc --docs-root <development_docs_root> [--write-assets] --json`
 
 ## 运行门禁
 - 未读取当前阶段四类合同前，不得开始该阶段动作。
@@ -47,3 +49,4 @@ anchors:
   - 前端合同边界
   - 产品母文档 ownership
   - 下一轮代码重建的契约完备度
+- 前端 mother doc lint 必须直接读取目标 `Development_Docs/mother_doc`，并对 layout / surface / component / split 粒度做前端专项门禁。

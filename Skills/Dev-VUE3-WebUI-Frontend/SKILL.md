@@ -71,6 +71,9 @@ metadata:
 - graph 校验：
   - `npm run cli -- build-anchor-graph --json`
   - `npm run cli -- rebuild-self-graph --json`
+- 产品 mother doc 门禁：
+  - `npm run cli -- build-product-doc-graph --docs-root <development_docs_root> [--write-assets] --json`
+  - `npm run cli -- lint-product-mother-doc --docs-root <development_docs_root> [--write-assets] --json`
 - 产品运行时需求入口：
   - 由具体产品仓的 `Workflow-OctopusOS-DevFlow mother_doc` 承载
 
@@ -80,6 +83,7 @@ metadata:
 - 阶段切换后必须丢弃上一阶段的局部 focus，只保留 resident docs。
 - 组件、动效、布局、语言规则、menu/canvas 架构都应先写入文档，再进入下一轮代码重建。
 - 只要任务进入前端开发，就应优先使用本技能收敛组件、界面与规范语义。
+- 当前技能不仅治理通用前端合同，也负责读取目标产品 `mother_doc` 并执行前端定制 lint；lint 应直接消费目标文档树与其 graph，而不是只检查 skill 自身规则文案。
 - 统一前端壳应承载多治理域内容，但不得把各治理域的原始语义压平；应通过 domain-aware viewer projection 收口到统一 UI。
 - 具体产品的运行时需求、panel catalog 与产品 UI 代码必须落在产品仓，而不回流进本技能。
 

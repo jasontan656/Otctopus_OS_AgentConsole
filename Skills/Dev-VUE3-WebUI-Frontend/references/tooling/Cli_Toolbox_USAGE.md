@@ -23,8 +23,12 @@ anchors:
 - `npm run cli -- stage-graph-contract --stage <stage> --json`
 - `npm run cli -- build-anchor-graph --json`
 - `npm run cli -- rebuild-self-graph --json`
+- `npm run cli -- build-product-doc-graph --docs-root <development_docs_root> [--write-assets] --json`
+- `npm run cli -- lint-product-mother-doc --docs-root <development_docs_root> [--write-assets] --json`
 
 ## 使用原则
 - staged skill 的当前阶段行为只能从 CLI JSON 获取。
 - graph rebuild 用于让技能自身合同图保持最新。
+- product mother doc graph 用于从目标 `Development_Docs/mother_doc` 提取 graph、panel/component/container/surface profile 与 lint assets。
+- product mother doc lint 负责发现前端合同缺口、布局数据缺失、视觉属性缺失、组件属性缺失与语义应拆未拆问题。
 - 若任务是产品 UI 运行层，CLI 只负责合同与 graph，不替代产品仓的 dev/build/service 命令。

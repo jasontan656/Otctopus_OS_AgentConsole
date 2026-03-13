@@ -185,6 +185,7 @@ const STAGES: Record<StageId, StageDefinition> = {
       ],
       gate_commands: [
         'npm run typecheck',
+        'npm run cli -- lint-product-mother-doc --docs-root <development_docs_root> --json',
       ],
       stage_actions: [
         'Adjust layout docs before reintroducing any UI code.',
@@ -278,6 +279,7 @@ const STAGES: Record<StageId, StageDefinition> = {
       gate_commands: [
         'npm run typecheck',
         'npm test',
+        'npm run cli -- lint-product-mother-doc --docs-root <development_docs_root> --json',
       ],
       stage_actions: [
         'Refine component/file organization docs before restructuring code.',
@@ -374,6 +376,8 @@ const STAGES: Record<StageId, StageDefinition> = {
       gate_commands: [
         'npm run typecheck',
         'npm test',
+        'npm run cli -- build-product-doc-graph --docs-root <development_docs_root> --write-assets --json',
+        'npm run cli -- lint-product-mother-doc --docs-root <development_docs_root> --write-assets --json',
         'npm run cli -- rebuild-self-graph --json',
       ],
       stage_actions: [
@@ -456,6 +460,8 @@ export const RUNTIME_CONTRACT = {
     'Cli_Toolbox.stage-graph-contract': 'Emit graph-reading and graph-update policy for the current stage.',
     'Cli_Toolbox.build-anchor-graph': 'Emit the current markdown graph workspace for a target skill root.',
     'Cli_Toolbox.rebuild-self-graph': 'Rebuild self_anchor_graph.json for the current skill root.',
+    'Cli_Toolbox.build-product-doc-graph': 'Build a graph/profile workspace for a product Development_Docs mother_doc tree.',
+    'Cli_Toolbox.lint-product-mother-doc': 'Lint a product mother_doc against frontend contract, layout, component, and split gates.',
   },
   governance_rules: [
     'SKILL.md must stay entry-only.',
@@ -468,6 +474,7 @@ export const RUNTIME_CONTRACT = {
   validation_closure: [
     'npm run typecheck',
     'npm test',
+    'npm run cli -- lint-product-mother-doc --docs-root <development_docs_root> --json',
     'npm run cli -- rebuild-self-graph --json',
   ],
 } as const

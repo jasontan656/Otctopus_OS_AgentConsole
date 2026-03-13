@@ -25,6 +25,14 @@ anchors:
     relation: "indexes"
     direction: "downstream"
     reason: "Language rules constrain UI copy, code comments, and implementation text."
+  - target: "UI_PRODUCT_MOTHER_DOC_LINT_WORKFLOW.md"
+    relation: "indexes"
+    direction: "downstream"
+    reason: "Product mother doc lint governs frontend-specific completeness and structure gates."
+  - target: "UI_PRODUCT_SEMANTIC_SPLIT_GATE.md"
+    relation: "indexes"
+    direction: "downstream"
+    reason: "Semantic split gate governs overloaded product docs that should be split."
 ---
 
 # Frontend Rules Index
@@ -38,9 +46,15 @@ anchors:
   - 定义组件 package 目录形状、局部样式、导出与 registry 一致性的 lint 工作流。
 - `UI_LANGUAGE_AND_COPY_RULES.md`
   - 定义页面文案、代码和注释必须统一使用 English 的规则。
+- `UI_PRODUCT_MOTHER_DOC_LINT_WORKFLOW.md`
+  - 定义如何读取产品侧 `mother_doc`、构造 graph/profile，并执行前端专项门禁。
+- `UI_PRODUCT_SEMANTIC_SPLIT_GATE.md`
+  - 定义如何在产品母文档上识别“应拆未拆”的前端违规。
 
 ## 读取顺序
 1. `UI_LAYOUT_ADJUSTMENT_RULES.md`
 2. `UI_LANGUAGE_AND_COPY_RULES.md`
 3. `UI_IDENTIFIER_LINT_WORKFLOW.md`
 4. `UI_PACKAGE_SHAPE_LINT_WORKFLOW.md`
+5. `UI_PRODUCT_MOTHER_DOC_LINT_WORKFLOW.md`
+6. `UI_PRODUCT_SEMANTIC_SPLIT_GATE.md`

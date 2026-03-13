@@ -8,6 +8,10 @@ import {
   rebuildSelfGraph,
 } from '../src/lib/docstructure.js'
 import {
+  buildProductMotherDocGraph,
+  lintProductMotherDoc,
+} from '../src/lib/product-mother-doc-lint.js'
+import {
   RUNTIME_CONTRACT,
   getStageDefinition,
 } from '../src/lib/stage-contracts.js'
@@ -34,6 +38,8 @@ function usage(): never {
     '  npm run cli -- stage-graph-contract --stage <stage> --json',
     '  npm run cli -- build-anchor-graph --target <skill_root> --json',
     '  npm run cli -- rebuild-self-graph --json',
+    '  npm run cli -- build-product-doc-graph --docs-root <development_docs_root> [--write-assets] --json',
+    '  npm run cli -- lint-product-mother-doc --docs-root <development_docs_root> [--write-assets] --json',
   ].join('\n'))
   process.exit(2)
 }
@@ -50,7 +56,9 @@ async function main(): Promise<void> {
   }
 
   const target = readFlag(rest, '--target') ?? defaultSkillRoot()
+  const docsRoot = readFlag(rest, '--docs-root')
   const stage = readFlag(rest, '--stage')
+  const writeAssets = rest.includes('--write-assets')
 
   try {
     if (command === 'runtime-contract') {
@@ -109,6 +117,20 @@ async function main(): Promise<void> {
         errors: workspace.errors,
       })
       process.exit(workspace.status === 'fail' ? 1 : 0)
+    }
+
+    if (command === 'build-product-doc-graph') {
+      if (!docsRoot) usage()
+      const payload = await buildProductMotherDocGraph(docsRoot, { writeAssets })
+      printJson(payload)
+      process.exit(payload.status === 'fail' ? 1 : 0)
+    }
+
+    if (command === 'lint-product-mother-doc') {
+      if (!docsRoot) usage()
+      const payload = await lintProductMotherDoc(docsRoot, { writeAssets })
+      printJson(payload)
+      process.exit(payload.status === 'fail' ? 1 : 0)
     }
 
     usage()
