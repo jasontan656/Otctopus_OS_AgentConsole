@@ -14,3 +14,5 @@ anchors:
 - Primary runtime entry: `./.venv_backend_skills/bin/python Skills/Dev-OctopusOS-Constitution-ProjectStructure/scripts/Cli_Toolbox.py contract --json`
 - CLI JSON is the primary runtime source.
 - `SKILL.md` remains a facade and narrative mirror.
+- Object roots express object identity only; object-internal stable role directories use short role names such as `Common/` and `Core/`.
+- `Foundation_Bundle` capability directories use `Auth/`, `Payload/`, `Persistence/`, `Event_Task/`, `Cache/`, `Session_Context/`, `Policy_Enforcement/`, `Storage_Access/`, and `Audit_Observe/`; `*_Runtime` is no longer a valid object-level path suffix.

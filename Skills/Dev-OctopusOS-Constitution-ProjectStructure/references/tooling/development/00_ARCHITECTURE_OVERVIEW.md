@@ -11,5 +11,7 @@ anchors:
 
 # Architecture Overview
 
-- 当前没有专属工具架构。
+- 当前工具架构为“静态 contract reader”：
+  - `scripts/Cli_Toolbox.py` 只负责读取并输出 `references/runtime_contracts/SKILL_RUNTIME_CONTRACT.json`
+  - 结构规则和命名宪法仍以下沉治理文档为源
 - 若未来新增工具，其职责只能是消费本技能已有的项目级结构合同，输出 lint 或检查结果，不能反向成为规则源。

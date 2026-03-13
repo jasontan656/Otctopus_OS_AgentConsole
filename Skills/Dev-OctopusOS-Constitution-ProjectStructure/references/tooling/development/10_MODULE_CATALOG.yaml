@@ -1,4 +1,4 @@
-catalog_version: v1
+catalog_version: v2
 toolbox_name: Cli_Toolbox
 maintain_rules:
   naming: "Cli_Toolbox.<tool_name>"
@@ -10,4 +10,7 @@ maintain_rules:
 profile_support:
   - basic
   - staged_cli_first
-modules: []
+modules:
+  - name: contract
+    kind: static_contract_reader
+    purpose: emit_runtime_contract_json

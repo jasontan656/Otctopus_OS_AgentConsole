@@ -22,24 +22,25 @@ anchors:
 
 ## 规则说明
 - `Foundation_Bundle` 当前阶段固定包含以下子能力：
-  - `Auth_Runtime`
+  - `Auth`
     - 作用：统一认证、主体校验与身份相关运行时合同。
-  - `Payload_Runtime`
+  - `Payload`
     - 作用：统一 request / response / event payload 的规范化、校验、重塑与出口收口。
-  - `Persistence_Runtime`
+  - `Persistence`
     - 作用：统一事务边界、repository adapter、数据库访问合同。
-  - `Event_Task_Runtime`
+  - `Event_Task`
     - 作用：统一异步任务投递、worker 执行路径、重试与消费通道。
-  - `Cache_Runtime`
+  - `Cache`
     - 作用：统一缓存、热点数据与快速读取合同。
-  - `Session_Context_Runtime`
+  - `Session_Context`
     - 作用：统一会话态、上下文透传与请求生命周期状态合同。
-  - `Policy_Enforcement_Runtime`
+  - `Policy_Enforcement`
     - 作用：统一鉴权、策略裁决与跨模块执行约束。
-  - `Storage_Access_Runtime`
+  - `Storage_Access`
     - 作用：统一文件与对象存储的访问合同、元数据桥接与下载上传通道。
-  - `Audit_Observe_Runtime`
+  - `Audit_Observe`
     - 作用：统一日志上下文、trace、审计线索和系统级观测基线。
+- 这些目录名表达的是“底座能力身份”，不是部署形态；`Runtime` 已被视为 bundle 上下文中的默认语义，不应继续出现在对象级物理路径后缀里。
 - `Foundation_Bundle` 的项目级技术选型固定为：
   - `Python 3.12`
   - `FastAPI`

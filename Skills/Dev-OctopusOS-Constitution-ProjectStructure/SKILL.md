@@ -24,7 +24,7 @@ metadata:
 - 本文件只做门面入口，不承载深规则正文。
 - 本技能负责治理整个章鱼OS项目的整体架构、项目结构、模块定位与热插拔边界。
 - 本技能只处理项目级结构，不治理某个域内部的具体实现架构；例如前端在章鱼OS中的系统定位、依赖关系、插拔方式归本技能，但前端域内组件分层、页面结构与具体前端规范不归本技能。
-- 本技能当前是静态治理技能，没有专属 runtime contract，也没有本地 CLI；有效规则以下沉文档为准。
+- 本技能当前通过静态 `Cli_Toolbox.py` 暴露 runtime contract；有效结构规则仍以下沉文档为准。
 
 ## 2. 必读顺序
 1. 先读取 `references/routing/TASK_ROUTING.md`。
@@ -56,7 +56,9 @@ metadata:
   - `references/project_structure/FOLDER_CONTAINER_PLANNING_RULES.md`
   - `references/project_structure/OCTOPUS_OS_TARGET_FOLDER_LAYOUT.md`
 - 工具层：
-  - 当前无专属 CLI；`references/tooling/` 只保留“当前无工具”和未来扩展约束。
+  - `scripts/Cli_Toolbox.py`
+  - `references/runtime_contracts/*`
+  - `references/tooling/*`
 
 ## 4. 适用域
 - 适用于：章鱼OS整体架构设计、项目级对象定位、模块热插拔边界、底座能力常驻边界、项目目录/容器规划、未来 lint 门禁的结构性依据。
@@ -66,9 +68,9 @@ metadata:
 - `Meta-Architect-MindModel` 负责更高层的 architect-first 决策镜头；本技能负责把章鱼OS项目结构本身落成稳定的治理合同。
 
 ## 5. 执行入口
-- 当前无专属 CLI。
-- 当前入口即：`SKILL.md -> references/routing/TASK_ROUTING.md -> 对应 project_structure 原子文档`。
-- 若未来新增 lint、目录规划检查或模块注册检查工具，必须同步更新 `references/tooling/` 全套文档。
+- 先执行 `./.venv_backend_skills/bin/python Skills/Dev-OctopusOS-Constitution-ProjectStructure/scripts/Cli_Toolbox.py contract --json`。
+- 再按 `SKILL.md -> references/routing/TASK_ROUTING.md -> 对应 project_structure 原子文档` 深读。
+- 若未来新增 lint、目录规划检查或模块注册检查工具，必须同步更新 `references/runtime_contracts/` 与 `references/tooling/` 全套文档。
 
 ## 6. 读取原则
 - 门面只负责路由，不重新长回规则正文。
@@ -76,6 +78,7 @@ metadata:
 - 若某条规则只属于单一 topic，应下沉到原子文档；不要继续堆在门面里。
 - 项目级结构规则优先于局部域偏好；先确定对象在章鱼OS中的系统位置，再进入域内实现。
 - 逻辑解耦优先于物理拆分；本技能允许“逻辑上可插拔、物理上先 bundle 部署”的过渡形态。
+- 物理路径一次只表达一层语义：对象身份、内部角色、运行态、阶段态不得堆叠进同一层目录名。
 
 ## 7. 结构索引
 ```text

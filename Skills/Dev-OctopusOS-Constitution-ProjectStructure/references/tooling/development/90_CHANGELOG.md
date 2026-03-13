@@ -11,4 +11,5 @@ anchors:
 
 # Changelog
 
-- `v1`: 初始化技能骨架，并声明当前无专属 CLI。
+- `v1`: 初始化技能骨架，建立门面、routing 与 project_structure 原子文档。
+- `v2`: 启用静态 `Cli_Toolbox.py contract --json` 入口，并把目录命名宪法更新为“对象名不重复、对象级目录不再使用 `*_Runtime` 后缀”。

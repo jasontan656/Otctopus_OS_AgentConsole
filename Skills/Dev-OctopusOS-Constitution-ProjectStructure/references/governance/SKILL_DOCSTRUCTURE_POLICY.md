@@ -27,4 +27,4 @@ anchors:
 ## 当前结构边界
 - 当前 skill 采用 `facade -> task routing -> governance atoms + project_structure atoms` 的 basic 结构。
 - `references/project_structure/` 只容纳项目级对象、模块、bundle、容器与文件夹结构规则；域内实现规范不得混入这里。
-- 当前未声明 runtime contract，也未声明专属 CLI；因此 `references/tooling/` 只承担“当前无工具现状”和未来扩展约束，不承担运行规则。
+- 当前已声明 runtime contract，并提供静态 `Cli_Toolbox.py contract --json` 入口；`references/tooling/` 负责说明该入口用途与未来工具扩展边界。

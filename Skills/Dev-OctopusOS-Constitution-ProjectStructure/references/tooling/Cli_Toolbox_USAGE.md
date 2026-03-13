@@ -12,8 +12,13 @@ anchors:
 # Cli_Toolbox Usage
 
 ## 当前状态
-- 本技能当前没有专属 `Cli_Toolbox.py`。
-- 当前读取入口固定为门面与 `references/` 下的治理文档。
+- 本技能当前提供静态 `scripts/Cli_Toolbox.py`。
+- 当前唯一命令是 `contract`，用途是输出 runtime contract JSON，供模型在深读治理文档前先获得统一入口和命名宪法。
+- 当前读取顺序固定为：
+  - `./.venv_backend_skills/bin/python Skills/Dev-OctopusOS-Constitution-ProjectStructure/scripts/Cli_Toolbox.py contract --json`
+  - `SKILL.md`
+  - `references/routing/TASK_ROUTING.md`
+  - 对应 `references/project_structure/*`
 
 ## 未来约束
 - 若后续为项目结构 lint、目录规划校验或模块注册检查新增专属 CLI：

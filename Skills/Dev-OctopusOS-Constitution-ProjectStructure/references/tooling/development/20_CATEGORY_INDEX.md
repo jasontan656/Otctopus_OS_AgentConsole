@@ -11,5 +11,6 @@ anchors:
 
 # Category Index
 
-- 当前没有工具分类。
-- 未来若新增工具，先按 `lint / registry-check / structure-audit` 之类的稳定职责分类，再补模块目录。
+- 当前工具分类：
+  - `contract-reader`
+- 未来若新增工具，先按 `contract-reader / lint / registry-check / structure-audit` 之类的稳定职责分类，再补模块目录。

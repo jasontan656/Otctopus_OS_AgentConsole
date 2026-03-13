@@ -68,12 +68,18 @@ anchors:
     - `module_manifest.yaml`
     - `entry_manifest.yaml`
 - 当前阶段的可部署对象根目录默认预留以下稳定子目录：
-  - `<Object_Name>_Common/`
-  - `<Object_Name>_Core/`
+  - `Common/`
+  - `Core/`
   - `Assets/`
   - `Development_Docs/`
+- 这些稳定子目录是“对象内部角色目录”，不是对象名的重复壳；禁止再写成 `<Object_Name>_Common/`、`<Object_Name>_Core/`。
+- 对象内部目录命名必须服从单层单义：
+  - 对象根只表达对象身份。
+  - 一级子目录只表达角色或能力。
+  - `runtime`、`worker`、`api`、`construction_plan`、`acceptance` 这类运行态或流程态，默认不作为对象级命名后缀。
 - `Development_Docs/` 是“当前对象自己的开发文档容器”，不是上层分类容器的共享文档区，也不是必须再套一层对象同名目录的占位壳。
 - 例如 `Client_Applications/Unified_Portal/Development_Docs/` 表示 `Unified_Portal` 这个客户端应用对象自己的开发文档容器；仅完成项目结构创建时，这个目录默认可以为空。
 - 若后续进入具体开发闭环，再由下游 workflow 在当前对象的 `Development_Docs/` 下创建工作主题目录，例如 `<module_dir>/mother_doc/...`；该 `<module_dir>` 表示当前开发主题，不表示再次重复对象名。
+- `Foundation_Bundle` 这类底座对象的一级能力目录应直接使用能力名，如 `Auth/`、`Payload/`、`Persistence/`，而不是带 `Runtime` 后缀的物理目录名。
 - 对象内部具体是否再生长出 `src/`、`tests/`、`deploy/`、`docs/` 或更多域内分层，由对应域技能或实现阶段决定，但不允许越过项目级根目录边界乱放。
 - 未来 lint 的作用不是替 AI 设计架构，而是检查目录、对象归属和容器命名是否违反本技能已经声明的项目级结构合同。
