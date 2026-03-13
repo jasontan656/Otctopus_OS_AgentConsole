@@ -1,40 +1,32 @@
 ---
-doc_id: "stages.showroom_runtime"
+doc_id: "stages.product_runtime_handoff"
 doc_type: "stage_doc"
-topic: "Runnable showroom and runtime delivery stage for the Vue3 web UI frontend skill"
+topic: "Product runtime handoff stage for the Vue3 web UI frontend skill"
 anchors:
-  - target: "../../ui-dev/UI_DEV_ENTRY.md"
-    relation: "implements"
-    direction: "downstream"
-    reason: "The runnable showroom root is the concrete execution surface of this stage."
   - target: "../../frontend_dev_contracts/layers/30_LOCATOR_AND_IDENTIFIER_PROTOCOL.md"
     relation: "details"
     direction: "downstream"
-    reason: "The locator protocol defines the visible node identifiers that the runtime UI must surface."
+    reason: "The locator protocol defines the visible node identifiers that a product runtime must surface."
   - target: "../../frontend_dev_contracts/containers/state/20_CONTAINER_PAYLOAD_NORMALIZATION.md"
     relation: "details"
     direction: "downstream"
-    reason: "The payload normalization contract defines the runtime bridge input boundary for the showroom."
+    reason: "The payload normalization contract defines the runtime bridge input boundary for a product runtime."
   - target: "../../frontend_dev_contracts/rules/UI_PACKAGE_SHAPE_LINT_WORKFLOW.md"
     relation: "details"
     direction: "downstream"
-    reason: "The runtime stage also enforces component package shape and export discipline."
-  - target: "../../references/tooling/development/modules/mod_showroom_runtime.md"
-    relation: "explained_by"
-    direction: "downstream"
-    reason: "The showroom runtime module documents server, viewer, and service responsibilities."
+    reason: "The handoff stage also enforces component package shape and export discipline."
 ---
 
-# Stage Showroom Runtime
+# Stage Product Runtime Handoff
 
 ## 本阶段负责
-- 定义 showroom / unified workbench 自身的用途、菜单导航、canvas 工作区与 panel catalog。
-- 保持 `ui-dev/` 作为 showroom redevelopment docs root，而不是保留一套已经偏离目标的旧 UI 代码。
-- 让人类先通过文档确认展厅应该展示什么，再进入下一轮代码重建。
-- 保留未来 runtime bridge、workspace 容器、panel 容器与 locator 协议的目标叙事，但不假装当前已经落地。
-- 定义文档 graph、代码 graph、AI 入口与多治理域自动发现如何在同一个前端壳中共存。
+- 定义技能如何把具体产品运行时需求 handoff 到产品仓的 mother doc。
+- 保持本技能只承载通用前端合同、运行时边界和 truthfulness，不回存产品级 menu/canvas/panel 需求。
+- 要求人类先通过产品母文档确认工作台要展示什么，再进入下一轮代码重建。
+- 保留 runtime bridge、workspace 容器、panel 容器与 locator 协议的目标叙事，但不假装当前技能内已经落地产品 UI。
+- 定义文档 graph、代码 graph、AI 入口与多治理域自动发现的共通合同，不替代产品级 requirement source。
 
 ## 交付要求
-- `ui-dev/UI_DEV_ENTRY.md` 成为 showroom docs 的稳定入口。
-- `ui-dev/docs/` 明确说明 SPA menu、canvas workspace、panel catalog、多治理域边界、自动发现协议与语言规则。
-- 当前 skill 内不再保留会误导读者的旧 runnable UI 代码与依赖。
+- `frontend_dev_contracts/` 与阶段合同能够独立描述通用前端规范。
+- 具体产品运行时需求落到产品仓的 `Workflow-OctopusOS-DevFlow mother_doc`。
+- 当前 skill 内不再保留会误导读者的产品级 UI 代码、依赖或需求目录。

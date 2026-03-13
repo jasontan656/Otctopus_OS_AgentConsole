@@ -1,7 +1,7 @@
 ---
 doc_id: "ui.dev.code_architecture.registry_guide"
 doc_type: "ui_dev_guide"
-topic: "Component registry guide for ui-dev packages"
+topic: "Component registry guide for product frontend packages"
 node_role: "topic_atom"
 domain_type: "frontend_contract_atom"
 anchors:

@@ -17,7 +17,7 @@ anchors:
 
 ## 合同目标
 - 约束 `Dev-VUE3-WebUI-Frontend` 只能以 staged skill 方式运行。
-- 把前端规范、展厅设计、graph 展示与 showroom redevelopment docs 拆成可切换的 stage。
+- 把前端规范、运行时 handoff 与 graph 展示拆成可切换的 stage。
 - 保证阶段切换后只保留 resident docs，而不把局部实现上下文跨阶段带走。
 
 ## 常驻文档
@@ -42,8 +42,8 @@ anchors:
 ## 运行门禁
 - 未读取当前阶段四类合同前，不得开始该阶段动作。
 - 阶段切换后，必须丢弃上一阶段 checklist、stage docs 与临时 focus。
-- UI 展厅修改必须同时考虑：
+- 产品运行时 handoff 修改必须同时考虑：
   - 文档 graph 可读性
-  - SPA menu + canvas 工作区目标
-  - UI 自身开发文档边界
+  - 前端合同边界
+  - 产品母文档 ownership
   - 下一轮代码重建的契约完备度

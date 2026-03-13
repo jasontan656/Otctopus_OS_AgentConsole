@@ -65,7 +65,7 @@
     "Runtime rules must be consumed from machine-readable contracts instead of markdown.",
     "The graph display remains a first-class narrative surface across desktop and mobile variants.",
     "Reusable component, motion, architecture, and runtime rules must stay document-first before code changes.",
-    "No contract may claim that ui-dev is runnable while the legacy UI code has been removed."
+    "No contract may store product runtime docs under the skill root or claim deleted skill-side UI code is runnable."
   ],
   "validation_closure": [
     "npm run typecheck",

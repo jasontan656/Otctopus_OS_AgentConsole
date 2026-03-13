@@ -9,10 +9,10 @@ anchors:
     relation: "belongs_to"
     direction: "upstream"
     reason: "Brand-direction rules belong to the brand branch."
-  - target: "../../showroom_runtime/VIEWER_STACK_AND_REUSE.md"
+  - target: "../../../references/stages/40_STAGE_SHOWROOM_RUNTIME.md"
     relation: "supports"
     direction: "cross"
-    reason: "The runnable showroom should expose a stable visual language that can be reused as a front-end seed."
+    reason: "The product-runtime handoff stage should preserve a stable visual language that can be reused by product frontends."
 ---
 
 # Brand Direction Guide

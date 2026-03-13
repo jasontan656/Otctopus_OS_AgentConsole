@@ -26,5 +26,5 @@ anchors:
 
 ## 使用原则
 - staged skill 的当前阶段行为只能从 CLI JSON 获取。
-- graph rebuild 用于让展厅读取最新 self graph。
-- 若任务是 UI 运行层，CLI 只负责合同与 graph，不直接替代 `ui-dev` 的 dev/build/service 命令。
+- graph rebuild 用于让技能自身合同图保持最新。
+- 若任务是产品 UI 运行层，CLI 只负责合同与 graph，不替代产品仓的 dev/build/service 命令。

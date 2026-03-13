@@ -1,24 +1,24 @@
 ---
 doc_id: "runtime.docgraph.audit"
 doc_type: "runtime_contract"
-topic: "Audit version of the embedded doc-graph contract used by the frontend showroom"
+topic: "Audit version of the embedded doc-graph contract used by the frontend standards skill"
 anchors:
   - target: "SKILL_RUNTIME_CONTRACT.md"
     relation: "supports"
     direction: "upstream"
     reason: "The embedded doc-graph contract exists to support the staged frontend runtime contract."
-  - target: "../../ui-dev/UI_DEV_ENTRY.md"
+  - target: "../stages/40_STAGE_SHOWROOM_RUNTIME.md"
     relation: "implements"
     direction: "downstream"
-    reason: "The showroom redevelopment docs define how future UI surfaces will consume the graph."
+    reason: "The product-runtime handoff stage defines how future UI surfaces consume the graph."
 ---
 
 # Embedded Doc Graph Contract
 
 ## 作用
-- 为 `ui-dev` 的 showroom redevelopment docs 与未来 runtime 提供稳定的 markdown graph 数据输入。
+- 为 staged frontend contracts 与产品运行时 handoff 提供稳定的 markdown graph 数据输入。
 - 要求技能内 markdown 文档具备 frontmatter anchors。
-- 让未来的 showroom runtime 能把当前技能自身渲染成可读的 graph。
+- 让产品侧实现能够消费当前技能自身的可读 graph。
 
 ## 最小合同
 - 每个 markdown 文档至少一个 anchor。

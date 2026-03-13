@@ -5,14 +5,14 @@ topic: "Index of frontend development contracts for Dev-VUE3-WebUI-Frontend"
 node_role: "index_doc"
 domain_type: "frontend_contract_index"
 anchors:
-  - target: "../ui-dev/UI_DEV_ENTRY.md"
+  - target: "../references/stages/40_STAGE_SHOWROOM_RUNTIME.md"
     relation: "supports"
     direction: "upstream"
-    reason: "The showroom consumes this frontend contract index as its official reading path."
-  - target: "../ui-dev/docs/00_UI_DEV_DOCS_INDEX.md"
+    reason: "The runtime handoff stage consumes this frontend contract index as its standards entry."
+  - target: "../references/stages/40_STAGE_SHOWROOM_RUNTIME.md"
     relation: "pairs_with"
     direction: "cross"
-    reason: "Showroom-specific development docs complement the generic frontend contract tree."
+    reason: "Product-runtime handoff docs complement the generic frontend contract tree."
   - target: "design_system/00_DESIGN_SYSTEM_INDEX.md"
     relation: "routes_to"
     direction: "downstream"
@@ -37,10 +37,6 @@ anchors:
     relation: "routes_to"
     direction: "downstream"
     reason: "Positioning and file-boundary contracts form the first branch of the frontend contract tree."
-  - target: "showroom_runtime/00_SHOWROOM_RUNTIME_INDEX.md"
-    relation: "routes_to"
-    direction: "downstream"
-    reason: "Showroom runtime contracts form the second branch of the frontend contract tree."
   - target: "rules/00_RULES_INDEX.md"
     relation: "routes_to"
     direction: "downstream"
@@ -62,12 +58,10 @@ anchors:
   - 负责 SPA 容器角色、层级、状态边界、布局权、交互协议与治理规则。
 - `positioning/00_POSITIONING_INDEX.md`
   - 负责合同定位、目录边界、文件组织。
-- `showroom_runtime/00_SHOWROOM_RUNTIME_INDEX.md`
-  - 负责 SPA menu/canvas 目标、showroom runtime 恢复门禁与未来运行链。
 - `rules/00_RULES_INDEX.md`
   - 负责布局调整与响应式约束。
-- `../ui-dev/docs/00_UI_DEV_DOCS_INDEX.md`
-  - 负责这个 showroom 自己要展示什么、菜单怎么组织、canvas 怎么承载 panel。
+- `../references/stages/40_STAGE_SHOWROOM_RUNTIME.md`
+  - 负责把具体产品运行时需求路由到产品侧 mother doc，而不是保存在技能内。
 
 ## 最小读取路径
 1. 先读 `design_system/00_DESIGN_SYSTEM_INDEX.md`，确认 tokens、语义样式和主题基线。
@@ -76,5 +70,4 @@ anchors:
 4. 再读 `layers/00_LAYERS_INDEX.md`，确认 layer catalog、节点命名协议和 locator 治理边界。
 5. 再读 `containers/00_CONTAINERS_INDEX.md`，确认 SPA 容器树、状态边界和布局权边界。
 6. 再读 `positioning/00_POSITIONING_INDEX.md`，确认这个目录在整个 skill 里的职责。
-7. 再读 `showroom_runtime/00_SHOWROOM_RUNTIME_INDEX.md`，确认展厅运行面和复用面。
-8. 最后读 `rules/00_RULES_INDEX.md`，收敛到具体 lint 和布局规则。
+7. 最后读 `rules/00_RULES_INDEX.md`，收敛到具体 lint 和布局规则。

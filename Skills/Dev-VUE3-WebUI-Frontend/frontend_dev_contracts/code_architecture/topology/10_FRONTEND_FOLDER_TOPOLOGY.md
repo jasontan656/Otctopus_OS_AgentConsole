@@ -19,7 +19,7 @@ anchors:
 
 ## 未来实现推荐拓扑
 ```text
-ui-dev/
+product-frontend/
 └── src/
     ├── containers/
     ├── components/
@@ -45,7 +45,7 @@ ui-dev/
   - 全局 token、semantic、base、layout 资产。
 
 ## 当前状态
-- 当前 `ui-dev/` 先保留开发文档，不保留旧代码实现。
+- 当前技能不再保留产品代码实现。
 - 因此本文档描述的是下一轮代码重建目标，而不是当前文件系统实况。
 
 ## 禁止事项

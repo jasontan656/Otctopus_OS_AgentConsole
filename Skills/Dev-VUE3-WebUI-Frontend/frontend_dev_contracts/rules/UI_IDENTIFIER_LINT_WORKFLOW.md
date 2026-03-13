@@ -9,10 +9,10 @@ anchors:
     relation: "belongs_to"
     direction: "upstream"
     reason: "This lint workflow belongs to the frontend rules branch."
-  - target: "../../ui-dev/UI_DEV_ENTRY.md"
+  - target: "../../references/stages/40_STAGE_SHOWROOM_RUNTIME.md"
     relation: "supports"
     direction: "upstream"
-    reason: "The runnable showroom must stay in sync with the identifier lint."
+    reason: "The product-runtime handoff stage must stay in sync with the identifier lint."
   - target: "../layers/30_LOCATOR_AND_IDENTIFIER_PROTOCOL.md"
     relation: "implements"
     direction: "upstream"
@@ -22,7 +22,7 @@ anchors:
 # UI Identifier Lint Workflow
 
 ## 当前状态
-- 当前 `ui-dev/` 已回退到 docs-first redevelopment 状态，因此本 workflow 处于 future-only 阶段。
+- 当前技能不再存放产品 UI 代码，因此本 workflow 处于 future-only 阶段。
 - 在新的 UI 代码根重新引入前，不应把本文件误读成“当前已有可执行 lint”。
 
 ## 未来恢复时负责的检查
@@ -34,5 +34,5 @@ anchors:
 - 容器 / 组件文件是否正确绑定自身 id。
 
 ## 恢复条件
-- 只有当新的 SPA menu + canvas UI 实现重新落到 `ui-dev/` 后，本 workflow 才能重新绑定真实 CLI。
+- 只有当新的 SPA menu + canvas UI 实现落到具体产品代码仓后，本 workflow 才能重新绑定真实 CLI。
 - 在此之前，命名协议只作为开发文档与未来实现约束存在。

@@ -9,14 +9,14 @@ anchors:
     relation: "belongs_to"
     direction: "upstream"
     reason: "This language rule belongs to the frontend rules branch."
-  - target: "../showroom_runtime/VIEWER_STACK_AND_REUSE.md"
+  - target: "../../references/stages/40_STAGE_SHOWROOM_RUNTIME.md"
     relation: "pairs_with"
     direction: "cross"
-    reason: "The showroom runtime target must follow the language and copy boundary."
-  - target: "../../ui-dev/docs/10_SHOWROOM_PURPOSE_AND_SCOPE.md"
+    reason: "The product-runtime handoff stage must follow the language and copy boundary."
+  - target: "../positioning/UI_TOOL_POSITIONING.md"
     relation: "supports"
     direction: "downstream"
-    reason: "The UI-specific docs must also reflect the same language boundary."
+    reason: "The positioning contract must reflect the same language boundary."
 ---
 
 # UI Language Rules
@@ -32,8 +32,8 @@ anchors:
 
 ## Documentation Boundary
 - Generic frontend contracts may remain Chinese-first because they are internal governance docs.
-- `ui-dev/` development docs may explain the showroom in Chinese, but any quoted future UI copy must be written in English.
+- Product-owned development docs may explain implementation intent in Chinese, but any quoted future UI copy must be written in English.
 
 ## Enforcement Intent
-- This rule is active immediately even while `ui-dev/` is docs-first.
-- When UI code is rebuilt, this rule becomes a blocking implementation contract.
+- This rule is active immediately even while the skill stores only contracts.
+- When product UI code is implemented, this rule becomes a blocking implementation contract.

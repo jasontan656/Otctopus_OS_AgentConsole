@@ -26,7 +26,7 @@ anchors:
 # UI Package Shape Lint Workflow
 
 ## 当前状态
-- 当前 `ui-dev/` 已经移除旧代码与依赖，因此本 workflow 只保留 future package-shape 约束，不再假装当前可以执行。
+- 当前技能不再存放产品 UI 代码与产品依赖，因此本 workflow 只保留 future package-shape 约束，不再假装当前可以执行。
 
 ## 未来恢复时负责的检查
 - component 是否拥有独立 package 目录。

@@ -9,10 +9,10 @@ anchors:
     relation: "belongs_to"
     direction: "upstream"
     reason: "This contract belongs to the state and data branch."
-  - target: "../../showroom_runtime/VIEWER_SERVICE_WORKFLOW.md"
+  - target: "../../../references/stages/40_STAGE_SHOWROOM_RUNTIME.md"
     relation: "pairs_with"
     direction: "cross"
-    reason: "The viewer service workflow provides the runtime source that feeds the normalized payload."
+    reason: "The runtime handoff stage provides the runtime-source boundary that feeds the normalized payload."
   - target: "../interaction/10_CONTAINER_EVENT_AND_ROUTE_PROTOCOL.md"
     relation: "pairs_with"
     direction: "cross"
@@ -22,7 +22,7 @@ anchors:
 # Container Payload Normalization
 
 ## 归一化边界
-- 当前 runtime 代码已删除，但未来恢复时仍必须保留清晰的归一化边界。
+- 当前技能不存放 runtime 代码，但未来产品实现仍必须保留清晰的归一化边界。
 - 未来 runtime source 负责提供 raw runtime channel。
 - 未来 payload adapter 负责把 graph workspace 归一化成 `PreviewPayload`。
 - 未来 scene-level runtime bridge 负责消费 `PreviewPayload`，不在容器内部重新拼装 raw channel 数据。

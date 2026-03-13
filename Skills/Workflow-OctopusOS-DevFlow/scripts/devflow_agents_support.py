@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import subprocess
 from pathlib import Path
+from typing import TypedDict
 
 
 SKILL_ROOT = Path(__file__).resolve().parents[1]
@@ -12,6 +13,18 @@ META_DEFAULT_MD_MANAGER_CLI = (
 ).resolve()
 EXTERNAL_AGENTS_TEMPLATE = SKILL_ROOT / "assets" / "templates" / "agents" / "EXTERNAL_AGENTS.md"
 MACHINE_AGENTS_TEMPLATE = SKILL_ROOT / "assets" / "templates" / "agents" / "AGENTS_MACHINE_TEMPLATE.json"
+
+
+class MachineAgentsPayload(TypedDict):
+    target_root: str
+    development_docs_root: str
+    codebase_root: str
+    module_dir: str
+    module_docs_root: str
+    mother_doc_root: str
+    construction_plan_root: str
+    graph_runtime_root: str
+    acceptance_root: str
 
 
 def _render_template(path: Path, replacements: dict[str, str]) -> str:
@@ -38,7 +51,7 @@ def render_external_agents(runtime: dict[str, object]) -> str:
     return _render_template(EXTERNAL_AGENTS_TEMPLATE, replacements)
 
 
-def render_machine_payload(runtime: dict[str, object]) -> dict[str, object]:
+def render_machine_payload(runtime: dict[str, object]) -> MachineAgentsPayload:
     replacements = {
         "target_root": str(runtime["target_root"]),
         "development_docs_root": str(runtime["development_docs_root"]),
@@ -63,8 +76,20 @@ def _run_json_command(command: list[str]) -> dict[str, object]:
     if completed.returncode != 0:
         raise RuntimeError(
             f"command_failed: {' '.join(command)}\nstdout={completed.stdout}\nstderr={completed.stderr}"
-        )
+    )
     return json.loads(completed.stdout)
+
+
+def _managed_machine_path(target_contract: dict[str, object]) -> Path:
+    machine_path = target_contract.get("managed_machine_path")
+    if isinstance(machine_path, str) and machine_path:
+        return Path(machine_path)
+    managed_files = target_contract.get("managed_files")
+    if isinstance(managed_files, dict):
+        machine_candidate = managed_files.get("machine")
+        if isinstance(machine_candidate, str) and machine_candidate:
+            return Path(machine_candidate)
+    raise KeyError("managed_machine_path")
 
 
 def scaffold_and_collect_devflow_agents(runtime: dict[str, object]) -> dict[str, object]:
@@ -93,7 +118,9 @@ def scaffold_and_collect_devflow_agents(runtime: dict[str, object]) -> dict[str,
             "--json",
         ]
     )
-    Path(target_contract["managed_machine_path"]).write_text(
+    machine_path = _managed_machine_path(target_contract)
+    machine_path.parent.mkdir(parents=True, exist_ok=True)
+    machine_path.write_text(
         json.dumps(render_machine_payload(runtime), indent=2, ensure_ascii=False) + "\n",
         encoding="utf-8",
     )

@@ -1,7 +1,7 @@
 ---
 doc_id: "ui.dev.code_architecture.dependency_direction"
 doc_type: "ui_dev_guide"
-topic: "Dependency direction guide for ui-dev containers, components, composables, and contracts"
+topic: "Dependency direction guide for product frontend containers, components, composables, and contracts"
 node_role: "topic_atom"
 domain_type: "frontend_contract_atom"
 anchors:

@@ -33,7 +33,7 @@ anchors:
 | `foundation_north_star` | 定义前端北极星与展厅角色 | `stage-checklist` | `stage-doc-contract` | `stage-command-contract` | `stage-graph-contract` | 北极星与 resident docs 稳定 |
 | `responsive_surface_system` | 定义桌面与移动端表面规范 | `stage-checklist` | `stage-doc-contract` | `stage-command-contract` | `stage-graph-contract` | 响应式主叙事稳定 |
 | `motion_component_architecture` | 定义动效、组件与代码组织 | `stage-checklist` | `stage-doc-contract` | `stage-command-contract` | `stage-graph-contract` | 组件边界和动效语义稳定 |
-| `showroom_runtime_delivery` | 维持可运行展厅与交付链 | `stage-checklist` | `stage-doc-contract` | `stage-command-contract` | `stage-graph-contract` | 展厅可运行且展示真实 graph |
+| `showroom_runtime_delivery` | 维持产品运行时 handoff 边界与合同诚实性 | `stage-checklist` | `stage-doc-contract` | `stage-command-contract` | `stage-graph-contract` | 技能不再存放产品需求且 handoff 语义稳定 |
 
 ## 切换规则
 - 跨阶段只保留顶层常驻文档。

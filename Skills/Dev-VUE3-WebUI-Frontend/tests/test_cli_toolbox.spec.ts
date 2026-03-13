@@ -16,10 +16,8 @@ describe('Dev-VUE3-WebUI-Frontend stage contracts', () => {
     expect(RUNTIME_CONTRACT.stage_contract_policy.stage_order).toContain('showroom_runtime_delivery')
   })
 
-  it('exposes ui-dev docs in the showroom runtime stage', () => {
+  it('exposes product-runtime handoff docs in the showroom runtime stage', () => {
     const showroom = getStageDefinition('showroom_runtime_delivery')
-    expect(showroom.docContract.doc_boundary).toContain('ui-dev/UI_DEV_ENTRY.md')
-    expect(showroom.docContract.doc_boundary).toContain('ui-dev/docs/00_UI_DEV_DOCS_INDEX.md')
     expect(showroom.docContract.doc_boundary).toContain('frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md')
     expect(showroom.docContract.doc_boundary).toContain('frontend_dev_contracts/design_system/00_DESIGN_SYSTEM_INDEX.md')
     expect(showroom.docContract.doc_boundary).toContain('frontend_dev_contracts/component_system/00_COMPONENT_SYSTEM_INDEX.md')
@@ -27,9 +25,8 @@ describe('Dev-VUE3-WebUI-Frontend stage contracts', () => {
     expect(showroom.docContract.doc_boundary).toContain(
       'frontend_dev_contracts/containers/state/20_CONTAINER_PAYLOAD_NORMALIZATION.md',
     )
-    expect(showroom.docContract.doc_boundary).toContain(
-      'frontend_dev_contracts/showroom_runtime/VIEWER_SERVICE_WORKFLOW.md',
-    )
+    expect(showroom.docContract.doc_boundary).toContain('frontend_dev_contracts/positioning/00_POSITIONING_INDEX.md')
+    expect(showroom.docContract.doc_boundary).toContain('references/stages/40_STAGE_SHOWROOM_RUNTIME.md')
     expect(showroom.commandContract.gate_commands).toContain('npm run cli -- rebuild-self-graph --json')
   })
 

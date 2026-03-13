@@ -61,7 +61,7 @@ const STAGES: Record<StageId, StageDefinition> = {
   foundation_north_star: {
     checklist: {
       stage_id: 'foundation_north_star',
-      stage_objective: 'Define the long-lived frontend north star, skill scope, design tone, and showroom role.',
+      stage_objective: 'Define the long-lived frontend north star, skill scope, design tone, and product-runtime handoff role.',
       required_outputs: [
         'Resident docs describe the skill purpose, audience, and constraints.',
         'Foundation docs define the shared visual language and graph-display intent.',
@@ -73,7 +73,7 @@ const STAGES: Record<StageId, StageDefinition> = {
       ],
       entry_actions: [
         'Read the resident docs and current stage doc contract.',
-        'Confirm the site is both a standards system and a live showroom.',
+        'Confirm the skill is a standards system and not a product-runtime content store.',
       ],
       exit_gates: [
         'The frontend north star is explicit and single-axis.',
@@ -92,8 +92,8 @@ const STAGES: Record<StageId, StageDefinition> = {
         'references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md',
       ],
       do_not_read_by_default: [
-        'frontend_dev_contracts/showroom_runtime/VIEWER_SERVICE_WORKFLOW.md',
-        'ui-dev/UI_DEV_ENTRY.md',
+        'references/stages/40_STAGE_SHOWROOM_RUNTIME.md',
+        'frontend_dev_contracts/positioning/UI_TOOL_POSITIONING.md',
       ],
       focus_rule: 'Stay at strategy, IA, and skill boundary level before touching responsive or runtime details.',
     },
@@ -129,7 +129,7 @@ const STAGES: Record<StageId, StageDefinition> = {
         'references/stages/10_STAGE_FOUNDATION.md',
       ],
       allowed_cross_links: [
-        'Foundation docs may link to ui-dev positioning docs when they affect the showroom role.',
+        'Foundation docs may link to runtime handoff docs when they affect product-runtime ownership.',
       ],
     },
   },
@@ -169,11 +169,11 @@ const STAGES: Record<StageId, StageDefinition> = {
         'frontend_dev_contracts/rules/UI_LAYOUT_ADJUSTMENT_RULES.md',
         'frontend_dev_contracts/layers/30_LOCATOR_AND_IDENTIFIER_PROTOCOL.md',
         'frontend_dev_contracts/containers/layout/10_APP_SHELL_AND_WORKSPACE_LAYOUT_AUTHORITY.md',
-        'frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md',
+        'references/stages/40_STAGE_SHOWROOM_RUNTIME.md',
       ],
       do_not_read_by_default: [
-        'ui-dev/server/viewer-server.ts',
-        'ui-dev/scripts/install_user_service.sh',
+        'product repo runtime scripts',
+        'product repo service installers',
       ],
       focus_rule: 'Stay on layout behavior, viewport choreography, and graph readability instead of runtime plumbing.',
     },
@@ -188,7 +188,7 @@ const STAGES: Record<StageId, StageDefinition> = {
       ],
       stage_actions: [
         'Adjust layout docs before reintroducing any UI code.',
-        'Use ui-dev/docs to define the future menu and canvas surface.',
+        'Use product-owned mother docs to define the future menu and canvas surface.',
       ],
       forbidden_actions: [
         'Do not change service/runtime files for pure viewport work.',
@@ -199,17 +199,17 @@ const STAGES: Record<StageId, StageDefinition> = {
       stage_id: 'responsive_surface_system',
       graph_role: {
         read_policy: 'Prioritize docs that describe viewport hierarchy and panel choreography.',
-        update_policy: 'Surface-stage changes may add anchors between stage docs and ui-dev layout rules.',
+        update_policy: 'Surface-stage changes may add anchors between stage docs and runtime handoff rules.',
       },
       prioritize_nodes: [
         'references/stages/20_STAGE_SURFACE_LAYOUTS.md',
         'frontend_dev_contracts/rules/UI_LAYOUT_ADJUSTMENT_RULES.md',
         'frontend_dev_contracts/layers/30_LOCATOR_AND_IDENTIFIER_PROTOCOL.md',
         'frontend_dev_contracts/containers/layout/10_APP_SHELL_AND_WORKSPACE_LAYOUT_AUTHORITY.md',
-        'frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md',
+        'references/stages/40_STAGE_SHOWROOM_RUNTIME.md',
       ],
       allowed_cross_links: [
-        'Cross-link responsive docs with showroom stack docs when a surface rule changes the runtime shell.',
+        'Cross-link responsive docs with runtime handoff docs when a surface rule changes the product shell.',
       ],
     },
   },
@@ -231,11 +231,11 @@ const STAGES: Record<StageId, StageDefinition> = {
         'frontend_dev_contracts/layers/20_LAYER_NODE_MAPPING.md',
         'frontend_dev_contracts/positioning/UI_FILE_ORGANIZATION.md',
         'frontend_dev_contracts/containers/model/10_CONTAINER_ROLE_TAXONOMY.md',
-        'frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md',
+        'references/stages/40_STAGE_SHOWROOM_RUNTIME.md',
       ],
       entry_actions: [
         'Read component-system and motion docs before touching implementation files.',
-        'Treat the viewer as a seed of a broader UI kit and showroom.',
+        'Treat the future product runtime as a seed of a broader UI kit, not a skill-owned showroom.',
       ],
       exit_gates: [
         'Motion is purposeful instead of decorative.',
@@ -262,10 +262,10 @@ const STAGES: Record<StageId, StageDefinition> = {
         'frontend_dev_contracts/positioning/UI_FILE_ORGANIZATION.md',
         'frontend_dev_contracts/containers/model/10_CONTAINER_ROLE_TAXONOMY.md',
         'frontend_dev_contracts/containers/layout/10_APP_SHELL_AND_WORKSPACE_LAYOUT_AUTHORITY.md',
-        'frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md',
+        'references/stages/40_STAGE_SHOWROOM_RUNTIME.md',
       ],
       do_not_read_by_default: [
-        'frontend_dev_contracts/showroom_runtime/VIEWER_SERVICE_WORKFLOW.md',
+        'references/stages/40_STAGE_SHOWROOM_RUNTIME.md',
       ],
       focus_rule: 'Stay on reusable component architecture, motion semantics, and code shape.',
     },
@@ -303,7 +303,7 @@ const STAGES: Record<StageId, StageDefinition> = {
         'frontend_dev_contracts/layers/10_LAYER_TAXONOMY.md',
         'frontend_dev_contracts/positioning/UI_FILE_ORGANIZATION.md',
         'frontend_dev_contracts/containers/model/10_CONTAINER_ROLE_TAXONOMY.md',
-        'frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md',
+        'references/stages/40_STAGE_SHOWROOM_RUNTIME.md',
       ],
       allowed_cross_links: [
         'Cross-link stage docs with frontend contracts when a runtime component pattern becomes a general frontend rule.',
@@ -313,16 +313,14 @@ const STAGES: Record<StageId, StageDefinition> = {
   showroom_runtime_delivery: {
     checklist: {
       stage_id: 'showroom_runtime_delivery',
-      stage_objective: 'Keep the showroom redevelopment docs, future runtime target, and delivery boundary coherent.',
+      stage_objective: 'Keep product-runtime handoff rules, future runtime target, and delivery boundary coherent.',
       required_outputs: [
-        'The showroom purpose, menu model, canvas model, and panel catalog are explicit.',
-        'The skill no longer claims that an invalid legacy UI is still runnable.',
+        'The product runtime handoff path is explicit.',
+        'The skill no longer stores product UI requirements or claims that deleted runtime code is runnable.',
       ],
       resident_docs: RESIDENT_DOCS,
       stage_docs: [
         'references/stages/40_STAGE_SHOWROOM_RUNTIME.md',
-        'ui-dev/UI_DEV_ENTRY.md',
-        'ui-dev/docs/00_UI_DEV_DOCS_INDEX.md',
         'frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md',
         'frontend_dev_contracts/design_system/00_DESIGN_SYSTEM_INDEX.md',
         'frontend_dev_contracts/component_system/00_COMPONENT_SYSTEM_INDEX.md',
@@ -330,19 +328,19 @@ const STAGES: Record<StageId, StageDefinition> = {
         'frontend_dev_contracts/rules/UI_LANGUAGE_AND_COPY_RULES.md',
         'frontend_dev_contracts/containers/state/20_CONTAINER_PAYLOAD_NORMALIZATION.md',
         'frontend_dev_contracts/containers/interaction/10_CONTAINER_EVENT_AND_ROUTE_PROTOCOL.md',
-        'frontend_dev_contracts/showroom_runtime/VIEWER_SERVICE_WORKFLOW.md',
+        'frontend_dev_contracts/positioning/00_POSITIONING_INDEX.md',
       ],
       entry_actions: [
-        'Read the showroom docs before planning a new implementation.',
-        'Confirm that ui-dev is currently docs-first and does not ship a runnable UI.',
+        'Read the runtime handoff docs before planning a new implementation.',
+        'Confirm that product-specific runtime requirements live in the product mother_doc, not in this skill.',
       ],
       exit_gates: [
-        'The showroom docs clearly define the future SPA menu + canvas target.',
-        'No active contract still claims that the deleted legacy UI can run.',
+        'The handoff docs clearly define how product runtime requirements leave the skill.',
+        'No active contract still claims that deleted skill-side UI code can run.',
       ],
       discard_policy: {
-        read_policy: 'Discard stale runtime assumptions that still depend on the deleted legacy UI.',
-        update_policy: 'Only keep redevelopment docs and future runtime settings that match the current target architecture.',
+        read_policy: 'Discard stale runtime assumptions that still depend on deleted skill-side UI directories.',
+        update_policy: 'Only keep handoff docs and future runtime settings that match the current target architecture.',
       },
     },
     docContract: {
@@ -350,8 +348,6 @@ const STAGES: Record<StageId, StageDefinition> = {
       doc_boundary: [
         ...RESIDENT_DOCS,
         'references/stages/40_STAGE_SHOWROOM_RUNTIME.md',
-        'ui-dev/UI_DEV_ENTRY.md',
-        'ui-dev/docs/00_UI_DEV_DOCS_INDEX.md',
         'frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md',
         'frontend_dev_contracts/design_system/00_DESIGN_SYSTEM_INDEX.md',
         'frontend_dev_contracts/component_system/00_COMPONENT_SYSTEM_INDEX.md',
@@ -360,13 +356,14 @@ const STAGES: Record<StageId, StageDefinition> = {
         'frontend_dev_contracts/containers/00_CONTAINERS_INDEX.md',
         'frontend_dev_contracts/containers/state/20_CONTAINER_PAYLOAD_NORMALIZATION.md',
         'frontend_dev_contracts/containers/interaction/10_CONTAINER_EVENT_AND_ROUTE_PROTOCOL.md',
-        'frontend_dev_contracts/showroom_runtime/VIEWER_SERVICE_WORKFLOW.md',
+        'frontend_dev_contracts/positioning/00_POSITIONING_INDEX.md',
         'frontend_dev_contracts/positioning/UI_TOOL_POSITIONING.md',
+        'references/stages/40_STAGE_SHOWROOM_RUNTIME.md',
       ],
       do_not_read_by_default: [
         'references/stages/20_STAGE_SURFACE_LAYOUTS.md',
       ],
-      focus_rule: 'Stay on showroom redevelopment docs, future runtime boundary, and truthfulness of current repo state.',
+      focus_rule: 'Stay on runtime handoff docs, future runtime boundary, and truthfulness of current repo state.',
     },
     commandContract: {
       stage_id: 'showroom_runtime_delivery',
@@ -380,31 +377,30 @@ const STAGES: Record<StageId, StageDefinition> = {
         'npm run cli -- rebuild-self-graph --json',
       ],
       stage_actions: [
-        'Write or revise ui-dev redevelopment docs.',
-        'Prepare the future runtime contract without reintroducing invalid legacy code.',
+        'Write or revise product-runtime handoff docs.',
+        'Prepare the future runtime contract without reintroducing skill-side product directories.',
       ],
       forbidden_actions: [
-        'Do not claim that ui-dev is runnable while no valid UI code exists.',
-        'Do not preserve legacy tri-panel code just to keep old commands alive.',
+        'Do not recreate product runtime docs under the skill root.',
+        'Do not claim that deleted skill-side UI code is runnable.',
       ],
     },
     graphContract: {
       stage_id: 'showroom_runtime_delivery',
       graph_role: {
-        read_policy: 'Prioritize ui-dev docs, showroom runtime docs, and stage truthfulness.',
-        update_policy: 'Keep anchors aligned with the redevelopment-doc path and the future runtime target.',
+        read_policy: 'Prioritize runtime handoff docs, positioning docs, and stage truthfulness.',
+        update_policy: 'Keep anchors aligned with the handoff path and the future runtime target.',
       },
       prioritize_nodes: [
         'references/stages/40_STAGE_SHOWROOM_RUNTIME.md',
-        'ui-dev/UI_DEV_ENTRY.md',
-        'ui-dev/docs/00_UI_DEV_DOCS_INDEX.md',
+        'frontend_dev_contracts/positioning/00_POSITIONING_INDEX.md',
+        'frontend_dev_contracts/positioning/UI_TOOL_POSITIONING.md',
         'frontend_dev_contracts/rules/UI_LANGUAGE_AND_COPY_RULES.md',
         'frontend_dev_contracts/containers/model/20_CONTAINER_HIERARCHY_AND_NESTING.md',
         'frontend_dev_contracts/containers/layout/10_APP_SHELL_AND_WORKSPACE_LAYOUT_AUTHORITY.md',
-        'frontend_dev_contracts/showroom_runtime/VIEWER_SERVICE_WORKFLOW.md',
       ],
       allowed_cross_links: [
-        'Showroom runtime docs may cross-link to any stage when the display shell exposes their rules to humans.',
+        'Runtime handoff docs may cross-link to any stage when product ownership affects their rules.',
       ],
     },
   },
@@ -463,11 +459,11 @@ export const RUNTIME_CONTRACT = {
   },
   governance_rules: [
     'SKILL.md must stay entry-only.',
-    'The skill doubles as a frontend standards system and a showroom redevelopment-doc system.',
+    'The skill is a frontend standards system with explicit product-runtime handoff rules.',
     'Runtime rules must be consumed from machine-readable contracts instead of markdown.',
     'The graph display remains a first-class narrative surface across desktop and mobile variants.',
     'Reusable component, motion, architecture, and runtime rules must stay document-first before code changes.',
-    'No contract may claim that ui-dev is runnable while the legacy UI code has been removed.',
+    'No contract may store product runtime docs under the skill root or claim deleted skill-side UI code is runnable.',
   ],
   validation_closure: [
     'npm run typecheck',

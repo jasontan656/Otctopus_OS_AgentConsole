@@ -1,16 +1,12 @@
 ---
 doc_id: "tooling.category.index"
 doc_type: "tooling_index"
-topic: "Category index for frontend stage docs, tooling docs, and runnable showroom docs"
+topic: "Category index for frontend stage docs and tooling docs"
 anchors:
   - target: "00_ARCHITECTURE_OVERVIEW.md"
     relation: "indexes"
     direction: "downstream"
     reason: "Architecture overview is the top-level entry for tooling docs."
-  - target: "../../../ui-dev/UI_DEV_ENTRY.md"
-    relation: "pairs_with"
-    direction: "cross"
-    reason: "The ui-dev entry is the runnable sibling branch of the tooling docs."
 ---
 
 # Category Index
@@ -28,6 +24,3 @@ anchors:
 - tooling：
   - `00_ARCHITECTURE_OVERVIEW.md`
   - `modules/mod_stage_contract_runtime.md`
-  - `modules/mod_showroom_runtime.md`
-- runnable showroom：
-  - `../../../ui-dev/UI_DEV_ENTRY.md`

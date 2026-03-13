@@ -1,7 +1,7 @@
 ---
 doc_id: "ui.dev.code_architecture.component_folder_template"
 doc_type: "ui_dev_guide"
-topic: "Component folder template for ui-dev reusable packages"
+topic: "Component folder template for product frontend reusable packages"
 node_role: "topic_atom"
 domain_type: "frontend_contract_atom"
 anchors:

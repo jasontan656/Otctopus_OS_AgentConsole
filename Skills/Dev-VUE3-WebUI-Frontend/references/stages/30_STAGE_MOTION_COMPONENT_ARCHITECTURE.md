@@ -11,10 +11,10 @@ anchors:
     relation: "details"
     direction: "downstream"
     reason: "The container taxonomy defines the stable container roles that shape component architecture."
-  - target: "../../frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md"
+  - target: "../../references/stages/40_STAGE_SHOWROOM_RUNTIME.md"
     relation: "details"
     direction: "downstream"
-    reason: "The frontend contract stack doc expands the runtime component and layout implications."
+    reason: "The runtime handoff stage expands the product-runtime implications."
   - target: "../../frontend_dev_contracts/component_system/00_COMPONENT_SYSTEM_INDEX.md"
     relation: "details"
     direction: "downstream"
@@ -45,5 +45,5 @@ anchors:
   - 运行时接线层
 
 ## 目标
-- 让当前 viewer 进化为前端组件资产和交互准则的展厅。
-- 让 design system、component system、code architecture 三条合同都能直接反向驱动 UI 重构。
+- 让前端合同稳定地驱动未来产品 UI 重构。
+- 让 design system、component system、code architecture 三条合同都能直接反向驱动产品代码结构。

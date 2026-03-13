@@ -19,9 +19,9 @@ anchors:
 
 ## 本分支负责
 - `UI_TOOL_POSITIONING.md`
-  - 定义 `frontend_dev_contracts/`、root resident docs、stage docs 与 `ui-dev/` 的职责边界。
+  - 定义 `frontend_dev_contracts/`、root resident docs、stage docs 与产品仓母文档的职责边界。
 - `UI_FILE_ORGANIZATION.md`
-  - 定义哪些内容应该留在 `ui-dev/`，哪些内容应沉淀到合同树。
+  - 定义哪些内容应该留在产品代码仓，哪些内容应沉淀到合同树。
 
 ## 读取顺序
 1. `UI_TOOL_POSITIONING.md`

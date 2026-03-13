@@ -3,10 +3,10 @@
   "graph_version": "v2",
   "source_skill": "Dev-VUE3-WebUI-Frontend",
   "summary": {
-    "nodeCount": 98,
-    "edgeCount": 294,
+    "nodeCount": 80,
+    "edgeCount": 221,
     "errorCount": 0,
-    "warningCount": 0
+    "warningCount": 2
   },
   "nodes": [
     {
@@ -78,7 +78,7 @@
       "docType": "ui_dev_index",
       "topic": "Index of frontend development contracts for Dev-VUE3-WebUI-Frontend",
       "title": "Frontend Development Contracts",
-      "anchorCount": 10,
+      "anchorCount": 9,
       "depth": 1
     },
     {
@@ -121,7 +121,7 @@
       "path": "frontend_dev_contracts/code_architecture/packages/10_COMPONENT_FOLDER_TEMPLATE.md",
       "docId": "ui.dev.code_architecture.component_folder_template",
       "docType": "ui_dev_guide",
-      "topic": "Component folder template for ui-dev reusable packages",
+      "topic": "Component folder template for product frontend reusable packages",
       "title": "Component Folder Template",
       "anchorCount": 2,
       "depth": 3
@@ -139,7 +139,7 @@
       "path": "frontend_dev_contracts/code_architecture/packages/30_COMPONENT_EXPORT_GUIDE.md",
       "docId": "ui.dev.code_architecture.export_guide",
       "docType": "ui_dev_guide",
-      "topic": "Component export guide for ui-dev packages",
+      "topic": "Component export guide for product frontend packages",
       "title": "Component Export Guide",
       "anchorCount": 2,
       "depth": 3
@@ -148,7 +148,7 @@
       "path": "frontend_dev_contracts/code_architecture/packages/40_COMPONENT_REGISTRY_GUIDE.md",
       "docId": "ui.dev.code_architecture.registry_guide",
       "docType": "ui_dev_guide",
-      "topic": "Component registry guide for ui-dev packages",
+      "topic": "Component registry guide for product frontend packages",
       "title": "Component Registry Guide",
       "anchorCount": 2,
       "depth": 3
@@ -175,7 +175,7 @@
       "path": "frontend_dev_contracts/code_architecture/topology/20_DEPENDENCY_DIRECTION_GUIDE.md",
       "docId": "ui.dev.code_architecture.dependency_direction",
       "docType": "ui_dev_guide",
-      "topic": "Dependency direction guide for ui-dev containers, components, composables, and contracts",
+      "topic": "Dependency direction guide for product frontend containers, components, composables, and contracts",
       "title": "Dependency Direction Guide",
       "anchorCount": 2,
       "depth": 3
@@ -604,37 +604,10 @@
       "depth": 2
     },
     {
-      "path": "frontend_dev_contracts/showroom_runtime/00_SHOWROOM_RUNTIME_INDEX.md",
-      "docId": "ui.dev.showroom_runtime.index",
-      "docType": "index_doc",
-      "topic": "Index of showroom redevelopment and future runtime contracts",
-      "title": "Showroom Runtime Contracts",
-      "anchorCount": 3,
-      "depth": 2
-    },
-    {
-      "path": "frontend_dev_contracts/showroom_runtime/VIEWER_SERVICE_WORKFLOW.md",
-      "docId": "ui.viewer.service_workflow",
-      "docType": "tooling_usage",
-      "topic": "Dev, build, and systemd workflow for the Dev-VUE3-WebUI-Frontend showroom",
-      "title": "Viewer Service Workflow",
-      "anchorCount": 5,
-      "depth": 2
-    },
-    {
-      "path": "frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md",
-      "docId": "ui.viewer.stack",
-      "docType": "tooling_architecture",
-      "topic": "Viewer stack, reusable UI direction, and showroom layout contract",
-      "title": "Viewer Stack Reuse Contract",
-      "anchorCount": 5,
-      "depth": 2
-    },
-    {
       "path": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md",
       "docId": "runtime.docgraph.audit",
       "docType": "runtime_contract",
-      "topic": "Audit version of the embedded doc-graph contract used by the frontend showroom",
+      "topic": "Audit version of the embedded doc-graph contract used by the frontend standards skill",
       "title": "Embedded Doc Graph Contract",
       "anchorCount": 2,
       "depth": 2
@@ -695,11 +668,11 @@
     },
     {
       "path": "references/stages/40_STAGE_SHOWROOM_RUNTIME.md",
-      "docId": "stages.showroom_runtime",
+      "docId": "stages.product_runtime_handoff",
       "docType": "stage_doc",
-      "topic": "Runnable showroom and runtime delivery stage for the Vue3 web UI frontend skill",
-      "title": "Stage Showroom Runtime",
-      "anchorCount": 5,
+      "topic": "Product runtime handoff stage for the Vue3 web UI frontend skill",
+      "title": "Stage Product Runtime Handoff",
+      "anchorCount": 3,
       "depth": 2
     },
     {
@@ -724,18 +697,18 @@
       "path": "references/tooling/development/00_ARCHITECTURE_OVERVIEW.md",
       "docId": "tooling.architecture.overview",
       "docType": "tooling_architecture",
-      "topic": "Architecture overview for staged frontend contracts, doc graph core, and runnable showroom",
+      "topic": "Architecture overview for staged frontend contracts, doc graph core, and product-runtime handoff",
       "title": "Architecture Overview",
-      "anchorCount": 2,
+      "anchorCount": 1,
       "depth": 3
     },
     {
       "path": "references/tooling/development/20_CATEGORY_INDEX.md",
       "docId": "tooling.category.index",
       "docType": "tooling_index",
-      "topic": "Category index for frontend stage docs, tooling docs, and runnable showroom docs",
+      "topic": "Category index for frontend stage docs and tooling docs",
       "title": "Category Index",
-      "anchorCount": 2,
+      "anchorCount": 1,
       "depth": 3
     },
     {
@@ -748,15 +721,6 @@
       "depth": 3
     },
     {
-      "path": "references/tooling/development/modules/mod_showroom_runtime.md",
-      "docId": "tooling.module.showroom_runtime",
-      "docType": "module_doc",
-      "topic": "Showroom runtime module for the Vue3 viewer, live payload server, and systemd path",
-      "title": "Showroom Runtime Module",
-      "anchorCount": 2,
-      "depth": 4
-    },
-    {
       "path": "references/tooling/development/modules/mod_stage_contract_runtime.md",
       "docId": "tooling.module.stage_contract_runtime",
       "docType": "module_doc",
@@ -764,132 +728,6 @@
       "title": "Stage Contract Runtime Module",
       "anchorCount": 2,
       "depth": 4
-    },
-    {
-      "path": "ui-dev/UI_DEV_ENTRY.md",
-      "docId": "ui.dev.entry",
-      "docType": "ui_dev_entry",
-      "topic": "Showroom redevelopment root for Dev-VUE3-WebUI-Frontend",
-      "title": "UI Dev Entry",
-      "anchorCount": 7,
-      "depth": 1
-    },
-    {
-      "path": "ui-dev/docs/00_UI_DEV_DOCS_INDEX.md",
-      "docId": "ui.dev.docs.index",
-      "docType": "index_doc",
-      "topic": "Index of showroom-specific development docs for Dev-VUE3-WebUI-Frontend",
-      "title": "UI Dev Docs Index",
-      "anchorCount": 7,
-      "depth": 2
-    },
-    {
-      "path": "ui-dev/docs/10_SHOWROOM_PURPOSE_AND_SCOPE.md",
-      "docId": "ui.dev.docs.purpose_boundary",
-      "docType": "topic_atom",
-      "topic": "Purpose boundary for the showroom redevelopment",
-      "title": "Showroom Purpose Boundary",
-      "anchorCount": 5,
-      "depth": 2
-    },
-    {
-      "path": "ui-dev/docs/canvas/00_CANVAS_INDEX.md",
-      "docId": "ui.dev.docs.canvas.index",
-      "docType": "index_doc",
-      "topic": "Index of showroom canvas workspace docs",
-      "title": "Canvas Index",
-      "anchorCount": 2,
-      "depth": 3
-    },
-    {
-      "path": "ui-dev/docs/canvas/10_CANVAS_WORKSPACE_MODEL.md",
-      "docId": "ui.dev.docs.canvas.workspace_model",
-      "docType": "topic_atom",
-      "topic": "Canvas workspace model for showroom panels",
-      "title": "Canvas Workspace Model",
-      "anchorCount": 3,
-      "depth": 3
-    },
-    {
-      "path": "ui-dev/docs/domains/00_GOVERNANCE_DOMAIN_INDEX.md",
-      "docId": "ui.dev.docs.domains.index",
-      "docType": "index_doc",
-      "topic": "Index of governance-domain docs for the unified frontend workbench",
-      "title": "Governance Domain Index",
-      "anchorCount": 3,
-      "depth": 3
-    },
-    {
-      "path": "ui-dev/docs/domains/10_UNIFIED_GOVERNANCE_WORKBENCH_MODEL.md",
-      "docId": "ui.dev.docs.domains.workbench_model",
-      "docType": "topic_atom",
-      "topic": "Unified governance workbench model for document and code graph domains",
-      "title": "Unified Governance Workbench Model",
-      "anchorCount": 3,
-      "depth": 3
-    },
-    {
-      "path": "ui-dev/docs/domains/20_DISCOVERY_AND_RENDERING_PROTOCOL.md",
-      "docId": "ui.dev.docs.domains.discovery_protocol",
-      "docType": "topic_atom",
-      "topic": "Discovery protocol for rendering governed sources inside the workbench",
-      "title": "Discovery Protocol For Rendering Governed Sources",
-      "anchorCount": 4,
-      "depth": 3
-    },
-    {
-      "path": "ui-dev/docs/navigation/00_NAVIGATION_INDEX.md",
-      "docId": "ui.dev.docs.navigation.index",
-      "docType": "index_doc",
-      "topic": "Index of showroom navigation docs",
-      "title": "Navigation Index",
-      "anchorCount": 2,
-      "depth": 3
-    },
-    {
-      "path": "ui-dev/docs/navigation/10_MENU_NAVIGATION_MODEL.md",
-      "docId": "ui.dev.docs.navigation.menu_model",
-      "docType": "topic_atom",
-      "topic": "Expandable SPA menu model for the showroom",
-      "title": "Menu Navigation Model",
-      "anchorCount": 3,
-      "depth": 3
-    },
-    {
-      "path": "ui-dev/docs/panels/00_PANEL_CATALOG_INDEX.md",
-      "docId": "ui.dev.docs.panels.index",
-      "docType": "index_doc",
-      "topic": "Index of showroom panel catalog docs",
-      "title": "Panel Catalog Index",
-      "anchorCount": 4,
-      "depth": 3
-    },
-    {
-      "path": "ui-dev/docs/panels/10_SHOWROOM_PANEL_CATALOG.md",
-      "docId": "ui.dev.docs.panels.catalog",
-      "docType": "topic_atom",
-      "topic": "Panel catalog for the future showroom canvas",
-      "title": "Showroom Panel Catalog",
-      "anchorCount": 4,
-      "depth": 3
-    },
-    {
-      "path": "ui-dev/docs/panels/20_DOCUMENT_GRAPH_PANEL_PROTOCOL.md",
-      "docId": "ui.dev.docs.panels.document_graph_protocol",
-      "docType": "topic_atom",
-      "topic": "Document graph panel protocol for governed doc packages inside the workbench",
-      "title": "Document Graph Panel Protocol",
-      "anchorCount": 3,
-      "depth": 3
-    },
-    {
-      "path": "ui-dev/docs/panels/30_CODEGRAPH_PANEL_PROTOCOL.md",
-      "docId": "ui.dev.docs.panels.codegraph_protocol",
-      "docType": "topic_atom",
-      "topic": "Code graph panel protocol derived from GitNexus viewer capabilities and local workbench constraints",
-      "title": "Code Graph Panel Protocol",
-      "anchorCount": 3,
-      "depth": 3
     }
   ],
   "edges": [
@@ -993,17 +831,17 @@
     },
     {
       "source": "frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md",
-      "target": "ui-dev/UI_DEV_ENTRY.md",
+      "target": "references/stages/40_STAGE_SHOWROOM_RUNTIME.md",
       "relation": "supports",
       "direction": "upstream",
-      "reason": "The showroom consumes this frontend contract index as its official reading path."
+      "reason": "The runtime handoff stage consumes this frontend contract index as its standards entry."
     },
     {
       "source": "frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md",
-      "target": "ui-dev/docs/00_UI_DEV_DOCS_INDEX.md",
+      "target": "references/stages/40_STAGE_SHOWROOM_RUNTIME.md",
       "relation": "pairs_with",
       "direction": "cross",
-      "reason": "Showroom-specific development docs complement the generic frontend contract tree."
+      "reason": "Product-runtime handoff docs complement the generic frontend contract tree."
     },
     {
       "source": "frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md",
@@ -1046,13 +884,6 @@
       "relation": "routes_to",
       "direction": "downstream",
       "reason": "Positioning and file-boundary contracts form the first branch of the frontend contract tree."
-    },
-    {
-      "source": "frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md",
-      "target": "frontend_dev_contracts/showroom_runtime/00_SHOWROOM_RUNTIME_INDEX.md",
-      "relation": "routes_to",
-      "direction": "downstream",
-      "reason": "Showroom runtime contracts form the second branch of the frontend contract tree."
     },
     {
       "source": "frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md",
@@ -1749,10 +1580,10 @@
     },
     {
       "source": "frontend_dev_contracts/containers/state/20_CONTAINER_PAYLOAD_NORMALIZATION.md",
-      "target": "frontend_dev_contracts/showroom_runtime/VIEWER_SERVICE_WORKFLOW.md",
+      "target": "references/stages/40_STAGE_SHOWROOM_RUNTIME.md",
       "relation": "pairs_with",
       "direction": "cross",
-      "reason": "The viewer service workflow provides the runtime source that feeds the normalized payload."
+      "reason": "The runtime handoff stage provides the runtime-source boundary that feeds the normalized payload."
     },
     {
       "source": "frontend_dev_contracts/containers/state/20_CONTAINER_PAYLOAD_NORMALIZATION.md",
@@ -1840,10 +1671,10 @@
     },
     {
       "source": "frontend_dev_contracts/design_system/brand/20_BRAND_DIRECTION_GUIDE.md",
-      "target": "frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md",
+      "target": "references/stages/40_STAGE_SHOWROOM_RUNTIME.md",
       "relation": "supports",
       "direction": "cross",
-      "reason": "The runnable showroom should expose a stable visual language that can be reused as a front-end seed."
+      "reason": "The product-runtime handoff stage should preserve a stable visual language that can be reused by product frontends."
     },
     {
       "source": "frontend_dev_contracts/design_system/brand/30_TYPOGRAPHY_GUIDE.md",
@@ -2071,10 +1902,10 @@
     },
     {
       "source": "frontend_dev_contracts/positioning/UI_FILE_ORGANIZATION.md",
-      "target": "ui-dev/UI_DEV_ENTRY.md",
+      "target": "references/stages/40_STAGE_SHOWROOM_RUNTIME.md",
       "relation": "supports",
       "direction": "upstream",
-      "reason": "This guide constrains how the showroom codebase is organized."
+      "reason": "This guide constrains how product runtime code must be kept out of the skill."
     },
     {
       "source": "frontend_dev_contracts/positioning/UI_TOOL_POSITIONING.md",
@@ -2085,10 +1916,10 @@
     },
     {
       "source": "frontend_dev_contracts/positioning/UI_TOOL_POSITIONING.md",
-      "target": "ui-dev/UI_DEV_ENTRY.md",
+      "target": "references/stages/40_STAGE_SHOWROOM_RUNTIME.md",
       "relation": "supports",
       "direction": "upstream",
-      "reason": "This guide defines how the showroom consumes the frontend contracts."
+      "reason": "This guide defines how product-runtime handoff consumes the frontend contracts."
     },
     {
       "source": "frontend_dev_contracts/positioning/UI_TOOL_POSITIONING.md",
@@ -2141,10 +1972,10 @@
     },
     {
       "source": "frontend_dev_contracts/rules/UI_IDENTIFIER_LINT_WORKFLOW.md",
-      "target": "ui-dev/UI_DEV_ENTRY.md",
+      "target": "references/stages/40_STAGE_SHOWROOM_RUNTIME.md",
       "relation": "supports",
       "direction": "upstream",
-      "reason": "The runnable showroom must stay in sync with the identifier lint."
+      "reason": "The product-runtime handoff stage must stay in sync with the identifier lint."
     },
     {
       "source": "frontend_dev_contracts/rules/UI_IDENTIFIER_LINT_WORKFLOW.md",
@@ -2162,17 +1993,17 @@
     },
     {
       "source": "frontend_dev_contracts/rules/UI_LANGUAGE_AND_COPY_RULES.md",
-      "target": "frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md",
+      "target": "references/stages/40_STAGE_SHOWROOM_RUNTIME.md",
       "relation": "pairs_with",
       "direction": "cross",
-      "reason": "The showroom runtime target must follow the language and copy boundary."
+      "reason": "The product-runtime handoff stage must follow the language and copy boundary."
     },
     {
       "source": "frontend_dev_contracts/rules/UI_LANGUAGE_AND_COPY_RULES.md",
-      "target": "ui-dev/docs/10_SHOWROOM_PURPOSE_AND_SCOPE.md",
+      "target": "frontend_dev_contracts/positioning/UI_TOOL_POSITIONING.md",
       "relation": "supports",
       "direction": "downstream",
-      "reason": "The UI-specific docs must also reflect the same language boundary."
+      "reason": "The positioning contract must reflect the same language boundary."
     },
     {
       "source": "frontend_dev_contracts/rules/UI_LAYOUT_ADJUSTMENT_RULES.md",
@@ -2190,10 +2021,10 @@
     },
     {
       "source": "frontend_dev_contracts/rules/UI_LAYOUT_ADJUSTMENT_RULES.md",
-      "target": "frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md",
+      "target": "references/stages/40_STAGE_SHOWROOM_RUNTIME.md",
       "relation": "extends",
       "direction": "upstream",
-      "reason": "Layout adjustments must extend the viewer stack contract."
+      "reason": "Layout adjustments must remain aligned with the product-runtime handoff stage."
     },
     {
       "source": "frontend_dev_contracts/rules/UI_LAYOUT_ADJUSTMENT_RULES.md",
@@ -2231,97 +2062,6 @@
       "reason": "The lint workflow also checks registry discipline."
     },
     {
-      "source": "frontend_dev_contracts/showroom_runtime/00_SHOWROOM_RUNTIME_INDEX.md",
-      "target": "frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md",
-      "relation": "belongs_to",
-      "direction": "upstream",
-      "reason": "This index is one branch under the frontend development contract entry."
-    },
-    {
-      "source": "frontend_dev_contracts/showroom_runtime/00_SHOWROOM_RUNTIME_INDEX.md",
-      "target": "frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md",
-      "relation": "indexes",
-      "direction": "downstream",
-      "reason": "Viewer stack and reuse is the primary architecture contract of this branch."
-    },
-    {
-      "source": "frontend_dev_contracts/showroom_runtime/00_SHOWROOM_RUNTIME_INDEX.md",
-      "target": "frontend_dev_contracts/showroom_runtime/VIEWER_SERVICE_WORKFLOW.md",
-      "relation": "indexes",
-      "direction": "downstream",
-      "reason": "Viewer service workflow defines the docs-first restore boundary for the unified workbench."
-    },
-    {
-      "source": "frontend_dev_contracts/showroom_runtime/VIEWER_SERVICE_WORKFLOW.md",
-      "target": "frontend_dev_contracts/showroom_runtime/00_SHOWROOM_RUNTIME_INDEX.md",
-      "relation": "belongs_to",
-      "direction": "upstream",
-      "reason": "This workflow belongs to the showroom runtime branch."
-    },
-    {
-      "source": "frontend_dev_contracts/showroom_runtime/VIEWER_SERVICE_WORKFLOW.md",
-      "target": "frontend_dev_contracts/containers/state/20_CONTAINER_PAYLOAD_NORMALIZATION.md",
-      "relation": "pairs_with",
-      "direction": "cross",
-      "reason": "The service workflow feeds the normalized payload boundary consumed by UI containers."
-    },
-    {
-      "source": "frontend_dev_contracts/showroom_runtime/VIEWER_SERVICE_WORKFLOW.md",
-      "target": "frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md",
-      "relation": "operates",
-      "direction": "upstream",
-      "reason": "This workflow doc operates the stack defined there."
-    },
-    {
-      "source": "frontend_dev_contracts/showroom_runtime/VIEWER_SERVICE_WORKFLOW.md",
-      "target": "ui-dev/UI_DEV_ENTRY.md",
-      "relation": "supports",
-      "direction": "upstream",
-      "reason": "This workflow drives the runnable showroom entry."
-    },
-    {
-      "source": "frontend_dev_contracts/showroom_runtime/VIEWER_SERVICE_WORKFLOW.md",
-      "target": "ui-dev/docs/domains/20_DISCOVERY_AND_RENDERING_PROTOCOL.md",
-      "relation": "pairs_with",
-      "direction": "cross",
-      "reason": "The runtime restore workflow depends on a stable discovery and rendering protocol."
-    },
-    {
-      "source": "frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md",
-      "target": "frontend_dev_contracts/showroom_runtime/00_SHOWROOM_RUNTIME_INDEX.md",
-      "relation": "belongs_to",
-      "direction": "upstream",
-      "reason": "This contract belongs to the showroom runtime branch."
-    },
-    {
-      "source": "frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md",
-      "target": "frontend_dev_contracts/containers/00_CONTAINERS_INDEX.md",
-      "relation": "pairs_with",
-      "direction": "cross",
-      "reason": "The showroom stack is implemented through the SPA container tree."
-    },
-    {
-      "source": "frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md",
-      "target": "frontend_dev_contracts/layers/00_LAYERS_INDEX.md",
-      "relation": "pairs_with",
-      "direction": "cross",
-      "reason": "The showroom stack must also follow the fixed layer catalog and locator protocol."
-    },
-    {
-      "source": "frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md",
-      "target": "ui-dev/UI_DEV_ENTRY.md",
-      "relation": "supports",
-      "direction": "upstream",
-      "reason": "This stack contract is consumed by the runnable showroom entry."
-    },
-    {
-      "source": "frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md",
-      "target": "frontend_dev_contracts/rules/UI_LAYOUT_ADJUSTMENT_RULES.md",
-      "relation": "pairs_with",
-      "direction": "cross",
-      "reason": "Layout adjustment rules complement the stack contract."
-    },
-    {
       "source": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md",
       "target": "references/runtime/SKILL_RUNTIME_CONTRACT.md",
       "relation": "supports",
@@ -2330,10 +2070,10 @@
     },
     {
       "source": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md",
-      "target": "ui-dev/UI_DEV_ENTRY.md",
+      "target": "references/stages/40_STAGE_SHOWROOM_RUNTIME.md",
       "relation": "implements",
       "direction": "downstream",
-      "reason": "The showroom redevelopment docs define how future UI surfaces will consume the graph."
+      "reason": "The product-runtime handoff stage defines how future UI surfaces consume the graph."
     },
     {
       "source": "references/runtime/SKILL_RUNTIME_CONTRACT.md",
@@ -2421,10 +2161,10 @@
     },
     {
       "source": "references/stages/30_STAGE_MOTION_COMPONENT_ARCHITECTURE.md",
-      "target": "frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md",
+      "target": "references/stages/40_STAGE_SHOWROOM_RUNTIME.md",
       "relation": "details",
       "direction": "downstream",
-      "reason": "The frontend contract stack doc expands the runtime component and layout implications."
+      "reason": "The runtime handoff stage expands the product-runtime implications."
     },
     {
       "source": "references/stages/30_STAGE_MOTION_COMPONENT_ARCHITECTURE.md",
@@ -2449,38 +2189,24 @@
     },
     {
       "source": "references/stages/40_STAGE_SHOWROOM_RUNTIME.md",
-      "target": "ui-dev/UI_DEV_ENTRY.md",
-      "relation": "implements",
-      "direction": "downstream",
-      "reason": "The runnable showroom root is the concrete execution surface of this stage."
-    },
-    {
-      "source": "references/stages/40_STAGE_SHOWROOM_RUNTIME.md",
       "target": "frontend_dev_contracts/layers/30_LOCATOR_AND_IDENTIFIER_PROTOCOL.md",
       "relation": "details",
       "direction": "downstream",
-      "reason": "The locator protocol defines the visible node identifiers that the runtime UI must surface."
+      "reason": "The locator protocol defines the visible node identifiers that a product runtime must surface."
     },
     {
       "source": "references/stages/40_STAGE_SHOWROOM_RUNTIME.md",
       "target": "frontend_dev_contracts/containers/state/20_CONTAINER_PAYLOAD_NORMALIZATION.md",
       "relation": "details",
       "direction": "downstream",
-      "reason": "The payload normalization contract defines the runtime bridge input boundary for the showroom."
+      "reason": "The payload normalization contract defines the runtime bridge input boundary for a product runtime."
     },
     {
       "source": "references/stages/40_STAGE_SHOWROOM_RUNTIME.md",
       "target": "frontend_dev_contracts/rules/UI_PACKAGE_SHAPE_LINT_WORKFLOW.md",
       "relation": "details",
       "direction": "downstream",
-      "reason": "The runtime stage also enforces component package shape and export discipline."
-    },
-    {
-      "source": "references/stages/40_STAGE_SHOWROOM_RUNTIME.md",
-      "target": "references/tooling/development/modules/mod_showroom_runtime.md",
-      "relation": "explained_by",
-      "direction": "downstream",
-      "reason": "The showroom runtime module documents server, viewer, and service responsibilities."
+      "reason": "The handoff stage also enforces component package shape and export discipline."
     },
     {
       "source": "references/tooling/Cli_Toolbox_DEVELOPMENT.md",
@@ -2518,25 +2244,11 @@
       "reason": "The stage-contract module explains the CLI contract layer."
     },
     {
-      "source": "references/tooling/development/00_ARCHITECTURE_OVERVIEW.md",
-      "target": "references/tooling/development/modules/mod_showroom_runtime.md",
-      "relation": "indexes",
-      "direction": "downstream",
-      "reason": "The showroom runtime module explains the runnable ui-dev layer."
-    },
-    {
       "source": "references/tooling/development/20_CATEGORY_INDEX.md",
       "target": "references/tooling/development/00_ARCHITECTURE_OVERVIEW.md",
       "relation": "indexes",
       "direction": "downstream",
       "reason": "Architecture overview is the top-level entry for tooling docs."
-    },
-    {
-      "source": "references/tooling/development/20_CATEGORY_INDEX.md",
-      "target": "ui-dev/UI_DEV_ENTRY.md",
-      "relation": "pairs_with",
-      "direction": "cross",
-      "reason": "The ui-dev entry is the runnable sibling branch of the tooling docs."
     },
     {
       "source": "references/tooling/development/90_CHANGELOG.md",
@@ -2553,20 +2265,6 @@
       "reason": "The changelog also records stage-surface changes."
     },
     {
-      "source": "references/tooling/development/modules/mod_showroom_runtime.md",
-      "target": "references/tooling/development/00_ARCHITECTURE_OVERVIEW.md",
-      "relation": "belongs_to",
-      "direction": "upstream",
-      "reason": "This module is part of the tooling architecture overview."
-    },
-    {
-      "source": "references/tooling/development/modules/mod_showroom_runtime.md",
-      "target": "ui-dev/UI_DEV_ENTRY.md",
-      "relation": "explained_by",
-      "direction": "downstream",
-      "reason": "The ui-dev entry expands how the showroom runtime is organized."
-    },
-    {
       "source": "references/tooling/development/modules/mod_stage_contract_runtime.md",
       "target": "references/tooling/development/00_ARCHITECTURE_OVERVIEW.md",
       "relation": "belongs_to",
@@ -2579,379 +2277,23 @@
       "relation": "implements",
       "direction": "upstream",
       "reason": "The CLI module operationalizes the stage index through machine-readable contracts."
-    },
-    {
-      "source": "ui-dev/UI_DEV_ENTRY.md",
-      "target": "references/stages/40_STAGE_SHOWROOM_RUNTIME.md",
-      "relation": "belongs_to",
-      "direction": "upstream",
-      "reason": "The ui-dev root is the concrete surface of the showroom redevelopment stage."
-    },
-    {
-      "source": "ui-dev/UI_DEV_ENTRY.md",
-      "target": "frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md",
-      "relation": "routes_to",
-      "direction": "downstream",
-      "reason": "The frontend contract index defines the official UI development reading path."
-    },
-    {
-      "source": "ui-dev/UI_DEV_ENTRY.md",
-      "target": "ui-dev/docs/00_UI_DEV_DOCS_INDEX.md",
-      "relation": "routes_to",
-      "direction": "downstream",
-      "reason": "The ui-dev docs index defines the showroom-specific purpose, menu, canvas, and panel scope."
-    },
-    {
-      "source": "ui-dev/UI_DEV_ENTRY.md",
-      "target": "frontend_dev_contracts/design_system/00_DESIGN_SYSTEM_INDEX.md",
-      "relation": "pairs_with",
-      "direction": "downstream",
-      "reason": "The showroom docs must stay aligned with the generic design-system contracts."
-    },
-    {
-      "source": "ui-dev/UI_DEV_ENTRY.md",
-      "target": "frontend_dev_contracts/component_system/00_COMPONENT_SYSTEM_INDEX.md",
-      "relation": "pairs_with",
-      "direction": "downstream",
-      "reason": "The future showroom implementation must stay aligned with the generic component-system contracts."
-    },
-    {
-      "source": "ui-dev/UI_DEV_ENTRY.md",
-      "target": "frontend_dev_contracts/code_architecture/00_CODE_ARCHITECTURE_INDEX.md",
-      "relation": "pairs_with",
-      "direction": "downstream",
-      "reason": "The future showroom implementation must stay aligned with the generic code-architecture contracts."
-    },
-    {
-      "source": "ui-dev/UI_DEV_ENTRY.md",
-      "target": "frontend_dev_contracts/layers/00_LAYERS_INDEX.md",
-      "relation": "pairs_with",
-      "direction": "downstream",
-      "reason": "The future showroom implementation must stay aligned with the generic layer catalog and locator protocol."
-    },
-    {
-      "source": "ui-dev/docs/00_UI_DEV_DOCS_INDEX.md",
-      "target": "ui-dev/UI_DEV_ENTRY.md",
-      "relation": "belongs_to",
-      "direction": "upstream",
-      "reason": "This index is the first branch below the ui-dev entry."
-    },
-    {
-      "source": "ui-dev/docs/00_UI_DEV_DOCS_INDEX.md",
-      "target": "ui-dev/docs/10_SHOWROOM_PURPOSE_AND_SCOPE.md",
-      "relation": "indexes",
-      "direction": "downstream",
-      "reason": "Showroom purpose and scope is the first showroom-specific document."
-    },
-    {
-      "source": "ui-dev/docs/00_UI_DEV_DOCS_INDEX.md",
-      "target": "ui-dev/docs/domains/00_GOVERNANCE_DOMAIN_INDEX.md",
-      "relation": "indexes",
-      "direction": "downstream",
-      "reason": "Domain docs define how the unified workbench distinguishes and renders governed sources."
-    },
-    {
-      "source": "ui-dev/docs/00_UI_DEV_DOCS_INDEX.md",
-      "target": "ui-dev/docs/navigation/00_NAVIGATION_INDEX.md",
-      "relation": "indexes",
-      "direction": "downstream",
-      "reason": "Navigation docs define the SPA menu surface."
-    },
-    {
-      "source": "ui-dev/docs/00_UI_DEV_DOCS_INDEX.md",
-      "target": "ui-dev/docs/canvas/00_CANVAS_INDEX.md",
-      "relation": "indexes",
-      "direction": "downstream",
-      "reason": "Canvas docs define the workspace and panel lifecycle."
-    },
-    {
-      "source": "ui-dev/docs/00_UI_DEV_DOCS_INDEX.md",
-      "target": "ui-dev/docs/panels/00_PANEL_CATALOG_INDEX.md",
-      "relation": "indexes",
-      "direction": "downstream",
-      "reason": "Panel docs define what the showroom should actually contain."
-    },
-    {
-      "source": "ui-dev/docs/00_UI_DEV_DOCS_INDEX.md",
-      "target": "frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md",
-      "relation": "pairs_with",
-      "direction": "cross",
-      "reason": "The showroom docs complement the generic frontend contract tree."
-    },
-    {
-      "source": "ui-dev/docs/10_SHOWROOM_PURPOSE_AND_SCOPE.md",
-      "target": "ui-dev/docs/00_UI_DEV_DOCS_INDEX.md",
-      "relation": "belongs_to",
-      "direction": "upstream",
-      "reason": "This purpose doc belongs to the showroom docs index."
-    },
-    {
-      "source": "ui-dev/docs/10_SHOWROOM_PURPOSE_AND_SCOPE.md",
-      "target": "frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md",
-      "relation": "pairs_with",
-      "direction": "cross",
-      "reason": "The generic showroom stack contract and the showroom-specific purpose must stay aligned."
-    },
-    {
-      "source": "ui-dev/docs/10_SHOWROOM_PURPOSE_AND_SCOPE.md",
-      "target": "ui-dev/docs/domains/00_GOVERNANCE_DOMAIN_INDEX.md",
-      "relation": "routes_to",
-      "direction": "downstream",
-      "reason": "The workbench purpose must hand readers into domain-aware rendering docs."
-    },
-    {
-      "source": "ui-dev/docs/10_SHOWROOM_PURPOSE_AND_SCOPE.md",
-      "target": "ui-dev/docs/navigation/00_NAVIGATION_INDEX.md",
-      "relation": "routes_to",
-      "direction": "downstream",
-      "reason": "Navigation is one concrete expression of the showroom purpose."
-    },
-    {
-      "source": "ui-dev/docs/10_SHOWROOM_PURPOSE_AND_SCOPE.md",
-      "target": "ui-dev/docs/canvas/00_CANVAS_INDEX.md",
-      "relation": "routes_to",
-      "direction": "downstream",
-      "reason": "Canvas workspace is the other concrete expression of the showroom purpose."
-    },
-    {
-      "source": "ui-dev/docs/canvas/00_CANVAS_INDEX.md",
-      "target": "ui-dev/docs/00_UI_DEV_DOCS_INDEX.md",
-      "relation": "belongs_to",
-      "direction": "upstream",
-      "reason": "This index belongs to the showroom docs tree."
-    },
-    {
-      "source": "ui-dev/docs/canvas/00_CANVAS_INDEX.md",
-      "target": "ui-dev/docs/canvas/10_CANVAS_WORKSPACE_MODEL.md",
-      "relation": "indexes",
-      "direction": "downstream",
-      "reason": "The canvas model defines workspace behavior."
-    },
-    {
-      "source": "ui-dev/docs/canvas/10_CANVAS_WORKSPACE_MODEL.md",
-      "target": "ui-dev/docs/canvas/00_CANVAS_INDEX.md",
-      "relation": "belongs_to",
-      "direction": "upstream",
-      "reason": "This canvas model belongs to the canvas branch."
-    },
-    {
-      "source": "ui-dev/docs/canvas/10_CANVAS_WORKSPACE_MODEL.md",
-      "target": "frontend_dev_contracts/containers/interaction/10_CONTAINER_EVENT_AND_ROUTE_PROTOCOL.md",
-      "relation": "pairs_with",
-      "direction": "cross",
-      "reason": "The canvas model must align with the generic panel interaction protocol."
-    },
-    {
-      "source": "ui-dev/docs/canvas/10_CANVAS_WORKSPACE_MODEL.md",
-      "target": "ui-dev/docs/panels/10_SHOWROOM_PANEL_CATALOG.md",
-      "relation": "pairs_with",
-      "direction": "cross",
-      "reason": "Canvas lifecycle must be able to host the full panel catalog of the unified workbench."
-    },
-    {
-      "source": "ui-dev/docs/domains/00_GOVERNANCE_DOMAIN_INDEX.md",
-      "target": "ui-dev/docs/00_UI_DEV_DOCS_INDEX.md",
-      "relation": "belongs_to",
-      "direction": "upstream",
-      "reason": "This domain branch belongs to the showroom docs tree."
-    },
-    {
-      "source": "ui-dev/docs/domains/00_GOVERNANCE_DOMAIN_INDEX.md",
-      "target": "ui-dev/docs/domains/10_UNIFIED_GOVERNANCE_WORKBENCH_MODEL.md",
-      "relation": "indexes",
-      "direction": "downstream",
-      "reason": "The domain model is the first branch-specific contract."
-    },
-    {
-      "source": "ui-dev/docs/domains/00_GOVERNANCE_DOMAIN_INDEX.md",
-      "target": "ui-dev/docs/domains/20_DISCOVERY_AND_RENDERING_PROTOCOL.md",
-      "relation": "indexes",
-      "direction": "downstream",
-      "reason": "The discovery protocol defines how governed sources become UI-readable."
-    },
-    {
-      "source": "ui-dev/docs/domains/10_UNIFIED_GOVERNANCE_WORKBENCH_MODEL.md",
-      "target": "ui-dev/docs/domains/00_GOVERNANCE_DOMAIN_INDEX.md",
-      "relation": "belongs_to",
-      "direction": "upstream",
-      "reason": "This workbench model belongs to the domain branch."
-    },
-    {
-      "source": "ui-dev/docs/domains/10_UNIFIED_GOVERNANCE_WORKBENCH_MODEL.md",
-      "target": "ui-dev/docs/panels/10_SHOWROOM_PANEL_CATALOG.md",
-      "relation": "pairs_with",
-      "direction": "cross",
-      "reason": "The workbench domain model constrains which panels the shell must provide."
-    },
-    {
-      "source": "ui-dev/docs/domains/10_UNIFIED_GOVERNANCE_WORKBENCH_MODEL.md",
-      "target": "frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md",
-      "relation": "pairs_with",
-      "direction": "cross",
-      "reason": "The generic showroom stack contract must stay aligned with the domain-aware workbench model."
-    },
-    {
-      "source": "ui-dev/docs/domains/20_DISCOVERY_AND_RENDERING_PROTOCOL.md",
-      "target": "ui-dev/docs/domains/00_GOVERNANCE_DOMAIN_INDEX.md",
-      "relation": "belongs_to",
-      "direction": "upstream",
-      "reason": "This discovery protocol belongs to the domain branch."
-    },
-    {
-      "source": "ui-dev/docs/domains/20_DISCOVERY_AND_RENDERING_PROTOCOL.md",
-      "target": "ui-dev/docs/navigation/10_MENU_NAVIGATION_MODEL.md",
-      "relation": "pairs_with",
-      "direction": "cross",
-      "reason": "Discovered sources must appear through the stable menu taxonomy."
-    },
-    {
-      "source": "ui-dev/docs/domains/20_DISCOVERY_AND_RENDERING_PROTOCOL.md",
-      "target": "ui-dev/docs/panels/20_DOCUMENT_GRAPH_PANEL_PROTOCOL.md",
-      "relation": "details",
-      "direction": "downstream",
-      "reason": "Document panels are one consumer of the discovery protocol."
-    },
-    {
-      "source": "ui-dev/docs/domains/20_DISCOVERY_AND_RENDERING_PROTOCOL.md",
-      "target": "ui-dev/docs/panels/30_CODEGRAPH_PANEL_PROTOCOL.md",
-      "relation": "details",
-      "direction": "downstream",
-      "reason": "Code graph panels are another consumer of the discovery protocol."
-    },
-    {
-      "source": "ui-dev/docs/navigation/00_NAVIGATION_INDEX.md",
-      "target": "ui-dev/docs/00_UI_DEV_DOCS_INDEX.md",
-      "relation": "belongs_to",
-      "direction": "upstream",
-      "reason": "This index belongs to the showroom docs tree."
-    },
-    {
-      "source": "ui-dev/docs/navigation/00_NAVIGATION_INDEX.md",
-      "target": "ui-dev/docs/navigation/10_MENU_NAVIGATION_MODEL.md",
-      "relation": "indexes",
-      "direction": "downstream",
-      "reason": "The menu model defines the SPA navigation surface."
-    },
-    {
-      "source": "ui-dev/docs/navigation/10_MENU_NAVIGATION_MODEL.md",
-      "target": "ui-dev/docs/navigation/00_NAVIGATION_INDEX.md",
-      "relation": "belongs_to",
-      "direction": "upstream",
-      "reason": "This menu model belongs to the navigation branch."
-    },
-    {
-      "source": "ui-dev/docs/navigation/10_MENU_NAVIGATION_MODEL.md",
-      "target": "frontend_dev_contracts/containers/layout/10_APP_SHELL_AND_WORKSPACE_LAYOUT_AUTHORITY.md",
-      "relation": "pairs_with",
-      "direction": "cross",
-      "reason": "The menu model must align with the generic layout-authority contract."
-    },
-    {
-      "source": "ui-dev/docs/navigation/10_MENU_NAVIGATION_MODEL.md",
-      "target": "ui-dev/docs/domains/10_UNIFIED_GOVERNANCE_WORKBENCH_MODEL.md",
-      "relation": "pairs_with",
-      "direction": "cross",
-      "reason": "Navigation groups must reflect the workbench domain model instead of ad hoc pages."
-    },
-    {
-      "source": "ui-dev/docs/panels/00_PANEL_CATALOG_INDEX.md",
-      "target": "ui-dev/docs/00_UI_DEV_DOCS_INDEX.md",
-      "relation": "belongs_to",
-      "direction": "upstream",
-      "reason": "This index belongs to the showroom docs tree."
-    },
-    {
-      "source": "ui-dev/docs/panels/00_PANEL_CATALOG_INDEX.md",
-      "target": "ui-dev/docs/panels/10_SHOWROOM_PANEL_CATALOG.md",
-      "relation": "indexes",
-      "direction": "downstream",
-      "reason": "The panel catalog defines the required showroom panels."
-    },
-    {
-      "source": "ui-dev/docs/panels/00_PANEL_CATALOG_INDEX.md",
-      "target": "ui-dev/docs/panels/20_DOCUMENT_GRAPH_PANEL_PROTOCOL.md",
-      "relation": "indexes",
-      "direction": "downstream",
-      "reason": "The document graph protocol defines how doc packages and doc readers cooperate."
-    },
-    {
-      "source": "ui-dev/docs/panels/00_PANEL_CATALOG_INDEX.md",
-      "target": "ui-dev/docs/panels/30_CODEGRAPH_PANEL_PROTOCOL.md",
-      "relation": "indexes",
-      "direction": "downstream",
-      "reason": "The code graph protocol defines which GitNexus-derived behaviors must survive in the new workbench."
-    },
-    {
-      "source": "ui-dev/docs/panels/10_SHOWROOM_PANEL_CATALOG.md",
-      "target": "ui-dev/docs/panels/00_PANEL_CATALOG_INDEX.md",
-      "relation": "belongs_to",
-      "direction": "upstream",
-      "reason": "This panel catalog belongs to the panel branch."
-    },
-    {
-      "source": "ui-dev/docs/panels/10_SHOWROOM_PANEL_CATALOG.md",
-      "target": "frontend_dev_contracts/showroom_runtime/VIEWER_STACK_AND_REUSE.md",
-      "relation": "pairs_with",
-      "direction": "cross",
-      "reason": "The panel catalog must align with the generic showroom stack contract."
-    },
-    {
-      "source": "ui-dev/docs/panels/10_SHOWROOM_PANEL_CATALOG.md",
-      "target": "ui-dev/docs/panels/20_DOCUMENT_GRAPH_PANEL_PROTOCOL.md",
-      "relation": "details",
-      "direction": "downstream",
-      "reason": "Document graph panels need a narrower protocol than the top-level panel catalog."
-    },
-    {
-      "source": "ui-dev/docs/panels/10_SHOWROOM_PANEL_CATALOG.md",
-      "target": "ui-dev/docs/panels/30_CODEGRAPH_PANEL_PROTOCOL.md",
-      "relation": "details",
-      "direction": "downstream",
-      "reason": "Code graph panels need a narrower protocol than the top-level panel catalog."
-    },
-    {
-      "source": "ui-dev/docs/panels/20_DOCUMENT_GRAPH_PANEL_PROTOCOL.md",
-      "target": "ui-dev/docs/panels/00_PANEL_CATALOG_INDEX.md",
-      "relation": "belongs_to",
-      "direction": "upstream",
-      "reason": "This protocol belongs to the panel branch."
-    },
-    {
-      "source": "ui-dev/docs/panels/20_DOCUMENT_GRAPH_PANEL_PROTOCOL.md",
-      "target": "ui-dev/docs/domains/20_DISCOVERY_AND_RENDERING_PROTOCOL.md",
-      "relation": "pairs_with",
-      "direction": "cross",
-      "reason": "Document graph panels consume the shared discovery protocol."
-    },
-    {
-      "source": "ui-dev/docs/panels/20_DOCUMENT_GRAPH_PANEL_PROTOCOL.md",
-      "target": "ui-dev/docs/panels/10_SHOWROOM_PANEL_CATALOG.md",
-      "relation": "details",
-      "direction": "upstream",
-      "reason": "This document expands the document-facing panel portion of the catalog."
-    },
-    {
-      "source": "ui-dev/docs/panels/30_CODEGRAPH_PANEL_PROTOCOL.md",
-      "target": "ui-dev/docs/panels/00_PANEL_CATALOG_INDEX.md",
-      "relation": "belongs_to",
-      "direction": "upstream",
-      "reason": "This protocol belongs to the panel branch."
-    },
-    {
-      "source": "ui-dev/docs/panels/30_CODEGRAPH_PANEL_PROTOCOL.md",
-      "target": "ui-dev/docs/domains/20_DISCOVERY_AND_RENDERING_PROTOCOL.md",
-      "relation": "pairs_with",
-      "direction": "cross",
-      "reason": "Code graph panels consume the shared discovery protocol."
-    },
-    {
-      "source": "ui-dev/docs/panels/30_CODEGRAPH_PANEL_PROTOCOL.md",
-      "target": "ui-dev/docs/panels/10_SHOWROOM_PANEL_CATALOG.md",
-      "relation": "details",
-      "direction": "upstream",
-      "reason": "This document expands the code-graph-facing panel portion of the catalog."
     }
   ],
-  "warnings": [],
-  "updated_at": "2026-03-12T10:04:57.734Z"
+  "warnings": [
+    {
+      "doc": "frontend_dev_contracts/00_UI_DEVELOPMENT_INDEX.md",
+      "ruleId": "body_axis_overload",
+      "severity": "warn",
+      "message": "正文跨越过多轴线，可能需要进一步原子化。",
+      "hits": 4
+    },
+    {
+      "doc": "frontend_dev_contracts/positioning/UI_FILE_ORGANIZATION.md",
+      "ruleId": "body_axis_overload",
+      "severity": "warn",
+      "message": "正文跨越过多轴线，可能需要进一步原子化。",
+      "hits": 4
+    }
+  ],
+  "updated_at": "2026-03-13T03:35:16.075Z"
 }
