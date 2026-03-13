@@ -27,6 +27,49 @@ anchors:
 - Business 接入场景要特别重视权限、审计、人工接管和 SLA。
 - 自动回复、工单状态、人工转接应拆成不同责任面，不要所有消息都交给一个 giant handler。
 
+## JSON 示例
+- business connection update：
+```json
+{
+  "update_id": 90015001,
+  "business_connection": {
+    "id": "bc_8d1d7ab1",
+    "user": {
+      "id": 555000111,
+      "is_bot": false,
+      "first_name": "Merchant",
+      "username": "merchant_owner"
+    },
+    "user_chat_id": 555000111,
+    "date": 1773360600,
+    "can_reply": true,
+    "is_enabled": true
+  }
+}
+```
+- business message update：
+```json
+{
+  "update_id": 90015002,
+  "business_message": {
+    "message_id": 710,
+    "business_connection_id": "bc_8d1d7ab1",
+    "from": {
+      "id": 123456789,
+      "is_bot": false,
+      "first_name": "Customer",
+      "username": "customer_one"
+    },
+    "chat": {
+      "id": 555000111,
+      "type": "private"
+    },
+    "date": 1773360605,
+    "text": "I need help with my order #A-1007"
+  }
+}
+```
+
 ## 不要做
 - 不要把企业客服流程设计成“只能 bot 回复、没有人工兜底”。
 - 不要缺少消息归属、转接和审计字段。

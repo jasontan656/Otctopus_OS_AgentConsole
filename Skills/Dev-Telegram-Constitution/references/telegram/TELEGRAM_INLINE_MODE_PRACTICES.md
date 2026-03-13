@@ -32,6 +32,64 @@ anchors:
 - 结果卡片文案要短，因为用户是在聊天输入框上下文里快速做选择。
 - 如果结果依赖第三方账号连接，默认给出“先授权再返回结果”的引导，不要静默空结果。
 
+## JSON 示例
+- incoming inline query update：
+```json
+{
+  "update_id": 90011001,
+  "inline_query": {
+    "id": "AAHdF6IQAAAAAN0XohDhrOrc",
+    "from": {
+      "id": 123456789,
+      "is_bot": false,
+      "first_name": "Jason",
+      "username": "jason_demo",
+      "language_code": "en"
+    },
+    "query": "deploy checklist",
+    "offset": "",
+    "chat_type": "sender"
+  }
+}
+```
+- `answerInlineQuery` request body：
+```json
+{
+  "inline_query_id": "AAHdF6IQAAAAAN0XohDhrOrc",
+  "cache_time": 30,
+  "is_personal": true,
+  "results": [
+    {
+      "type": "article",
+      "id": "deploy_checklist_v1",
+      "title": "Deployment Checklist",
+      "description": "Send a deployment checklist to the current chat",
+      "input_message_content": {
+        "message_text": "Deployment checklist:\n1. confirm webhook secret\n2. verify Redis session store\n3. run smoke test"
+      },
+      "reply_markup": {
+        "inline_keyboard": [
+          [
+            {
+              "text": "Open Mini App",
+              "web_app": {
+                "url": "https://example.com/tg/app/checklist"
+              }
+            }
+          ]
+        ]
+      }
+    }
+  ],
+  "button": {
+    "text": "Switch to Mini App",
+    "web_app": {
+      "url": "https://example.com/tg/app/inline-builder"
+    }
+  }
+}
+```
+
 ## 不要做
 - 不要把 inline 当成完整管理后台。
 - 不要把必须长时间编辑的内容塞进 inline 结果选择。

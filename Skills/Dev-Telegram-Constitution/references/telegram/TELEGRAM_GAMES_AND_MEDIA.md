@@ -30,6 +30,67 @@ anchors:
 - 游戏分数、奖励、排行榜都应以后端为真值，不要只信前端上报。
 - 适合把“分享战绩/生成卡片/邀请链接”设计成传播环节，而不是把复杂社交关系全压到 Telegram UI 上。
 
+## JSON 示例
+- `sendGame` request body：
+```json
+{
+  "chat_id": 123456789,
+  "game_short_name": "octopus_runner",
+  "reply_markup": {
+    "inline_keyboard": [
+      [
+        {
+          "text": "Play",
+          "callback_game": {}
+        }
+      ],
+      [
+        {
+          "text": "Leaderboard",
+          "callback_data": "game:leaderboard:octopus_runner"
+        }
+      ]
+    ]
+  }
+}
+```
+- game launch callback：
+```json
+{
+  "update_id": 90014001,
+  "callback_query": {
+    "id": "game_cb_001",
+    "from": {
+      "id": 123456789,
+      "is_bot": false,
+      "first_name": "Jason"
+    },
+    "message": {
+      "message_id": 610,
+      "chat": {
+        "id": 123456789,
+        "type": "private"
+      },
+      "date": 1773360500,
+      "game": {
+        "title": "Octopus Runner",
+        "description": "A lightweight Telegram HTML5 game",
+        "photo": [
+          {
+            "file_id": "AgACAgUAAxkBAAIBQmY",
+            "file_unique_id": "AQAD1e8xG2",
+            "width": 512,
+            "height": 512
+          }
+        ]
+      }
+    },
+    "chat_instance": "987654321012345678",
+    "game_short_name": "octopus_runner"
+  }
+}
+```
+
 ## 不要做
 - 不要把客户端可篡改分数直接写入排行榜。
 - 不要假设游戏运行环境等同标准浏览器环境。

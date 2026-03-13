@@ -34,6 +34,40 @@ anchors:
 - 将 Telegram identity 与内部 account/session 分离，便于后续扩展其他登录方式。
 - 身份成功后应落明确的后端 session，而不是持续依赖前端 query 参数。
 
+## JSON 示例
+- `login_url` button config：
+```json
+{
+  "reply_markup": {
+    "inline_keyboard": [
+      [
+        {
+          "text": "Login with Telegram",
+          "login_url": {
+            "url": "https://example.com/auth/telegram/callback",
+            "forward_text": "Login to Example",
+            "bot_username": "example_auth_bot",
+            "request_write_access": true
+          }
+        }
+      ]
+    ]
+  }
+}
+```
+- 登录回调归一化对象：
+```json
+{
+  "id": 123456789,
+  "first_name": "Jason",
+  "last_name": "Tan",
+  "username": "jason_demo",
+  "photo_url": "https://t.me/i/userpic/320/jason_demo.jpg",
+  "auth_date": 1773360400,
+  "hash": "8e6a7d9b9f47e4a34fba8df00a17af8e4bfa2c2d0fb5a8d67be93175b6c6a112"
+}
+```
+
 ## 不要做
 - 不要只做前端校验，不做后端 `initData` 验证。
 - 不要让品牌不一致的 bot 去承担登录入口。

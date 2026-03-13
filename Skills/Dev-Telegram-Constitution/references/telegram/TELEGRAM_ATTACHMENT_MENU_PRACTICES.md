@@ -33,6 +33,21 @@ anchors:
 - 把附件菜单视为“常驻产品入口”，适合客服工具、商家工具、内容面板、常用控制台。
 - 如果入口很多，先保证启动后就能落到用户最常用任务，而不是只打开 landing page。
 
+## JSON 示例
+- `setChatMenuButton` body：
+```json
+{
+  "chat_id": 123456789,
+  "menu_button": {
+    "type": "web_app",
+    "text": "Open Console",
+    "web_app": {
+      "url": "https://example.com/tg/app/main"
+    }
+  }
+}
+```
+
 ## 不要做
 - 不要把附件菜单当唯一入口。
 - 不要假设所有正式 bot 都能直接获得该入口能力。

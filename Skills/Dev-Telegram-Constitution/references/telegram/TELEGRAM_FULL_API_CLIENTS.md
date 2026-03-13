@@ -28,6 +28,31 @@ anchors:
 - Full API 路线的实现、风控、账号安全和兼容复杂度都显著更高，应单独立项。
 - 若团队只是做产品入口或客服 bot，用 Full API 往往是过度设计。
 
+## JSON 示例
+- 说明：完整 Telegram API/TDLib/其他 client 库通常不是 Bot API 这种固定 JSON 回调面。下面给的是“客户端库归一化后的事件对象示例”，用于帮助 AI 理解这条线的数据复杂度，不应误认为 Bot API payload。
+```json
+{
+  "@type": "updateNewMessage",
+  "message": {
+    "@type": "message",
+    "id": 841239812349,
+    "chat_id": -1002003004005,
+    "date": 1773360700,
+    "sender_id": {
+      "@type": "messageSenderUser",
+      "user_id": 123456789
+    },
+    "content": {
+      "@type": "messageText",
+      "text": {
+        "@type": "formattedText",
+        "text": "hello from a custom Telegram client"
+      }
+    }
+  }
+}
+```
+
 ## 不要做
 - 不要因为想“多拿一点能力”就默认改走 Full API。
 - 不要把 Full API 的风险和复杂度混入普通 Bot/Mini App 方案。

@@ -54,6 +54,28 @@ anchors:
 - `@grammyjs/*` 插件族
   - 在 `grammY` 路线下按需补 session、menu、conversations 等能力。
 
+## Python 依赖推荐
+- `python-telegram-bot`
+  - 默认推荐给“消息/按钮/回调/支付/Inline”完整覆盖的 Python Bot。
+- `python-telegram-bot[rate-limiter]`
+  - 用于广播、群发、批量编辑等节流场景；官方对应 `AIORateLimiter`。
+- `python-telegram-bot[job-queue]`
+  - 用于定时任务、延迟执行、重试编排；官方对应 `JobQueue`。
+- `python-telegram-bot[callback-data]`
+  - 用于 arbitrary callback data 场景。
+- `python-telegram-bot[webhooks]`
+  - 用于 webhook 部署。
+- `aiogram`
+  - 默认推荐给 asyncio-first、router/middleware/FSM 分层更强的 Python Bot。
+- `redis`
+  - `aiogram` 做生产级 FSM/session storage 时的常用依赖。
+- `FastAPI` 或 `Starlette`
+  - 用于 webhook 共栈。
+- `APScheduler`
+  - 若不走 PTB `job-queue`，可作为统一调度层。
+- `orjson`
+  - 大量 update/webhook 解析和日志落盘时可选。
+
 ## 选型规则
 - 新项目若以 Python 为主、可读性优先，默认先选 `python-telegram-bot`。
 - 新项目若以 TypeScript 为主，默认先选 `grammY`，除非团队已有稳定 `Telegraf` 存量。
@@ -67,6 +89,36 @@ anchors:
 - aiogram docs: `https://docs.aiogram.dev/en/latest/`
 - grammY docs: `https://grammy.dev/`
 - Telegraf docs: `https://telegraf.js.org/`
+
+## 推荐 Python 组合包
+- `轻量消息型 Bot`
+```text
+python-telegram-bot
+pydantic
+httpx
+```
+- `生产 webhook Bot`
+```text
+python-telegram-bot[webhooks,rate-limiter,job-queue,callback-data]
+pydantic
+httpx
+orjson
+```
+- `高并发 asyncio Bot`
+```text
+aiogram
+redis
+pydantic
+httpx
+```
+- `Mini App 配套 Python 后端`
+```text
+FastAPI
+python-telegram-bot or aiogram
+pydantic
+httpx
+orjson
+```
 
 ## 例外与门禁
 - 若任务涉及用户账号自动化而非 Bot API，默认视为超出本技能主路径，需要单独说明风险与边界。

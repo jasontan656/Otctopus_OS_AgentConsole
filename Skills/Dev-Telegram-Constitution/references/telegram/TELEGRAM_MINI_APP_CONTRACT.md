@@ -44,6 +44,67 @@ anchors:
   参考：telegram-mini-app.dev 的 Mini App guide 总结了这一套落地顺序。[Community Guide](https://www.telegram-mini-app.dev/blog/telegram-mini-app-guide)
 - 使用 Telegram 容器的 back button、safe area、viewport、theme，避免做成“看起来像普通网页但在 Telegram 里很别扭”的 UI。[Community Guide](https://www.telegram-mini-app.dev/blog/telegram-mini-app-guide)
 
+## JSON 示例
+- `web_app_data` update：
+```json
+{
+  "update_id": 90012001,
+  "message": {
+    "message_id": 410,
+    "from": {
+      "id": 123456789,
+      "is_bot": false,
+      "first_name": "Jason",
+      "username": "jason_demo",
+      "language_code": "en"
+    },
+    "chat": {
+      "id": 123456789,
+      "type": "private"
+    },
+    "date": 1773360200,
+    "web_app_data": {
+      "button_text": "Open Scheduler",
+      "data": "{\"action\":\"submit_schedule\",\"draft_id\":\"draft_42\",\"timezone\":\"Asia/Shanghai\",\"slots\":[\"2026-03-14T09:00:00+08:00\"]}"
+    }
+  }
+}
+```
+- 前端可见 `initDataUnsafe` 归一化示例：
+```json
+{
+  "query_id": "AAHdF6IQAAAAAN0XohDhrOrc",
+  "user": {
+    "id": 123456789,
+    "is_bot": false,
+    "first_name": "Jason",
+    "last_name": "Tan",
+    "username": "jason_demo",
+    "language_code": "en",
+    "allows_write_to_pm": true
+  },
+  "auth_date": 1773360200,
+  "start_param": "main_dashboard",
+  "chat_type": "sender",
+  "chat_instance": "239847234982734",
+  "hash": "e8d7f6e9c9f42f5b7a9e5f4d4b2e9ad0a8a5f7cb6e7a9b2d8e8c1f0b7d0f9c12"
+}
+```
+- `answerWebAppQuery` request body：
+```json
+{
+  "web_app_query_id": "AAHdF6IQAAAAAN0XohDhrOrc",
+  "result": {
+    "type": "article",
+    "id": "draft_saved_42",
+    "title": "Draft saved",
+    "input_message_content": {
+      "message_text": "Draft #42 saved from Mini App."
+    }
+  }
+}
+```
+
 ## 局部规则
 - Mini App 页面应假设用户主要在移动端内打开。
 - 任何需要长时间编辑、复杂筛选和多字段输入的流程，都优先在 Mini App 完成，而不是消息流硬拼。

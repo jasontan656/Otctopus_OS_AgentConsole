@@ -31,6 +31,68 @@ anchors:
 - 把支付成功、失败、退款、订阅续期都做成独立可审计事件，不要只依赖客户端提示。
 - 对付费媒体和订阅，优先设计“支付后即时回执 + 后端异步履约”。
 
+## JSON 示例
+- `sendInvoice` for Stars：
+```json
+{
+  "chat_id": 123456789,
+  "title": "Pro Subscription",
+  "description": "30-day access to premium Telegram workflow features",
+  "payload": "sub_30d_user_123456789_plan_pro",
+  "currency": "XTR",
+  "prices": [
+    {
+      "label": "30-day Pro plan",
+      "amount": 250
+    }
+  ]
+}
+```
+- incoming `pre_checkout_query` update：
+```json
+{
+  "update_id": 90013001,
+  "pre_checkout_query": {
+    "id": "129384712938471",
+    "from": {
+      "id": 123456789,
+      "is_bot": false,
+      "first_name": "Jason",
+      "username": "jason_demo"
+    },
+    "currency": "XTR",
+    "total_amount": 250,
+    "invoice_payload": "sub_30d_user_123456789_plan_pro"
+  }
+}
+```
+- successful payment message：
+```json
+{
+  "update_id": 90013002,
+  "message": {
+    "message_id": 520,
+    "from": {
+      "id": 123456789,
+      "is_bot": false,
+      "first_name": "Jason"
+    },
+    "chat": {
+      "id": 123456789,
+      "type": "private"
+    },
+    "date": 1773360300,
+    "successful_payment": {
+      "currency": "XTR",
+      "total_amount": 250,
+      "invoice_payload": "sub_30d_user_123456789_plan_pro",
+      "telegram_payment_charge_id": "528463847264",
+      "provider_payment_charge_id": "tg_stars_internal"
+    }
+  }
+}
+```
+
 ## 不要做
 - 不要在数字商品场景继续推荐第三方币种或外链支付作为 Telegram 内主路径。
 - 不要缺 `/paysupport`。
