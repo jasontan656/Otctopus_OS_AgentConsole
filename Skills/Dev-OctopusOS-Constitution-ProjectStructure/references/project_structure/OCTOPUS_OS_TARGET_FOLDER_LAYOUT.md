@@ -56,8 +56,7 @@ Octopus_OS/
 │   │   └── Development_Docs/
 │   ├── Audit_Observe/
 │   │   └── Development_Docs/
-│   ├── README.md
-│   └── bundle_manifest.yaml
+│   └── README.md
 ├── Capability_Modules/
 │   ├── Principal_Module/
 │   │   └── Development_Docs/

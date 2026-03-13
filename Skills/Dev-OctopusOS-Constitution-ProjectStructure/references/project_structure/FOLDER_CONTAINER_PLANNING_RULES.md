@@ -62,11 +62,11 @@ anchors:
 - `API_Gateway`、`*_Service`、`*_UI`、`*_DB`、`*_Cache`、`MQ_Broker` 这类旧顶层目录名不再允许继续作为权威目录名存在。
 - 每个服务/模块对象根目录至少应承载：
   - `README.md`
-  - 一个对象级 manifest：
+  - 若当前对象确实需要项目级身份注册，再按对象类型放置一个对象级 manifest：
     - `hub_manifest.yaml`
-    - `bundle_manifest.yaml`
     - `module_manifest.yaml`
     - `entry_manifest.yaml`
+- 当前阶段 `Foundation_Bundle/` 暂不再要求 bundle 级对象 manifest。
 - 当前阶段的服务/模块对象根目录默认只预留以下稳定子目录：
   - `Development_Docs/`
 - `Development_Docs/` 是当前阶段唯一允许由项目结构层预置的对象级固定子目录；除此之外，不应再默认预置 `Assets/`、`Channels/` 或其他高抽象内部骨架。
