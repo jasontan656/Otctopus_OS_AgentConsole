@@ -31,3 +31,4 @@ anchors:
 
 ## 特殊说明
 - `GraphCanvas` 作为 visual_engine，可以依赖自己的 contract 和类型，但不能反向依赖 panel container。
+- `viewer adapter` 可以依赖受治理的第三方 graph/render/layout 库，但第三方库只能停留在 adapter / wrapper 层，不得直接扩散到业务 panel、domain contract 或 registry 定义层。

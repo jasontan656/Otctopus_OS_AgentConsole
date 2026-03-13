@@ -17,6 +17,10 @@ anchors:
     relation: "indexes"
     direction: "downstream"
     reason: "Dependency direction prevents architecture drift."
+  - target: "30_EXTERNAL_GRAPH_DEPENDENCY_GOVERNANCE.md"
+    relation: "indexes"
+    direction: "downstream"
+    reason: "Graph-heavy runtimes need explicit dependency governance."
 ---
 
 # Topology Index
@@ -24,3 +28,4 @@ anchors:
 ## 读取顺序
 1. `10_FRONTEND_FOLDER_TOPOLOGY.md`
 2. `20_DEPENDENCY_DIRECTION_GUIDE.md`
+3. `30_EXTERNAL_GRAPH_DEPENDENCY_GOVERNANCE.md`

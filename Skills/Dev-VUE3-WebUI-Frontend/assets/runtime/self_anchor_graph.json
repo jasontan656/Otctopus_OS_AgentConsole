@@ -3,8 +3,8 @@
   "graph_version": "v2",
   "source_skill": "Dev-VUE3-WebUI-Frontend",
   "summary": {
-    "nodeCount": 80,
-    "edgeCount": 221,
+    "nodeCount": 81,
+    "edgeCount": 226,
     "errorCount": 0,
     "warningCount": 2
   },
@@ -159,7 +159,7 @@
       "docType": "ui_dev_index",
       "topic": "Index of frontend folder topology and dependency direction contracts",
       "title": "Topology Index",
-      "anchorCount": 3,
+      "anchorCount": 4,
       "depth": 3
     },
     {
@@ -178,6 +178,15 @@
       "topic": "Dependency direction guide for product frontend containers, components, composables, and contracts",
       "title": "Dependency Direction Guide",
       "anchorCount": 2,
+      "depth": 3
+    },
+    {
+      "path": "frontend_dev_contracts/code_architecture/topology/30_EXTERNAL_GRAPH_DEPENDENCY_GOVERNANCE.md",
+      "docId": "ui.dev.code_architecture.external_graph_dependency_governance",
+      "docType": "ui_dev_guide",
+      "topic": "Governance for external graph, render, and layout dependencies in frontend runtimes",
+      "title": "External Graph Dependency Governance",
+      "anchorCount": 3,
       "depth": 3
     },
     {
@@ -663,7 +672,7 @@
       "docType": "stage_doc",
       "topic": "Motion language, reusable component boundaries, and code organization",
       "title": "Stage Motion Component Architecture",
-      "anchorCount": 6,
+      "anchorCount": 7,
       "depth": 2
     },
     {
@@ -1061,6 +1070,13 @@
       "reason": "Dependency direction prevents architecture drift."
     },
     {
+      "source": "frontend_dev_contracts/code_architecture/topology/00_TOPOLOGY_INDEX.md",
+      "target": "frontend_dev_contracts/code_architecture/topology/30_EXTERNAL_GRAPH_DEPENDENCY_GOVERNANCE.md",
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "Graph-heavy runtimes need explicit dependency governance."
+    },
+    {
       "source": "frontend_dev_contracts/code_architecture/topology/10_FRONTEND_FOLDER_TOPOLOGY.md",
       "target": "frontend_dev_contracts/code_architecture/topology/00_TOPOLOGY_INDEX.md",
       "relation": "belongs_to",
@@ -1087,6 +1103,27 @@
       "relation": "supports",
       "direction": "cross",
       "reason": "State ownership boundaries rely on clean dependency direction."
+    },
+    {
+      "source": "frontend_dev_contracts/code_architecture/topology/30_EXTERNAL_GRAPH_DEPENDENCY_GOVERNANCE.md",
+      "target": "frontend_dev_contracts/code_architecture/topology/00_TOPOLOGY_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "External graph dependency governance belongs to the topology branch."
+    },
+    {
+      "source": "frontend_dev_contracts/code_architecture/topology/30_EXTERNAL_GRAPH_DEPENDENCY_GOVERNANCE.md",
+      "target": "frontend_dev_contracts/code_architecture/topology/20_DEPENDENCY_DIRECTION_GUIDE.md",
+      "relation": "extends",
+      "direction": "cross",
+      "reason": "Third-party dependency rules refine the generic dependency direction guide."
+    },
+    {
+      "source": "frontend_dev_contracts/code_architecture/topology/30_EXTERNAL_GRAPH_DEPENDENCY_GOVERNANCE.md",
+      "target": "frontend_dev_contracts/code_architecture/packages/40_COMPONENT_REGISTRY_GUIDE.md",
+      "relation": "supports",
+      "direction": "cross",
+      "reason": "Graph wrappers and adapters still need stable identity and package registration."
     },
     {
       "source": "frontend_dev_contracts/component_system/00_COMPONENT_SYSTEM_INDEX.md",
@@ -2182,6 +2219,13 @@
     },
     {
       "source": "references/stages/30_STAGE_MOTION_COMPONENT_ARCHITECTURE.md",
+      "target": "frontend_dev_contracts/code_architecture/topology/30_EXTERNAL_GRAPH_DEPENDENCY_GOVERNANCE.md",
+      "relation": "details",
+      "direction": "downstream",
+      "reason": "Graph-heavy frontend products need explicit dependency and adapter boundaries."
+    },
+    {
+      "source": "references/stages/30_STAGE_MOTION_COMPONENT_ARCHITECTURE.md",
       "target": "references/tooling/development/modules/mod_stage_contract_runtime.md",
       "relation": "explained_by",
       "direction": "downstream",
@@ -2295,5 +2339,5 @@
       "hits": 4
     }
   ],
-  "updated_at": "2026-03-13T05:08:13.022Z"
+  "updated_at": "2026-03-13T05:30:19.865Z"
 }

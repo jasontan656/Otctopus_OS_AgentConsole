@@ -23,6 +23,10 @@ anchors:
     relation: "details"
     direction: "downstream"
     reason: "The code-architecture branch defines folder topology, style placement, and export discipline."
+  - target: "../../frontend_dev_contracts/code_architecture/topology/30_EXTERNAL_GRAPH_DEPENDENCY_GOVERNANCE.md"
+    relation: "details"
+    direction: "downstream"
+    reason: "Graph-heavy frontend products need explicit dependency and adapter boundaries."
   - target: "../../references/tooling/development/modules/mod_stage_contract_runtime.md"
     relation: "explained_by"
     direction: "downstream"
@@ -37,6 +41,7 @@ anchors:
 - 组件应以 folder-first package 落盘，自带 `.vue/.contract.ts/.tokens.css/index.ts`。
 - 产品 runtime 的实现顺序必须固定为：先框架，再可复用底座，再独立组件；不允许跳过前两层直接堆具体组件。
 - 每个独立组件都必须可追踪，拥有稳定 component id，并纳入统一 registry。
+- 对 graph-heavy runtime，应先固定 `viewer adapter` / `layout adapter`，再接入外部库；不得让 `Vue Flow`、`Cytoscape.js` 或其他依赖直接变成业务组件的事实源。
 - 代码组织需要反映：
   - layer catalog
   - app shell 与 route scene
@@ -50,3 +55,4 @@ anchors:
 - 让前端合同稳定地驱动未来产品 UI 重构。
 - 让 design system、component system、code architecture 三条合同都能直接反向驱动产品代码结构。
 - 让每个小组件都能被独立追踪、复用、替换，而不是沦为一次性页面碎片。
+- 让外部 graph/render/layout 依赖可替换、可审计，而不是在产品里散落成不可治理的插件调用。

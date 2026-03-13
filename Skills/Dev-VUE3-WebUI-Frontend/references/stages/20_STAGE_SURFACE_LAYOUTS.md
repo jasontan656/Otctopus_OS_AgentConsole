@@ -25,3 +25,4 @@ anchors:
 - 不允许把 graph 藏成二级入口。
 - 响应式不是缩放版桌面，而是重组叙事顺序。
 - 当产品运行时仍处于早期收敛期，允许先只实现 desktop，可见性优先于多端齐平。
+- 当 graph/workflow surface 已经超过普通 DOM 布局能力时，优先接入受治理的外部 graph/render/layout 依赖，而不是在产品内自研 zoom/pan/minimap。
