@@ -60,6 +60,9 @@ NON_GOVERNED_SKILL_ROOTS = {
     "SkillsManager-Tooling-CheckUp",
     "SkillsManager-Creation-Template",
 }
+NON_GOVERNED_RELATIVE_PREFIXES = tuple((name,) for name in NON_GOVERNED_SKILL_ROOTS) + tuple(
+    (container, name) for container in ("Skills", "skills") for name in NON_GOVERNED_SKILL_ROOTS
+)
 IO_PATTERNS = ("requests.", "httpx.", "fetch(", "axios(", "sqlalchemy", "psycopg", "redis.", "pymongo", "subprocess", "socket", "aiohttp", "requests.get(", "httpx.get(")
 RAW_PAYLOAD_PATTERNS = ("telegram_update", "callback_query", "webapp_data", "raw_payload", "raw_update", "incoming_update")
 PYTHON_PATH_HINTS = (
@@ -113,12 +116,10 @@ def is_ignored_path(path: Path, root: Path) -> bool:
 
 
 def _is_non_governed_skill_root_path(path: Path, root: Path) -> bool:
-    if root.name not in {"Skills", "skills"}:
-        return False
     parts = path.relative_to(root).parts
     if not parts:
         return False
-    return parts[0] in NON_GOVERNED_SKILL_ROOTS
+    return any(parts[: len(prefix)] == prefix for prefix in NON_GOVERNED_RELATIVE_PREFIXES)
 
 
 def should_skip(path: Path, root: Path) -> bool:

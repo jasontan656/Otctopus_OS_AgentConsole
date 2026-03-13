@@ -195,6 +195,35 @@ class TestPythonCodeLintTests:
             report = json.loads(result.stdout)
             assert all(g["status"] == "pass" for g in report["gates"])
 
+    def test_lint_ignores_non_governed_skill_roots_from_repo_root_scan(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="py_lint_", dir=str(ROOT.parent)) as tmp:
+            repo_root = Path(tmp) / "Otctopus_OS_AgentConsole"
+            governed = repo_root / "Skills" / "Meta-RootFile-Manager" / "scripts"
+            ignored_system = repo_root / "Skills" / ".system" / "Skill-creator" / "scripts"
+            ignored_creation = repo_root / "Skills" / "SkillsManager-Creation-Template" / "scripts"
+
+            governed.mkdir(parents=True)
+            ignored_system.mkdir(parents=True)
+            ignored_creation.mkdir(parents=True)
+
+            (governed / "toolbox.py").write_text("def run() -> None:\n    pass\n", encoding="utf-8")
+            (ignored_system / "bad_service.py").write_text("def process(payload):\n    return payload\n", encoding="utf-8")
+            (ignored_creation / "bad_prompt.py").write_text(
+                'PROMPT = """\n'
+                "You are an audit assistant.\n"
+                "## 1. Goal\n"
+                "- 必须读取规则\n"
+                "- 禁止跳过验证\n"
+                "- 输出契约固定\n"
+                '"""\n',
+                encoding="utf-8",
+            )
+
+            result = self._run_lint(repo_root)
+            assert result.returncode == 0, result.stdout + result.stderr
+            report = json.loads(result.stdout)
+            assert all(g["status"] == "pass" for g in report["gates"])
+
     def test_non_python_contract_and_rules_assets_stay_out_of_scope(self) -> None:
         with tempfile.TemporaryDirectory(prefix="py_lint_", dir=str(ROOT.parent)) as tmp:
             root = Path(tmp)

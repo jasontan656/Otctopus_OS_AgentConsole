@@ -25,7 +25,8 @@
     "do not use audit markdown as the primary execution guide",
     "choose READ_EXEC or WRITE_EXEC by actual write intent, not by file type alone",
     "for any skill-related task, load the Otctopus_OS_AgentConsole repo-local contract before skill-specific reads, writes, sync, install, registry, lint, or Git actions",
-    "when a concrete repo path becomes active, load that repo-local contract before repo-specific write, lint, or Git actions"
+    "when a concrete repo path becomes active, load that repo-local contract before repo-specific write, lint, or Git actions",
+    "before every final reply, hard-execute the Meta-Runtime-Selfcheck turn-end gate instead of treating selfcheck as optional narration"
   ],
   "execution_modes": {
     "READ_EXEC": {
@@ -57,6 +58,11 @@
   ],
   "turn_end_actions": [
     "print TURN_END guardrails",
+    "hard-execute $Meta-Runtime-Selfcheck before final reply",
+    "call runtime-contract --json first, then read directive --topic turn-end-selfcheck --json as the default branch",
+    "if the run is smooth, skip selfcheck output and continue to the normal final reply",
+    "if issues are present, classify them into immediate same-turn repair, optimization guidance, and unresolved risk",
+    "when a bounded fix is safe within the active repo boundary, repair first; otherwise merge concise selfcheck findings into the same final reply",
     "defer repo-specific lint or Git duties to the concrete repo-local contract when applicable"
   ]
 }
