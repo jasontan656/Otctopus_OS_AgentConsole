@@ -74,6 +74,41 @@ describe('Dev-VUE3-WebUI-Frontend stage contracts', () => {
     expect(payload.errors.some((item) => item.code === 'component.missing_panel_component_contract')).toBe(true)
   })
 
+  it('fails lint when blueprint nodes omit required overlap schema keys', async () => {
+    const docsRoot = await fs.mkdtemp(path.join(os.tmpdir(), 'portal-docs-overlap-'))
+    const motherDocRoot = path.join(docsRoot, 'mother_doc')
+    await fs.mkdir(path.join(motherDocRoot, '04_frontend_contract_layer', '39_panel_blueprint_catalog'), { recursive: true })
+    await fs.mkdir(path.join(motherDocRoot, '04_frontend_contract_layer', '56_component_property_matrix'), { recursive: true })
+    await fs.mkdir(path.join(motherDocRoot, '05_domain_contracts'), { recursive: true })
+
+    await fs.writeFile(path.join(motherDocRoot, '04_frontend_contract_layer', '35_container_surface_and_slot_matrix.md'), `---\ndoc_work_state: modified\ndoc_pack_refs: []\ndoc_id: a\ntopic: a\ndoc_links: []\n---\n# A\n\`container.panel.body.docs_catalog\`\n`, 'utf8')
+    await fs.writeFile(path.join(motherDocRoot, '04_frontend_contract_layer', '36_spatial_blueprint_protocol.md'), `---\ndoc_work_state: modified\ndoc_pack_refs: []\ndoc_id: b\ntopic: b\ndoc_links: [\"39_panel_blueprint_catalog/00_index.md\"]\n---\n# B\n\`\`\`yaml\nlocal_coordinate_spaces:\n  - local_coordinate_space_id: panel_local_px.4col\n    width: 311\n    height: 284\n    overflow_policy: forbid_overflow\n\`\`\`\n`, 'utf8')
+    await fs.writeFile(path.join(motherDocRoot, '04_frontend_contract_layer', '37_desktop_viewport_baseline_blueprint.md'), `---\ndoc_work_state: modified\ndoc_pack_refs: []\ndoc_id: c\ntopic: c\ndoc_links: [\"36_spatial_blueprint_protocol.md\"]\n---\n# C\n\`\`\`yaml\nviewport:\n  viewport_id: demo\n  viewport_width: 100\n  viewport_height: 100\nnodes: []\n\`\`\`\n`, 'utf8')
+    await fs.writeFile(path.join(motherDocRoot, '04_frontend_contract_layer', '38_workspace_and_panel_state_blueprints.md'), `---\ndoc_work_state: modified\ndoc_pack_refs: []\ndoc_id: d\ntopic: d\ndoc_links: [\"36_spatial_blueprint_protocol.md\"]\n---\n# D\nstate blueprint\n`, 'utf8')
+    await fs.writeFile(path.join(motherDocRoot, '04_frontend_contract_layer', '39_panel_blueprint_catalog', '00_index.md'), `---\ndoc_work_state: modified\ndoc_pack_refs: []\ndoc_id: e\ntopic: e\ndoc_links: [\"10_primary_workspace_panels.md\"]\n---\n# E\n`, 'utf8')
+    await fs.writeFile(path.join(motherDocRoot, '04_frontend_contract_layer', '39_panel_blueprint_catalog', '10_primary_workspace_panels.md'), `---\ndoc_work_state: modified\ndoc_pack_refs: []\ndoc_id: f\ntopic: f\ndoc_links: [\"../56_component_property_matrix/10_shell_nav_foundations.md\"]\n---\n# F\n\`panel.docs_catalog\`\n\`\`\`yaml\npanel_blueprint:\n  panel_id: panel.docs_catalog\n  body_container_id: container.panel.body.docs_catalog\n  local_coordinate_space: panel_local_px.4col\n  frame_width: 311\n  frame_height: 284\n  overflow_policy: forbid_overflow\n  interaction_states: [default]\n  responsive_variants:\n    desktop_default:\n      grid_span: 4\n      frame_width: 311\n      frame_height: 284\n  nodes:\n    - node_id: panel.docs_catalog.toolbar\n      parent_id: panel.docs_catalog.body\n      component_id: cmp.viewer.toolbar_strip\n      x: 0\n      y: 0\n      w: 311\n      h: 36\n\`\`\`\n`, 'utf8')
+    await fs.writeFile(path.join(motherDocRoot, '04_frontend_contract_layer', '39_panel_blueprint_catalog', '20_docs_governance_panels.md'), `---\ndoc_work_state: modified\ndoc_pack_refs: []\ndoc_id: g\ntopic: g\ndoc_links: []\n---\n# G\n`, 'utf8')
+    await fs.writeFile(path.join(motherDocRoot, '04_frontend_contract_layer', '39_panel_blueprint_catalog', '30_code_panels.md'), `---\ndoc_work_state: modified\ndoc_pack_refs: []\ndoc_id: h\ntopic: h\ndoc_links: []\n---\n# H\n`, 'utf8')
+    await fs.writeFile(path.join(motherDocRoot, '04_frontend_contract_layer', '39_panel_blueprint_catalog', '40_ai_runtime_panels.md'), `---\ndoc_work_state: modified\ndoc_pack_refs: []\ndoc_id: i\ntopic: i\ndoc_links: []\n---\n# I\n`, 'utf8')
+    await fs.writeFile(path.join(motherDocRoot, '04_frontend_contract_layer', '50_component_system_contract.md'), `---\ndoc_work_state: modified\ndoc_pack_refs: []\ndoc_id: j\ntopic: j\ndoc_links: [\"55_component_registry_seed.md\"]\n---\n# J\ncomponent props\n`, 'utf8')
+    await fs.writeFile(path.join(motherDocRoot, '04_frontend_contract_layer', '55_component_registry_seed.md'), `---\ndoc_work_state: modified\ndoc_pack_refs: []\ndoc_id: k\ntopic: k\ndoc_links: [\"50_component_system_contract.md\"]\n---\n# K\n\`cmp.viewer.toolbar_strip\`\n`, 'utf8')
+    await fs.writeFile(path.join(motherDocRoot, '04_frontend_contract_layer', '56_component_property_matrix', '00_index.md'), `---\ndoc_work_state: modified\ndoc_pack_refs: []\ndoc_id: l\ntopic: l\ndoc_links: [\"10_shell_nav_foundations.md\", \"20_panel_viewer_foundations.md\", \"30_reader_ai_runtime_components.md\"]\n---\n# L\n`, 'utf8')
+    await fs.writeFile(path.join(motherDocRoot, '04_frontend_contract_layer', '56_component_property_matrix', '10_shell_nav_foundations.md'), `---\ndoc_work_state: modified\ndoc_pack_refs: []\ndoc_id: m\ntopic: m\ndoc_links: []\n---\n# M\n\`panel.docs_catalog\`\n\`cmp.viewer.toolbar_strip\`\n`, 'utf8')
+    await fs.writeFile(path.join(motherDocRoot, '04_frontend_contract_layer', '56_component_property_matrix', '20_panel_viewer_foundations.md'), `---\ndoc_work_state: modified\ndoc_pack_refs: []\ndoc_id: n\ntopic: n\ndoc_links: []\n---\n# N\n`, 'utf8')
+    await fs.writeFile(path.join(motherDocRoot, '04_frontend_contract_layer', '56_component_property_matrix', '30_reader_ai_runtime_components.md'), `---\ndoc_work_state: modified\ndoc_pack_refs: []\ndoc_id: o\ntopic: o\ndoc_links: []\n---\n# O\n`, 'utf8')
+    await fs.writeFile(path.join(motherDocRoot, '04_frontend_contract_layer', '60_design_system_contract.md'), `---\ndoc_work_state: modified\ndoc_pack_refs: []\ndoc_id: p\ntopic: p\ndoc_links: [\"65_visual_token_and_surface_matrix.md\"]\n---\n# P\nsurface token\n`, 'utf8')
+    await fs.writeFile(path.join(motherDocRoot, '04_frontend_contract_layer', '65_visual_token_and_surface_matrix.md'), `---\ndoc_work_state: modified\ndoc_pack_refs: []\ndoc_id: q\ntopic: q\ndoc_links: [\"35_container_surface_and_slot_matrix.md\"]\n---\n# Q\n\`surface.panel.base\`\n`, 'utf8')
+    await fs.writeFile(path.join(motherDocRoot, '04_frontend_contract_layer', '80_rules_and_validation_contract.md'), `---\ndoc_work_state: modified\ndoc_pack_refs: []\ndoc_id: r\ntopic: r\ndoc_links: [\"81_frontend_mother_doc_gate_contract.md\", \"82_semantic_split_graph_gate_contract.md\", \"83_blueprint_numeric_integrity_gate_contract.md\"]\n---\n# R\nlayout component\n`, 'utf8')
+    await fs.writeFile(path.join(motherDocRoot, '04_frontend_contract_layer', '81_frontend_mother_doc_gate_contract.md'), `---\ndoc_work_state: modified\ndoc_pack_refs: []\ndoc_id: s\ntopic: s\ndoc_links: [\"80_rules_and_validation_contract.md\"]\n---\n# S\n`, 'utf8')
+    await fs.writeFile(path.join(motherDocRoot, '04_frontend_contract_layer', '82_semantic_split_graph_gate_contract.md'), `---\ndoc_work_state: modified\ndoc_pack_refs: []\ndoc_id: t\ntopic: t\ndoc_links: [\"80_rules_and_validation_contract.md\"]\n---\n# T\n`, 'utf8')
+    await fs.writeFile(path.join(motherDocRoot, '04_frontend_contract_layer', '83_blueprint_numeric_integrity_gate_contract.md'), `---\ndoc_work_state: modified\ndoc_pack_refs: []\ndoc_id: u\ntopic: u\ndoc_links: [\"36_spatial_blueprint_protocol.md\"]\n---\n# U\n`, 'utf8')
+    await fs.writeFile(path.join(motherDocRoot, '05_domain_contracts', '20_navigation_canvas_panel_contract.md'), `---\ndoc_work_state: modified\ndoc_pack_refs: []\ndoc_id: v\ntopic: v\ndoc_links: []\n---\n# V\n\`panel.docs_catalog\`\n`, 'utf8')
+
+    const payload = await lintProductMotherDoc(docsRoot)
+    expect(payload.status).toBe('fail')
+    expect(payload.errors.some((item) => item.code === 'blueprint.node_missing_required_fields')).toBe(true)
+  })
+
   it('builds graph and passes lint on Unified Portal docs', async () => {
     const docsRoot = path.resolve(
       defaultPortalDocsRoot(),

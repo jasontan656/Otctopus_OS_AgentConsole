@@ -47,6 +47,7 @@ anchors:
   - panel catalog 中的每个 panel 都必须有详细 blueprint 和 component property coverage。
 - `numeric blueprint integrity`
   - blueprint 必须给出足够数值让脚本检查 frame bounds、overflow、overlap 和已声明派生状态。
+  - overlap 相关字段必须完整存在：`allow_overlap`、`overlap_targets`、`overlap_mode`、`collision_policy`；字段允许为空，但键本身不得缺失。
 
 ## 产物
 - `graph/frontend_mother_doc_graph.json`

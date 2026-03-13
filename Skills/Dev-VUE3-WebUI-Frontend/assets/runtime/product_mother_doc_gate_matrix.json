@@ -88,7 +88,12 @@
     "frame_height",
     "responsive_variants",
     "allow_overlap",
-    "overflow_policy"
+    "overflow_policy",
+    "overlap_targets",
+    "overlap_mode",
+    "collision_policy",
+    "relation_refs",
+    "elevation"
   ],
   "visual_keywords": [
     "background",

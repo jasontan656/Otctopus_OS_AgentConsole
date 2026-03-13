@@ -74,12 +74,18 @@ interface ProductMotherDocProfile {
 
 interface SpatialRectNode {
   nodeId: string
-  parentId: string
+  parentId: string | null
   x: number | null
   y: number | null
   w: number | null
   h: number | null
+  overlapTargets: string[]
+  overlapMode: string | null
+  collisionPolicy: string | null
+  relationRefs: string[]
+  elevation: number | null
   allowOverlap: boolean
+  missingKeys: string[]
 }
 
 interface ParsedPanelBlueprint {
@@ -91,6 +97,7 @@ interface ParsedPanelBlueprint {
   frameHeight: number | null
   overflowPolicy: string | null
   interactionStates: string[]
+  missingKeys: string[]
   responsiveVariants: Record<string, {
     gridSpan: number | null
     frameWidth: number | null
@@ -105,6 +112,7 @@ interface LocalCoordinateSpaceContract {
   width: number | null
   height: number | null
   overflowPolicy: string | null
+  missingKeys: string[]
 }
 
 interface ParsedViewportScene {
@@ -113,6 +121,7 @@ interface ParsedViewportScene {
   viewportWidth: number | null
   viewportHeight: number | null
   nodes: SpatialRectNode[]
+  missingKeys: string[]
 }
 
 export interface ProductMotherDocGraphPayload {
@@ -167,6 +176,42 @@ const CONTAINER_ID_REGEX = /\bcontainer\.[A-Za-z0-9_.-]+\b/g
 const SURFACE_ID_REGEX = /\bsurface\.[A-Za-z0-9_.-]+\b/g
 const REQUIREMENT_ID_REGEX = /\bUP-REQ-\d+\b/g
 const MARKDOWN_LINK_REGEX = /\[[^\]]+\]\(([^)]+\.md)\)/g
+const SPATIAL_NODE_REQUIRED_KEYS = [
+  'node_id',
+  'parent_id',
+  'x',
+  'y',
+  'w',
+  'h',
+  'allow_overlap',
+  'overlap_targets',
+  'overlap_mode',
+  'collision_policy',
+  'relation_refs',
+  'elevation',
+]
+const PANEL_BLUEPRINT_REQUIRED_KEYS = [
+  'panel_id',
+  'body_container_id',
+  'local_coordinate_space',
+  'frame_width',
+  'frame_height',
+  'overflow_policy',
+  'interaction_states',
+  'responsive_variants',
+  'nodes',
+]
+const LOCAL_COORDINATE_SPACE_REQUIRED_KEYS = [
+  'local_coordinate_space_id',
+  'width',
+  'height',
+  'overflow_policy',
+]
+const VIEWPORT_REQUIRED_KEYS = [
+  'viewport_id',
+  'viewport_width',
+  'viewport_height',
+]
 
 function uniq(items: string[]): string[] {
   return [...new Set(items)].sort()
@@ -296,6 +341,14 @@ function toStringArray(value: unknown): string[] {
   return value.filter((item): item is string => typeof item === 'string').map((item) => item.trim()).filter(Boolean)
 }
 
+function hasOwnField(record: Record<string, unknown>, field: string): boolean {
+  return Object.prototype.hasOwnProperty.call(record, field)
+}
+
+function missingRecordKeys(record: Record<string, unknown>, requiredKeys: string[]): string[] {
+  return requiredKeys.filter((field) => !hasOwnField(record, field))
+}
+
 function parseSpatialNode(value: unknown): SpatialRectNode | null {
   const record = toRecord(value)
   if (!record || typeof record.node_id !== 'string') {
@@ -303,12 +356,18 @@ function parseSpatialNode(value: unknown): SpatialRectNode | null {
   }
   return {
     nodeId: record.node_id,
-    parentId: typeof record.parent_id === 'string' ? record.parent_id : 'viewport',
+    parentId: typeof record.parent_id === 'string' ? record.parent_id : null,
     x: toNumber(record.x),
     y: toNumber(record.y),
     w: toNumber(record.w),
     h: toNumber(record.h),
+    overlapTargets: toStringArray(record.overlap_targets),
+    overlapMode: typeof record.overlap_mode === 'string' ? record.overlap_mode : null,
+    collisionPolicy: typeof record.collision_policy === 'string' ? record.collision_policy : null,
+    relationRefs: toStringArray(record.relation_refs),
+    elevation: toNumber(record.elevation),
     allowOverlap: record.allow_overlap === true,
+    missingKeys: missingRecordKeys(record, SPATIAL_NODE_REQUIRED_KEYS),
   }
 }
 
@@ -571,6 +630,7 @@ function collectPanelBlueprints(docs: ProductDocRecord[]): ParsedPanelBlueprint[
         frameHeight: toNumber(blueprint.frame_height),
         overflowPolicy: typeof blueprint.overflow_policy === 'string' ? blueprint.overflow_policy : null,
         interactionStates: toStringArray(blueprint.interaction_states),
+        missingKeys: missingRecordKeys(blueprint, PANEL_BLUEPRINT_REQUIRED_KEYS),
         responsiveVariants,
         nodes: Array.isArray(blueprint.nodes)
           ? blueprint.nodes.map(parseSpatialNode).filter((node): node is SpatialRectNode => Boolean(node))
@@ -601,6 +661,7 @@ function collectLocalCoordinateSpaces(docs: ProductDocRecord[]): LocalCoordinate
           width: toNumber(space.width),
           height: toNumber(space.height),
           overflowPolicy: typeof space.overflow_policy === 'string' ? space.overflow_policy : null,
+          missingKeys: missingRecordKeys(space, LOCAL_COORDINATE_SPACE_REQUIRED_KEYS),
         })
       }
     }
@@ -626,6 +687,7 @@ function collectViewportScenes(docs: ProductDocRecord[]): ParsedViewportScene[] 
         viewportWidth: toNumber(viewport.viewport_width),
         viewportHeight: toNumber(viewport.viewport_height),
         nodes: record.nodes.map(parseSpatialNode).filter((node): node is SpatialRectNode => Boolean(node)),
+        missingKeys: missingRecordKeys(viewport, VIEWPORT_REQUIRED_KEYS),
       })
     }
   }
@@ -647,7 +709,24 @@ function validateBlueprintGeometry(
   const issues: LintIssue[] = []
   const localSpaceMap = new Map(localSpaces.map((space) => [space.id, space]))
 
+  for (const localSpace of localSpaces) {
+    if (localSpace.missingKeys.length > 0) {
+      issues.push({
+        code: 'blueprint.local_coordinate_space_missing_required_fields',
+        doc: localSpace.sourceDoc,
+        message: `Local coordinate space is missing required fields: ${localSpace.id} -> ${localSpace.missingKeys.join(', ')}`,
+      })
+    }
+  }
+
   for (const blueprint of panelBlueprints) {
+    if (blueprint.missingKeys.length > 0) {
+      issues.push({
+        code: 'blueprint.missing_required_fields',
+        doc: blueprint.sourceDoc,
+        message: `Panel blueprint is missing required fields: ${blueprint.panelId} -> ${blueprint.missingKeys.join(', ')}`,
+      })
+    }
     if (!blueprint.bodyContainerId) {
       issues.push({
         code: 'blueprint.missing_body_container',
@@ -717,6 +796,13 @@ function validateBlueprintGeometry(
 
     const nodesByParent = new Map<string, SpatialRectNode[]>()
     for (const node of blueprint.nodes) {
+      if (node.missingKeys.length > 0) {
+        issues.push({
+          code: 'blueprint.node_missing_required_fields',
+          doc: blueprint.sourceDoc,
+          message: `Blueprint node is missing required fields: ${blueprint.panelId} -> ${node.nodeId} -> ${node.missingKeys.join(', ')}`,
+        })
+      }
       if (node.x === null || node.y === null || node.w === null || node.h === null) {
         issues.push({
           code: 'blueprint.node_missing_geometry',
@@ -739,9 +825,9 @@ function validateBlueprintGeometry(
           message: `Blueprint node exceeds frame bounds: ${blueprint.panelId} -> ${node.nodeId}`,
         })
       }
-      const siblings = nodesByParent.get(node.parentId) ?? []
+      const siblings = nodesByParent.get(node.parentId ?? '__missing_parent__') ?? []
       siblings.push(node)
-      nodesByParent.set(node.parentId, siblings)
+      nodesByParent.set(node.parentId ?? '__missing_parent__', siblings)
     }
 
     for (const siblings of nodesByParent.values()) {
@@ -752,12 +838,51 @@ function validateBlueprintGeometry(
           if (!current || !peer) {
             continue
           }
-          if (rectsOverlap(current, peer) && !current.allowOverlap && !peer.allowOverlap) {
+          if (!rectsOverlap(current, peer)) {
+            continue
+          }
+          if (!current.allowOverlap && !peer.allowOverlap) {
             issues.push({
               code: 'blueprint.unexpected_overlap',
               doc: blueprint.sourceDoc,
               message: `Sibling blueprint nodes overlap without explicit allow_overlap: ${blueprint.panelId} -> ${current.nodeId} / ${peer.nodeId}`,
             })
+            continue
+          }
+
+          for (const node of [current, peer]) {
+            const otherNodeId = node.nodeId === current.nodeId ? peer.nodeId : current.nodeId
+            if (!node.allowOverlap) {
+              continue
+            }
+            if (!node.overlapMode) {
+              issues.push({
+                code: 'blueprint.overlap_missing_mode',
+                doc: blueprint.sourceDoc,
+                message: `Overlapping node is missing overlap_mode: ${blueprint.panelId} -> ${node.nodeId}`,
+              })
+            }
+            if (!node.collisionPolicy) {
+              issues.push({
+                code: 'blueprint.overlap_missing_collision_policy',
+                doc: blueprint.sourceDoc,
+                message: `Overlapping node is missing collision_policy: ${blueprint.panelId} -> ${node.nodeId}`,
+              })
+            }
+            if (node.collisionPolicy === 'forbid') {
+              issues.push({
+                code: 'blueprint.overlap_policy_conflict',
+                doc: blueprint.sourceDoc,
+                message: `Overlapping node declares allow_overlap but collision_policy forbids overlap: ${blueprint.panelId} -> ${node.nodeId}`,
+              })
+            }
+            if (node.overlapTargets.length > 0 && !node.overlapTargets.includes(otherNodeId)) {
+              issues.push({
+                code: 'blueprint.overlap_target_mismatch',
+                doc: blueprint.sourceDoc,
+                message: `Overlapping node does not allow this peer in overlap_targets: ${blueprint.panelId} -> ${node.nodeId} / ${otherNodeId}`,
+              })
+            }
           }
         }
       }
@@ -771,6 +896,13 @@ function validateViewportScenes(scenes: ParsedViewportScene[]): LintIssue[] {
   const issues: LintIssue[] = []
 
   for (const scene of scenes) {
+    if (scene.missingKeys.length > 0) {
+      issues.push({
+        code: 'viewport.missing_required_fields',
+        doc: scene.sourceDoc,
+        message: `Viewport blueprint is missing required fields: ${scene.viewportId} -> ${scene.missingKeys.join(', ')}`,
+      })
+    }
     if (scene.viewportWidth === null || scene.viewportHeight === null) {
       issues.push({
         code: 'viewport.missing_dimensions',
@@ -785,6 +917,13 @@ function validateViewportScenes(scenes: ParsedViewportScene[]): LintIssue[] {
     const nodesByParent = new Map<string, SpatialRectNode[]>()
 
     for (const node of scene.nodes) {
+      if (node.missingKeys.length > 0) {
+        issues.push({
+          code: 'viewport.node_missing_required_fields',
+          doc: scene.sourceDoc,
+          message: `Viewport node is missing required fields: ${scene.viewportId} -> ${node.nodeId} -> ${node.missingKeys.join(', ')}`,
+        })
+      }
       if (node.x === null || node.y === null || node.w === null || node.h === null) {
         issues.push({
           code: 'viewport.node_missing_geometry',
@@ -793,7 +932,7 @@ function validateViewportScenes(scenes: ParsedViewportScene[]): LintIssue[] {
         })
         continue
       }
-      const parentBounds = bounds.get(node.parentId)
+      const parentBounds = bounds.get(node.parentId ?? '__missing_parent__')
       if (!parentBounds) {
         issues.push({
           code: 'viewport.undefined_parent',
@@ -817,9 +956,9 @@ function validateViewportScenes(scenes: ParsedViewportScene[]): LintIssue[] {
         })
       }
       bounds.set(node.nodeId, { x: node.x, y: node.y, w: node.w, h: node.h })
-      const siblings = nodesByParent.get(node.parentId) ?? []
+      const siblings = nodesByParent.get(node.parentId ?? '__missing_parent__') ?? []
       siblings.push(node)
-      nodesByParent.set(node.parentId, siblings)
+      nodesByParent.set(node.parentId ?? '__missing_parent__', siblings)
     }
 
     for (const siblings of nodesByParent.values()) {
@@ -830,12 +969,51 @@ function validateViewportScenes(scenes: ParsedViewportScene[]): LintIssue[] {
           if (!current || !peer) {
             continue
           }
-          if (rectsOverlap(current, peer) && !current.allowOverlap && !peer.allowOverlap) {
+          if (!rectsOverlap(current, peer)) {
+            continue
+          }
+          if (!current.allowOverlap && !peer.allowOverlap) {
             issues.push({
               code: 'viewport.unexpected_overlap',
               doc: scene.sourceDoc,
               message: `Viewport sibling nodes overlap without explicit allow_overlap: ${scene.viewportId} -> ${current.nodeId} / ${peer.nodeId}`,
             })
+            continue
+          }
+
+          for (const node of [current, peer]) {
+            const otherNodeId = node.nodeId === current.nodeId ? peer.nodeId : current.nodeId
+            if (!node.allowOverlap) {
+              continue
+            }
+            if (!node.overlapMode) {
+              issues.push({
+                code: 'viewport.overlap_missing_mode',
+                doc: scene.sourceDoc,
+                message: `Overlapping viewport node is missing overlap_mode: ${scene.viewportId} -> ${node.nodeId}`,
+              })
+            }
+            if (!node.collisionPolicy) {
+              issues.push({
+                code: 'viewport.overlap_missing_collision_policy',
+                doc: scene.sourceDoc,
+                message: `Overlapping viewport node is missing collision_policy: ${scene.viewportId} -> ${node.nodeId}`,
+              })
+            }
+            if (node.collisionPolicy === 'forbid') {
+              issues.push({
+                code: 'viewport.overlap_policy_conflict',
+                doc: scene.sourceDoc,
+                message: `Overlapping viewport node declares allow_overlap but collision_policy forbids overlap: ${scene.viewportId} -> ${node.nodeId}`,
+              })
+            }
+            if (node.overlapTargets.length > 0 && !node.overlapTargets.includes(otherNodeId)) {
+              issues.push({
+                code: 'viewport.overlap_target_mismatch',
+                doc: scene.sourceDoc,
+                message: `Overlapping viewport node does not allow this peer in overlap_targets: ${scene.viewportId} -> ${node.nodeId} / ${otherNodeId}`,
+              })
+            }
           }
         }
       }
