@@ -35,7 +35,7 @@ class TestMetaRuntimeSelfcheckSmoke:
     def test_runtime_pain_batch_help_starts(self) -> None:
         result = self.run_python(BATCH_SCRIPT, "--help")
         assert result.returncode == 0, result.stderr
-        assert "Post-task runtime selfcheck" in result.stdout
+        assert "Turn-end runtime selfcheck" in result.stdout
         assert "--memory-runtime" in result.stdout
 
     def test_runtime_pain_batch_reports_missing_provider_as_json(self) -> None:

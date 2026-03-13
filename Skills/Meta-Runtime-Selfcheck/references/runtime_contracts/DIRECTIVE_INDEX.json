@@ -1,11 +1,11 @@
 {
   "topics": {
-    "diagnose-workflow": {
+    "turn-end-selfcheck": {
       "doc_kind": "workflow",
       "json_path": "DIAGNOSE_WORKFLOW.json",
       "human_path": "DIAGNOSE_WORKFLOW_human.md"
     },
-    "repair-writeback": {
+    "self-repair-writeback": {
       "doc_kind": "contract",
       "json_path": "REPAIR_WRITEBACK_CONTRACT.json",
       "human_path": "REPAIR_WRITEBACK_CONTRACT_human.md"
@@ -14,6 +14,11 @@
       "doc_kind": "contract",
       "json_path": "OUTPUT_GOVERNANCE_CONTRACT.json",
       "human_path": "OUTPUT_GOVERNANCE_CONTRACT_human.md"
+    },
+    "final-reply-merge": {
+      "doc_kind": "contract",
+      "json_path": "FINAL_REPLY_MERGE_CONTRACT.json",
+      "human_path": "FINAL_REPLY_MERGE_CONTRACT_human.md"
     }
   }
 }

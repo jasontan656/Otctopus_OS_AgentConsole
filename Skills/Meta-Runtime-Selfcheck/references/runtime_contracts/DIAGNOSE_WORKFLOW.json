@@ -1,22 +1,41 @@
 {
-  "directive_name": "meta_runtime_selfcheck_diagnose_workflow",
-  "directive_version": "1.0.0",
+  "directive_name": "meta_runtime_selfcheck_turn_end_selfcheck",
+  "directive_version": "2.0.0",
   "doc_kind": "workflow",
-  "topic": "diagnose-workflow",
-  "purpose": "Analyze the previous run and emit a pain-context report without entering writeback mode.",
+  "topic": "turn-end-selfcheck",
+  "purpose": "Run a default turn-end selfcheck before final reply; skip output when the run is smooth, otherwise diagnose pain points and decide whether immediate same-turn repair is safe.",
   "instruction": [
-    "Use this directive only after the task or run has ended.",
-    "Treat the external pain provider as evidence input, not as the user-facing narrative.",
-    "Organize the answer around the previous run, not around an abstract framework."
+    "Enter this workflow near turn end, before sending the final reply.",
+    "Treat the current turn's tool runs, failures, retries, user corrections, path mistakes, and hesitation as first-class evidence.",
+    "Skip emitting selfcheck content when no material problem, confusion, or recoverable waste occurred."
   ],
   "workflow": [
-    "Confirm that CODEX_RUNTIME_PAIN_PROVIDER is set or pass --memory-runtime <provider.py>.",
-    "Run the default diagnose command with mode token > and session scope forced to all_threads.",
-    "Summarize what happened, why it happened, which layer must change, and how the next run avoids the same stall."
+    "Check whether the turn had any tool failure, script failure, path misuse, repeated retry, user correction caused by misunderstanding, or obvious hesitation.",
+    "If none are present, mark selfcheck as skipped and continue directly to the normal final reply.",
+    "If issues are present, classify them into: immediately repairable in this turn, document/tooling/skill improvements to propose, and unresolved risks that must be disclosed.",
+    "When a bounded fix is safe and within the active repo boundary, repair first; otherwise keep the issue as an optimization item.",
+    "Merge concise selfcheck findings into the same final reply instead of opening a separate meta-only report."
+  ],
+  "issue_checklist": [
+    "Tool command failed due to wrong path, wrong working directory, wrong entrypoint, or missing governed environment",
+    "The model hesitated, looped, retried blindly, or explored too many branches before converging",
+    "The user had to correct intent, terminology, path, trigger wording, or missing assumptions",
+    "A skill description, routing rule, trigger phrase, or default prompt caused confusion",
+    "A script, CLI contract, or runtime contract was misleading, too implicit, or maze-like",
+    "The final answer could hide a recoverable execution flaw that should instead feed skill/tool evolution"
+  ],
+  "optimization_example_list": [
+    "Tighten a skill description so trigger semantics are clearer",
+    "Adjust keyword or tone wording so the right skill triggers earlier",
+    "Fix a wrong default path, runtime root, or repo-local environment instruction",
+    "Add a missing example, payload shape, checklist, or boundary rule to a skill document",
+    "Simplify a CLI usage contract that caused unnecessary trial-and-error",
+    "Patch a local tool or workflow document when the defect is proven and low-risk to repair now"
   ],
   "rules": [
-    "Do not enter 修复 flow unless the user explicitly requested it.",
-    "Do not describe tool failures without naming the missing guidance, document, script, or workflow boundary.",
-    "Keep the diagnosis focused on proven evidence, remaining unknowns, and concrete remediation targets."
+    "Do not emit selfcheck text when the turn was smooth enough that the extra section would be noise.",
+    "Do not describe failures without naming the missing guidance, document, script, workflow boundary, or decision gap.",
+    "Do not use selfcheck as an excuse for unrelated broad refactors.",
+    "If the model can safely repair the issue now, prefer repair plus concise disclosure over merely reporting the problem."
   ]
 }

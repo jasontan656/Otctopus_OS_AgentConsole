@@ -1,51 +1,56 @@
 ---
-doc_id: "meta_runtime_selfcheck.repair_writeback_contract"
+doc_id: "meta_runtime_selfcheck.self_repair_writeback_contract"
 doc_type: "topic_atom"
-topic: "Explicit repair writeback contract after manual remediation"
+topic: "Immediate same-turn self-repair contract after turn-end selfcheck"
 node_role: "topic_atom"
 domain_type: "runtime_contract"
 anchors:
   - target: "SKILL_RUNTIME_CONTRACT_human.md"
     relation: "belongs_to"
     direction: "upstream"
-    reason: "Repair writeback is a runtime branch under the main contract."
+    reason: "Self-repair writeback is a runtime branch under the main contract."
   - target: "OUTPUT_GOVERNANCE_CONTRACT_human.md"
     relation: "governed_by"
     direction: "downstream"
-    reason: "Repair writeback still needs governed runtime logs and result roots."
+    reason: "Self-repair still needs governed runtime logs and result roots."
+  - target: "FINAL_REPLY_MERGE_CONTRACT_human.md"
+    relation: "routes_to"
+    direction: "downstream"
+    reason: "Self-repair outcomes must be merged into the same final reply."
 ---
 
 # REPAIR_WRITEBACK_CONTRACT
 
 <part_A>
-- 本文件只说明显式 `修复` 路径的进入条件与写回边界。
-- 修复本身必须先在别处手工落盘，再由本技能负责验证与 resolved writeback。
-- 若用户没有明确要求 `修复`，不要进入本分支。
+- 本文件说明同回合即时自修的进入条件与写回边界。
+- 自修不再要求用户显式先说“修复”；只要 turn-end 自检已证明该问题局部、可验证、可安全收口，就可进入。
+- 若问题超出当前任务边界、过大或无法验证，应停止自修，改为 final reply 内的优化建议。
 </part_A>
 
 <part_B>
 
 ```json
 {
-  "directive_name": "meta_runtime_selfcheck_repair_writeback_contract",
-  "directive_version": "1.0.0",
+  "directive_name": "meta_runtime_selfcheck_self_repair_writeback",
+  "directive_version": "2.0.0",
   "doc_kind": "contract",
-  "topic": "repair-writeback",
-  "purpose": "Govern the explicit 修复 flow after manual changes and verification evidence already exist.",
+  "topic": "self-repair-writeback",
+  "purpose": "Govern immediate same-turn self-repair when turn-end selfcheck proves that a bounded fix is safe, local, and verifiable.",
   "instruction": [
-    "Enter this contract only when the user explicitly requested 修复.",
-    "Manual changes must already be applied outside this skill before writeback is attempted.",
-    "Provide --manual-repair-path and at least one --verify-cmd whenever repair writeback is intended."
+    "Enter this contract when turn-end selfcheck finds a concrete issue that can be safely repaired in the same turn.",
+    "Prefer low-risk, local repairs such as tool usage fixes, skill description fixes, routing fixes, contract wording fixes, or missing example additions.",
+    "Whenever a file is changed, collect verification evidence in the same turn and disclose the repair in the final reply."
   ],
   "workflow": [
-    "Run the repair command with 修复 plus --manual-repair-applied.",
-    "Allow the skill to verify the changed paths and mark resolved groups only after verification succeeds.",
-    "Refresh the pending queue after writeback so the next pain focus is current."
+    "Confirm the fix is within the active repo boundary and does not require speculative broad refactors.",
+    "Apply the minimal correct repair first, then run the relevant verification command or inspection step.",
+    "If verification succeeds, treat the issue as self-repaired and include the outcome in the final reply.",
+    "If repair is unsafe, too broad, or unverifiable, stop repairing and downgrade the item into a final-reply optimization suggestion."
   ],
   "rules": [
-    "Do not auto-execute deprecated repair commands.",
-    "Do not mark a pain group resolved when verification evidence is missing or failing.",
-    "Do not present repair writeback as a substitute for the manual code edit itself."
+    "Do not auto-repair speculative issues without evidence from the current run.",
+    "Do not mark a pain item repaired when verification evidence is missing or failing.",
+    "Do not let self-repair escape the active task boundary or overwrite unrelated user changes."
   ]
 }
 ```

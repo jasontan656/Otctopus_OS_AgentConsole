@@ -1,22 +1,23 @@
 {
-  "directive_name": "meta_runtime_selfcheck_repair_writeback_contract",
-  "directive_version": "1.0.0",
+  "directive_name": "meta_runtime_selfcheck_self_repair_writeback",
+  "directive_version": "2.0.0",
   "doc_kind": "contract",
-  "topic": "repair-writeback",
-  "purpose": "Govern the explicit 修复 flow after manual changes and verification evidence already exist.",
+  "topic": "self-repair-writeback",
+  "purpose": "Govern immediate same-turn self-repair when turn-end selfcheck proves that a bounded fix is safe, local, and verifiable.",
   "instruction": [
-    "Enter this contract only when the user explicitly requested 修复.",
-    "Manual changes must already be applied outside this skill before writeback is attempted.",
-    "Provide --manual-repair-path and at least one --verify-cmd whenever repair writeback is intended."
+    "Enter this contract when turn-end selfcheck finds a concrete issue that can be safely repaired in the same turn.",
+    "Prefer low-risk, local repairs such as tool usage fixes, skill description fixes, routing fixes, contract wording fixes, or missing example additions.",
+    "Whenever a file is changed, collect verification evidence in the same turn and disclose the repair in the final reply."
   ],
   "workflow": [
-    "Run the repair command with 修复 plus --manual-repair-applied.",
-    "Allow the skill to verify the changed paths and mark resolved groups only after verification succeeds.",
-    "Refresh the pending queue after writeback so the next pain focus is current."
+    "Confirm the fix is within the active repo boundary and does not require speculative broad refactors.",
+    "Apply the minimal correct repair first, then run the relevant verification command or inspection step.",
+    "If verification succeeds, treat the issue as self-repaired and include the outcome in the final reply.",
+    "If repair is unsafe, too broad, or unverifiable, stop repairing and downgrade the item into a final-reply optimization suggestion."
   ],
   "rules": [
-    "Do not auto-execute deprecated repair commands.",
-    "Do not mark a pain group resolved when verification evidence is missing or failing.",
-    "Do not present repair writeback as a substitute for the manual code edit itself."
+    "Do not auto-repair speculative issues without evidence from the current run.",
+    "Do not mark a pain item repaired when verification evidence is missing or failing.",
+    "Do not let self-repair escape the active task boundary or overwrite unrelated user changes."
   ]
 }

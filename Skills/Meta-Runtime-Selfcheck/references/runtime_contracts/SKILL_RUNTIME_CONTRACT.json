@@ -1,12 +1,18 @@
 {
   "contract_name": "meta_runtime_selfcheck_runtime_contract",
-  "contract_version": "1.0.0",
+  "contract_version": "2.0.0",
   "skill_name": "__SKILL_NAME__",
   "runtime_source_policy": {
     "primary_runtime_source": "CLI_JSON",
     "human_markdown_role": "part_a_narrative_for_humans",
     "payload_role": "part_b_json_for_models",
     "markdown_is_not_primary_instruction_source": true
+  },
+  "trigger_policy": {
+    "default_trigger": "turn_end",
+    "manual_invoke_still_allowed": true,
+    "skip_when_smooth": true,
+    "allow_implicit_invocation": true
   },
   "tool_entry": {
     "script": "scripts/Cli_Toolbox.py",
@@ -19,26 +25,32 @@
     }
   },
   "must_use_sequence": [
-    "Call runtime-contract before consuming runtime guidance for this skill.",
-    "Choose a directive topic by actual task intent.",
+    "Near turn end, call runtime-contract before consuming runtime guidance for this skill.",
+    "Read the turn-end-selfcheck directive as the default branch.",
+    "If issues are detected, decide whether same-turn self-repair is safe; otherwise downgrade the item into final-reply optimization guidance.",
     "Call paths --json when governed runtime or result paths matter.",
     "Open human mirrors only when the direct JSON payload still leaves a real gap."
   ],
   "directive_topics": [
     {
-      "topic": "diagnose-workflow",
+      "topic": "turn-end-selfcheck",
       "doc_kind": "workflow",
-      "use_when": "The task is to analyze the previous run and emit a pain-context report without writeback."
+      "use_when": "Every turn end before final reply; skip output if the run is smooth."
     },
     {
-      "topic": "repair-writeback",
+      "topic": "self-repair-writeback",
       "doc_kind": "contract",
-      "use_when": "The user explicitly requested 修复 and manual code changes plus verification evidence already exist."
+      "use_when": "Turn-end selfcheck found a bounded issue that can be safely repaired and verified in the same turn."
     },
     {
       "topic": "output-governance",
       "doc_kind": "contract",
-      "use_when": "The task needs governed runtime log roots, result roots, or migration duties for legacy artifacts."
+      "use_when": "The task needs governed runtime log roots, result roots, or repair-evidence artifact policy."
+    },
+    {
+      "topic": "final-reply-merge",
+      "doc_kind": "contract",
+      "use_when": "The turn found optimization items or self-repair outcomes that must be merged into the same final reply."
     }
   ],
   "runtime_dependencies": {
@@ -48,7 +60,8 @@
       "required_for": [
         "diagnose",
         "repair"
-      ]
+      ],
+      "fallback_policy": "If unavailable, perform a lightweight selfcheck from the visible turn evidence instead of failing the user-facing answer."
     },
     "history_source": {
       "default_path": "__DEFAULT_HISTORY_PATH__",
@@ -61,9 +74,10 @@
     "resolved_paths_command": "./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py paths --json"
   },
   "hard_constraints": [
-    "Use this skill only after a task or run has ended.",
+    "Use this skill near turn end by default, not only when the user manually invokes it.",
+    "Skip selfcheck output when the turn was smooth and the extra section would be noise.",
     "Do not treat SKILL.md as the primary runtime instruction source.",
-    "Do not auto-execute repair commands; manual changes must already be applied before repair writeback.",
+    "Do not perform speculative broad auto-repairs under the name of selfcheck.",
     "Do not default logs or result artifacts to the current working directory."
   ]
 }

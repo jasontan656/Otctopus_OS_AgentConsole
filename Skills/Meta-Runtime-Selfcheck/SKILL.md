@@ -1,6 +1,6 @@
 ---
 name: "Meta-Runtime-Selfcheck"
-description: "Manual-invoke-only post-task runtime selfcheck. 在任务运行结束后，分析上一回合中的犹豫、工具失败、脚本失败、引导不足、模型 confused 与迷宫式流程，并输出完整痛点报告和整改方案。"
+description: "Turn-end runtime selfcheck contract. 在每个任务回合结束前，对本轮执行进行自检；顺利则跳过，有问题则先即时自修或沉淀修复建议，并把可优化点合并进 final reply。"
 metadata:
   doc_structure:
     doc_id: "meta_runtime_selfcheck.entry.facade"
@@ -14,7 +14,7 @@ metadata:
       - target: "references/runtime_contracts/DIAGNOSE_WORKFLOW_human.md"
         relation: "routes_to"
         direction: "downstream"
-        reason: "Diagnosis is the default branch after reading the runtime contract."
+        reason: "Turn-end selfcheck is the default branch after reading the runtime contract."
 ---
 
 # Meta-Runtime-Selfcheck
@@ -24,30 +24,36 @@ metadata:
   - `./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py runtime-contract --json`
   - `./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py directive --topic <topic> --json`
   - `./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py paths --json`
-- 真正执行诊断或修复回写时使用：
+- 运行时诊断与写回入口：
   - `./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/runtime_pain_batch.py ">" --session-scope-mode all_threads --max-results 200`
   - `./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/runtime_pain_batch.py 修复 --manual-repair-applied --manual-repair-path <changed_file> --verify-cmd <verify_cmd>`
 - 模型读取 runtime contract、workflow、output 规则时必须优先走 CLI JSON；`SKILL.md` 只做门面。
 
 ## 2. 适用域
-- 适用于：任务或运行结束后的上一回合复盘。
-- 适用于：模型犹豫、工具失败、脚本失败、引导不足、文档缺失、confused 状态与迷宫式流程。
-- 不适用于：未结束的任务中途调度、自动代码修复编排、把 pain provider 协议本身当主要叙事。
+- 适用于：每个任务回合 `turn end` 前的默认运行自检。
+- 适用于：工具错误、脚本失败、路径误用、犹豫不决、重复试错、文档缺口、技能描述不清、触发语气不准、模型 confused 与迷宫式流程。
+- 适用于：在当前回合内能安全收口的问题，先即时自修；不能即时收口的问题，合并为 final reply 内的优化建议。
+- 不适用于：未结束任务中途强插复盘叙事、把 pain provider 协议本身当主要用户叙事、无边界地自动改写大范围资产。
 
 ## 3. 必读顺序
 1. 先执行 `./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py runtime-contract --json`。
-2. 按任务意图读取 directive：
-   - 默认诊断：`./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py directive --topic diagnose-workflow --json`
-   - 显式修复回写：`./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py directive --topic repair-writeback --json`
-   - 日志与产物治理：`./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py directive --topic output-governance --json`
-3. 任务涉及 runtime/result 路径时，再执行 `./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py paths --json`。
-4. 只有当 CLI JSON 仍留下真实语义缺口时，才打开 human mirrors。
+2. 再读取默认 turn-end 自检 workflow：
+   - `./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py directive --topic turn-end-selfcheck --json`
+3. 若自检发现当前回合内存在可安全收口的问题，再读取：
+   - `./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py directive --topic self-repair-writeback --json`
+4. 若任务涉及 runtime/result 路径时，再执行：
+   - `./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py paths --json`
+5. 若需要把建议合并进 final reply，再读取：
+   - `./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py directive --topic final-reply-merge --json`
+6. 只有当 CLI JSON 仍留下真实语义缺口时，才打开 human mirrors。
 
 ## 4. 运行边界
-- 仅手动触发：只有用户明确输入 `$Meta-Runtime-Selfcheck` 或明确点名此技能时才允许执行。
-- 默认目标是输出痛点报告与完整整改方案，而不是自动落盘修复。
-- `修复` 只表示“在手工改动已完成后执行验证与 resolved writeback”，不代表本技能自动替你改文件。
-- 数据源来自外部 pain provider；若未提供 `CODEX_RUNTIME_PAIN_PROVIDER` 或 `--memory-runtime`，运行会返回结构化错误。
+- 默认触发：本技能是 `turn end` 默认自检合同，不需要用户手动点名才可进入。
+- 跳过条件：若本轮运行顺利，没有工具错误、路径误用、明显犹豫、重复失败、用户纠偏或流程迷路，则跳过自检输出，不增加 final 噪音。
+- 自修原则：若本轮发现的问题在当前回合内可被安全、局部、受管地修复，可先修复再收尾。
+- 写回边界：允许修正文档、技能描述、技能触发语气、工具入口说明与局部脚本合同；不允许借自检之名无边界扩张修改面。
+- 输出规则：若发现问题，必须把 `问题清单 + 可优化点建议 + 是否已即时修复 + 剩余风险` 合并进 final reply，而不是单独开一轮空洞复盘。
+- 数据源来自外部 pain provider；若未提供 `CODEX_RUNTIME_PAIN_PROVIDER` 或 `--memory-runtime`，可退化为基于本轮可见运行证据的轻量自检，不把 provider 缺失本身伪装成用户问题。
 
 ## 5. 结构索引
 ```text

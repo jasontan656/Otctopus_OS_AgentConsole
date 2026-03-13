@@ -1,0 +1,23 @@
+{
+  "directive_name": "meta_runtime_selfcheck_final_reply_merge_contract",
+  "directive_version": "1.0.0",
+  "doc_kind": "contract",
+  "topic": "final-reply-merge",
+  "purpose": "Govern how selfcheck findings, same-turn repairs, and optimization items are merged into the same final reply without overwhelming the main user answer.",
+  "instruction": [
+    "Keep the user's main task answer first; selfcheck findings are appended only when issues materially affected the run.",
+    "Merge only high-signal items: what went wrong, what was fixed now, what still needs improvement, and what should change next time.",
+    "When selfcheck was skipped, emit nothing about selfcheck in the final reply."
+  ],
+  "workflow": [
+    "Answer the user's original request normally.",
+    "If turn-end selfcheck found material issues, append a concise selfcheck section in the same final reply.",
+    "State whether each item was self-repaired now, only diagnosed, or left as a suggested improvement.",
+    "Prefer a short issue list or short paragraph over a long audit dump."
+  ],
+  "rules": [
+    "Do not let selfcheck overshadow the user's requested answer.",
+    "Do not dump raw pain-provider internals into the final reply.",
+    "Do not repeat low-value noise when the run was effectively smooth."
+  ]
+}
