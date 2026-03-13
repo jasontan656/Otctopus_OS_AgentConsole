@@ -44,17 +44,13 @@ metadata:
 - `AGENTS_MD`
   - 仍使用 `Part A / Part B` 双承载治理模型。
   - 内部治理映射由 `AGENTS_human.md + AGENTS_machine.json` 共同组成。
-  - `owner` 必须进入 external/internal human frontmatter 与 machine payload。
   - 任何 `AGENTS_machine.json` payload 治理都必须先走：
     `./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py agents-payload-contract --source-path "<external AGENTS path>" --json`
   - 该入口合同内部强制要求先加载 `$Meta-Enhance-Prompt`，把用户口语请求压缩为“最小但精确”的 payload 语义后，才允许回写 machine payload。
 - 其他 root file channel
   - 不使用 `A/B` 分段。
-  - 技能内部保存“外部文件内容的治理映射版本”。
-  - 映射版本文件名必须显式带有 `__governed_external` 语义，避免与外部真实文件同名导致误扫描。
-  - 若内部映射内容本身是 json object，则 `owner` 必须直接并入该 json。
-  - 若内部映射内容本身不是 json，则必须把 `owner` 并入该文件 frontmatter，而不是额外生成 companion file。
-  - `owner` 的值不是固定枚举，而是根据受管目录语义自动推导出的描述性内容。
+  - 使用单映射副本治理模型。
+  - 通用映射承载与 `owner` 写入规则以 `ROOTFILE_MAPPED_COPY_STRUCTURE.md` 和 runtime contract 为准，不在本章重复展开。
 
 ## 4. 当前已开通文件类型
 - `AGENTS.md`
