@@ -19,6 +19,10 @@ anchors:
   relation: routes_to
   direction: downstream
   reason: Backup management is a second stable branch of this skill.
+- target: ../runtime/OPEN_SOURCE_PROJECT_ANALYSIS_ZONE_POLICY.md
+  relation: routes_to
+  direction: downstream
+  reason: Open-source project analysis is a third stable branch of this skill.
 ---
 
 # Task Routing
@@ -61,3 +65,17 @@ anchors:
 
 ## 分支十：给备份目录命名
 - 当任务需要决定备份目录名，或核对 `<2个word>_bak_<日期>` 规则时，先读 `../runtime/BACKUP_NAMING_RULE.md`。
+
+## 分支十一：管理开源项目分析区
+- 当任务涉及开源项目问题分析、报告归档、证据沉淀时，先读 `../runtime/OPEN_SOURCE_PROJECT_ANALYSIS_ZONE_POLICY.md`。
+- 该分支负责分析承载目录、按项目归类与分析总 README 的长期目标形态。
+
+## 分支十二：回答开源项目问题并写报告
+- 当用户针对某个开源项目突然提问，需要去项目里找答案并沉淀报告时，先读 `../runtime/ANSWER_OPEN_SOURCE_PROJECT_QUESTION_FLOW.md`。
+- 该分支负责问题上下文、结论、证据与写回报告。
+
+## 分支十三：维护分析索引 README
+- 当任务涉及补分析清单、补项目级索引或更新最新报告入口时，先读 `../runtime/PROJECT_ANALYSIS_INDEX_MAINTENANCE_FLOW.md`。
+
+## 分支十四：核对分析报告结构
+- 当任务需要判断一份报告是否“有头有尾、证据完整”时，先读 `../runtime/PROJECT_ANALYSIS_REPORT_STRUCTURE.md`。

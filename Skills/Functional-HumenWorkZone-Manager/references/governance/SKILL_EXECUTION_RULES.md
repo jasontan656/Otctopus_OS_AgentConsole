@@ -19,6 +19,10 @@ anchors:
   relation: routes_to
   direction: downstream
   reason: Backup handling needs a dedicated governed branch.
+- target: ../runtime/OPEN_SOURCE_PROJECT_ANALYSIS_ZONE_POLICY.md
+  relation: routes_to
+  direction: downstream
+  reason: Project analysis handling needs a dedicated governed branch.
 ---
 
 # Skill Execution Rules
@@ -31,8 +35,10 @@ anchors:
 - 当前先把“使用这个技能”解释为：把任务范围固定到该目录，再执行收纳、整理、归类或归位。
 - `Human_Work_Zone/Open_Source_Projects` 是开源项目集中管理区。
 - `Human_Work_Zone/Backup_Management` 是备份集中管理区。
+- `Human_Work_Zone/Open_Source_Project_Analysis` 是开源项目分析集中区。
 - 开源项目相关动作必须优先落到集中管理区规则，不再把“开源 repo 随手散放”视为目标形态。
 - 备份相关动作必须优先落到备份区规则，不再把“随手复制一份放任意位置”视为目标形态。
+- 开源项目分析相关动作必须优先落到分析区规则，不再把“只在对话里说答案、不留上下文和证据”视为目标形态。
 
 ## 局部规则
 - 若用户明确点名 `Functional-HumenWorkZone-Manager`，默认不要越过 `Human_Work_Zone` 去操作其他目录。
@@ -45,6 +51,11 @@ anchors:
   - 目标是否完整复制到了 `Backup_Management`
   - 备份目录名是否符合 `<2个word>_bak_<日期>` 规则
   - 备份 README 是否已经追加条目与一句描述
+- 若任务涉及开源项目分析，至少要同步考虑：
+  - 报告是否已经落到对应项目目录
+  - 是否写清用户当时的问题与分析时间
+  - 是否写清分析所针对的项目路径或版本上下文
+  - 是否补了明确证据或证据入口
 - 现有散落在 `Human_Work_Zone` 根层的开源 repo 视为 legacy placement；先纳入 inventory，再决定是否显式迁移。
 
 ## 例外与门禁
@@ -52,6 +63,7 @@ anchors:
 - 若后续新增专属脚本、清单或规则文档，必须同步更新门面与 routing。
 - 若用户没有明确要求，不要直接批量搬迁已存在的本地 repo；优先先建 inventory 与规则，再做显式迁移。
 - 若用户要求“备份某个文件夹”，默认执行完整复制，不做裁剪、不做内容筛选、不改备份内部结构。
+- 若用户针对开源项目提问，默认需要把答案沉淀成可追溯报告，而不是只在当轮对话给一句结论。
 
 ## 下沉执行文档
 - 开源项目集中区规则：`../runtime/OPEN_SOURCE_PROJECTS_ZONE_POLICY.md`
@@ -62,3 +74,7 @@ anchors:
 - 文件夹备份流程：`../runtime/CREATE_FOLDER_BACKUP_FLOW.md`
 - 备份 README 维护流程：`../runtime/BACKUP_README_MAINTENANCE_FLOW.md`
 - 备份目录命名规则：`../runtime/BACKUP_NAMING_RULE.md`
+- 开源项目分析区规则：`../runtime/OPEN_SOURCE_PROJECT_ANALYSIS_ZONE_POLICY.md`
+- 开源项目问答分析流程：`../runtime/ANSWER_OPEN_SOURCE_PROJECT_QUESTION_FLOW.md`
+- 分析索引维护流程：`../runtime/PROJECT_ANALYSIS_INDEX_MAINTENANCE_FLOW.md`
+- 分析报告结构规则：`../runtime/PROJECT_ANALYSIS_REPORT_STRUCTURE.md`
