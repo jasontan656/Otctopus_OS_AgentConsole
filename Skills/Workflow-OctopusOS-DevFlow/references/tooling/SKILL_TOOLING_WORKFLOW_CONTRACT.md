@@ -85,6 +85,8 @@
 
 ### `mother_doc`
 - 输出目录化 mother doc。
+- mother_doc 支持 tree-first 原子化结构；必需章节可保持 `NN_topic.md`，也可升级为 `NN_topic/00_index.md + 子文档树`。
+- 每个 mother_doc 原子文档都必须带 frontmatter：`doc_work_state`、`doc_pack_refs`。
 - 明确生产级交付目标、成功定义、关键场景、外部系统、限制、失败语义、验收方式。
 - 产出 `requirement_atom` 清单、`baseline_mode` 判断、`blocked_state` 判断、ADR 候选，以及阶段目标/阶段断言/阶段测试/阶段验收。
 - 若本项目已有已归档的 `docs/NN_slug` 历史轮次，先抽取上一轮稳定设计、已知 blocker、交付增量和被保留/被替换的决策，再回填当前轮 mother doc。
@@ -96,12 +98,15 @@
 ### `construction_plan`
 - 读取 mother doc 中的设计者规划 `08_dev_execution_plan.md`，并写出独立 `Development_Docs/<module_dir>/mother_doc/execution_atom_plan_validation_packs/`。
 - 这个阶段的目标是“生成 AI 自用的 `Execution_atom_plan&validation_packs`”，显式区别于 mother doc 中的设计规划。
+- 只允许把当前 `doc_work_state=modified` 的 mother_doc 原子文档吸收到 pack 中；未吸收文档不得批量改成 `planned`。
+- 每个 pack 都必须带 `source_mother_doc_refs`，显式声明 implementation 期间允许回读的 mother_doc 原子文档。
 - 若 pack 树已经存在，目标是修订和延续当前 pack 体系，而不是重新平行生成第二套 pack。
 - 若已有图谱，补入现有模块、依赖、影响面、可复用边界。
 - 本阶段的读物边界、命令、pack schema 和 graph 角色以 stage-specific CLI contracts、`workflow-contract` 与 `construction-plan-lint` 为准。
 
 ### `implementation`
 - 严格按当前 active pack 施工。
+- implementation 不允许通读整个 mother_doc 树；只允许读取 active pack 显式声明的 `source_mother_doc_refs`，以及按需参考的 `ref` 文档。
 - 如实现偏离 active pack，先改 `Development_Docs/<module_dir>/mother_doc/execution_atom_plan_validation_packs/<active_pack>/`，再改代码；若设计意图也改变，再回写 `08_dev_execution_plan.md`。
 - 按 `baseline_mode` 选择 clean build 或增量开发路径。
 - 默认运行假设是：模型位于可控本地环境，拥有足够 access 去安装依赖、修复运行环境、编辑本地配置、拉起项目所需运行面并验证本地链路。
@@ -118,6 +123,7 @@
   - `03_validation_and_writeback.md`
   - 必要时回写 `pack_manifest.yaml` 与 `02_inner_dev_phases.md`
 - 仅写“功能试过了/命令跑通了”不算合格回填。
+- 只有当 active pack 的实现和局部验证完成后，其关联 mother_doc 文档才允许从 `planned` 迁移到 `developed`。
 - 本阶段的读物边界、graph 禁读规则和退出门命令以 stage-specific CLI contracts 为准。
 
 ### `acceptance`
@@ -128,6 +134,7 @@
 - 若 `acceptance-lint` 失败，说明 acceptance 文档领先于实现或证据不真实，必须退回 `construction_plan`/`implementation` 修正。
 - 不把 code graph 当验收证据，只把它当解释层。
 - `acceptance` 只能基于 mother doc 与前面各阶段已定义的断言/测试/验收做裁决，不得临时补写一套新标准。
+- 只有当 acceptance/evidence 收口完成且 graph postflight 已执行后，相关 mother_doc 文档才允许从 `developed` 迁移到 `ref`。
 - `acceptance` 必须先完成以下本地可解动作，才允许写入 `needs_real_env`：
   - 解析本地 ignored env 文件或项目声明的非 Git secrets source，补齐 token、webhook secret、owner allowlist、runtime endpoint 等配置
   - 把项目声明的本地 ignored secrets source（本项目默认 `.env.example`）以及相关 config/unit/webhook/ngrok 配置真正落到本地 WSL 环境并实测

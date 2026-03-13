@@ -27,6 +27,8 @@
 5.5 目标模块的 `AGENTS.md` 必须使用本技能模版创建，并在创建后立即通过 `$Meta-RootFile-Manager collect` 收治；不得在未受管状态下长期存在。
 6. 阶段切换时只允许保留顶层常驻文档；上一阶段的 checklist、阶段文档、临时 focus、模板填写上下文必须显式丢弃，除非当前阶段合同明确要求重新读取。
 7. `mother_doc` 阶段必须先把需求固化成目录化项目说明与 `requirement_atom`；没有完整说明书，不得进入 `construction_plan`。
+7.0 `mother_doc` 必须支持 tree-first 原子化结构；每个必需章节既可保持 `NN_topic.md`，也可升级为 `NN_topic/00_index.md + 子文档树`，但不得回退成 giant mother_doc 单文件。
+7.0.0 每个 mother_doc 原子文档都必须带 frontmatter：`doc_work_state`、`doc_pack_refs`；合法状态只有 `modified -> planned -> developed -> ref`。
 7.0 `mother_doc` 阶段文档只允许包含：`Development_Docs/<module_dir>/mother_doc/*` 与 `assets/templates/mother_doc/*`；不得提前读取 construction packs、implementation 证据或 acceptance artifacts。
 7.0.1 若当前模块文档根下已经存在编号归档的 `NN_slug` 目录，`mother_doc` 阶段必须先读取最新一轮归档，并抽取仍然有效的目标、架构决策、blocker 与交付增量；不得把新 mother_doc 当成与历史脱钩的空白起点。
 7.1 `mother_doc` 在进入 `construction_plan` 前必须通过 `mother-doc-lint`；若结构缺失、仍有 `replace_me`、缺少阶段断言/阶段测试/阶段验收，或出现 `最小闭环`、`最小实现`、`mvp`、`test profile` 等降级语义，必须先修正文档。
@@ -68,10 +70,13 @@
 12. `construction_plan` 阶段文档边界、命令与 graph 角色以 `stage-doc-contract --stage construction_plan`、`stage-command-contract --stage construction_plan`、`stage-graph-contract --stage construction_plan` 为准；不得把 implementation 落盘证据或 acceptance 判决文档混进本阶段。
 13. `construction_plan` 阶段必须单独产出 `Development_Docs/<module_dir>/mother_doc/execution_atom_plan_validation_packs/`；术语使用 `Execution_atom_plan&validation_packs`，文件系统 slug 固定为 `execution_atom_plan_validation_packs`。
 14. construction packs 的 root/file schema、numbered packs、machine files 与 inner phase 结构必须满足 `construction-plan-lint` 与 `workflow-contract`；不得自造平替布局。
+14.1 任何文档从 `modified` 迁移到 `planned` 前，必须先被至少一个真实 `NN_slug` pack 吸收，并在文档侧记录 `doc_pack_refs`。
+14.2 每个 pack 必须显式声明 `source_mother_doc_refs`；implementation 只允许回读这些 source refs，不得通读整个 mother_doc 树。
 17. `implementation` 阶段的读物边界、禁读 graph 规则与阶段切换丢弃项以 `stage-doc-contract --stage implementation` 与 `stage-graph-contract --stage implementation` 为准；不得把未激活 pack 或 acceptance 判决文档带进实现 focus。
 18. 模型不得跳过 `Development_Docs/<module_dir>/mother_doc/execution_atom_plan_validation_packs/` 直接靠代码和测试定义真实意图。
 19. 若 implementation 与 active pack 发生偏离，必须先回写当前 pack 的 machine files 与 markdown anchors；若设计意图也变化，再回写 `08_dev_execution_plan.md`。
 20. implementation 回填的测试结果必须说明“为什么这组测试证明了设计理念与失败语义”，而不是只记录“功能试过了”。
+20.1 implementation 只允许把与当前 active pack 关联的文档从 `planned` 迁移到 `developed`；不得批量推进无关文档状态。
 21. `acceptance` 阶段的读物边界、graph 更新动作与收口命令以 `stage-doc-contract --stage acceptance`、`stage-command-contract --stage acceptance`、`stage-graph-contract --stage acceptance` 为准；不得把 graph 当验收证据，也不得保留 implementation 局部调试 focus 来替代交付裁决。
 22. 验收必须绑定真实行为与真实 witness，不接受只靠自写 report、自写状态字段宣称完成。
 22.1 `acceptance` 不只是写报告；它必须把本地可控环境真正配到可运行状态，包括项目声明的凭据、runtime endpoint、常驻运行面、health/connectivity，以及至少一轮模拟人类或操作员使用。
@@ -82,6 +87,7 @@
 23.0 `acceptance_report` 与 `acceptance_matrix` 运行产物固定收敛在当前 `Development_Docs/<module_dir>/mother_doc/acceptance/`；不得把这两份文档平铺到模块文档根目录。
 23.1 `acceptance_matrix` 与 `acceptance_report` 中的 `implemented=true`、`tested=true` 只能引用当前磁盘上已经存在的实现/测试证据；不得把“计划要写的文件”提前写成成功态。
 23.2 在 acceptance 收口前必须通过 `acceptance-lint`；若 lint 报出 evidence path 不存在、`needs_real_env` 下错误写 `witnessed=true`、或 acceptance 早于 implementation，则必须回退修正。
+23.3 只有当 acceptance/evidence 完成且 graph postflight 已执行后，相关 mother_doc 文档才允许从 `developed` 迁移到 `ref`。
 24. code graph 的阶段角色以 `stage-graph-contract --stage <stage>` 为准；不得在其他文档中另造一套分阶段图谱语义。
 25. code graph 不是 blocker 工厂：
 - 有图谱时在 `mother_doc` 与 `construction_plan` 阶段必须读取并使用

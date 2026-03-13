@@ -92,7 +92,14 @@ def validate_pack_manifest(pack_dir: Path) -> list[str]:
         violations.append(f"{pack_dir.name}/pack_manifest.yaml: design_step_id must be a non-empty string")
     if not _is_non_empty_string(manifest.get("pack_goal")):
         violations.append(f"{pack_dir.name}/pack_manifest.yaml: pack_goal must be a non-empty string")
-    for key in ("design_plan_refs", "target_requirement_atoms", "implementation_actions", "changed_files_boundary", "stage_acceptance_target"):
+    for key in (
+        "design_plan_refs",
+        "source_mother_doc_refs",
+        "target_requirement_atoms",
+        "implementation_actions",
+        "changed_files_boundary",
+        "stage_acceptance_target",
+    ):
         if not _is_non_empty_string_list(manifest.get(key)):
             violations.append(f"{pack_dir.name}/pack_manifest.yaml: {key} must be a non-empty string list")
     machine_files = manifest.get("machine_files")

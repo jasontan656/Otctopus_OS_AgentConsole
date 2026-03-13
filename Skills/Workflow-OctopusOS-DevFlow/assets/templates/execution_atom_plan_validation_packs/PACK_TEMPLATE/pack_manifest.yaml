@@ -3,6 +3,8 @@ design_step_id: replace_me
 pack_goal: replace_me
 design_plan_refs:
   - replace_me
+source_mother_doc_refs:
+  - replace_me
 target_requirement_atoms:
   - replace_me
 implementation_actions:

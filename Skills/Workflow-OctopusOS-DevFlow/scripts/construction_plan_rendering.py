@@ -89,7 +89,17 @@ def render_root_index(steps: list[dict[str, str]]) -> str:
     for index, step in enumerate(steps, start=1):
         pack_slug = f"{index:02d}_{slugify(step['design_step_id'])}"
         lines.append(f"| `{pack_slug}` | `{step['design_step_id']}` | {step['implementation_actions']} | `{pack_slug}/pack_manifest.yaml` |")
-    lines.extend(["", "## 3. implementation 读取规则", "- active_pack_only: 一次只读取并更新当前 pack 目录。", "- pack_switch_rule: 完成当前 pack 的阶段验收后，才能切到下一个 pack。", "- writeback_boundary: phase_status.jsonl、evidence_registry.json 与 markdown 章节分别回写，不得混堆。", ""])
+    lines.extend(
+        [
+            "",
+            "## 3. implementation 读取规则",
+            "- active_pack_only: 一次只读取并更新当前 pack 目录。",
+            "- mother_doc_read_boundary: 只允许读取 active pack 显式声明的 `source_mother_doc_refs`，不得通读整个 mother_doc 树。",
+            "- pack_switch_rule: 完成当前 pack 的阶段验收后，才能切到下一个 pack。",
+            "- writeback_boundary: phase_status.jsonl、evidence_registry.json 与 markdown 章节分别回写，不得混堆。",
+            "",
+        ]
+    )
     return "\n".join(lines)
 
 
@@ -97,10 +107,16 @@ def write_pack(pack_dir: Path, step: dict[str, str], index: int) -> None:
     pack_id = f"PACK-{index:02d}"
     pack_dir.mkdir(parents=True, exist_ok=True)
     pack_dir.joinpath("00_index.md").write_text(f"# Execution Atom Pack Index\n\n## 1. Pack Identity\n- pack_id: {pack_id}\n- design_step_id: {step['design_step_id']}\n- pack_goal: {step['implementation_actions']}\n- current_progress_state: planned\n\n## 2. Read/Write Contract\n- human_anchor_docs:\n  - `01_scope_and_intent.md`\n  - `02_inner_dev_phases.md`\n  - `03_validation_and_writeback.md`\n- machine_anchor_files:\n  - `pack_manifest.yaml`\n  - `inner_phase_plan.json`\n  - `phase_status.jsonl`\n  - `evidence_registry.json`\n", encoding="utf-8")
-    pack_dir.joinpath("01_scope_and_intent.md").write_text(f"# Scope And Intent\n\n## 1. Scope\n- target_requirement_atoms: {step['target_requirement_atoms']}\n- implementation_actions: {step['implementation_actions']}\n- changed_files_boundary: current pack owned source, test, config, and runtime files only\n\n## 2. Design Intent\n- design_plan_refs: `{step['design_step_id']}`\n- design_intent_proof_target: {step['stage_assertions']}\n- stage_acceptance_target: {step['stage_acceptance']}\n", encoding="utf-8")
+    pack_dir.joinpath("01_scope_and_intent.md").write_text(
+        f"# Scope And Intent\n\n## 1. Scope\n- target_requirement_atoms: {step['target_requirement_atoms']}\n- implementation_actions: {step['implementation_actions']}\n- changed_files_boundary: current pack owned source, test, config, and runtime files only\n\n## 2. Design Intent\n- design_plan_refs: `{step['design_step_id']}`\n- source_mother_doc_refs:\n  - `08_dev_execution_plan.md`\n- design_intent_proof_target: {step['stage_assertions']}\n- stage_acceptance_target: {step['stage_acceptance']}\n",
+        encoding="utf-8",
+    )
     pack_dir.joinpath("02_inner_dev_phases.md").write_text(f"# Inner Dev Phases\n\n| inner_phase_id | phase_goal | implementation_slice | validation_slice | evidence_writeback_slice | phase_exit_signal |\n|---|---|---|---|---|---|\n| `PHASE-01` | 固化本 pack 的框架与边界 | {step['implementation_actions']} | {step['stage_assertions']} | 更新 `pack_manifest.yaml` 与 `inner_phase_plan.json` | 边界与改动面固定 |\n| `PHASE-02` | 落真实实现与局部验证 | {step['implementation_actions']} | {step['stage_tests']} | 追加 `phase_status.jsonl` | 当前切片实现可验证 |\n| `PHASE-03` | 分域证据回写与阶段验收 | 分域整理 code/tests/runtime/log/db/mq/redis/operator_notes 证据 | {step['stage_acceptance']} | 更新 `evidence_registry.json` 与 `03_validation_and_writeback.md` | 当前 pack 可切换到下一个 pack |\n", encoding="utf-8")
     pack_dir.joinpath("03_validation_and_writeback.md").write_text(f"# Validation And Writeback\n\n## 1. Validation Contract\n- tests_run_target: {step['stage_tests']}\n- test_why_it_proves_design: {step['stage_assertions']}\n- stage_acceptance_rule: {step['stage_acceptance']}\n\n## 2. Writeback Contract\n- phase_status_jsonl_usage: 每个 inner phase 完成后追加一行结构化状态。\n- evidence_registry_usage: 按 code/tests/runtime/logs/db/mq/redis/operator_notes 分域登记证据。\n- divergence_escalation_rule: 若 pack 意图变化，先回写本 pack，再回写 mother doc 设计阶段计划。\n", encoding="utf-8")
-    pack_dir.joinpath("pack_manifest.yaml").write_text(f"pack_id: {pack_id}\ndesign_step_id: {step['design_step_id']}\npack_goal: {step['implementation_actions']}\ndesign_plan_refs:\n  - {step['design_step_id']}\ntarget_requirement_atoms:\n  - {step['target_requirement_atoms']}\nimplementation_actions:\n  - {step['implementation_actions']}\nchanged_files_boundary:\n  - current pack owned source, test, config, and runtime files only\nstage_acceptance_target:\n  - {step['stage_acceptance']}\nmachine_files:\n  inner_phase_plan: inner_phase_plan.json\n  phase_status_ledger: phase_status.jsonl\n  evidence_registry: evidence_registry.json\n", encoding="utf-8")
+    pack_dir.joinpath("pack_manifest.yaml").write_text(
+        f"pack_id: {pack_id}\ndesign_step_id: {step['design_step_id']}\npack_goal: {step['implementation_actions']}\ndesign_plan_refs:\n  - {step['design_step_id']}\nsource_mother_doc_refs:\n  - 08_dev_execution_plan.md\ntarget_requirement_atoms:\n  - {step['target_requirement_atoms']}\nimplementation_actions:\n  - {step['implementation_actions']}\nchanged_files_boundary:\n  - current pack owned source, test, config, and runtime files only\nstage_acceptance_target:\n  - {step['stage_acceptance']}\nmachine_files:\n  inner_phase_plan: inner_phase_plan.json\n  phase_status_ledger: phase_status.jsonl\n  evidence_registry: evidence_registry.json\n",
+        encoding="utf-8",
+    )
     pack_dir.joinpath("inner_phase_plan.json").write_text(json.dumps({"pack_id": pack_id, "design_step_id": step["design_step_id"], "inner_phases": [{"inner_phase_id": "PHASE-01", "phase_goal": "框架与边界固定", "implementation_slice": [step["implementation_actions"]], "validation_slice": [step["stage_assertions"]], "evidence_writeback_slice": ["pack_manifest.yaml", "inner_phase_plan.json"], "phase_exit_signal": "边界固定"}, {"inner_phase_id": "PHASE-02", "phase_goal": "真实实现与局部验证", "implementation_slice": [step["implementation_actions"]], "validation_slice": [step["stage_tests"]], "evidence_writeback_slice": ["phase_status.jsonl"], "phase_exit_signal": "实现可验证"}, {"inner_phase_id": "PHASE-03", "phase_goal": "证据回写与阶段验收", "implementation_slice": ["分域整理 code/tests/runtime/log/db/mq/redis/operator_notes 证据"], "validation_slice": [step["stage_acceptance"]], "evidence_writeback_slice": ["evidence_registry.json", "03_validation_and_writeback.md"], "phase_exit_signal": "pack 验收完成"}]}, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     pack_dir.joinpath("phase_status.jsonl").write_text(json.dumps({"pack_id": pack_id, "inner_phase_id": "PHASE-00", "status": "planned", "notes": "pack created from design plan"}, ensure_ascii=False) + "\n", encoding="utf-8")
     pack_dir.joinpath("evidence_registry.json").write_text(json.dumps({"pack_id": pack_id, "evidence_domains": {"code": [], "tests": [], "runtime": [], "logs": [], "db": [], "mq": [], "redis": [], "operator_notes": []}}, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")

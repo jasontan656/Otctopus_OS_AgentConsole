@@ -7,8 +7,16 @@ from pathlib import Path
 from acceptance_contract_support import acceptance_lint_payload
 from construction_plan_support import construction_plan_init_payload, construction_plan_lint_payload
 from devflow_agents_support import scaffold_and_collect_devflow_agents
-from mother_doc_contract import MOTHER_DOC_FORBIDDEN_TERMS, MOTHER_DOC_REQUIRED_FILES, MOTHER_DOC_REQUIRED_SIGNALS
+from mother_doc_contract import (
+    MOTHER_DOC_FORBIDDEN_TERMS,
+    MOTHER_DOC_FRONTMATTER_REQUIRED_FIELDS,
+    MOTHER_DOC_REQUIRED_ENTRY_ALTERNATIVES,
+    MOTHER_DOC_REQUIRED_FILES,
+    MOTHER_DOC_REQUIRED_SIGNALS,
+    MOTHER_DOC_WORK_STATES,
+)
 from mother_doc_lint_support import mother_doc_lint_payload
+from mother_doc_state_support import sync_doc_states
 from runtime_context_support import graph_postflight_payload as build_graph_postflight_payload
 from runtime_context_support import graph_preflight_payload as build_graph_preflight_payload
 from workflow_contract_data import ACCEPTANCE_LINT_POLICY, ADR_REQUIRED_SECTIONS, ACCEPTANCE_FIELDS
@@ -235,8 +243,11 @@ def workflow_contract_payload(
         },
         "stage_graph_roles": {name: data["graph_role"] for name, data in STAGES.items()},
         "mother_doc_required_files": MOTHER_DOC_REQUIRED_FILES,
+        "mother_doc_required_entry_alternatives": MOTHER_DOC_REQUIRED_ENTRY_ALTERNATIVES,
         "mother_doc_required_signals": MOTHER_DOC_REQUIRED_SIGNALS,
         "mother_doc_forbidden_terms": MOTHER_DOC_FORBIDDEN_TERMS,
+        "mother_doc_frontmatter_required_fields": MOTHER_DOC_FRONTMATTER_REQUIRED_FIELDS,
+        "mother_doc_work_states": MOTHER_DOC_WORK_STATES,
         "requirement_atom_required_fields": REQUIREMENT_ATOM_FIELDS,
         "baseline_mode_policy": BASELINE_MODES,
         "implementation_source_policy": IMPLEMENTATION_SOURCE_POLICY,
@@ -256,6 +267,25 @@ def workflow_contract_payload(
         "acceptance_lint_policy": ACCEPTANCE_LINT_POLICY,
         "adr_required_sections": ADR_REQUIRED_SECTIONS,
     }
+
+
+def mother_doc_state_sync_payload(
+    root: Path,
+    doc_refs: list[str],
+    from_state: str,
+    to_state: str,
+    pack_ref: str | None,
+) -> dict:
+    payload = sync_doc_states(root, doc_refs, from_state, to_state, pack_ref)
+    payload.update(
+        {
+            "root": str(root),
+            "doc_refs": doc_refs,
+            "allowed_states": MOTHER_DOC_WORK_STATES,
+            "frontmatter_fields": MOTHER_DOC_FRONTMATTER_REQUIRED_FIELDS,
+        }
+    )
+    return payload
 
 
 def graph_preflight_payload(repo: Path, allow_missing_index: bool, graph_runtime_root: Path) -> dict:

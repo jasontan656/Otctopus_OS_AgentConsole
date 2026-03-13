@@ -96,10 +96,14 @@ def stage_command_contract_payload(
                 f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py target-scaffold --target-root {target_root} --docs-root {docs_root} --module-dir {runtime['module_dir']} --codebase-root {codebase_root} --graph-runtime-root {graph_runtime_root} --json",
             ],
             "gate_commands": [f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py construction-plan-lint --path {construction_plan_root} --json"],
-            "optional_commands": [f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py graph-preflight --repo {codebase_root} --graph-runtime-root {graph_runtime_root} --allow-missing-index --json"],
+            "optional_commands": [
+                f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py graph-preflight --repo {codebase_root} --graph-runtime-root {graph_runtime_root} --allow-missing-index --json",
+                f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py mother-doc-state-sync --path {mother_doc_root} --doc-ref <mother_doc_doc> --from-state modified --to-state planned --pack-ref <NN_slug> --json",
+            ],
             "required_reuse_actions": [
                 "reuse the existing execution_atom_plan_validation_packs root when it is already present",
                 "do not create a second disconnected task-pack tree under a different docs container for the same target",
+                "only move a mother_doc atom from modified to planned after an actual pack has absorbed it and the doc records that pack ref",
             ],
         },
         "implementation": {
@@ -108,9 +112,12 @@ def stage_command_contract_payload(
                 f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py stage-checklist --stage {stage} --target-root {target_root} --docs-root {docs_root} --module-dir {runtime['module_dir']} --codebase-root {codebase_root} --graph-runtime-root {graph_runtime_root} --json",
             ],
             "gate_commands": [],
-            "optional_commands": [],
+            "optional_commands": [
+                f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py mother-doc-state-sync --path {mother_doc_root} --doc-ref <mother_doc_doc> --from-state planned --to-state developed --pack-ref <NN_slug> --json",
+            ],
             "required_reuse_actions": [
                 "read only the active pack in the current execution pack tree; do not fork implementation onto a new disconnected pack set",
+                "read only the source_mother_doc_refs declared by the active pack plus ref docs when truly needed",
             ],
         },
         "acceptance": {
@@ -121,6 +128,7 @@ def stage_command_contract_payload(
             "gate_commands": [
                 f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py acceptance-lint --codebase-root {codebase_root} --target-root {target_root} --docs-root {docs_root} --json",
                 f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py graph-postflight --repo {codebase_root} --graph-runtime-root {graph_runtime_root} --json",
+                f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py mother-doc-state-sync --path {mother_doc_root} --doc-ref <mother_doc_doc> --from-state developed --to-state ref --pack-ref <NN_slug> --json",
                 f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py mother-doc-archive --target {mother_doc_root} --json",
             ],
             "optional_commands": [],

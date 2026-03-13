@@ -14,5 +14,6 @@
 
 ## 2. Design Intent
 - design_plan_refs: replace_me
+- source_mother_doc_refs: replace_me
 - design_intent_proof_target: replace_me
 - stage_acceptance_target: replace_me

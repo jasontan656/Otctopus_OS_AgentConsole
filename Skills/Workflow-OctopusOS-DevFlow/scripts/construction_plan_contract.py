@@ -27,6 +27,7 @@ MANIFEST_REQUIRED_KEYS = {
     "design_step_id",
     "pack_goal",
     "design_plan_refs",
+    "source_mother_doc_refs",
     "target_requirement_atoms",
     "implementation_actions",
     "changed_files_boundary",

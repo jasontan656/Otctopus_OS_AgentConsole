@@ -1,3 +1,8 @@
+---
+doc_work_state: modified
+doc_pack_refs: []
+---
+
 # 04 Stack Decisions
 
 ```python

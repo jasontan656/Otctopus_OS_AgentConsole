@@ -21,5 +21,6 @@
 
 ## 3. implementation 读取规则
 - active_pack_only: replace_me
+- source_mother_doc_refs_only: replace_me
 - pack_switch_rule: replace_me
 - writeback_boundary: replace_me

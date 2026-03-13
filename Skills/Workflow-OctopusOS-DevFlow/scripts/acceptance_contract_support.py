@@ -3,6 +3,7 @@ from __future__ import annotations
 import csv
 from pathlib import Path
 
+from mother_doc_state_support import iter_atomic_markdown_files, parse_frontmatter
 from workflow_policy_contract import ACCEPTANCE_LINT_POLICY
 
 # contract_name: octopus_devflow_acceptance_contract_support
@@ -60,6 +61,12 @@ def acceptance_lint_payload(matrix_path: Path, report_path: Path, codebase_root:
     violations: list[dict[str, str]] = []
     matrix_rows = _parse_markdown_table(matrix_path)
     report_rows = _parse_markdown_table(report_path)
+    mother_doc_root = report_path.parent.parent if report_path.parent.name == "acceptance" else None
+    graph_registry = (
+        mother_doc_root.parent / "graph" / "registry" / "registry.json"
+        if mother_doc_root is not None
+        else None
+    )
 
     for row in matrix_rows:
         requirement_atom_id = row.get("requirement_atom_id", "").strip() or "<missing>"
@@ -123,6 +130,39 @@ def acceptance_lint_payload(matrix_path: Path, report_path: Path, codebase_root:
                     "scope": "acceptance_report",
                     "row_id": package_id,
                     "reason": "tests_run_missing_on_disk",
+                }
+            )
+
+    if mother_doc_root is not None and mother_doc_root.exists():
+        ref_docs: list[str] = []
+        for doc_path in iter_atomic_markdown_files(mother_doc_root):
+            metadata, _body, parse_errors = parse_frontmatter(doc_path)
+            if parse_errors:
+                continue
+            if metadata.get("doc_work_state") == "ref":
+                ref_docs.append(str(doc_path.relative_to(mother_doc_root)))
+        if (
+            ACCEPTANCE_LINT_POLICY["ref_state_requires_acceptance_closeout"]
+            and ref_docs
+            and violations
+        ):
+            violations.append(
+                {
+                    "scope": "mother_doc",
+                    "row_id": ",".join(ref_docs),
+                    "reason": "ref_state_present_before_acceptance_closeout_is_clean",
+                }
+            )
+        if (
+            ACCEPTANCE_LINT_POLICY["ref_state_requires_graph_postflight"]
+            and ref_docs
+            and (graph_registry is None or not graph_registry.exists())
+        ):
+            violations.append(
+                {
+                    "scope": "mother_doc",
+                    "row_id": ",".join(ref_docs),
+                    "reason": "ref_state_requires_graph_postflight_registry",
                 }
             )
 

@@ -8,6 +8,8 @@ from pathlib import Path
 # required_fields:
 #   - DISCOVERY_SCOPE_POLICY
 #   - PHASE_READ_POLICY
+#   - MOTHER_DOC_FRONTMATTER_FIELDS
+#   - MOTHER_DOC_WORK_STATES
 #   - REQUIREMENT_ATOM_FIELDS
 #   - BASELINE_MODES
 #   - IMPLEMENTATION_SOURCE_POLICY
@@ -94,6 +96,18 @@ PHASE_READ_POLICY = {
     "question_answer_rule": "when the user is filling mother doc chapters interactively, answer with bounded options or structured prompts rather than free-form essays",
 }
 
+MOTHER_DOC_FRONTMATTER_FIELDS = [
+    "doc_work_state",
+    "doc_pack_refs",
+]
+
+MOTHER_DOC_WORK_STATES = [
+    "modified",
+    "planned",
+    "developed",
+    "ref",
+]
+
 REQUIREMENT_ATOM_FIELDS = [
     "requirement_atom_id",
     "source_clause",
@@ -111,9 +125,12 @@ BASELINE_MODES = ["empty_baseline", "real_codebase"]
 IMPLEMENTATION_SOURCE_POLICY = {
     "default_for_near_empty_worktree": "empty_baseline",
     "implementation_source_scope": "current_worktree_only",
+    "mother_doc_read_scope": "active_pack_declared_source_mother_doc_refs_plus_ref_docs_when_needed",
     "forbidden_actions": [
         "reading non-worktree source artifacts as implementation material",
         "reading non-worktree tests as implementation material",
+        "reading unrelated modified mother_doc docs during implementation",
+        "reading the whole mother_doc tree instead of pack-declared source refs",
     ],
 }
 
@@ -185,6 +202,8 @@ ACCEPTANCE_LINT_POLICY = {
     "tested_true_requires_existing_test_evidence": True,
     "witnessed_true_forbidden_when_blocked_state_needs_real_env": True,
     "acceptance_docs_must_follow_implementation": True,
+    "ref_state_requires_acceptance_closeout": True,
+    "ref_state_requires_graph_postflight": True,
 }
 
 ADR_REQUIRED_SECTIONS = [

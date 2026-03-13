@@ -9,7 +9,7 @@ from cli_support import ACCEPTANCE_MATRIX_PATH, ACCEPTANCE_REPORT_PATH, CODEBASE
 from cli_support import STAGES, TEMPLATES
 from cli_support import acceptance_lint_payload, graph_postflight_payload, graph_preflight_payload
 from cli_support import construction_plan_init_payload, construction_plan_lint_payload, mother_doc_archive_payload
-from cli_support import mother_doc_init_payload, mother_doc_lint_payload, target_scaffold_payload, workflow_contract_payload
+from cli_support import mother_doc_init_payload, mother_doc_lint_payload, mother_doc_state_sync_payload, target_scaffold_payload, workflow_contract_payload
 from stage_contract_support import stage_command_contract_payload, stage_doc_contract_payload, stage_graph_contract_payload
 from target_runtime_support import resolve_target_runtime, target_runtime_contract_payload
 def print_payload(payload: dict, as_json: bool) -> int:
@@ -188,6 +188,20 @@ def cmd_mother_doc_lint(args: argparse.Namespace) -> int:
     payload = mother_doc_lint_payload(Path(target).resolve())
     print_payload(payload, args.json)
     return 0 if payload["status"] == "pass" else 1
+def cmd_mother_doc_state_sync(args: argparse.Namespace) -> int:
+    runtime = _resolve_runtime(args)
+    if not runtime["ready_for_service"] and args.path is None:
+        return _emit_runtime_not_ready(runtime, args.json)
+    target = Path(args.path or runtime["mother_doc_root"]).resolve()
+    payload = mother_doc_state_sync_payload(
+        target,
+        args.doc_ref,
+        args.from_state,
+        args.to_state,
+        args.pack_ref,
+    )
+    print_payload(payload, args.json)
+    return 0 if payload["status"] == "pass" else 1
 def cmd_acceptance_lint(args: argparse.Namespace) -> int:
     runtime = _resolve_runtime(args)
     if not runtime["ready_for_service"] and args.matrix_path is None and args.report_path is None:
@@ -305,6 +319,16 @@ def build_parser() -> argparse.ArgumentParser:
     mother_doc_lint.add_argument("--mother-doc", dest="mother_doc", default=None)
     mother_doc_lint.add_argument("--json", action="store_true")
     mother_doc_lint.set_defaults(func=cmd_mother_doc_lint)
+
+    mother_doc_state_sync = subparsers.add_parser("mother-doc-state-sync")
+    add_runtime_scope_args(mother_doc_state_sync)
+    mother_doc_state_sync.add_argument("--path", default=None)
+    mother_doc_state_sync.add_argument("--doc-ref", action="append", required=True)
+    mother_doc_state_sync.add_argument("--from-state", required=True)
+    mother_doc_state_sync.add_argument("--to-state", required=True)
+    mother_doc_state_sync.add_argument("--pack-ref", default=None)
+    mother_doc_state_sync.add_argument("--json", action="store_true")
+    mother_doc_state_sync.set_defaults(func=cmd_mother_doc_state_sync)
 
     acceptance_lint = subparsers.add_parser("acceptance-lint")
     add_runtime_scope_args(acceptance_lint)

@@ -44,6 +44,12 @@ def fill_directory_placeholders(root: Path) -> None:
         path.write_text(content + "\n", encoding="utf-8")
 
 
+def create_mother_doc_source_for_pack(target: Path) -> None:
+    mother_doc_root = target.parent
+    mother_doc_root.mkdir(parents=True, exist_ok=True)
+    (mother_doc_root / "08_dev_execution_plan.md").write_text("# plan\n", encoding="utf-8")
+
+
 class TestCliToolboxRegressionTest:
     def test_workflow_contract_exposes_construction_plan_model(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -94,7 +100,10 @@ class TestCliToolboxRegressionTest:
         )
         assert "run graph-postflight" in payload["stage_graph_roles"]["acceptance"]["update_policy"]
         assert "08_dev_execution_plan.md" in payload["mother_doc_required_files"]
+        assert "01_target_state/00_index.md" in payload["mother_doc_required_entry_alternatives"]["01_target_state"]
         assert "阶段断言" in payload["mother_doc_required_signals"]
+        assert payload["mother_doc_frontmatter_required_fields"] == ["doc_work_state", "doc_pack_refs"]
+        assert payload["mother_doc_work_states"] == ["modified", "planned", "developed", "ref"]
         assert "requirement_atom_id" in payload["requirement_atom_required_fields"]
         assert "design_step_id" in payload["design_phase_plan_required_sections"]
         assert "00_index.md" in payload["construction_plan_required_sections"]
@@ -113,6 +122,7 @@ class TestCliToolboxRegressionTest:
             payload = run_cli("stage-checklist", "--stage", "construction_plan", "--target-root", temp_dir, "--module-dir", "sample_module")
         assert payload["stage"] == "construction_plan"
         assert "Development_Docs/<module_dir>/mother_doc/execution_atom_plan_validation_packs/ directory" in payload["required_outputs"][0]
+        assert "source_mother_doc_refs" in payload["required_outputs"][-1]
         assert "rules/OCTOPUS_SKILL_HARD_RULES.md" in payload["resident_docs"]
         assert "Development_Docs/<module_dir>/mother_doc/08_dev_execution_plan.md" in payload["stage_docs"]
         assert payload["target_runtime_precheck_required"] is True
@@ -131,9 +141,12 @@ class TestCliToolboxRegressionTest:
             graph_payload = run_cli("stage-graph-contract", "--stage", "mother_doc", "--target-root", temp_dir, "--module-dir", "sample_module")
         assert doc_payload["stage"] == "implementation"
         assert "Development_Docs/<module_dir>/mother_doc/execution_atom_plan_validation_packs/<active_pack>/*" in doc_payload["stage_docs"]
+        assert "Development_Docs/<module_dir>/mother_doc/<source_mother_doc_refs declared by active_pack>" in doc_payload["stage_docs"]
+        assert "Development_Docs/<module_dir>/mother_doc/*" not in doc_payload["stage_docs"]
         assert doc_payload["target_root"] == str(Path(temp_dir).resolve())
         assert "acceptance-lint" in command_payload["gate_commands"][0]
-        assert "mother-doc-archive" in command_payload["gate_commands"][2]
+        assert "mother-doc-state-sync" in command_payload["gate_commands"][2]
+        assert "mother-doc-archive" in command_payload["gate_commands"][3]
         assert "target-runtime-contract" in command_payload["entry_commands"][0]
         assert "read 07_env_and_deploy.md" in command_payload["required_runtime_actions"][0]
         assert "resolve secrets or credentials from local ignored env files" in command_payload["required_runtime_actions"][1]
@@ -183,6 +196,9 @@ class TestCliToolboxRegressionTest:
             assert (target / "00_index.md").exists()
             assert (target / "08_dev_execution_plan.md").exists()
             assert (target / "12_adrs" / "ADR_TEMPLATE.md").exists()
+            created = (target / "00_index.md").read_text(encoding="utf-8")
+            assert "doc_work_state: modified" in created
+            assert "doc_pack_refs: []" in created
 
     def test_construction_plan_init_creates_plan_skeleton(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -192,11 +208,14 @@ class TestCliToolboxRegressionTest:
             assert (target / "00_index.md").exists()
             assert (target / "pack_registry.yaml").exists()
             assert (target / "01_design_01").exists()
+            manifest = (target / "01_design_01" / "pack_manifest.yaml").read_text(encoding="utf-8")
+            assert "source_mother_doc_refs:" in manifest
 
     def test_construction_plan_lint_passes_for_filled_directory_contract(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             target = Path(temp_dir) / "docs" / "mother_doc" / "execution_atom_plan_validation_packs"
             run_cli("construction-plan-init", "--target", str(target))
+            create_mother_doc_source_for_pack(target)
             fill_directory_placeholders(target)
             completed = run_cli_raw("construction-plan-lint", "--path", str(target))
             assert completed.returncode == 0
@@ -208,6 +227,7 @@ class TestCliToolboxRegressionTest:
         with tempfile.TemporaryDirectory() as temp_dir:
             target = Path(temp_dir) / "docs" / "mother_doc" / "execution_atom_plan_validation_packs"
             run_cli("construction-plan-init", "--target", str(target))
+            create_mother_doc_source_for_pack(target)
             fill_directory_placeholders(target)
             manifest = target / "01_design_01" / "pack_manifest.yaml"
             manifest.write_text(
@@ -241,11 +261,13 @@ class TestCliToolboxRegressionTest:
             assert payload["machine_schema_violations"]
             assert "pack_id must match PACK-NN" in "\n".join(payload["machine_schema_violations"])
             assert "machine_files missing keys ['evidence_registry']" in "\n".join(payload["machine_schema_violations"])
+            assert "source_mother_doc_refs must be a non-empty string list" in "\n".join(payload["machine_schema_violations"])
 
     def test_construction_plan_lint_fails_for_invalid_inner_phase_schema(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             target = Path(temp_dir) / "docs" / "mother_doc" / "execution_atom_plan_validation_packs"
             run_cli("construction-plan-init", "--target", str(target))
+            create_mother_doc_source_for_pack(target)
             fill_directory_placeholders(target)
             phase_plan = target / "01_design_01" / "inner_phase_plan.json"
             phase_plan.write_text(
@@ -323,6 +345,58 @@ class TestCliToolboxRegressionTest:
             payload = json.loads(completed.stdout)
             assert payload["status"] == "pass"
             assert payload["construction_plan_gate_allowed"]
+
+    def test_mother_doc_lint_accepts_directory_index_variant(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            target = Path(temp_dir) / "docs" / "mother_doc"
+            run_cli("mother-doc-init", "--target", str(target))
+            source = target / "01_target_state.md"
+            content = source.read_text(encoding="utf-8")
+            source.unlink()
+            chapter_dir = target / "01_target_state"
+            chapter_dir.mkdir()
+            (chapter_dir / "00_index.md").write_text(content, encoding="utf-8")
+            fill_directory_placeholders(target)
+            completed = run_cli_raw("mother-doc-lint", "--path", str(target))
+            assert completed.returncode == 0
+            payload = json.loads(completed.stdout)
+            assert payload["status"] == "pass"
+
+    def test_mother_doc_lint_requires_pack_refs_for_planned_docs(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            target = Path(temp_dir) / "docs" / "mother_doc"
+            run_cli("mother-doc-init", "--target", str(target))
+            fill_directory_placeholders(target)
+            doc = target / "01_target_state.md"
+            content = doc.read_text(encoding="utf-8").replace("doc_work_state: modified", "doc_work_state: planned")
+            doc.write_text(content, encoding="utf-8")
+            completed = run_cli_raw("mother-doc-lint", "--path", str(target))
+            assert completed.returncode != 0
+            payload = json.loads(completed.stdout)
+            assert "01_target_state.md" in payload["frontmatter_violations"]
+
+    def test_mother_doc_state_sync_transitions_doc_and_adds_pack_ref(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            target = Path(temp_dir) / "docs" / "mother_doc"
+            run_cli("mother-doc-init", "--target", str(target))
+            fill_directory_placeholders(target)
+            payload = run_cli(
+                "mother-doc-state-sync",
+                "--path",
+                str(target),
+                "--doc-ref",
+                "01_target_state.md",
+                "--from-state",
+                "modified",
+                "--to-state",
+                "planned",
+                "--pack-ref",
+                "01_design_01",
+            )
+            assert payload["status"] == "pass"
+            updated = (target / "01_target_state.md").read_text(encoding="utf-8")
+            assert "doc_work_state: planned" in updated
+            assert "01_design_01" in updated
 
     def test_mother_doc_lint_rejects_single_file_input(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -452,3 +526,63 @@ class TestCliToolboxRegressionTest:
             payload = json.loads(completed.stdout)
             assert payload["status"] == "pass"
             assert payload["acceptance_gate_allowed"]
+
+    def test_acceptance_lint_requires_graph_postflight_before_ref_state(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            mother_doc_root = root / "mother_doc"
+            acceptance_root = mother_doc_root / "acceptance"
+            acceptance_root.mkdir(parents=True)
+            (mother_doc_root / "00_index.md").write_text(
+                "\n".join(
+                    [
+                        "---",
+                        "doc_work_state: ref",
+                        "doc_pack_refs:",
+                        "  - 01_design_01",
+                        "---",
+                        "# Mother Doc Index",
+                        "",
+                        "生产级",
+                        "requirement_atom",
+                        "阶段断言",
+                        "阶段测试",
+                        "阶段验收",
+                        "上线可交付",
+                    ]
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+            matrix = acceptance_root / "acceptance_matrix.md"
+            report = acceptance_root / "acceptance_report.md"
+            matrix.write_text(
+                "\n".join(
+                    [
+                        "# Acceptance Matrix",
+                        "",
+                        "| requirement_atom_id | implemented | tested | witnessed | blocked_state | evidence_refs | notes |",
+                        "|---|---|---|---|---|---|---|",
+                        "| `RA-01` | `false` | `false` | `false` | `clear_to_proceed` | `` | pending |",
+                    ]
+                ),
+                encoding="utf-8",
+            )
+            report.write_text(
+                "\n".join(
+                    [
+                        "# Acceptance Report",
+                        "",
+                        "## 2. Plan Step Results",
+                        "| plan_step_id | implemented_files | tests_run | real_witnesses | residual_risks |",
+                        "|---|---|---|---|---|",
+                        "| `STEP-01` | `` | `` | `pending` | `pending` |",
+                    ]
+                ),
+                encoding="utf-8",
+            )
+            completed = run_cli_raw("acceptance-lint", "--matrix-path", str(matrix), "--report-path", str(report))
+            assert completed.returncode != 0
+            payload = json.loads(completed.stdout)
+            reasons = {item["reason"] for item in payload["violations"]}
+            assert "ref_state_requires_graph_postflight_registry" in reasons
