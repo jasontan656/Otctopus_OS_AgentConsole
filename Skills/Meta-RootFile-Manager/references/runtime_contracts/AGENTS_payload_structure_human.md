@@ -565,6 +565,7 @@ Human mirror for `AGENTS_payload_structure.json`.
       "key_order": [
         "owner",
         "entry_role",
+        "default_meta_skill_order",
         "governed_container",
         "workflow_contract",
         "turn_end_contract_hooks"
@@ -575,6 +576,12 @@ Human mirror for `AGENTS_payload_structure.json`.
         },
         "entry_role": {
           "type": "string"
+        },
+        "default_meta_skill_order": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         },
         "governed_container": {
           "type": "object",

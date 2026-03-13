@@ -27,7 +27,6 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `Octopus_OS/Client_Applications` con
     "path_metadata_is_not_action_guidance": true
   },
   "default_meta_skill_order": [
-    "$Dev-VUE3-WebUI-Frontend (run lint always for mother doc edits.)",
     "$Workflow-OctopusOS-DevFlow (this skill drives the development here and is responsible for mother doc edits.)",
     "$Meta-RootFile-Manager (AGENTS governance mapping flow)"
   ],

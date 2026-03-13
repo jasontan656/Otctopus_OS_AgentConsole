@@ -549,6 +549,7 @@
       "key_order": [
         "owner",
         "entry_role",
+        "default_meta_skill_order",
         "governed_container",
         "workflow_contract",
         "turn_end_contract_hooks"
@@ -559,6 +560,12 @@
         },
         "entry_role": {
           "type": "string"
+        },
+        "default_meta_skill_order": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         },
         "governed_container": {
           "type": "object",
