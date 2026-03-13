@@ -1,5 +1,5 @@
 {
-  "directive_name": "meta_runtime_selfcheck_turn_end_selfcheck",
+  "directive_name": "meta_runtime_selfcheck_turn_hook_self_repair",
   "directive_version": "2.0.0",
   "doc_kind": "workflow",
   "topic": "turn-hook-self-repair",
