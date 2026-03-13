@@ -19,6 +19,7 @@ anchors:
   - `SKILL.md`
   - `references/routing/TASK_ROUTING.md`
   - 对应 `references/project_structure/*`
+- 当前 contract 还负责声明一条硬边界：项目结构层不默认预置 `Common/`、`Core/`，只预置真实能力边界目录。
 
 ## 未来约束
 - 若后续为项目结构 lint、目录规划校验或模块注册检查新增专属 CLI：

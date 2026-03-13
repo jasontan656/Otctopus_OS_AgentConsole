@@ -67,16 +67,15 @@ anchors:
     - `bundle_manifest.yaml`
     - `module_manifest.yaml`
     - `entry_manifest.yaml`
-- 当前阶段的可部署对象根目录默认预留以下稳定子目录：
-  - `Common/`
-  - `Core/`
+- 当前阶段的可部署对象根目录默认只预留以下稳定容器：
   - `Assets/`
   - `Development_Docs/`
-- 这些稳定子目录是“对象内部角色目录”，不是对象名的重复壳；禁止再写成 `<Object_Name>_Common/`、`<Object_Name>_Core/`。
+- `Assets/` 与 `Development_Docs/` 是对象通用容器；除此之外，不应再默认预置高抽象内部骨架。
 - 对象内部目录命名必须服从单层单义：
   - 对象根只表达对象身份。
-  - 一级子目录只表达角色或能力。
+  - 一级子目录只表达真实能力边界或真实对象职责。
   - `runtime`、`worker`、`api`、`construction_plan`、`acceptance` 这类运行态或流程态，默认不作为对象级命名后缀。
+- 若某个一级目录未来可能独立迁移到别的服务器、扩容单元或部署对象，它应在项目结构层直接以能力名出现，而不是先躲进 `Common/`、`Core/` 这类抽象壳。
 - `Development_Docs/` 是“当前对象自己的开发文档容器”，不是上层分类容器的共享文档区，也不是必须再套一层对象同名目录的占位壳。
 - 例如 `Client_Applications/Unified_Portal/Development_Docs/` 表示 `Unified_Portal` 这个客户端应用对象自己的开发文档容器；仅完成项目结构创建时，这个目录默认可以为空。
 - 若后续进入具体开发闭环，再由下游 workflow 在当前对象的 `Development_Docs/` 下创建工作主题目录，例如 `<module_dir>/mother_doc/...`；该 `<module_dir>` 表示当前开发主题，不表示再次重复对象名。

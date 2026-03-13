@@ -34,13 +34,9 @@ Octopus_OS/
 │   ├── tech_baseline/
 │   └── deploy_matrix/
 ├── Octopus_Hub/
-│   ├── Common/
-│   ├── Core/
 │   ├── Assets/
 │   └── Development_Docs/
 ├── Foundation_Bundle/
-│   ├── Common/
-│   ├── Core/
 │   ├── Auth/
 │   ├── Payload/
 │   ├── Persistence/
@@ -63,8 +59,6 @@ Octopus_OS/
 │   └── AI_Module/
 ├── Client_Applications/
 │   └── Unified_Portal/
-│       ├── Common/
-│       ├── Core/
 │       ├── Assets/
 │       ├── Channels/
 │       │   ├── Web/
@@ -86,13 +80,12 @@ Octopus_OS/
 ```
 
 ## 对象根保留子目录
-- `Octopus_Hub/`、`Foundation_Bundle/`、`Capability_Modules/*`、`Client_Applications/*`、`Integration_Adapters/*` 当前都默认预留：
-  - `Common/`
-  - `Core/`
+- `Octopus_Hub/`、`Foundation_Bundle/`、`Capability_Modules/*`、`Client_Applications/*`、`Integration_Adapters/*` 当前默认只预留：
   - `Assets/`
   - `Development_Docs/`
-- `Common/`、`Core/` 是对象内部角色目录，不得在名字里重复对象名。
+- 不再默认预置 `Common/`、`Core/` 这类高抽象角色目录；若没有真实能力语义，就不应在项目结构层先长出内部骨架。
 - `Foundation_Bundle` 的一级能力目录固定采用 `Auth/`、`Payload/`、`Persistence/`、`Event_Task/`、`Cache/`、`Session_Context/`、`Policy_Enforcement/`、`Storage_Access/`、`Audit_Observe/`；不得继续使用 `*_Runtime/` 作为对象级目录后缀。
+- 这些一级能力目录代表 bundle 内部未来可独立演化、独立扩容或独立拆部署的能力边界，而不是 bundle 内部的抽象层分区。
 - `Development_Docs/` 归当前对象自己所有；它不是上层容器的公共 docs 根，也不是要求再嵌一层对象同名目录的冗余壳。
 - 因此 `Client_Applications/Unified_Portal/Development_Docs/` 表示 `Unified_Portal` 自己的开发文档容器；只完成项目结构初始化时，该目录默认应为空。
 - 若后续进入具体开发闭环，才允许在该容器下继续创建工作主题目录，例如 `<module_dir>/mother_doc/...`；这里的 `<module_dir>` 是开发主题名，不是再次重复 `Unified_Portal`。

@@ -1,6 +1,6 @@
 {
   "contract_name": "dev_octopusos_constitution_projectstructure_runtime_contract",
-  "contract_version": "2.0.0",
+  "contract_version": "3.0.0",
   "skill_name": "Dev-OctopusOS-Constitution-ProjectStructure",
   "runtime_source_policy": {
     "primary_runtime_source": "CLI_JSON",
@@ -19,7 +19,7 @@
   ],
   "naming_constitution": {
     "object_root_rule": "Object root directories express object identity only.",
-    "role_dir_rule": "Object-internal stable role directories use short role names such as Common and Core without repeating the object name.",
+    "capability_dir_rule": "Do not pre-create abstract role directories such as Common/Core at project-structure level; pre-create only real capability boundaries or real object responsibilities.",
     "runtime_suffix_rule": "Runtime/deployment/stage semantics must not be encoded as object-level physical suffixes by default.",
     "foundation_bundle_capabilities": [
       "Auth",
@@ -31,6 +31,10 @@
       "Policy_Enforcement",
       "Storage_Access",
       "Audit_Observe"
+    ],
+    "forbidden_default_role_dirs": [
+      "Common",
+      "Core"
     ]
   }
 }
