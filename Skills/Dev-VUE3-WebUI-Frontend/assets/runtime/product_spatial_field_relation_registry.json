@@ -1,0 +1,178 @@
+{
+  "registry_name": "dev_vue3_product_spatial_field_relation_registry",
+  "registry_version": "1.0.0",
+  "enum_fields": {
+    "overlap_mode": [
+      "cover_peer",
+      "covered_by_peer",
+      "float_above",
+      "edge_bleed"
+    ],
+    "collision_policy": [
+      "forbid",
+      "allow_with_declaration",
+      "push_siblings",
+      "clip_inside_parent"
+    ],
+    "inbound_overlap_policy": [
+      "forbid",
+      "allow_declared_cover",
+      "allow_declared_float",
+      "allow_declared_edge_bleed"
+    ],
+    "occlusion_policy": [
+      "forbid_occlusion",
+      "allow_partial_occlusion",
+      "allow_full_occlusion"
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "panel.focus_requires_focus_variant",
+      "scope": "panel_blueprint",
+      "when": [
+        {
+          "field": "interaction_states",
+          "op": "includes",
+          "value": "focus"
+        }
+      ],
+      "require_variant_non_empty": [
+        {
+          "variant": "panel_focus",
+          "fields": [
+            "frame_width",
+            "frame_height"
+          ]
+        }
+      ]
+    },
+    {
+      "rule_id": "node.allow_overlap_requires_resolution_contract",
+      "scope": "spatial_node",
+      "when": [
+        {
+          "field": "allow_overlap",
+          "op": "equals",
+          "value": true
+        }
+      ],
+      "require_non_empty": [
+        "overlap_targets",
+        "overlap_mode",
+        "collision_policy"
+      ]
+    },
+    {
+      "rule_id": "node.allow_overlap_false_requires_empty_actor_fields",
+      "scope": "spatial_node",
+      "when": [
+        {
+          "field": "allow_overlap",
+          "op": "equals",
+          "value": false
+        }
+      ],
+      "require_empty": [
+        "overlap_targets",
+        "overlap_mode"
+      ],
+      "require_equals": {
+        "collision_policy": "forbid"
+      }
+    },
+    {
+      "rule_id": "node.cover_or_float_requires_elevation",
+      "scope": "spatial_node",
+      "when": [
+        {
+          "field": "overlap_mode",
+          "op": "in",
+          "value": [
+            "cover_peer",
+            "float_above"
+          ]
+        }
+      ],
+      "require_non_null": [
+        "elevation"
+      ]
+    },
+    {
+      "rule_id": "node.cover_peer_requires_peer_acceptance",
+      "scope": "spatial_node",
+      "when": [
+        {
+          "field": "overlap_mode",
+          "op": "equals",
+          "value": "cover_peer"
+        }
+      ],
+      "peer_requirements": [
+        {
+          "target_list_field": "overlap_targets",
+          "peer_field": "inbound_overlap_policy",
+          "allowed_values": [
+            "allow_declared_cover"
+          ]
+        },
+        {
+          "target_list_field": "overlap_targets",
+          "peer_field": "occlusion_policy",
+          "allowed_values": [
+            "allow_partial_occlusion",
+            "allow_full_occlusion"
+          ]
+        }
+      ]
+    },
+    {
+      "rule_id": "node.float_above_requires_peer_acceptance",
+      "scope": "spatial_node",
+      "when": [
+        {
+          "field": "overlap_mode",
+          "op": "equals",
+          "value": "float_above"
+        }
+      ],
+      "peer_requirements": [
+        {
+          "target_list_field": "overlap_targets",
+          "peer_field": "inbound_overlap_policy",
+          "allowed_values": [
+            "allow_declared_float"
+          ]
+        },
+        {
+          "target_list_field": "overlap_targets",
+          "peer_field": "occlusion_policy",
+          "allowed_values": [
+            "allow_partial_occlusion",
+            "allow_full_occlusion"
+          ]
+        }
+      ]
+    },
+    {
+      "rule_id": "node.edge_bleed_requires_peer_acceptance",
+      "scope": "spatial_node",
+      "when": [
+        {
+          "field": "overlap_mode",
+          "op": "equals",
+          "value": "edge_bleed"
+        }
+      ],
+      "peer_requirements": [
+        {
+          "target_list_field": "overlap_targets",
+          "peer_field": "inbound_overlap_policy",
+          "allowed_values": [
+            "allow_declared_edge_bleed"
+          ]
+        }
+      ]
+    }
+  ]
+}

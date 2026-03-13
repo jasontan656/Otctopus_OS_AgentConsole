@@ -3,8 +3,8 @@
   "graph_version": "v2",
   "source_skill": "Dev-VUE3-WebUI-Frontend",
   "summary": {
-    "nodeCount": 85,
-    "edgeCount": 244,
+    "nodeCount": 86,
+    "edgeCount": 249,
     "errorCount": 0,
     "warningCount": 2
   },
@@ -582,7 +582,7 @@
       "docType": "index_doc",
       "topic": "Index of layout and responsive frontend rule contracts",
       "title": "Frontend Rules Index",
-      "anchorCount": 8,
+      "anchorCount": 9,
       "depth": 2
     },
     {
@@ -636,7 +636,7 @@
       "docType": "ui_dev_guide",
       "topic": "Workflow for linting product-owned frontend mother docs through Dev-VUE3-WebUI-Frontend",
       "title": "UI Product Mother Doc Lint Workflow",
-      "anchorCount": 4,
+      "anchorCount": 5,
       "depth": 2
     },
     {
@@ -646,6 +646,15 @@
       "topic": "Semantic split gate for frontend-heavy product mother docs",
       "title": "UI Product Semantic Split Gate",
       "anchorCount": 2,
+      "depth": 2
+    },
+    {
+      "path": "frontend_dev_contracts/rules/UI_PRODUCT_SPATIAL_FIELD_RELATION_GATE.md",
+      "docId": "ui.dev.rules.product_spatial_field_relation_gate",
+      "docType": "ui_dev_guide",
+      "topic": "Field relation gate for product-owned frontend spatial contracts",
+      "title": "UI Product Spatial Field Relation Gate",
+      "anchorCount": 3,
       "depth": 2
     },
     {
@@ -2107,6 +2116,13 @@
       "reason": "Blueprint numeric gate governs calculable spatial contracts in product mother docs."
     },
     {
+      "source": "frontend_dev_contracts/rules/00_RULES_INDEX.md",
+      "target": "frontend_dev_contracts/rules/UI_PRODUCT_SPATIAL_FIELD_RELATION_GATE.md",
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "Field relation gate governs activation, peer acceptance, and conflict semantics in product blueprints."
+    },
+    {
       "source": "frontend_dev_contracts/rules/UI_IDENTIFIER_LINT_WORKFLOW.md",
       "target": "frontend_dev_contracts/rules/00_RULES_INDEX.md",
       "relation": "belongs_to",
@@ -2247,6 +2263,13 @@
       "reason": "Numeric blueprint integrity is part of the same product mother doc gate."
     },
     {
+      "source": "frontend_dev_contracts/rules/UI_PRODUCT_MOTHER_DOC_LINT_WORKFLOW.md",
+      "target": "frontend_dev_contracts/rules/UI_PRODUCT_SPATIAL_FIELD_RELATION_GATE.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "Field relation gates must pass before geometry-only checks are considered sufficient."
+    },
+    {
       "source": "frontend_dev_contracts/rules/UI_PRODUCT_SEMANTIC_SPLIT_GATE.md",
       "target": "frontend_dev_contracts/rules/00_RULES_INDEX.md",
       "relation": "belongs_to",
@@ -2259,6 +2282,27 @@
       "relation": "pairs_with",
       "direction": "cross",
       "reason": "The split gate is enforced through the product mother doc lint workflow."
+    },
+    {
+      "source": "frontend_dev_contracts/rules/UI_PRODUCT_SPATIAL_FIELD_RELATION_GATE.md",
+      "target": "frontend_dev_contracts/rules/00_RULES_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "This field-relation gate belongs to the frontend rules branch."
+    },
+    {
+      "source": "frontend_dev_contracts/rules/UI_PRODUCT_SPATIAL_FIELD_RELATION_GATE.md",
+      "target": "frontend_dev_contracts/rules/UI_PRODUCT_MOTHER_DOC_LINT_WORKFLOW.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "Field relation checks are executed through the product mother doc lint workflow."
+    },
+    {
+      "source": "frontend_dev_contracts/rules/UI_PRODUCT_SPATIAL_FIELD_RELATION_GATE.md",
+      "target": "frontend_dev_contracts/rules/UI_PRODUCT_BLUEPRINT_NUMERIC_GATE.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "Numeric geometry checks must run after field relation checks succeed."
     },
     {
       "source": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md",
@@ -2501,5 +2545,5 @@
       "hits": 4
     }
   ],
-  "updated_at": "2026-03-13T13:57:47.770Z"
+  "updated_at": "2026-03-13T14:25:30.388Z"
 }

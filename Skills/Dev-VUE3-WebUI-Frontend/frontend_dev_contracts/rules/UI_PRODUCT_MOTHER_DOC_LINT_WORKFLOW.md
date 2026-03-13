@@ -21,6 +21,10 @@ anchors:
     relation: "pairs_with"
     direction: "cross"
     reason: "Numeric blueprint integrity is part of the same product mother doc gate."
+  - target: "UI_PRODUCT_SPATIAL_FIELD_RELATION_GATE.md"
+    relation: "pairs_with"
+    direction: "cross"
+    reason: "Field relation gates must pass before geometry-only checks are considered sufficient."
 ---
 
 # UI Product Mother Doc Lint Workflow
@@ -48,11 +52,16 @@ anchors:
 - `numeric blueprint integrity`
   - blueprint 必须给出足够数值让脚本检查 frame bounds、overflow、overlap 和已声明派生状态。
   - overlap 相关字段必须完整存在：`allow_overlap`、`overlap_targets`、`overlap_mode`、`collision_policy`；字段允许为空，但键本身不得缺失。
+- `field relation integrity`
+  - 字段关系必须形成可推理合同，而不是只存在部分键。
+  - 触发字段一旦启用，伴随字段必须补齐。
+  - 发生 peer 关系时，对端必须接受。
 
 ## 产物
 - `graph/frontend_mother_doc_graph.json`
 - `graph/frontend_mother_doc_lint_profile.json`
 - `graph/frontend_mother_doc_lint_report.json`
+- `assets/runtime/product_spatial_field_relation_registry.json`
 
 ## 责任边界
 - 该 lint 属于前端 skill 的专项门禁，不属于 `Workflow-OctopusOS-DevFlow` 的规则本体。

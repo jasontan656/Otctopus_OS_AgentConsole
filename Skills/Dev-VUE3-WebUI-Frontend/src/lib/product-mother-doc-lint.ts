@@ -30,6 +30,42 @@ interface GateMatrix {
   }>
 }
 
+interface FieldRelationRegistry {
+  registry_name: string
+  registry_version: string
+  enum_fields: Record<string, string[]>
+  rules: FieldRelationRule[]
+}
+
+interface FieldRelationRuleCondition {
+  field: string
+  op: 'equals' | 'includes' | 'in'
+  value: unknown
+}
+
+interface VariantNonEmptyRequirement {
+  variant: string
+  fields: string[]
+}
+
+interface PeerRequirement {
+  target_list_field: string
+  peer_field: string
+  allowed_values: string[]
+}
+
+interface FieldRelationRule {
+  rule_id: string
+  scope: 'spatial_node' | 'panel_blueprint'
+  when: FieldRelationRuleCondition[]
+  require_non_empty?: string[]
+  require_empty?: string[]
+  require_non_null?: string[]
+  require_equals?: Record<string, string | boolean | null>
+  require_variant_non_empty?: VariantNonEmptyRequirement[]
+  peer_requirements?: PeerRequirement[]
+}
+
 interface ProductDocRecord {
   path: string
   docId: string
@@ -82,6 +118,8 @@ interface SpatialRectNode {
   overlapTargets: string[]
   overlapMode: string | null
   collisionPolicy: string | null
+  inboundOverlapPolicy: string | null
+  occlusionPolicy: string | null
   relationRefs: string[]
   elevation: number | null
   allowOverlap: boolean
@@ -167,6 +205,7 @@ interface ResolvedProductContext {
   motherDocRoot: string
   graphRoot: string
   matrixPath: string
+  relationRegistryPath: string
 }
 
 const IDENTIFIER_REGEX = /\b(?:container|cmp|surface|panel)\.[A-Za-z0-9_.-]+\b/g
@@ -187,6 +226,8 @@ const SPATIAL_NODE_REQUIRED_KEYS = [
   'overlap_targets',
   'overlap_mode',
   'collision_policy',
+  'inbound_overlap_policy',
+  'occlusion_policy',
   'relation_refs',
   'elevation',
 ]
@@ -238,6 +279,7 @@ async function resolveProductContext(docsRootInput: string): Promise<ResolvedPro
     motherDocRoot,
     graphRoot: path.join(docsRoot, 'graph'),
     matrixPath: path.join(defaultSkillRoot(), 'assets', 'runtime', 'product_mother_doc_gate_matrix.json'),
+    relationRegistryPath: path.join(defaultSkillRoot(), 'assets', 'runtime', 'product_spatial_field_relation_registry.json'),
   }
 }
 
@@ -364,11 +406,81 @@ function parseSpatialNode(value: unknown): SpatialRectNode | null {
     overlapTargets: toStringArray(record.overlap_targets),
     overlapMode: typeof record.overlap_mode === 'string' ? record.overlap_mode : null,
     collisionPolicy: typeof record.collision_policy === 'string' ? record.collision_policy : null,
+    inboundOverlapPolicy: typeof record.inbound_overlap_policy === 'string' ? record.inbound_overlap_policy : null,
+    occlusionPolicy: typeof record.occlusion_policy === 'string' ? record.occlusion_policy : null,
     relationRefs: toStringArray(record.relation_refs),
     elevation: toNumber(record.elevation),
     allowOverlap: record.allow_overlap === true,
     missingKeys: missingRecordKeys(record, SPATIAL_NODE_REQUIRED_KEYS),
   }
+}
+
+function isEmptyValue(value: unknown): boolean {
+  if (value === null || value === undefined) {
+    return true
+  }
+  if (typeof value === 'string') {
+    return value.trim().length === 0
+  }
+  if (Array.isArray(value)) {
+    return value.length === 0
+  }
+  return false
+}
+
+function getNodeFieldValue(node: SpatialRectNode, field: string): unknown {
+  switch (field) {
+    case 'allow_overlap':
+      return node.allowOverlap
+    case 'overlap_targets':
+      return node.overlapTargets
+    case 'overlap_mode':
+      return node.overlapMode
+    case 'collision_policy':
+      return node.collisionPolicy
+    case 'inbound_overlap_policy':
+      return node.inboundOverlapPolicy
+    case 'occlusion_policy':
+      return node.occlusionPolicy
+    case 'relation_refs':
+      return node.relationRefs
+    case 'elevation':
+      return node.elevation
+    default:
+      return null
+  }
+}
+
+function getPanelFieldValue(blueprint: ParsedPanelBlueprint, field: string): unknown {
+  switch (field) {
+    case 'interaction_states':
+      return blueprint.interactionStates
+    case 'frame_width':
+      return blueprint.frameWidth
+    case 'frame_height':
+      return blueprint.frameHeight
+    default:
+      return null
+  }
+}
+
+function evaluateConditions(
+  conditions: FieldRelationRuleCondition[],
+  getter: (field: string) => unknown,
+): boolean {
+  return conditions.every((condition) => {
+    const value = getter(condition.field)
+    switch (condition.op) {
+      case 'equals':
+        return value === condition.value
+      case 'includes':
+        return Array.isArray(value) && value.includes(condition.value)
+      case 'in':
+        return Array.isArray(condition.value) && condition.value.includes(value)
+      default:
+        return false
+    }
+  })
 }
 
 function hasKeyword(text: string, keywords: string[]): boolean {
@@ -702,6 +814,198 @@ function rectsOverlap(a: SpatialRectNode, b: SpatialRectNode): boolean {
   return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y
 }
 
+function validateFieldRelationEnums(
+  panelBlueprints: ParsedPanelBlueprint[],
+  viewportScenes: ParsedViewportScene[],
+  registry: FieldRelationRegistry,
+): LintIssue[] {
+  const issues: LintIssue[] = []
+
+  for (const blueprint of panelBlueprints) {
+    for (const node of blueprint.nodes) {
+      for (const [field, allowedValues] of Object.entries(registry.enum_fields)) {
+        const value = getNodeFieldValue(node, field)
+        if (value === null || value === undefined) {
+          continue
+        }
+        if (typeof value !== 'string') {
+          continue
+        }
+        if (!allowedValues.includes(value)) {
+          issues.push({
+            code: 'field_relation.invalid_enum_value',
+            doc: blueprint.sourceDoc,
+            message: `Spatial node uses unsupported value: ${blueprint.panelId} -> ${node.nodeId} -> ${field}=${value}`,
+          })
+        }
+      }
+    }
+  }
+
+  for (const scene of viewportScenes) {
+    for (const node of scene.nodes) {
+      for (const [field, allowedValues] of Object.entries(registry.enum_fields)) {
+        const value = getNodeFieldValue(node, field)
+        if (value === null || value === undefined) {
+          continue
+        }
+        if (typeof value !== 'string') {
+          continue
+        }
+        if (!allowedValues.includes(value)) {
+          issues.push({
+            code: 'field_relation.invalid_enum_value',
+            doc: scene.sourceDoc,
+            message: `Viewport node uses unsupported value: ${scene.viewportId} -> ${node.nodeId} -> ${field}=${value}`,
+          })
+        }
+      }
+    }
+  }
+
+  return issues
+}
+
+function validateFieldRelationRules(
+  panelBlueprints: ParsedPanelBlueprint[],
+  viewportScenes: ParsedViewportScene[],
+  registry: FieldRelationRegistry,
+): LintIssue[] {
+  const issues: LintIssue[] = []
+  const panelRules = registry.rules.filter((rule) => rule.scope === 'panel_blueprint')
+  const nodeRules = registry.rules.filter((rule) => rule.scope === 'spatial_node')
+
+  for (const blueprint of panelBlueprints) {
+    for (const rule of panelRules) {
+      if (!evaluateConditions(rule.when, (field) => getPanelFieldValue(blueprint, field))) {
+        continue
+      }
+      for (const requirement of rule.require_variant_non_empty ?? []) {
+        const variant = blueprint.responsiveVariants[requirement.variant]
+        if (!variant) {
+          issues.push({
+            code: 'field_relation.panel_missing_variant',
+            doc: blueprint.sourceDoc,
+            message: `Field relation rule requires responsive variant: ${blueprint.panelId} -> ${requirement.variant}`,
+          })
+          continue
+        }
+        for (const field of requirement.fields) {
+          const value =
+            field === 'frame_width' ? variant.frameWidth :
+            field === 'frame_height' ? variant.frameHeight :
+            field === 'grid_span' ? variant.gridSpan :
+            null
+          if (value === null || value === undefined) {
+            issues.push({
+              code: 'field_relation.panel_variant_missing_field',
+              doc: blueprint.sourceDoc,
+              message: `Field relation rule requires variant field: ${blueprint.panelId} -> ${requirement.variant} -> ${field}`,
+            })
+          }
+        }
+      }
+    }
+  }
+
+  const nodeCollections: Array<{ sourceDoc: string; scopeId: string; nodeMap: Map<string, SpatialRectNode>; nodes: SpatialRectNode[] }> = [
+    ...panelBlueprints.map((blueprint) => ({
+      sourceDoc: blueprint.sourceDoc,
+      scopeId: blueprint.panelId,
+      nodeMap: new Map(blueprint.nodes.map((node) => [node.nodeId, node])),
+      nodes: blueprint.nodes,
+    })),
+    ...viewportScenes.map((scene) => ({
+      sourceDoc: scene.sourceDoc,
+      scopeId: scene.viewportId,
+      nodeMap: new Map(scene.nodes.map((node) => [node.nodeId, node])),
+      nodes: scene.nodes,
+    })),
+  ]
+
+  for (const collection of nodeCollections) {
+    for (const node of collection.nodes) {
+      for (const rule of nodeRules) {
+        if (!evaluateConditions(rule.when, (field) => getNodeFieldValue(node, field))) {
+          continue
+        }
+
+        for (const field of rule.require_non_empty ?? []) {
+          if (isEmptyValue(getNodeFieldValue(node, field))) {
+            issues.push({
+              code: 'field_relation.node_required_non_empty',
+              doc: collection.sourceDoc,
+              message: `Field relation rule requires non-empty field: ${collection.scopeId} -> ${node.nodeId} -> ${field}`,
+            })
+          }
+        }
+
+        for (const field of rule.require_empty ?? []) {
+          if (!isEmptyValue(getNodeFieldValue(node, field))) {
+            issues.push({
+              code: 'field_relation.node_required_empty',
+              doc: collection.sourceDoc,
+              message: `Field relation rule requires empty field: ${collection.scopeId} -> ${node.nodeId} -> ${field}`,
+            })
+          }
+        }
+
+        for (const field of rule.require_non_null ?? []) {
+          const value = getNodeFieldValue(node, field)
+          if (value === null || value === undefined) {
+            issues.push({
+              code: 'field_relation.node_required_non_null',
+              doc: collection.sourceDoc,
+              message: `Field relation rule requires non-null field: ${collection.scopeId} -> ${node.nodeId} -> ${field}`,
+            })
+          }
+        }
+
+        for (const [field, expected] of Object.entries(rule.require_equals ?? {})) {
+          if (getNodeFieldValue(node, field) !== expected) {
+            issues.push({
+              code: 'field_relation.node_required_equals',
+              doc: collection.sourceDoc,
+              message: `Field relation rule requires exact value: ${collection.scopeId} -> ${node.nodeId} -> ${field}=${String(expected)}`,
+            })
+          }
+        }
+
+        for (const peerRequirement of rule.peer_requirements ?? []) {
+          const targetIds = getNodeFieldValue(node, peerRequirement.target_list_field)
+          if (!Array.isArray(targetIds)) {
+            continue
+          }
+          for (const targetId of targetIds) {
+            if (typeof targetId !== 'string') {
+              continue
+            }
+            const peer = collection.nodeMap.get(targetId)
+            if (!peer) {
+              issues.push({
+                code: 'field_relation.peer_target_missing',
+                doc: collection.sourceDoc,
+                message: `Field relation rule references missing peer target: ${collection.scopeId} -> ${node.nodeId} -> ${targetId}`,
+              })
+              continue
+            }
+            const peerValue = getNodeFieldValue(peer, peerRequirement.peer_field)
+            if (typeof peerValue !== 'string' || !peerRequirement.allowed_values.includes(peerValue)) {
+              issues.push({
+                code: 'field_relation.peer_contract_mismatch',
+                doc: collection.sourceDoc,
+                message: `Peer contract does not accept declared relation: ${collection.scopeId} -> ${node.nodeId} -> ${targetId} -> ${peerRequirement.peer_field}`,
+              })
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return issues
+}
+
 function validateBlueprintGeometry(
   panelBlueprints: ParsedPanelBlueprint[],
   localSpaces: LocalCoordinateSpaceContract[],
@@ -850,24 +1154,18 @@ function validateBlueprintGeometry(
             continue
           }
 
+          if (current.collisionPolicy === 'push_siblings' || peer.collisionPolicy === 'push_siblings') {
+            issues.push({
+              code: 'blueprint.push_siblings_overlap_conflict',
+              doc: blueprint.sourceDoc,
+              message: `Nodes still overlap even though collision_policy requires sibling displacement: ${blueprint.panelId} -> ${current.nodeId} / ${peer.nodeId}`,
+            })
+          }
+
           for (const node of [current, peer]) {
             const otherNodeId = node.nodeId === current.nodeId ? peer.nodeId : current.nodeId
             if (!node.allowOverlap) {
               continue
-            }
-            if (!node.overlapMode) {
-              issues.push({
-                code: 'blueprint.overlap_missing_mode',
-                doc: blueprint.sourceDoc,
-                message: `Overlapping node is missing overlap_mode: ${blueprint.panelId} -> ${node.nodeId}`,
-              })
-            }
-            if (!node.collisionPolicy) {
-              issues.push({
-                code: 'blueprint.overlap_missing_collision_policy',
-                doc: blueprint.sourceDoc,
-                message: `Overlapping node is missing collision_policy: ${blueprint.panelId} -> ${node.nodeId}`,
-              })
             }
             if (node.collisionPolicy === 'forbid') {
               issues.push({
@@ -981,24 +1279,18 @@ function validateViewportScenes(scenes: ParsedViewportScene[]): LintIssue[] {
             continue
           }
 
+          if (current.collisionPolicy === 'push_siblings' || peer.collisionPolicy === 'push_siblings') {
+            issues.push({
+              code: 'viewport.push_siblings_overlap_conflict',
+              doc: scene.sourceDoc,
+              message: `Viewport nodes still overlap even though collision_policy requires sibling displacement: ${scene.viewportId} -> ${current.nodeId} / ${peer.nodeId}`,
+            })
+          }
+
           for (const node of [current, peer]) {
             const otherNodeId = node.nodeId === current.nodeId ? peer.nodeId : current.nodeId
             if (!node.allowOverlap) {
               continue
-            }
-            if (!node.overlapMode) {
-              issues.push({
-                code: 'viewport.overlap_missing_mode',
-                doc: scene.sourceDoc,
-                message: `Overlapping viewport node is missing overlap_mode: ${scene.viewportId} -> ${node.nodeId}`,
-              })
-            }
-            if (!node.collisionPolicy) {
-              issues.push({
-                code: 'viewport.overlap_missing_collision_policy',
-                doc: scene.sourceDoc,
-                message: `Overlapping viewport node is missing collision_policy: ${scene.viewportId} -> ${node.nodeId}`,
-              })
             }
             if (node.collisionPolicy === 'forbid') {
               issues.push({
@@ -1045,6 +1337,7 @@ function applySplitRules(doc: ProductDocRecord, matrix: GateMatrix): LintIssue[]
 function lintDocs(
   docs: ProductDocRecord[],
   matrix: GateMatrix,
+  relationRegistry: FieldRelationRegistry,
   profile: ProductMotherDocProfile,
   baseErrors: LintIssue[],
 ): { warnings: LintIssue[]; errors: LintIssue[] } {
@@ -1117,6 +1410,8 @@ function lintDocs(
 
   errors.push(...validateBlueprintGeometry(panelBlueprints, localCoordinateSpaces))
   errors.push(...validateViewportScenes(viewportScenes))
+  errors.push(...validateFieldRelationEnums(panelBlueprints, viewportScenes, relationRegistry))
+  errors.push(...validateFieldRelationRules(panelBlueprints, viewportScenes, relationRegistry))
 
   for (const doc of docs) {
     if (doc.path.startsWith('12_adrs/')) {
@@ -1269,9 +1564,10 @@ export async function lintProductMotherDoc(
 ): Promise<ProductMotherDocLintPayload> {
   const context = await resolveProductContext(docsRootInput)
   const matrix = await readJsonFile<GateMatrix>(context.matrixPath)
+  const relationRegistry = await readJsonFile<FieldRelationRegistry>(context.relationRegistryPath)
   const { docs, edges, errors: baseErrors } = await loadDocs(context, matrix)
   const profile = buildProfile(docs, matrix)
-  const { warnings, errors } = lintDocs(docs, matrix, profile, baseErrors)
+  const { warnings, errors } = lintDocs(docs, matrix, relationRegistry, profile, baseErrors)
   const status: GateStatus = errors.length > 0 ? 'fail' : warnings.length > 0 ? 'pass_with_warnings' : 'pass'
 
   const payload: ProductMotherDocLintPayload = {

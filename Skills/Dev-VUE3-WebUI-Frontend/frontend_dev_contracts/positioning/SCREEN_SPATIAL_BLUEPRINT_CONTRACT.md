@@ -58,6 +58,13 @@ anchors:
 - `state_variant`
 - `relation_refs`
 - `overflow_policy`
+- `allow_overlap`
+- `overlap_targets`
+- `overlap_mode`
+- `collision_policy`
+- `inbound_overlap_policy`
+- `occlusion_policy`
+- `elevation`
 - `scroll_axis`
 - `grid_span`
 - `min_w`

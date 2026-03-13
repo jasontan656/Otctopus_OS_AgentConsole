@@ -32,6 +32,7 @@
     "04_frontend_contract_layer/81_frontend_mother_doc_gate_contract.md",
     "04_frontend_contract_layer/82_semantic_split_graph_gate_contract.md",
     "04_frontend_contract_layer/83_blueprint_numeric_integrity_gate_contract.md",
+    "04_frontend_contract_layer/84_spatial_field_relation_gate_contract.md",
     "05_domain_contracts/20_navigation_canvas_panel_contract.md"
   ],
   "blueprint_doc_prefixes": [
@@ -92,6 +93,8 @@
     "overlap_targets",
     "overlap_mode",
     "collision_policy",
+    "inbound_overlap_policy",
+    "occlusion_policy",
     "relation_refs",
     "elevation"
   ],

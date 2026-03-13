@@ -37,6 +37,10 @@ anchors:
     relation: "indexes"
     direction: "downstream"
     reason: "Blueprint numeric gate governs calculable spatial contracts in product mother docs."
+  - target: "UI_PRODUCT_SPATIAL_FIELD_RELATION_GATE.md"
+    relation: "indexes"
+    direction: "downstream"
+    reason: "Field relation gate governs activation, peer acceptance, and conflict semantics in product blueprints."
 ---
 
 # Frontend Rules Index
@@ -56,6 +60,8 @@ anchors:
   - 定义如何在产品母文档上识别“应拆未拆”的前端违规。
 - `UI_PRODUCT_BLUEPRINT_NUMERIC_GATE.md`
   - 定义如何在产品母文档上阻断缺尺寸、越界和未声明 overlap 的空间合同违规。
+- `UI_PRODUCT_SPATIAL_FIELD_RELATION_GATE.md`
+  - 定义如何在产品母文档上阻断字段联动未补齐、peer 不接受和冲突语义不完整的空间合同违规。
 
 ## 读取顺序
 1. `UI_LAYOUT_ADJUSTMENT_RULES.md`
@@ -65,3 +71,4 @@ anchors:
 5. `UI_PRODUCT_MOTHER_DOC_LINT_WORKFLOW.md`
 6. `UI_PRODUCT_SEMANTIC_SPLIT_GATE.md`
 7. `UI_PRODUCT_BLUEPRINT_NUMERIC_GATE.md`
+8. `UI_PRODUCT_SPATIAL_FIELD_RELATION_GATE.md`
