@@ -65,9 +65,9 @@ MOTHER_DOC_WORK_STATES = [
 
 MOTHER_DOC_STATE_TRANSITIONS = {
     "modified": ["planned"],
-    "planned": ["developed"],
-    "developed": ["ref"],
-    "ref": [],
+    "planned": ["modified", "developed"],
+    "developed": ["modified", "ref"],
+    "ref": ["modified"],
 }
 
 MOTHER_DOC_REQUIRED_SIGNALS = [

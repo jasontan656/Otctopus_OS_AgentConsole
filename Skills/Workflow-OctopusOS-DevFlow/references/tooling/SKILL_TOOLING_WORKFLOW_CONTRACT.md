@@ -31,14 +31,14 @@
 ## 1.1 Discovery Scope Policy
 - 发现范围只允许包含：
   - 当前 `target_root` 边界
-  - 当前 `development_docs_root`
-  - 当前模块文档根
+  - 当前 `docs_root`
   - 当前模块 `mother_doc`
   - 当前 `codebase_root`
   - 当前技能文件与必要图谱技能入口
 - 若项目尚未固定开发文档容器，必须先读取 `Dev-OctopusOS-Constitution-ProjectStructure`，确认应把开发文档落在哪个容器。
-- `development_docs_root` 在本合同里始终表示“当前代码对象自己的 `Development_Docs/` 容器”。
-- `module_dir` 在本合同里始终表示该容器下的当前开发主题目录，不表示再次重复对象名。
+- `docs_root` 在本合同里始终表示“当前代码对象唯一受管的 `Development_Docs/` 根”。
+- `development_docs_root` 在本合同里与 `docs_root` 指向同一物理目录，只作为 CLI/runtime 元数据保留。
+- `module_dir` 在本合同里只保留为可选逻辑主题标识，不参与物理路径拼接。
 - 若启动 cwd 是 `/home/jasontan656/AI_Projects`，它只是容器根与钩子根，不是 discoverable repo。
 - 禁止为了找需求或上下文而扫描整个 `/home/jasontan656/AI_Projects`。
 - 禁止读取 `Human_Work_Zone`、`GoogleDriveDump` 等 sibling 区域，除非 mother doc 显式引用。
@@ -46,12 +46,12 @@
   - 先执行 `target-runtime-contract`
   - 若模块容器已具备使用条件但骨架未齐，先执行 `target-scaffold`
   - 必要时确认或覆盖 `docs_root`
-  - 直接读取当前 `Development_Docs/<module_dir>/mother_doc/00_index.md`
-    - 这里的 `<module_dir>` 是当前开发主题 slug，不是对象名重复一层
+  - 直接读取当前 `<docs_root>/mother_doc/00_index.md`
   - 若已存在编号归档的 `docs/NN_slug`，先读取最新一轮归档内容再开始本轮回填
   - 若已存在 `execution_atom_plan_validation_packs/`，先读取并沿用当前 pack 树
   - 执行 `mother-doc-lint`
   - 若存在图谱，读取 graph context 以校准当前代码现实
+  - 若本轮会修改 mother_doc，先由模型列出应改动的原子文档，再执行 `mother-doc-mark-modified --auto-from-git`
   - 仅在当前阶段确实需要代码上下文时，执行当前目标上的 `graph-preflight`
   - 仅在这些步骤后，按需读取 codebase 中的具体文件
 
@@ -99,7 +99,7 @@
 - 本阶段的读物边界、命令和 graph 角色以 stage-specific CLI contracts 为准。
 
 ### `construction_plan`
-- 读取 mother doc 中的设计者规划 `08_dev_execution_plan.md`，并写出独立 `Development_Docs/<module_dir>/mother_doc/execution_atom_plan_validation_packs/`。
+- 读取 mother doc 中的设计者规划 `08_dev_execution_plan.md`，并写出独立 `<docs_root>/mother_doc/execution_atom_plan_validation_packs/`。
 - 这个阶段的目标是“生成 AI 自用的 `Execution_atom_plan&validation_packs`”，显式区别于 mother doc 中的设计规划。
 - 只允许把当前 `doc_work_state=modified` 的 mother_doc 原子文档吸收到 pack 中；未吸收文档不得批量改成 `planned`。
 - 每个 pack 都必须带 `source_mother_doc_refs`，显式声明 implementation 期间允许回读的 mother_doc 原子文档。
@@ -110,7 +110,7 @@
 ### `implementation`
 - 严格按当前 active pack 施工。
 - implementation 不允许通读整个 mother_doc 树；只允许读取 active pack 显式声明的 `source_mother_doc_refs`，以及按需参考的 `ref` 文档。
-- 如实现偏离 active pack，先改 `Development_Docs/<module_dir>/mother_doc/execution_atom_plan_validation_packs/<active_pack>/`，再改代码；若设计意图也改变，再回写 `08_dev_execution_plan.md`。
+- 如实现偏离 active pack，先改 `<docs_root>/mother_doc/execution_atom_plan_validation_packs/<active_pack>/`，再改代码；若设计意图也改变，再回写 `08_dev_execution_plan.md`。
 - 按 `baseline_mode` 选择 clean build 或增量开发路径。
 - 默认运行假设是：模型位于可控本地环境，拥有足够 access 去安装依赖、修复运行环境、编辑本地配置、拉起项目所需运行面并验证本地链路。
 - `baseline_mode` 只允许依据当前 `HEAD/worktree` 与 runtime 现状判定；git 历史、旧提交、旧 rollout 只能作为参考证据，不能自动触发恢复。
@@ -133,7 +133,7 @@
 - 在本地可控环境内，把所有可本地完成的配置、bring-up、运行面常驻、健康检查、模拟使用和证据回写做完后，再汇总 requirement-level 验收。
 - 交付真实 witness、测试结果、风险与回滚说明。
 - 生成按 `requirement_atom` 汇总的 `acceptance_matrix`。
-- `acceptance_report` 与 `acceptance_matrix` 固定落在 `Development_Docs/<module_dir>/mother_doc/acceptance/`，属于当前 mother doc 容器；不得再平铺到模块文档根目录。
+- `acceptance_report` 与 `acceptance_matrix` 固定落在 `<docs_root>/mother_doc/acceptance/`，属于当前 mother doc 容器；不得再平铺到模块文档根目录。
 - 若 `acceptance-lint` 失败，说明 acceptance 文档领先于实现或证据不真实，必须退回 `construction_plan`/`implementation` 修正。
 - 不把 code graph 当验收证据，只把它当解释层。
 - `acceptance` 只能基于 mother doc 与前面各阶段已定义的断言/测试/验收做裁决，不得临时补写一套新标准。

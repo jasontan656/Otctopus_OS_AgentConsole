@@ -5,13 +5,13 @@
     "development_docs_root": "/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs",
     "codebase_root": "/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal",
     "module_dir": "Unified_Portal",
-    "module_docs_root": "/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs/Unified_Portal"
+    "module_docs_root": "/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs"
   },
   "workflow_roots": {
-    "mother_doc_root": "/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs/Unified_Portal/mother_doc",
-    "construction_plan_root": "/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs/Unified_Portal/mother_doc/execution_atom_plan_validation_packs",
-    "graph_runtime_root": "/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs/Unified_Portal/graph",
-    "acceptance_root": "/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs/Unified_Portal/mother_doc/acceptance"
+    "mother_doc_root": "/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs/mother_doc",
+    "construction_plan_root": "/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs/mother_doc/execution_atom_plan_validation_packs",
+    "graph_runtime_root": "/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs/graph",
+    "acceptance_root": "/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs/mother_doc/acceptance"
   },
   "workflow_contract": {
     "required_skill": "Workflow-OctopusOS-DevFlow",

@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import subprocess
 from pathlib import Path
+from typing import TypedDict
 
 from mother_doc_contract import (
     MOTHER_DOC_FRONTMATTER_REQUIRED_FIELDS,
@@ -8,6 +10,11 @@ from mother_doc_contract import (
     MOTHER_DOC_STATE_TRANSITIONS,
     MOTHER_DOC_WORK_STATES,
 )
+
+
+class StateViolation(TypedDict):
+    doc_ref: str
+    reason: str
 
 
 def _parse_scalar(value: str) -> object:
@@ -151,6 +158,86 @@ def validate_transition(from_state: str, to_state: str) -> str | None:
     return None
 
 
+def _git_repo_root(path: Path) -> Path:
+    completed = subprocess.run(
+        ["git", "-C", str(path), "rev-parse", "--show-toplevel"],
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    if completed.returncode != 0:
+        raise RuntimeError(f"git_repo_root_resolution_failed: {completed.stderr.strip()}")
+    return Path(completed.stdout.strip()).resolve()
+
+
+def _git_changed_paths(repo_root: Path, scope_root: Path) -> list[Path]:
+    relative_scope = scope_root.resolve().relative_to(repo_root.resolve())
+    completed = subprocess.run(
+        [
+            "git",
+            "-C",
+            str(repo_root),
+            "status",
+            "--short",
+            "--porcelain=v1",
+            "--untracked-files=all",
+            "--",
+            str(relative_scope),
+        ],
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    if completed.returncode != 0:
+        raise RuntimeError(f"git_status_failed: {completed.stderr.strip()}")
+
+    changed_paths: list[Path] = []
+    for line in completed.stdout.splitlines():
+        if not line:
+            continue
+        path_text = line[3:]
+        if " -> " in path_text:
+            path_text = path_text.split(" -> ", 1)[1]
+        changed_paths.append((repo_root / path_text).resolve())
+    return changed_paths
+
+
+def _impact_doc_refs(root: Path, changed_doc: Path) -> set[str]:
+    impacted: set[str] = set()
+    impacted.add(str(changed_doc.relative_to(root)))
+
+    current = changed_doc.parent
+    while current != root.parent and current.is_relative_to(root):
+        index_path = current / "00_index.md"
+        if index_path.exists():
+            impacted.add(str(index_path.relative_to(root)))
+        if current == root:
+            break
+        current = current.parent
+
+    return impacted
+
+
+def detect_git_modified_doc_refs(root: Path, repo_root: Path | None = None) -> dict[str, list[str]]:
+    resolved_repo_root = repo_root or _git_repo_root(root)
+    changed_paths = _git_changed_paths(resolved_repo_root, root)
+    direct_doc_refs: set[str] = set()
+    impact_doc_refs: set[str] = set()
+
+    for changed_path in changed_paths:
+        if not changed_path.exists():
+            continue
+        if changed_path.suffix != ".md" or not changed_path.is_relative_to(root):
+            continue
+        direct_doc_refs.add(str(changed_path.relative_to(root)))
+        impact_doc_refs.update(_impact_doc_refs(root, changed_path))
+
+    return {
+        "direct_doc_refs": sorted(direct_doc_refs),
+        "impact_doc_refs": sorted(impact_doc_refs),
+    }
+
+
 def sync_doc_states(
     root: Path,
     doc_refs: list[str],
@@ -170,7 +257,7 @@ def sync_doc_states(
         }
 
     updated_docs: list[str] = []
-    violations: list[dict[str, str]] = []
+    violations: list[StateViolation] = []
     for relative_doc in doc_refs:
         path = (root / relative_doc).resolve()
         if not path.exists() or not path.is_file():
@@ -179,7 +266,10 @@ def sync_doc_states(
         metadata, body, parse_errors = parse_frontmatter(path)
         if parse_errors:
             violations.append(
-                {"doc_ref": relative_doc, "reason": f"frontmatter_parse_error:{','.join(parse_errors)}"}
+                {
+                    "doc_ref": relative_doc,
+                    "reason": f"frontmatter_parse_error:{','.join(parse_errors)}",
+                }
             )
             continue
         current_state = metadata.get("doc_work_state")
@@ -195,7 +285,9 @@ def sync_doc_states(
         if not isinstance(pack_refs, list):
             violations.append({"doc_ref": relative_doc, "reason": "doc_pack_refs_must_be_a_list"})
             continue
-        if pack_ref and pack_ref not in pack_refs:
+        if to_state == "modified":
+            pack_refs = []
+        elif pack_ref and pack_ref not in pack_refs:
             pack_refs.append(pack_ref)
         metadata["doc_pack_refs"] = pack_refs
         metadata["doc_work_state"] = to_state
@@ -218,4 +310,78 @@ def sync_doc_states(
         "from_state": from_state,
         "to_state": to_state,
         "pack_ref": pack_ref,
+    }
+
+
+def mark_docs_modified(
+    root: Path,
+    doc_refs: list[str],
+    *,
+    repo_root: Path | None = None,
+    auto_from_git: bool,
+) -> dict[str, object]:
+    explicit_doc_refs = sorted(set(doc_refs))
+    detected = (
+        detect_git_modified_doc_refs(root, repo_root)
+        if auto_from_git
+        else {"direct_doc_refs": [], "impact_doc_refs": []}
+    )
+    merged_doc_refs = sorted(
+        set(explicit_doc_refs)
+        | set(detected["direct_doc_refs"])
+        | set(detected["impact_doc_refs"])
+    )
+    if not merged_doc_refs:
+        return {
+            "status": "fail",
+            "reason": "no_doc_refs_selected_for_modified_mark",
+            "explicit_doc_refs": explicit_doc_refs,
+            "git_direct_doc_refs": detected["direct_doc_refs"],
+            "git_impact_doc_refs": detected["impact_doc_refs"],
+            "updated_docs": [],
+        }
+
+    updated_docs: list[str] = []
+    already_modified_docs: list[str] = []
+    violations: list[StateViolation] = []
+    for relative_doc in merged_doc_refs:
+        path = (root / relative_doc).resolve()
+        if not path.exists() or not path.is_file():
+            violations.append({"doc_ref": relative_doc, "reason": "doc_missing"})
+            continue
+        metadata, body, parse_errors = parse_frontmatter(path)
+        if parse_errors:
+            violations.append(
+                {
+                    "doc_ref": relative_doc,
+                    "reason": f"frontmatter_parse_error:{','.join(parse_errors)}",
+                }
+            )
+            continue
+        pack_refs = metadata.get("doc_pack_refs", [])
+        if not isinstance(pack_refs, list):
+            violations.append({"doc_ref": relative_doc, "reason": "doc_pack_refs_must_be_a_list"})
+            continue
+        current_state = metadata.get("doc_work_state")
+        if current_state == "modified" and pack_refs == []:
+            already_modified_docs.append(relative_doc)
+            continue
+        metadata["doc_work_state"] = "modified"
+        metadata["doc_pack_refs"] = []
+        validation_errors = validate_doc_metadata(metadata)
+        if validation_errors:
+            violations.append({"doc_ref": relative_doc, "reason": ",".join(validation_errors)})
+            continue
+        write_frontmatter(path, metadata, body)
+        updated_docs.append(relative_doc)
+
+    return {
+        "status": "pass" if not violations else "fail",
+        "explicit_doc_refs": explicit_doc_refs,
+        "git_direct_doc_refs": detected["direct_doc_refs"],
+        "git_impact_doc_refs": detected["impact_doc_refs"],
+        "selected_doc_refs": merged_doc_refs,
+        "updated_docs": updated_docs,
+        "already_modified_docs": already_modified_docs,
+        "violations": violations,
     }

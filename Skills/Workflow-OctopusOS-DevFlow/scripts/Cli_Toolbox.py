@@ -5,13 +5,20 @@ import argparse
 import json
 from pathlib import Path
 
-from cli_support import ACCEPTANCE_MATRIX_PATH, ACCEPTANCE_REPORT_PATH, CODEBASE_ROOT, CONSTRUCTION_PLAN_ROOT, MOTHER_DOC_PATH, MOTHER_DOC_ROOT, RUNTIME_ROOT
-from cli_support import STAGES, TEMPLATES
-from cli_support import acceptance_lint_result, graph_postflight_summary, graph_preflight_summary
-from cli_support import construction_plan_init_result, construction_plan_lint_summary, mother_doc_archive_result
-from cli_support import mother_doc_init_result, mother_doc_lint_summary, mother_doc_state_sync_result, target_scaffold_result, workflow_contract_document
-from stage_contract_support import stage_command_contract_spec, stage_doc_contract_spec, stage_graph_contract_spec
-from target_runtime_support import resolve_target_runtime, target_runtime_contract_document
+from cli_support import STAGES
+from cli_support import acceptance_lint_result, construction_plan_init_result, construction_plan_lint_summary
+from cli_support import graph_postflight_summary, graph_preflight_summary
+from cli_support import mother_doc_archive_result, mother_doc_init_result, mother_doc_lint_summary
+from cli_support import mother_doc_mark_modified_result, mother_doc_state_sync_result
+from cli_support import target_scaffold_result, workflow_contract_document
+from stage_contract_support import (
+    stage_command_contract_payload,
+    stage_doc_contract_payload,
+    stage_graph_contract_payload,
+)
+from target_runtime_support import TargetRuntimeRecord, resolve_target_runtime, target_runtime_contract_payload
+
+
 def print_document(document: dict[str, object], as_json: bool) -> int:
     if as_json:
         print(json.dumps(document, indent=2))
@@ -19,6 +26,8 @@ def print_document(document: dict[str, object], as_json: bool) -> int:
         for key, value in document.items():
             print(f"{key}: {value}")
     return 0
+
+
 def cmd_workflow_contract(args: argparse.Namespace) -> int:
     return print_document(
         workflow_contract_document(
@@ -35,7 +44,7 @@ def cmd_workflow_contract(args: argparse.Namespace) -> int:
 
 
 def cmd_target_runtime_contract(args: argparse.Namespace) -> int:
-    document = target_runtime_contract_document(
+    document = target_runtime_contract_payload(
         target_root=args.target_root,
         development_docs_root=args.development_docs_root,
         docs_root=args.docs_root,
@@ -48,7 +57,7 @@ def cmd_target_runtime_contract(args: argparse.Namespace) -> int:
     return 0 if document["status"] == "pass" else 1
 
 
-def _resolve_runtime(args: argparse.Namespace) -> dict[str, object]:
+def _resolve_runtime(args: argparse.Namespace) -> TargetRuntimeRecord:
     return resolve_target_runtime(
         target_root=args.target_root,
         development_docs_root=args.development_docs_root,
@@ -60,7 +69,7 @@ def _resolve_runtime(args: argparse.Namespace) -> dict[str, object]:
     )
 
 
-def _emit_runtime_not_ready(runtime: dict[str, object], as_json: bool) -> int:
+def _emit_runtime_not_ready(runtime: TargetRuntimeRecord, as_json: bool) -> int:
     document = {
         "status": "fail",
         "reason": "target_runtime_not_ready",
@@ -82,7 +91,7 @@ def cmd_stage_checklist(args: argparse.Namespace) -> int:
         "stage": args.stage,
         **STAGES[args.stage],
         "target_runtime_precheck_required": True,
-        "target_runtime_contract": target_runtime_contract_document(
+        "target_runtime_contract": target_runtime_contract_payload(
             target_root=args.target_root,
             development_docs_root=args.development_docs_root,
             docs_root=args.docs_root,
@@ -101,30 +110,34 @@ def cmd_stage_checklist(args: argparse.Namespace) -> int:
         },
     }
     return print_document(document, args.json)
+
+
 def _cmd_stage_contract(args: argparse.Namespace, kind: str) -> int:
     runtime = _resolve_runtime(args)
     if not runtime["ready_for_service"]:
         return _emit_runtime_not_ready(runtime, args.json)
     factories = {
-        "doc": lambda: stage_doc_contract_spec(
+        "doc": lambda: stage_doc_contract_payload(
             args.stage,
             Path(runtime["mother_doc_root"]),
             runtime,
         ),
-        "command": lambda: stage_command_contract_spec(
+        "command": lambda: stage_command_contract_payload(
             args.stage,
             Path(runtime["mother_doc_root"]),
             Path(runtime["construction_plan_root"]),
             Path(runtime["codebase_root"]),
             runtime,
         ),
-        "graph": lambda: stage_graph_contract_spec(
+        "graph": lambda: stage_graph_contract_payload(
             args.stage,
             Path(runtime["codebase_root"]),
             Path(runtime["graph_runtime_root"]),
         ),
     }
     return print_document(factories[kind](), args.json)
+
+
 def cmd_graph_preflight(args: argparse.Namespace) -> int:
     runtime = _resolve_runtime(args)
     if not runtime["ready_for_service"] and args.repo is None:
@@ -133,6 +146,8 @@ def cmd_graph_preflight(args: argparse.Namespace) -> int:
     graph_runtime_root = Path(args.graph_runtime_root or runtime["graph_runtime_root"]).resolve()
     document = graph_preflight_summary(Path(repo).resolve(), args.allow_missing_index, graph_runtime_root)
     return print_document(document, args.json)
+
+
 def cmd_graph_postflight(args: argparse.Namespace) -> int:
     runtime = _resolve_runtime(args)
     if not runtime["ready_for_service"] and args.repo is None:
@@ -141,6 +156,8 @@ def cmd_graph_postflight(args: argparse.Namespace) -> int:
     graph_runtime_root = Path(args.graph_runtime_root or runtime["graph_runtime_root"]).resolve()
     document = graph_postflight_summary(Path(repo).resolve(), graph_runtime_root)
     return print_document(document, args.json)
+
+
 def cmd_target_scaffold(args: argparse.Namespace) -> int:
     runtime = _resolve_runtime(args)
     document, status_code = target_scaffold_result(runtime, args.force)
@@ -149,8 +166,12 @@ def cmd_target_scaffold(args: argparse.Namespace) -> int:
 
 
 def cmd_template_index(args: argparse.Namespace) -> int:
+    from cli_support import TEMPLATES
+
     document = {name: str(path) for name, path in TEMPLATES.items()}
     return print_document(document, args.json)
+
+
 def cmd_mother_doc_init(args: argparse.Namespace) -> int:
     runtime = _resolve_runtime(args)
     if not runtime["ready_for_service"] and args.target is None:
@@ -159,6 +180,8 @@ def cmd_mother_doc_init(args: argparse.Namespace) -> int:
     document, status_code = mother_doc_init_result(target, args.force)
     print_document(document, args.json)
     return status_code
+
+
 def cmd_mother_doc_archive(args: argparse.Namespace) -> int:
     runtime = _resolve_runtime(args)
     if not runtime["ready_for_service"] and args.target is None:
@@ -167,6 +190,8 @@ def cmd_mother_doc_archive(args: argparse.Namespace) -> int:
     document, status_code = mother_doc_archive_result(target, args.force, args.archive_slug)
     print_document(document, args.json)
     return status_code
+
+
 def cmd_construction_plan_init(args: argparse.Namespace) -> int:
     runtime = _resolve_runtime(args)
     if not runtime["ready_for_service"] and args.target is None and args.design_plan is None:
@@ -176,6 +201,8 @@ def cmd_construction_plan_init(args: argparse.Namespace) -> int:
     document, status_code = construction_plan_init_result(target, design_plan_path, args.force)
     print_document(document, args.json)
     return status_code
+
+
 def cmd_construction_plan_lint(args: argparse.Namespace) -> int:
     runtime = _resolve_runtime(args)
     if not runtime["ready_for_service"] and args.path is None:
@@ -184,6 +211,8 @@ def cmd_construction_plan_lint(args: argparse.Namespace) -> int:
     document = construction_plan_lint_summary(Path(target).resolve())
     print_document(document, args.json)
     return 0 if document["status"] == "pass" else 1
+
+
 def cmd_mother_doc_lint(args: argparse.Namespace) -> int:
     runtime = _resolve_runtime(args)
     if not runtime["ready_for_service"] and args.path is None and args.mother_doc is None:
@@ -192,6 +221,8 @@ def cmd_mother_doc_lint(args: argparse.Namespace) -> int:
     document = mother_doc_lint_summary(Path(target).resolve())
     print_document(document, args.json)
     return 0 if document["status"] == "pass" else 1
+
+
 def cmd_mother_doc_state_sync(args: argparse.Namespace) -> int:
     runtime = _resolve_runtime(args)
     if not runtime["ready_for_service"] and args.path is None:
@@ -206,6 +237,24 @@ def cmd_mother_doc_state_sync(args: argparse.Namespace) -> int:
     )
     print_document(document, args.json)
     return 0 if document["status"] == "pass" else 1
+
+
+def cmd_mother_doc_mark_modified(args: argparse.Namespace) -> int:
+    runtime = _resolve_runtime(args)
+    if not runtime["ready_for_service"] and args.path is None:
+        return _emit_runtime_not_ready(runtime, args.json)
+    target = Path(args.path or runtime["mother_doc_root"]).resolve()
+    repo_root = Path(args.repo_root).resolve() if args.repo_root else None
+    document = mother_doc_mark_modified_result(
+        target,
+        args.doc_ref or [],
+        repo_root,
+        args.auto_from_git,
+    )
+    print_document(document, args.json)
+    return 0 if document["status"] == "pass" else 1
+
+
 def cmd_acceptance_lint(args: argparse.Namespace) -> int:
     runtime = _resolve_runtime(args)
     if not runtime["ready_for_service"] and args.matrix_path is None and args.report_path is None:
@@ -218,6 +267,8 @@ def cmd_acceptance_lint(args: argparse.Namespace) -> int:
     )
     print_document(document, args.json)
     return 0 if document["status"] == "pass" else 1
+
+
 def add_runtime_scope_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--target-root", default=None)
     parser.add_argument("--development-docs-root", default=None)
@@ -335,16 +386,30 @@ def build_parser() -> argparse.ArgumentParser:
     mother_doc_state_sync.add_argument("--json", action="store_true")
     mother_doc_state_sync.set_defaults(func=cmd_mother_doc_state_sync)
 
+    mother_doc_mark_modified = subparsers.add_parser("mother-doc-mark-modified")
+    add_runtime_scope_args(mother_doc_mark_modified)
+    mother_doc_mark_modified.add_argument("--path", default=None)
+    mother_doc_mark_modified.add_argument("--doc-ref", action="append")
+    mother_doc_mark_modified.add_argument("--repo-root", default=None)
+    mother_doc_mark_modified.add_argument("--auto-from-git", action="store_true")
+    mother_doc_mark_modified.add_argument("--json", action="store_true")
+    mother_doc_mark_modified.set_defaults(func=cmd_mother_doc_mark_modified)
+
     acceptance_lint = subparsers.add_parser("acceptance-lint")
     add_runtime_scope_args(acceptance_lint)
     acceptance_lint.add_argument("--matrix-path", default=None)
     acceptance_lint.add_argument("--report-path", default=None)
     acceptance_lint.add_argument("--json", action="store_true")
     acceptance_lint.set_defaults(func=cmd_acceptance_lint)
+
     return parser
+
+
 def main() -> int:
     parser = build_parser()
     args = parser.parse_args()
     return int(args.func(args))
+
+
 if __name__ == "__main__":
     raise SystemExit(main())

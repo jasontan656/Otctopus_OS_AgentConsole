@@ -46,7 +46,6 @@ ROOT_AGENTS_PATH = (PRODUCT_ROOT / "AGENTS.md").resolve()
 DISCOVERY_SCOPE_POLICY = {
     "allowed_roots": [
         "<target_root as repo_root_boundary>",
-        "<development_docs_root>",
         "<docs_root>",
         "<mother_doc_root>",
         "<codebase_root>",

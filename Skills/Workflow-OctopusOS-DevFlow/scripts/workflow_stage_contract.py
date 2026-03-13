@@ -1,25 +1,34 @@
 from __future__ import annotations
+
 from workflow_policy_contract import PHASE_READ_POLICY
-from workflow_template_contract import TEMPLATES
-# contract_name: octopus_devflow_workflow_stage_contract
-# contract_version: 1.2.0
-# validation_mode: strict
-# required_fields:
-#   - STAGES
-# optional_fields:
-#   - TEMPLATES
+
+
 TOP_LEVEL_RESIDENT_DOCS = PHASE_READ_POLICY["top_level_resident_docs"]
+
 GRAPH_STAGE_ROLES = {
-    "mother_doc": {"read_policy": "read graph context in this stage to reconcile existing code reality with the mother doc", "update_policy": "do_not_update_graph_in_this_stage"},
-    "construction_plan": {"read_policy": "read graph context in this stage to decompose execution atom packs against real module boundaries and dependencies", "update_policy": "do_not_update_graph_in_this_stage"},
-    "implementation": {"read_policy": "do_not_read_graph_as_a_stage_artifact; implementation must read concrete code directly", "update_policy": "do_not_update_graph_in_this_stage"},
-    "acceptance": {"read_policy": "do_not_read_graph_as_acceptance_evidence", "update_policy": "after acceptance evidence is complete, run graph-postflight to refresh downstream maintenance context"},
+    "mother_doc": {
+        "read_policy": "read graph context in this stage to reconcile existing code reality with the mother doc",
+        "update_policy": "do_not_update_graph_in_this_stage",
+    },
+    "construction_plan": {
+        "read_policy": "read graph context in this stage to decompose execution atom packs against real module boundaries and dependencies",
+        "update_policy": "do_not_update_graph_in_this_stage",
+    },
+    "implementation": {
+        "read_policy": "do_not_read_graph_as_a_stage_artifact; implementation must read concrete code directly",
+        "update_policy": "do_not_update_graph_in_this_stage",
+    },
+    "acceptance": {
+        "read_policy": "do_not_read_graph_as_acceptance_evidence",
+        "update_policy": "after acceptance evidence is complete, run graph-postflight to refresh downstream maintenance context",
+    },
 }
+
 STAGES = {
     "mother_doc": {
         "objective": "Create or refine the tree-first directory-based mother doc until every required chapter entry exists, every replace_me is gone, each atomic doc carries frontmatter state, and each stage has explicit goals, assertions, tests, and exit evidence. For iterative projects, mother_doc must first absorb the latest archived iteration history and current code reality before drafting the next round.",
         "required_outputs": [
-            "Development_Docs/<module_dir>/mother_doc/ directory",
+            "<docs_root>/mother_doc/ directory",
             "fully filled project description chapters",
             "atomic docs with doc_work_state/doc_pack_refs frontmatter",
             "stage-by-stage goals/assertions/tests/exit evidence",
@@ -27,9 +36,9 @@ STAGES = {
         ],
         "resident_docs": TOP_LEVEL_RESIDENT_DOCS,
         "stage_docs": [
-            "Development_Docs/<module_dir>/mother_doc/00_index.md",
-            "Development_Docs/<module_dir>/mother_doc/*",
-            "Development_Docs/<module_dir>/<latest_NN_slug>/* when present",
+            "<docs_root>/mother_doc/00_index.md",
+            "<docs_root>/mother_doc/*",
+            "<docs_root>/<latest_NN_slug>/* when present",
             "assets/templates/mother_doc/*",
             "Meta-code-graph-base context/resource when available",
         ],
@@ -37,8 +46,8 @@ STAGES = {
         "stage_entry_actions": [
             "run target-runtime-contract before reading or writing stage artifacts",
             "confirm docs_root through Dev-OctopusOS-Constitution-ProjectStructure when the project has already fixed a custom development-doc container",
-            "if Development_Docs/<module_dir>/mother_doc is missing, run target-scaffold",
-            "read Development_Docs/<module_dir>/mother_doc/00_index.md",
+            "if <docs_root>/mother_doc is missing, run target-scaffold",
+            "read <docs_root>/mother_doc/00_index.md",
             "if numbered archived docs directories exist, inspect the latest archived sibling before drafting the new iteration",
             "if execution packs already exist, treat them as the current task-pack lineage rather than creating a disconnected second pack tree",
             "extract reusable target state, architecture decisions, blockers, and unfinished delivery deltas from the latest archive when present",
@@ -61,17 +70,17 @@ STAGES = {
     "construction_plan": {
         "objective": "Read the completed mother doc design plan plus current modified docs, then write separate Execution_atom_plan&validation_packs for the AI to use during implementation and stage acceptance without severing the mother doc requirement source.",
         "required_outputs": [
-            "Development_Docs/<module_dir>/mother_doc/execution_atom_plan_validation_packs/ directory",
+            "<docs_root>/mother_doc/execution_atom_plan_validation_packs/ directory",
             "00_index.md plus numbered pack directories",
             "per-pack markdown anchors and machine-writeable manifests/ledgers",
             "source_mother_doc_refs carried by each numbered pack",
         ],
         "resident_docs": TOP_LEVEL_RESIDENT_DOCS,
         "stage_docs": [
-            "Development_Docs/<module_dir>/mother_doc/* with doc_work_state=modified|planned|ref as needed",
-            "Development_Docs/<module_dir>/mother_doc/08_dev_execution_plan.md",
-            "Development_Docs/<module_dir>/mother_doc/execution_atom_plan_validation_packs/00_index.md",
-            "Development_Docs/<module_dir>/mother_doc/execution_atom_plan_validation_packs/*",
+            "<docs_root>/mother_doc/* with doc_work_state=modified|planned|ref as needed",
+            "<docs_root>/mother_doc/08_dev_execution_plan.md",
+            "<docs_root>/mother_doc/execution_atom_plan_validation_packs/00_index.md",
+            "<docs_root>/mother_doc/execution_atom_plan_validation_packs/*",
             "assets/templates/execution_atom_plan_validation_packs/*",
             "Meta-code-graph-base context/resource when available",
             "codebase files only after mother-doc-lint passes",
@@ -101,23 +110,23 @@ STAGES = {
         "required_outputs": [
             "code",
             "tests",
-            "updated Development_Docs/<module_dir>/mother_doc/execution_atom_plan_validation_packs/*",
+            "updated <docs_root>/mother_doc/execution_atom_plan_validation_packs/*",
             "linked mother_doc docs advanced from planned to developed when the active pack is implemented and locally validated",
             "ADR records when architecture decisions change",
         ],
         "resident_docs": TOP_LEVEL_RESIDENT_DOCS,
         "stage_docs": [
-            "Development_Docs/<module_dir>/mother_doc/execution_atom_plan_validation_packs/00_index.md",
-            "Development_Docs/<module_dir>/mother_doc/execution_atom_plan_validation_packs/<active_pack>/*",
-            "Development_Docs/<module_dir>/mother_doc/<source_mother_doc_refs declared by active_pack>",
-            "Development_Docs/<module_dir>/mother_doc/<ref docs when explicitly needed>",
+            "<docs_root>/mother_doc/execution_atom_plan_validation_packs/00_index.md",
+            "<docs_root>/mother_doc/execution_atom_plan_validation_packs/<active_pack>/*",
+            "<docs_root>/mother_doc/<source_mother_doc_refs declared by active_pack>",
+            "<docs_root>/mother_doc/<ref docs when explicitly needed>",
             "concrete codebase files needed by the active pack and inner phase",
         ],
         "graph_role": GRAPH_STAGE_ROLES["implementation"],
         "stage_entry_actions": [
             "run target-runtime-contract before reading the active pack so implementation stays attached to the current task lineage",
             "reload the implementation checklist and discard construction_plan decomposition notes that are not part of the active pack",
-            "do not pull graph context into implementation focus; read concrete code and tests directly",
+            "do_not_pull_graph_context_into_implementation_focus; read concrete code and tests directly",
             "read only the active pack plus the source_mother_doc_refs declared by that pack; do not sweep unrelated modified docs into implementation focus",
             "run phase validation before moving to the next inner phase or pack",
         ],
@@ -138,9 +147,9 @@ STAGES = {
         "required_outputs": ["acceptance report", "acceptance matrix"],
         "resident_docs": TOP_LEVEL_RESIDENT_DOCS,
         "stage_docs": [
-            "Development_Docs/<module_dir>/mother_doc/* with doc_work_state=developed|ref as needed",
-            "Development_Docs/<module_dir>/mother_doc/execution_atom_plan_validation_packs/<active_or_completed_pack>/*",
-            "Development_Docs/<module_dir>/mother_doc/acceptance/*",
+            "<docs_root>/mother_doc/* with doc_work_state=developed|ref as needed",
+            "<docs_root>/mother_doc/execution_atom_plan_validation_packs/<active_or_completed_pack>/*",
+            "<docs_root>/mother_doc/acceptance/*",
             "test outputs and live witness evidence",
         ],
         "graph_role": GRAPH_STAGE_ROLES["acceptance"],

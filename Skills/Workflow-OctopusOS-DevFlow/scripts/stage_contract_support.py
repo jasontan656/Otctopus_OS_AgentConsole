@@ -1,24 +1,46 @@
 from __future__ import annotations
+
 from pathlib import Path
+from typing import TypedDict
+
+from target_runtime_support import TargetRuntimeRecord, latest_archived_iteration, resolve_target_runtime
 from workflow_stage_contract import STAGES
-import re
-from target_runtime_support import latest_archived_iteration, resolve_target_runtime
-
-# contract_name: octopus_devflow_stage_contract_support
-# contract_version: 1.0.0
-# validation_mode: strict
-# required_fields: stage_doc_contract_spec, stage_command_contract_spec, stage_graph_contract_spec
-# optional_fields: []
 
 
-ARCHIVE_DIR_PATTERN = re.compile(r"^(\d{2})_.+")
+class StageDocContractPayload(TypedDict, total=False):
+    stage: str
+    resident_docs: list[str]
+    stage_docs: list[str]
+    drop_on_stage_switch: list[str]
+    target_root: str
+    docs_root: str
+    mother_doc_root: str
+    construction_plan_root: str
+    iteration_context_root: str | None
 
 
-def stage_doc_contract_spec(
+class StageCommandContractPayload(TypedDict, total=False):
+    stage: str
+    entry_commands: list[str]
+    gate_commands: list[str]
+    optional_commands: list[str]
+    required_iteration_actions: list[str]
+    required_reuse_actions: list[str]
+    required_runtime_actions: list[str]
+    needs_real_env_threshold: list[str]
+
+
+class StageGraphContractPayload(TypedDict):
+    stage: str
+    graph_role: str
+    recommended_commands: list[str]
+
+
+def stage_doc_contract_payload(
     stage: str,
     mother_doc_root: Path | None = None,
-    target_runtime: dict[str, object] | None = None,
-) -> dict[str, object]:
+    target_runtime: TargetRuntimeRecord | None = None,
+) -> StageDocContractPayload:
     stage_data = STAGES[stage]
     payload = {
         "stage": stage,
@@ -39,45 +61,64 @@ def stage_doc_contract_spec(
     return payload
 
 
-def stage_command_contract_spec(
+def _runtime_cli_prefix(
+    runtime: TargetRuntimeRecord,
+    codebase_root: Path,
+    graph_runtime_root: Path,
+) -> str:
+    target_root = Path(runtime["target_root"])
+    docs_root = Path(runtime["docs_root"])
+    parts = [
+        "./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py",
+        f"--target-root {target_root}",
+        f"--development-docs-root {docs_root}",
+        f"--docs-root {docs_root}",
+        f"--codebase-root {codebase_root}",
+        f"--graph-runtime-root {graph_runtime_root}",
+    ]
+    module_dir = runtime.get("module_dir")
+    if isinstance(module_dir, str) and module_dir:
+        parts.append(f"--module-dir {module_dir}")
+    project_agents_path = runtime.get("project_agents_path")
+    if project_agents_path is not None:
+        parts.append(f"--project-agents {project_agents_path}")
+    return " ".join(parts)
+
+
+def stage_command_contract_payload(
     stage: str,
     mother_doc_root: Path,
     construction_plan_root: Path,
     codebase_root: Path,
-    target_runtime: dict[str, object] | None = None,
-) -> dict[str, object]:
+    target_runtime: TargetRuntimeRecord | None = None,
+) -> StageCommandContractPayload:
     runtime = target_runtime or resolve_target_runtime(
         docs_root=mother_doc_root.parent,
         codebase_root=codebase_root,
     )
     target_root = Path(runtime["target_root"])
-    development_docs_root = Path(runtime["development_docs_root"])
     docs_root = Path(runtime["docs_root"])
     graph_runtime_root = Path(runtime["graph_runtime_root"])
-    project_agents_path = runtime["project_agents_path"]
     latest_archive = latest_archived_iteration(mother_doc_root)
-    target_runtime_cmd_parts = [
-        "./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py target-runtime-contract",
-        f"--target-root {target_root}",
-        f"--development-docs-root {development_docs_root}",
-        f"--docs-root {docs_root}",
-        f"--module-dir {runtime['module_dir']}",
-        f"--codebase-root {codebase_root}",
-        f"--graph-runtime-root {graph_runtime_root}",
-    ]
-    if project_agents_path is not None:
-        target_runtime_cmd_parts.append(f"--project-agents {project_agents_path}")
-    target_runtime_cmd_parts.append("--json")
-    target_runtime_cmd = " ".join(target_runtime_cmd_parts)
+    runtime_args = _runtime_cli_prefix(runtime, codebase_root, graph_runtime_root)
+    target_runtime_cmd = f"{runtime_args} target-runtime-contract --json"
+    checklist_cmd = f"{runtime_args} stage-checklist --stage {stage} --json"
+    scaffold_cmd = f"{runtime_args} target-scaffold --json"
+
     commands = {
         "mother_doc": {
             "entry_commands": [
                 target_runtime_cmd,
-                f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py stage-checklist --stage {stage} --target-root {target_root} --development-docs-root {development_docs_root} --docs-root {docs_root} --module-dir {runtime['module_dir']} --codebase-root {codebase_root} --graph-runtime-root {graph_runtime_root} --json",
-                f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py target-scaffold --target-root {target_root} --development-docs-root {development_docs_root} --docs-root {docs_root} --module-dir {runtime['module_dir']} --codebase-root {codebase_root} --graph-runtime-root {graph_runtime_root} --json",
+                checklist_cmd,
+                scaffold_cmd,
             ],
-            "gate_commands": [f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py mother-doc-lint --path {mother_doc_root} --json"],
-            "optional_commands": [f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py graph-preflight --repo {codebase_root} --graph-runtime-root {graph_runtime_root} --allow-missing-index --json"],
+            "gate_commands": [
+                f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py mother-doc-lint --path {mother_doc_root} --json",
+            ],
+            "optional_commands": [
+                f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py graph-preflight --repo {codebase_root} --graph-runtime-root {graph_runtime_root} --allow-missing-index --json",
+                f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py mother-doc-mark-modified --path {mother_doc_root} --doc-ref <mother_doc_doc> --auto-from-git --json",
+            ],
             "required_iteration_actions": [
                 (
                     f"read the latest archived mother_doc iteration at {latest_archive} before writing the new iteration"
@@ -92,13 +133,16 @@ def stage_command_contract_spec(
         "construction_plan": {
             "entry_commands": [
                 target_runtime_cmd,
-                f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py stage-checklist --stage {stage} --target-root {target_root} --development-docs-root {development_docs_root} --docs-root {docs_root} --module-dir {runtime['module_dir']} --codebase-root {codebase_root} --graph-runtime-root {graph_runtime_root} --json",
-                f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py target-scaffold --target-root {target_root} --development-docs-root {development_docs_root} --docs-root {docs_root} --module-dir {runtime['module_dir']} --codebase-root {codebase_root} --graph-runtime-root {graph_runtime_root} --json",
+                checklist_cmd,
+                scaffold_cmd,
             ],
-            "gate_commands": [f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py construction-plan-lint --path {construction_plan_root} --json"],
+            "gate_commands": [
+                f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py construction-plan-lint --path {construction_plan_root} --json",
+            ],
             "optional_commands": [
                 f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py graph-preflight --repo {codebase_root} --graph-runtime-root {graph_runtime_root} --allow-missing-index --json",
                 f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py mother-doc-state-sync --path {mother_doc_root} --doc-ref <mother_doc_doc> --from-state modified --to-state planned --pack-ref <NN_slug> --json",
+                f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py mother-doc-mark-modified --path {mother_doc_root} --doc-ref <mother_doc_doc> --auto-from-git --json",
             ],
             "required_reuse_actions": [
                 "reuse the existing execution_atom_plan_validation_packs root when it is already present",
@@ -109,11 +153,12 @@ def stage_command_contract_spec(
         "implementation": {
             "entry_commands": [
                 target_runtime_cmd,
-                f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py stage-checklist --stage {stage} --target-root {target_root} --development-docs-root {development_docs_root} --docs-root {docs_root} --module-dir {runtime['module_dir']} --codebase-root {codebase_root} --graph-runtime-root {graph_runtime_root} --json",
+                checklist_cmd,
             ],
             "gate_commands": [],
             "optional_commands": [
                 f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py mother-doc-state-sync --path {mother_doc_root} --doc-ref <mother_doc_doc> --from-state planned --to-state developed --pack-ref <NN_slug> --json",
+                f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py mother-doc-mark-modified --path {mother_doc_root} --doc-ref <design_doc> --auto-from-git --json",
             ],
             "required_reuse_actions": [
                 "read only the active pack in the current execution pack tree; do not fork implementation onto a new disconnected pack set",
@@ -123,10 +168,10 @@ def stage_command_contract_spec(
         "acceptance": {
             "entry_commands": [
                 target_runtime_cmd,
-                f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py stage-checklist --stage {stage} --target-root {target_root} --development-docs-root {development_docs_root} --docs-root {docs_root} --module-dir {runtime['module_dir']} --codebase-root {codebase_root} --graph-runtime-root {graph_runtime_root} --json",
+                checklist_cmd,
             ],
             "gate_commands": [
-                f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py acceptance-lint --codebase-root {codebase_root} --target-root {target_root} --development-docs-root {development_docs_root} --docs-root {docs_root} --json",
+                f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py acceptance-lint --codebase-root {codebase_root} --target-root {target_root} --development-docs-root {docs_root} --docs-root {docs_root} --json",
                 f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py graph-postflight --repo {codebase_root} --graph-runtime-root {graph_runtime_root} --json",
                 f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py mother-doc-state-sync --path {mother_doc_root} --doc-ref <mother_doc_doc> --from-state developed --to-state ref --pack-ref <NN_slug> --json",
                 f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py mother-doc-archive --target {mother_doc_root} --json",
@@ -148,13 +193,34 @@ def stage_command_contract_spec(
     return {"stage": stage, **commands[stage]}
 
 
-def stage_graph_contract_spec(stage: str, codebase_root: Path, graph_runtime_root: Path | None = None) -> dict[str, object]:
+def stage_graph_contract_payload(
+    stage: str,
+    codebase_root: Path,
+    graph_runtime_root: Path | None = None,
+) -> StageGraphContractPayload:
     graph_role = STAGES[stage]["graph_role"]
-    graph_root = graph_runtime_root or resolve_target_runtime(codebase_root=codebase_root)["graph_runtime_root"]
+    graph_root = graph_runtime_root or resolve_target_runtime(codebase_root=codebase_root)[
+        "graph_runtime_root"
+    ]
     recommended_commands = {
-        "mother_doc": [f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py graph-preflight --repo {codebase_root} --graph-runtime-root {graph_root} --allow-missing-index --json"],
-        "construction_plan": [f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py graph-preflight --repo {codebase_root} --graph-runtime-root {graph_root} --allow-missing-index --json"],
+        "mother_doc": [
+            f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py graph-preflight --repo {codebase_root} --graph-runtime-root {graph_root} --allow-missing-index --json",
+        ],
+        "construction_plan": [
+            f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py graph-preflight --repo {codebase_root} --graph-runtime-root {graph_root} --allow-missing-index --json",
+        ],
         "implementation": [],
-        "acceptance": [f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py graph-postflight --repo {codebase_root} --graph-runtime-root {graph_root} --json"],
+        "acceptance": [
+            f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py graph-postflight --repo {codebase_root} --graph-runtime-root {graph_root} --json",
+        ],
     }
-    return {"stage": stage, "graph_role": graph_role, "recommended_commands": recommended_commands[stage]}
+    return {
+        "stage": stage,
+        "graph_role": graph_role,
+        "recommended_commands": recommended_commands[stage],
+    }
+
+
+stage_doc_contract_spec = stage_doc_contract_payload
+stage_command_contract_spec = stage_command_contract_payload
+stage_graph_contract_spec = stage_graph_contract_payload

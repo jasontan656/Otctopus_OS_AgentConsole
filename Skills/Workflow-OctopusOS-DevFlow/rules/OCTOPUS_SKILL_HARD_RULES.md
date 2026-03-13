@@ -19,9 +19,9 @@
 - `<docs_root>/AGENTS.md`（若存在）
 - `/home/jasontan656/.codex/skills/Dev-OctopusOS-Constitution-ProjectStructure/SKILL.md`（当 `docs_root` 尚未固定时）
 5. 每个阶段只能做本阶段的事，禁止跨阶段混写；进入新阶段前必须先读取 `stage-checklist --stage <current_stage>`。
-5.1 在进入任一阶段前，必须先运行 `target-runtime-contract`，确认当前 `target_root` 只是 `AI_Projects` 内的 repo/workspace 根边界，并以 `development_docs_root / docs_root / module_dir / mother_doc_root / execution_atom_plan_validation_packs / graph_runtime_root` 解析实际工作目标。
-5.2 目标代码对象自己的 `Development_Docs/` 与当前工作主题子目录必须先存在；任一不存在时，本技能必须拒绝服务，不得私自创建主题容器。
-5.2.0 仅完成项目结构初始化时，`Development_Docs/` 本身允许为空；但一旦进入本技能的开发闭环，`module_dir` 必须已经是 `Development_Docs/` 下一个真实存在的工作主题目录，而不是对象名重复一层。
+5.1 在进入任一阶段前，必须先运行 `target-runtime-contract`，确认当前 `target_root` 只是 `AI_Projects` 内的 repo/workspace 根边界，并以 `docs_root / mother_doc_root / execution_atom_plan_validation_packs / graph_runtime_root` 解析实际工作目标。
+5.2 当前代码对象自己的 `docs_root` 必须先存在；不存在时，本技能必须拒绝服务，不得私自创建主题容器。
+5.2.0 仅完成项目结构初始化时，`Development_Docs/` 本身允许为空；但一旦进入本技能的开发闭环，`docs_root` 必须已经是当前代码对象真实存在的开发文档根，而不是再重复下一层对象目录。
 5.2.1 `target_root` 还必须位于 `AI_Projects` workspace 内；否则 `$Meta-RootFile-Manager` 无法收治模块 `AGENTS.md`，本技能必须拒绝服务。
 5.3 若目标项目已经固定开发文档容器，必须按 `Dev-OctopusOS-Constitution-ProjectStructure` 的判定使用该容器；不得自行改投到另一个 `docs/` 或 sibling 目录。
 5.4 若目标模块文件夹中已经存在 `execution_atom_plan_validation_packs/`、`pack_registry.yaml`、编号归档 `NN_slug` 或既有 graph，必须先复用它们；不得为同一目标另外创建脱节的母文档、pack 树或图谱脉络。
@@ -30,10 +30,10 @@
 7. `mother_doc` 阶段必须先把需求固化成目录化项目说明与 `requirement_atom`；没有完整说明书，不得进入 `construction_plan`。
 7.0 `mother_doc` 必须支持 tree-first 原子化结构；每个必需章节既可保持 `NN_topic.md`，也可升级为 `NN_topic/00_index.md + 子文档树`，但不得回退成 giant mother_doc 单文件。
 7.0.0 每个 mother_doc 原子文档都必须带 frontmatter：`doc_work_state`、`doc_pack_refs`；合法状态只有 `modified -> planned -> developed -> ref`。
-7.0 `mother_doc` 阶段文档只允许包含：`Development_Docs/<module_dir>/mother_doc/*` 与 `assets/templates/mother_doc/*`；不得提前读取 construction packs、implementation 证据或 acceptance artifacts。
+7.0 `mother_doc` 阶段文档只允许包含：`<docs_root>/mother_doc/*` 与 `assets/templates/mother_doc/*`；不得提前读取 construction packs、implementation 证据或 acceptance artifacts。
 7.0.1 若当前模块文档根下已经存在编号归档的 `NN_slug` 目录，`mother_doc` 阶段必须先读取最新一轮归档，并抽取仍然有效的目标、架构决策、blocker 与交付增量；不得把新 mother_doc 当成与历史脱钩的空白起点。
 7.1 `mother_doc` 在进入 `construction_plan` 前必须通过 `mother-doc-lint`；若结构缺失、仍有 `replace_me`、缺少阶段断言/阶段测试/阶段验收，或出现 `最小闭环`、`最小实现`、`mvp`、`test profile` 等降级语义，必须先修正文档。
-7.2 发现范围固定限制为：当前 `target_root` 边界、已判定的 `development_docs_root`、模块文档根、`mother_doc/`、当前 `codebase_root`、必要 skill 文件与必要 graph 文件。
+7.2 发现范围固定限制为：当前 `target_root` 边界、已判定的 `docs_root`、`mother_doc/`、当前 `codebase_root`、必要 skill 文件与必要 graph 文件。
 7.3 若启动 cwd 恰好是 `/home/jasontan656/AI_Projects`，它只是容器根/钩子根，不得被视为 discoverable repo。
 7.4 禁止为了找上下文扫描整个 `/home/jasontan656/AI_Projects`，也不得读取 `Human_Work_Zone`、`GoogleDriveDump` 等 sibling 区域，除非 mother doc 显式引用。
 7.5 极简 prompt 启动时，第一批动作必须固定为：先运行 `target-runtime-contract`；必要时读取 `Dev-OctopusOS-Constitution-ProjectStructure` 以确认模块文档容器；若模块容器可用但骨架未齐，先运行 `target-scaffold`；再读取当前 `mother_doc/00_index.md`；若已存在编号归档的 `NN_slug`，先读取最新一轮归档；若已存在任务包，先读取并复用当前任务包；运行 `mother-doc-lint`；在 `mother_doc` 阶段若已有图谱必须读取它来校准现有代码现实；不得先用 `rg/find/ls` 在 workspace 根盲扫需求或仓库。
@@ -56,7 +56,7 @@
 8. package 数量不得由固定 min/max 规则控制，只能由需求粒度、依赖关系和可读性决定。
 9. `package dependency graph` 若需要显式产出，必须调用 `Meta-code-graph-base` 或读取其结果，不得在章鱼技能内部重复造一套。
 10. ADR 必须独立记录长期架构决策，不得把稳定架构裁决埋进一次性实现叙事。
-10.1 ADR 运行产物固定收敛在当前 `Development_Docs/<module_dir>/mother_doc/12_adrs/`；不得再平铺第二套 `adr` 根目录。
+10.1 ADR 运行产物固定收敛在当前 `<docs_root>/mother_doc/12_adrs/`；不得再平铺第二套 `adr` 根目录。
 11. `08_dev_execution_plan.md` 只表示 mother doc 内的设计者规划；它必须至少写清：
 - 阶段总览
 - design_step_id
@@ -69,12 +69,12 @@
 - 上线交付 witness
 - 风险与回滚
 12. `construction_plan` 阶段文档边界、命令与 graph 角色以 `stage-doc-contract --stage construction_plan`、`stage-command-contract --stage construction_plan`、`stage-graph-contract --stage construction_plan` 为准；不得把 implementation 落盘证据或 acceptance 判决文档混进本阶段。
-13. `construction_plan` 阶段必须单独产出 `Development_Docs/<module_dir>/mother_doc/execution_atom_plan_validation_packs/`；术语使用 `Execution_atom_plan&validation_packs`，文件系统 slug 固定为 `execution_atom_plan_validation_packs`。
+13. `construction_plan` 阶段必须单独产出 `<docs_root>/mother_doc/execution_atom_plan_validation_packs/`；术语使用 `Execution_atom_plan&validation_packs`，文件系统 slug 固定为 `execution_atom_plan_validation_packs`。
 14. construction packs 的 root/file schema、numbered packs、machine files 与 inner phase 结构必须满足 `construction-plan-lint` 与 `workflow-contract`；不得自造平替布局。
 14.1 任何文档从 `modified` 迁移到 `planned` 前，必须先被至少一个真实 `NN_slug` pack 吸收，并在文档侧记录 `doc_pack_refs`。
 14.2 每个 pack 必须显式声明 `source_mother_doc_refs`；implementation 只允许回读这些 source refs，不得通读整个 mother_doc 树。
 17. `implementation` 阶段的读物边界、禁读 graph 规则与阶段切换丢弃项以 `stage-doc-contract --stage implementation` 与 `stage-graph-contract --stage implementation` 为准；不得把未激活 pack 或 acceptance 判决文档带进实现 focus。
-18. 模型不得跳过 `Development_Docs/<module_dir>/mother_doc/execution_atom_plan_validation_packs/` 直接靠代码和测试定义真实意图。
+18. 模型不得跳过 `<docs_root>/mother_doc/execution_atom_plan_validation_packs/` 直接靠代码和测试定义真实意图。
 19. 若 implementation 与 active pack 发生偏离，必须先回写当前 pack 的 machine files 与 markdown anchors；若设计意图也变化，再回写 `08_dev_execution_plan.md`。
 20. implementation 回填的测试结果必须说明“为什么这组测试证明了设计理念与失败语义”，而不是只记录“功能试过了”。
 20.1 implementation 只允许把与当前 active pack 关联的文档从 `planned` 迁移到 `developed`；不得批量推进无关文档状态。
@@ -85,10 +85,11 @@
 22.3 在本地可控 bring-up 尚未完成前，不得把 `needs_real_env` 当作收尾出口。
 22.4 若项目已声明模型目标、浏览器目标、运行目标或其他关键目标表达，必须使用完整目标表达，不得写成会丢失精度的模糊缩写。
 23. 最终验收必须产出 `acceptance_matrix`，并按 `requirement_atom` 逐条给出 `implemented/tested/witnessed/blocked_state`。
-23.0 `acceptance_report` 与 `acceptance_matrix` 运行产物固定收敛在当前 `Development_Docs/<module_dir>/mother_doc/acceptance/`；不得把这两份文档平铺到模块文档根目录。
+23.0 `acceptance_report` 与 `acceptance_matrix` 运行产物固定收敛在当前 `<docs_root>/mother_doc/acceptance/`；不得把这两份文档平铺到模块文档根目录。
 23.1 `acceptance_matrix` 与 `acceptance_report` 中的 `implemented=true`、`tested=true` 只能引用当前磁盘上已经存在的实现/测试证据；不得把“计划要写的文件”提前写成成功态。
 23.2 在 acceptance 收口前必须通过 `acceptance-lint`；若 lint 报出 evidence path 不存在、`needs_real_env` 下错误写 `witnessed=true`、或 acceptance 早于 implementation，则必须回退修正。
 23.3 只有当 acceptance/evidence 完成且 graph postflight 已执行后，相关 mother_doc 文档才允许从 `developed` 迁移到 `ref`。
+23.4 当本轮设计或实现真实改动了 mother_doc 时，模型必须先判断应回到 `modified` 的原子文档，再使用 `mother-doc-mark-modified --auto-from-git` 作为 Git diff / impact 兜底检查；不得完全依赖自动扫描替代模型判断。
 24. code graph 的阶段角色以 `stage-graph-contract --stage <stage>` 为准；不得在其他文档中另造一套分阶段图谱语义。
 25. code graph 不是 blocker 工厂：
 - 有图谱时在 `mother_doc` 与 `construction_plan` 阶段必须读取并使用

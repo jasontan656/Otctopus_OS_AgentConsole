@@ -16,22 +16,23 @@ from mother_doc_contract import (
     MOTHER_DOC_WORK_STATES,
 )
 from mother_doc_lint_support import mother_doc_lint_summary
-from mother_doc_state_support import sync_doc_states
+from mother_doc_state_support import mark_docs_modified, sync_doc_states
 from runtime_context_support import graph_postflight_summary as build_graph_postflight_summary
 from runtime_context_support import graph_preflight_summary as build_graph_preflight_summary
-from workflow_contract_data import ACCEPTANCE_LINT_POLICY, ADR_REQUIRED_SECTIONS, ACCEPTANCE_FIELDS
-from workflow_contract_data import ACCEPTANCE_MATRIX_FIELDS, BASELINE_MODES, BLOCKED_STATES
-from workflow_contract_data import DESIGN_PHASE_PLAN_SECTIONS, DISCOVERY_SCOPE_POLICY
-from workflow_contract_data import EXECUTION_ATOM_PACK_MACHINE_FILES, EXECUTION_ATOM_PACK_MARKDOWN_FILES
-from workflow_contract_data import EXECUTION_ATOM_PACK_ROOT_FILES, EXECUTION_ATOM_PHASE_FIELDS, PHASE_READ_POLICY
-from workflow_contract_data import IMPLEMENTATION_SOURCE_POLICY
-from workflow_contract_data import REQUIREMENT_ATOM_FIELDS, STAGES, TEMPLATES
 from target_runtime_support import (
     ROOT_AGENTS_PATH,
     latest_archived_iteration,
     resolve_target_runtime,
-    target_runtime_contract_document,
+    target_runtime_contract_payload,
 )
+from workflow_contract_data import ACCEPTANCE_FIELDS, ACCEPTANCE_LINT_POLICY, ACCEPTANCE_MATRIX_FIELDS
+from workflow_contract_data import ADR_REQUIRED_SECTIONS, BASELINE_MODES, BLOCKED_STATES
+from workflow_contract_data import DESIGN_PHASE_PLAN_SECTIONS, DISCOVERY_SCOPE_POLICY
+from workflow_contract_data import EXECUTION_ATOM_PACK_MACHINE_FILES, EXECUTION_ATOM_PACK_MARKDOWN_FILES
+from workflow_contract_data import EXECUTION_ATOM_PACK_ROOT_FILES, EXECUTION_ATOM_PHASE_FIELDS
+from workflow_contract_data import IMPLEMENTATION_SOURCE_POLICY, PHASE_READ_POLICY
+from workflow_contract_data import REQUIREMENT_ATOM_FIELDS, STAGES, TEMPLATES
+
 
 DEFAULT_RUNTIME = resolve_target_runtime()
 RUNTIME_ROOT = Path(DEFAULT_RUNTIME["target_root"])
@@ -84,7 +85,7 @@ def target_scaffold_result(runtime: dict[str, object], force: bool) -> tuple[dic
             "status": "fail",
             "reason": "target_runtime_not_ready",
             "missing_prerequisites": runtime["missing_prerequisites"],
-            "hint": "create the current object's Development_Docs container and the requested workstream subfolder first, then rerun target-scaffold",
+            "hint": "create the current docs_root container first, then rerun target-scaffold",
         }, 1
 
     created_items: list[str] = []
@@ -94,8 +95,6 @@ def target_scaffold_result(runtime: dict[str, object], force: bool) -> tuple[dic
     created_items.append(str(Path(runtime["docs_root"]) / "AGENTS.md"))
 
     graph_root = Path(runtime["graph_runtime_root"])
-    if force and graph_root.exists():
-        pass
     graph_root.mkdir(parents=True, exist_ok=True)
     created_items.append(str(graph_root))
 
@@ -128,7 +127,7 @@ def target_scaffold_result(runtime: dict[str, object], force: bool) -> tuple[dic
         "status": "pass",
         "target_root": str(runtime["target_root"]),
         "development_docs_root": str(runtime["development_docs_root"]),
-        "module_docs_root": str(runtime["docs_root"]),
+        "docs_root": str(runtime["docs_root"]),
         "graph_root": str(graph_root),
         "created_or_verified": created_items,
         "operations": operations,
@@ -171,7 +170,12 @@ def mother_doc_archive_result(active_root: Path, force: bool, archive_slug: str 
     active_root.rename(archive_dir)
     init_result, init_status = mother_doc_init_result(active_root, force=False)
     if init_status != 0:
-        return {"status": "fail", "archive_dir": str(archive_dir), "reason": "archive_created_but_reinit_failed", "reinit_result": init_result}, 1
+        return {
+            "status": "fail",
+            "archive_dir": str(archive_dir),
+            "reason": "archive_created_but_reinit_failed",
+            "reinit_result": init_result,
+        }, 1
     return {
         "status": "pass",
         "archived_root": str(archive_dir),
@@ -179,6 +183,7 @@ def mother_doc_archive_result(active_root: Path, force: bool, archive_slug: str 
         "archive_index": max_index + 1,
         "archive_slug": archive_dir.name.split("_", 1)[1],
     }, 0
+
 
 def workflow_contract_document(
     *,
@@ -223,10 +228,11 @@ def workflow_contract_document(
             "stage-command-contract",
             "stage-graph-contract",
             "template-index",
+            "mother-doc-mark-modified",
         ],
         "top_level_resident_docs": top_level_resident_docs,
         "stage_switch_protocol": PHASE_READ_POLICY["stage_switch_protocol"],
-        "target_runtime_contract": target_runtime_contract_document(
+        "target_runtime_contract": target_runtime_contract_payload(
             target_root=target_root,
             development_docs_root=development_docs_root,
             docs_root=docs_root,
@@ -284,6 +290,24 @@ def mother_doc_state_sync_result(
         {
             "root": str(root),
             "doc_refs": doc_refs,
+            "allowed_states": MOTHER_DOC_WORK_STATES,
+            "frontmatter_fields": MOTHER_DOC_FRONTMATTER_REQUIRED_FIELDS,
+        }
+    )
+    return result
+
+
+def mother_doc_mark_modified_result(
+    root: Path,
+    doc_refs: list[str],
+    repo_root: Path | None,
+    auto_from_git: bool,
+) -> dict:
+    result = mark_docs_modified(root, doc_refs, repo_root=repo_root, auto_from_git=auto_from_git)
+    result.update(
+        {
+            "root": str(root),
+            "repo_root": str(repo_root) if repo_root is not None else None,
             "allowed_states": MOTHER_DOC_WORK_STATES,
             "frontmatter_fields": MOTHER_DOC_FRONTMATTER_REQUIRED_FIELDS,
         }

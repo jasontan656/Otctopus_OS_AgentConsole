@@ -3,13 +3,17 @@ from __future__ import annotations
 import os
 import re
 from pathlib import Path
+from typing import TypedDict
 
 from runtime_context_support import is_indexed, repo_has_substantial_code
 
 
 def _resolve_repo_root() -> Path:
     script_path = Path(__file__).resolve()
-    repo_root = next((parent for parent in script_path.parents if parent.name == "Otctopus_OS_AgentConsole"), None)
+    repo_root = next(
+        (parent for parent in script_path.parents if parent.name == "Otctopus_OS_AgentConsole"),
+        None,
+    )
     if repo_root is None:
         raise RuntimeError("cannot resolve repo root from Workflow-OctopusOS-DevFlow script path")
     return repo_root
@@ -37,6 +41,75 @@ DEVELOPMENT_DOCS_DIRNAME = "Development_Docs"
 
 ARCHIVE_DIR_PATTERN = re.compile(r"^(\d{2})_.+")
 PACK_DIR_PATTERN = re.compile(r"^\d{2}_.+")
+
+
+class TargetRuntimeRecord(TypedDict):
+    target_root: Path
+    development_docs_root: Path
+    module_dir: str | None
+    docs_root: Path
+    docs_root_source: str
+    codebase_root: Path
+    graph_runtime_root: Path
+    mother_doc_root: Path
+    mother_doc_index: Path
+    construction_plan_root: Path
+    construction_plan_index: Path
+    acceptance_root: Path
+    acceptance_matrix_path: Path
+    acceptance_report_path: Path
+    project_agents_path: Path | None
+    root_agents_path: Path
+    workspace_root: Path
+    project_structure_skill_path: Path
+    mother_doc_exists: bool
+    mother_doc_index_exists: bool
+    latest_archived_iteration: Path | None
+    construction_plan_exists: bool
+    pack_registry_exists: bool
+    numbered_pack_dirs: list[Path]
+    acceptance_exists: bool
+    graph_registry_exists: bool
+    graph_indexed_for_codebase: bool
+    substantial_codebase: bool
+    missing_prerequisites: list[str]
+    ready_for_service: bool
+
+
+class TargetRuntimeContractPayload(TypedDict):
+    status: str
+    target_root: str
+    development_docs_root: str
+    module_dir: str | None
+    docs_root: str
+    docs_root_source: str
+    docs_root_resolution_rule: str
+    module_dir_role: str
+    project_structure_skill_path: str
+    workspace_root: str
+    root_agents_path: str
+    project_agents_path: str | None
+    codebase_root: str
+    graph_runtime_root: str
+    mother_doc_root: str
+    mother_doc_index: str
+    mother_doc_exists: bool
+    latest_archived_iteration: str | None
+    construction_plan_root: str
+    construction_plan_index: str
+    construction_plan_exists: bool
+    pack_registry_exists: bool
+    numbered_pack_dirs: list[str]
+    active_task_pack_exists: bool
+    acceptance_root: str
+    acceptance_exists: bool
+    graph_registry_exists: bool
+    graph_indexed_for_codebase: bool
+    substantial_codebase: bool
+    missing_prerequisites: list[str]
+    ready_for_service: bool
+    reuse_actions: list[str]
+    first_actions: list[str]
 
 
 def _resolve_optional(path: str | Path | None) -> Path | None:
@@ -74,6 +147,23 @@ def numbered_pack_dirs(construction_plan_root: Path) -> list[Path]:
     )
 
 
+def _default_docs_root(
+    target_root: Path,
+    explicit_codebase_root: Path | None,
+) -> Path:
+    if explicit_codebase_root is not None:
+        return (explicit_codebase_root / DEVELOPMENT_DOCS_DIRNAME).resolve()
+    return (target_root / DEVELOPMENT_DOCS_DIRNAME).resolve()
+
+
+def _infer_module_dir(docs_root: Path, codebase_root: Path, explicit_module_dir: str | None) -> str | None:
+    if explicit_module_dir:
+        return explicit_module_dir
+    if docs_root.name == DEVELOPMENT_DOCS_DIRNAME:
+        return codebase_root.name
+    return docs_root.name
+
+
 def resolve_target_runtime(
     *,
     target_root: str | Path | None = None,
@@ -83,29 +173,34 @@ def resolve_target_runtime(
     codebase_root: str | Path | None = None,
     graph_runtime_root: str | Path | None = None,
     project_agents: str | Path | None = None,
-) -> dict[str, object]:
+) -> TargetRuntimeRecord:
     resolved_target_root = Path(target_root or WORKSPACE_ROOT).resolve()
-    inferred_module_dir = module_dir
+    explicit_codebase_root = _resolve_optional(codebase_root)
+    explicit_docs_root = _resolve_optional(docs_root)
     explicit_development_docs_root = _resolve_optional(development_docs_root)
-    if docs_root:
-        resolved_docs_root = Path(docs_root).resolve()
-        resolved_development_docs_root = resolved_docs_root.parent
-        if inferred_module_dir is None:
-            inferred_module_dir = resolved_docs_root.name
+
+    if explicit_docs_root is not None:
+        resolved_docs_root = explicit_docs_root
+    elif explicit_development_docs_root is not None:
+        resolved_docs_root = explicit_development_docs_root
     else:
-        resolved_development_docs_root = explicit_development_docs_root or (
-            resolved_target_root / DEVELOPMENT_DOCS_DIRNAME
-        ).resolve()
-        resolved_docs_root = (
-            (resolved_development_docs_root / inferred_module_dir).resolve()
-            if inferred_module_dir
-            else resolved_development_docs_root.resolve()
-        )
-    resolved_codebase_root = (
-        Path(codebase_root).resolve()
-        if codebase_root
-        else resolved_development_docs_root.parent.resolve()
+        resolved_docs_root = _default_docs_root(resolved_target_root, explicit_codebase_root)
+
+    resolved_development_docs_root = (
+        explicit_development_docs_root or resolved_docs_root
     )
+
+    if explicit_docs_root is not None and explicit_development_docs_root is not None:
+        docs_roots_match = explicit_docs_root == explicit_development_docs_root
+    else:
+        docs_roots_match = True
+
+    resolved_codebase_root = (
+        explicit_codebase_root
+        if explicit_codebase_root is not None
+        else resolved_docs_root.parent.resolve()
+    )
+    inferred_module_dir = _infer_module_dir(resolved_docs_root, resolved_codebase_root, module_dir)
     resolved_graph_runtime_root = (
         Path(graph_runtime_root).resolve()
         if graph_runtime_root
@@ -116,6 +211,7 @@ def resolve_target_runtime(
         resolved_mother_doc_root / "execution_atom_plan_validation_packs"
     )
     resolved_acceptance_root = resolved_mother_doc_root / "acceptance"
+
     resolved_project_agents = _resolve_optional(project_agents)
     if resolved_project_agents is None:
         implicit_agents = resolved_docs_root / "AGENTS.md"
@@ -135,28 +231,25 @@ def resolve_target_runtime(
     missing_prerequisites: list[str] = []
     if not resolved_target_root.exists():
         missing_prerequisites.append("target_root_missing")
-    if not resolved_development_docs_root.is_relative_to(resolved_target_root):
-        missing_prerequisites.append("development_docs_root_outside_target_root")
-    if not resolved_development_docs_root.exists():
-        missing_prerequisites.append("development_docs_root_missing")
-    if not inferred_module_dir:
-        missing_prerequisites.append("module_dir_missing")
-    if inferred_module_dir and resolved_docs_root.parent != resolved_development_docs_root:
-        missing_prerequisites.append("docs_root_outside_development_docs")
-    if inferred_module_dir and not resolved_docs_root.exists():
-        missing_prerequisites.append("module_docs_root_missing")
+    if not docs_roots_match:
+        missing_prerequisites.append("development_docs_root_must_equal_docs_root")
+    if not resolved_docs_root.is_relative_to(resolved_target_root):
+        missing_prerequisites.append("docs_root_outside_target_root")
+    if not resolved_docs_root.exists():
+        missing_prerequisites.append("docs_root_missing")
     if not resolved_codebase_root.is_relative_to(resolved_target_root):
         missing_prerequisites.append("codebase_root_outside_target_root")
+
     ready_for_service = not missing_prerequisites
 
     return {
         "target_root": resolved_target_root,
-        "development_docs_root": resolved_development_docs_root,
+        "development_docs_root": resolved_docs_root,
         "module_dir": inferred_module_dir,
         "docs_root": resolved_docs_root,
         "docs_root_source": (
             "explicit_docs_root"
-            if docs_root
+            if explicit_docs_root is not None
             else "explicit_development_docs_root"
             if explicit_development_docs_root is not None
             else "target_root_default_development_docs"
@@ -189,7 +282,7 @@ def resolve_target_runtime(
     }
 
 
-def target_runtime_contract_document(
+def target_runtime_contract_payload(
     *,
     target_root: str | Path | None = None,
     development_docs_root: str | Path | None = None,
@@ -198,7 +291,7 @@ def target_runtime_contract_document(
     codebase_root: str | Path | None = None,
     graph_runtime_root: str | Path | None = None,
     project_agents: str | Path | None = None,
-) -> dict[str, object]:
+) -> TargetRuntimeContractPayload:
     runtime = resolve_target_runtime(
         target_root=target_root,
         development_docs_root=development_docs_root,
@@ -211,6 +304,7 @@ def target_runtime_contract_document(
     numbered_pack_dirs_value = [str(path) for path in runtime["numbered_pack_dirs"]]
     latest_archive = runtime["latest_archived_iteration"]
     project_agents_path = runtime["project_agents_path"]
+
     reuse_actions: list[str] = []
     if runtime["mother_doc_exists"]:
         reuse_actions.append("reuse_existing_mother_doc_container")
@@ -236,12 +330,12 @@ def target_runtime_contract_document(
         "docs_root_source": runtime["docs_root_source"],
         "docs_root_resolution_rule": (
             "treat <target_root> as the repo/workspace boundary inside AI_Projects, "
-            "treat <development_docs_root> as the current object's own Development_Docs container, "
-            "treat <module_dir> as a workstream slug inside that container rather than a repeated object-name layer, "
-            "derive the governed module docs root from <development_docs_root>/<module_dir> or an explicit <docs_root>, "
-            "and default codebase_root to the parent of development_docs_root"
+            "treat <docs_root> as the current code object's single governed Development_Docs root, "
+            "resolve <development_docs_root> to the same filesystem root as <docs_root> rather than an extra parent container, "
+            "treat <module_dir> only as an optional logical topic identifier and never as a required filesystem segment, "
+            "and default codebase_root to the parent of docs_root"
         ),
-        "module_dir_role": "workstream_slug_inside_current_object_development_docs",
+        "module_dir_role": "optional_logical_topic_identifier_not_used_as_filesystem_segment",
         "project_structure_skill_path": str(runtime["project_structure_skill_path"]),
         "workspace_root": str(runtime["workspace_root"]),
         "root_agents_path": str(runtime["root_agents_path"]),
@@ -268,8 +362,11 @@ def target_runtime_contract_document(
         "reuse_actions": reuse_actions,
         "first_actions": [
             "treat <target_root> as the repo/workspace boundary under AI_Projects, not as the code repo itself",
-            "validate that the resolved development_docs_root and requested workstream subfolder already exist; otherwise refuse service",
+            "validate that the resolved docs_root already exists and sits inside target_root; otherwise refuse service",
             "inspect existing mother_doc, archived iterations, execution packs, AGENTS governance state, and graph state before deciding whether to init or reuse",
             "reuse existing task packs and graph context when they are already present; do not fork a second disconnected documentation line",
         ],
     }
+
+
+target_runtime_contract_document = target_runtime_contract_payload
