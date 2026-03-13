@@ -23,15 +23,22 @@ anchors:
 ## 1. 根目录职责
 - plan_root_role: replace_me
 - designer_plan_source: replace_me
+- plan_kind: replace_me
+- plan_state: replace_me
+- execution_eligible: replace_me
+- state_sync_eligible: replace_me
+- reusable_as_official_plan: false
 - pack_execution_rule: replace_me
 
 ## 2. pack 顺序
-| pack_dir | design_step_id | pack_goal | machine_entry |
-|---|---|---|---|
-| `replace_me` | `replace_me` | `replace_me` | `replace_me` |
+| pack_dir | design_step_id | plan_kind | pack_state | pack_goal | machine_entry |
+|---|---|---|---|---|---|
+| `replace_me` | `replace_me` | `replace_me` | `replace_me` | `replace_me` | `replace_me` |
 
 ## 3. implementation 读取规则
 - active_pack_only: replace_me
+- preview_skeleton_block: replace_me
+- official_plan_block: replace_me
 - source_mother_doc_refs_only: replace_me
 - pack_switch_rule: replace_me
 - writeback_boundary: replace_me

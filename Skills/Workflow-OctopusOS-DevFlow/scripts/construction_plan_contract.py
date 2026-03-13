@@ -8,10 +8,16 @@ import re
 # required_fields:
 #   - PACK_DIR_PATTERN
 #   - ROOT_REQUIRED_FILES
+#   - PLAN_KIND_VALUES
+#   - ROOT_PLAN_STATE_VALUES
+#   - PACK_PLAN_STATE_VALUES
 #   - PACK_MARKDOWN_FILES
 #   - PACK_MACHINE_FILES
+#   - ROOT_REGISTRY_REQUIRED_KEYS
+#   - ROOT_PACK_ENTRY_REQUIRED_KEYS
 #   - MANIFEST_REQUIRED_KEYS
 #   - MANIFEST_MACHINE_FILE_MAP
+#   - INNER_PHASE_TOP_LEVEL_REQUIRED_KEYS
 #   - INNER_PHASE_REQUIRED_KEYS
 # optional_fields: []
 
@@ -19,12 +25,43 @@ PACK_DIR_PATTERN = re.compile(r"^\d{2}_.+")
 PACK_ID_PATTERN = re.compile(r"^PACK-\d{2}$")
 INNER_PHASE_PATTERN = re.compile(r"^PHASE-\d{2}$")
 ROOT_REQUIRED_FILES = ["00_index.md", "pack_registry.yaml"]
+PLAN_KIND_VALUES = ["official_plan", "preview_skeleton"]
+ROOT_PLAN_STATE_VALUES = ["planned_unused", "in_execution", "implemented", "accepted", "retired", "preview_only"]
+PACK_PLAN_STATE_VALUES = ["planned_unused", "in_execution", "implemented", "accepted", "retired", "preview_only"]
 PACK_MARKDOWN_FILES = ["00_index.md", "01_scope_and_intent.md", "02_inner_dev_phases.md", "03_validation_and_writeback.md"]
 PACK_MACHINE_FILES = ["pack_manifest.yaml", "inner_phase_plan.json", "phase_status.jsonl", "evidence_registry.json"]
 GUIDANCE_MARKERS = ["replace_me_fill_rule:", "Remove this guidance block after drafting."]
+ROOT_REGISTRY_REQUIRED_KEYS = {
+    "plan_kind",
+    "plan_state",
+    "execution_eligible",
+    "state_sync_eligible",
+    "reusable_as_official_plan",
+    "design_plan_path",
+    "design_step_ids",
+    "packs",
+}
+ROOT_PACK_ENTRY_REQUIRED_KEYS = {
+    "pack_id",
+    "design_step_id",
+    "pack_dir",
+    "plan_kind",
+    "pack_state",
+    "execution_eligible",
+    "state_sync_eligible",
+    "reusable_as_official_plan",
+    "machine_manifest",
+    "progress_ledger",
+    "evidence_registry",
+}
 MANIFEST_REQUIRED_KEYS = {
     "pack_id",
     "design_step_id",
+    "plan_kind",
+    "pack_state",
+    "execution_eligible",
+    "state_sync_eligible",
+    "reusable_as_official_plan",
     "pack_goal",
     "design_plan_refs",
     "source_mother_doc_refs",
@@ -38,6 +75,14 @@ MANIFEST_MACHINE_FILE_MAP = {
     "inner_phase_plan": "inner_phase_plan.json",
     "phase_status_ledger": "phase_status.jsonl",
     "evidence_registry": "evidence_registry.json",
+}
+INNER_PHASE_TOP_LEVEL_REQUIRED_KEYS = {
+    "pack_id",
+    "design_step_id",
+    "plan_kind",
+    "pack_state",
+    "execution_eligible",
+    "inner_phases",
 }
 INNER_PHASE_REQUIRED_KEYS = {
     "inner_phase_id",

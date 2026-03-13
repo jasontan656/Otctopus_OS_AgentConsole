@@ -17,8 +17,6 @@ from stage_contract_support import (
     stage_graph_contract_payload,
 )
 from target_runtime_support import TargetRuntimeRecord, resolve_target_runtime, target_runtime_contract_payload
-
-
 def print_document(document: dict[str, object], as_json: bool) -> int:
     if as_json:
         print(json.dumps(document, indent=2))
@@ -26,8 +24,6 @@ def print_document(document: dict[str, object], as_json: bool) -> int:
         for key, value in document.items():
             print(f"{key}: {value}")
     return 0
-
-
 def cmd_workflow_contract(args: argparse.Namespace) -> int:
     return print_document(
         workflow_contract_document(
@@ -41,8 +37,6 @@ def cmd_workflow_contract(args: argparse.Namespace) -> int:
         ),
         args.json,
     )
-
-
 def cmd_target_runtime_contract(args: argparse.Namespace) -> int:
     document = target_runtime_contract_payload(
         target_root=args.target_root,
@@ -55,8 +49,6 @@ def cmd_target_runtime_contract(args: argparse.Namespace) -> int:
     )
     print_document(document, args.json)
     return 0 if document["status"] == "pass" else 1
-
-
 def _resolve_runtime(args: argparse.Namespace) -> TargetRuntimeRecord:
     return resolve_target_runtime(
         target_root=args.target_root,
@@ -67,8 +59,6 @@ def _resolve_runtime(args: argparse.Namespace) -> TargetRuntimeRecord:
         graph_runtime_root=args.graph_runtime_root,
         project_agents=args.project_agents,
     )
-
-
 def _emit_runtime_not_ready(runtime: TargetRuntimeRecord, as_json: bool) -> int:
     document = {
         "status": "fail",
@@ -81,8 +71,6 @@ def _emit_runtime_not_ready(runtime: TargetRuntimeRecord, as_json: bool) -> int:
     }
     print_document(document, as_json)
     return 1
-
-
 def cmd_stage_checklist(args: argparse.Namespace) -> int:
     runtime = _resolve_runtime(args)
     if not runtime["ready_for_service"]:
@@ -110,8 +98,6 @@ def cmd_stage_checklist(args: argparse.Namespace) -> int:
         },
     }
     return print_document(document, args.json)
-
-
 def _cmd_stage_contract(args: argparse.Namespace, kind: str) -> int:
     runtime = _resolve_runtime(args)
     if not runtime["ready_for_service"]:
@@ -136,8 +122,6 @@ def _cmd_stage_contract(args: argparse.Namespace, kind: str) -> int:
         ),
     }
     return print_document(factories[kind](), args.json)
-
-
 def cmd_graph_preflight(args: argparse.Namespace) -> int:
     runtime = _resolve_runtime(args)
     if not runtime["ready_for_service"] and args.repo is None:
@@ -146,8 +130,6 @@ def cmd_graph_preflight(args: argparse.Namespace) -> int:
     graph_runtime_root = Path(args.graph_runtime_root or runtime["graph_runtime_root"]).resolve()
     document = graph_preflight_summary(Path(repo).resolve(), args.allow_missing_index, graph_runtime_root)
     return print_document(document, args.json)
-
-
 def cmd_graph_postflight(args: argparse.Namespace) -> int:
     runtime = _resolve_runtime(args)
     if not runtime["ready_for_service"] and args.repo is None:
@@ -156,22 +138,16 @@ def cmd_graph_postflight(args: argparse.Namespace) -> int:
     graph_runtime_root = Path(args.graph_runtime_root or runtime["graph_runtime_root"]).resolve()
     document = graph_postflight_summary(Path(repo).resolve(), graph_runtime_root)
     return print_document(document, args.json)
-
-
 def cmd_target_scaffold(args: argparse.Namespace) -> int:
     runtime = _resolve_runtime(args)
     document, status_code = target_scaffold_result(runtime, args.force)
     print_document(document, args.json)
     return status_code
-
-
 def cmd_template_index(args: argparse.Namespace) -> int:
     from cli_support import TEMPLATES
 
     document = {name: str(path) for name, path in TEMPLATES.items()}
     return print_document(document, args.json)
-
-
 def cmd_mother_doc_init(args: argparse.Namespace) -> int:
     runtime = _resolve_runtime(args)
     if not runtime["ready_for_service"] and args.target is None:
@@ -180,8 +156,6 @@ def cmd_mother_doc_init(args: argparse.Namespace) -> int:
     document, status_code = mother_doc_init_result(target, args.force)
     print_document(document, args.json)
     return status_code
-
-
 def cmd_mother_doc_archive(args: argparse.Namespace) -> int:
     runtime = _resolve_runtime(args)
     if not runtime["ready_for_service"] and args.target is None:
@@ -190,29 +164,31 @@ def cmd_mother_doc_archive(args: argparse.Namespace) -> int:
     document, status_code = mother_doc_archive_result(target, args.force, args.archive_slug)
     print_document(document, args.json)
     return status_code
-
-
 def cmd_construction_plan_init(args: argparse.Namespace) -> int:
     runtime = _resolve_runtime(args)
     if not runtime["ready_for_service"] and args.target is None and args.design_plan is None:
         return _emit_runtime_not_ready(runtime, args.json)
     target = Path(args.target or runtime["construction_plan_root"]).resolve()
     design_plan_path = Path(args.design_plan or Path(runtime["mother_doc_root"]) / "08_dev_execution_plan.md").resolve()
-    document, status_code = construction_plan_init_result(target, design_plan_path, args.force)
+    document, status_code = construction_plan_init_result(
+        target,
+        design_plan_path,
+        args.force,
+        args.plan_kind,
+    )
     print_document(document, args.json)
     return status_code
-
-
 def cmd_construction_plan_lint(args: argparse.Namespace) -> int:
     runtime = _resolve_runtime(args)
     if not runtime["ready_for_service"] and args.path is None:
         return _emit_runtime_not_ready(runtime, args.json)
     target = args.path or str(runtime["construction_plan_root"])
-    document = construction_plan_lint_summary(Path(target).resolve())
+    document = construction_plan_lint_summary(
+        Path(target).resolve(),
+        require_execution_eligible=args.require_execution_eligible,
+    )
     print_document(document, args.json)
     return 0 if document["status"] == "pass" else 1
-
-
 def cmd_mother_doc_lint(args: argparse.Namespace) -> int:
     runtime = _resolve_runtime(args)
     if not runtime["ready_for_service"] and args.path is None and args.mother_doc is None:
@@ -221,8 +197,6 @@ def cmd_mother_doc_lint(args: argparse.Namespace) -> int:
     document = mother_doc_lint_summary(Path(target).resolve())
     print_document(document, args.json)
     return 0 if document["status"] == "pass" else 1
-
-
 def cmd_mother_doc_state_sync(args: argparse.Namespace) -> int:
     runtime = _resolve_runtime(args)
     if not runtime["ready_for_service"] and args.path is None:
@@ -237,8 +211,6 @@ def cmd_mother_doc_state_sync(args: argparse.Namespace) -> int:
     )
     print_document(document, args.json)
     return 0 if document["status"] == "pass" else 1
-
-
 def cmd_mother_doc_mark_modified(args: argparse.Namespace) -> int:
     runtime = _resolve_runtime(args)
     if not runtime["ready_for_service"] and args.path is None:
@@ -253,8 +225,6 @@ def cmd_mother_doc_mark_modified(args: argparse.Namespace) -> int:
     )
     print_document(document, args.json)
     return 0 if document["status"] == "pass" else 1
-
-
 def cmd_acceptance_lint(args: argparse.Namespace) -> int:
     runtime = _resolve_runtime(args)
     if not runtime["ready_for_service"] and args.matrix_path is None and args.report_path is None:
@@ -267,8 +237,6 @@ def cmd_acceptance_lint(args: argparse.Namespace) -> int:
     )
     print_document(document, args.json)
     return 0 if document["status"] == "pass" else 1
-
-
 def add_runtime_scope_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--target-root", default=None)
     parser.add_argument("--development-docs-root", default=None)
@@ -277,8 +245,6 @@ def add_runtime_scope_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--codebase-root", default=None)
     parser.add_argument("--graph-runtime-root", default=None)
     parser.add_argument("--project-agents", default=None)
-
-
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -359,6 +325,11 @@ def build_parser() -> argparse.ArgumentParser:
     add_runtime_scope_args(construction_plan_init)
     construction_plan_init.add_argument("--target", default=None)
     construction_plan_init.add_argument("--design-plan", default=None)
+    construction_plan_init.add_argument(
+        "--plan-kind",
+        default="official_plan",
+        choices=["official_plan", "preview_skeleton"],
+    )
     construction_plan_init.add_argument("--force", action="store_true")
     construction_plan_init.add_argument("--json", action="store_true")
     construction_plan_init.set_defaults(func=cmd_construction_plan_init)
@@ -366,6 +337,7 @@ def build_parser() -> argparse.ArgumentParser:
     construction_plan_lint = subparsers.add_parser("construction-plan-lint")
     add_runtime_scope_args(construction_plan_lint)
     construction_plan_lint.add_argument("--path", default=None)
+    construction_plan_lint.add_argument("--require-execution-eligible", action="store_true")
     construction_plan_lint.add_argument("--json", action="store_true")
     construction_plan_lint.set_defaults(func=cmd_construction_plan_lint)
 

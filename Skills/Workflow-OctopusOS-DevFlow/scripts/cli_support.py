@@ -5,6 +5,7 @@ import shutil
 from pathlib import Path
 
 from acceptance_contract_support import acceptance_lint_result
+from construction_plan_rendering import PREVIEW_PLAN_KIND
 from construction_plan_support import construction_plan_init_result, construction_plan_lint_summary
 from devflow_agents_support import scaffold_and_collect_devflow_agents
 from mother_doc_contract import (
@@ -113,6 +114,7 @@ def target_scaffold_result(runtime: dict[str, object], force: bool) -> tuple[dic
             construction_plan_root,
             design_plan_path,
             force=False,
+            plan_kind=PREVIEW_PLAN_KIND,
         )
         if construction_status != 0:
             return {

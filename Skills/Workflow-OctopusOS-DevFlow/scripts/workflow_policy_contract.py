@@ -16,6 +16,9 @@ from pathlib import Path
 #   - BLOCKED_STATES
 #   - DESIGN_PHASE_PLAN_SECTIONS
 #   - EXECUTION_ATOM_PACK_ROOT_FILES
+#   - EXECUTION_ATOM_PLAN_KIND_VALUES
+#   - EXECUTION_ATOM_ROOT_STATE_VALUES
+#   - EXECUTION_ATOM_PACK_STATE_VALUES
 #   - EXECUTION_ATOM_PACK_MARKDOWN_FILES
 #   - EXECUTION_ATOM_PACK_MACHINE_FILES
 #   - EXECUTION_ATOM_PHASE_FIELDS
@@ -154,6 +157,9 @@ DESIGN_PHASE_PLAN_SECTIONS = [
 ]
 
 EXECUTION_ATOM_PACK_ROOT_FILES = ["00_index.md", "pack_registry.yaml"]
+EXECUTION_ATOM_PLAN_KIND_VALUES = ["official_plan", "preview_skeleton"]
+EXECUTION_ATOM_ROOT_STATE_VALUES = ["planned_unused", "in_execution", "implemented", "accepted", "retired", "preview_only"]
+EXECUTION_ATOM_PACK_STATE_VALUES = ["planned_unused", "in_execution", "implemented", "accepted", "retired", "preview_only"]
 
 EXECUTION_ATOM_PACK_MARKDOWN_FILES = [
     "00_index.md",
@@ -177,6 +183,13 @@ EXECUTION_ATOM_PHASE_FIELDS = [
     "evidence_writeback_slice",
     "phase_exit_signal",
 ]
+
+EXECUTION_ATOM_PLAN_LIFECYCLE_RULES = {
+    "official_plan_prerequisite": "mother_doc must already exist, mother-doc-lint must pass, and 08_dev_execution_plan.md must expose concrete design steps",
+    "preview_skeleton_usage": "preview_skeleton is display-only scaffolding and cannot be used for implementation, state sync, or active pack selection",
+    "fresh_plan_rule": "official construction plans start at planned_unused and become in_execution only when implementation consumes them",
+    "non_reuse_rule": "accepted or retired official plans cannot be recycled as the fresh input of a new construction round; generate a new official plan instead",
+}
 
 ACCEPTANCE_FIELDS = [
     "plan_step_id",

@@ -1,6 +1,9 @@
 {
   "pack_id": "replace_me",
   "design_step_id": "replace_me",
+  "plan_kind": "replace_me",
+  "pack_state": "replace_me",
+  "execution_eligible": false,
   "inner_phases": [
     {
       "inner_phase_id": "replace_me",

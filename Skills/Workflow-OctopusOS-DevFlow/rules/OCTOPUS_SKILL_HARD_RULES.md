@@ -35,7 +35,7 @@ anchors:
 5.2.0 仅完成项目结构初始化时，`Development_Docs/` 本身允许为空；但一旦进入本技能的开发闭环，`docs_root` 必须已经是当前代码对象真实存在的开发文档根，而不是再重复下一层对象目录。
 5.2.1 `target_root` 还必须位于 `AI_Projects` workspace 内；否则 `$Meta-RootFile-Manager` 无法收治模块 `AGENTS.md`，本技能必须拒绝服务。
 5.3 若目标项目已经固定开发文档容器，必须按 `Dev-OctopusOS-Constitution-ProjectStructure` 的判定使用该容器；不得自行改投到另一个 `docs/` 或 sibling 目录。
-5.4 若目标模块文件夹中已经存在 `execution_atom_plan_validation_packs/`、`pack_registry.yaml`、编号归档 `NN_slug` 或既有 graph，必须先复用它们；不得为同一目标另外创建脱节的母文档、pack 树或图谱脉络。
+5.4 若目标模块文件夹中已经存在 `execution_atom_plan_validation_packs/`、`pack_registry.yaml`、编号归档 `NN_slug` 或既有 graph，必须先判定它们的生命周期与合法性；不得把 `preview_skeleton` 或 `accepted/retired` 的旧 official plan 当成当前轮 construction input 复用，也不得为同一目标另外创建脱节的母文档、pack 树或图谱脉络。
 5.5 目标模块的 `AGENTS.md` 必须使用本技能模版创建，并在创建后立即通过 `$Meta-RootFile-Manager collect` 收治；不得在未受管状态下长期存在。
 6. 阶段切换时只允许保留顶层常驻文档；上一阶段的 checklist、阶段文档、临时 focus、模板填写上下文必须显式丢弃，除非当前阶段合同明确要求重新读取。
 7. `mother_doc` 阶段必须先把需求固化成目录化项目说明与 `requirement_atom`；没有完整说明书，不得进入 `construction_plan`。
@@ -82,6 +82,9 @@ anchors:
 12. `construction_plan` 阶段文档边界、命令与 graph 角色以 `stage-doc-contract --stage construction_plan`、`stage-command-contract --stage construction_plan`、`stage-graph-contract --stage construction_plan` 为准；不得把 implementation 落盘证据或 acceptance 判决文档混进本阶段。
 13. `construction_plan` 阶段必须单独产出 `<docs_root>/mother_doc/execution_atom_plan_validation_packs/`；术语使用 `Execution_atom_plan&validation_packs`，文件系统 slug 固定为 `execution_atom_plan_validation_packs`。
 14. construction packs 的 root/file schema、numbered packs、machine files 与 inner phase 结构必须满足 `construction-plan-lint` 与 `workflow-contract`；不得自造平替布局。
+14.0 `construction_plan` 只能从已通过 `mother-doc-lint` 的 mother doc 正式生成；若只是想看骨架形态，只能生成 `preview_skeleton`，并且它必须显式带 `execution_eligible=false`、`state_sync_eligible=false`、`plan_state=preview_only`。
+14.0.1 official plan 与 preview skeleton 必须显式区分；未带 `plan_kind` / `plan_state` 生命周期字段的 pack 树视为非法 construction plan。
+14.0.2 official plan 初始状态只能是 `planned_unused`；进入 implementation 后才允许切到 `in_execution`，并且 `accepted/retired` 后不得回到新一轮 construction input。
 14.1 任何文档从 `modified` 迁移到 `planned` 前，必须先被至少一个真实 `NN_slug` pack 吸收，并在文档侧记录 `doc_pack_refs`。
 14.2 每个 pack 必须显式声明 `source_mother_doc_refs`；implementation 只允许回读这些 source refs，不得通读整个 mother_doc 树。
 17. `implementation` 阶段的读物边界、禁读 graph 规则与阶段切换丢弃项以 `stage-doc-contract --stage implementation` 与 `stage-graph-contract --stage implementation` 为准；不得把未激活 pack 或 acceptance 判决文档带进实现 focus。

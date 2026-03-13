@@ -59,7 +59,7 @@ anchors:
   - 必要时确认或覆盖 `docs_root`
   - 直接读取当前 `<docs_root>/mother_doc/00_index.md`
   - 若已存在编号归档的 `docs/NN_slug`，先读取最新一轮归档内容再开始本轮回填
-  - 若已存在 `execution_atom_plan_validation_packs/`，先读取并沿用当前 pack 树
+  - 若已存在 `execution_atom_plan_validation_packs/`，先判定它是 `official_plan` 还是 `preview_skeleton`，以及是否仍处于当前轮合法生命周期
   - 执行 `mother-doc-lint`
   - 若存在图谱，读取 graph context 以校准当前代码现实
   - 若本轮会修改 mother_doc，先由模型列出应改动的原子文档，再执行 `mother-doc-mark-modified --auto-from-git`
@@ -114,7 +114,10 @@ anchors:
 - 这个阶段的目标是“生成 AI 自用的 `Execution_atom_plan&validation_packs`”，显式区别于 mother doc 中的设计规划。
 - 只允许把当前 `doc_work_state=modified` 的 mother_doc 原子文档吸收到 pack 中；未吸收文档不得批量改成 `planned`。
 - 每个 pack 都必须带 `source_mother_doc_refs`，显式声明 implementation 期间允许回读的 mother_doc 原子文档。
-- 若 pack 树已经存在，目标是修订和延续当前 pack 体系，而不是重新平行生成第二套 pack。
+- 若 pack 树已经存在，必须先判定其生命周期：
+  - `preview_skeleton`：只能展示结构，不能进入 implementation，正式 construction 时应替换
+  - `official_plan + planned_unused|in_execution`：仅在当前 design-step 覆盖仍成立时才可继续作为当前轮 plan root
+  - `official_plan + accepted|retired`：不得回到新一轮 construction input，必须生成新 official plan
 - 若已有图谱，补入现有模块、依赖、影响面、可复用边界。
 - 本阶段的读物边界、命令、pack schema 和 graph 角色以 stage-specific CLI contracts、`workflow-contract` 与 `construction-plan-lint` 为准。
 

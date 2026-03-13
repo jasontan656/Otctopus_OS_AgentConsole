@@ -145,8 +145,9 @@ def stage_command_contract_payload(
                 f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py mother-doc-mark-modified --path {mother_doc_root} --doc-ref <mother_doc_doc> --auto-from-git --json",
             ],
             "required_reuse_actions": [
-                "reuse the existing execution_atom_plan_validation_packs root when it is already present",
+                "classify any existing execution_atom_plan_validation_packs root before touching it: preview_skeleton must be replaced, accepted/retired plans must not be reused as fresh construction input",
                 "do not create a second disconnected task-pack tree under a different docs container for the same target",
+                "only an official_plan with plan_state=planned_unused or in_execution and current design-step coverage may remain as the active plan root",
                 "only move a mother_doc atom from modified to planned after an actual pack has absorbed it and the doc records that pack ref",
             ],
         },
@@ -155,13 +156,15 @@ def stage_command_contract_payload(
                 target_runtime_cmd,
                 checklist_cmd,
             ],
-            "gate_commands": [],
+            "gate_commands": [
+                f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py construction-plan-lint --path {construction_plan_root} --require-execution-eligible --json",
+            ],
             "optional_commands": [
                 f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py mother-doc-state-sync --path {mother_doc_root} --doc-ref <mother_doc_doc> --from-state planned --to-state developed --pack-ref <NN_slug> --json",
                 f"./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py mother-doc-mark-modified --path {mother_doc_root} --doc-ref <design_doc> --auto-from-git --json",
             ],
             "required_reuse_actions": [
-                "read only the active pack in the current execution pack tree; do not fork implementation onto a new disconnected pack set",
+                "read only the active official pack in the current execution pack tree; preview skeletons and accepted/retired plans cannot enter implementation",
                 "read only the source_mother_doc_refs declared by the active pack plus ref docs when truly needed",
             ],
         },

@@ -22,6 +22,11 @@ anchors:
 ## 1. Pack Identity
 - pack_id: replace_me
 - design_step_id: replace_me
+- plan_kind: replace_me
+- pack_state: replace_me
+- execution_eligible: replace_me
+- state_sync_eligible: replace_me
+- reusable_as_official_plan: false
 - pack_goal: replace_me
 - current_progress_state: replace_me
 

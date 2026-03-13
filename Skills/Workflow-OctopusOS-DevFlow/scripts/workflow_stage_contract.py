@@ -68,7 +68,7 @@ STAGES = {
         ],
     },
     "construction_plan": {
-        "objective": "Read the completed mother doc design plan plus current modified docs, then write separate Execution_atom_plan&validation_packs for the AI to use during implementation and stage acceptance without severing the mother doc requirement source.",
+        "objective": "Read the completed mother doc design plan plus current modified docs, then generate an official Execution_atom_plan&validation_packs tree for implementation and stage acceptance. Preview skeletons are allowed only as non-executable display scaffolds and must never be mistaken for official plans.",
         "required_outputs": [
             "<docs_root>/mother_doc/execution_atom_plan_validation_packs/ directory",
             "00_index.md plus numbered pack directories",
@@ -91,11 +91,14 @@ STAGES = {
             "reload the construction_plan stage checklist before reading execution packs",
             "read graph context before pack decomposition when the codebase already exists",
             "decompose only the current modified mother_doc slice into new or updated packs; do not batch-flip unrelated docs to planned",
-            "reuse existing execution_atom_plan_validation_packs when present; run target-scaffold only when the pack root is missing",
+            "classify any existing execution_atom_plan_validation_packs root before reuse: preview_skeleton must be replaced, accepted/retired plans must not be reused as fresh construction input",
+            "only an official_plan with plan_state=planned_unused or in_execution and current design-step coverage may remain as the current round plan root",
+            "run target-scaffold only when the pack root is missing; target-scaffold may create preview skeletons but not official plans",
             "run construction-plan-lint before leaving the stage",
         ],
         "stage_exit_gate": [
             "construction plan root is separate from mother doc design plan",
+            "construction plan root is explicitly classified as official_plan or preview_skeleton",
             "each numbered pack directory contains its own markdown anchors and machine files",
             "each numbered pack declares source_mother_doc_refs for implementation readback",
             "each pack defines inner development phases, validation slices, evidence writeback, and stage acceptance",
@@ -127,7 +130,8 @@ STAGES = {
             "run target-runtime-contract before reading the active pack so implementation stays attached to the current task lineage",
             "reload the implementation checklist and discard construction_plan decomposition notes that are not part of the active pack",
             "do_not_pull_graph_context_into_implementation_focus; read concrete code and tests directly",
-            "read only the active pack plus the source_mother_doc_refs declared by that pack; do not sweep unrelated modified docs into implementation focus",
+            "read only an execution-eligible official active pack plus the source_mother_doc_refs declared by that pack; do not sweep unrelated modified docs into implementation focus",
+            "preview_skeleton or accepted/retired plan roots must be rejected before implementation starts",
             "run phase validation before moving to the next inner phase or pack",
         ],
         "stage_exit_gate": [

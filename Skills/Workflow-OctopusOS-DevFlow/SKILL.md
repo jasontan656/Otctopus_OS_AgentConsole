@@ -33,7 +33,7 @@ metadata:
 - 仅在项目结构初始化阶段，`Development_Docs/` 容器允许为空；一旦本技能介入具体开发闭环，`docs_root` 就必须已经是可用的真实目录。
 - 开发文档的落盘容器必须先由 `Dev-OctopusOS-Constitution-ProjectStructure` 判定；若目标项目尚未固定其他特殊容器，则默认容器是 `<codebase_root>/Development_Docs/`，并且该目录本身就是当前 `docs_root`，不再额外要求 `<module_dir>` 物理子目录。
 - 若目标模块下已经存在编号归档的 `NN_slug`，新一轮 `mother_doc` 不是空白起手；必须先从最近一轮归档与当前 code graph/context 抽取仍然有效的设计与增量，再开始回填。
-- 若目标文件夹中已经存在 `execution_atom_plan_validation_packs/`、`pack_registry.yaml` 或既有 graph，必须先复用当前任务包与图谱上下文；禁止在同一目标上另起一条脱节的文档线。
+- 若目标文件夹中已经存在 `execution_atom_plan_validation_packs/`、`pack_registry.yaml` 或既有 graph，必须先判定现有 pack 树是否合法：`preview_skeleton` 只能展示不能执行，`accepted/retired` 的旧 official plan 不能复用为新一轮 construction plan；只有当前轮仍合法的 official plan 才能继续作为执行输入。
 - 目标模块的外部 `AGENTS.md` 必须由本技能模版创建，并由 `$Meta-RootFile-Manager` 收治；创建后必须立即执行 `collect`，使外部 `AGENTS.md` 与技能内治理映射形成闭环。
 - 详细规则必须从下方入口文档读取，不得只凭本门面自行发挥。
 - 默认路径解析：
@@ -114,7 +114,7 @@ metadata:
 - 顶层常驻文档只保留 `硬规则 + workflow contract + root AGENTS + project AGENTS + project-structure skill（当 docs_root 未固定时）`。
 - `Meta-code-graph-base` 只按 `stage-graph-contract` 读取或更新，不属于顶层常驻文档。
 - `$Meta-RootFile-Manager` 负责把目标模块 `AGENTS.md` 收治进治理映射模版；本技能必须通过它完成 `AGENTS` 闭环，而不是自行绕开治理链。
-- 进入任何阶段前，必须先做目标位置预检，确认当前任务是“复用已有 mother_doc / task pack / graph”还是“创建新骨架”。
+- 进入任何阶段前，必须先做目标位置预检，确认当前任务是“延续合法 official plan / 生成新 official plan / 仅创建 preview skeleton / 复用 graph 上下文”中的哪一种。
 - 若模块容器已具备使用条件但缺少 `AGENTS.md`、mother doc、task packs 或 graph，必须先执行 `target-scaffold` 一次性补齐骨架。
 - 当 mother_doc 已发生真实修改时，优先由模型显式选择应回到 `modified` 的原子文档，再用 `mother-doc-mark-modified --auto-from-git` 做 Git diff / impact 兜底检查。
 - 若当前目标已经存在任务包、归档轮次或图谱，必须沿用当前脉络继续开发，不得另起一套脱节的说明书。

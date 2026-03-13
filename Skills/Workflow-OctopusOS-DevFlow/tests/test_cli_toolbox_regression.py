@@ -8,6 +8,7 @@ import tempfile
 from pathlib import Path
 
 import pytest
+import yaml
 
 
 SKILL_ROOT = Path(__file__).resolve().parents[1]
@@ -202,6 +203,130 @@ class TestCliToolboxRegression:
                 / "execution_atom_plan_validation_packs"
                 / "00_index.md"
             ).exists()
+            preview_registry = (
+                Path(layout["docs_root"])
+                / "mother_doc"
+                / "execution_atom_plan_validation_packs"
+                / "pack_registry.yaml"
+            ).read_text(encoding="utf-8")
+            assert "plan_kind: preview_skeleton" in preview_registry
+
+    def test_official_construction_plan_requires_ready_mother_doc(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            mother_doc_root = Path(temp_dir) / "docs" / "mother_doc"
+            pack_root = mother_doc_root / "execution_atom_plan_validation_packs"
+            run_cli("mother-doc-init", "--target", str(mother_doc_root))
+            completed = run_cli_raw(
+                "construction-plan-init",
+                "--target",
+                str(pack_root),
+                "--design-plan",
+                str(mother_doc_root / "08_dev_execution_plan.md"),
+            )
+            assert completed.returncode != 0
+            payload = json.loads(completed.stdout)
+            assert payload["reason"] == "mother_doc_not_ready_for_construction_plan"
+
+    def test_preview_skeleton_is_not_execution_eligible(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            plan_root = Path(temp_dir) / "packs"
+            design_plan = Path(temp_dir) / "08_dev_execution_plan.md"
+            completed = run_cli_raw(
+                "construction-plan-init",
+                "--target",
+                str(plan_root),
+                "--design-plan",
+                str(design_plan),
+                "--plan-kind",
+                "preview_skeleton",
+            )
+            assert completed.returncode == 0
+            lint_completed = run_cli_raw(
+                "construction-plan-lint",
+                "--path",
+                str(plan_root),
+                "--require-execution-eligible",
+            )
+            assert lint_completed.returncode != 0
+            payload = json.loads(lint_completed.stdout)
+            assert "execution-eligible lint requires execution_eligible=true" in payload[
+                "execution_eligibility_violations"
+            ][0]
+
+    def test_construction_plan_lint_detects_design_step_coverage_drift(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            mother_doc_root = Path(temp_dir) / "docs" / "mother_doc"
+            pack_root = mother_doc_root / "execution_atom_plan_validation_packs"
+            run_cli("mother-doc-init", "--target", str(mother_doc_root))
+            fill_directory_placeholders(mother_doc_root)
+            design_plan = mother_doc_root / "08_dev_execution_plan.md"
+            design_plan.write_text(
+                "\n".join(
+                    [
+                        "---",
+                        "doc_work_state: modified",
+                        "doc_pack_refs: []",
+                        "doc_id: sample.dev_execution_plan",
+                        "doc_type: example_doc",
+                        "topic: 08 Design Phase Plan",
+                        "anchors: []",
+                        "---",
+                        "",
+                        "# 08 Design Phase Plan",
+                        "",
+                        "## 1. 阶段总览",
+                        "本节明确阶段断言、阶段测试与阶段验收。",
+                        "",
+                        "| stage_id | stage_goal | stage_assertions | stage_tests | stage_exit_evidence |",
+                        "|---|---|---|---|---|",
+                        "| `mother_doc` | `shape doc` | `doc passes lint` | `mother-doc-lint` | `lint pass` |",
+                        "| `construction_plan` | `write official packs` | `packs cover design steps` | `construction-plan-lint` | `lint pass` |",
+                        "| `implementation` | `consume official packs` | `code matches pack` | `tests` | `phase ledger` |",
+                        "| `acceptance` | `close delivery` | `evidence linked` | `acceptance-lint` | `report` |",
+                        "",
+                        "## 2. 设计阶段步骤",
+                        "| design_step_id | target_requirement_atoms | dependencies | implementation_actions | stage_assertions | stage_tests | stage_acceptance | live_delivery_witness | rollback_or_risk |",
+                        "|---|---|---|---|---|---|---|---|---|",
+                        "| `DESIGN-01` | `REQ-01` | none | action 1 | assert 1 | test 1 | accept 1 | witness 1 | risk 1 |",
+                        "| `DESIGN-02` | `REQ-02` | DESIGN-01 | action 2 | assert 2 | test 2 | accept 2 | witness 2 | risk 2 |",
+                        "",
+                        "## 3. 进入 construction_plan 的要求",
+                        "- construction_plan_must_separate_from_design_plan: yes",
+                        "- construction_plan_expected_focus: official plan only",
+                        "- construction_plan_pack_shape_expectation: numbered packs",
+                        "- construction_plan_evidence_backfill_expectation: later phase ledgers",
+                        "",
+                        "## 4. 上线可交付收口",
+                        "- delivery_path: local runtime",
+                        "- live_witness_expectations: real witness",
+                        "- remaining_risk_threshold: explicit only",
+                        "",
+                    ]
+                ),
+                encoding="utf-8",
+            )
+            completed = run_cli_raw(
+                "construction-plan-init",
+                "--target",
+                str(pack_root),
+                "--design-plan",
+                str(design_plan),
+                "--plan-kind",
+                "official_plan",
+            )
+            assert completed.returncode == 0
+            registry_path = pack_root / "pack_registry.yaml"
+            registry = yaml.safe_load(registry_path.read_text(encoding="utf-8"))
+            registry["design_step_ids"] = ["DESIGN-01"]
+            registry["packs"] = [registry["packs"][0]]
+            registry_path.write_text(yaml.safe_dump(registry, allow_unicode=True, sort_keys=False), encoding="utf-8")
+            lint_completed = run_cli_raw("construction-plan-lint", "--path", str(pack_root))
+            assert lint_completed.returncode != 0
+            payload = json.loads(lint_completed.stdout)
+            assert any(
+                "official plan missing design steps ['DESIGN-02']" in item
+                for item in payload["design_coverage_violations"]
+            )
 
     def test_mother_doc_lint_accepts_tree_first_structure(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
