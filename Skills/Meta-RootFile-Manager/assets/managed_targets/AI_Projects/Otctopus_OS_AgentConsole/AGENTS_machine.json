@@ -60,10 +60,7 @@
     "use the returned target contract JSON as the runtime rule source"
   ],
   "runtime_constraints": [
-    "stay within the concrete repo-local boundary defined by this payload",
-    "product/runtime paths must resolve from the product root; do not hardcode author-machine absolute paths or treat AI_Projects literals as the only valid install root",
-    "skill-local resources may resolve from current skill roots, but repo mirrors, codex runtime paths, result paths, and product workspaces must use root-first derivation",
-    "when <root>/.codex is absent, only Codex home lookup may fall back to explicit CODEX_HOME or an attached existing Codex installation; other governed product paths remain root-first"
+    "stay within the concrete repo-local boundary defined by this payload"
   ],
   "execution_modes": {
     "READ_EXEC": {
