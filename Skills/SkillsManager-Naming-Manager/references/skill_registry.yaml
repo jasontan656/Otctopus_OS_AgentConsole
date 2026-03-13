@@ -173,6 +173,13 @@ families:
         role_tag: "frontend-standards-showroom"
         status: "active"
         trigger_summary: "当进行前端开发，需要项目定制 Vue3 组件、UI 展厅与前端规范时使用。"
+      - canonical_id: "Dev-Telegram-Constitution"
+        display_name: "Dev-Telegram-Constitution"
+        prefix: "Dev"
+        family: "[DEV]"
+        role_tag: "telegram-interface-constitution"
+        status: "active"
+        trigger_summary: "当需要定义 Telegram 作为用户 interface 开发时的能力边界、最佳实践、流行依赖与技术栈基线时使用。"
   - family: "[Disabled]"
     description: "默认停用、仅在历史查看、迁移或重启用场景下使用的技能。"
     members:

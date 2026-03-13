@@ -1,0 +1,16 @@
+catalog_version: v1
+toolbox_name: none
+maintain_rules:
+  naming: "no_cli_yet"
+  docs_sync_required: true
+  required_docs:
+    - references/tooling/Cli_Toolbox_USAGE.md
+    - references/tooling/Cli_Toolbox_DEVELOPMENT.md
+    - references/tooling/development/20_CATEGORY_INDEX.md
+profile_support:
+  - basic
+modules:
+  - module_id: "static_docs_only"
+    status: "active"
+    entrypoint: "none"
+    summary: "Current skill is document-only and exposes no local toolbox."
