@@ -22,6 +22,7 @@ anchors:
 - For `AGENTS.md`, `collect` must read external `Part A` and rebuild `AGENTS_human.md`.
 - For every non-`AGENTS.md` channel, `collect` must overwrite the internal mapped copy with the exact external file content.
 - `collect` must sync changed managed assets into the installed codex copy when the mirror asset changed.
+- When the external governed file lives under `Codex_Skill_Runtime/<skill>/...`, `collect` must keep the managed asset inside the same runtime root and skip installed-skill sync.
 
 ## Boundary
 - `collect` treats the external file as the truth source for that turn.

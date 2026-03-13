@@ -25,6 +25,8 @@ anchors:
   - the channel-specific internal managed asset
 - For `AGENTS.md`, scaffold creates the human/machine pair.
 - For non-`AGENTS.md`, scaffold creates the internal mapped copy with the same initial content as the external file.
+- When the external target is under `Codex_Skill_Runtime/<skill>/...`, scaffold must place the internal managed asset under that runtime root as well, instead of writing repo-tracked `assets/managed_targets/...`.
+- Runtime-local scaffold targets must remain ephemeral: they must not be registered back into `rules/scan_rules.json` and must not sync into the installed skill copy.
 
 ## Boundary
 - `scaffold` is only initialization.

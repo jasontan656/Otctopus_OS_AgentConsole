@@ -12,6 +12,7 @@ from rootfile_runtime import (
     extract_external_agents_part_a,
     extract_internal_part_a,
     find_channel_by_file_kind,
+    derive_managed_dir,
     lint_external_entry,
     lint_managed_entry,
     load_machine_payload,
@@ -27,7 +28,6 @@ from rootfile_runtime import (
     write_stage_report,
     write_text,
 )
-
 
 def add_common_report_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--dry-run", action="store_true")
@@ -300,7 +300,7 @@ def cmd_scaffold(args: argparse.Namespace) -> int:
                 continue
             channel_id, channel = found
             external_path = (target_dir / file_kind).resolve()
-            managed_dir = Path((paths.managed_targets_root / external_path.relative_to(paths.workspace_root).parent))
+            managed_dir = derive_managed_dir(paths, external_path)
             managed_files = {
                 key: managed_dir / filename for key, filename in channel.get("managed_files", {}).items()
             }

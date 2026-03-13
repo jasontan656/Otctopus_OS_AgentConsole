@@ -24,6 +24,7 @@ REPO_ROOT_COMPAT_ALIASES = {
     REPO_ROOT_CANONICAL_NAME: REPO_ROOT_CANONICAL_NAME,
 }
 LEGACY_MANAGED_TARGET_DIRS = ("Codex_Skills_Mirror",)
+RUNTIME_MANAGED_TARGETS_DIRNAME = "managed_targets"
 
 
 @dataclass(frozen=True)
@@ -122,7 +123,10 @@ def write_json(path: Path, payload: object, dry_run: bool) -> None:
 
 
 def sync_file_to_installed(paths: RuntimePaths, mirror_path: Path, dry_run: bool) -> None:
-    relative = mirror_path.relative_to(paths.mirror_skill_root)
+    try:
+        relative = mirror_path.relative_to(paths.mirror_skill_root)
+    except ValueError:
+        return
     installed_path = paths.installed_skill_root / relative
     ensure_parent(installed_path, dry_run)
     if dry_run:
@@ -227,7 +231,25 @@ def _canonical_relative_path(paths: RuntimePaths, source_path: Path) -> Path:
     return _canonicalize_relative_path(relative)
 
 
+def is_runtime_local_source(paths: RuntimePaths, source_path: Path) -> bool:
+    resolved = source_path.resolve()
+    try:
+        resolved.relative_to(paths.runtime_root)
+    except ValueError:
+        return False
+    return True
+
+
+def runtime_managed_targets_root(paths: RuntimePaths) -> Path:
+    return paths.runtime_root / RUNTIME_MANAGED_TARGETS_DIRNAME
+
+
 def derive_managed_dir(paths: RuntimePaths, source_path: Path) -> Path:
+    if is_runtime_local_source(paths, source_path):
+        relative = source_path.resolve().relative_to(paths.runtime_root).parent
+        if str(relative) == ".":
+            return runtime_managed_targets_root(paths)
+        return runtime_managed_targets_root(paths) / relative
     relative = _canonical_relative_path(paths, source_path)
     parent = relative.parent
     if str(parent) == ".":
@@ -257,6 +279,8 @@ def find_channel_by_file_kind(paths: RuntimePaths, file_kind: str) -> tuple[str,
 
 
 def find_channel_for_source_path(paths: RuntimePaths, source_path: Path) -> tuple[str, dict[str, object]] | None:
+    if is_runtime_local_source(paths, source_path):
+        return find_channel_by_file_kind(paths, source_path.name)
     relative = _relative_source_key(paths, source_path)
     for channel_id, channel in list_channels(paths).items():
         governed = channel.get("governed_source_paths", [])
@@ -322,6 +346,25 @@ def match_scan_rules(
                 continue
             if not include_missing and not source_path.exists():
                 continue
+            results.append(build_entry(paths, source_path, channel_id, channel))
+    if normalized_source_paths:
+        existing_sources = {item["source_path"] for item in results}
+        for source_text in sorted(normalized_source_paths):
+            source_path = Path(source_text).resolve()
+            if source_text in existing_sources:
+                continue
+            if not is_runtime_local_source(paths, source_path):
+                continue
+            found = find_channel_for_source_path(paths, source_path)
+            if found is None:
+                continue
+            if any(keyword in source_text for keyword in disallowed):
+                continue
+            if only_filters and not any(token in source_text for token in only_filters):
+                continue
+            if not include_missing and not source_path.exists():
+                continue
+            channel_id, channel = found
             results.append(build_entry(paths, source_path, channel_id, channel))
     return sorted(results, key=lambda item: item["relative_path"])
 
@@ -447,7 +490,7 @@ def validate_managed_agents_pair(
 ) -> list[str]:
     errors: list[str] = []
     payload_schema = _payload_schema_for_source(paths, source_path)
-    if payload_schema is None:
+    if payload_schema is None and not is_runtime_local_source(paths, source_path):
         return [f"missing_payload_structure_schema:{_relative_source_key(paths, source_path)}"]
     if not human_path.exists():
         errors.append("missing_managed_human")
@@ -526,6 +569,8 @@ def add_governed_source_path(
     file_kind: str,
     dry_run: bool,
 ) -> None:
+    if is_runtime_local_source(paths, source_path):
+        return
     found = find_channel_by_file_kind(paths, file_kind)
     if found is None:
         raise ValueError(f"unsupported_file_kind:{file_kind}")

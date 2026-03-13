@@ -22,6 +22,7 @@ anchors:
 - For `AGENTS.md`, `push` must export only internal `Part A` back to the external file.
 - For every non-`AGENTS.md` channel, `push` must write the internal mapped copy content directly to the external file.
 - `push` must preserve the registered external path for the channel target; it must not redirect to a different file path.
+- Runtime-local targets under `Codex_Skill_Runtime/<skill>/...` are allowed even though they are not persisted in `rules/scan_rules.json`; `push` must resolve them from runtime-local managed assets rather than repo-tracked managed assets.
 
 ## Boundary
 - `push` treats the internal managed asset as the truth source for that turn.

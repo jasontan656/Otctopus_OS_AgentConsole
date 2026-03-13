@@ -244,3 +244,67 @@ class TestCliToolbox:
         assert not (
             self.installed / "assets" / "managed_targets" / "AI_Projects" / "Codex_Skills_Mirror"
         ).exists()
+
+    def test_runtime_local_scaffold_uses_runtime_managed_assets_without_registry_writeback(self) -> None:
+        target_dir = self.runtime / "sandbox" / "sample_repo" / "Development_Docs"
+        result = self.run_cli(
+            "scaffold",
+            "--json",
+            "--target-dir",
+            str(target_dir),
+            "--file-kind",
+            "AGENTS.md",
+        )
+        assert result["operation_count"] == 1
+        external_path = target_dir / "AGENTS.md"
+        assert external_path.exists()
+        target_contract = self.run_cli("target-contract", "--source-path", str(external_path), "--json")
+        assert target_contract["channel_id"] == "AGENTS_MD"
+        assert target_contract["managed_dir"].startswith(str(self.runtime / "managed_targets"))
+        assert not target_contract["managed_dir"].startswith(str(self.skill_root / "assets" / "managed_targets"))
+
+        rules = json.loads((self.skill_root / "rules" / "scan_rules.json").read_text(encoding="utf-8"))
+        governed = rules["channels"]["AGENTS_MD"]["governed_source_paths"]
+        assert "Codex_Skill_Runtime/Meta-RootFile-Manager/sandbox/sample_repo/Development_Docs/AGENTS.md" not in governed
+        assert not (
+            self.installed
+            / "assets"
+            / "managed_targets"
+            / "AI_Projects"
+            / "Codex_Skill_Runtime"
+            / "Meta-RootFile-Manager"
+            / "sandbox"
+            / "sample_repo"
+            / "Development_Docs"
+            / "AGENTS_human.md"
+        ).exists()
+
+    def test_collect_runtime_local_agents_updates_runtime_managed_pair(self) -> None:
+        target_dir = self.runtime / "sandbox" / "sample_repo" / "Development_Docs"
+        self.run_cli(
+            "scaffold",
+            "--json",
+            "--target-dir",
+            str(target_dir),
+            "--file-kind",
+            "AGENTS.md",
+        )
+        external_path = target_dir / "AGENTS.md"
+        write(
+            external_path,
+            render_external_agents(
+                "1. 根入口命令\n- 在处理当前目录路径规则之前，必须先运行：\n- `placeholder`\n"
+            ),
+        )
+        result = self.run_cli("collect", "--json", "--source-path", str(external_path))
+        assert result["operation_count"] == 1
+        managed_human = (
+            self.runtime
+            / "managed_targets"
+            / "sandbox"
+            / "sample_repo"
+            / "Development_Docs"
+            / "AGENTS_human.md"
+        )
+        assert managed_human.exists()
+        assert "placeholder" in managed_human.read_text(encoding="utf-8")
