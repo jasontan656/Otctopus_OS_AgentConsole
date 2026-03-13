@@ -37,4 +37,4 @@ anchors:
 - 若当前 repo 合同没有把某个库声明为必用基线，即使它“更标准”，本技能也不能自行把它当成既定依赖要求。
 - 若目标自实现承载 repo-specific contract、历史兼容语义或第三方库无法直接表达的行为，应保留实现或只做局部整理，不做强替换。
 - 若目标技能的历史日志或产物包含人工整理价值、审计意义或用户交付语义，迁移策略应保持可追溯，不能粗暴清空。
-- 进入修正前，应先完成目标 skill 自身合同阅读；退出前，必须完成目标 skill 现有测试 / lint，且 Python 改动还要补 `Dev-PythonCode-Constitution-Backend` lint。
+- 进入修正前，应先完成目标 skill 自身合同阅读；退出前，必须完成目标 skill 现有测试 / lint，且 Python 改动还要补 `Dev-PythonCode-Constitution` lint。

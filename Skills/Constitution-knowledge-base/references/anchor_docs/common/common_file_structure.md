@@ -31,7 +31,7 @@ graph_hook:
 
 1. `common_file_structure` 只定义“复杂实现或需拆分时的固定落点”。
 2. 规则类文件仍必须遵循单一规则域。
-3. Python 胖文件阈值已迁移到 `Dev-PythonCode-Constitution-Backend`。
+3. Python 胖文件阈值已迁移到 `Dev-PythonCode-Constitution`。
 
 ## 固定目录与文件职责模板（必须遵守）
 

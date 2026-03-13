@@ -38,4 +38,4 @@ anchors:
 5. 若需要典型模式样本，再进入 `COMMON_REDUNDANT_WHEEL_PATTERNS.md`。
 6. 再读取 `REMEDIATION_GATES.md`，确认替换门禁已满足。
 7. 修正时优先删除冗余自实现，再接入既有依赖；若命中落盘治理，还要同步修正默认路径、显式落点参数、文档声明与旧内容迁移方案。
-8. 使用目标 skill 现有测试和 lint 完成验证；若修改 Python，再补 `Dev-PythonCode-Constitution-Backend` lint。
+8. 使用目标 skill 现有测试和 lint 完成验证；若修改 Python，再补 `Dev-PythonCode-Constitution` lint。

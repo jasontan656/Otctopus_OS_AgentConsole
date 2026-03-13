@@ -63,6 +63,6 @@
   "target_skill_handoff": [
     "After this skill clarifies the review or remediation workflow, enter the target skill through its own CLI-first or repo-local runtime contract path.",
     "Use the target skill's existing tests and lint commands for behavior verification.",
-    "If Python files are edited, run Dev-PythonCode-Constitution-Backend lint on the concrete Python target scope before closing the turn."
+    "If Python files are edited, run Dev-PythonCode-Constitution lint on the concrete Python target scope before closing the turn."
   ]
 }

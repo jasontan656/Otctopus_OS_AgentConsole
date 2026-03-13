@@ -31,11 +31,11 @@
 - 新增或改写 skill / installer / contract / prompt 时，必须优先使用这套 root-first 规则，避免把旧机器路径重新写回 repo。
 
 6. 同回合要求
-- 如果本回合写入 `Otctopus_OS_AgentConsole`，必须从一开始就纳入 Git traceability；若任务内容涉及 Python 相关编辑，还必须把 `Dev-PythonCode-Constitution-Backend` 的阅读与 lint 纳入同回合范围。
+- 如果本回合写入 `Otctopus_OS_AgentConsole`，必须从一开始就纳入 Git traceability；若任务内容涉及 Python 相关编辑，还必须把 `Dev-PythonCode-Constitution` 的阅读与 lint 纳入同回合范围。
 - skill mirror 根目录固定为 `Otctopus_OS_AgentConsole/Skills/`；repo 根目录保留给产品文档、产品工具与正常代码库入口。
 - 如果本回合编辑 skill，必须先在 `Otctopus_OS_AgentConsole/Skills/` 中的 mirror 副本完成编辑，禁止直接编辑 codex 安装目录下的对应 skill。
 - skill 编辑完成后，若目标 skill 已存在于 codex 安装目录，必须同回合执行 `$SkillsManager-Mirror-To-Codex` 的 `Push`；若目标 skill 是新建且 codex 安装目录中尚不存在，必须同回合执行 `$SkillsManager-Mirror-To-Codex` 的 `Install`。
-- 若任务内容涉及 Python 相关编辑，结束前必须完成 `Dev-PythonCode-Constitution-Backend` 的 lint。
+- 若任务内容涉及 Python 相关编辑，结束前必须完成 `Dev-PythonCode-Constitution` 的 lint。
 - 如果本回合写入了 `Otctopus_OS_AgentConsole`，必须同回合 commit-and-push。
 
 7. Repo-local skills 依赖环境

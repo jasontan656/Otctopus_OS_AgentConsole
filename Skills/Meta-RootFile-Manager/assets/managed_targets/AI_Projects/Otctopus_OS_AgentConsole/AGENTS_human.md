@@ -31,11 +31,11 @@
 - 新增或改写 skill / installer / contract / prompt 时，必须优先使用这套 root-first 规则，避免把旧机器路径重新写回 repo。
 
 6. 同回合要求
-- 如果本回合写入 `Otctopus_OS_AgentConsole`，必须从一开始就纳入 Git traceability；若任务内容涉及 Python 相关编辑，还必须把 `Dev-PythonCode-Constitution-Backend` 的阅读与 lint 纳入同回合范围。
+- 如果本回合写入 `Otctopus_OS_AgentConsole`，必须从一开始就纳入 Git traceability；若任务内容涉及 Python 相关编辑，还必须把 `Dev-PythonCode-Constitution` 的阅读与 lint 纳入同回合范围。
 - skill mirror 根目录固定为 `Otctopus_OS_AgentConsole/Skills/`；repo 根目录保留给产品文档、产品工具与正常代码库入口。
 - 如果本回合编辑 skill，必须先在 `Otctopus_OS_AgentConsole/Skills/` 中的 mirror 副本完成编辑，禁止直接编辑 codex 安装目录下的对应 skill。
 - skill 编辑完成后，若目标 skill 已存在于 codex 安装目录，必须同回合执行 `$SkillsManager-Mirror-To-Codex` 的 `Push`；若目标 skill 是新建且 codex 安装目录中尚不存在，必须同回合执行 `$SkillsManager-Mirror-To-Codex` 的 `Install`。
-- 若任务内容涉及 Python 相关编辑，结束前必须完成 `Dev-PythonCode-Constitution-Backend` 的 lint。
+- 若任务内容涉及 Python 相关编辑，结束前必须完成 `Dev-PythonCode-Constitution` 的 lint。
 - 如果本回合写入了 `Otctopus_OS_AgentConsole`，必须同回合 commit-and-push。
 
 7. Repo-local skills 依赖环境
@@ -69,7 +69,7 @@
     "$SkillsManager-Mirror-To-Codex (edit skills only in the product repo mirror paths, never directly in the codex installation directory; after editing, use Push for already-installed skills and Install for newly created skills)",
     "$SkillsManager-Creation-Template ( should be considered to imply if there is no specific user request on how skill should be created (prioritize user request than template) )",
     "$skill-creator (for skill standard formatter to ensure codex reads it properly, do not use its template for skill creation)",
-    "$Dev-PythonCode-Constitution-Backend (for Python-related fat-file checks, split guidance, and lint runs when the task edits Python code)"
+    "$Dev-PythonCode-Constitution (for Python-related fat-file checks, split guidance, and lint runs when the task edits Python code)"
   ],
   "peer_summary_policy": {
     "available": true,
@@ -121,20 +121,20 @@
     "use the returned target contract JSON as the runtime rule source",
     "classify the turn as READ_EXEC or WRITE_EXEC",
     "when task contents include skill/runtime/product path usage, identify the concrete product root first and derive governed runtime paths from that root before editing",
-    "if the turn will write Otctopus_OS_AgentConsole, plan same-turn Git traceability from the start; if task contents include Python related edits, also plan Dev-PythonCode-Constitution-Backend reading and lint from the start",
+    "if the turn will write Otctopus_OS_AgentConsole, plan same-turn Git traceability from the start; if task contents include Python related edits, also plan Dev-PythonCode-Constitution reading and lint from the start",
     "if the task needs repo-local dependencies, read the backend/frontend skills environment manifests before installing or invoking tooling",
     "if the task needs new repo-local dependencies, the AI may choose them from task evidence and install them into the governed *_skills environments before use",
     "if the task touches Skills/, read skills_required_techstacks first and treat it as the mandatory baseline before introducing new stacks or writing custom equivalents",
     "if the turn touches language surfaces, enforce outward English docs and inward Chinese development boundaries before editing",
     "if the turn will edit a skill, treat the mirror copy under Otctopus_OS_AgentConsole/Skills as the only editable source and determine whether downstream sync must be Push or Install",
-    "if task contents include Python related edits, read Dev-PythonCode-Constitution-Backend through SKILL.md -> TASK_ROUTING -> SKILL_EXECUTION_RULES before editing"
+    "if task contents include Python related edits, read Dev-PythonCode-Constitution through SKILL.md -> TASK_ROUTING -> SKILL_EXECUTION_RULES before editing"
   ],
   "runtime_constraints": [
     "treat CLI JSON as the primary runtime rule source",
     "do not use audit markdown as the primary execution guide",
     "stay within the concrete repo-local boundary defined by this payload",
     "choose READ_EXEC or WRITE_EXEC by actual write intent, not by file type alone",
-    "when this repo is written, keep same-turn Git traceability in scope; if task contents include Python related edits, keep same-turn Dev-PythonCode-Constitution-Backend lint in scope",
+    "when this repo is written, keep same-turn Git traceability in scope; if task contents include Python related edits, keep same-turn Dev-PythonCode-Constitution lint in scope",
     "product/runtime paths must resolve from the product root; do not hardcode author-machine absolute paths or treat AI_Projects literals as the only valid install root",
     "skill-local resources may resolve from current skill roots, but repo mirrors, codex runtime paths, result paths, and product workspaces must use root-first derivation",
     "when <root>/.codex is absent, only Codex home lookup may fall back to explicit CODEX_HOME or an attached existing Codex installation; other governed product paths remain root-first",
@@ -170,7 +170,7 @@
         "for public product surfaces, keep English-only wording and avoid leaking internal Chinese governance content",
         "for skill edits, write only the mirror copy under Otctopus_OS_AgentConsole/Skills and do not directly edit the codex installed copy",
         "after skill edits, run SkillsManager-Mirror-To-Codex Push for existing installed skills or Install for newly created skills",
-        "if task contents include Python related edits, run Dev-PythonCode-Constitution-Backend lint on the concrete Python-related target scope before closing the turn",
+        "if task contents include Python related edits, run Dev-PythonCode-Constitution lint on the concrete Python-related target scope before closing the turn",
         "complete same-turn commit-and-push when Otctopus_OS_AgentConsole files are written"
       ]
     }
@@ -181,7 +181,7 @@
     "Do not emit only path metadata when the real need is direct action guidance."
   ],
   "turn_end_actions": [
-    "if task contents include Python related edits, run Dev-PythonCode-Constitution-Backend lint on the concrete Python-related target scope",
+    "if task contents include Python related edits, run Dev-PythonCode-Constitution lint on the concrete Python-related target scope",
     "if dependency manifests or lock files changed, keep the repo-local skills environments and AGENTS governance mapping synchronized in the same turn",
     "if the turn updated the mandatory Skills tech stack baseline, keep skills_required_techstacks and the repo-local environment lock or manifest files synchronized in the same turn",
     "if the turn edited a skill, complete SkillsManager-Mirror-To-Codex Push or Install before closing the turn",

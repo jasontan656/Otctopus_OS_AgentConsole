@@ -44,7 +44,7 @@ description: 宪法库技能用于让大模型使用关键字查询,相关规范
   - `common_core`：始终全量输出。
   - `common_conditional/constraints`：仅在命中时输出。
 - lint gate 范围（强制）：
-  - Python 代码 lint、胖文件检查与拆分指引已迁出本技能，由 `Dev-PythonCode-Constitution-Backend` 单独承接。
+  - Python 代码 lint、胖文件检查与拆分指引已迁出本技能，由 `Dev-PythonCode-Constitution` 单独承接。
   - 宪法库不再提供本地 lint CLI。
 
 ## 5. 方法论约束
@@ -87,4 +87,4 @@ Constitution-knowledge-base/
 落地规则：
 - `1-7` 章节必须完整保留。
 - 查询工具输出以机器 JSONL 为唯一对外合同；Markdown 仅作为人类阅读资产。
-- Python lint 与胖文件治理已迁移到 `Dev-PythonCode-Constitution-Backend`；本技能不再内置 lint 工具。
+- Python lint 与胖文件治理已迁移到 `Dev-PythonCode-Constitution`；本技能不再内置 lint 工具。

@@ -1,0 +1,15 @@
+{
+  "registry_name": "META_SKILL_DOCSTRUCTURE_SPLIT_DECISION_REGISTRY",
+  "registry_version": "v1",
+  "entries": [
+    {
+      "doc_path": "references/python_rules/PYTHON_FAT_FILE_CONSTITUTION.md",
+      "doc_id": "dev_pythoncode_constitution.python_rules.fat_file",
+      "rule_id": "body_axis_overload",
+      "fingerprint": "f5041bdbf4d4fb575f92fc97dd7dbd312d63815d",
+      "decision": "accepted",
+      "note": "Keep this document as one cohesive Python fat-file contract because thresholds, split targets, and blocking policy are intentionally consumed together.",
+      "decided_at": "2026-03-11T23:40:22.562Z"
+    }
+  ]
+}

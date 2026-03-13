@@ -10,7 +10,7 @@
 
 ## 单一职责
 - `constitution_keyword_query`：双语关键词查询与机械 JSONL 输出。
-- 宪法库当前不再内置 lint CLI；Python 代码 lint 已迁移到 `Dev-PythonCode-Constitution-Backend`。
+- 宪法库当前不再内置 lint CLI；Python 代码 lint 已迁移到 `Dev-PythonCode-Constitution`。
 - 查询工具只对可检索锚点合同负责，不承载运行态证据检查。
 
 ## 输入合同

@@ -35,7 +35,7 @@ metadata:
 - 适用于：根据 repo 当前 `skills_required_techstacks` 基线，判断某段自实现逻辑是否应该优先替换为现有依赖能力。
 - 适用于：通过代码语义检查目标技能的日志可观测性落盘、默认产物落盘、定向产物落点约束、相关文档声明与历史落盘迁移责任。
 - 不适用于：新增 repo 依赖、发明新的治理工具、替代目标 skill 的 domain 规则源、在证据不足时臆断“所有自写代码都应该被库替换”。
-- 若修正落在 Python 代码，仍要遵守 `Dev-PythonCode-Constitution-Backend`；若修正落在 Vue3 / TypeScript tooling code，仍要遵守目标前端 skill 的既有合同。
+- 若修正落在 Python 代码，仍要遵守 `Dev-PythonCode-Constitution`；若修正落在 Vue3 / TypeScript tooling code，仍要遵守目标前端 skill 的既有合同。
 
 ## 3. 必读顺序
 1. 先执行 `./.venv_backend_skills/bin/python Skills/SkillsManager-Tooling-CheckUp/scripts/Cli_Toolbox.py contract --json`。
@@ -62,7 +62,7 @@ metadata:
 - 门面不再把模型主入口路由为 markdown 文件链。
 - 若任务目标是治理某个具体 skill 的运行时形态，必须优先使用 `govern-target --target-skill-root <path> --json` 获取目标感知审计结果。
 - 真正的改写、测试与 lint 仍通过目标 skill 已有命令完成，而不是把本技能扩张成目标 skill 的替代执行器。
-- 若任务涉及 Python 代码修改，回合末必须对具体 Python 目标范围执行 `Dev-PythonCode-Constitution-Backend` lint。
+- 若任务涉及 Python 代码修改，回合末必须对具体 Python 目标范围执行 `Dev-PythonCode-Constitution` lint。
 
 ## 6. 参考入口
 - Runtime 合同：`references/runtime_contracts/SKILL_RUNTIME_CONTRACT.json`

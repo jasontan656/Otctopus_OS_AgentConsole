@@ -44,7 +44,7 @@ graph_hook:
 
 ```bash
 rg -n "constraint_permission_boundary_enforcement" references/anchor_docs/ANCHOR_DOC_REGISTRY.yaml references/anchor_docs/constraints
-./.venv_backend_skills/bin/python Skills/Dev-PythonCode-Constitution-Backend/scripts/run_python_code_lints.py --target . | jq '.gates[] | select(.gate=="permission_boundary_gate")'
+./.venv_backend_skills/bin/python Skills/Dev-PythonCode-Constitution/scripts/run_python_code_lints.py --target . | jq '.gates[] | select(.gate=="permission_boundary_gate")'
 ```
 
 ## 最小验收

@@ -13,7 +13,7 @@
     "Read the target skill local contract and execution surface before editing.",
     "Use the techstack-baseline and output-governance directives to confirm replacement gates are satisfied.",
     "Rewrite the minimal correct scope, then validate with the target skill's existing tests and lint commands.",
-    "If Python files changed, finish by running Dev-PythonCode-Constitution-Backend lint on the concrete target scope."
+    "If Python files changed, finish by running Dev-PythonCode-Constitution lint on the concrete target scope."
   ],
   "rules": [
     "Do not add a parallel helper system when the repo-local baseline dependency already covers the need.",

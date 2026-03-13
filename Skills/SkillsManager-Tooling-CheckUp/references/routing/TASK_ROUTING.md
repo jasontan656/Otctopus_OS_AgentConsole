@@ -38,7 +38,7 @@ anchors:
 - 再按任务需要补 `directive --topic output-governance` 与 `directive --topic techstack-baseline`。
 - 若需要典型命中样式或 gates 细节，再读 `../governance/COMMON_REDUNDANT_WHEEL_PATTERNS.md` 与 `../governance/REMEDIATION_GATES.md`。
 - 然后进入目标 skill 自己的 `SKILL.md -> routing -> execution/tooling docs`，按其局部合同执行改写、测试和 lint。
-- 若改动落在 Python，额外纳入 `Dev-PythonCode-Constitution-Backend` 的阅读与 lint；若落在 Vue3 / TS tooling，额外纳入目标前端 skill 的既有合同。
+- 若改动落在 Python，额外纳入 `Dev-PythonCode-Constitution` 的阅读与 lint；若落在 Vue3 / TS tooling，额外纳入目标前端 skill 的既有合同。
 
 ## 分支三：用户要改 repo 必用依赖栈
 - 这不是本技能单独决策的范围。

@@ -31,7 +31,7 @@ graph_hook:
 
 1. 结构治理必须遵循 `common_file_structure` 的固定职责落点模板。
 2. 规则类文件仅在“规则定义纯文件”前提下可使用 1000 行上限。
-3. Python 胖文件阈值与拆分规则已迁移到 `Dev-PythonCode-Constitution-Backend`。
+3. Python 胖文件阈值与拆分规则已迁移到 `Dev-PythonCode-Constitution`。
 
 ## 代码执行合同（Project Required）
 
@@ -59,7 +59,7 @@ graph_hook:
 
 ## 必须做（Do）
 1. 新增功能先选择文件职责边界并确认固定落点。
-2. 需要 Python 胖文件阈值时，转入 `Dev-PythonCode-Constitution-Backend`。
+2. 需要 Python 胖文件阈值时，转入 `Dev-PythonCode-Constitution`。
 3. 关键改动必须同时更新类型、错误码和验证用例。
 4. 每次跨层改动都要检视依赖方向是否破坏分层。
 5. PR 必须附带“阈值 + 结构 + 兼容性”三类检查结果。
