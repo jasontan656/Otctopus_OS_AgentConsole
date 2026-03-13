@@ -1,0 +1,19 @@
+{
+  "topics": {
+    "diagnose-workflow": {
+      "doc_kind": "workflow",
+      "json_path": "DIAGNOSE_WORKFLOW.json",
+      "human_path": "DIAGNOSE_WORKFLOW_human.md"
+    },
+    "repair-writeback": {
+      "doc_kind": "contract",
+      "json_path": "REPAIR_WRITEBACK_CONTRACT.json",
+      "human_path": "REPAIR_WRITEBACK_CONTRACT_human.md"
+    },
+    "output-governance": {
+      "doc_kind": "contract",
+      "json_path": "OUTPUT_GOVERNANCE_CONTRACT.json",
+      "human_path": "OUTPUT_GOVERNANCE_CONTRACT_human.md"
+    }
+  }
+}

@@ -1,7 +1,7 @@
 interface:
   display_name: "Meta-Runtime-Selfcheck"
   short_description: "Post-task runtime selfcheck for previous-turn hesitation, tool/script failure, guidance gaps, confused states, and maze-like execution. Output a pain report and concrete remediation plan."
-  default_prompt: "Use $Meta-Runtime-Selfcheck only after a task or run has ended. Analyze the previous run's hesitation, tool failure, script failure, guidance gaps, confused states, or maze-like execution, then output a complete pain report and exact remediation plan targeting docs, scripts, CLI guidance, prompts, workflow, or tool wrappers. Only use `修复` when the user explicitly wants writeback after manual changes are already applied."
+  default_prompt: "Use $Meta-Runtime-Selfcheck only after a task or run has ended. First run `./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py runtime-contract --json`; then choose one directive by task intent: `./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py directive --topic diagnose-workflow --json`, `./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py directive --topic repair-writeback --json`, or `./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py directive --topic output-governance --json`. Use `./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py paths --json` when runtime or result paths matter. Only use `修复` when manual changes are already applied and verification evidence exists."
 
 policy:
   allow_implicit_invocation: false

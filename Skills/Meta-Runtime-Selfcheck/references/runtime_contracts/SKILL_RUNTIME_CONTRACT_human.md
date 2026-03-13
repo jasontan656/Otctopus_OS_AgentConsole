@@ -1,0 +1,99 @@
+---
+doc_id: "meta_runtime_selfcheck.runtime_contract"
+doc_type: "topic_atom"
+topic: "CLI-first runtime contract for Meta-Runtime-Selfcheck"
+node_role: "topic_atom"
+domain_type: "runtime_contract"
+anchors:
+  - target: "../../SKILL.md"
+    relation: "implements"
+    direction: "upstream"
+    reason: "The runtime contract is the first governed runtime branch linked from the facade."
+  - target: "DIAGNOSE_WORKFLOW_human.md"
+    relation: "routes_to"
+    direction: "downstream"
+    reason: "Diagnosis flow selection follows the runtime contract."
+---
+
+# SKILL_RUNTIME_CONTRACT
+
+<part_A>
+- 人类阅读时可用本文件理解 `Meta-Runtime-Selfcheck` 的 CLI-first 入口。
+- 模型运行时主入口固定为 `./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py runtime-contract --json`。
+- 当任务进入具体诊断或修复回写语境时，再读取对应 directive。
+</part_A>
+
+<part_B>
+
+```json
+{
+  "contract_name": "meta_runtime_selfcheck_runtime_contract",
+  "contract_version": "1.0.0",
+  "skill_name": "__SKILL_NAME__",
+  "runtime_source_policy": {
+    "primary_runtime_source": "CLI_JSON",
+    "human_markdown_role": "part_a_narrative_for_humans",
+    "payload_role": "part_b_json_for_models",
+    "markdown_is_not_primary_instruction_source": true
+  },
+  "tool_entry": {
+    "script": "scripts/Cli_Toolbox.py",
+    "commands": {
+      "runtime-contract": "./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py runtime-contract --json",
+      "directive": "./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py directive --topic <topic> --json",
+      "paths": "./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py paths --json",
+      "diagnose": "./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/runtime_pain_batch.py \">\" --session-scope-mode all_threads --max-results 200",
+      "repair": "./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/runtime_pain_batch.py 修复 --manual-repair-applied --manual-repair-path <changed_file> --verify-cmd <verify_cmd>"
+    }
+  },
+  "must_use_sequence": [
+    "Call runtime-contract before consuming runtime guidance for this skill.",
+    "Choose a directive topic by actual task intent.",
+    "Call paths --json when governed runtime or result paths matter.",
+    "Open human mirrors only when the direct JSON payload still leaves a real gap."
+  ],
+  "directive_topics": [
+    {
+      "topic": "diagnose-workflow",
+      "doc_kind": "workflow",
+      "use_when": "The task is to analyze the previous run and emit a pain-context report without writeback."
+    },
+    {
+      "topic": "repair-writeback",
+      "doc_kind": "contract",
+      "use_when": "The user explicitly requested 修复 and manual code changes plus verification evidence already exist."
+    },
+    {
+      "topic": "output-governance",
+      "doc_kind": "contract",
+      "use_when": "The task needs governed runtime log roots, result roots, or migration duties for legacy artifacts."
+    }
+  ],
+  "runtime_dependencies": {
+    "pain_provider": {
+      "environment_variable": "CODEX_RUNTIME_PAIN_PROVIDER",
+      "cli_override": "--memory-runtime <provider.py>",
+      "required_for": [
+        "diagnose",
+        "repair"
+      ]
+    },
+    "history_source": {
+      "default_path": "__DEFAULT_HISTORY_PATH__",
+      "environment_override": "CODEX_HOME"
+    }
+  },
+  "path_policy": {
+    "runtime_log_root_rule": "__RUNTIME_ROOT__/logs/runtime_pain_batch/<run_id>",
+    "result_root_rule": "__RESULT_ROOT__",
+    "resolved_paths_command": "./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py paths --json"
+  },
+  "hard_constraints": [
+    "Use this skill only after a task or run has ended.",
+    "Do not treat SKILL.md as the primary runtime instruction source.",
+    "Do not auto-execute repair commands; manual changes must already be applied before repair writeback.",
+    "Do not default logs or result artifacts to the current working directory."
+  ]
+}
+```
+</part_B>
