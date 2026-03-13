@@ -4,68 +4,105 @@ from pathlib import Path
 
 
 SKILL_ROOT = Path(__file__).resolve().parents[1]
-PRODUCT_ROOT = SKILL_ROOT.parents[2]
 WRAPPER = SKILL_ROOT / "scripts" / "meta_code_graph_base.py"
-RUNTIME_ROOT = PRODUCT_ROOT / "Codex_Skill_Runtime" / "Meta-code-graph-base" / "code_graph_runtime"
-TARGET_REPO = PRODUCT_ROOT / "Human_Work_Zone" / "Open_Source_Projects" / "GitNexus_repo-intel-hub"
+TARGET_REPO = (
+    SKILL_ROOT.parents[2]
+    / "Human_Work_Zone"
+    / "Open_Source_Projects"
+    / "GitNexus_repo-intel-hub"
+)
 TARGET_REPO_NAME = "GitNexus_repo-intel-hub"
 TARGET_REPO_KEY = "GitNexus_repo-intel-hub-cd46025f10d5"
 
 
-def run_cmd(*args: str, cwd: Path | None = None) -> subprocess.CompletedProcess[str]:
+def run_cmd(
+    runtime_root: Path,
+    *args: str,
+    cwd: Path | None = None,
+    check: bool = True,
+) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
-        ["python3", str(WRAPPER), *args],
+        ["python3", str(WRAPPER), "--runtime-root", str(runtime_root), *args],
         text=True,
         capture_output=True,
-        check=True,
+        check=check,
         cwd=str(cwd) if cwd else None,
     )
 
 
-class TestMetaCodeGraphBaseTest:
-    def test_runtime_layout_exists(self) -> None:
-        assert str(RUNTIME_ROOT).endswith("Codex_Skill_Runtime/Meta-code-graph-base/code_graph_runtime")
-        expected = ["registry", "indexes", "maps", "wiki"]
-        for name in expected:
-            (RUNTIME_ROOT / name).mkdir(parents=True, exist_ok=True)
-            assert (RUNTIME_ROOT / name).exists(), name
+def runtime_root_for_test(tmp_path: Path) -> Path:
+    runtime_root = tmp_path / "graph_runtime"
+    runtime_root.mkdir(parents=True, exist_ok=True)
+    return runtime_root
 
-    def test_analyze_and_list(self) -> None:
-        run_cmd("analyze", str(TARGET_REPO))
-        result = run_cmd("list")
+
+class TestMetaCodeGraphBaseTest:
+    def test_runtime_root_is_required(self) -> None:
+        result = subprocess.run(
+            ["python3", str(WRAPPER), "status"],
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        assert result.returncode != 0
+        assert "runtime root is required" in result.stderr
+
+    def test_analyze_and_list(self, tmp_path: Path) -> None:
+        runtime_root = runtime_root_for_test(tmp_path)
+        run_cmd(runtime_root, "analyze", str(TARGET_REPO))
+        result = run_cmd(runtime_root, "list")
         assert TARGET_REPO_NAME in result.stdout
 
-    def test_resource_context_and_impact(self) -> None:
-        run_cmd("analyze", str(TARGET_REPO))
-        context = run_cmd("resource", f"codegraph://repo/{TARGET_REPO_NAME}/context")
+    def test_runtime_layout_uses_caller_provided_root(self, tmp_path: Path) -> None:
+        runtime_root = runtime_root_for_test(tmp_path)
+        run_cmd(runtime_root, "analyze", str(TARGET_REPO))
+        expected = ["registry", "indexes"]
+        for name in expected:
+            assert (runtime_root / name).exists(), name
+
+    def test_resource_context_and_impact(self, tmp_path: Path) -> None:
+        runtime_root = runtime_root_for_test(tmp_path)
+        run_cmd(runtime_root, "analyze", str(TARGET_REPO))
+        context = run_cmd(runtime_root, "resource", f"codegraph://repo/{TARGET_REPO_NAME}/context")
         assert "tools_available" in context.stdout
-        impact = run_cmd("impact", "LocalBackend", "--direction", "upstream", "--repo", TARGET_REPO_NAME)
+        impact = run_cmd(runtime_root, "impact", "LocalBackend", "--direction", "upstream", "--repo", TARGET_REPO_NAME)
         payload = json.loads(impact.stdout or impact.stderr)
         assert "summary" in payload
 
-    def test_detect_changes_and_rename_preview(self) -> None:
-        run_cmd("analyze", str(TARGET_REPO))
-        changes = run_cmd("detect-changes", "--repo", TARGET_REPO_NAME)
+    def test_detect_changes_and_rename_preview(self, tmp_path: Path) -> None:
+        runtime_root = runtime_root_for_test(tmp_path)
+        run_cmd(runtime_root, "analyze", str(TARGET_REPO))
+        changes = run_cmd(runtime_root, "detect-changes", "--repo", TARGET_REPO_NAME)
         change_payload = json.loads(changes.stdout)
         assert "summary" in change_payload
 
-        rename = run_cmd("rename", "--symbol-name", "readResource", "--new-name", "readGraphResource", "--repo", TARGET_REPO_NAME)
+        rename = run_cmd(
+            runtime_root,
+            "rename",
+            "--symbol-name",
+            "readResource",
+            "--new-name",
+            "readGraphResource",
+            "--repo",
+            TARGET_REPO_NAME,
+        )
         rename_payload = json.loads(rename.stdout)
         assert rename_payload["status"] == "success"
-        assert not (rename_payload["applied"])
+        assert not rename_payload["applied"]
         assert rename_payload["files_affected"] >= 1
 
-        augment = run_cmd("augment", "LocalBackend", cwd=TARGET_REPO)
+        augment = run_cmd(runtime_root, "augment", "LocalBackend", cwd=TARGET_REPO)
         assert "[Meta-code-graph-base]" in augment.stdout
         assert "LocalBackend" in augment.stdout
 
-    def test_map_generation_writes_runtime_artifacts(self) -> None:
-        run_cmd("analyze", str(TARGET_REPO))
-        result = run_cmd("map", TARGET_REPO_NAME)
+    def test_map_generation_writes_runtime_artifacts(self, tmp_path: Path) -> None:
+        runtime_root = runtime_root_for_test(tmp_path)
+        run_cmd(runtime_root, "analyze", str(TARGET_REPO))
+        result = run_cmd(runtime_root, "map", TARGET_REPO_NAME)
         payload = json.loads(result.stdout)
         assert payload["status"] == "success"
 
-        map_dir = RUNTIME_ROOT / "maps" / TARGET_REPO_KEY
+        map_dir = runtime_root / "maps" / TARGET_REPO_KEY
         assert (map_dir / "repo_context.md").exists()
         assert (map_dir / "clusters.md").exists()
         assert (map_dir / "processes.md").exists()
@@ -77,13 +114,14 @@ class TestMetaCodeGraphBaseTest:
         assert "tools_available" in context_text
         assert "modules:" in clusters_text
 
-    def test_wiki_generation_writes_local_bundle(self) -> None:
-        run_cmd("analyze", str(TARGET_REPO))
-        result = run_cmd("wiki", TARGET_REPO_NAME)
+    def test_wiki_generation_writes_local_bundle(self, tmp_path: Path) -> None:
+        runtime_root = runtime_root_for_test(tmp_path)
+        run_cmd(runtime_root, "analyze", str(TARGET_REPO))
+        result = run_cmd(runtime_root, "wiki", TARGET_REPO_NAME)
         payload = json.loads(result.stdout)
         assert payload["status"] == "success"
 
-        wiki_dir = RUNTIME_ROOT / "wiki" / TARGET_REPO_KEY
+        wiki_dir = runtime_root / "wiki" / TARGET_REPO_KEY
         assert (wiki_dir / "overview.md").exists()
         assert (wiki_dir / "clusters.md").exists()
         assert (wiki_dir / "processes.md").exists()

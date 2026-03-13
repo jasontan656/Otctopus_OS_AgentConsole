@@ -1,15 +1,15 @@
 # Runtime Layout
 
 Root:
-- `<root>/Codex_Skill_Runtime/Meta-code-graph-base/code_graph_runtime`
+- caller-provided runtime root via `--runtime-root <abs/runtime/root>` or `META_CODE_GRAPH_RUNTIME_ROOT`
 
 Subdirectories:
-- `registry/`: indexed repo registry
-- `indexes/`: per-repo graph index storage, including kuzu + meta
-- `reports/`: impact / detect-changes / audit style reports
-- `maps/`: per-repo resource snapshots and graph-derived maps
-- `wiki/`: per-repo wiki and graph-derived documentation
-- `snapshots/`: future snapshots / compare artifacts
+- `<runtime-root>/registry`: indexed repo registry
+- `<runtime-root>/indexes`: per-repo graph index storage, including kuzu + meta
+- `<runtime-root>/reports`: impact / detect-changes / audit style reports
+- `<runtime-root>/maps`: per-repo resource snapshots and graph-derived maps
+- `<runtime-root>/wiki`: per-repo wiki and graph-derived documentation
+- `<runtime-root>/snapshots`: future snapshots / compare artifacts
 
 UI handoff:
 - This runtime layout is the source area for code-graph-facing viewer data.

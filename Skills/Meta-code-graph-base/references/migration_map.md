@@ -29,7 +29,7 @@
 ## Rewritten / Patched
 
 - `src/storage/repo-manager.ts`
-  - central runtime storage under `code_graph_runtime`
+  - runtime storage root now comes only from explicit `META_CODE_GRAPH_RUNTIME_ROOT`
 - `src/cli/index.ts`
   - removed setup / serve / mcp / eval-server
   - added direct `detect-changes` / `rename` / `resource`
@@ -37,7 +37,7 @@
   - removed AGENTS/CLAUDE context generation
   - removed `.gitignore` mutation
 - `src/core/wiki/generator.ts`
-  - wiki output moved to `code_graph_runtime/wiki/<repo-key>`
+  - wiki output moved to `<runtime-root>/wiki/<repo-key>`
 - `src/mcp/resources.ts`
   - converted to local resource views
   - removed setup resource

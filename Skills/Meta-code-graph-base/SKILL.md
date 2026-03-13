@@ -1,6 +1,6 @@
 ---
 name: "Meta-code-graph-base"
-description: "维护本地代码图谱底座：统一建图、查图、影响面分析、变更检测、资源视图与本地 wiki/map bundle 生成。运行产物固定落在 Codex_Skill_Runtime/Meta-code-graph-base/code_graph_runtime。"
+description: "维护本地代码图谱底座：统一建图、查图、影响面分析、变更检测、资源视图与本地 wiki/map bundle 生成。调用时必须显式提供 graph runtime 落点。"
 ---
 
 # Meta-code-graph-base
@@ -20,8 +20,10 @@ description: "维护本地代码图谱底座：统一建图、查图、影响面
 - 资源视图
 - 本地 wiki / map bundle 生成
 
-运行产物固定落在：
-- `<root>/Codex_Skill_Runtime/Meta-code-graph-base/code_graph_runtime`
+运行产物不再有默认落点：
+- 调用时必须显式提供 `--runtime-root <abs/runtime/root>`，或预先设置 `META_CODE_GRAPH_RUNTIME_ROOT`
+- 若未提供 runtime root，本技能直接拒绝执行
+- 传入的 runtime root 就是 graph 产物根目录
 
 当前前端承载关系：
 - 最终 UI / workbench 由 `Dev-VUE3-WebUI-Frontend` 承载。
@@ -38,12 +40,12 @@ description: "维护本地代码图谱底座：统一建图、查图、影响面
 
 1. 先确认目标仓库是否已经建图：
 ```bash
-./.venv_backend_skills/bin/python Skills/Meta-code-graph-base/scripts/meta_code_graph_base.py status
+./.venv_backend_skills/bin/python Skills/Meta-code-graph-base/scripts/meta_code_graph_base.py --runtime-root /abs/runtime/root status
 ```
 
 2. 如果未建图或已过期，先分析：
 ```bash
-./.venv_backend_skills/bin/python Skills/Meta-code-graph-base/scripts/meta_code_graph_base.py analyze /abs/repo/path
+./.venv_backend_skills/bin/python Skills/Meta-code-graph-base/scripts/meta_code_graph_base.py --runtime-root /abs/runtime/root analyze /abs/repo/path
 ```
 
 3. 施工前，至少使用以下能力之一：
@@ -61,7 +63,7 @@ description: "维护本地代码图谱底座：统一建图、查图、影响面
 
 统一入口：
 ```bash
-./.venv_backend_skills/bin/python Skills/Meta-code-graph-base/scripts/meta_code_graph_base.py <subcommand> [args...]
+./.venv_backend_skills/bin/python Skills/Meta-code-graph-base/scripts/meta_code_graph_base.py --runtime-root /abs/runtime/root <subcommand> [args...]
 ```
 
 核心子命令：
@@ -82,17 +84,18 @@ description: "维护本地代码图谱底座：统一建图、查图、影响面
 
 ## Output Contract
 
-运行产物集中于：
-- `code_graph_runtime/registry`
-- `code_graph_runtime/indexes`
-- `code_graph_runtime/reports`
-- `code_graph_runtime/maps`
-- `code_graph_runtime/wiki`
-- `code_graph_runtime/snapshots`
+运行产物集中于调用方提供的 runtime root：
+- `<runtime-root>/registry`
+- `<runtime-root>/indexes`
+- `<runtime-root>/reports`
+- `<runtime-root>/maps`
+- `<runtime-root>/wiki`
+- `<runtime-root>/snapshots`
 
 ## Guardrails
 
 - 不向 codex 安装目录同步。
+- 不得偷偷回退到任何默认 runtime root；没有显式落点就直接失败。
 - 不生成外部安装壳、Web UI、MCP transport。
 - 不接入任何额外 LLM API 或交互式 provider 配置。
 - 不把图谱能力简化成只会 `impact` 的最小试用品。

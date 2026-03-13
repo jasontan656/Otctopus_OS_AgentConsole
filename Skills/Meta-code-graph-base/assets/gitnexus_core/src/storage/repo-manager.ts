@@ -9,7 +9,6 @@
 import fs from 'fs/promises';
 import path from 'path';
 import crypto from 'crypto';
-import { fileURLToPath } from 'url';
 
 export interface RepoMeta {
   repoPath: string;
@@ -45,30 +44,17 @@ export interface RegistryEntry {
   stats?: RepoMeta['stats'];
 }
 
-const SKILL_NAME = 'Meta-code-graph-base';
-
-function resolveDefaultRuntimeRoot(): string {
+function resolveRuntimeRoot(): string {
   const explicit = process.env.META_CODE_GRAPH_RUNTIME_ROOT;
   if (explicit && explicit.trim()) {
     return path.resolve(explicit);
   }
-
-  let probe = path.dirname(fileURLToPath(import.meta.url));
-  while (true) {
-    if (path.basename(probe) === 'Otctopus_OS_AgentConsole') {
-      return path.join(path.dirname(probe), 'Codex_Skill_Runtime', SKILL_NAME, 'code_graph_runtime');
-    }
-    const parent = path.dirname(probe);
-    if (parent === probe) {
-      break;
-    }
-    probe = parent;
-  }
-
-  return path.resolve(process.cwd(), 'Codex_Skill_Runtime', SKILL_NAME, 'code_graph_runtime');
+  throw new Error(
+    'Meta-code-graph-base: runtime root is required. Set META_CODE_GRAPH_RUNTIME_ROOT or use the Python wrapper with --runtime-root.'
+  );
 }
 
-const RUNTIME_ROOT = resolveDefaultRuntimeRoot();
+const RUNTIME_ROOT = resolveRuntimeRoot();
 const INDEXES_DIR = 'indexes';
 const REGISTRY_DIR = 'registry';
 const CONFIG_DIR = 'config';

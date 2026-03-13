@@ -10,12 +10,7 @@ from pathlib import Path
 
 
 SKILL_ROOT = Path(__file__).resolve().parents[1]
-SKILL_NAME = SKILL_ROOT.name
 ENGINE_ROOT = SKILL_ROOT / "assets" / "gitnexus_core"
-REPO_ROOT = SKILL_ROOT.parents[1]
-PRODUCT_ROOT = REPO_ROOT.parent
-SKILL_RUNTIME_ROOT = (PRODUCT_ROOT / "Codex_Skill_Runtime" / SKILL_NAME).resolve()
-RUNTIME_ROOT = (SKILL_RUNTIME_ROOT / "code_graph_runtime").resolve()
 DIST_ENTRY = ENGINE_ROOT / "dist" / "cli" / "index.js"
 
 
@@ -31,9 +26,50 @@ def ensure_engine() -> None:
         run(["npm", "run", "build"], ENGINE_ROOT)
 
 
-def engine_run(args: list[str], cwd: Path | None = None, capture_output: bool = False) -> subprocess.CompletedProcess[str]:
+def usage() -> str:
+    return (
+        "Usage: meta_code_graph_base.py [--runtime-root <abs/runtime/root>] <subcommand> [args...]\n\n"
+        "A runtime root is mandatory. Provide it with --runtime-root or META_CODE_GRAPH_RUNTIME_ROOT."
+    )
+
+
+def parse_runtime_root(argv: list[str]) -> tuple[Path, list[str]]:
+    runtime_root_arg: str | None = None
+    remaining: list[str] = []
+    index = 0
+    while index < len(argv):
+        arg = argv[index]
+        if arg == "--runtime-root":
+            if index + 1 >= len(argv):
+                raise SystemExit("Meta-code-graph-base: --runtime-root requires a path.")
+            runtime_root_arg = argv[index + 1]
+            index += 2
+            continue
+        if arg.startswith("--runtime-root="):
+            runtime_root_arg = arg.split("=", 1)[1]
+            index += 1
+            continue
+        remaining.append(arg)
+        index += 1
+
+    runtime_root_raw = runtime_root_arg or os.environ.get("META_CODE_GRAPH_RUNTIME_ROOT", "").strip()
+    if not runtime_root_raw:
+        raise SystemExit(
+            "Meta-code-graph-base: runtime root is required. Provide --runtime-root <abs/runtime/root> "
+            "or set META_CODE_GRAPH_RUNTIME_ROOT."
+        )
+
+    return Path(runtime_root_raw).expanduser().resolve(), remaining
+
+
+def engine_run(
+    args: list[str],
+    runtime_root: Path,
+    cwd: Path | None = None,
+    capture_output: bool = False,
+) -> subprocess.CompletedProcess[str]:
     env = os.environ.copy()
-    env["META_CODE_GRAPH_RUNTIME_ROOT"] = str(RUNTIME_ROOT)
+    env["META_CODE_GRAPH_RUNTIME_ROOT"] = str(runtime_root)
     return subprocess.run(
         ["node", str(DIST_ENTRY), *args],
         cwd=str(cwd or Path.cwd()),
@@ -53,8 +89,8 @@ def emit_result(result: subprocess.CompletedProcess[str]) -> int:
     return result.returncode
 
 
-def load_registry() -> list[dict]:
-    registry_path = RUNTIME_ROOT / "registry" / "registry.json"
+def load_registry(runtime_root: Path) -> list[dict]:
+    registry_path = runtime_root / "registry" / "registry.json"
     if not registry_path.exists():
         return []
     return json.loads(registry_path.read_text(encoding="utf-8"))
@@ -67,8 +103,8 @@ def repo_key(repo_path: str) -> str:
     return f"{base}-{digest}"
 
 
-def resolve_repo(user_value: str | None) -> dict:
-    registry = load_registry()
+def resolve_repo(user_value: str | None, runtime_root: Path) -> dict:
+    registry = load_registry(runtime_root)
     if not registry:
         raise SystemExit("Meta-code-graph-base: no indexed repositories found. Run analyze first.")
 
@@ -92,10 +128,10 @@ def resolve_repo(user_value: str | None) -> dict:
     raise SystemExit("Meta-code-graph-base: current directory is not inside an indexed repository.")
 
 
-def write_map(repo_value: str | None, emit: bool = True) -> int:
-    repo = resolve_repo(repo_value)
+def write_map(repo_value: str | None, runtime_root: Path, emit: bool = True) -> int:
+    repo = resolve_repo(repo_value, runtime_root)
     key = repo_key(repo["path"])
-    map_dir = RUNTIME_ROOT / "maps" / key
+    map_dir = runtime_root / "maps" / key
     map_dir.mkdir(parents=True, exist_ok=True)
 
     resources = {
@@ -107,7 +143,7 @@ def write_map(repo_value: str | None, emit: bool = True) -> int:
 
     written = []
     for filename, uri in resources.items():
-        result = engine_run(["resource", uri], cwd=Path(repo["path"]), capture_output=True)
+        result = engine_run(["resource", uri], runtime_root=runtime_root, cwd=Path(repo["path"]), capture_output=True)
         target = map_dir / filename
         payload = result.stdout if result.stdout.strip() else result.stderr
         target.write_text(payload, encoding="utf-8")
@@ -128,14 +164,14 @@ def write_map(repo_value: str | None, emit: bool = True) -> int:
     return 0
 
 
-def write_wiki(repo_value: str | None) -> int:
-    repo = resolve_repo(repo_value)
+def write_wiki(repo_value: str | None, runtime_root: Path) -> int:
+    repo = resolve_repo(repo_value, runtime_root)
     key = repo_key(repo["path"])
-    map_dir = RUNTIME_ROOT / "maps" / key
+    map_dir = runtime_root / "maps" / key
     if not map_dir.exists():
-        write_map(repo["name"], emit=False)
+        write_map(repo["name"], runtime_root=runtime_root, emit=False)
 
-    wiki_dir = RUNTIME_ROOT / "wiki" / key
+    wiki_dir = runtime_root / "wiki" / key
     wiki_dir.mkdir(parents=True, exist_ok=True)
 
     source_files = {
@@ -221,20 +257,23 @@ def write_wiki(repo_value: str | None) -> int:
 
 
 def main() -> int:
-    if len(sys.argv) < 2:
-        print("usage: meta_code_graph_base.py <subcommand> [args...]", file=sys.stderr)
-        return 1
+    raw_args = sys.argv[1:]
+    if not raw_args or any(arg in {"-h", "--help"} for arg in raw_args):
+        print(usage())
+        return 0
 
     ensure_engine()
-    if sys.argv[1] == "map":
-        repo_arg = sys.argv[2] if len(sys.argv) > 2 else None
-        return write_map(repo_arg)
-    if sys.argv[1] == "wiki":
-        if any(arg in {"-h", "--help"} for arg in sys.argv[2:]):
-            print("Usage: meta_code_graph_base.py wiki [repo-name-or-path]\n\nGenerate a local wiki bundle from graph resource snapshots.")
-            return 0
-        repo_arg = sys.argv[2] if len(sys.argv) > 2 else None
-        return write_wiki(repo_arg)
+    runtime_root, args = parse_runtime_root(raw_args)
+    if not args:
+        print(usage(), file=sys.stderr)
+        return 1
+
+    if args[0] == "map":
+        repo_arg = args[1] if len(args) > 1 else None
+        return write_map(repo_arg, runtime_root=runtime_root)
+    if args[0] == "wiki":
+        repo_arg = args[1] if len(args) > 1 else None
+        return write_wiki(repo_arg, runtime_root=runtime_root)
     structured_commands = {
         "list",
         "status",
@@ -247,11 +286,11 @@ def main() -> int:
         "resource",
         "cypher",
     }
-    if sys.argv[1] in structured_commands:
-        result = engine_run(sys.argv[1:], cwd=Path.cwd(), capture_output=True)
+    if args[0] in structured_commands:
+        result = engine_run(args, runtime_root=runtime_root, cwd=Path.cwd(), capture_output=True)
         return emit_result(result)
 
-    result = engine_run(sys.argv[1:], cwd=Path.cwd())
+    result = engine_run(args, runtime_root=runtime_root, cwd=Path.cwd())
     return result.returncode
 
 
