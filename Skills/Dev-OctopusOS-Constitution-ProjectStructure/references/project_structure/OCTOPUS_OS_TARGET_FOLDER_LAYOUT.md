@@ -34,61 +34,83 @@ Octopus_OS/
 │   ├── tech_baseline/
 │   └── deploy_matrix/
 ├── Octopus_Hub/
-│   ├── Assets/
+│   ├── README.md
+│   ├── hub_manifest.yaml
 │   └── Development_Docs/
 ├── Foundation_Bundle/
 │   ├── Auth/
+│   │   └── Development_Docs/
 │   ├── Payload/
+│   │   └── Development_Docs/
 │   ├── Persistence/
+│   │   └── Development_Docs/
 │   ├── Event_Task/
+│   │   └── Development_Docs/
 │   ├── Cache/
+│   │   └── Development_Docs/
 │   ├── Session_Context/
+│   │   └── Development_Docs/
 │   ├── Policy_Enforcement/
+│   │   └── Development_Docs/
 │   ├── Storage_Access/
+│   │   └── Development_Docs/
 │   ├── Audit_Observe/
-│   ├── Assets/
-│   └── Development_Docs/
+│   │   └── Development_Docs/
+│   ├── README.md
+│   └── bundle_manifest.yaml
 ├── Capability_Modules/
 │   ├── Principal_Module/
+│   │   └── Development_Docs/
 │   ├── Access_Activation_Module/
+│   │   └── Development_Docs/
 │   ├── Account_Module/
+│   │   └── Development_Docs/
 │   ├── Order_Module/
+│   │   └── Development_Docs/
 │   ├── Payment_Module/
+│   │   └── Development_Docs/
 │   ├── Notification_Module/
+│   │   └── Development_Docs/
 │   ├── File_Module/
+│   │   └── Development_Docs/
 │   └── AI_Module/
+│       └── Development_Docs/
 ├── Client_Applications/
 │   └── Unified_Portal/
-│       ├── Assets/
-│       ├── Channels/
-│       │   ├── Web/
-│       │   ├── Mobile_H5/
-│       │   └── Telegram_Mini_App/
 │       └── Development_Docs/
 ├── Integration_Adapters/
 │   ├── OpenAPI_Adapter/
+│   │   └── Development_Docs/
 │   └── Webhook_Adapter/
+│       └── Development_Docs/
 ├── Infra_Contracts/
 │   ├── PostgreSQL/
+│   │   └── Development_Docs/
 │   ├── Redis/
+│   │   └── Development_Docs/
 │   ├── MongoDB/
+│   │   └── Development_Docs/
 │   ├── Kafka/
+│   │   └── Development_Docs/
 │   ├── ClickHouse/
+│   │   └── Development_Docs/
 │   ├── OpenSearch/
+│   │   └── Development_Docs/
 │   └── Object_Storage/
+│       └── Development_Docs/
 └── Deploy/
 ```
 
 ## 对象根保留子目录
-- `Octopus_Hub/`、`Foundation_Bundle/`、`Capability_Modules/*`、`Client_Applications/*`、`Integration_Adapters/*` 当前默认只预留：
-  - `Assets/`
+- `Octopus_Hub/`、`Foundation_Bundle/*`、`Capability_Modules/*`、`Client_Applications/*`、`Integration_Adapters/*`、`Infra_Contracts/*` 当前默认只预留：
   - `Development_Docs/`
 - 不再默认预置 `Common/`、`Core/` 这类高抽象角色目录；若没有真实能力语义，就不应在项目结构层先长出内部骨架。
 - `Foundation_Bundle` 的一级能力目录固定采用 `Auth/`、`Payload/`、`Persistence/`、`Event_Task/`、`Cache/`、`Session_Context/`、`Policy_Enforcement/`、`Storage_Access/`、`Audit_Observe/`；不得继续使用 `*_Runtime/` 作为对象级目录后缀。
-- 这些一级能力目录代表 bundle 内部未来可独立演化、独立扩容或独立拆部署的能力边界，而不是 bundle 内部的抽象层分区。
-- `Development_Docs/` 归当前对象自己所有；它不是上层容器的公共 docs 根，也不是要求再嵌一层对象同名目录的冗余壳。
-- 因此 `Client_Applications/Unified_Portal/Development_Docs/` 表示 `Unified_Portal` 自己的开发文档容器；只完成项目结构初始化时，该目录默认应为空。
-- 若后续进入具体开发闭环，才允许在该容器下继续创建工作主题目录，例如 `<module_dir>/mother_doc/...`；这里的 `<module_dir>` 是开发主题名，不是再次重复 `Unified_Portal`。
+- 这些一级能力目录代表 `Foundation_Bundle` 容器内未来可独立演化、独立扩容或独立拆部署的能力对象，而不是 bundle 内部的抽象层分区。
+- `Foundation_Bundle/` 本身不再承载共享 `Development_Docs/`；开发文档一律下沉到各能力对象自己的 `Development_Docs/`。
+- `Development_Docs/` 归当前服务/模块对象自己所有；它不是上层容器的公共 docs 根，也不是要求再嵌一层对象同名目录的冗余壳。
+- 因此 `Client_Applications/Unified_Portal/Development_Docs/` 表示 `Unified_Portal` 自己的开发文档容器；`Capability_Modules/Principal_Module/Development_Docs/` 表示 `Principal_Module` 自己的开发文档容器。
+- 章鱼OS当前阶段不再把 `Channels/`、`Assets/` 视为项目结构层的权威预置子目录；若未来需要这些域内目录，应由对应域技能在对象内部实现阶段决定。
 
 ## 目录职责
 - `Mother_Doc/`

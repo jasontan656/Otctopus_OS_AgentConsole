@@ -61,7 +61,7 @@ anchors:
 - `Client_Applications/Unified_Portal`：
   - 固定承载 `Vue 3 + TypeScript + Vite`
   - 作用：作为章鱼OS面向人类用户的统一客户端应用对象，而不是系统中枢
-  - 其内部渠道壳当前固定为 `Channels/Web`、`Channels/Mobile_H5`、`Channels/Telegram_Mini_App`
+  - 项目结构层当前只固定其对象根与 `Development_Docs/`；具体前端目录形态下沉到客户端域实现阶段决定
 - `Integration_Adapters/OpenAPI_Adapter` 与 `Integration_Adapters/Webhook_Adapter`：
   - 默认承载服务端项目级基线
   - 作用：把外部协议接入中枢或业务模块

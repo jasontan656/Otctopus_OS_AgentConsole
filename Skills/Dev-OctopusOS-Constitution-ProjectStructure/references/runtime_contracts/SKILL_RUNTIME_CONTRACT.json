@@ -1,6 +1,6 @@
 {
   "contract_name": "dev_octopusos_constitution_projectstructure_runtime_contract",
-  "contract_version": "3.0.0",
+  "contract_version": "3.1.0",
   "skill_name": "Dev-OctopusOS-Constitution-ProjectStructure",
   "runtime_source_policy": {
     "primary_runtime_source": "CLI_JSON",
@@ -20,6 +20,11 @@
   "naming_constitution": {
     "object_root_rule": "Object root directories express object identity only.",
     "capability_dir_rule": "Do not pre-create abstract role directories such as Common/Core at project-structure level; pre-create only real capability boundaries or real object responsibilities.",
+    "object_default_child_dir_rule": "At project-structure level, service/module object roots may pre-create only Development_Docs as a fixed child directory.",
+    "forbidden_default_object_child_dirs": [
+      "Assets",
+      "Channels"
+    ],
     "runtime_suffix_rule": "Runtime/deployment/stage semantics must not be encoded as object-level physical suffixes by default.",
     "foundation_bundle_capabilities": [
       "Auth",
