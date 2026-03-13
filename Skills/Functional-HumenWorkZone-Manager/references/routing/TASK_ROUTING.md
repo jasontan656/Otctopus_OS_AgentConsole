@@ -27,6 +27,10 @@ anchors:
   relation: routes_to
   direction: downstream
   reason: Books and readings management is a fourth stable branch of this skill.
+- target: ../runtime/TEMPORARY_PROJECTS_ZONE_POLICY.md
+  relation: routes_to
+  direction: downstream
+  reason: Temporary project management is a fifth stable branch of this skill.
 ---
 
 # Task Routing
@@ -97,3 +101,17 @@ anchors:
 
 ## 分支十八：核对书籍命名
 - 当任务需要决定书籍或阅读资料的统一名字时，先读 `../runtime/BOOK_NAMING_RULE.md`。
+
+## 分支十九：管理临时项目集中区
+- 当任务涉及一次性小项目、临时试验项目或待观察项目时，先读 `../runtime/TEMPORARY_PROJECTS_ZONE_POLICY.md`。
+- 该分支负责临时项目承载目录、项目清单 README 与后续清理前的稳定收纳形态。
+
+## 分支二十：执行临时项目迁移与收纳
+- 当任务涉及把某个外部临时项目整体迁入 `Human_Work_Zone` 时，先读 `../runtime/ORGANIZE_TEMPORARY_PROJECT_FLOW.md`。
+- 该分支负责整目录迁移、必要命名判断和迁入后的第一轮登记。
+
+## 分支二十一：维护临时项目清单 README
+- 当任务涉及补临时项目列表、更新说明或标记某个项目已废弃时，先读 `../runtime/TEMP_PROJECT_README_MAINTENANCE_FLOW.md`。
+
+## 分支二十二：核对临时项目命名
+- 当任务需要决定临时项目目录名，或判断是否保留现有项目名时，先读 `../runtime/TEMP_PROJECT_NAMING_RULE.md`。
