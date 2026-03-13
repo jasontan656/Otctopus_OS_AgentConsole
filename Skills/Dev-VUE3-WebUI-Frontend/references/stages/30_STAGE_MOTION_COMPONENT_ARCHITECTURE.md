@@ -35,6 +35,8 @@ anchors:
 - 动效必须服务信息层级，不得抢夺 graph 阅读主线。
 - 页面应逐步沉淀为可复用组件，而不是继续把所有逻辑堆在单文件里。
 - 组件应以 folder-first package 落盘，自带 `.vue/.contract.ts/.tokens.css/index.ts`。
+- 产品 runtime 的实现顺序必须固定为：先框架，再可复用底座，再独立组件；不允许跳过前两层直接堆具体组件。
+- 每个独立组件都必须可追踪，拥有稳定 component id，并纳入统一 registry。
 - 代码组织需要反映：
   - layer catalog
   - app shell 与 route scene
@@ -47,3 +49,4 @@ anchors:
 ## 目标
 - 让前端合同稳定地驱动未来产品 UI 重构。
 - 让 design system、component system、code architecture 三条合同都能直接反向驱动产品代码结构。
+- 让每个小组件都能被独立追踪、复用、替换，而不是沦为一次性页面碎片。

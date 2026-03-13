@@ -17,6 +17,13 @@ class StateViolation(TypedDict):
     reason: str
 
 
+EXCLUDED_MOTHER_DOC_ROOTS = {
+    "execution_atom_plan_validation_packs",
+    "acceptance",
+    "graph",
+}
+
+
 def _parse_scalar(value: str) -> object:
     stripped = value.strip()
     if stripped == "[]":
@@ -141,15 +148,10 @@ def required_entry_hits(root: Path) -> tuple[list[str], dict[str, list[str]]]:
 
 
 def iter_atomic_markdown_files(root: Path) -> list[Path]:
-    excluded_roots = {
-        "execution_atom_plan_validation_packs",
-        "acceptance",
-        "graph",
-    }
     files: list[Path] = []
     for path in sorted(root.rglob("*.md")):
         relative_parts = path.relative_to(root).parts
-        if relative_parts and relative_parts[0] in excluded_roots:
+        if relative_parts and relative_parts[0] in EXCLUDED_MOTHER_DOC_ROOTS:
             continue
         files.append(path)
     return files
@@ -289,7 +291,10 @@ def detect_git_modified_doc_refs(root: Path, repo_root: Path | None = None) -> d
             continue
         if changed_path.suffix != ".md" or not changed_path.is_relative_to(root):
             continue
-        direct_doc_refs.add(str(changed_path.relative_to(root)))
+        relative_doc = changed_path.relative_to(root)
+        if relative_doc.parts and relative_doc.parts[0] in EXCLUDED_MOTHER_DOC_ROOTS:
+            continue
+        direct_doc_refs.add(str(relative_doc))
         impact_doc_refs.update(_impact_doc_refs(root, changed_path))
 
     return {

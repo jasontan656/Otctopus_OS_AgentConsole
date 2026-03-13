@@ -375,6 +375,33 @@ class TestCliToolboxRegression:
             assert "doc_pack_refs: []" in updated_section
             assert "doc_work_state: modified" in updated_index
 
+    def test_mother_doc_mark_modified_ignores_pack_docs_from_git_fallback(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            repo_root = Path(temp_dir) / "repo"
+            mother_doc_root = repo_root / "Development_Docs" / "mother_doc"
+            pack_root = mother_doc_root / "execution_atom_plan_validation_packs" / "01_pack"
+            init_git_repo(repo_root)
+            run_cli("mother-doc-init", "--target", str(mother_doc_root))
+            fill_directory_placeholders(mother_doc_root)
+            pack_root.mkdir(parents=True, exist_ok=True)
+            (pack_root / "00_index.md").write_text("# Pack\n", encoding="utf-8")
+            subprocess.run(["git", "add", "."], cwd=repo_root, check=True)
+            subprocess.run(["git", "commit", "-m", "baseline"], cwd=repo_root, check=True)
+
+            (pack_root / "00_index.md").write_text("# Changed Pack\n", encoding="utf-8")
+            completed = run_cli_raw(
+                "mother-doc-mark-modified",
+                "--path",
+                str(mother_doc_root),
+                "--repo-root",
+                str(repo_root),
+                "--auto-from-git",
+            )
+            assert completed.returncode != 0
+            payload = json.loads(completed.stdout)
+            assert payload["status"] == "fail"
+            assert payload["reason"] == "no_doc_refs_selected_for_modified_mark"
+
     def test_mother_doc_mark_modified_fails_when_no_docs_selected(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             target = Path(temp_dir) / "docs" / "mother_doc"

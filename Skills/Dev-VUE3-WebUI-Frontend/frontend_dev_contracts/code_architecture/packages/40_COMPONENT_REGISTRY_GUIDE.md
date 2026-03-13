@@ -19,9 +19,11 @@ anchors:
 
 ## registry 规则
 - `ui-identity-registry.ts` 必须记录每个 component 的：
+  - component id
   - layer id
   - container id
   - locator 短码
   - 主文件路径
   - package 目录路径
+- 每个独立组件在真正开始实现前，就应先取得稳定 `component id` 并进入 registry；不允许先实现、后补登记。
 - lint 必须校验 registry 和文件系统是否一致。

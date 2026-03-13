@@ -24,6 +24,7 @@ anchors:
 ## 当前状态
 - 当前技能不再存放产品 UI 代码，因此本 workflow 处于 future-only 阶段。
 - 在新的 UI 代码根重新引入前，不应把本文件误读成“当前已有可执行 lint”。
+- 即便 lint 尚未重新绑定真实 CLI，产品 construction plan 和 implementation 也必须先按本协议规划 component/container IDs 与 registry。
 
 ## 未来恢复时负责的检查
 - layer id 是否属于固定 catalog。
