@@ -15,6 +15,10 @@ anchors:
   relation: routes_to
   direction: downstream
   reason: Open-source project management is now a stable branch of this skill.
+- target: ../runtime/BACKUP_MANAGEMENT_ZONE_POLICY.md
+  relation: routes_to
+  direction: downstream
+  reason: Backup management is a second stable branch of this skill.
 ---
 
 # Task Routing
@@ -43,3 +47,17 @@ anchors:
 
 ## 分支六：给项目目录命名
 - 当任务只是在决定项目目录名，或需要核对 `<项目名>_<2-3word加强>` 规则时，先读 `../runtime/OPEN_SOURCE_PROJECT_NAMING_RULE.md`。
+
+## 分支七：管理备份集中区
+- 当任务涉及备份目录、备份列表或备份收纳时，先读 `../runtime/BACKUP_MANAGEMENT_ZONE_POLICY.md`。
+- 该分支负责备份承载目录、备份 README 与备份区的长期目标形态。
+
+## 分支八：执行文件夹备份
+- 当用户直接说“把某某文件夹备份”时，先读 `../runtime/CREATE_FOLDER_BACKUP_FLOW.md`。
+- 该分支负责整目录复制、固定命名与落备份区后的登记动作。
+
+## 分支九：维护备份清单 README
+- 当任务涉及更新备份列表、补一句描述或删除失效备份条目时，先读 `../runtime/BACKUP_README_MAINTENANCE_FLOW.md`。
+
+## 分支十：给备份目录命名
+- 当任务需要决定备份目录名，或核对 `<2个word>_bak_<日期>` 规则时，先读 `../runtime/BACKUP_NAMING_RULE.md`。

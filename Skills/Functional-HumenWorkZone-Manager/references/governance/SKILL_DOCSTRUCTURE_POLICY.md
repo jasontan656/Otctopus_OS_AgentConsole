@@ -25,3 +25,4 @@ anchors:
 - 所有 markdown 文档补齐 `doc_structure` frontmatter 与 anchors。
 - 只要 `Human_Work_Zone` 下出现稳定子域，就应为该子域建立独立 routing 或 topic atom。
 - 对“开源项目落位”“目录命名”“inventory README 维护”这类长期动作，必须一事一文档，不允许混成一篇大规则。
+- 对“备份目录承载”“备份执行动作”“备份命名”“备份 README 维护”同样必须一事一文档，不允许混进开源项目分支。
