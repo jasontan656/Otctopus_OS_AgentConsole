@@ -17,14 +17,14 @@
   - 脚本读取 `ANCHOR_DOC_REGISTRY.yaml` 与 `MOL_TECH_STACK_KEYWORD_ANCHOR_GRAPH_v1.md`。
   - 脚本读取 `references/anchor_docs_machine/anchor_docs_machine_v1.jsonl` 作为唯一查询语料。
   - 接收 `--keywords-zh` 与 `--keywords-en`（双语必填），计算域关联命中。
-  - 始终打印完整 `common_core` 机器规则；然后只打印真实命中的 `common_conditional/constraints` 机器规则（含绝对路径）。
+  - 不再附带已外移的 `common_core/common_conditional` 查询底座；只打印真实命中的 `constraints` 机器规则（含绝对路径）。
   - 强制输出 `JSONL`，禁止 markdown 正文输出。
   - 禁止落盘参数；若传 `--out/--output/--file/--save/...` 直接报错。
 - 人类叙事版输出：
   - 控制台输出多行 JSON，每行一个机械规则对象，可直接给模型消费，不需要再做正文清洗。
 
 ## 示例命令（强制：一行可复制）
-- 最小用途描述：双语关键词检索机器版宪法 JSONL（始终带 common_core，全程仅控制台输出）。
+- 最小用途描述：双语关键词检索机器版宪法 JSONL（只返回命中 constraints，全程仅控制台输出）。
 - 一行命令：
   - `cd <repo-root> && ./.venv_backend_skills/bin/python Skills/Constitution-knowledge-base/scripts/constitution_keyword_query.py --keywords-zh "会话,队列" --keywords-en "session,queue" | cat`
 - 禁止事项（强制）：

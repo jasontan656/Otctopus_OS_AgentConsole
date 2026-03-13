@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import re
 from pathlib import Path
+from typing import Dict, List
 
 from ckb_toolbox.query_engine import (
     MINIMUM_KEYWORD_CONTRACT,
@@ -25,6 +26,9 @@ FORBIDDEN_OUTPUT_ARG_PATTERN = re.compile(
     re.IGNORECASE,
 )
 
+QuerySectionItem = Dict[str, str]
+MachineRecord = Dict[str, object]
+
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Query constitution machine rules by bilingual keywords.")
@@ -33,7 +37,17 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def emit_hits(section: str, items, machine, zh_terms, en_terms, matched_domains, skill_root: Path) -> list[str]:
+def emit_hits(
+    section: str,
+    items: List[QuerySectionItem],
+    machine: Dict[str, MachineRecord],
+    zh_terms: List[str],
+    en_terms: List[str],
+    matched_domains: List[str],
+    skill_root: Path,
+) -> list[str]:
+    if not items:
+        return []
     hits = []
     for item in items:
         rec = machine.get(item["anchor_id"])
@@ -81,18 +95,19 @@ def main() -> int:
         "mode": "machine_jsonl_v1",
         "keywords": {"zh": zh_terms, "en": en_terms},
         "matched_domains": matched_domains,
-        "common_policy": "common_core_always_on;common_conditional_on_hit",
+        "common_policy": "constraints_on_hit_only",
         "minimum_keyword_contract_record": "minimum_keyword_contract",
         "enforcement_contract_record": "constitution_enforcement_contract",
         "output_contract": "console_only_no_disk_no_markdown",
     })
     emit_jsonl({"record": "minimum_keyword_contract", **MINIMUM_KEYWORD_CONTRACT, "provided_keywords": {"zh": zh_terms, "en": en_terms}})
-    for item in sorted(sections["common_core"], key=lambda x: x["anchor_id"]):
-        rec = dict(machine.get(item["anchor_id"], {}))
-        if not rec:
-            continue
-        rec.update({"record": "constitution_rule", "section": "common_core", "src": str((skill_root / str(rec.get("src", ""))).resolve())})
-        emit_jsonl(rec)
+    if sections["common_core"]:
+        for item in sorted(sections["common_core"], key=lambda x: x["anchor_id"]):
+            rec = dict(machine.get(item["anchor_id"], {}))
+            if not rec:
+                continue
+            rec.update({"record": "constitution_rule", "section": "common_core", "src": str((skill_root / str(rec.get("src", ""))).resolve())})
+            emit_jsonl(rec)
     emit_hits("common_conditional", sections["common_conditional"], machine, zh_terms, en_terms, matched_domains, skill_root)
     matched_constraints = emit_hits("constraints", sections["constraints"], machine, zh_terms, en_terms, matched_domains, skill_root)
     emit_jsonl({

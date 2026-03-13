@@ -3,18 +3,8 @@ from __future__ import annotations
 import json
 from typing import Dict, List, Tuple
 
-REQUIRED_COMMON_ANCHORS = [
-    "common_code_governance",
-    "common_file_structure",
-    "common_folder_structure",
-    "common_modularity",
-    "common_typed_contract",
-    "common_permission_boundary",
-]
-REQUIRED_CONSTRAINT_ANCHORS = [
-    "constraint_always_attach_common",
-    "constraint_task_package_constitution_binding",
-]
+REQUIRED_COMMON_ANCHORS: list[str] = []
+REQUIRED_CONSTRAINT_ANCHORS: list[str] = []
 REQUIRED_GATES: list[str] = []
 MINIMUM_KEYWORD_CONTRACT = {
     "bilingual_required": True,

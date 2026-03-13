@@ -30,7 +30,7 @@
 
 ## 关联策略
 1. 查询工具读取 `ANCHOR_DOC_REGISTRY.yaml`、`MOL_TECH_STACK_KEYWORD_ANCHOR_GRAPH_v1.md`、`anchor_docs_machine_v1.jsonl`。
-2. `common_fat_file` 与 Python lint 已迁移出宪法库，不再作为 `common_core` 查询底座。
+2. 已被 `Dev-PythonCode-Constitution`、`Dev-VUE3-WebUI-Frontend`、`Dev-OctopusOS-Constitution-ProjectStructure` 接管的规则不再进入宪法库查询面。
 3. 无法稳定静态验证的条款不再进入宪法库 registry。
 
 ## 示例命令（强制：一行可复制）
@@ -44,7 +44,8 @@
   - `anchor_docs_machine_v1.jsonl`（通过构建脚本重建）
 
 ## 版本变更记录
-- 2026-03-01：新增 `Cli_Toolbox.constitution_keyword_query`，支持双语关键词查询、common_core 全量输出、禁止落盘参数。
+- 2026-03-01：新增 `Cli_Toolbox.constitution_keyword_query`，支持双语关键词查询、禁止落盘参数。
 - 2026-03-01：查询输出升级为仅机器 JSONL，并引入 `anchor_docs_machine_v1.jsonl`。
 - 2026-03-06：移除不可静态验证的运行态条款，仅保留静态 gate 合同。
 - 2026-03-12：迁出 Python lint 与胖文件治理，宪法库回到 query-only 边界。
+- 2026-03-13：移除已被 Python/Frontend/ProjectStructure 技能接管的查询锚点；当前查询面只保留命中 `constraints`。

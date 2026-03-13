@@ -1,32 +1,8 @@
 version: v1
 graph_doc: references/knowledge_graph/MOL_TECH_STACK_KEYWORD_ANCHOR_GRAPH_v1.md
 common_core:
-- anchor_id: common_code_governance
-  graph_node: common_always_on
-  doc: references/anchor_docs/common/common_code_governance.md
-- anchor_id: common_file_structure
-  graph_node: common_always_on
-  doc: references/anchor_docs/common/common_file_structure.md
-- anchor_id: common_folder_structure
-  graph_node: common_always_on
-  doc: references/anchor_docs/common/common_folder_structure.md
-- anchor_id: common_modularity
-  graph_node: common_always_on
-  doc: references/anchor_docs/common/common_modularity.md
-- anchor_id: common_typed_contract
-  graph_node: common_always_on
-  doc: references/anchor_docs/common/common_typed_contract.md
-- anchor_id: common_permission_boundary
-  graph_node: common_always_on
-  doc: references/anchor_docs/common/common_permission_boundary.md
 common_conditional:
-- anchor_id: common_payload_normalize
-  graph_node: backend_domain
-  doc: references/anchor_docs/common/common_payload_normalize.md
 constraints:
-- anchor_id: constraint_always_attach_common
-  graph_node: common_always_on
-  doc: references/anchor_docs/constraints/constraint_always_attach_common.md
 - anchor_id: constraint_task_package_constitution_binding
   graph_node: common_always_on
   doc: references/anchor_docs/constraints/constraint_task_package_constitution_binding.md
@@ -42,12 +18,3 @@ constraints:
 - anchor_id: constraint_database_expansion_rule
   graph_node: common_always_on
   doc: references/anchor_docs/constraints/constraint_database_expansion_rule.md
-- anchor_id: constraint_permission_boundary_enforcement
-  graph_node: common_always_on
-  doc: references/anchor_docs/constraints/constraint_permission_boundary_enforcement.md
-- anchor_id: constraint_payload_normalization_enforcement
-  graph_node: common_always_on
-  doc: references/anchor_docs/constraints/constraint_payload_normalization_enforcement.md
-- anchor_id: constraint_typed_contract_enforcement
-  graph_node: common_always_on
-  doc: references/anchor_docs/constraints/constraint_typed_contract_enforcement.md

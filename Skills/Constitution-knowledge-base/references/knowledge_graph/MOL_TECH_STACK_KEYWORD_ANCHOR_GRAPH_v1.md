@@ -4,8 +4,8 @@
 
 - 目标：把 `MOL_FULL_CANON.md` 中与工程实现相关、且适合静态检索和结构约束的语义锚点，整理为“可检索关键词图”。
 - 输入基线：`assets/goal/MOL_FULL_CANON.md`
-- 边界：本图只服务于可静态 gate 的行为合同、结构规则与域扩展，不承载技术栈选型、依赖裁决或运行时证据要求。
-- 约束：任意检索（后端/数据库/渠道/运行时）都必须自动携带“通用静态治理锚点”。
+- 边界：本图只服务于仍由宪法库自身治理的可检索约束；已迁出的 Python、前端与项目结构规则不再由本图承接。
+- 约束：检索只返回真实命中的约束锚点，不再强制附带已外移的通用结构/代码治理底座。
 
 ## 2. MOL 锚点提取（证据）
 
@@ -29,17 +29,13 @@ graph_nodes:
   common_always_on:
     keywords:
       - governance
-      - code_governance
       - constitution_binding
       - task_package
-      - file_structure
-      - folder_structure
-      - modularity
-      - typed_contract
-      - permission_boundary
-      - static_gate
-      - lint_gate
-      - rule_traceability
+      - retrieval
+      - query
+      - expansion
+      - cross_domain
+      - handoff
 
   backend_domain:
     keywords:
@@ -135,21 +131,6 @@ graph_edges:
     to: database_domain
     reason: "请求生命周期与状态持久化天然相关"
 
-  - from: common_always_on
-    to: backend_domain
-    reason: "通用静态治理常驻"
-
-  - from: common_always_on
-    to: database_domain
-    reason: "通用静态治理常驻"
-
-  - from: common_always_on
-    to: codex_runtime_domain
-    reason: "通用静态治理常驻"
-
-  - from: common_always_on
-    to: telegram_channel_domain
-    reason: "通用静态治理常驻"
 ```
 
 ## 4. 召回与扩展规则（执行用）
@@ -162,16 +143,13 @@ retrieval_policy:
     - split_by_symbol
     - cn_en_alias_expand
 
-  always_attach:
-    - common_always_on
-
   expansion_rules:
     - trigger_any_of: ["telegram", "channel", "webhook", "callback", "deep_link", "chat"]
-      attach: ["telegram_channel_domain", "backend_domain", "database_domain", "common_always_on"]
+      attach: ["telegram_channel_domain", "backend_domain", "database_domain"]
 
     - trigger_any_of: ["codex", "runtime", "session", "resume", "reply", "exec", "thread"]
-      attach: ["codex_runtime_domain", "backend_domain", "database_domain", "common_always_on"]
+      attach: ["codex_runtime_domain", "backend_domain", "database_domain"]
 
     - trigger_any_of: ["backend", "api", "worker", "queue", "request", "response", "payload", "normalize"]
-      attach: ["backend_domain", "database_domain", "common_always_on"]
+      attach: ["backend_domain", "database_domain"]
 ```

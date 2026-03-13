@@ -47,10 +47,11 @@ def extract_keywords_zh(text: str) -> List[str]:
 
 def mechanical_payload(cat: str, anchor_id: str, domain: str, src: str, text: str, graph_kws: List[str]) -> Dict[str, object]:
     is_common_core = cat == "common_core"
+    is_common_conditional = cat == "common_conditional"
     priority = "always_on" if is_common_core else "query_hit"
-    cohit = [] if is_common_core else ["common_core_always_on"]
+    cohit = ["query_keyword_hit"] if is_common_conditional else []
     must = [f"apply_{anchor_id}", "emit_id_cat_domain_src", "emit_keywords_and_gate"]
-    must.insert(1, "always_attach_on_query" if is_common_core else "attach_when_keyword_or_domain_hits" if cat == "common_conditional" else "enforce_block_when_condition_met")
+    must.insert(1, "always_attach_on_query" if is_common_core else "attach_when_keyword_or_domain_hits" if is_common_conditional else "enforce_block_when_condition_met")
     gate = ["bilingual_keywords_required", "always_on" if is_common_core else "score_gt_0"]
     return {
         "v": "machine_v1",

@@ -21,6 +21,10 @@ Machine-only constitution corpus for `Cli_Toolbox.constitution_keyword_query`.
 - `evidence`: required evidence fields.
 - `src`: human markdown source path.
 
+Current active query surface:
+- `constraints`
+- `common_core/common_conditional` remain as empty compatibility categories in the registry schema.
+
 ## Build
 ```bash
 cd <repo-root> && ./.venv_backend_skills/bin/python Skills/Constitution-knowledge-base/scripts/build_machine_anchor_docs.py
