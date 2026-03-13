@@ -31,6 +31,7 @@
     "04_frontend_contract_layer/80_rules_and_validation_contract.md",
     "04_frontend_contract_layer/81_frontend_mother_doc_gate_contract.md",
     "04_frontend_contract_layer/82_semantic_split_graph_gate_contract.md",
+    "04_frontend_contract_layer/83_blueprint_numeric_integrity_gate_contract.md",
     "05_domain_contracts/20_navigation_canvas_panel_contract.md"
   ],
   "blueprint_doc_prefixes": [
@@ -82,7 +83,12 @@
     "宽度",
     "高度",
     "挤压",
-    "摆放"
+    "摆放",
+    "frame_width",
+    "frame_height",
+    "responsive_variants",
+    "allow_overlap",
+    "overflow_policy"
   ],
   "visual_keywords": [
     "background",

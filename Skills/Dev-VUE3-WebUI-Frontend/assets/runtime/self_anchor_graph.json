@@ -3,8 +3,8 @@
   "graph_version": "v2",
   "source_skill": "Dev-VUE3-WebUI-Frontend",
   "summary": {
-    "nodeCount": 84,
-    "edgeCount": 240,
+    "nodeCount": 85,
+    "edgeCount": 244,
     "errorCount": 0,
     "warningCount": 2
   },
@@ -582,7 +582,7 @@
       "docType": "index_doc",
       "topic": "Index of layout and responsive frontend rule contracts",
       "title": "Frontend Rules Index",
-      "anchorCount": 7,
+      "anchorCount": 8,
       "depth": 2
     },
     {
@@ -622,12 +622,21 @@
       "depth": 2
     },
     {
+      "path": "frontend_dev_contracts/rules/UI_PRODUCT_BLUEPRINT_NUMERIC_GATE.md",
+      "docId": "ui.dev.rules.product_blueprint_numeric_gate",
+      "docType": "ui_dev_guide",
+      "topic": "Numeric integrity gate for product-owned frontend spatial blueprints",
+      "title": "UI Product Blueprint Numeric Gate",
+      "anchorCount": 2,
+      "depth": 2
+    },
+    {
       "path": "frontend_dev_contracts/rules/UI_PRODUCT_MOTHER_DOC_LINT_WORKFLOW.md",
       "docId": "ui.dev.rules.product_mother_doc_lint",
       "docType": "ui_dev_guide",
       "topic": "Workflow for linting product-owned frontend mother docs through Dev-VUE3-WebUI-Frontend",
       "title": "UI Product Mother Doc Lint Workflow",
-      "anchorCount": 3,
+      "anchorCount": 4,
       "depth": 2
     },
     {
@@ -2091,6 +2100,13 @@
       "reason": "Semantic split gate governs overloaded product docs that should be split."
     },
     {
+      "source": "frontend_dev_contracts/rules/00_RULES_INDEX.md",
+      "target": "frontend_dev_contracts/rules/UI_PRODUCT_BLUEPRINT_NUMERIC_GATE.md",
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "Blueprint numeric gate governs calculable spatial contracts in product mother docs."
+    },
+    {
       "source": "frontend_dev_contracts/rules/UI_IDENTIFIER_LINT_WORKFLOW.md",
       "target": "frontend_dev_contracts/rules/00_RULES_INDEX.md",
       "relation": "belongs_to",
@@ -2189,6 +2205,20 @@
       "reason": "The lint workflow also checks registry discipline."
     },
     {
+      "source": "frontend_dev_contracts/rules/UI_PRODUCT_BLUEPRINT_NUMERIC_GATE.md",
+      "target": "frontend_dev_contracts/rules/00_RULES_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "This numeric gate belongs to the frontend rules branch."
+    },
+    {
+      "source": "frontend_dev_contracts/rules/UI_PRODUCT_BLUEPRINT_NUMERIC_GATE.md",
+      "target": "frontend_dev_contracts/rules/UI_PRODUCT_MOTHER_DOC_LINT_WORKFLOW.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "Numeric blueprint checks are executed through the product mother doc lint workflow."
+    },
+    {
       "source": "frontend_dev_contracts/rules/UI_PRODUCT_MOTHER_DOC_LINT_WORKFLOW.md",
       "target": "frontend_dev_contracts/rules/00_RULES_INDEX.md",
       "relation": "belongs_to",
@@ -2208,6 +2238,13 @@
       "relation": "pairs_with",
       "direction": "cross",
       "reason": "Semantic split is part of the same product mother doc gate."
+    },
+    {
+      "source": "frontend_dev_contracts/rules/UI_PRODUCT_MOTHER_DOC_LINT_WORKFLOW.md",
+      "target": "frontend_dev_contracts/rules/UI_PRODUCT_BLUEPRINT_NUMERIC_GATE.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "Numeric blueprint integrity is part of the same product mother doc gate."
     },
     {
       "source": "frontend_dev_contracts/rules/UI_PRODUCT_SEMANTIC_SPLIT_GATE.md",
@@ -2464,5 +2501,5 @@
       "hits": 4
     }
   ],
-  "updated_at": "2026-03-13T10:59:24.808Z"
+  "updated_at": "2026-03-13T11:58:39.624Z"
 }

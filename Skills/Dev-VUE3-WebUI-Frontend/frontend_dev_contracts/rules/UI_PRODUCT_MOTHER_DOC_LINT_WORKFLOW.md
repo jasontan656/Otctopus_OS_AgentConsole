@@ -17,6 +17,10 @@ anchors:
     relation: "pairs_with"
     direction: "cross"
     reason: "Semantic split is part of the same product mother doc gate."
+  - target: "UI_PRODUCT_BLUEPRINT_NUMERIC_GATE.md"
+    relation: "pairs_with"
+    direction: "cross"
+    reason: "Numeric blueprint integrity is part of the same product mother doc gate."
 ---
 
 # UI Product Mother Doc Lint Workflow
@@ -41,6 +45,8 @@ anchors:
   - `panel.*`、`cmp.*`、`container.*`、`surface.*` 不能只被引用，不被定义。
 - `panel coverage`
   - panel catalog 中的每个 panel 都必须有详细 blueprint 和 component property coverage。
+- `numeric blueprint integrity`
+  - blueprint 必须给出足够数值让脚本检查 frame bounds、overflow、overlap 和已声明派生状态。
 
 ## 产物
 - `graph/frontend_mother_doc_graph.json`

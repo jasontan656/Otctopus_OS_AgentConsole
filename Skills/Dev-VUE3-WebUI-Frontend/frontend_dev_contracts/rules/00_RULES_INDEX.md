@@ -33,6 +33,10 @@ anchors:
     relation: "indexes"
     direction: "downstream"
     reason: "Semantic split gate governs overloaded product docs that should be split."
+  - target: "UI_PRODUCT_BLUEPRINT_NUMERIC_GATE.md"
+    relation: "indexes"
+    direction: "downstream"
+    reason: "Blueprint numeric gate governs calculable spatial contracts in product mother docs."
 ---
 
 # Frontend Rules Index
@@ -50,6 +54,8 @@ anchors:
   - 定义如何读取产品侧 `mother_doc`、构造 graph/profile，并执行前端专项门禁。
 - `UI_PRODUCT_SEMANTIC_SPLIT_GATE.md`
   - 定义如何在产品母文档上识别“应拆未拆”的前端违规。
+- `UI_PRODUCT_BLUEPRINT_NUMERIC_GATE.md`
+  - 定义如何在产品母文档上阻断缺尺寸、越界和未声明 overlap 的空间合同违规。
 
 ## 读取顺序
 1. `UI_LAYOUT_ADJUSTMENT_RULES.md`
@@ -58,3 +64,4 @@ anchors:
 4. `UI_PACKAGE_SHAPE_LINT_WORKFLOW.md`
 5. `UI_PRODUCT_MOTHER_DOC_LINT_WORKFLOW.md`
 6. `UI_PRODUCT_SEMANTIC_SPLIT_GATE.md`
+7. `UI_PRODUCT_BLUEPRINT_NUMERIC_GATE.md`

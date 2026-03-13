@@ -1,6 +1,7 @@
 import path from 'node:path'
 import { promises as fs } from 'node:fs'
 import matter from 'gray-matter'
+import YAML from 'yaml'
 import { defaultSkillRoot } from './docstructure.js'
 
 type GateStatus = 'pass' | 'pass_with_warnings' | 'fail'
@@ -66,6 +67,52 @@ interface ProductMotherDocProfile {
   blueprintDocs: string[]
   visualDocs: string[]
   componentDocs: string[]
+  localCoordinateSpaces: string[]
+  panelBlueprintContracts: string[]
+  viewportBlueprintDocs: string[]
+}
+
+interface SpatialRectNode {
+  nodeId: string
+  parentId: string
+  x: number | null
+  y: number | null
+  w: number | null
+  h: number | null
+  allowOverlap: boolean
+}
+
+interface ParsedPanelBlueprint {
+  sourceDoc: string
+  panelId: string
+  bodyContainerId: string
+  localCoordinateSpace: string
+  frameWidth: number | null
+  frameHeight: number | null
+  overflowPolicy: string | null
+  interactionStates: string[]
+  responsiveVariants: Record<string, {
+    gridSpan: number | null
+    frameWidth: number | null
+    frameHeight: number | null
+  }>
+  nodes: SpatialRectNode[]
+}
+
+interface LocalCoordinateSpaceContract {
+  sourceDoc: string
+  id: string
+  width: number | null
+  height: number | null
+  overflowPolicy: string | null
+}
+
+interface ParsedViewportScene {
+  sourceDoc: string
+  viewportId: string
+  viewportWidth: number | null
+  viewportHeight: number | null
+  nodes: SpatialRectNode[]
 }
 
 export interface ProductMotherDocGraphPayload {
@@ -210,6 +257,59 @@ function extractMarkdownLinks(body: string, sourceAbsolutePath: string, motherDo
 
 function extractIdentifiers(text: string, regex: RegExp): string[] {
   return uniq((text.match(regex) ?? []).map((item) => item.trim()))
+}
+
+function extractYamlBlocks(body: string): string[] {
+  const blocks: string[] = []
+  const regex = /```yaml\s*\n([\s\S]*?)```/g
+  for (const match of body.matchAll(regex)) {
+    const candidate = match[1]?.trim()
+    if (candidate) {
+      blocks.push(candidate)
+    }
+  }
+  return blocks
+}
+
+function parseYamlDocument(source: string): unknown | null {
+  try {
+    return YAML.parse(source)
+  } catch {
+    return null
+  }
+}
+
+function toRecord(value: unknown): Record<string, unknown> | null {
+  return value !== null && typeof value === 'object' && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
+    : null
+}
+
+function toNumber(value: unknown): number | null {
+  return typeof value === 'number' && Number.isFinite(value) ? value : null
+}
+
+function toStringArray(value: unknown): string[] {
+  if (!Array.isArray(value)) {
+    return []
+  }
+  return value.filter((item): item is string => typeof item === 'string').map((item) => item.trim()).filter(Boolean)
+}
+
+function parseSpatialNode(value: unknown): SpatialRectNode | null {
+  const record = toRecord(value)
+  if (!record || typeof record.node_id !== 'string') {
+    return null
+  }
+  return {
+    nodeId: record.node_id,
+    parentId: typeof record.parent_id === 'string' ? record.parent_id : 'viewport',
+    x: toNumber(record.x),
+    y: toNumber(record.y),
+    w: toNumber(record.w),
+    h: toNumber(record.h),
+    allowOverlap: record.allow_overlap === true,
+  }
 }
 
 function hasKeyword(text: string, keywords: string[]): boolean {
@@ -382,6 +482,39 @@ function buildProfile(docs: ProductDocRecord[], matrix: GateMatrix): ProductMoth
   const surfaceIdsDefined = uniq(docs.filter((doc) => doc.path === '04_frontend_contract_layer/65_visual_token_and_surface_matrix.md').flatMap((doc) => extractIdentifiers(doc.body, SURFACE_ID_REGEX)))
   const surfaceIdsReferenced = uniq(docs.flatMap((doc) => extractIdentifiers(doc.body, SURFACE_ID_REGEX)))
   const requirementAtoms = uniq(docs.flatMap((doc) => extractIdentifiers(doc.body, REQUIREMENT_ID_REGEX)))
+  const localCoordinateSpaces = uniq(
+    docs.flatMap((doc) =>
+      extractYamlBlocks(doc.body)
+        .map(parseYamlDocument)
+        .flatMap((parsed) => {
+          const record = toRecord(parsed)
+          const spaces = Array.isArray(record?.local_coordinate_spaces) ? record.local_coordinate_spaces : []
+          return spaces.flatMap((item) => {
+            const space = toRecord(item)
+            return typeof space?.local_coordinate_space_id === 'string' ? [space.local_coordinate_space_id] : []
+          })
+        }),
+    ),
+  )
+  const panelBlueprintContracts = uniq(
+    docs.flatMap((doc) =>
+      extractYamlBlocks(doc.body)
+        .map(parseYamlDocument)
+        .flatMap((parsed) => {
+          const blueprint = toRecord(toRecord(parsed)?.panel_blueprint)
+          return typeof blueprint?.panel_id === 'string' ? [blueprint.panel_id] : []
+        }),
+    ),
+  )
+  const viewportBlueprintDocs = docs
+    .filter((doc) =>
+      extractYamlBlocks(doc.body).some((block) => {
+        const parsed = parseYamlDocument(block)
+        const record = toRecord(parsed)
+        return Boolean(record?.viewport && Array.isArray(record.nodes))
+      }),
+    )
+    .map((doc) => doc.path)
 
   return {
     panelCatalog,
@@ -397,7 +530,319 @@ function buildProfile(docs: ProductDocRecord[], matrix: GateMatrix): ProductMoth
     blueprintDocs: blueprintDocs.map((doc) => doc.path),
     visualDocs: visualDocs.map((doc) => doc.path),
     componentDocs: componentDocs.map((doc) => doc.path),
+    localCoordinateSpaces,
+    panelBlueprintContracts,
+    viewportBlueprintDocs,
   }
+}
+
+function collectPanelBlueprints(docs: ProductDocRecord[]): ParsedPanelBlueprint[] {
+  const blueprints: ParsedPanelBlueprint[] = []
+
+  for (const doc of docs) {
+    for (const block of extractYamlBlocks(doc.body)) {
+      const parsed = parseYamlDocument(block)
+      const blueprint = toRecord(toRecord(parsed)?.panel_blueprint)
+      if (!blueprint || typeof blueprint.panel_id !== 'string') {
+        continue
+      }
+
+      const responsiveVariantsRecord = toRecord(blueprint.responsive_variants) ?? {}
+      const responsiveVariants = Object.fromEntries(
+        Object.entries(responsiveVariantsRecord).map(([variantKey, rawValue]) => {
+          const variant = toRecord(rawValue) ?? {}
+          return [
+            variantKey,
+            {
+              gridSpan: toNumber(variant.grid_span),
+              frameWidth: toNumber(variant.frame_width),
+              frameHeight: toNumber(variant.frame_height),
+            },
+          ]
+        }),
+      )
+
+      blueprints.push({
+        sourceDoc: doc.path,
+        panelId: blueprint.panel_id,
+        bodyContainerId: typeof blueprint.body_container_id === 'string' ? blueprint.body_container_id : '',
+        localCoordinateSpace: typeof blueprint.local_coordinate_space === 'string' ? blueprint.local_coordinate_space : '',
+        frameWidth: toNumber(blueprint.frame_width),
+        frameHeight: toNumber(blueprint.frame_height),
+        overflowPolicy: typeof blueprint.overflow_policy === 'string' ? blueprint.overflow_policy : null,
+        interactionStates: toStringArray(blueprint.interaction_states),
+        responsiveVariants,
+        nodes: Array.isArray(blueprint.nodes)
+          ? blueprint.nodes.map(parseSpatialNode).filter((node): node is SpatialRectNode => Boolean(node))
+          : [],
+      })
+    }
+  }
+
+  return blueprints
+}
+
+function collectLocalCoordinateSpaces(docs: ProductDocRecord[]): LocalCoordinateSpaceContract[] {
+  const spaces: LocalCoordinateSpaceContract[] = []
+
+  for (const doc of docs) {
+    for (const block of extractYamlBlocks(doc.body)) {
+      const parsed = parseYamlDocument(block)
+      const record = toRecord(parsed)
+      const rawSpaces = Array.isArray(record?.local_coordinate_spaces) ? record.local_coordinate_spaces : []
+      for (const rawSpace of rawSpaces) {
+        const space = toRecord(rawSpace)
+        if (!space || typeof space.local_coordinate_space_id !== 'string') {
+          continue
+        }
+        spaces.push({
+          sourceDoc: doc.path,
+          id: space.local_coordinate_space_id,
+          width: toNumber(space.width),
+          height: toNumber(space.height),
+          overflowPolicy: typeof space.overflow_policy === 'string' ? space.overflow_policy : null,
+        })
+      }
+    }
+  }
+
+  return spaces
+}
+
+function collectViewportScenes(docs: ProductDocRecord[]): ParsedViewportScene[] {
+  const scenes: ParsedViewportScene[] = []
+
+  for (const doc of docs) {
+    for (const block of extractYamlBlocks(doc.body)) {
+      const parsed = parseYamlDocument(block)
+      const record = toRecord(parsed)
+      const viewport = toRecord(record?.viewport)
+      if (!viewport || !Array.isArray(record?.nodes)) {
+        continue
+      }
+      scenes.push({
+        sourceDoc: doc.path,
+        viewportId: typeof viewport.viewport_id === 'string' ? viewport.viewport_id : 'viewport',
+        viewportWidth: toNumber(viewport.viewport_width),
+        viewportHeight: toNumber(viewport.viewport_height),
+        nodes: record.nodes.map(parseSpatialNode).filter((node): node is SpatialRectNode => Boolean(node)),
+      })
+    }
+  }
+
+  return scenes
+}
+
+function rectsOverlap(a: SpatialRectNode, b: SpatialRectNode): boolean {
+  if (a.x === null || a.y === null || a.w === null || a.h === null || b.x === null || b.y === null || b.w === null || b.h === null) {
+    return false
+  }
+  return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y
+}
+
+function validateBlueprintGeometry(
+  panelBlueprints: ParsedPanelBlueprint[],
+  localSpaces: LocalCoordinateSpaceContract[],
+): LintIssue[] {
+  const issues: LintIssue[] = []
+  const localSpaceMap = new Map(localSpaces.map((space) => [space.id, space]))
+
+  for (const blueprint of panelBlueprints) {
+    if (!blueprint.bodyContainerId) {
+      issues.push({
+        code: 'blueprint.missing_body_container',
+        doc: blueprint.sourceDoc,
+        message: `Panel blueprint is missing body_container_id: ${blueprint.panelId}`,
+      })
+    }
+    if (!blueprint.localCoordinateSpace) {
+      issues.push({
+        code: 'blueprint.missing_local_coordinate_space',
+        doc: blueprint.sourceDoc,
+        message: `Panel blueprint is missing local_coordinate_space: ${blueprint.panelId}`,
+      })
+    }
+
+    const localSpace = blueprint.localCoordinateSpace ? localSpaceMap.get(blueprint.localCoordinateSpace) : null
+    if (blueprint.localCoordinateSpace && !localSpace) {
+      issues.push({
+        code: 'blueprint.undefined_local_coordinate_space',
+        doc: blueprint.sourceDoc,
+        message: `Panel blueprint references undefined local coordinate space: ${blueprint.panelId} -> ${blueprint.localCoordinateSpace}`,
+      })
+    }
+
+    if (blueprint.frameWidth === null || blueprint.frameHeight === null) {
+      issues.push({
+        code: 'blueprint.missing_frame_dimensions',
+        doc: blueprint.sourceDoc,
+        message: `Panel blueprint is missing frame dimensions: ${blueprint.panelId}`,
+      })
+      continue
+    }
+
+    if (localSpace && (localSpace.width !== blueprint.frameWidth || localSpace.height !== blueprint.frameHeight)) {
+      issues.push({
+        code: 'blueprint.frame_space_mismatch',
+        doc: blueprint.sourceDoc,
+        message: `Panel blueprint frame does not match declared local coordinate space: ${blueprint.panelId}`,
+      })
+    }
+
+    if (!blueprint.responsiveVariants.desktop_default) {
+      issues.push({
+        code: 'blueprint.missing_default_variant',
+        doc: blueprint.sourceDoc,
+        message: `Panel blueprint is missing desktop_default responsive variant: ${blueprint.panelId}`,
+      })
+    }
+
+    if (blueprint.interactionStates.includes('focus') && !blueprint.responsiveVariants.panel_focus) {
+      issues.push({
+        code: 'blueprint.missing_focus_variant',
+        doc: blueprint.sourceDoc,
+        message: `Focus-capable panel blueprint is missing panel_focus responsive variant: ${blueprint.panelId}`,
+      })
+    }
+
+    for (const [variantKey, variant] of Object.entries(blueprint.responsiveVariants)) {
+      if (variant.frameWidth === null || variant.frameHeight === null) {
+        issues.push({
+          code: 'blueprint.variant_missing_dimensions',
+          doc: blueprint.sourceDoc,
+          message: `Responsive variant is missing frame dimensions: ${blueprint.panelId} -> ${variantKey}`,
+        })
+      }
+    }
+
+    const nodesByParent = new Map<string, SpatialRectNode[]>()
+    for (const node of blueprint.nodes) {
+      if (node.x === null || node.y === null || node.w === null || node.h === null) {
+        issues.push({
+          code: 'blueprint.node_missing_geometry',
+          doc: blueprint.sourceDoc,
+          message: `Blueprint node is missing geometry: ${blueprint.panelId} -> ${node.nodeId}`,
+        })
+        continue
+      }
+      if (node.x < 0 || node.y < 0 || node.w <= 0 || node.h <= 0) {
+        issues.push({
+          code: 'blueprint.node_invalid_geometry',
+          doc: blueprint.sourceDoc,
+          message: `Blueprint node has invalid geometry: ${blueprint.panelId} -> ${node.nodeId}`,
+        })
+      }
+      if (node.x + node.w > blueprint.frameWidth || node.y + node.h > blueprint.frameHeight) {
+        issues.push({
+          code: 'blueprint.node_out_of_bounds',
+          doc: blueprint.sourceDoc,
+          message: `Blueprint node exceeds frame bounds: ${blueprint.panelId} -> ${node.nodeId}`,
+        })
+      }
+      const siblings = nodesByParent.get(node.parentId) ?? []
+      siblings.push(node)
+      nodesByParent.set(node.parentId, siblings)
+    }
+
+    for (const siblings of nodesByParent.values()) {
+      for (let index = 0; index < siblings.length; index += 1) {
+        for (let otherIndex = index + 1; otherIndex < siblings.length; otherIndex += 1) {
+          const current = siblings[index]
+          const peer = siblings[otherIndex]
+          if (!current || !peer) {
+            continue
+          }
+          if (rectsOverlap(current, peer) && !current.allowOverlap && !peer.allowOverlap) {
+            issues.push({
+              code: 'blueprint.unexpected_overlap',
+              doc: blueprint.sourceDoc,
+              message: `Sibling blueprint nodes overlap without explicit allow_overlap: ${blueprint.panelId} -> ${current.nodeId} / ${peer.nodeId}`,
+            })
+          }
+        }
+      }
+    }
+  }
+
+  return issues
+}
+
+function validateViewportScenes(scenes: ParsedViewportScene[]): LintIssue[] {
+  const issues: LintIssue[] = []
+
+  for (const scene of scenes) {
+    if (scene.viewportWidth === null || scene.viewportHeight === null) {
+      issues.push({
+        code: 'viewport.missing_dimensions',
+        doc: scene.sourceDoc,
+        message: `Viewport blueprint is missing viewport dimensions: ${scene.viewportId}`,
+      })
+      continue
+    }
+
+    const bounds = new Map<string, { x: number; y: number; w: number; h: number }>()
+    bounds.set('viewport', { x: 0, y: 0, w: scene.viewportWidth, h: scene.viewportHeight })
+    const nodesByParent = new Map<string, SpatialRectNode[]>()
+
+    for (const node of scene.nodes) {
+      if (node.x === null || node.y === null || node.w === null || node.h === null) {
+        issues.push({
+          code: 'viewport.node_missing_geometry',
+          doc: scene.sourceDoc,
+          message: `Viewport node is missing geometry: ${scene.viewportId} -> ${node.nodeId}`,
+        })
+        continue
+      }
+      const parentBounds = bounds.get(node.parentId)
+      if (!parentBounds) {
+        issues.push({
+          code: 'viewport.undefined_parent',
+          doc: scene.sourceDoc,
+          message: `Viewport node references unknown parent: ${scene.viewportId} -> ${node.nodeId} -> ${node.parentId}`,
+        })
+        continue
+      }
+      if (node.x < 0 || node.y < 0 || node.w <= 0 || node.h <= 0) {
+        issues.push({
+          code: 'viewport.node_invalid_geometry',
+          doc: scene.sourceDoc,
+          message: `Viewport node has invalid geometry: ${scene.viewportId} -> ${node.nodeId}`,
+        })
+      }
+      if (node.x + node.w > parentBounds.w || node.y + node.h > parentBounds.h) {
+        issues.push({
+          code: 'viewport.node_out_of_bounds',
+          doc: scene.sourceDoc,
+          message: `Viewport node exceeds parent bounds: ${scene.viewportId} -> ${node.nodeId}`,
+        })
+      }
+      bounds.set(node.nodeId, { x: node.x, y: node.y, w: node.w, h: node.h })
+      const siblings = nodesByParent.get(node.parentId) ?? []
+      siblings.push(node)
+      nodesByParent.set(node.parentId, siblings)
+    }
+
+    for (const siblings of nodesByParent.values()) {
+      for (let index = 0; index < siblings.length; index += 1) {
+        for (let otherIndex = index + 1; otherIndex < siblings.length; otherIndex += 1) {
+          const current = siblings[index]
+          const peer = siblings[otherIndex]
+          if (!current || !peer) {
+            continue
+          }
+          if (rectsOverlap(current, peer) && !current.allowOverlap && !peer.allowOverlap) {
+            issues.push({
+              code: 'viewport.unexpected_overlap',
+              doc: scene.sourceDoc,
+              message: `Viewport sibling nodes overlap without explicit allow_overlap: ${scene.viewportId} -> ${current.nodeId} / ${peer.nodeId}`,
+            })
+          }
+        }
+      }
+    }
+  }
+
+  return issues
 }
 
 function applySplitRules(doc: ProductDocRecord, matrix: GateMatrix): LintIssue[] {
@@ -429,6 +874,9 @@ function lintDocs(
   const errors = [...baseErrors]
   const docSet = new Set(docs.map((doc) => doc.path))
   const adjacency = buildAdjacency(docs)
+  const panelBlueprints = collectPanelBlueprints(docs)
+  const localCoordinateSpaces = collectLocalCoordinateSpaces(docs)
+  const viewportScenes = collectViewportScenes(docs)
   const keywordGateTargets = new Set([
     '05_domain_contracts/20_navigation_canvas_panel_contract.md',
     '05_domain_contracts/30_requirement_atoms.md',
@@ -488,6 +936,9 @@ function lintDocs(
       })
     }
   }
+
+  errors.push(...validateBlueprintGeometry(panelBlueprints, localCoordinateSpaces))
+  errors.push(...validateViewportScenes(viewportScenes))
 
   for (const doc of docs) {
     if (doc.path.startsWith('12_adrs/')) {
