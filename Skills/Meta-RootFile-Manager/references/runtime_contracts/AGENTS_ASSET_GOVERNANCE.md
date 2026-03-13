@@ -76,12 +76,14 @@ anchors:
 ### Part B Allows
 - the structured runtime payload that CLI output should return
 - JSON objects and arrays that define execution modes, runtime constraints, must-use rules, forbidden patterns, turn contracts, and contract handoff behavior
+- `default_meta_skill_order` as the only place that may carry `skill name + minimal description` entries inside the payload
 - repo-local payload fields that are meant for deterministic machine consumption
 
 ### Part B Forbids
 - free-form human entry prose that belongs in `Part A`
 - duplicated copies of the direct human entry instructions unless they are intentionally normalized into payload fields
 - content that should only exist as a shell command or a plain-language entry note
+- repeating any skill name from `default_meta_skill_order` inside other action-oriented payload fields just to restate the same routing or obligation
 
 ## Adjacent Contract References
 - `scan` semantics are defined in `references/runtime_contracts/SCAN_STAGE_CONTRACT.md`.

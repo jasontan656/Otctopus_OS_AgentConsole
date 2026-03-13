@@ -30,18 +30,18 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `Octopus_OS/Client_Applications` con
     "path_metadata_is_not_action_guidance": true
   },
   "default_meta_skill_order": [
-    "$Dev-VUE3-WebUI-Frontend (the mandatory frontend development constitution for Client_Applications; do not violate it)",
-    "$Meta-RootFile-Manager (required whenever governing this AGENTS.md; do not directly edit the external AGENTS.md)"
+    "$Dev-VUE3-WebUI-Frontend (frontend governance baseline for Client_Applications)",
+    "$Meta-RootFile-Manager (AGENTS governance mapping flow)"
   ],
   "turn_start_actions": [
     "load the returned target-contract JSON before following Client_Applications local runtime rules",
     "classify the turn as READ_EXEC or WRITE_EXEC",
-    "if the task enters frontend development under Client_Applications, use $Dev-VUE3-WebUI-Frontend as the governing frontend standard",
-    "if the task governs this AGENTS.md, use $Meta-RootFile-Manager collect/push flow instead of directly editing the external file"
+    "if the task enters frontend development under Client_Applications, use the active frontend governance standard",
+    "if the task governs this AGENTS.md, use the governed collect/push flow instead of directly editing the external file"
   ],
   "runtime_constraints": [
-    "Client_Applications frontend work must use $Dev-VUE3-WebUI-Frontend as the governing frontend standard and must not violate it",
-    "this AGENTS.md is governed by $Meta-RootFile-Manager and must not be directly edited as an external file",
+    "Client_Applications frontend work must follow the active frontend governance standard",
+    "this AGENTS.md is governed and must not be directly edited as an external file",
     "treat CLI JSON as the primary runtime rule source"
   ],
   "execution_modes": {
@@ -49,28 +49,28 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `Octopus_OS/Client_Applications` con
       "goal": "inspect or answer without changing Client_Applications files",
       "default_actions": [
         "prefer the target-contract JSON as the primary runtime entry",
-        "read Dev-VUE3-WebUI-Frontend only when the task enters actual frontend work"
+        "load the active frontend governance only when the task enters actual frontend work"
       ]
     },
     "WRITE_EXEC": {
       "goal": "change Client_Applications artifacts under governed frontend rules",
       "default_actions": [
-        "use $Dev-VUE3-WebUI-Frontend as the mandatory frontend development standard",
-        "use $Meta-RootFile-Manager when governing this AGENTS.md and finish the collect/push loop"
+        "use the active frontend governance as the mandatory development standard",
+        "when governing this AGENTS.md, finish the collect/push loop"
       ]
     }
   },
   "repo_local_contract_handoff": [
-    "for frontend development under Client_Applications, read and follow Dev-VUE3-WebUI-Frontend before editing",
-    "for AGENTS governance, keep the internal managed pair and the external AGENTS.md synchronized through Meta-RootFile-Manager"
+    "for frontend development under Client_Applications, load and follow the active frontend governance before editing",
+    "for AGENTS governance, keep the internal managed pair and the external AGENTS.md synchronized through the governed mapping flow"
   ],
   "forbidden_primary_runtime_pattern": [
-    "Do not perform Client_Applications frontend work while ignoring Dev-VUE3-WebUI-Frontend.",
-    "Do not directly edit the external Client_Applications/AGENTS.md without going through Meta-RootFile-Manager."
+    "Do not perform Client_Applications frontend work while ignoring the active frontend governance.",
+    "Do not directly edit the external Client_Applications/AGENTS.md outside the governed mapping flow."
   ],
   "turn_end_actions": [
-    "if the turn changed Client_Applications frontend artifacts, confirm Dev-VUE3-WebUI-Frontend was used as the governing standard",
-    "if the turn governed this AGENTS.md, complete the Meta-RootFile-Manager collect/push loop before closing"
+    "if the turn changed Client_Applications frontend artifacts, confirm the active frontend governance was used as the governing standard",
+    "if the turn governed this AGENTS.md, complete the governed collect/push loop before closing"
   ],
   "repo_name": "Octopus_OS"
 }

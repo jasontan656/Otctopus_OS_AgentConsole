@@ -244,6 +244,82 @@ class TestCliToolbox:
         assert "owner" in result
         assert "payload" in result
 
+    def test_lint_rejects_skill_name_repeated_outside_default_meta_skill_order(self) -> None:
+        governed_owner = (
+            "由 `$Meta-RootFile-Manager` 作为 `Otctopus_OS_AgentConsole` repository root container 的 "
+            "runtime entry owner 负责治理；当前通过 `AGENTS_MD` 通道受管并同步这个入口文件。"
+        )
+        invalid_payload = {
+            "owner": governed_owner,
+            "entry_role": "repo_runtime_entry",
+            "runtime_source_policy": {
+                "runtime_rule_source": "CLI_JSON",
+                "audit_fields_are_not_primary_runtime_instructions": True,
+                "path_metadata_is_not_action_guidance": True,
+            },
+            "default_meta_skill_order": [
+                "$meta-github-operation (Git traceability for repo writes)",
+            ],
+            "peer_summary_policy": {
+                "available": True,
+                "relation": "same_level_summary",
+                "read_policy": "available_for_public_product_summary",
+                "guidance": "same-level README.md is available and should be treated as the public English product summary for this repo",
+            },
+            "language_policy": {
+                "conversation_and_internal_coordination": "Chinese-first",
+                "public_product_readme_and_docs": "English-only",
+                "wizard_user_interface": "Bilingual English/Chinese required",
+                "internal_skill_core_and_governance_docs": "Chinese allowed for internal iteration",
+                "git_iteration_logs_for_github": "English-preferred",
+            },
+            "skills_required_techstacks": {
+                "python_backend": [],
+                "vue3_typescript_frontend": [],
+            },
+            "turn_start_actions": [
+                "plan same-turn Git traceability through $meta-github-operation",
+            ],
+            "runtime_constraints": [
+                "treat CLI JSON as the primary runtime rule source",
+            ],
+            "execution_modes": {
+                "READ_EXEC": {
+                    "goal": "inspect without changing files",
+                    "default_actions": [],
+                },
+                "WRITE_EXEC": {
+                    "goal": "edit files",
+                    "default_actions": [],
+                },
+            },
+            "forbidden_primary_runtime_pattern": [],
+            "turn_end_actions": [],
+            "repo_name": "Otctopus_OS_AgentConsole",
+        }
+        managed_human = (
+            self.skill_root
+            / "assets"
+            / "managed_targets"
+            / "AI_Projects"
+            / "Otctopus_OS_AgentConsole"
+            / "AGENTS_human.md"
+        )
+        managed_machine = managed_human.with_name("AGENTS_machine.json")
+        write(managed_human, render_internal_human("repo root", invalid_payload))
+        write(managed_machine, json.dumps(invalid_payload, ensure_ascii=False, indent=2) + "\n")
+
+        result = self.run_cli(
+            "lint",
+            "--json",
+            "--source-path",
+            str(self.repo_root / "AGENTS.md"),
+            expect_ok=False,
+        )
+
+        error_text = "\n".join(result["failures"][0]["errors"])
+        assert "payload_skill_repeated_outside_default_meta_skill_order:$meta-github-operation" in error_text
+
     def test_collect_prunes_legacy_alias_dir(self) -> None:
         self._seed_legacy_alias_dir()
         result = self.run_cli("collect", "--json", "--source-path", str(self.repo_root / "README.md"))

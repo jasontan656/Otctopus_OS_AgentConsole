@@ -16,12 +16,9 @@ owner: "由 `Octopus_OS` repository root container 所代表的 公共说明面 
 - `Infra_Contracts/`
 - `Deploy/`
 
-当前固定前端对象为 `Client_Applications/Unified_Portal/`，其内部按 `Channels/Web/`、`Channels/Mobile_H5/`、`Channels/Telegram_Mini_App/` 分区。
+当前固定前端对象为 `Client_Applications/Unified_Portal/`；项目结构层当前只固定该对象根与其 `Development_Docs/`，域内前端目录形态下沉到实现阶段决定。
 
-所有可部署对象根目录都预留：
-- `<Object_Name>_Common/`
-- `<Object_Name>_Core/`
-- `Assets/`
+所有服务/模块对象根目录当前只预留一个固定子目录：
 - `Development_Docs/`
 
 旧的 `Entry_Objects/`、`Admin_Portal`、`User_Portal`、`Identity_Module`、`RabbitMQ` 目录语义已经废止，不再作为项目结构依据。

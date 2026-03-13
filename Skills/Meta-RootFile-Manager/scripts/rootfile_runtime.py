@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import shutil
+from collections.abc import Iterable
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -27,6 +29,7 @@ LEGACY_MANAGED_TARGET_DIRS = ("Codex_Skills_Mirror",)
 LEGACY_OWNER_META_GLOB = "*__owner_meta.json"
 RUNTIME_MANAGED_TARGETS_DIRNAME = "managed_targets"
 ROOTFILE_MANAGER_NAME = "$Meta-RootFile-Manager"
+SKILL_TOKEN_PATTERN = re.compile(r"\$[A-Za-z][A-Za-z0-9._-]*")
 
 
 @dataclass(frozen=True)
@@ -636,6 +639,52 @@ def _validate_payload_value(payload: object, schema: dict[str, object], path: st
     return errors
 
 
+def _default_meta_skill_tokens(payload: object) -> set[str]:
+    if not isinstance(payload, dict):
+        return set()
+    entries = payload.get("default_meta_skill_order")
+    if not isinstance(entries, list):
+        return set()
+    tokens: set[str] = set()
+    for item in entries:
+        if isinstance(item, str):
+            tokens.update(SKILL_TOKEN_PATTERN.findall(item))
+    return tokens
+
+
+def _iter_skill_tokens(payload: object, path: str) -> Iterable[tuple[str, str]]:
+    if isinstance(payload, dict):
+        for key, value in payload.items():
+            yield from _iter_skill_tokens(value, f"{path}.{key}")
+        return
+    if isinstance(payload, list):
+        for index, item in enumerate(payload):
+            yield from _iter_skill_tokens(item, f"{path}[{index}]")
+        return
+    if isinstance(payload, str):
+        for token in SKILL_TOKEN_PATTERN.findall(payload):
+            yield path, token
+
+
+def _validate_default_meta_skill_uniqueness(payload: object) -> list[str]:
+    if not isinstance(payload, dict):
+        return []
+    default_tokens = _default_meta_skill_tokens(payload)
+    if not default_tokens:
+        return []
+    errors: list[str] = []
+    for key, value in payload.items():
+        if key in {"owner", "default_meta_skill_order"}:
+            continue
+        for path, token in _iter_skill_tokens(value, f"$.{key}"):
+            if token in default_tokens:
+                errors.append(
+                    "payload_skill_repeated_outside_default_meta_skill_order:"
+                    f"{token}:{path}"
+                )
+    return errors
+
+
 def validate_external_agents(text: str, expected_owner: str) -> list[str]:
     errors: list[str] = []
     if HOOK_HEADER not in text:
@@ -677,6 +726,8 @@ def validate_internal_human_agents(
     errors.extend(payload_errors)
     if payload_schema is not None and payload is not None:
         errors.extend(_validate_payload_value(payload, payload_schema, "$"))
+    if payload is not None:
+        errors.extend(_validate_default_meta_skill_uniqueness(payload))
     errors.extend(validate_markdown_owner(text, expected_owner))
     return errors
 
@@ -698,9 +749,11 @@ def validate_machine_json(
         return ["missing_owner_field"]
     if payload.get("owner") != expected_owner:
         return ["owner_field_mismatch"]
+    errors = _validate_default_meta_skill_uniqueness(payload)
     if payload_schema is None:
-        return []
-    return _validate_payload_value(payload, payload_schema, "$")
+        return errors
+    errors.extend(_validate_payload_value(payload, payload_schema, "$"))
+    return errors
 
 
 def validate_managed_agents_pair(
