@@ -70,10 +70,7 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `AI_Projects` workspace root 的 run
   ],
   "runtime_constraints": [
     "treat CLI JSON as the primary runtime rule source",
-    "do not use audit markdown as the primary execution guide",
-    "choose READ_EXEC or WRITE_EXEC by actual write intent, not by file type alone",
     "for any skill-related task, load the Otctopus_OS_AgentConsole repo-local contract before skill-specific reads, writes, sync, install, registry, lint, or Git actions",
-    "when a concrete repo path becomes active, load that repo-local contract before repo-specific write, lint, or Git actions",
     "treat Meta-Runtime-Selfcheck as a default turn hook across the active turn instead of a final-reply-only narration step",
     "the hook must stay available throughout the turn for analysis and repair; only the extra user-facing hook output may be skipped when the run is smooth"
   ],
@@ -90,8 +87,7 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `AI_Projects` workspace root 的 run
       "default_actions": [
         "apply the default meta sequence before editing",
         "state the intended write scope before editing",
-        "edit the minimal correct scope that matches the user intent",
-        "do not trigger Git automation unless the active repo-local contract or the user explicitly requires it"
+        "edit the minimal correct scope that matches the user intent"
       ]
     }
   },
@@ -100,11 +96,7 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `AI_Projects` workspace root 的 run
     "repo-local contract may add stricter lint, delivery, or Git rules for that repo only",
     "when repo-local and workspace-root rules overlap, keep the workspace-root boundary and add the repo-local concrete duties"
   ],
-  "forbidden_primary_runtime_pattern": [
-    "Do not treat audit markdown paths as the main runtime instructions.",
-    "Do not require the model to open a chain of markdown files just to learn the next skill to use.",
-    "Do not emit only path metadata when the real need is direct action guidance."
-  ],
+  "forbidden_primary_runtime_pattern": [],
   "turn_end_actions": [
     "print TURN_END guardrails",
     "keep Meta-Runtime-Selfcheck active as a default turn hook throughout the turn and run a final closure pass before final reply",
