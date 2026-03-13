@@ -16,7 +16,8 @@ metadata:
 # SkillsManager-Doc-Structure
 
 ## Runtime Entry
-- Primary runtime entry: `./.venv_backend_skills/bin/python Skills/SkillsManager-Doc-Structure/scripts/Cli_Toolbox.py contract --json`
+- Full tool entry: `cd Skills/SkillsManager-Doc-Structure && npm run cli -- <command> ...`
+- Contract-only compatibility entry: `./.venv_backend_skills/bin/python Skills/SkillsManager-Doc-Structure/scripts/Cli_Toolbox.py contract --json`
 - CLI JSON is the primary runtime source; `SKILL.md` only remains as a facade and routing narrative.
 
 
@@ -34,7 +35,7 @@ metadata:
 
 ## 2. 必读顺序
 1. 先读取运行合同：
-   - `npm run cli -- runtime-contract --json`
+   - `cd Skills/SkillsManager-Doc-Structure && npm run cli -- runtime-contract --json`
 2. 再进入规则轨：
    - `references/rules/00_RULE_SYSTEM_INDEX.md`
 3. 再进入 fewshot 示例轨：
@@ -78,12 +79,14 @@ metadata:
 - 适用于：skills 内 markdown 文档树设计、分叉节点设计、单 topic 原子文档、fewshot 样例树、frontmatter/anchors、graph JSON、文档 lint、self graph 重建。
 
 ## 5. 执行入口
-- `npm run cli -- runtime-contract --json`
-- `npm run cli -- lint-doc-anchors --target <skill_root> --json`
-- `npm run cli -- lint-split-points --target <skill_root> --json`
-- `npm run cli -- register-split-decision --target <skill_root> --doc <doc_path> --rule <rule_id> --decision <accepted|split_required> --note <text> --json`
-- `npm run cli -- build-anchor-graph --target <skill_root> --json`
-- `npm run cli -- rebuild-self-graph --json`
+- 完整工具入口必须在 skill 根目录执行：
+  - `cd Skills/SkillsManager-Doc-Structure && npm run cli -- runtime-contract --json`
+  - `cd Skills/SkillsManager-Doc-Structure && npm run cli -- lint-doc-anchors --target <skill_root> --json`
+  - `cd Skills/SkillsManager-Doc-Structure && npm run cli -- lint-split-points --target <skill_root> --json`
+  - `cd Skills/SkillsManager-Doc-Structure && npm run cli -- register-split-decision --target <skill_root> --doc <doc_path> --rule <rule_id> --decision <accepted|split_required> --note <text> --json`
+  - `cd Skills/SkillsManager-Doc-Structure && npm run cli -- build-anchor-graph --target <skill_root> --json`
+  - `cd Skills/SkillsManager-Doc-Structure && npm run cli -- rebuild-self-graph --json`
+- Python `scripts/Cli_Toolbox.py` 只用于 `contract --json` 兼容读取；不要把它当成完整 lint CLI。
 
 ## 6. 读取原则
 - 入口节点负责把读者送到对应知识轨与 workflow 轨。

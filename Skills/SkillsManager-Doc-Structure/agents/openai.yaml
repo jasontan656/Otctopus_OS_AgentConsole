@@ -1,4 +1,4 @@
 interface:
   display_name: SkillsManager-Doc-Structure
   short_description: 规范 skill 内部文档结构、单 topic 原子文档与锚点图谱。
-  default_prompt: Use $SkillsManager-Doc-Structure. First run `./.venv_backend_skills/bin/python Skills/SkillsManager-Doc-Structure/scripts/Cli_Toolbox.py contract --json`. Treat CLI JSON as the primary runtime source and use markdown mirrors only when the contract still leaves a real gap.
+  default_prompt: Use $SkillsManager-Doc-Structure. Read the contract first via `cd Skills/SkillsManager-Doc-Structure && npm run cli -- runtime-contract --json` or the compatibility reader `./.venv_backend_skills/bin/python Skills/SkillsManager-Doc-Structure/scripts/Cli_Toolbox.py contract --json`. For lint and graph operations, always run the TypeScript npm CLI from the skill root; do not assume the Python wrapper exposes the full tool surface. Treat CLI JSON as the primary runtime source and use markdown mirrors only when the contract still leaves a real gap.
