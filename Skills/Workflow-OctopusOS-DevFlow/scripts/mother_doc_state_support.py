@@ -40,11 +40,20 @@ def parse_frontmatter(path: Path) -> tuple[dict[str, object], str, list[str]]:
 
     metadata: dict[str, object] = {}
     current_key: str | None = None
+    current_item_dict: dict[str, object] | None = None
     errors: list[str] = []
     for line_number, raw_line in enumerate(lines[1:closing_index], start=2):
         if not raw_line.strip():
             continue
-        if raw_line.startswith("  - "):
+        if raw_line.startswith("  ") and current_item_dict is not None:
+            nested = raw_line.strip()
+            if ":" not in nested:
+                errors.append(f"line_{line_number}_expected_nested_key_value")
+                continue
+            nested_key, nested_value = nested.split(":", 1)
+            current_item_dict[nested_key.strip()] = _parse_scalar(nested_value)
+            continue
+        if raw_line.startswith("  - ") or raw_line.startswith("- "):
             if current_key is None:
                 errors.append(f"line_{line_number}_list_item_without_parent")
                 continue
@@ -52,7 +61,14 @@ def parse_frontmatter(path: Path) -> tuple[dict[str, object], str, list[str]]:
             if not isinstance(existing, list):
                 errors.append(f"line_{line_number}_mixed_scalar_and_list_for_{current_key}")
                 continue
-            existing.append(raw_line[4:].strip())
+            item_text = raw_line[4:].strip() if raw_line.startswith("  - ") else raw_line[2:].strip()
+            if ":" in item_text and not item_text.startswith(("http://", "https://")):
+                item_key, item_value = item_text.split(":", 1)
+                current_item_dict = {item_key.strip(): _parse_scalar(item_value)}
+                existing.append(current_item_dict)
+            else:
+                existing.append(item_text)
+                current_item_dict = None
             continue
         if raw_line.startswith(" "):
             errors.append(f"line_{line_number}_unsupported_indentation")
@@ -60,6 +76,7 @@ def parse_frontmatter(path: Path) -> tuple[dict[str, object], str, list[str]]:
         if ":" not in raw_line:
             errors.append(f"line_{line_number}_expected_key_value")
             current_key = None
+            current_item_dict = None
             continue
         key, raw_value = raw_line.split(":", 1)
         key = key.strip()
@@ -67,8 +84,10 @@ def parse_frontmatter(path: Path) -> tuple[dict[str, object], str, list[str]]:
         if not key:
             errors.append(f"line_{line_number}_empty_key")
             current_key = None
+            current_item_dict = None
             continue
         current_key = key
+        current_item_dict = None
         metadata[key] = _parse_scalar(value) if value else []
 
     body = "\n".join(lines[closing_index + 1 :])
@@ -86,6 +105,13 @@ def render_frontmatter(metadata: dict[str, object]) -> str:
                 continue
             lines.append(f"{key}:")
             for item in value:
+                if isinstance(item, dict):
+                    first = True
+                    for item_key, item_value in item.items():
+                        prefix = "- " if first else "  "
+                        lines.append(f"{prefix}{item_key}: {item_value}")
+                        first = False
+                    continue
                 lines.append(f"  - {item}")
             continue
         lines.append(f"{key}: {value}")
@@ -127,6 +153,40 @@ def iter_atomic_markdown_files(root: Path) -> list[Path]:
             continue
         files.append(path)
     return files
+
+
+def _build_doc_id_index(root: Path) -> dict[str, str]:
+    index: dict[str, str] = {}
+    for path in iter_atomic_markdown_files(root):
+        metadata, _body, parse_errors = parse_frontmatter(path)
+        if parse_errors:
+            continue
+        doc_id = metadata.get("doc_id")
+        if isinstance(doc_id, str) and doc_id and doc_id not in index:
+            index[doc_id] = str(path.relative_to(root))
+    return index
+
+
+def resolve_doc_refs(root: Path, doc_refs: list[str]) -> tuple[list[str], list[StateViolation]]:
+    doc_id_index = _build_doc_id_index(root)
+    resolved: list[str] = []
+    violations: list[StateViolation] = []
+    seen: set[str] = set()
+    for doc_ref in doc_refs:
+        direct_path = (root / doc_ref).resolve()
+        relative_doc = (
+            doc_ref
+            if direct_path.exists() and direct_path.is_file()
+            else doc_id_index.get(doc_ref)
+        )
+        if relative_doc is None:
+            violations.append({"doc_ref": doc_ref, "reason": "doc_missing"})
+            continue
+        if relative_doc in seen:
+            continue
+        seen.add(relative_doc)
+        resolved.append(relative_doc)
+    return resolved, violations
 
 
 def validate_doc_metadata(metadata: dict[str, object]) -> list[str]:
@@ -256,13 +316,10 @@ def sync_doc_states(
             "updated_docs": [],
         }
 
+    resolved_doc_refs, violations = resolve_doc_refs(root, doc_refs)
     updated_docs: list[str] = []
-    violations: list[StateViolation] = []
-    for relative_doc in doc_refs:
+    for relative_doc in resolved_doc_refs:
         path = (root / relative_doc).resolve()
-        if not path.exists() or not path.is_file():
-            violations.append({"doc_ref": relative_doc, "reason": "doc_missing"})
-            continue
         metadata, body, parse_errors = parse_frontmatter(path)
         if parse_errors:
             violations.append(
@@ -306,6 +363,7 @@ def sync_doc_states(
     return {
         "status": "pass" if not violations else "fail",
         "updated_docs": updated_docs,
+        "selected_doc_refs": resolved_doc_refs,
         "violations": violations,
         "from_state": from_state,
         "to_state": to_state,
@@ -326,12 +384,12 @@ def mark_docs_modified(
         if auto_from_git
         else {"direct_doc_refs": [], "impact_doc_refs": []}
     )
-    merged_doc_refs = sorted(
+    candidate_doc_refs = sorted(
         set(explicit_doc_refs)
         | set(detected["direct_doc_refs"])
         | set(detected["impact_doc_refs"])
     )
-    if not merged_doc_refs:
+    if not candidate_doc_refs:
         return {
             "status": "fail",
             "reason": "no_doc_refs_selected_for_modified_mark",
@@ -341,14 +399,11 @@ def mark_docs_modified(
             "updated_docs": [],
         }
 
+    resolved_doc_refs, violations = resolve_doc_refs(root, candidate_doc_refs)
     updated_docs: list[str] = []
     already_modified_docs: list[str] = []
-    violations: list[StateViolation] = []
-    for relative_doc in merged_doc_refs:
+    for relative_doc in resolved_doc_refs:
         path = (root / relative_doc).resolve()
-        if not path.exists() or not path.is_file():
-            violations.append({"doc_ref": relative_doc, "reason": "doc_missing"})
-            continue
         metadata, body, parse_errors = parse_frontmatter(path)
         if parse_errors:
             violations.append(
@@ -380,7 +435,7 @@ def mark_docs_modified(
         "explicit_doc_refs": explicit_doc_refs,
         "git_direct_doc_refs": detected["direct_doc_refs"],
         "git_impact_doc_refs": detected["impact_doc_refs"],
-        "selected_doc_refs": merged_doc_refs,
+        "selected_doc_refs": resolved_doc_refs,
         "updated_docs": updated_docs,
         "already_modified_docs": already_modified_docs,
         "violations": violations,

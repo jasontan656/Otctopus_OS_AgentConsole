@@ -272,6 +272,43 @@ class TestCliToolboxRegression:
             assert "doc_work_state: modified" in updated
             assert "doc_pack_refs: []" in updated
 
+    def test_mother_doc_mark_modified_accepts_doc_id(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            target = Path(temp_dir) / "docs" / "mother_doc"
+            run_cli("mother-doc-init", "--target", str(target))
+            fill_directory_placeholders(target)
+            source = target / "01_target_state.md"
+            content = source.read_text(encoding="utf-8").replace(
+                "doc_id: workflow_octopusos_devflow.assets_templates_mother_doc_01_target_state",
+                "doc_id: sample.target_state",
+            )
+            source.write_text(content, encoding="utf-8")
+            run_cli(
+                "mother-doc-state-sync",
+                "--path",
+                str(target),
+                "--doc-ref",
+                "sample.target_state",
+                "--from-state",
+                "modified",
+                "--to-state",
+                "planned",
+                "--pack-ref",
+                "01_design_01",
+            )
+            payload = run_cli(
+                "mother-doc-mark-modified",
+                "--path",
+                str(target),
+                "--doc-ref",
+                "sample.target_state",
+            )
+            assert payload["status"] == "pass"
+            assert payload["selected_doc_refs"] == ["01_target_state.md"]
+            updated = source.read_text(encoding="utf-8")
+            assert "doc_work_state: modified" in updated
+            assert "doc_pack_refs: []" in updated
+
     def test_mother_doc_mark_modified_can_use_git_diff_as_fallback(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             repo_root = Path(temp_dir) / "repo"
