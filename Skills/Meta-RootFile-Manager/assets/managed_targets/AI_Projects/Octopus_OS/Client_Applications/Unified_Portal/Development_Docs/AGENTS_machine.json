@@ -16,19 +16,9 @@
   },
   "workflow_contract": {
     "required_skill": "Workflow-OctopusOS-DevFlow",
-    "required_preflight": [
-      "target-runtime-contract",
-      "stage-checklist"
-    ],
-    "reuse_policy": [
-      "reuse_existing_mother_doc_when_present",
-      "reuse_existing_execution_packs_when_present",
-      "reuse_existing_graph_when_present"
-    ],
-    "governance_chain": [
-      "Meta-RootFile-Manager scaffold/collect/push",
-      "Workflow-OctopusOS-DevFlow four-stage delivery loop"
-    ]
+    "required_preflight": [],
+    "reuse_policy": [],
+    "governance_chain": []
   },
   "turn_end_contract_hooks": {
     "frontend_skill_backflow": {
