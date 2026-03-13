@@ -100,10 +100,11 @@ class TestMetaRuntimeSelfcheckSmoke:
             assert machine_log_path.exists()
 
     def test_execute_command_list_runs_argv_safe_command(self) -> None:
+        safe_python = f'{sys.executable} -c "print(123)"'
         script = (
             "import json\n"
             "from runtime_pain_repair_exec import execute_command_list\n"
-            "result = execute_command_list(commands=['python -c \"print(123)\"'], timeout_sec=5, workdir='.', change_detection_root='')\n"
+            f"result = execute_command_list(commands=['{safe_python}'], timeout_sec=5, workdir='.', change_detection_root='')\n"
             "print(json.dumps(result))\n"
         )
         result = subprocess.run(
