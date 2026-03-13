@@ -1,0 +1,27 @@
+{
+  "directive_name": "functional_humenworkzone_manager_task_routing_guide",
+  "directive_version": "1.0.0",
+  "doc_kind": "guide",
+  "topic": "task-routing",
+  "purpose": "Map a Human_Work_Zone request into the correct managed branch before opening legacy markdown docs or changing files.",
+  "instruction": [
+    "Classify the request by management intent before reading deep markdown documents.",
+    "Use the dedicated branch for open-source projects, backups, project analysis, books, temporary projects, company documents, or external research reports.",
+    "If the request is a generic cleanup or intake action, keep the scope at Human_Work_Zone and only descend into the relevant branch after classification."
+  ],
+  "workflow": [
+    "Call paths --json if you need the canonical zone paths.",
+    "If the request is about open-source repos, route to OPEN_SOURCE_PROJECTS_ZONE_POLICY.md and its naming or README flows.",
+    "If the request is about backups, route to BACKUP_MANAGEMENT_ZONE_POLICY.md and CREATE_FOLDER_BACKUP_FLOW.md.",
+    "If the request is about answering questions from local open-source repos, route to OPEN_SOURCE_PROJECT_ANALYSIS_ZONE_POLICY.md and ANSWER_OPEN_SOURCE_PROJECT_QUESTION_FLOW.md.",
+    "If the request is about books or reading materials, route to BOOKS_AND_READINGS_ZONE_POLICY.md and ORGANIZE_BOOKS_AND_READINGS_FLOW.md.",
+    "If the request is about temporary one-off projects, route to TEMPORARY_PROJECTS_ZONE_POLICY.md and ORGANIZE_TEMPORARY_PROJECT_FLOW.md.",
+    "If the request is about company folders or company media archives, route to COMPANY_DOCUMENTS_ZONE_POLICY.md and ORGANIZE_COMPANY_DOCUMENTS_FLOW.md.",
+    "If the request is about external reports collected from outside sources, route to EXTERNAL_RESEARCH_REPORTS_ZONE_POLICY.md and ORGANIZE_EXTERNAL_RESEARCH_REPORTS_FLOW.md."
+  ],
+  "rules": [
+    "Do not treat the skill facade itself as the full runtime rule source.",
+    "Do not skip the classification step and move files straight into arbitrary folders.",
+    "When a branch owns inventory maintenance, update the branch README in the same turn."
+  ]
+}

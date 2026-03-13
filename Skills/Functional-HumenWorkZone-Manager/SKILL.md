@@ -7,10 +7,10 @@ metadata:
     doc_type: skill_facade
     topic: Entry facade for Functional-HumenWorkZone-Manager
     anchors:
-    - target: references/routing/TASK_ROUTING.md
+    - target: ./references/runtime_contracts/SKILL_RUNTIME_CONTRACT_human.md
       relation: routes_to
       direction: downstream
-      reason: The facade must route readers into the first task branch.
+      reason: The facade routes runtime execution to the CLI-first contract.
     - target: references/governance/SKILL_DOCSTRUCTURE_POLICY.md
       relation: governed_by
       direction: downstream
@@ -18,6 +18,12 @@ metadata:
 ---
 
 # Functional-HumenWorkZone-Manager
+
+## Runtime Entry
+- Primary runtime entry: `./.venv_backend_skills/bin/python Skills/Functional-HumenWorkZone-Manager/scripts/Cli_Toolbox.py contract --json`
+- Secondary runtime entry: `./.venv_backend_skills/bin/python Skills/Functional-HumenWorkZone-Manager/scripts/Cli_Toolbox.py directive --topic <topic> --json`
+- Managed path lookup: `./.venv_backend_skills/bin/python Skills/Functional-HumenWorkZone-Manager/scripts/Cli_Toolbox.py paths --json`
+- CLI JSON is the primary runtime source; `SKILL.md` only remains as a facade and high-level routing narrative.
 
 ## 1. 技能定位
 - 本文件只做门面入口，不承载深规则正文。
@@ -39,10 +45,12 @@ metadata:
 - 当任务涉及从外部收集回来的调研报告、资料包、AI 整理报告或证据附件时，必须进入外部调研报告分支，按内容重命名并维护总清单 README。
 
 ## 2. 必读顺序
-1. 先读取 `references/routing/TASK_ROUTING.md`。
-2. 再读取 `references/governance/SKILL_DOCSTRUCTURE_POLICY.md`。
-3. 再读取 `references/governance/SKILL_EXECUTION_RULES.md`。
-4. 若任务涉及开源项目管理、备份管理、开源项目分析、书籍管理、临时项目管理、公司&文档管理或外部调研报告管理，再进入 `references/runtime/` 下的对应原子流程文档。
+1. 先执行 `./.venv_backend_skills/bin/python Skills/Functional-HumenWorkZone-Manager/scripts/Cli_Toolbox.py contract --json`。
+2. 再按任务意图选择 directive：
+   - 分支判定：`./.venv_backend_skills/bin/python Skills/Functional-HumenWorkZone-Manager/scripts/Cli_Toolbox.py directive --topic task-routing --json`
+   - 执行边界：`./.venv_backend_skills/bin/python Skills/Functional-HumenWorkZone-Manager/scripts/Cli_Toolbox.py directive --topic execution-boundary --json`
+3. 若需要受管目录与子区路径，再执行 `./.venv_backend_skills/bin/python Skills/Functional-HumenWorkZone-Manager/scripts/Cli_Toolbox.py paths --json`。
+4. 只有当 CLI JSON 已经把任务收敛到具体子域后，再进入 `references/routing/`、`references/governance/` 与 `references/runtime/` 下的对应原子文档。
 
 ## 3. 分类入口
 - 路由层：
@@ -51,7 +59,7 @@ metadata:
   - `references/governance/SKILL_DOCSTRUCTURE_POLICY.md`
   - `references/governance/SKILL_EXECUTION_RULES.md`
 - 工具层：
-  - 当前无专属 CLI；入口就是本门面与固定治理文档。
+  - `scripts/Cli_Toolbox.py`
 
 ## 4. 适用域
 - 适用于：整理 `Human_Work_Zone`、归档新资料、调整子目录、清理临时堆放内容、统一命名与保持该目录可读。
@@ -66,8 +74,7 @@ metadata:
 - 若任务需要更复杂的归档策略、命名法或自动化脚本，再在本技能下继续补原子文档。
 
 ## 5. 执行入口
-- 当前无专属 CLI。
-- 当前入口即：`SKILL.md -> references/routing/TASK_ROUTING.md -> references/governance/SKILL_EXECUTION_RULES.md -> references/runtime/*.md`。
+- 当前入口即：`Cli_Toolbox.py contract/directive/paths -> routing/governance/runtime docs`。
 - 当用户明确提到使用 `Functional-HumenWorkZone-Manager` 时，默认把任务范围锁定到 `Human_Work_Zone`。
 
 ## 6. 读取原则

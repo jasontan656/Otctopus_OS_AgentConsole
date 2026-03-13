@@ -1,0 +1,23 @@
+{
+  "directive_name": "functional_humenworkzone_manager_execution_boundary_contract",
+  "directive_version": "1.0.0",
+  "doc_kind": "contract",
+  "topic": "execution-boundary",
+  "purpose": "Keep Functional-HumenWorkZone-Manager file operations scoped to Human_Work_Zone and its managed intake flows.",
+  "instruction": [
+    "Lock the managed target to Human_Work_Zone before any move, rename, delete, or README update.",
+    "Allow external source paths only as intake origins; the managed destination must still resolve under Human_Work_Zone.",
+    "Use paths --json whenever the canonical destination zone is not already obvious from the active branch."
+  ],
+  "workflow": [
+    "Confirm whether the user request is read-only or write execution.",
+    "If the task writes files, resolve the managed zone first and keep the destination under Human_Work_Zone.",
+    "When intake changes folder names, preserve content bodies and only normalize the container name and inventory entries.",
+    "After file placement changes, update the relevant zone README before closing the turn."
+  ],
+  "rules": [
+    "Do not use this skill to govern the whole workspace.",
+    "Do not move files into unregistered ad hoc folders outside the managed zones.",
+    "Do not leave stale inventory entries after renames, moves, or removals."
+  ]
+}

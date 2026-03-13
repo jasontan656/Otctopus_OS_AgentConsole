@@ -1,16 +1,12 @@
 ---
-doc_id: skill_creation_template.asset.toolbox_development_template
-doc_type: template_doc
-topic: Template for a generated skill's Cli_Toolbox development entry
+doc_id: functional_humenworkzone_manager.tooling.cli_toolbox_development
+doc_type: topic_atom
+topic: Development entry for the Functional-HumenWorkZone-Manager CLI toolbox
 anchors:
 - target: Cli_Toolbox_USAGE.md
   relation: pairs_with
   direction: lateral
-  reason: Usage and development templates are paired.
-- target: development/00_ARCHITECTURE_OVERVIEW.md
-  relation: routes_to
-  direction: downstream
-  reason: The development entry should route readers into the architecture template.
+  reason: Usage and development docs are paired.
 ---
 
 # Cli_Toolbox 开发文档（入口）
@@ -18,29 +14,29 @@ anchors:
 适用技能：`Functional-HumenWorkZone-Manager`
 
 ## 命名约束
-- 工具统一命名为 `Cli_Toolbox.<tool_name>`。
+- 本 skill 当前提供 `contract`、`directive`、`paths` 三个命令。
 
-## 内联索引（阅读顺序）
-1. 架构总览：`references/tooling/development/00_ARCHITECTURE_OVERVIEW.md`
-2. 模块目录：`references/tooling/development/10_MODULE_CATALOG.yaml`
-3. 分类索引：`references/tooling/development/20_CATEGORY_INDEX.md`
-4. 模块文档模板：`references/tooling/development/modules/MODULE_TEMPLATE.md`
-5. 变更记录：`references/tooling/development/90_CHANGELOG.md`
+## 当前实现结构
+- 入口脚本：`scripts/Cli_Toolbox.py`
+- 运行合同根：`references/runtime_contracts/`
+- 当前 runtime asset：
+  - `SKILL_RUNTIME_CONTRACT`
+  - `TASK_ROUTING_GUIDE`
+  - `EXECUTION_BOUNDARY_CONTRACT`
 
 ## 文档分类规则
-- 入口文档只做导航与约束，不承载全部实现细节。
-- 模块目录记录 tool alias、入口、状态与文档映射。
-- 分类索引负责跨模块视图。
-- 具体实现细节写入 `modules/<module_id>.md`。
+- `scripts/Cli_Toolbox.py` 只负责稳定输出 JSON payload，不在脚本里重复实现 markdown 规则树。
+- 分支语义仍以下沉文档为主，但模型必须先经由 runtime contract 的 CLI JSON 做入口收敛。
+- 新增 runtime-facing contract/workflow/instruction/guide 时，必须继续遵守 `*_human.md + same-name .json` 双文件形态。
 
 ## 同步维护约束（强制）
 - 工具变更必须同步更新：
   - `Cli_Toolbox_USAGE.md`
-  - `10_MODULE_CATALOG.yaml`
-  - 对应模块文档
-- 若模板或工具会影响模型如何读取运行态规则，必须同步更新模板合同、架构手册与正文模板。
-- 若模板或工具会影响 facade / routing / atomic doc tree，必须同步更新 `references/routing/` 与 `references/governance/`。
-- 若技能使用 staged CLI-first profile，必须同步维护阶段目录与 runtime contract。
+  - `references/runtime_contracts/*.json`
+  - `references/runtime_contracts/*_human.md`
+  - `SKILL.md`
+  - `agents/openai.yaml`
+- 若工具会影响 facade / routing / atomic doc tree，必须同步更新 `references/routing/` 与 `references/governance/`。
 
 ## 版本变更记录
-- [日期] [变更摘要]
+- `2026-03-13`：补齐真实 `Cli_Toolbox.py`、runtime contracts 双文件资产与 CLI-first 门面入口。
