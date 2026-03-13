@@ -122,30 +122,25 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `Otctopus_OS_AgentConsole` repositor
     "use the returned target contract JSON as the runtime rule source"
   ],
   "runtime_constraints": [
-    "stay within the concrete repo-local boundary defined by this payload"
+    "stay within the concrete repo-local boundary defined by this payload",
+    "all skill edits must happen under Otctopus_OS_AgentConsole/Skills as the codex skill installation mirror, then be pushed by SkillsManager; direct edits inside the codex installation folder are prohibited"
   ],
   "execution_modes": {
     "READ_EXEC": {
       "goal": "answer, inspect, classify, or route without changing files",
       "default_actions": [
         "prefer direct CLI contract output over opening markdown rule files",
-        "open extra files only when the direct contract still leaves a real gap",
-        "treat README.md as the public English summary instead of inferring product positioning from internal skill docs"
+        "open extra files only when the direct contract still leaves a real gap"
       ]
     },
     "WRITE_EXEC": {
       "goal": "edit files or trigger manager-owned write flows",
       "default_actions": [
-        "state the intended write scope before editing",
-        "edit the minimal correct scope that matches the user intent"
+        "state the intended write scope before editing"
       ]
     }
   },
-  "forbidden_primary_runtime_pattern": [
-    "Do not treat audit markdown paths as the main runtime instructions.",
-    "Do not require the model to open a chain of markdown files just to learn the next skill to use.",
-    "Do not emit only path metadata when the real need is direct action guidance."
-  ],
+  "forbidden_primary_runtime_pattern": [],
   "turn_end_actions": [
     "if dependency manifests or lock files changed, keep the AGENTS governance mapping synchronized in the same turn"
   ],
