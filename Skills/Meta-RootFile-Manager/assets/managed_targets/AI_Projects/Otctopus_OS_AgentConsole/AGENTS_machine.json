@@ -8,9 +8,12 @@
   },
   "default_meta_skill_order": [
     "$SkillsManager-Production-Form (console product form and Skills surface governance)",
-    "$meta-github-operation (Git traceability for repo writes)",
+    "$SkillsManager-Naming-Manager (skill naming, family grouping, and registry governance)",
+    "$SkillsManager-Creation-Template (governed skill creation and structure refit)",
+    "$SkillsManager-Doc-Structure (skill markdown tree, metadata, and anchor graph governance)",
+    "$SkillsManager-Tooling-CheckUp (skill tooling, techstack baseline, and runtime artifact governance)",
     "$SkillsManager-Mirror-To-Codex (sync edited skills to codex install)",
-    "$SkillsManager-Creation-Template (default governed skill creation baseline)",
+    "$meta-github-operation (Git traceability for repo writes)",
     "$skill-creator (Codex-readable skill formatter)",
     "$Dev-PythonCode-Constitution (Python governance and lint baseline)"
   ],
@@ -54,21 +57,13 @@
     ]
   },
   "turn_start_actions": [
-    "use the returned target contract JSON as the runtime rule source",
-    "if the task needs repo-local dependencies, read the backend/frontend skills environment manifests before installing or invoking tooling",
-    "if the task needs new repo-local dependencies, the AI may choose them from task evidence and install them into the governed *_skills environments before use",
-    "if the task touches Skills/, read skills_required_techstacks first and treat it as the mandatory baseline before introducing new stacks or writing custom equivalents"
+    "use the returned target contract JSON as the runtime rule source"
   ],
   "runtime_constraints": [
     "stay within the concrete repo-local boundary defined by this payload",
     "product/runtime paths must resolve from the product root; do not hardcode author-machine absolute paths or treat AI_Projects literals as the only valid install root",
     "skill-local resources may resolve from current skill roots, but repo mirrors, codex runtime paths, result paths, and product workspaces must use root-first derivation",
-    "when <root>/.codex is absent, only Codex home lookup may fall back to explicit CODEX_HOME or an attached existing Codex installation; other governed product paths remain root-first",
-    "skills runtime dependencies must be installed into repo-local *_skills environments or their tracked manifest/lock files, not global environments",
-    "the AI may decide which repo-local dependencies are needed for the active task, but every installation must stay inside the governed repo-local environments and be reflected in the tracked lock or manifest files",
-    "when the task touches Skills/, treat skills_required_techstacks as the mandatory baseline and do not reinvent equivalent local parsing, lint, markdown, schema, test, CLI, or runtime stacks without an explicit user override",
-    "keep requirements-backend_skills.lock.txt in sync with the Python dependencies installed into .venv_backend_skills",
-    "keep frontend_skills/package.json and frontend_skills/package-lock.json in sync with the frontend dependency set used by skills tasks"
+    "when <root>/.codex is absent, only Codex home lookup may fall back to explicit CODEX_HOME or an attached existing Codex installation; other governed product paths remain root-first"
   ],
   "execution_modes": {
     "READ_EXEC": {
@@ -93,8 +88,7 @@
     "Do not emit only path metadata when the real need is direct action guidance."
   ],
   "turn_end_actions": [
-    "if dependency manifests or lock files changed, keep the repo-local skills environments and AGENTS governance mapping synchronized in the same turn",
-    "if the turn updated the mandatory Skills tech stack baseline, keep skills_required_techstacks and the repo-local environment lock or manifest files synchronized in the same turn"
+    "if dependency manifests or lock files changed, keep the AGENTS governance mapping synchronized in the same turn"
   ],
   "repo_name": "Otctopus_OS_AgentConsole"
 }
