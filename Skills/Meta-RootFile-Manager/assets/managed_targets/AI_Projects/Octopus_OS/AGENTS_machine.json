@@ -12,35 +12,22 @@
     "$Dev-PythonCode-Constitution (non-frontend Python governance)",
     "$Meta-RootFile-Manager (AGENTS governance mapping flow)"
   ],
-  "turn_start_actions": [
-    "load the returned target-contract JSON before following Octopus_OS local runtime rules",
-    "classify the turn as READ_EXEC or WRITE_EXEC"
-  ],
-  "runtime_constraints": [
-    "treat CLI JSON as the primary runtime rule source"
-  ],
+  "turn_start_actions": [],
+  "runtime_constraints": [],
   "execution_modes": {
     "READ_EXEC": {
       "goal": "inspect or answer without changing Octopus_OS files",
       "default_actions": [
-        "prefer the target-contract JSON as the primary runtime entry",
         "read additional structure or Python rules only when the concrete task requires them"
       ]
     },
     "WRITE_EXEC": {
       "goal": "change Octopus_OS artifacts under governed runtime rules",
-      "default_actions": [
-        "edit the minimal correct scope that matches the user intent"
-      ]
+      "default_actions": []
     }
   },
-  "repo_local_contract_handoff": [
-    "when another governed sub-container becomes active, load its local contract before following sub-container-specific rules"
-  ],
-  "forbidden_primary_runtime_pattern": [
-    "Do not treat audit markdown paths as the main runtime instructions.",
-    "Do not bypass the returned target-contract JSON when local runtime rules are required."
-  ],
+  "repo_local_contract_handoff": [],
+  "forbidden_primary_runtime_pattern": [],
   "turn_end_actions": [],
   "repo_name": "Octopus_OS"
 }
