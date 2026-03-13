@@ -1,0 +1,42 @@
+{
+  "registry_name": "META_SKILL_DOCSTRUCTURE_SPLIT_DECISION_REGISTRY",
+  "registry_version": "v1",
+  "entries": [
+    {
+      "doc_path": "references/telegram/TELEGRAM_FULL_API_CLIENTS.md",
+      "doc_id": "dev_telegram_constitution.topic.full_api_clients",
+      "rule_id": "title_conjunction_en",
+      "fingerprint": "de4d18b183373c96a7948f07814fa68e803a940f",
+      "decision": "accepted",
+      "note": "Full API and custom clients are intentionally governed as one capability line in this skill.",
+      "decided_at": "2026-03-13T02:36:59.500Z"
+    },
+    {
+      "doc_path": "references/telegram/TELEGRAM_GAMES_AND_MEDIA.md",
+      "doc_id": "dev_telegram_constitution.topic.games_and_media",
+      "rule_id": "title_conjunction_en",
+      "fingerprint": "dc432512321289276a64be9e370df1bf49c4baf3",
+      "decision": "accepted",
+      "note": "Games and media are intentionally grouped as one growth and sharing capability line.",
+      "decided_at": "2026-03-13T02:36:59.538Z"
+    },
+    {
+      "doc_path": "references/telegram/TELEGRAM_LOGIN_AND_IDENTITY.md",
+      "doc_id": "dev_telegram_constitution.topic.login_and_identity",
+      "rule_id": "title_conjunction_en",
+      "fingerprint": "1ff2333ccda29548f08f5f6d2f9167a994ce918f",
+      "decision": "accepted",
+      "note": "Login and identity are one integration line and should stay in one atomic doc.",
+      "decided_at": "2026-03-13T02:36:59.582Z"
+    },
+    {
+      "doc_path": "references/telegram/TELEGRAM_PAYMENTS_AND_STARS.md",
+      "doc_id": "dev_telegram_constitution.topic.payments_and_stars",
+      "rule_id": "title_conjunction_en",
+      "fingerprint": "e609527b4e5f13649e82dfd12e3f451c01235244",
+      "decision": "accepted",
+      "note": "Payments and Stars belong to one payment capability line in Telegram product design.",
+      "decided_at": "2026-03-13T02:36:59.589Z"
+    }
+  ]
+}

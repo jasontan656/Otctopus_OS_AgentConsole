@@ -45,6 +45,10 @@ anchors:
 - `rate limit`
   - 发送消息、编辑消息、批量通知都要考虑节流与失败退避。
 
+## 社区补充
+- `aiogram` 的 router/middleware 体系说明了“先过滤、再中间件、再 handler”的可分层事件处理模型，适合把审计、鉴权、session 注入和风控从业务 handler 里拆出去。[aiogram Middlewares](https://docs.aiogram.dev/en/v3.13.1/dispatcher/middlewares.html)
+- `grammY` 的部署文档明确提醒：webhook 处理链阻塞会导致 Telegram 重发未确认 update，高峰期应考虑队列、sequentialize/session key 一致性以及错误捕获。[grammY Deployment](https://grammy.dev/zh/advanced/deployment)
+
 ## 安全边界
 - Bot Token 必须放在受管密钥存储，不写进 repo。
 - Mini App 的 init data 校验必须在服务端完成。

@@ -30,6 +30,7 @@ metadata:
 2. 再读取 `references/governance/SKILL_DOCSTRUCTURE_POLICY.md`。
 3. 再读取 `references/governance/SKILL_EXECUTION_RULES.md`。
 4. 若任务在问 Telegram 能做什么、适合什么交互入口，再读取：
+   - `references/telegram/TELEGRAM_CAPABILITY_LANDSCAPE.md`
    - `references/telegram/TELEGRAM_INTERFACE_SURFACES.md`
 5. 若任务在问框架、依赖、语言栈或推荐组合，再读取：
    - `references/telegram/TELEGRAM_STACK_BASELINE.md`
@@ -45,10 +46,19 @@ metadata:
   - `references/governance/SKILL_DOCSTRUCTURE_POLICY.md`
   - `references/governance/SKILL_EXECUTION_RULES.md`
 - Telegram 能力层：
+  - `references/telegram/TELEGRAM_CAPABILITY_LANDSCAPE.md`
   - `references/telegram/TELEGRAM_INTERFACE_SURFACES.md`
   - `references/telegram/TELEGRAM_STACK_BASELINE.md`
   - `references/telegram/TELEGRAM_DELIVERY_GUARDRAILS.md`
   - `references/telegram/TELEGRAM_MINI_APP_CONTRACT.md`
+  - `references/telegram/TELEGRAM_BOT_INTERFACE_PRACTICES.md`
+  - `references/telegram/TELEGRAM_INLINE_MODE_PRACTICES.md`
+  - `references/telegram/TELEGRAM_ATTACHMENT_MENU_PRACTICES.md`
+  - `references/telegram/TELEGRAM_PAYMENTS_AND_STARS.md`
+  - `references/telegram/TELEGRAM_LOGIN_AND_IDENTITY.md`
+  - `references/telegram/TELEGRAM_GAMES_AND_MEDIA.md`
+  - `references/telegram/TELEGRAM_BUSINESS_INTEGRATION.md`
+  - `references/telegram/TELEGRAM_FULL_API_CLIENTS.md`
 - 工具层：
   - 当前无专属 CLI；`references/tooling/` 只保留“当前无工具”和未来扩展约束。
 

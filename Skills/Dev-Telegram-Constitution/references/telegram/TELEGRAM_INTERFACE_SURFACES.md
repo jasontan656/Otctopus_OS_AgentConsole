@@ -7,6 +7,10 @@ anchors:
     relation: "implements"
     direction: "upstream"
     reason: "Task routing sends Telegram capability questions here."
+  - target: "TELEGRAM_CAPABILITY_LANDSCAPE.md"
+    relation: "implements"
+    direction: "upstream"
+    reason: "Capability landscape should be read before surface selection."
   - target: "TELEGRAM_STACK_BASELINE.md"
     relation: "pairs_with"
     direction: "lateral"
@@ -22,6 +26,10 @@ anchors:
 ## 本地目的
 - 让模型先判断 Telegram 需求应该落在哪一种交互面，再讨论实现。
 - 避免把所有需求都粗暴落成“发消息 + 收命令”的单一 Bot 方案。
+
+## 主线前置
+- 更高层的主线能力划分先见 `TELEGRAM_CAPABILITY_LANDSCAPE.md`。
+- 本文只负责在 Bot / Inline / Deep Link / Login / Mini App 这些典型用户入口面之间做选择。
 
 ## 当前边界
 - 本文只负责 Telegram 能力分层与适用场景。

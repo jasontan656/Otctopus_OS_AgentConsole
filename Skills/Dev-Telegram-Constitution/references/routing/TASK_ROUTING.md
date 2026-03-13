@@ -22,6 +22,7 @@ anchors:
 ## 分支一：能力面与交互入口
 - 先读 `../governance/SKILL_DOCSTRUCTURE_POLICY.md`
 - 再读 `../governance/SKILL_EXECUTION_RULES.md`
+- 再进入 `../telegram/TELEGRAM_CAPABILITY_LANDSCAPE.md`
 - 再进入 `../telegram/TELEGRAM_INTERFACE_SURFACES.md`
 - 适用：Bot command、callback、deep link、reply keyboard、LoginUrl、Mini App 选型
 
