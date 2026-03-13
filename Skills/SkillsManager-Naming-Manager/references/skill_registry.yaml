@@ -200,6 +200,13 @@ families:
         role_tag: "branch-session-chat"
         status: "active"
         trigger_summary: "当用户提供 resume_id 或 session_id，并希望基于历史会话证据直接提问答疑时使用。"
+      - canonical_id: "Functional-HumenWorkZone-Manager"
+        display_name: "Functional-HumenWorkZone-Manager"
+        prefix: "Functional"
+        family: "[Functional]"
+        role_tag: "human-workzone-manager"
+        status: "active"
+        trigger_summary: "当用户要收纳、整理、归位或维护 Human_Work_Zone 文件夹时使用。"
   - family: "[WorkFlow]"
     description: "各类自动化工作流技能的统一管理族。"
     members:
