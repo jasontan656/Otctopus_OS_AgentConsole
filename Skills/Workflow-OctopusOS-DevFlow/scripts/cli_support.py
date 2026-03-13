@@ -84,7 +84,7 @@ def target_scaffold_payload(runtime: dict[str, object], force: bool) -> tuple[di
             "status": "fail",
             "reason": "target_runtime_not_ready",
             "missing_prerequisites": runtime["missing_prerequisites"],
-            "hint": "create Development_Docs and the requested module subfolder first, then rerun target-scaffold",
+            "hint": "create the current object's Development_Docs container and the requested workstream subfolder first, then rerun target-scaffold",
         }, 1
 
     created_items: list[str] = []

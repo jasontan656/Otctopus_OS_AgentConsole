@@ -49,5 +49,6 @@ anchors:
   - `Octopus_Hub`：不可拔；拔掉等于系统整体失效。
   - `Foundation_Bundle`：定义为系统级必需 bundle；停掉等于所有业务链路失效。
   - `Capability_Modules/*`：默认可拔；拔掉后仅影响所属业务能力。
-  - `Entry_Objects/*`：默认可拔；拔掉后只影响对应入口渠道。
+  - `Client_Applications/*`：默认可拔；拔掉后只影响对应人类交互入口，不改变系统中枢和业务模块本体。
+  - `Integration_Adapters/*`：默认可拔；拔掉后只影响对应外部协议或事件接入通道。
   - `Infra_Contracts/*`：是否可拔取决于上游依赖，但它们永远不是中枢对象。

@@ -37,6 +37,8 @@
   - 当前 `codebase_root`
   - 当前技能文件与必要图谱技能入口
 - 若项目尚未固定开发文档容器，必须先读取 `Dev-OctopusOS-Constitution-ProjectStructure`，确认应把开发文档落在哪个容器。
+- `development_docs_root` 在本合同里始终表示“当前代码对象自己的 `Development_Docs/` 容器”。
+- `module_dir` 在本合同里始终表示该容器下的当前开发主题目录，不表示再次重复对象名。
 - 若启动 cwd 是 `/home/jasontan656/AI_Projects`，它只是容器根与钩子根，不是 discoverable repo。
 - 禁止为了找需求或上下文而扫描整个 `/home/jasontan656/AI_Projects`。
 - 禁止读取 `Human_Work_Zone`、`GoogleDriveDump` 等 sibling 区域，除非 mother doc 显式引用。
@@ -45,6 +47,7 @@
   - 若模块容器已具备使用条件但骨架未齐，先执行 `target-scaffold`
   - 必要时确认或覆盖 `docs_root`
   - 直接读取当前 `Development_Docs/<module_dir>/mother_doc/00_index.md`
+    - 这里的 `<module_dir>` 是当前开发主题 slug，不是对象名重复一层
   - 若已存在编号归档的 `docs/NN_slug`，先读取最新一轮归档内容再开始本轮回填
   - 若已存在 `execution_atom_plan_validation_packs/`，先读取并沿用当前 pack 树
   - 执行 `mother-doc-lint`

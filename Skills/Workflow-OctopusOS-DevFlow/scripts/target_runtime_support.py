@@ -236,9 +236,12 @@ def target_runtime_contract_payload(
         "docs_root_source": runtime["docs_root_source"],
         "docs_root_resolution_rule": (
             "treat <target_root> as the repo/workspace boundary inside AI_Projects, "
+            "treat <development_docs_root> as the current object's own Development_Docs container, "
+            "treat <module_dir> as a workstream slug inside that container rather than a repeated object-name layer, "
             "derive the governed module docs root from <development_docs_root>/<module_dir> or an explicit <docs_root>, "
             "and default codebase_root to the parent of development_docs_root"
         ),
+        "module_dir_role": "workstream_slug_inside_current_object_development_docs",
         "project_structure_skill_path": str(runtime["project_structure_skill_path"]),
         "workspace_root": str(runtime["workspace_root"]),
         "root_agents_path": str(runtime["root_agents_path"]),
@@ -265,7 +268,7 @@ def target_runtime_contract_payload(
         "reuse_actions": reuse_actions,
         "first_actions": [
             "treat <target_root> as the repo/workspace boundary under AI_Projects, not as the code repo itself",
-            "validate that the resolved development_docs_root and requested module subfolder already exist; otherwise refuse service",
+            "validate that the resolved development_docs_root and requested workstream subfolder already exist; otherwise refuse service",
             "inspect existing mother_doc, archived iterations, execution packs, AGENTS governance state, and graph state before deciding whether to init or reuse",
             "reuse existing task packs and graph context when they are already present; do not fork a second disconnected documentation line",
         ],

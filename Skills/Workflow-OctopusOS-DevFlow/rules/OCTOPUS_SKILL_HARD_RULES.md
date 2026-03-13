@@ -20,7 +20,8 @@
 - `/home/jasontan656/.codex/skills/Dev-OctopusOS-Constitution-ProjectStructure/SKILL.md`（当 `docs_root` 尚未固定时）
 5. 每个阶段只能做本阶段的事，禁止跨阶段混写；进入新阶段前必须先读取 `stage-checklist --stage <current_stage>`。
 5.1 在进入任一阶段前，必须先运行 `target-runtime-contract`，确认当前 `target_root` 只是 `AI_Projects` 内的 repo/workspace 根边界，并以 `development_docs_root / docs_root / module_dir / mother_doc_root / execution_atom_plan_validation_packs / graph_runtime_root` 解析实际工作目标。
-5.2 `Development_Docs/` 与目标模块子目录必须先存在；任一不存在时，本技能必须拒绝服务，不得私自创建模块容器。
+5.2 目标代码对象自己的 `Development_Docs/` 与当前工作主题子目录必须先存在；任一不存在时，本技能必须拒绝服务，不得私自创建主题容器。
+5.2.0 仅完成项目结构初始化时，`Development_Docs/` 本身允许为空；但一旦进入本技能的开发闭环，`module_dir` 必须已经是 `Development_Docs/` 下一个真实存在的工作主题目录，而不是对象名重复一层。
 5.2.1 `target_root` 还必须位于 `AI_Projects` workspace 内；否则 `$Meta-RootFile-Manager` 无法收治模块 `AGENTS.md`，本技能必须拒绝服务。
 5.3 若目标项目已经固定开发文档容器，必须按 `Dev-OctopusOS-Constitution-ProjectStructure` 的判定使用该容器；不得自行改投到另一个 `docs/` 或 sibling 目录。
 5.4 若目标模块文件夹中已经存在 `execution_atom_plan_validation_packs/`、`pack_registry.yaml`、编号归档 `NN_slug` 或既有 graph，必须先复用它们；不得为同一目标另外创建脱节的母文档、pack 树或图谱脉络。

@@ -27,15 +27,17 @@ anchors:
 - 默认先按逻辑对象规划目录，再按运行时需要决定是否拆成独立容器。
 - 推荐的项目级目录视角至少区分：
   - 中枢对象
-  - 底座能力 bundle / capability modules
+  - 底座能力 bundle
   - 业务模块对象
-  - 入口/适配层对象
+  - 客户端应用对象
+  - 集成适配对象
   - 外部基础设施或其合同文档
 - 当前章鱼OS的顶层文件夹只允许使用以下权威分类目录：
   - `Octopus_Hub/`
   - `Foundation_Bundle/`
   - `Capability_Modules/`
-  - `Entry_Objects/`
+  - `Client_Applications/`
+  - `Integration_Adapters/`
   - `Infra_Contracts/`
   - `System_Manifests/`
   - `Deploy/`
@@ -46,16 +48,32 @@ anchors:
   - `foundation-bundle-api`
   - `foundation-bundle-worker`
   - `capability-<module-name>`
-  - `entry-<object-name>`
+  - `client-application-<object-name>`
+  - `integration-adapter-<object-name>`
   - `postgresql`
   - `redis`
-  - `rabbitmq`
+  - `mongodb`
+  - `kafka`
+  - `clickhouse`
+  - `opensearch`
   - `object-storage`
 - 若一个对象当前要整体插拔，它可以先作为一个完整容器或 bundle 部署单元存在。
 - 若一个对象当前只需要逻辑边界，不需要独立扩缩容或独立故障隔离，则可以先与相邻对象同部署，但目录边界不得消失。
 - `API_Gateway`、`*_Service`、`*_UI`、`*_DB`、`*_Cache`、`MQ_Broker` 这类旧顶层目录名不再允许继续作为权威目录名存在。
 - 每个对象根目录至少应承载：
   - `README.md`
-  - `module.yaml`
-- 对象内部具体是否再生长出 `src/`、`tests/`、`deploy/`、`docs/`，由对应域技能或实现阶段决定，但不允许越过项目级根目录边界乱放。
+  - 一个对象级 manifest：
+    - `hub_manifest.yaml`
+    - `bundle_manifest.yaml`
+    - `module_manifest.yaml`
+    - `entry_manifest.yaml`
+- 当前阶段的可部署对象根目录默认预留以下稳定子目录：
+  - `<Object_Name>_Common/`
+  - `<Object_Name>_Core/`
+  - `Assets/`
+  - `Development_Docs/`
+- `Development_Docs/` 是“当前对象自己的开发文档容器”，不是上层分类容器的共享文档区，也不是必须再套一层对象同名目录的占位壳。
+- 例如 `Client_Applications/Unified_Portal/Development_Docs/` 表示 `Unified_Portal` 这个客户端应用对象自己的开发文档容器；仅完成项目结构创建时，这个目录默认可以为空。
+- 若后续进入具体开发闭环，再由下游 workflow 在当前对象的 `Development_Docs/` 下创建工作主题目录，例如 `<module_dir>/mother_doc/...`；该 `<module_dir>` 表示当前开发主题，不表示再次重复对象名。
+- 对象内部具体是否再生长出 `src/`、`tests/`、`deploy/`、`docs/` 或更多域内分层，由对应域技能或实现阶段决定，但不允许越过项目级根目录边界乱放。
 - 未来 lint 的作用不是替 AI 设计架构，而是检查目录、对象归属和容器命名是否违反本技能已经声明的项目级结构合同。

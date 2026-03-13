@@ -32,7 +32,10 @@ anchors:
 - 外部基础设施基线：
   - `PostgreSQL`
   - `Redis`
-  - `RabbitMQ`
+  - `MongoDB`
+  - `Kafka`
+  - `ClickHouse`
+  - `OpenSearch`
   - `MinIO` / `S3-compatible Object Storage`
 - 前端入口对象基线：
   - `Vue 3`
@@ -55,14 +58,15 @@ anchors:
 - `Capability_Modules/*`：
   - 默认沿用服务端项目级基线 `Python 3.12 + FastAPI + Pydantic v2`
   - 是否使用 `SQLAlchemy 2`、`Celery` 等由模块依赖决定，但不得绕过 `Foundation_Bundle` 的项目级合同
-- `Entry_Objects/Admin_Portal` 与 `Entry_Objects/User_Portal`：
+- `Client_Applications/Unified_Portal`：
   - 固定承载 `Vue 3 + TypeScript + Vite`
-  - 作用：作为章鱼OS外部交互入口对象，而不是系统中枢
-- `Entry_Objects/OpenAPI_Adapter` 与 `Entry_Objects/Webhook_Adapter`：
+  - 作用：作为章鱼OS面向人类用户的统一客户端应用对象，而不是系统中枢
+  - 其内部渠道壳当前固定为 `Channels/Web`、`Channels/Mobile_H5`、`Channels/Telegram_Mini_App`
+- `Integration_Adapters/OpenAPI_Adapter` 与 `Integration_Adapters/Webhook_Adapter`：
   - 默认承载服务端项目级基线
   - 作用：把外部协议接入中枢或业务模块
 - `Infra_Contracts/*`：
-  - 只声明 `PostgreSQL`、`Redis`、`RabbitMQ`、`Object_Storage` 在系统中的位置和接入约束
+  - 只声明 `PostgreSQL`、`Redis`、`MongoDB`、`Kafka`、`ClickHouse`、`OpenSearch`、`Object_Storage` 在系统中的位置和接入约束
   - 不承载应用层实现代码
 
 ## 排除项

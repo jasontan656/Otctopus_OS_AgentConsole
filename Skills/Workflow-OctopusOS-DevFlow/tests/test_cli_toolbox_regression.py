@@ -13,6 +13,8 @@ SKILL_ROOT = Path(__file__).resolve().parents[1]
 CLI = SKILL_ROOT / "scripts" / "Cli_Toolbox.py"
 sys.path.insert(0, str(SKILL_ROOT / "scripts"))
 
+from devflow_agents_support import scaffold_and_collect_devflow_agents
+
 
 def run_cli(*args: str) -> dict:
     completed = subprocess.run(
@@ -77,6 +79,49 @@ def runtime_scope(layout: dict[str, Path | str]) -> tuple[str, ...]:
 
 
 class TestCliToolboxRegressionTest:
+    def test_scaffold_and_collect_devflow_agents_accepts_managed_files_machine_contract(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir).resolve()
+            docs_root = root / "Development_Docs" / "sample_module"
+            docs_root.mkdir(parents=True, exist_ok=True)
+            machine_path = root / "managed" / "AGENTS_machine.json"
+            runtime = {
+                "target_root": root,
+                "development_docs_root": root / "Development_Docs",
+                "codebase_root": root / "sample_repo",
+                "module_dir": "sample_module",
+                "docs_root": docs_root,
+                "mother_doc_root": docs_root / "mother_doc",
+                "construction_plan_root": docs_root / "mother_doc" / "execution_atom_plan_validation_packs",
+                "graph_runtime_root": docs_root / "graph",
+                "acceptance_root": docs_root / "mother_doc" / "acceptance",
+            }
+            calls: list[list[str]] = []
+
+            def fake_run(command: list[str]) -> dict[str, object]:
+                calls.append(command)
+                if command[1:].count("target-contract"):
+                    return {
+                        "managed_files": {
+                            "human": str(root / "managed" / "AGENTS_human.md"),
+                            "machine": str(machine_path),
+                        }
+                    }
+                if command[1:].count("collect"):
+                    return {"stage": "collect", "operation_count": 1}
+                if command[1:].count("scaffold"):
+                    return {"stage": "scaffold", "operation_count": 1}
+                raise AssertionError(command)
+
+            monkeypatch.setattr("devflow_agents_support._run_json_command", fake_run)
+            payload = scaffold_and_collect_devflow_agents(runtime)
+
+            assert payload["external_agents_path"].endswith("Development_Docs/sample_module/AGENTS.md")
+            assert machine_path.exists()
+            machine_payload = json.loads(machine_path.read_text(encoding="utf-8"))
+            assert machine_payload["governed_container"]["module_dir"] == "sample_module"
+            assert any("collect" in command for command in calls)
+
     def test_workflow_contract_exposes_construction_plan_model(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             layout = create_runtime_layout(Path(temp_dir))
@@ -94,6 +139,10 @@ class TestCliToolboxRegressionTest:
         ]
         assert payload["target_runtime_contract"]["target_root"] == str(Path(temp_dir).resolve())
         assert payload["target_runtime_contract"]["development_docs_root"].endswith("/sample_repo/Development_Docs")
+        assert (
+            payload["target_runtime_contract"]["module_dir_role"]
+            == "workstream_slug_inside_current_object_development_docs"
+        )
         assert payload["target_runtime_contract"]["docs_root"].endswith("/sample_repo/Development_Docs/sample_module")
         assert payload["target_runtime_contract"]["codebase_root"].endswith("/sample_repo")
         assert payload["target_runtime_contract"]["construction_plan_root"].endswith(
@@ -204,6 +253,7 @@ class TestCliToolboxRegressionTest:
             layout = create_runtime_layout(Path(temp_dir))
             payload = run_cli("target-runtime-contract", *runtime_scope(layout))
         assert payload["acceptance_root"].endswith("sample_repo/Development_Docs/sample_module/mother_doc/acceptance")
+        assert "workstream slug" in payload["docs_root_resolution_rule"]
 
     def test_template_index_lists_directory_templates(self) -> None:
         payload = run_cli("template-index")

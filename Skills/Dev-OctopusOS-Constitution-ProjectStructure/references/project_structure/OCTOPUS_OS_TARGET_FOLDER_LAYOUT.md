@@ -25,29 +25,66 @@ Octopus_OS/
 ├── AGENTS.md
 ├── README.md
 ├── Mother_Doc/
+│   ├── Vision/
+│   ├── Architecture/
+│   ├── Roadmap/
+│   └── Evidence/
 ├── System_Manifests/
+│   ├── module_registry/
+│   ├── tech_baseline/
+│   └── deploy_matrix/
 ├── Octopus_Hub/
+│   ├── Octopus_Hub_Common/
+│   ├── Octopus_Hub_Core/
+│   ├── Assets/
+│   └── Development_Docs/
 ├── Foundation_Bundle/
+│   ├── Foundation_Bundle_Common/
+│   ├── Foundation_Bundle_Core/
+│   ├── Assets/
+│   └── Development_Docs/
 ├── Capability_Modules/
-│   ├── Identity_Module/
+│   ├── Principal_Module/
+│   ├── Access_Activation_Module/
 │   ├── Account_Module/
 │   ├── Order_Module/
 │   ├── Payment_Module/
 │   ├── Notification_Module/
 │   ├── File_Module/
 │   └── AI_Module/
-├── Entry_Objects/
-│   ├── Admin_Portal/
-│   ├── User_Portal/
+├── Client_Applications/
+│   └── Unified_Portal/
+│       ├── Unified_Portal_Common/
+│       ├── Unified_Portal_Core/
+│       ├── Assets/
+│       ├── Channels/
+│       │   ├── Web/
+│       │   ├── Mobile_H5/
+│       │   └── Telegram_Mini_App/
+│       └── Development_Docs/
+├── Integration_Adapters/
 │   ├── OpenAPI_Adapter/
 │   └── Webhook_Adapter/
 ├── Infra_Contracts/
 │   ├── PostgreSQL/
 │   ├── Redis/
-│   ├── RabbitMQ/
+│   ├── MongoDB/
+│   ├── Kafka/
+│   ├── ClickHouse/
+│   ├── OpenSearch/
 │   └── Object_Storage/
 └── Deploy/
 ```
+
+## 对象根保留子目录
+- `Octopus_Hub/`、`Foundation_Bundle/`、`Capability_Modules/*`、`Client_Applications/*`、`Integration_Adapters/*` 当前都默认预留：
+  - `<Object_Name>_Common/`
+  - `<Object_Name>_Core/`
+  - `Assets/`
+  - `Development_Docs/`
+- `Development_Docs/` 归当前对象自己所有；它不是上层容器的公共 docs 根，也不是要求再嵌一层对象同名目录的冗余壳。
+- 因此 `Client_Applications/Unified_Portal/Development_Docs/` 表示 `Unified_Portal` 自己的开发文档容器；只完成项目结构初始化时，该目录默认应为空。
+- 若后续进入具体开发闭环，才允许在该容器下继续创建工作主题目录，例如 `<module_dir>/mother_doc/...`；这里的 `<module_dir>` 是开发主题名，不是再次重复 `Unified_Portal`。
 
 ## 目录职责
 - `Mother_Doc/`
@@ -60,29 +97,35 @@ Octopus_OS/
   - 承载系统级必需底座能力，是所有业务链路的公共执行底座。
 - `Capability_Modules/*`
   - 承载可插拔业务模块；每个模块是一个完整对象。
-- `Entry_Objects/*`
-  - 承载对外入口与接入适配对象；前端对象归这里，不归中枢。
+- `Client_Applications/*`
+  - 承载面向人类用户的客户端应用对象；前端对象归这里，而不是归中枢或旧的 `Entry_Objects`。
+- `Integration_Adapters/*`
+  - 承载对外协议、事件或回调接入对象。
 - `Infra_Contracts/*`
   - 承载外部基础设施的接入合同、依赖声明和占位说明，不承载应用域代码。
 - `Deploy/`
   - 承载 Compose、容器编排、环境模板与部署相关固定工件。
 
 ## 旧目录映射裁决
-- `AI_Service` -> `Capability_Modules/AI_Module/`
+- `Identity_Service` -> `Capability_Modules/Principal_Module/`
+- `Access_Service` / `Access_Activation_Service` -> `Capability_Modules/Access_Activation_Module/`
 - `Account_Service` -> `Capability_Modules/Account_Module/`
-- `File_Service` -> `Capability_Modules/File_Module/`
-- `Identity_Service` -> `Capability_Modules/Identity_Module/`
-- `Notification_Service` -> `Capability_Modules/Notification_Module/`
 - `Order_Service` -> `Capability_Modules/Order_Module/`
 - `Payment_Service` -> `Capability_Modules/Payment_Module/`
-- `Admin_UI` -> `Entry_Objects/Admin_Portal/`
-- `User_UI` -> `Entry_Objects/User_Portal/`
-- `API_Gateway` -> 废止为独立顶层对象；中枢路由职责收敛到 `Octopus_Hub/`
+- `Notification_Service` -> `Capability_Modules/Notification_Module/`
+- `File_Service` -> `Capability_Modules/File_Module/`
+- `AI_Service` -> `Capability_Modules/AI_Module/`
+- `Admin_UI` / `User_UI` / unified frontend shell -> `Client_Applications/Unified_Portal/`
+- `OpenAPI_Gateway` / `API_Adapter` -> `Integration_Adapters/OpenAPI_Adapter/`
+- `Webhook_Receiver` / `Webhook_Adapter` -> `Integration_Adapters/Webhook_Adapter/`
 - `Postgres_DB` -> `Infra_Contracts/PostgreSQL/`
 - `Redis_Cache` -> `Infra_Contracts/Redis/`
-- `MQ_Broker` -> `Infra_Contracts/RabbitMQ/`
+- `Mongo_DB` -> `Infra_Contracts/MongoDB/`
+- `MQ_Broker` / `Kafka_Broker` -> `Infra_Contracts/Kafka/`
+- `Analytics_DB` / `ClickHouse_DB` -> `Infra_Contracts/ClickHouse/`
+- `Search_Engine` / `OpenSearch_Service` -> `Infra_Contracts/OpenSearch/`
 - `Object_Storage` -> `Infra_Contracts/Object_Storage/`
 
 ## 根目录门禁
 - 根目录不再允许直接新增新的 `*_Service`、`*_UI`、`*_DB`、`*_Cache`、`MQ_Broker`、`API_Gateway` 风格目录。
-- 任何新增对象必须先归类到 `Octopus_Hub`、`Foundation_Bundle`、`Capability_Modules`、`Entry_Objects`、`Infra_Contracts` 五大对象区之一，再写入仓库。
+- 任何新增对象必须先归类到 `Octopus_Hub`、`Foundation_Bundle`、`Capability_Modules`、`Client_Applications`、`Integration_Adapters`、`Infra_Contracts` 六大对象区之一，再写入仓库。
