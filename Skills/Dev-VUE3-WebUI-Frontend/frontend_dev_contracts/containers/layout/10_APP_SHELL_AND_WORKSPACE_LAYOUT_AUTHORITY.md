@@ -9,6 +9,10 @@ anchors:
     relation: "belongs_to"
     direction: "upstream"
     reason: "This contract belongs to the layout branch."
+  - target: "../../positioning/SCREEN_SPATIAL_BLUEPRINT_CONTRACT.md"
+    relation: "pairs_with"
+    direction: "cross"
+    reason: "Layout authority decides who has placement power; spatial blueprints describe the concrete placement."
   - target: "../../rules/UI_LAYOUT_ADJUSTMENT_RULES.md"
     relation: "pairs_with"
     direction: "cross"
@@ -45,3 +49,8 @@ anchors:
 ## 响应式退化要求
 - 当视口不足以同时承载 menu 与 canvas 时，由 `ShowroomRouteSceneContainer` 统一把菜单切成 overlay drawer。
 - canvas 中的 panel 可以改变排列，但不能退化成固定三栏遗留布局。
+
+## 与 spatial blueprint 的关系
+- 本文定义“谁有权摆放”。
+- `SCREEN_SPATIAL_BLUEPRINT_CONTRACT.md` 定义“摆在哪里、占多大、谁挤压谁、谁覆盖谁”。
+- 复杂界面不能只写 authority 而没有 blueprint；否则模型无法推理屏幕空间结果。

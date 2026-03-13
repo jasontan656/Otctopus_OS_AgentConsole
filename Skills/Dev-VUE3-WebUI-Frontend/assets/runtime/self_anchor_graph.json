@@ -3,8 +3,8 @@
   "graph_version": "v2",
   "source_skill": "Dev-VUE3-WebUI-Frontend",
   "summary": {
-    "nodeCount": 81,
-    "edgeCount": 226,
+    "nodeCount": 82,
+    "edgeCount": 233,
     "errorCount": 0,
     "warningCount": 2
   },
@@ -366,7 +366,7 @@
       "docType": "ui_dev_guide",
       "topic": "Layout authority boundaries for app shell, route scene, workspace, and panels",
       "title": "App Shell Workspace Layout Authority",
-      "anchorCount": 3,
+      "anchorCount": 4,
       "depth": 3
     },
     {
@@ -546,7 +546,16 @@
       "docType": "index_doc",
       "topic": "Index of positioning and file-boundary contracts for the frontend development tree",
       "title": "Positioning Contracts",
-      "anchorCount": 2,
+      "anchorCount": 3,
+      "depth": 2
+    },
+    {
+      "path": "frontend_dev_contracts/positioning/SCREEN_SPATIAL_BLUEPRINT_CONTRACT.md",
+      "docId": "ui.tool.spatial_blueprint_contract",
+      "docType": "ui_dev_guide",
+      "topic": "Screen spatial blueprint contract for AI-readable frontend layout planning",
+      "title": "Screen Spatial Blueprint Contract",
+      "anchorCount": 4,
       "depth": 2
     },
     {
@@ -564,7 +573,7 @@
       "docType": "ui_dev_guide",
       "topic": "Positioning of frontend development contracts inside Dev-VUE3-WebUI-Frontend",
       "title": "UI Tool Positioning",
-      "anchorCount": 3,
+      "anchorCount": 4,
       "depth": 2
     },
     {
@@ -1491,6 +1500,13 @@
     },
     {
       "source": "frontend_dev_contracts/containers/layout/10_APP_SHELL_AND_WORKSPACE_LAYOUT_AUTHORITY.md",
+      "target": "frontend_dev_contracts/positioning/SCREEN_SPATIAL_BLUEPRINT_CONTRACT.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "Layout authority decides who has placement power; spatial blueprints describe the concrete placement."
+    },
+    {
+      "source": "frontend_dev_contracts/containers/layout/10_APP_SHELL_AND_WORKSPACE_LAYOUT_AUTHORITY.md",
       "target": "frontend_dev_contracts/rules/UI_LAYOUT_ADJUSTMENT_RULES.md",
       "relation": "pairs_with",
       "direction": "cross",
@@ -1911,10 +1927,45 @@
     },
     {
       "source": "frontend_dev_contracts/positioning/00_POSITIONING_INDEX.md",
+      "target": "frontend_dev_contracts/positioning/SCREEN_SPATIAL_BLUEPRINT_CONTRACT.md",
+      "relation": "indexes",
+      "direction": "downstream",
+      "reason": "Spatial blueprint contract defines the AI-readable layout grammar for viewport, coordinates, and constraints."
+    },
+    {
+      "source": "frontend_dev_contracts/positioning/00_POSITIONING_INDEX.md",
       "target": "frontend_dev_contracts/positioning/UI_TOOL_POSITIONING.md",
       "relation": "indexes",
       "direction": "downstream",
       "reason": "Positioning is the primary document of this branch."
+    },
+    {
+      "source": "frontend_dev_contracts/positioning/SCREEN_SPATIAL_BLUEPRINT_CONTRACT.md",
+      "target": "frontend_dev_contracts/positioning/00_POSITIONING_INDEX.md",
+      "relation": "belongs_to",
+      "direction": "upstream",
+      "reason": "This blueprint contract belongs to the positioning branch."
+    },
+    {
+      "source": "frontend_dev_contracts/positioning/SCREEN_SPATIAL_BLUEPRINT_CONTRACT.md",
+      "target": "frontend_dev_contracts/containers/layout/10_APP_SHELL_AND_WORKSPACE_LAYOUT_AUTHORITY.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "Spatial blueprints instantiate layout authority into concrete coordinates and constraints."
+    },
+    {
+      "source": "frontend_dev_contracts/positioning/SCREEN_SPATIAL_BLUEPRINT_CONTRACT.md",
+      "target": "frontend_dev_contracts/rules/UI_LAYOUT_ADJUSTMENT_RULES.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "Responsive adjustment rules apply to spatial blueprints instead of bypassing them."
+    },
+    {
+      "source": "frontend_dev_contracts/positioning/SCREEN_SPATIAL_BLUEPRINT_CONTRACT.md",
+      "target": "references/stages/20_STAGE_SURFACE_LAYOUTS.md",
+      "relation": "supports",
+      "direction": "upstream",
+      "reason": "Stage surface planning must be expressible through this spatial blueprint grammar."
     },
     {
       "source": "frontend_dev_contracts/positioning/UI_FILE_ORGANIZATION.md",
@@ -1950,6 +2001,13 @@
       "relation": "belongs_to",
       "direction": "upstream",
       "reason": "This guide belongs to the positioning branch."
+    },
+    {
+      "source": "frontend_dev_contracts/positioning/UI_TOOL_POSITIONING.md",
+      "target": "frontend_dev_contracts/positioning/SCREEN_SPATIAL_BLUEPRINT_CONTRACT.md",
+      "relation": "pairs_with",
+      "direction": "cross",
+      "reason": "Spatial blueprints are the concrete layout-planning carrier under positioning governance."
     },
     {
       "source": "frontend_dev_contracts/positioning/UI_TOOL_POSITIONING.md",
@@ -2339,5 +2397,5 @@
       "hits": 4
     }
   ],
-  "updated_at": "2026-03-13T05:30:19.865Z"
+  "updated_at": "2026-03-13T09:49:31.072Z"
 }

@@ -9,6 +9,10 @@ anchors:
     relation: "belongs_to"
     direction: "upstream"
     reason: "This index is one branch under the frontend development contract entry."
+  - target: "SCREEN_SPATIAL_BLUEPRINT_CONTRACT.md"
+    relation: "indexes"
+    direction: "downstream"
+    reason: "Spatial blueprint contract defines the AI-readable layout grammar for viewport, coordinates, and constraints."
   - target: "UI_TOOL_POSITIONING.md"
     relation: "indexes"
     direction: "downstream"
@@ -18,11 +22,14 @@ anchors:
 # Positioning Contracts
 
 ## 本分支负责
+- `SCREEN_SPATIAL_BLUEPRINT_CONTRACT.md`
+  - 定义 AI 可读的屏幕空间蓝图 grammar，描述 viewport、coordinates、constraints、relations 与 z-order。
 - `UI_TOOL_POSITIONING.md`
   - 定义 `frontend_dev_contracts/`、root resident docs、stage docs 与产品仓母文档的职责边界。
 - `UI_FILE_ORGANIZATION.md`
   - 定义哪些内容应该留在产品代码仓，哪些内容应沉淀到合同树。
 
 ## 读取顺序
-1. `UI_TOOL_POSITIONING.md`
-2. `UI_FILE_ORGANIZATION.md`
+1. `SCREEN_SPATIAL_BLUEPRINT_CONTRACT.md`
+2. `UI_TOOL_POSITIONING.md`
+3. `UI_FILE_ORGANIZATION.md`

@@ -36,6 +36,7 @@ anchors:
 
 ## 必须留在 `frontend_dev_contracts/` 的内容
 - 前端开发合同索引。
+- 屏幕空间蓝图 grammar 和 viewport/coordinate/constraint 规则。
 - `layers/` 下的 layer catalog、locator 协议与命名 lint 工作流。
 - `containers/` 下的容器角色、状态边界、布局权、交互协议和治理规则。
 - `design_system/` 下的 token、semantic style、theme、typography 合同。
@@ -48,3 +49,9 @@ anchors:
 - 页面标题、布局细节、组件实验。
 - viewer payload 组装和 service 脚本。
 - `PreviewPayload` 一类 UI 语义类型。
+
+## 必须留在产品仓而非技能中的 spatial 蓝图内容
+- 具体产品的 viewport baseline。
+- 具体产品的 workspace 默认状态蓝图。
+- 具体产品的 panel open/focus/split 状态蓝图。
+- 具体产品的 surface/token 数值实例。

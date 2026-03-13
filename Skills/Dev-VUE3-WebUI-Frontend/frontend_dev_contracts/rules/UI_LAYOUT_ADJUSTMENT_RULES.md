@@ -30,3 +30,9 @@ anchors:
 - 保持 `SKILL.md` 仍是默认进入正文。
 - graph、文档列表、正文面板三者必须同时可见或可快速切换。
 - 窄屏退化应由 workspace 容器统一裁决，不得让单个 panel 各自漂移。
+- 所有复杂布局调整都必须先修改 spatial blueprint，再修改实现或样式；禁止跳过 blueprint 直接改代码。
+
+## spatial blueprint 调整规则
+- 同一界面的 desktop/mobile 变化，优先改 `viewport`, `w`, `h`, `grid_span`, `constraints`, `relation_refs`。
+- 若一个部件变成绝对尺寸，必须同步说明它会挤压谁、遮挡谁或让谁退化。
+- 当 overlay、drawer、sticky、split、focus 模式切换时，必须提供状态蓝图，而不是只靠自然语言描述。
