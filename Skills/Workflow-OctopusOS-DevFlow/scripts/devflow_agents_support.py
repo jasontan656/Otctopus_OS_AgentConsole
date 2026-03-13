@@ -28,6 +28,7 @@ def render_external_agents(runtime: dict[str, object]) -> str:
         "external_agents_path": str(agents_path),
         "target_root": str(runtime["target_root"]),
         "development_docs_root": str(runtime["development_docs_root"]),
+        "codebase_root": str(runtime["codebase_root"]),
         "module_dir": str(runtime["module_dir"]),
         "module_docs_root": str(runtime["docs_root"]),
         "mother_doc_root": str(runtime["mother_doc_root"]),
@@ -41,6 +42,7 @@ def render_machine_payload(runtime: dict[str, object]) -> dict[str, object]:
     replacements = {
         "target_root": str(runtime["target_root"]),
         "development_docs_root": str(runtime["development_docs_root"]),
+        "codebase_root": str(runtime["codebase_root"]),
         "module_dir": str(runtime["module_dir"]),
         "module_docs_root": str(runtime["docs_root"]),
         "mother_doc_root": str(runtime["mother_doc_root"]),

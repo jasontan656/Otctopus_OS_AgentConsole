@@ -50,12 +50,37 @@ def create_mother_doc_source_for_pack(target: Path) -> None:
     (mother_doc_root / "08_dev_execution_plan.md").write_text("# plan\n", encoding="utf-8")
 
 
+def create_runtime_layout(root: Path) -> dict[str, Path | str]:
+    repo_root = root.resolve()
+    codebase_root = repo_root / "sample_repo"
+    development_docs_root = codebase_root / "Development_Docs"
+    docs_root = development_docs_root / "sample_module"
+    docs_root.mkdir(parents=True, exist_ok=True)
+    return {
+        "target_root": repo_root,
+        "codebase_root": codebase_root,
+        "development_docs_root": development_docs_root,
+        "docs_root": docs_root,
+        "module_dir": "sample_module",
+    }
+
+
+def runtime_scope(layout: dict[str, Path | str]) -> tuple[str, ...]:
+    return (
+        "--target-root",
+        str(layout["target_root"]),
+        "--development-docs-root",
+        str(layout["development_docs_root"]),
+        "--module-dir",
+        str(layout["module_dir"]),
+    )
+
+
 class TestCliToolboxRegressionTest:
     def test_workflow_contract_exposes_construction_plan_model(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
-            module_root = Path(temp_dir) / "Development_Docs" / "sample_module"
-            module_root.mkdir(parents=True)
-            payload = run_cli("workflow-contract", "--target-root", temp_dir, "--module-dir", "sample_module")
+            layout = create_runtime_layout(Path(temp_dir))
+            payload = run_cli("workflow-contract", *runtime_scope(layout))
         assert payload["stage_order"] == ["mother_doc", "construction_plan", "implementation", "acceptance"]
         assert "rules/OCTOPUS_SKILL_HARD_RULES.md" in payload["top_level_resident_docs"]
         assert payload["stage_specific_contract_tools"] == [
@@ -68,9 +93,11 @@ class TestCliToolboxRegressionTest:
             "template-index",
         ]
         assert payload["target_runtime_contract"]["target_root"] == str(Path(temp_dir).resolve())
-        assert payload["target_runtime_contract"]["docs_root"].endswith("/Development_Docs/sample_module")
+        assert payload["target_runtime_contract"]["development_docs_root"].endswith("/sample_repo/Development_Docs")
+        assert payload["target_runtime_contract"]["docs_root"].endswith("/sample_repo/Development_Docs/sample_module")
+        assert payload["target_runtime_contract"]["codebase_root"].endswith("/sample_repo")
         assert payload["target_runtime_contract"]["construction_plan_root"].endswith(
-            "Development_Docs/sample_module/mother_doc/execution_atom_plan_validation_packs"
+            "sample_repo/Development_Docs/sample_module/mother_doc/execution_atom_plan_validation_packs"
         )
         assert "Dev-OctopusOS-Constitution-ProjectStructure" in payload["top_level_resident_docs"][-1]
         assert payload["discovery_scope_policy"]["required_startup_sequence"] == [
@@ -109,8 +136,8 @@ class TestCliToolboxRegressionTest:
         assert "00_index.md" in payload["construction_plan_required_sections"]
         assert "phase_status.jsonl" in payload["construction_plan_required_sections"]
         assert "plan_step_id" in payload["acceptance_required_fields"]
-        assert payload["construction_plan_root"].endswith("Development_Docs/sample_module/mother_doc/execution_atom_plan_validation_packs")
-        assert payload["construction_plan_index"].endswith("Development_Docs/sample_module/mother_doc/execution_atom_plan_validation_packs/00_index.md")
+        assert payload["construction_plan_root"].endswith("sample_repo/Development_Docs/sample_module/mother_doc/execution_atom_plan_validation_packs")
+        assert payload["construction_plan_index"].endswith("sample_repo/Development_Docs/sample_module/mother_doc/execution_atom_plan_validation_packs/00_index.md")
         assert payload["required_templates"]["mother_doc_root"].endswith("assets/templates/mother_doc")
         assert payload["required_templates"]["construction_plan_root"].endswith(
             "assets/templates/execution_atom_plan_validation_packs"
@@ -118,8 +145,8 @@ class TestCliToolboxRegressionTest:
 
     def test_stage_checklist_for_construction_plan_focuses_on_separate_execution_plan(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
-            (Path(temp_dir) / "Development_Docs" / "sample_module").mkdir(parents=True)
-            payload = run_cli("stage-checklist", "--stage", "construction_plan", "--target-root", temp_dir, "--module-dir", "sample_module")
+            layout = create_runtime_layout(Path(temp_dir))
+            payload = run_cli("stage-checklist", "--stage", "construction_plan", *runtime_scope(layout))
         assert payload["stage"] == "construction_plan"
         assert "Development_Docs/<module_dir>/mother_doc/execution_atom_plan_validation_packs/ directory" in payload["required_outputs"][0]
         assert "source_mother_doc_refs" in payload["required_outputs"][-1]
@@ -135,10 +162,10 @@ class TestCliToolboxRegressionTest:
 
     def test_stage_doc_command_and_graph_contracts_are_stage_scoped(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
-            (Path(temp_dir) / "Development_Docs" / "sample_module").mkdir(parents=True)
-            doc_payload = run_cli("stage-doc-contract", "--stage", "implementation", "--target-root", temp_dir, "--module-dir", "sample_module")
-            command_payload = run_cli("stage-command-contract", "--stage", "acceptance", "--target-root", temp_dir, "--module-dir", "sample_module")
-            graph_payload = run_cli("stage-graph-contract", "--stage", "mother_doc", "--target-root", temp_dir, "--module-dir", "sample_module")
+            layout = create_runtime_layout(Path(temp_dir))
+            doc_payload = run_cli("stage-doc-contract", "--stage", "implementation", *runtime_scope(layout))
+            command_payload = run_cli("stage-command-contract", "--stage", "acceptance", *runtime_scope(layout))
+            graph_payload = run_cli("stage-graph-contract", "--stage", "mother_doc", *runtime_scope(layout))
         assert doc_payload["stage"] == "implementation"
         assert "Development_Docs/<module_dir>/mother_doc/execution_atom_plan_validation_packs/<active_pack>/*" in doc_payload["stage_docs"]
         assert "Development_Docs/<module_dir>/mother_doc/<source_mother_doc_refs declared by active_pack>" in doc_payload["stage_docs"]
@@ -160,10 +187,10 @@ class TestCliToolboxRegressionTest:
 
     def test_mother_doc_contracts_require_latest_archive_review_before_refill(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
-            (Path(temp_dir) / "Development_Docs" / "sample_module").mkdir(parents=True)
-            doc_payload = run_cli("stage-doc-contract", "--stage", "mother_doc", "--target-root", temp_dir, "--module-dir", "sample_module")
-            command_payload = run_cli("stage-command-contract", "--stage", "mother_doc", "--target-root", temp_dir, "--module-dir", "sample_module")
-            checklist_payload = run_cli("stage-checklist", "--stage", "mother_doc", "--target-root", temp_dir, "--module-dir", "sample_module")
+            layout = create_runtime_layout(Path(temp_dir))
+            doc_payload = run_cli("stage-doc-contract", "--stage", "mother_doc", *runtime_scope(layout))
+            command_payload = run_cli("stage-command-contract", "--stage", "mother_doc", *runtime_scope(layout))
+            checklist_payload = run_cli("stage-checklist", "--stage", "mother_doc", *runtime_scope(layout))
         assert "Development_Docs/<module_dir>/<latest_NN_slug>/* when present" in checklist_payload["stage_docs"]
         assert "iteration_context_root" in doc_payload
         assert doc_payload["iteration_context_root"] is None
@@ -174,9 +201,9 @@ class TestCliToolboxRegressionTest:
 
     def test_acceptance_lint_defaults_to_mother_doc_acceptance_container(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
-            (Path(temp_dir) / "Development_Docs" / "sample_module").mkdir(parents=True)
-            payload = run_cli("target-runtime-contract", "--target-root", temp_dir, "--module-dir", "sample_module")
-        assert payload["acceptance_root"].endswith("Development_Docs/sample_module/mother_doc/acceptance")
+            layout = create_runtime_layout(Path(temp_dir))
+            payload = run_cli("target-runtime-contract", *runtime_scope(layout))
+        assert payload["acceptance_root"].endswith("sample_repo/Development_Docs/sample_module/mother_doc/acceptance")
 
     def test_template_index_lists_directory_templates(self) -> None:
         payload = run_cli("template-index")

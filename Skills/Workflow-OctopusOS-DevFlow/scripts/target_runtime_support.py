@@ -77,27 +77,34 @@ def numbered_pack_dirs(construction_plan_root: Path) -> list[Path]:
 def resolve_target_runtime(
     *,
     target_root: str | Path | None = None,
+    development_docs_root: str | Path | None = None,
     docs_root: str | Path | None = None,
     module_dir: str | None = None,
     codebase_root: str | Path | None = None,
     graph_runtime_root: str | Path | None = None,
     project_agents: str | Path | None = None,
 ) -> dict[str, object]:
-    resolved_target_root = Path(target_root or Path.cwd()).resolve()
-    development_docs_root = (resolved_target_root / DEVELOPMENT_DOCS_DIRNAME).resolve()
+    resolved_target_root = Path(target_root or WORKSPACE_ROOT).resolve()
     inferred_module_dir = module_dir
+    explicit_development_docs_root = _resolve_optional(development_docs_root)
     if docs_root:
         resolved_docs_root = Path(docs_root).resolve()
-        if resolved_docs_root.parent == development_docs_root:
+        resolved_development_docs_root = resolved_docs_root.parent
+        if inferred_module_dir is None:
             inferred_module_dir = resolved_docs_root.name
     else:
+        resolved_development_docs_root = explicit_development_docs_root or (
+            resolved_target_root / DEVELOPMENT_DOCS_DIRNAME
+        ).resolve()
         resolved_docs_root = (
-            (development_docs_root / inferred_module_dir).resolve()
+            (resolved_development_docs_root / inferred_module_dir).resolve()
             if inferred_module_dir
-            else development_docs_root.resolve()
+            else resolved_development_docs_root.resolve()
         )
     resolved_codebase_root = (
-        Path(codebase_root).resolve() if codebase_root else resolved_target_root
+        Path(codebase_root).resolve()
+        if codebase_root
+        else resolved_development_docs_root.parent.resolve()
     )
     resolved_graph_runtime_root = (
         Path(graph_runtime_root).resolve()
@@ -128,22 +135,32 @@ def resolve_target_runtime(
     missing_prerequisites: list[str] = []
     if not resolved_target_root.exists():
         missing_prerequisites.append("target_root_missing")
-    if not development_docs_root.exists():
+    if not resolved_development_docs_root.is_relative_to(resolved_target_root):
+        missing_prerequisites.append("development_docs_root_outside_target_root")
+    if not resolved_development_docs_root.exists():
         missing_prerequisites.append("development_docs_root_missing")
     if not inferred_module_dir:
         missing_prerequisites.append("module_dir_missing")
-    if inferred_module_dir and resolved_docs_root.parent != development_docs_root:
+    if inferred_module_dir and resolved_docs_root.parent != resolved_development_docs_root:
         missing_prerequisites.append("docs_root_outside_development_docs")
     if inferred_module_dir and not resolved_docs_root.exists():
         missing_prerequisites.append("module_docs_root_missing")
+    if not resolved_codebase_root.is_relative_to(resolved_target_root):
+        missing_prerequisites.append("codebase_root_outside_target_root")
     ready_for_service = not missing_prerequisites
 
     return {
         "target_root": resolved_target_root,
-        "development_docs_root": development_docs_root,
+        "development_docs_root": resolved_development_docs_root,
         "module_dir": inferred_module_dir,
         "docs_root": resolved_docs_root,
-        "docs_root_source": "explicit" if docs_root else "development_docs_module_root",
+        "docs_root_source": (
+            "explicit_docs_root"
+            if docs_root
+            else "explicit_development_docs_root"
+            if explicit_development_docs_root is not None
+            else "target_root_default_development_docs"
+        ),
         "codebase_root": resolved_codebase_root,
         "graph_runtime_root": resolved_graph_runtime_root,
         "mother_doc_root": resolved_mother_doc_root,
@@ -175,6 +192,7 @@ def resolve_target_runtime(
 def target_runtime_contract_payload(
     *,
     target_root: str | Path | None = None,
+    development_docs_root: str | Path | None = None,
     docs_root: str | Path | None = None,
     module_dir: str | None = None,
     codebase_root: str | Path | None = None,
@@ -183,6 +201,7 @@ def target_runtime_contract_payload(
 ) -> dict[str, object]:
     runtime = resolve_target_runtime(
         target_root=target_root,
+        development_docs_root=development_docs_root,
         docs_root=docs_root,
         module_dir=module_dir,
         codebase_root=codebase_root,
@@ -216,8 +235,9 @@ def target_runtime_contract_payload(
         "docs_root": str(runtime["docs_root"]),
         "docs_root_source": runtime["docs_root_source"],
         "docs_root_resolution_rule": (
-            "the governed development-doc container is <target_root>/Development_Docs/<module_dir>; "
-            "if the project has already fixed a different module-doc container, read Dev-OctopusOS-Constitution-ProjectStructure before overriding it"
+            "treat <target_root> as the repo/workspace boundary inside AI_Projects, "
+            "derive the governed module docs root from <development_docs_root>/<module_dir> or an explicit <docs_root>, "
+            "and default codebase_root to the parent of development_docs_root"
         ),
         "project_structure_skill_path": str(runtime["project_structure_skill_path"]),
         "workspace_root": str(runtime["workspace_root"]),
@@ -244,7 +264,8 @@ def target_runtime_contract_payload(
         "ready_for_service": runtime["ready_for_service"],
         "reuse_actions": reuse_actions,
         "first_actions": [
-            "validate that <target_root>/Development_Docs and the requested module subfolder already exist; otherwise refuse service",
+            "treat <target_root> as the repo/workspace boundary under AI_Projects, not as the code repo itself",
+            "validate that the resolved development_docs_root and requested module subfolder already exist; otherwise refuse service",
             "inspect existing mother_doc, archived iterations, execution packs, AGENTS governance state, and graph state before deciding whether to init or reuse",
             "reuse existing task packs and graph context when they are already present; do not fork a second disconnected documentation line",
         ],

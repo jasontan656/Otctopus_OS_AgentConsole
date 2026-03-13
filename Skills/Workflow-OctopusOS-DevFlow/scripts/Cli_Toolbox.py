@@ -23,6 +23,7 @@ def cmd_workflow_contract(args: argparse.Namespace) -> int:
     return print_payload(
         workflow_contract_payload(
             target_root=args.target_root,
+            development_docs_root=args.development_docs_root,
             docs_root=args.docs_root,
             module_dir=args.module_dir,
             codebase_root=args.codebase_root,
@@ -36,6 +37,7 @@ def cmd_workflow_contract(args: argparse.Namespace) -> int:
 def cmd_target_runtime_contract(args: argparse.Namespace) -> int:
     payload = target_runtime_contract_payload(
         target_root=args.target_root,
+        development_docs_root=args.development_docs_root,
         docs_root=args.docs_root,
         module_dir=args.module_dir,
         codebase_root=args.codebase_root,
@@ -49,6 +51,7 @@ def cmd_target_runtime_contract(args: argparse.Namespace) -> int:
 def _resolve_runtime(args: argparse.Namespace) -> dict[str, object]:
     return resolve_target_runtime(
         target_root=args.target_root,
+        development_docs_root=args.development_docs_root,
         docs_root=args.docs_root,
         module_dir=args.module_dir,
         codebase_root=args.codebase_root,
@@ -81,6 +84,7 @@ def cmd_stage_checklist(args: argparse.Namespace) -> int:
         "target_runtime_precheck_required": True,
         "target_runtime_contract": target_runtime_contract_payload(
             target_root=args.target_root,
+            development_docs_root=args.development_docs_root,
             docs_root=args.docs_root,
             module_dir=args.module_dir,
             codebase_root=args.codebase_root,
@@ -216,6 +220,7 @@ def cmd_acceptance_lint(args: argparse.Namespace) -> int:
     return 0 if payload["status"] == "pass" else 1
 def add_runtime_scope_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--target-root", default=None)
+    parser.add_argument("--development-docs-root", default=None)
     parser.add_argument("--docs-root", default=None)
     parser.add_argument("--module-dir", default=None)
     parser.add_argument("--codebase-root", default=None)

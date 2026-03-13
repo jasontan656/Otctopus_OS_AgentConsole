@@ -183,6 +183,7 @@ def mother_doc_archive_payload(active_root: Path, force: bool, archive_slug: str
 def workflow_contract_payload(
     *,
     target_root: str | Path | None = None,
+    development_docs_root: str | Path | None = None,
     docs_root: str | Path | None = None,
     module_dir: str | None = None,
     codebase_root: str | Path | None = None,
@@ -191,6 +192,7 @@ def workflow_contract_payload(
 ) -> dict:
     runtime = resolve_target_runtime(
         target_root=target_root,
+        development_docs_root=development_docs_root,
         docs_root=docs_root,
         module_dir=module_dir,
         codebase_root=codebase_root,
@@ -226,6 +228,7 @@ def workflow_contract_payload(
         "stage_switch_protocol": PHASE_READ_POLICY["stage_switch_protocol"],
         "target_runtime_contract": target_runtime_contract_payload(
             target_root=target_root,
+            development_docs_root=development_docs_root,
             docs_root=docs_root,
             module_dir=module_dir,
             codebase_root=codebase_root,

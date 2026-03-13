@@ -3,6 +3,7 @@
   "governed_container": {
     "target_root": "{{target_root}}",
     "development_docs_root": "{{development_docs_root}}",
+    "codebase_root": "{{codebase_root}}",
     "module_dir": "{{module_dir}}",
     "module_docs_root": "{{module_docs_root}}"
   },

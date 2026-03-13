@@ -30,8 +30,8 @@
 
 ## 1.1 Discovery Scope Policy
 - 发现范围只允许包含：
-  - 当前 `target_root`
-  - 当前 `target_root/Development_Docs`
+  - 当前 `target_root` 边界
+  - 当前 `development_docs_root`
   - 当前模块文档根
   - 当前模块 `mother_doc`
   - 当前 `codebase_root`
@@ -57,7 +57,7 @@
   - `rules/OCTOPUS_SKILL_HARD_RULES.md`
   - `references/tooling/SKILL_TOOLING_WORKFLOW_CONTRACT.md`
   - `/home/jasontan656/AI_Projects/AGENTS.md`
-  - `<target_root>/Development_Docs/<module_dir>/AGENTS.md`（若存在）
+  - `<docs_root>/AGENTS.md`（若存在）
   - `Dev-OctopusOS-Constitution-ProjectStructure/SKILL.md`（当 `docs_root` 尚未固定时）
 
 ## 1.3 Phase Read Policy

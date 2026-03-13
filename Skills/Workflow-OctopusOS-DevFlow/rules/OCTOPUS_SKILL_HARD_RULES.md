@@ -16,10 +16,10 @@
 - `rules/OCTOPUS_SKILL_HARD_RULES.md`
 - `references/tooling/SKILL_TOOLING_WORKFLOW_CONTRACT.md`
 - `/home/jasontan656/AI_Projects/AGENTS.md`
-- `<target_root>/Development_Docs/<module_dir>/AGENTS.md`（若存在）
+- `<docs_root>/AGENTS.md`（若存在）
 - `/home/jasontan656/.codex/skills/Dev-OctopusOS-Constitution-ProjectStructure/SKILL.md`（当 `docs_root` 尚未固定时）
 5. 每个阶段只能做本阶段的事，禁止跨阶段混写；进入新阶段前必须先读取 `stage-checklist --stage <current_stage>`。
-5.1 在进入任一阶段前，必须先运行 `target-runtime-contract`，确认当前目标的 `Development_Docs / module_dir / mother_doc_root / execution_atom_plan_validation_packs / graph_runtime_root`，并检查是否已存在任务包、归档轮次与图谱。
+5.1 在进入任一阶段前，必须先运行 `target-runtime-contract`，确认当前 `target_root` 只是 `AI_Projects` 内的 repo/workspace 根边界，并以 `development_docs_root / docs_root / module_dir / mother_doc_root / execution_atom_plan_validation_packs / graph_runtime_root` 解析实际工作目标。
 5.2 `Development_Docs/` 与目标模块子目录必须先存在；任一不存在时，本技能必须拒绝服务，不得私自创建模块容器。
 5.2.1 `target_root` 还必须位于 `AI_Projects` workspace 内；否则 `$Meta-RootFile-Manager` 无法收治模块 `AGENTS.md`，本技能必须拒绝服务。
 5.3 若目标项目已经固定开发文档容器，必须按 `Dev-OctopusOS-Constitution-ProjectStructure` 的判定使用该容器；不得自行改投到另一个 `docs/` 或 sibling 目录。
@@ -32,7 +32,7 @@
 7.0 `mother_doc` 阶段文档只允许包含：`Development_Docs/<module_dir>/mother_doc/*` 与 `assets/templates/mother_doc/*`；不得提前读取 construction packs、implementation 证据或 acceptance artifacts。
 7.0.1 若当前模块文档根下已经存在编号归档的 `NN_slug` 目录，`mother_doc` 阶段必须先读取最新一轮归档，并抽取仍然有效的目标、架构决策、blocker 与交付增量；不得把新 mother_doc 当成与历史脱钩的空白起点。
 7.1 `mother_doc` 在进入 `construction_plan` 前必须通过 `mother-doc-lint`；若结构缺失、仍有 `replace_me`、缺少阶段断言/阶段测试/阶段验收，或出现 `最小闭环`、`最小实现`、`mvp`、`test profile` 等降级语义，必须先修正文档。
-7.2 发现范围固定限制为：当前 `target_root`、其 `Development_Docs/`、已判定的模块文档根、`mother_doc/`、当前 `codebase_root`、必要 skill 文件与必要 graph 文件。
+7.2 发现范围固定限制为：当前 `target_root` 边界、已判定的 `development_docs_root`、模块文档根、`mother_doc/`、当前 `codebase_root`、必要 skill 文件与必要 graph 文件。
 7.3 若启动 cwd 恰好是 `/home/jasontan656/AI_Projects`，它只是容器根/钩子根，不得被视为 discoverable repo。
 7.4 禁止为了找上下文扫描整个 `/home/jasontan656/AI_Projects`，也不得读取 `Human_Work_Zone`、`GoogleDriveDump` 等 sibling 区域，除非 mother doc 显式引用。
 7.5 极简 prompt 启动时，第一批动作必须固定为：先运行 `target-runtime-contract`；必要时读取 `Dev-OctopusOS-Constitution-ProjectStructure` 以确认模块文档容器；若模块容器可用但骨架未齐，先运行 `target-scaffold`；再读取当前 `mother_doc/00_index.md`；若已存在编号归档的 `NN_slug`，先读取最新一轮归档；若已存在任务包，先读取并复用当前任务包；运行 `mother-doc-lint`；在 `mother_doc` 阶段若已有图谱必须读取它来校准现有代码现实；不得先用 `rg/find/ls` 在 workspace 根盲扫需求或仓库。

@@ -45,9 +45,9 @@ ROOT_AGENTS_PATH = (PRODUCT_ROOT / "AGENTS.md").resolve()
 
 DISCOVERY_SCOPE_POLICY = {
     "allowed_roots": [
-        "<target_root>",
-        "<target_root>/Development_Docs",
-        "<target_root>/Development_Docs/<module_dir>",
+        "<target_root as repo_root_boundary>",
+        "<development_docs_root>",
+        "<docs_root>",
         "<mother_doc_root>",
         "<codebase_root>",
         "current_skill_files",
@@ -58,7 +58,7 @@ DISCOVERY_SCOPE_POLICY = {
     "workspace_container_root_is_discovery_target": False,
     "fixed_startup_paths": [
         "<mother_doc_root>/00_index.md when present",
-        "<target_root>/Development_Docs/<module_dir>/AGENTS.md when present",
+        "<docs_root>/AGENTS.md when present",
         "Dev-OctopusOS-Constitution-ProjectStructure/SKILL.md when docs_root must be chosen",
     ],
     "required_startup_sequence": [
@@ -83,7 +83,7 @@ PHASE_READ_POLICY = {
         "rules/OCTOPUS_SKILL_HARD_RULES.md",
         "references/tooling/SKILL_TOOLING_WORKFLOW_CONTRACT.md",
         str(ROOT_AGENTS_PATH),
-        "<target_root>/Development_Docs/<module_dir>/AGENTS.md when present",
+        "<docs_root>/AGENTS.md when present",
         "Dev-OctopusOS-Constitution-ProjectStructure/SKILL.md when docs_root is not yet fixed",
     ],
     "single_stage_rule": "read only the current stage checklist and the artifacts required by that stage",
