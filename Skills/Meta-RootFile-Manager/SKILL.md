@@ -94,12 +94,10 @@ metadata:
 - `agents-payload-contract`
   - 说明：治理 `AGENTS_machine.json` payload 的专用入口合同。
   - 强制工作流：`$Meta-Enhance-Prompt 提取用户意图 -> 压缩为最小精确语义 -> 回写 AGENTS_machine.json -> collect 重渲染 AGENTS_human.md -> lint`
-  - 阅读入口：`references/runtime_contracts/AGENTS_PAYLOAD_GOVERNANCE_CONTRACT_human.md`
+  - 阅读入口：`references/runtime_contracts/AGENTS_GOVERNANCE_ENTRY.md`
 
 ## 6. 参考入口
-- [AGENTS 资产治理模型](references/runtime_contracts/AGENTS_ASSET_GOVERNANCE.md)
-- [AGENTS Payload 治理入口合同](references/runtime_contracts/AGENTS_PAYLOAD_GOVERNANCE_CONTRACT_human.md)
-- [AGENTS 结构合同](references/runtime_contracts/AGENTS_content_structure.md)
+- [AGENTS 治理入口](references/runtime_contracts/AGENTS_GOVERNANCE_ENTRY.md)
 - [Root File 映射副本合同](references/runtime_contracts/ROOTFILE_MAPPED_COPY_STRUCTURE.md)
 - [技能运行合同](references/runtime_contracts/SKILL_RUNTIME_CONTRACT.md)
 - [新增文件类型合同](references/runtime_contracts/NEW_FILE_STAGE_CONTRACT.md)
