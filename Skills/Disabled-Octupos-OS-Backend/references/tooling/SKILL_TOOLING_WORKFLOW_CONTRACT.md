@@ -30,10 +30,10 @@
 
 ## 1.1 Discovery Scope Policy
 - 发现范围只允许包含：
-  - `<root>/Octopus_CodeBase_Backend`
-  - `<root>/OctuposOS_Runtime_Backend`
-  - `<root>/OctuposOS_Runtime_Backend/docs`
-  - `<root>/OctuposOS_Runtime_Backend/docs/mother_doc`
+  - `<root>/Octopus_OS`
+  - `<root>/Codex_Skill_Runtime/Disabled-Octupos-OS-Backend`
+  - `<root>/Codex_Skill_Runtime/Disabled-Octupos-OS-Backend/docs`
+  - `<root>/Codex_Skill_Runtime/Disabled-Octupos-OS-Backend/docs/mother_doc`
   - 当前技能文件与必要图谱技能入口
 - 若启动 cwd 是 `<root>`，它只是容器根与钩子根，不是 discoverable repo。
 - 禁止为了找需求或上下文而扫描整个 `<root>`。
@@ -44,7 +44,7 @@
   - 若已存在编号归档的 `docs/NN_slug`，先读取最新一轮归档内容再开始本轮回填
   - 执行 `mother-doc-lint`
   - 若存在图谱，读取 graph context 以校准当前代码现实
-  - 仅在当前阶段确实需要代码上下文时，执行固定 codebase 路径上的 `graph-preflight`
+  - 仅在当前阶段确实需要代码上下文时，执行当前 active codebase 路径上的 `graph-preflight`
   - 仅在这些步骤后，按需读取 codebase 中的具体文件
 
 ## 1.2 Top-Level Resident Docs
@@ -52,7 +52,7 @@
   - `rules/OCTOPUS_SKILL_HARD_RULES.md`
   - `references/tooling/SKILL_TOOLING_WORKFLOW_CONTRACT.md`
   - `<root>/AGENTS.md`
-  - `<root>/Octopus_CodeBase_Backend/AGENTS.md`
+  - `<root>/Octopus_OS/AGENTS.md`
 
 ## 1.3 Phase Read Policy
 - 单阶段执行时，只读取当前阶段 checklist 与当前阶段直接需要的文档/模板。

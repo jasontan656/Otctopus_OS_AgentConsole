@@ -38,8 +38,8 @@ def _resolve_product_root() -> Path:
 
 
 PRODUCT_ROOT = _resolve_product_root()
-CODEBASE_ROOT = (PRODUCT_ROOT / "Octopus_CodeBase_Backend").resolve()
-RUNTIME_ROOT = (PRODUCT_ROOT / "OctuposOS_Runtime_Backend").resolve()
+CODEBASE_ROOT = (PRODUCT_ROOT / "Octopus_OS").resolve()
+RUNTIME_ROOT = (PRODUCT_ROOT / "Codex_Skill_Runtime" / "Disabled-Octupos-OS-Backend").resolve()
 RUNTIME_DOCS_ROOT = (RUNTIME_ROOT / "docs").resolve()
 MOTHER_DOC_ROOT = (RUNTIME_DOCS_ROOT / "mother_doc").resolve()
 ROOT_AGENTS_PATH = (PRODUCT_ROOT / "AGENTS.md").resolve()
@@ -61,7 +61,7 @@ DISCOVERY_SCOPE_POLICY = {
         str(MOTHER_DOC_ROOT / "00_index.md"),
         str(CODEBASE_AGENTS_PATH),
         str(CODEBASE_ROOT / "README.md"),
-        str(CODEBASE_ROOT / "Deployment_Guide.md"),
+        str(MOTHER_DOC_ROOT / "08_dev_execution_plan.md"),
     ],
     "required_startup_sequence": [
         "read_mother_doc_index_or_directory",

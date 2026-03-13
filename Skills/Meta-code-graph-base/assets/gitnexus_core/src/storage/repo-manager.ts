@@ -9,6 +9,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 import crypto from 'crypto';
+import { fileURLToPath } from 'url';
 
 export interface RepoMeta {
   repoPath: string;
@@ -44,8 +45,30 @@ export interface RegistryEntry {
   stats?: RepoMeta['stats'];
 }
 
-const DEFAULT_RUNTIME_ROOT = '/home/jasontan656/AI_Projects/OctuposOS_Runtime_Backend/code_graph_runtime';
-const RUNTIME_ROOT = process.env.META_CODE_GRAPH_RUNTIME_ROOT || DEFAULT_RUNTIME_ROOT;
+const SKILL_NAME = 'Meta-code-graph-base';
+
+function resolveDefaultRuntimeRoot(): string {
+  const explicit = process.env.META_CODE_GRAPH_RUNTIME_ROOT;
+  if (explicit && explicit.trim()) {
+    return path.resolve(explicit);
+  }
+
+  let probe = path.dirname(fileURLToPath(import.meta.url));
+  while (true) {
+    if (path.basename(probe) === 'Otctopus_OS_AgentConsole') {
+      return path.join(path.dirname(probe), 'Codex_Skill_Runtime', SKILL_NAME, 'code_graph_runtime');
+    }
+    const parent = path.dirname(probe);
+    if (parent === probe) {
+      break;
+    }
+    probe = parent;
+  }
+
+  return path.resolve(process.cwd(), 'Codex_Skill_Runtime', SKILL_NAME, 'code_graph_runtime');
+}
+
+const RUNTIME_ROOT = resolveDefaultRuntimeRoot();
 const INDEXES_DIR = 'indexes';
 const REGISTRY_DIR = 'registry';
 const CONFIG_DIR = 'config';

@@ -10,10 +10,12 @@ from pathlib import Path
 
 
 SKILL_ROOT = Path(__file__).resolve().parents[1]
+SKILL_NAME = SKILL_ROOT.name
 ENGINE_ROOT = SKILL_ROOT / "assets" / "gitnexus_core"
 REPO_ROOT = SKILL_ROOT.parents[1]
 PRODUCT_ROOT = REPO_ROOT.parent
-RUNTIME_ROOT = (PRODUCT_ROOT / "OctuposOS_Runtime_Backend" / "code_graph_runtime").resolve()
+SKILL_RUNTIME_ROOT = (PRODUCT_ROOT / "Codex_Skill_Runtime" / SKILL_NAME).resolve()
+RUNTIME_ROOT = (SKILL_RUNTIME_ROOT / "code_graph_runtime").resolve()
 DIST_ENTRY = ENGINE_ROOT / "dist" / "cli" / "index.js"
 
 

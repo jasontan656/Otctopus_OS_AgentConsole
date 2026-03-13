@@ -1,7 +1,7 @@
 # Runtime Layout
 
 Root:
-- `/home/jasontan656/AI_Projects/OctuposOS_Runtime_Backend/code_graph_runtime`
+- `<root>/Codex_Skill_Runtime/Meta-code-graph-base/code_graph_runtime`
 
 Subdirectories:
 - `registry/`: indexed repo registry

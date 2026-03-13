@@ -1,6 +1,6 @@
 ---
 name: "Meta-code-graph-base"
-description: "维护本地代码图谱底座：统一建图、查图、影响面分析、变更检测、资源视图与本地 wiki/map bundle 生成。运行产物固定落在 OctuposOS_Runtime_Backend/code_graph_runtime。"
+description: "维护本地代码图谱底座：统一建图、查图、影响面分析、变更检测、资源视图与本地 wiki/map bundle 生成。运行产物固定落在 Codex_Skill_Runtime/Meta-code-graph-base/code_graph_runtime。"
 ---
 
 # Meta-code-graph-base
@@ -21,7 +21,7 @@ description: "维护本地代码图谱底座：统一建图、查图、影响面
 - 本地 wiki / map bundle 生成
 
 运行产物固定落在：
-- `<root>/OctuposOS_Runtime_Backend/code_graph_runtime`
+- `<root>/Codex_Skill_Runtime/Meta-code-graph-base/code_graph_runtime`
 
 当前前端承载关系：
 - 最终 UI / workbench 由 `Dev-VUE3-WebUI-Frontend` 承载。

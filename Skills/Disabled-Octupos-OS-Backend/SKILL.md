@@ -13,19 +13,19 @@ description: "暂时不启用，避免被误触发；仅保留为可修改的历
 - 若 `docs/` 下已经存在编号归档的 `NN_slug`，新一轮 `mother_doc` 不是空白起手；必须先从最近一轮归档与当前 code graph/context 抽取仍然有效的设计与增量，再开始回填。
 - 详细规则必须从下方入口文档读取，不得只凭本门面自行发挥。
 - root-first 路径：
-  - mother doc root：`<root>/OctuposOS_Runtime_Backend/docs/mother_doc`
-  - mother doc index：`<root>/OctuposOS_Runtime_Backend/docs/mother_doc/00_index.md`
-  - construction packs root：`<root>/OctuposOS_Runtime_Backend/docs/mother_doc/execution_atom_plan_validation_packs`
-  - construction packs index：`<root>/OctuposOS_Runtime_Backend/docs/mother_doc/execution_atom_plan_validation_packs/00_index.md`
-  - runtime：`<root>/OctuposOS_Runtime_Backend`
-  - codebase：`<root>/Octopus_CodeBase_Backend`
+  - mother doc root：`<root>/Codex_Skill_Runtime/Disabled-Octupos-OS-Backend/docs/mother_doc`
+  - mother doc index：`<root>/Codex_Skill_Runtime/Disabled-Octupos-OS-Backend/docs/mother_doc/00_index.md`
+  - construction packs root：`<root>/Codex_Skill_Runtime/Disabled-Octupos-OS-Backend/docs/mother_doc/execution_atom_plan_validation_packs`
+  - construction packs index：`<root>/Codex_Skill_Runtime/Disabled-Octupos-OS-Backend/docs/mother_doc/execution_atom_plan_validation_packs/00_index.md`
+  - runtime：`<root>/Codex_Skill_Runtime/Disabled-Octupos-OS-Backend`
+  - codebase：`<root>/Octopus_OS`
 
 ## 2. 必读顺序
 1. 顶层常驻文档只保留：
    - `rules/OCTOPUS_SKILL_HARD_RULES.md`
    - `references/tooling/SKILL_TOOLING_WORKFLOW_CONTRACT.md`
    - `<root>/AGENTS.md`
-   - `<root>/Octopus_CodeBase_Backend/AGENTS.md`
+   - `<root>/Octopus_OS/AGENTS.md`
 2. 进入任一阶段前，必须先读取：
    - `./.venv_backend_skills/bin/python Skills/Disabled-Octupos-OS-Backend/scripts/Cli_Toolbox.py stage-checklist --stage <mother_doc|construction_plan|implementation|acceptance> --json`
 3. 当前阶段的读物边界只从工具取：
@@ -55,7 +55,7 @@ description: "暂时不启用，避免被误触发；仅保留为可修改的历
   - `<root>/Otctopus_OS_AgentConsole/Skills/Meta-code-graph-base/scripts/meta_code_graph_base.py`
 - 运行边界层：
   - `<root>/AGENTS.md`
-  - `<root>/Octopus_CodeBase_Backend/AGENTS.md`
+  - `<root>/Octopus_OS/AGENTS.md`
 
 ## 4. 适用域
 - 适用于：后端项目说明驱动的规划、施工、验收闭环。

@@ -6,10 +6,10 @@ from pathlib import Path
 SKILL_ROOT = Path(__file__).resolve().parents[1]
 PRODUCT_ROOT = SKILL_ROOT.parents[2]
 WRAPPER = SKILL_ROOT / "scripts" / "meta_code_graph_base.py"
-RUNTIME_ROOT = PRODUCT_ROOT / "OctuposOS_Runtime_Backend" / "code_graph_runtime"
-TARGET_REPO = PRODUCT_ROOT / "Human_Work_Zone" / "GitNexus"
-TARGET_REPO_NAME = "GitNexus"
-TARGET_REPO_KEY = "GitNexus-ed2fb3eb9c1d"
+RUNTIME_ROOT = PRODUCT_ROOT / "Codex_Skill_Runtime" / "Meta-code-graph-base" / "code_graph_runtime"
+TARGET_REPO = PRODUCT_ROOT / "Human_Work_Zone" / "Open_Source_Projects" / "GitNexus_repo-intel-hub"
+TARGET_REPO_NAME = "GitNexus_repo-intel-hub"
+TARGET_REPO_KEY = "GitNexus_repo-intel-hub-cd46025f10d5"
 
 
 def run_cmd(*args: str, cwd: Path | None = None) -> subprocess.CompletedProcess[str]:
@@ -24,8 +24,10 @@ def run_cmd(*args: str, cwd: Path | None = None) -> subprocess.CompletedProcess[
 
 class TestMetaCodeGraphBaseTest:
     def test_runtime_layout_exists(self) -> None:
+        assert str(RUNTIME_ROOT).endswith("Codex_Skill_Runtime/Meta-code-graph-base/code_graph_runtime")
         expected = ["registry", "indexes", "maps", "wiki"]
         for name in expected:
+            (RUNTIME_ROOT / name).mkdir(parents=True, exist_ok=True)
             assert (RUNTIME_ROOT / name).exists(), name
 
     def test_analyze_and_list(self) -> None:
