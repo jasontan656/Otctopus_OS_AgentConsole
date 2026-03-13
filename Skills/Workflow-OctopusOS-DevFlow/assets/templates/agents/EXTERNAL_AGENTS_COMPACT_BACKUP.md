@@ -1,12 +1,12 @@
 ---
-doc_id: workflow_octopusos_devflow.assets_templates_agents_external_agents
+doc_id: workflow_octopusos_devflow.assets_templates_agents_external_agents_compact_backup
 doc_type: example_doc
-topic: External Agents
+topic: External Agents Compact Backup
 anchors:
-- target: ../../../SKILL.md
-  relation: implements
-  direction: upstream
-  reason: This document belongs to the governed skill tree under the main facade.
+- target: ./EXTERNAL_AGENTS.md
+  relation: backup_of
+  direction: lateral
+  reason: Compact backup copy kept inside the skill for future direct injection.
 ---
 
 [AGENT RUNTIME HOOK - ABSOLUTE ENFORCEMENT]
