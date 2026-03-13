@@ -34,4 +34,5 @@ anchors:
 - `collect` treats external files as the source of truth, creates or refreshes the `治理映射模版`, and syncs mirror plus installed skill assets.
 - `push` treats the `治理映射模版` as the source of truth and overwrites external targets.
 - `target-contract`, `scan`, `collect`, `push`, and `scaffold` all surface a path-derived `owner`.
-- Every governed target now has a paired owner meta payload; markdown managed copies may also embed `owner` directly for human reading.
+- If the managed content is json, `owner` is embedded into that json.
+- If the managed content is not json, `owner` is embedded through frontmatter in the same managed file.

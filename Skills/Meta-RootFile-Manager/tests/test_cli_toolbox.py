@@ -166,19 +166,11 @@ class TestCliToolbox:
             / "Otctopus_OS_AgentConsole"
             / "README_MD__governed_external.md"
         )
-        owner_meta = (
-            self.skill_root
-            / "assets"
-            / "managed_targets"
-            / "AI_Projects"
-            / "Otctopus_OS_AgentConsole"
-            / "README_MD__owner_meta.json"
-        )
         assert managed.read_text(encoding="utf-8").startswith("---\nowner: ")
         assert managed.read_text(encoding="utf-8").endswith("# Console\n")
         assert installed.read_text(encoding="utf-8").startswith("---\nowner: ")
         assert installed.read_text(encoding="utf-8").endswith("# Console\n")
-        assert json.loads(owner_meta.read_text(encoding="utf-8"))["owner"] == owner
+        assert owner in managed.read_text(encoding="utf-8")
 
     def test_push_writes_plain_mapping_back_to_external(self) -> None:
         managed = (
@@ -201,7 +193,7 @@ class TestCliToolbox:
         assert result["mapping_mode"] == "plain_copy"
         assert "owner" in result
         assert result["managed_files"]["mapped"].endswith("README_MD__governed_external.md")
-        assert result["managed_files"]["owner_meta"].endswith("README_MD__owner_meta.json")
+        assert "owner_meta" not in result["managed_files"]
 
     def test_scaffold_can_open_non_agents_channel(self) -> None:
         target_dir = self.workspace / "NewRepo"
@@ -325,14 +317,14 @@ class TestCliToolbox:
             / "Development_Docs"
             / "AGENTS_human.md"
         )
-        owner_meta = (
+        machine_payload = (
             self.runtime
             / "managed_targets"
             / "sandbox"
             / "sample_repo"
             / "Development_Docs"
-            / "AGENTS_MD__owner_meta.json"
+            / "AGENTS_machine.json"
         )
         assert managed_human.exists()
         assert "placeholder" in managed_human.read_text(encoding="utf-8")
-        assert json.loads(owner_meta.read_text(encoding="utf-8"))["owner"] == result["operations"][0]["owner"]
+        assert json.loads(machine_payload.read_text(encoding="utf-8"))["owner"] == result["operations"][0]["owner"]

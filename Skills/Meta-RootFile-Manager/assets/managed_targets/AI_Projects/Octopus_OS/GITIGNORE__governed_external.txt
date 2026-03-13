@@ -1,3 +1,6 @@
+---
+owner: "由 `Octopus_OS` repository root container 所代表的 本地噪音过滤边界面 负责；当前通过 `$Meta-RootFile-Manager` 的 `GITIGNORE` 通道受管并同步。"
+---
 # OS_graph generated runtime assets stay local under Mother_Doc/graph/runtime.
 Mother_Doc/graph/runtime/registry/*.json
 Mother_Doc/graph/runtime/indexes/*

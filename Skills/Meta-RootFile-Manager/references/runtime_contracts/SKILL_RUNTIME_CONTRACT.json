@@ -7,6 +7,6 @@
     "AGENTS_MD"
   ],
   "plain_mapping_rule": "non_agents_channels_store_exact_external_content_in_non_identical_managed_filenames",
-  "owner_rule": "every governed target must expose a path-derived descriptive owner string; markdown managed copies may embed owner directly and every target must persist owner meta",
+  "owner_rule": "every governed target must expose a path-derived descriptive owner string; if managed content is json inject owner into that json, otherwise inject owner through frontmatter in the same managed file",
   "registry_source": "rules/scan_rules.json"
 }

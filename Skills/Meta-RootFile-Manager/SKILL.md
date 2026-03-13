@@ -42,13 +42,13 @@ metadata:
 - `AGENTS_MD`
   - 仍使用 `Part A / Part B` 双承载治理模型。
   - 内部治理映射由 `AGENTS_human.md + AGENTS_machine.json` 共同组成。
-  - `owner` 必须进入 external/internal human frontmatter、machine payload 与 owner meta。
+  - `owner` 必须进入 external/internal human frontmatter 与 machine payload。
 - 其他 root file channel
   - 不使用 `A/B` 分段。
   - 技能内部保存“外部文件内容的治理映射版本”。
   - 映射版本文件名必须显式带有 `__governed_external` 语义，避免与外部真实文件同名导致误扫描。
-  - 所有受管 target 都必须额外生成一个 owner meta 文件。
-  - 对可人类直读的 markdown channel，内部映射版本必须显式带 `owner` 字段，便于直接阅读时知道“谁是它的爹、受谁治理”。
+  - 若内部映射内容本身是 json object，则 `owner` 必须直接并入该 json。
+  - 若内部映射内容本身不是 json，则必须把 `owner` 并入该文件 frontmatter，而不是额外生成 companion file。
   - `owner` 的值不是固定枚举，而是根据受管目录语义自动推导出的描述性内容。
 
 ## 4. 当前已开通文件类型

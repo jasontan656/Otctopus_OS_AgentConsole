@@ -20,6 +20,7 @@ Human mirror for `AGENTS_payload_structure.json`.
     "AGENTS.md": {
       "type": "object",
       "key_order": [
+        "owner",
         "entry_role",
         "runtime_source_policy",
         "default_meta_skill_order",
@@ -31,6 +32,9 @@ Human mirror for `AGENTS_payload_structure.json`.
         "turn_end_actions"
       ],
       "properties": {
+        "owner": {
+          "type": "string"
+        },
         "entry_role": {
           "type": "string"
         },
@@ -139,6 +143,7 @@ Human mirror for `AGENTS_payload_structure.json`.
     "Otctopus_OS_AgentConsole/AGENTS.md": {
       "type": "object",
       "key_order": [
+        "owner",
         "entry_role",
         "runtime_source_policy",
         "default_meta_skill_order",
@@ -153,6 +158,9 @@ Human mirror for `AGENTS_payload_structure.json`.
         "repo_name"
       ],
       "properties": {
+        "owner": {
+          "type": "string"
+        },
         "entry_role": {
           "type": "string"
         },
@@ -329,6 +337,7 @@ Human mirror for `AGENTS_payload_structure.json`.
     "Octopus_OS/AGENTS.md": {
       "type": "object",
       "key_order": [
+        "owner",
         "entry_role",
         "runtime_source_policy",
         "default_meta_skill_order",
@@ -341,6 +350,9 @@ Human mirror for `AGENTS_payload_structure.json`.
         "repo_name"
       ],
       "properties": {
+        "owner": {
+          "type": "string"
+        },
         "entry_role": {
           "type": "string"
         },
@@ -452,6 +464,7 @@ Human mirror for `AGENTS_payload_structure.json`.
     "Octopus_OS/Client_Applications/AGENTS.md": {
       "type": "object",
       "key_order": [
+        "owner",
         "entry_role",
         "runtime_source_policy",
         "default_meta_skill_order",
@@ -464,6 +477,9 @@ Human mirror for `AGENTS_payload_structure.json`.
         "repo_name"
       ],
       "properties": {
+        "owner": {
+          "type": "string"
+        },
         "entry_role": {
           "type": "string"
         },
@@ -575,6 +591,7 @@ Human mirror for `AGENTS_payload_structure.json`.
     "Octopus_OS/Client_Applications/Unified_Portal/Development_Docs/AGENTS.md": {
       "type": "object",
       "key_order": [
+        "owner",
         "entry_role",
         "governed_container",
         "workflow_roots",
@@ -582,6 +599,9 @@ Human mirror for `AGENTS_payload_structure.json`.
         "turn_end_contract_hooks"
       ],
       "properties": {
+        "owner": {
+          "type": "string"
+        },
         "entry_role": {
           "type": "string"
         },

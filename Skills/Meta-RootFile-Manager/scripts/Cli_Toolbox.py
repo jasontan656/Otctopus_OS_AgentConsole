@@ -18,16 +18,17 @@ from rootfile_runtime import (
     lint_external_entry,
     lint_managed_entry,
     load_machine_payload,
+    managed_plain_copy_with_owner,
     match_scan_rules,
+    prune_legacy_owner_meta_files,
     prune_legacy_managed_target_dirs,
     resolve_target_contract,
     render_internal_agents_human,
     scaffold_external_agents,
     scaffold_internal_agents_human,
     scaffold_plain_external,
-    is_markdown_owner_managed,
-    strip_markdown_owner,
-    upsert_markdown_owner,
+    strip_owner_from_managed_plain_copy,
+    upsert_frontmatter_owner,
     sync_file_to_installed,
     write_json,
     write_stage_report,
@@ -139,6 +140,7 @@ def cmd_lint(args: argparse.Namespace) -> int:
 def cmd_collect(args: argparse.Namespace) -> int:
     paths = detect_paths(__file__)
     removed_legacy_dirs = prune_legacy_managed_target_dirs(paths, args.dry_run)
+    removed_legacy_owner_meta_files = prune_legacy_owner_meta_files(paths, args.dry_run)
     entries = match_scan_rules(paths, args.only, args.source_path)
     operations = []
     failures = []
@@ -158,31 +160,23 @@ def cmd_collect(args: argparse.Namespace) -> int:
         if entry["mapping_mode"] == "agents_ab":
             managed_human = Path(entry["managed_human_path"])
             managed_machine = Path(entry["managed_machine_path"])
-            managed_owner_meta = Path(entry["managed_owner_meta_path"])
             machine_payload = load_machine_payload(managed_machine)
             machine_payload = inject_owner_into_machine_payload(machine_payload, str(entry["owner"]))
             external_text = source_path.read_text(encoding="utf-8")
             external_part_a = extract_external_agents_part_a(external_text)
-            normalized_part_a = upsert_markdown_owner(external_part_a, str(entry["owner"]))
+            normalized_part_a = upsert_frontmatter_owner(external_part_a, str(entry["owner"]))
             new_human = render_internal_agents_human(normalized_part_a, machine_payload.as_dict())
             write_text(managed_human, new_human, args.dry_run)
             write_json(managed_machine, machine_payload.as_dict(), args.dry_run)
-            write_json(managed_owner_meta, {"owner": entry["owner"]}, args.dry_run)
             sync_file_to_installed(paths, managed_human, args.dry_run)
             sync_file_to_installed(paths, managed_machine, args.dry_run)
-            sync_file_to_installed(paths, managed_owner_meta, args.dry_run)
             operations.append(build_operation(entry, source_path=str(source_path)))
             continue
 
         managed_path = Path(entry["managed_mapped_path"])
-        managed_owner_meta = Path(entry["managed_owner_meta_path"])
         external_text = source_path.read_text(encoding="utf-8")
-        if is_markdown_owner_managed(str(entry["file_kind"])):
-            external_text = upsert_markdown_owner(external_text, str(entry["owner"]))
-        write_text(managed_path, external_text, args.dry_run)
-        write_json(managed_owner_meta, {"owner": entry["owner"]}, args.dry_run)
+        write_text(managed_path, managed_plain_copy_with_owner(external_text, str(entry["owner"])), args.dry_run)
         sync_file_to_installed(paths, managed_path, args.dry_run)
-        sync_file_to_installed(paths, managed_owner_meta, args.dry_run)
         operations.append(build_operation(entry, source_path=str(source_path)))
 
     payload = {
@@ -191,6 +185,7 @@ def cmd_collect(args: argparse.Namespace) -> int:
         "operation_count": len(operations),
         "operations": operations,
         "removed_legacy_dirs": removed_legacy_dirs,
+        "removed_legacy_owner_meta_files": removed_legacy_owner_meta_files,
         "failures": failures,
         "summary": f"collect prepared {len(operations)} managed file(s)",
         "details": [f"- {item['source_path']} [{item['channel_id']}]" for item in operations],
@@ -202,6 +197,7 @@ def cmd_collect(args: argparse.Namespace) -> int:
 def cmd_push(args: argparse.Namespace) -> int:
     paths = detect_paths(__file__)
     removed_legacy_dirs = prune_legacy_managed_target_dirs(paths, args.dry_run)
+    removed_legacy_owner_meta_files = prune_legacy_owner_meta_files(paths, args.dry_run)
     entries = match_scan_rules(paths, args.only, args.source_path, include_missing=True)
     operations = []
     failures = []
@@ -234,9 +230,7 @@ def cmd_push(args: argparse.Namespace) -> int:
                 }
             )
             continue
-        managed_text = managed_path.read_text(encoding="utf-8")
-        if is_markdown_owner_managed(str(entry["file_kind"])):
-            managed_text = strip_markdown_owner(managed_text)
+        managed_text = strip_owner_from_managed_plain_copy(managed_path.read_text(encoding="utf-8"))
         write_text(source_path, managed_text, args.dry_run)
         operations.append(build_operation(entry, source_path=str(source_path)))
 
@@ -246,6 +240,7 @@ def cmd_push(args: argparse.Namespace) -> int:
         "operation_count": len(operations),
         "operations": operations,
         "removed_legacy_dirs": removed_legacy_dirs,
+        "removed_legacy_owner_meta_files": removed_legacy_owner_meta_files,
         "failures": failures,
         "summary": f"push prepared {len(operations)} external file(s)",
         "details": [f"- {item['source_path']} [{item['channel_id']}]" for item in operations],
@@ -269,6 +264,7 @@ def cmd_target_contract(args: argparse.Namespace) -> int:
 def cmd_scaffold(args: argparse.Namespace) -> int:
     paths = detect_paths(__file__)
     removed_legacy_dirs = prune_legacy_managed_target_dirs(paths, args.dry_run)
+    removed_legacy_owner_meta_files = prune_legacy_owner_meta_files(paths, args.dry_run)
     target_dirs = [ensure_within_workspace(paths, Path(item)) for item in args.target_dir]
     selected_kinds = sorted(
         set(args.file_kind or ([] if not args.all_governed else [channel["file_kind"] for _, channel in []]))
@@ -320,25 +316,17 @@ def cmd_scaffold(args: argparse.Namespace) -> int:
             if channel["mapping_mode"] == "agents_ab":
                 human_path = managed_files["human"]
                 machine_path = managed_files["machine"]
-                owner_meta_path = managed_files["owner_meta"]
                 write_text(external_path, scaffold_external_agents(external_path, owner), args.dry_run)
                 write_text(human_path, scaffold_internal_agents_human(external_path, owner), args.dry_run)
                 write_json(machine_path, {"owner": owner}, args.dry_run)
-                write_json(owner_meta_path, {"owner": owner}, args.dry_run)
                 sync_file_to_installed(paths, human_path, args.dry_run)
                 sync_file_to_installed(paths, machine_path, args.dry_run)
-                sync_file_to_installed(paths, owner_meta_path, args.dry_run)
             else:
                 mapped_path = managed_files["mapped"]
-                owner_meta_path = managed_files["owner_meta"]
                 content = scaffold_plain_external(file_kind)
                 write_text(external_path, content, args.dry_run)
-                if is_markdown_owner_managed(file_kind):
-                    content = upsert_markdown_owner(content, owner)
-                write_text(mapped_path, content, args.dry_run)
-                write_json(owner_meta_path, {"owner": owner}, args.dry_run)
+                write_text(mapped_path, managed_plain_copy_with_owner(content, owner), args.dry_run)
                 sync_file_to_installed(paths, mapped_path, args.dry_run)
-                sync_file_to_installed(paths, owner_meta_path, args.dry_run)
 
             add_governed_source_path(paths, external_path, file_kind, args.dry_run)
             operations.append(
@@ -357,6 +345,7 @@ def cmd_scaffold(args: argparse.Namespace) -> int:
         "operation_count": len(operations),
         "operations": operations,
         "removed_legacy_dirs": removed_legacy_dirs,
+        "removed_legacy_owner_meta_files": removed_legacy_owner_meta_files,
         "failures": failures,
         "summary": f"scaffold prepared {len(operations)} governed file(s)",
         "details": [f"- {item['external_path']} [{item['channel_id']}]" for item in operations],
