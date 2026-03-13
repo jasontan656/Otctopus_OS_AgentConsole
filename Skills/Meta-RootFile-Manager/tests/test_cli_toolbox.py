@@ -244,6 +244,35 @@ class TestCliToolbox:
         assert "owner" in result
         assert "payload" in result
 
+    def test_contract_exposes_agents_payload_entry(self) -> None:
+        result = self.run_cli("contract", "--json")
+        assert result["skill_name"] == "Meta-RootFile-Manager"
+        assert "agents_payload_contract" in result["tool_entry"]["commands"]
+        assert "agents-payload-contract" in result["tool_entry"]["commands"]["agents_payload_contract"]
+
+    def test_agents_payload_contract_returns_targeted_workflow(self) -> None:
+        result = self.run_cli(
+            "agents-payload-contract",
+            "--source-path",
+            str(self.repo_root / "AGENTS.md"),
+            "--json",
+        )
+        assert result["channel_id"] == "AGENTS_MD"
+        assert result["managed_files"]["machine"].endswith("AGENTS_machine.json")
+        assert "Meta-Enhance-Prompt" in result["tool_entry"]["meta_enhance_prompt"]["contract"]
+        assert any("smallest precise payload semantics" in item for item in result["workflow"])
+        assert any("Do not add anything beyond the user request by default." == item for item in result["rules"])
+
+    def test_agents_payload_contract_rejects_non_agents_source(self) -> None:
+        result = self.run_cli(
+            "agents-payload-contract",
+            "--source-path",
+            str(self.repo_root / "README.md"),
+            "--json",
+            expect_ok=False,
+        )
+        assert result["error"] == "agents_payload_contract_requires_agents_target"
+
     def test_lint_rejects_skill_name_repeated_outside_default_meta_skill_order(self) -> None:
         governed_owner = (
             "由 `$Meta-RootFile-Manager` 作为 `Otctopus_OS_AgentConsole` repository root container 的 "

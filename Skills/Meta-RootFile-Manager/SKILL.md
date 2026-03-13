@@ -16,18 +16,20 @@ metadata:
 # Meta-RootFile-Manager
 
 ## Runtime Entry
-- Primary runtime entry: `./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py target-contract --source-path "<governed external path>" --json`
+- Primary runtime entry: `./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py contract --json`
 - CLI JSON is the primary runtime source; `SKILL.md` only remains as a facade and routing narrative.
 
 
 ## 1. 工具入口
 - 本技能提供可执行 CLI：
+  - `contract`
   - `scaffold`
   - `scan`
   - `lint`
   - `collect`
   - `push`
   - `target-contract`
+  - `agents-payload-contract`
 - 所有写操作类命令必须支持 `--dry-run`。
 - 工具行为必须服从 `references/runtime_contracts/` 下的静态治理合同。
 
@@ -43,6 +45,9 @@ metadata:
   - 仍使用 `Part A / Part B` 双承载治理模型。
   - 内部治理映射由 `AGENTS_human.md + AGENTS_machine.json` 共同组成。
   - `owner` 必须进入 external/internal human frontmatter 与 machine payload。
+  - 任何 `AGENTS_machine.json` payload 治理都必须先走：
+    `./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py agents-payload-contract --source-path "<external AGENTS path>" --json`
+  - 该入口合同内部强制要求先加载 `$Meta-Enhance-Prompt`，把用户口语请求压缩为“最小但精确”的 payload 语义后，才允许回写 machine payload。
 - 其他 root file channel
   - 不使用 `A/B` 分段。
   - 技能内部保存“外部文件内容的治理映射版本”。
@@ -86,9 +91,14 @@ metadata:
 - `push`
   - 说明：把技能内部映射版本覆盖回外部目标。
   - 阅读入口：`references/runtime_contracts/PUSH_STAGE_CONTRACT.md`
+- `agents-payload-contract`
+  - 说明：治理 `AGENTS_machine.json` payload 的专用入口合同。
+  - 强制工作流：`$Meta-Enhance-Prompt 提取用户意图 -> 压缩为最小精确语义 -> 回写 AGENTS_machine.json -> collect 重渲染 AGENTS_human.md -> lint`
+  - 阅读入口：`references/runtime_contracts/AGENTS_PAYLOAD_GOVERNANCE_CONTRACT_human.md`
 
 ## 6. 参考入口
 - [AGENTS 资产治理模型](references/runtime_contracts/AGENTS_ASSET_GOVERNANCE.md)
+- [AGENTS Payload 治理入口合同](references/runtime_contracts/AGENTS_PAYLOAD_GOVERNANCE_CONTRACT_human.md)
 - [AGENTS 结构合同](references/runtime_contracts/AGENTS_content_structure.md)
 - [Root File 映射副本合同](references/runtime_contracts/ROOTFILE_MAPPED_COPY_STRUCTURE.md)
 - [技能运行合同](references/runtime_contracts/SKILL_RUNTIME_CONTRACT.md)
@@ -104,5 +114,6 @@ metadata:
 - `scan` 规则必须外置在 `rules/scan_rules.json`，不得把 channel 注册表重新硬编码进 CLI。
 - 非 `AGENTS.md` 文件的技能内映射文件不得与外部真实文件同名。
 - `target-contract`、`scan`、`collect`、`push`、`scaffold` 的输出都必须暴露 `owner`。
+- `AGENTS_machine.json` payload 变更不得绕过 `agents-payload-contract` 入口合同。
 - `collect` 必须以外部源为真源覆盖技能内映射。
 - `push` 必须以技能内映射为真源覆盖外部目标。

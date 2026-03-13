@@ -1,12 +1,45 @@
 {
-  "contract_version": 3,
+  "contract_name": "meta_rootfile_manager_runtime_contract",
+  "contract_version": "4.0.0",
   "skill_name": "Meta-RootFile-Manager",
-  "description": "Meta-RootFile-Manager exposes channelized scan, lint, collect, push, scaffold, and target-contract CLI commands for governed root files.",
+  "description": "Meta-RootFile-Manager exposes CLI-first governance for channelized root files and a dedicated AGENTS payload governance entry.",
   "runtime_kind": "channelized_root_file_governance",
+  "runtime_source_policy": {
+    "primary_runtime_source": "CLI_JSON",
+    "human_markdown_role": "narrative_mirror_only",
+    "markdown_is_not_primary_instruction_source": true
+  },
+  "tool_entry": {
+    "script": "scripts/Cli_Toolbox.py",
+    "commands": {
+      "contract": "./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py contract --json",
+      "target_contract": "./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py target-contract --source-path \"<governed external path>\" --json",
+      "agents_payload_contract": "./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py agents-payload-contract --source-path \"<external AGENTS path>\" --json",
+      "scan": "./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py scan --json",
+      "lint": "./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py lint --json",
+      "collect": "./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py collect --json",
+      "push": "./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py push --json",
+      "scaffold": "./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py scaffold --json --target-dir \"<external dir>\""
+    }
+  },
+  "must_use_sequence": [
+    "Call contract before consuming runtime guidance for this skill.",
+    "When editing a governed target, call target-contract for the concrete external path.",
+    "When editing any AGENTS_machine.json payload, call agents-payload-contract for the corresponding external AGENTS.md before modifying payload content.",
+    "Treat returned JSON payloads as the primary runtime instruction source.",
+    "For AGENTS payload edits, complete collect and lint after writeback."
+  ],
   "special_channels": [
     "AGENTS_MD"
   ],
   "plain_mapping_rule": "non_agents_channels_store_exact_external_content_in_non_identical_managed_filenames",
   "owner_rule": "every governed target must expose a path-derived descriptive owner string; if managed content is json inject owner into that json, otherwise inject owner through frontmatter in the same managed file",
+  "agents_payload_rule": "skill name plus minimal description may appear only in default_meta_skill_order; AGENTS payload changes must pass through the agents-payload-contract workflow",
+  "hard_constraints": [
+    "Do not treat markdown mirrors as the primary runtime instruction source.",
+    "Do not edit AGENTS_machine.json payloads ad hoc; go through agents-payload-contract first.",
+    "Do not add extra reminders, extra routing, or extra obligations beyond the user request when normalizing payload semantics.",
+    "Do not bypass collect and lint after AGENTS payload writeback."
+  ],
   "registry_source": "rules/scan_rules.json"
 }

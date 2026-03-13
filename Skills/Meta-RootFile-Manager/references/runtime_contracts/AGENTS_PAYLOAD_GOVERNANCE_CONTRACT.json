@@ -1,0 +1,20 @@
+{
+  "contract_name": "meta_rootfile_manager_agents_payload_governance_contract_template",
+  "contract_version": "1.0.0",
+  "skill_name": "Meta-RootFile-Manager",
+  "topic": "agents_payload_governance_entry",
+  "entry_command": "./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py agents-payload-contract --source-path \"<external AGENTS path>\" --json",
+  "must_use_sequence": [
+    "Resolve the governed AGENTS target with agents-payload-contract.",
+    "Load Meta-Enhance-Prompt contract and skill-directive entry before interpreting the user request.",
+    "Compress the user request into the smallest precise payload semantics only.",
+    "Edit only the governed AGENTS_machine.json payload scope.",
+    "Run collect for the same external AGENTS.md to re-render AGENTS_human.md.",
+    "Run lint for the same external AGENTS.md before closing."
+  ],
+  "hard_constraints": [
+    "Do not add reminders, process notes, extra routing, or extra obligations beyond the user request.",
+    "Do not treat oral wording as permission to expand hidden intent.",
+    "Do not repeat or paraphrase skill-scoped reminders outside default_meta_skill_order once they are already recorded there."
+  ]
+}

@@ -27,3 +27,5 @@ anchors:
 ## Runtime Source Rule
 - `rules/scan_rules.json` is the channel registry truth source.
 - `target-contract` must return the resolved channel and managed asset paths for the requested external path.
+- `contract` must expose the skill-level CLI runtime entry set.
+- `agents-payload-contract` must expose the mandatory workflow for `AGENTS_machine.json` payload governance.

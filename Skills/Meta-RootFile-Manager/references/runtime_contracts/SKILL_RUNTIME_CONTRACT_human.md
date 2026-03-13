@@ -11,9 +11,15 @@ anchors:
 
 # Meta-RootFile-Manager Runtime Contract
 
-- Primary runtime entry: `./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py target-contract --source-path "<governed external path>" --json`
+- Primary runtime entry:
+  `./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py contract --json`
+- Concrete governed target entry:
+  `./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py target-contract --source-path "<governed external path>" --json`
+- Dedicated AGENTS payload entry:
+  `./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py agents-payload-contract --source-path "<external AGENTS path>" --json`
 - CLI JSON is the primary runtime source.
 - Every governed target must expose a path-derived descriptive `owner`.
 - If the managed content is json, `owner` must be embedded into that json.
 - If the managed content is not json, `owner` must be embedded through frontmatter in the same managed file.
+- `AGENTS_machine.json` payload changes must go through the dedicated `agents-payload-contract` workflow before writeback.
 - `SKILL.md` remains a facade and narrative mirror.

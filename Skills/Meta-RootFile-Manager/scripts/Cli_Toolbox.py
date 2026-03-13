@@ -4,8 +4,9 @@ import argparse
 import json
 import sys
 from pathlib import Path
-from typing import TypedDict
 
+from toolbox_contracts import build_agents_payload_contract, load_skill_runtime_contract
+from toolbox_support import add_common_report_args, build_operation, finalize_stage_report
 from rootfile_runtime import (
     add_governed_source_path,
     build_entry,
@@ -31,56 +32,8 @@ from rootfile_runtime import (
     upsert_frontmatter_owner,
     sync_file_to_installed,
     write_json,
-    write_stage_report,
     write_text,
 )
-
-
-class StageReportPayload(TypedDict, total=False):
-    stage: str
-    dry_run: bool
-    summary: str
-    details: list[str]
-    runtime_report_path: str
-
-
-def add_common_report_args(parser: argparse.ArgumentParser) -> None:
-    parser.add_argument("--dry-run", action="store_true")
-    parser.add_argument("--json", action="store_true", help="Print machine-readable JSON to stdout.")
-    parser.add_argument("--write-runtime-report", action="store_true", help="Write a JSON report into Codex_Skill_Runtime/<skill>/<stage>/latest.json.")
-    parser.add_argument("--only", action="append", default=[], help="Limit operation to source paths containing this substring. Repeatable.")
-    parser.add_argument("--source-path", action="append", default=[], help="Limit operation to an exact external source path. Repeatable.")
-    parser.add_argument("--report-path", help="Optional custom JSON report path. When set, also writes the report there.")
-
-
-def emit(report: dict[str, object], as_json: bool) -> None:
-    if as_json:
-        print(json.dumps(report, indent=2, ensure_ascii=False))
-        return
-    print(report["summary"])
-    for line in report.get("details", []):
-        print(line)
-
-
-def finalize_stage_report(
-    paths: object,
-    args: argparse.Namespace,
-    stage: str,
-    payload: StageReportPayload,
-) -> None:
-    if args.json or args.write_runtime_report or args.report_path:
-        runtime_path = write_stage_report(paths, stage, payload, args.dry_run, args.report_path)
-        payload["runtime_report_path"] = str(runtime_path)
-    emit(payload, args.json)
-
-
-def build_operation(entry: dict[str, object], **extra: object) -> dict[str, object]:
-    return {
-        **extra,
-        "channel_id": entry["channel_id"],
-        "owner": entry["owner"],
-        "managed_files": entry["managed_files"],
-    }
 
 
 def cmd_scan(args: argparse.Namespace) -> int:
@@ -261,6 +214,37 @@ def cmd_target_contract(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_contract(args: argparse.Namespace) -> int:
+    payload = load_skill_runtime_contract()
+    print(json.dumps(payload, indent=2, ensure_ascii=False))
+    return 0
+
+
+def cmd_agents_payload_contract(args: argparse.Namespace) -> int:
+    paths = detect_paths(__file__)
+    source_path = Path(args.source_path).resolve()
+    try:
+        payload = build_agents_payload_contract(paths, source_path)
+    except FileNotFoundError as exc:
+        print(json.dumps({"error": str(exc), "source_path": str(source_path)}, ensure_ascii=False))
+        return 1
+    except ValueError as exc:
+        print(
+            json.dumps(
+                {
+                    "status": "error",
+                    "error": str(exc),
+                    "source_path": str(source_path),
+                },
+                ensure_ascii=False,
+                indent=2,
+            )
+        )
+        return 1
+    print(json.dumps(payload, indent=2, ensure_ascii=False))
+    return 0
+
+
 def cmd_scaffold(args: argparse.Namespace) -> int:
     paths = detect_paths(__file__)
     removed_legacy_dirs = prune_legacy_managed_target_dirs(paths, args.dry_run)
@@ -358,6 +342,10 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="Cli_Toolbox.py")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
+    contract = subparsers.add_parser("contract")
+    contract.add_argument("--json", action="store_true", help="Compatibility flag; output is JSON.")
+    contract.set_defaults(func=cmd_contract)
+
     scan = subparsers.add_parser("scan")
     add_common_report_args(scan)
     scan.set_defaults(func=cmd_scan)
@@ -395,6 +383,11 @@ def build_parser() -> argparse.ArgumentParser:
     target_contract.add_argument("--source-path", required=True)
     target_contract.add_argument("--json", action="store_true", help="Compatibility flag; output is JSON.")
     target_contract.set_defaults(func=cmd_target_contract)
+
+    agents_payload_contract = subparsers.add_parser("agents-payload-contract")
+    agents_payload_contract.add_argument("--source-path", required=True)
+    agents_payload_contract.add_argument("--json", action="store_true", help="Compatibility flag; output is JSON.")
+    agents_payload_contract.set_defaults(func=cmd_agents_payload_contract)
 
     return parser
 

@@ -56,6 +56,7 @@ anchors:
 - It is the machine-readable payload source for CLI output.
 - It must not duplicate `Part A`.
 - It belongs to the same `治理映射模版` instance as the paired `AGENTS_human.md`.
+- Any change to this payload must go through the dedicated `agents-payload-contract` entry.
 
 ## Part Boundary Contract
 
@@ -97,6 +98,7 @@ anchors:
 - Do not update only one side unless the user explicitly scopes the change and the other side is proven unaffected.
 - If payload shape or field structure changes, update `AGENTS_human.md`, `AGENTS_machine.json`, and CLI behavior together.
 - Do not confuse changes to the long-lived `治理映射模版` with changes to the `骨架生成模版`; the former changes concrete governed content, while the latter changes only initialization defaults.
+- If the task changes `Part B`, start from `agents-payload-contract --source-path "<external AGENTS path>" --json` and follow its returned workflow before writeback.
 
 ## Scope Note
 - External root `AGENTS.md` and its corresponding internal root managed assets were excluded from the earlier cleanup round.

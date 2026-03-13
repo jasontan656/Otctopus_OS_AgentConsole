@@ -12,12 +12,14 @@ anchors:
 # Cli_Toolbox Usage
 
 ## Commands
+- `./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py contract --json`
 - `./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py scaffold`
 - `./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py scan`
 - `./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py lint`
 - `./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py collect`
 - `./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py push`
 - `./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py target-contract --source-path "<external AGENTS path>"`
+- `./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py agents-payload-contract --source-path "<external AGENTS path>" --json`
 
 ## Shared Flags
 - `--dry-run`
@@ -28,11 +30,13 @@ anchors:
 - `--report-path <custom json path>`
 
 ## Stage Notes
+- `contract` returns the skill-level CLI runtime entry set.
 - `scaffold` consumes the `骨架生成模版`, creates governed directory skeletons, and writes the first matching `治理映射模版`.
 - `scan` reads external rule assets and discovers governed files.
 - `lint` validates discovered files against the governed structure contracts.
 - `collect` treats external files as the source of truth, creates or refreshes the `治理映射模版`, and syncs mirror plus installed skill assets.
 - `push` treats the `治理映射模版` as the source of truth and overwrites external targets.
 - `target-contract`, `scan`, `collect`, `push`, and `scaffold` all surface a path-derived `owner`.
+- `agents-payload-contract` is the mandatory entry for governed `AGENTS_machine.json` payload edits; it returns the target-specific `$Meta-Enhance-Prompt -> payload writeback -> collect -> lint` workflow.
 - If the managed content is json, `owner` is embedded into that json.
 - If the managed content is not json, `owner` is embedded through frontmatter in the same managed file.
