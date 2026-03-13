@@ -39,7 +39,8 @@
     "Do not treat markdown mirrors as the primary runtime instruction source.",
     "Do not edit AGENTS_machine.json payloads ad hoc; go through agents-payload-contract first.",
     "Do not add extra reminders, extra routing, or extra obligations beyond the user request when normalizing payload semantics.",
-    "Do not bypass collect and lint after AGENTS payload writeback."
+    "Do not bypass collect and lint after AGENTS payload writeback.",
+    "Do not repeat parent AGENTS part_a or parent payload semantics inside child AGENTS surfaces; lint must reject parent-child duplicates except skill entries."
   ],
   "registry_source": "rules/scan_rules.json"
 }

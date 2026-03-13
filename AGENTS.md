@@ -25,6 +25,4 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `Otctopus_OS_AgentConsole` repositor
 - 如果本回合写入 `Otctopus_OS_AgentConsole`，必须同回合完成 Git traceability。
 - 若任务内容涉及 Python 相关编辑，结束前必须完成 `Dev-PythonCode-Constitution` 的 lint。
 
-5. 治理链约束
-- 更新本文件时及相关内容时,必须使用 $Meta-RootFile-Manager 更新治理映射模版然后再回推至本文件,或者更新本文件但是必须使用技能的collect来反向更新,避免单点更新治理链断裂.
 </part_A>

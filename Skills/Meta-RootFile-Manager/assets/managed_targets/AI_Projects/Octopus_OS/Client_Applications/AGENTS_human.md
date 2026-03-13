@@ -7,15 +7,12 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `Octopus_OS/Client_Applications` con
 
 <part_A>
 1. 根入口命令
-- 在处理当前目录路径规则之前，必须先运行：
+- 在读取 `Octopus_OS/Client_Applications` 容器 contract 前，必须先运行：
 - `<root>/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python <root>/Otctopus_OS_AgentConsole/Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py target-contract --source-path "/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/AGENTS.md" --json`
 
-2. 待治理骨架
-- 该目录已进入治理范围。
-- 用户后续应补全该目录所需的具体治理内容。
-
-3. 治理链约束
-- 更新本文件时及相关内容时,必须使用 $Meta-RootFile-Manager 更新治理映射模版然后再回推至本文件,或者更新本文件但是必须使用技能的collect来反向更新,避免单点更新治理链断裂.
+2. 当前容器定位
+- `Client_Applications` 承载面向最终用户的 client application surfaces。
+- 用户后续应补全该容器的前端与交互治理内容。
 </part_A>
 
 <part_B>
@@ -33,34 +30,22 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `Octopus_OS/Client_Applications` con
     "$Dev-VUE3-WebUI-Frontend (frontend governance baseline for Client_Applications)",
     "$Meta-RootFile-Manager (AGENTS governance mapping flow)"
   ],
-  "turn_start_actions": [
-    "load the returned target-contract JSON before following Client_Applications local runtime rules",
-    "classify the turn as READ_EXEC or WRITE_EXEC"
-  ],
-  "runtime_constraints": [
-    "treat CLI JSON as the primary runtime rule source"
-  ],
+  "turn_start_actions": [],
+  "runtime_constraints": [],
   "execution_modes": {
     "READ_EXEC": {
-      "goal": "inspect or answer without changing Client_Applications files",
-      "default_actions": [
-        "prefer the target-contract JSON as the primary runtime entry"
-      ]
+      "goal": "inspect Client_Applications frontend surfaces without mutating tracked files",
+      "default_actions": []
     },
     "WRITE_EXEC": {
-      "goal": "change Client_Applications artifacts under governed frontend rules",
-      "default_actions": [
-        "edit the minimal correct scope that matches the user intent"
-      ]
+      "goal": "edit Client_Applications frontend surfaces under the local governed contract",
+      "default_actions": []
     }
   },
   "repo_local_contract_handoff": [
     "when another governed sub-container becomes active, load its local contract before following sub-container-specific rules"
   ],
-  "forbidden_primary_runtime_pattern": [
-    "Do not treat audit markdown paths as the main runtime instructions.",
-    "Do not bypass the returned target-contract JSON when local runtime rules are required."
-  ],
+  "forbidden_primary_runtime_pattern": [],
   "turn_end_actions": [],
   "repo_name": "Octopus_OS"
 }

@@ -84,6 +84,7 @@ metadata:
 - `agents-payload-contract`
   - 说明：治理 `AGENTS_machine.json` payload 的专用入口合同。
   - 强制工作流：`$Meta-Enhance-Prompt 提取用户意图 -> 压缩为最小精确语义 -> 回写 AGENTS_machine.json -> collect 重渲染 AGENTS_human.md -> lint`
+  - 强门禁：上一级 `AGENTS.md` 与其 payload 已出现的语义，不得在下一级 `AGENTS` surface 中重复；`lint` 必须拦截这类父子重复，技能名条目除外。
   - 阅读入口：`references/runtime_contracts/AGENTS_GOVERNANCE_ENTRY.md`
 
 ## 6. 参考入口
@@ -103,5 +104,6 @@ metadata:
 - 非 `AGENTS.md` 文件的技能内映射文件不得与外部真实文件同名。
 - `target-contract`、`scan`、`collect`、`push`、`scaffold` 的输出都必须暴露 `owner`。
 - `AGENTS_machine.json` payload 变更不得绕过 `agents-payload-contract` 入口合同。
+- 上一级 `AGENTS.md` 与其 payload 已声明的语义，不得在下一级 `AGENTS` surface 中重复；`lint` 必须以强门禁拦截父子重复，技能条目是唯一例外。
 - `collect` 必须以外部源为真源覆盖技能内映射。
 - `push` 必须以技能内映射为真源覆盖外部目标。

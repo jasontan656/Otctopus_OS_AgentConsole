@@ -349,6 +349,43 @@ class TestCliToolbox:
         error_text = "\n".join(result["failures"][0]["errors"])
         assert "payload_skill_repeated_outside_default_meta_skill_order:$meta-github-operation" in error_text
 
+    def test_lint_rejects_parent_agents_duplicate_phrase(self) -> None:
+        parent_external = self.workspace / "Octopus_OS" / "AGENTS.md"
+        child_external = self.workspace / "Octopus_OS" / "Client_Applications" / "AGENTS.md"
+        parent_phrase = "Parent duplicate phrase should not be repeated downstream"
+        payload_phrase = "child payload must not repeat parent payload phrase exactly"
+
+        write(self.workspace / "Octopus_OS" / "README.md", "# Octopus\n")
+        write(parent_external, render_external_agents(parent_phrase))
+        write(child_external, render_external_agents(parent_phrase))
+
+        parent_managed_dir = (
+            self.skill_root / "assets" / "managed_targets" / "AI_Projects" / "Octopus_OS"
+        )
+        child_managed_dir = (
+            parent_managed_dir / "Client_Applications"
+        )
+        parent_payload = json.loads((parent_managed_dir / "AGENTS_machine.json").read_text(encoding="utf-8"))
+        child_payload = json.loads((child_managed_dir / "AGENTS_machine.json").read_text(encoding="utf-8"))
+        parent_payload["runtime_constraints"] = [payload_phrase]
+        child_payload["runtime_constraints"] = [payload_phrase]
+        write(parent_managed_dir / "AGENTS_human.md", render_internal_human(parent_phrase, parent_payload))
+        write(parent_managed_dir / "AGENTS_machine.json", json.dumps(parent_payload, ensure_ascii=False, indent=2) + "\n")
+        write(child_managed_dir / "AGENTS_human.md", render_internal_human(parent_phrase, child_payload))
+        write(child_managed_dir / "AGENTS_machine.json", json.dumps(child_payload, ensure_ascii=False, indent=2) + "\n")
+
+        result = self.run_cli(
+            "lint",
+            "--json",
+            "--source-path",
+            str(child_external),
+            expect_ok=False,
+        )
+
+        error_text = "\n".join(result["failures"][0]["errors"])
+        assert "parent_agents_duplicate_phrase:Octopus_OS/AGENTS.md:part_a" in error_text
+        assert "parent_agents_duplicate_phrase:Octopus_OS/AGENTS.md:$.runtime_constraints[0]" in error_text
+
     def test_collect_prunes_legacy_alias_dir(self) -> None:
         self._seed_legacy_alias_dir()
         result = self.run_cli("collect", "--json", "--source-path", str(self.repo_root / "README.md"))

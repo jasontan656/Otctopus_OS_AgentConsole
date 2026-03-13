@@ -24,9 +24,6 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `Otctopus_OS_AgentConsole` repositor
 4. 同回合收口
 - 如果本回合写入 `Otctopus_OS_AgentConsole`，必须同回合完成 Git traceability。
 - 若任务内容涉及 Python 相关编辑，结束前必须完成 `Dev-PythonCode-Constitution` 的 lint。
-
-5. 治理链约束
-- 更新本文件时及相关内容时,必须使用 $Meta-RootFile-Manager 更新治理映射模版然后再回推至本文件,或者更新本文件但是必须使用技能的collect来反向更新,避免单点更新治理链断裂.
 </part_A>
 
 <part_B>
@@ -90,26 +87,19 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `Otctopus_OS_AgentConsole` repositor
       "prettier"
     ]
   },
-  "turn_start_actions": [
-    "use the returned target contract JSON as the runtime rule source"
-  ],
+  "turn_start_actions": [],
   "runtime_constraints": [
     "stay within the concrete repo-local boundary defined by this payload",
     "all skill edits must happen under Otctopus_OS_AgentConsole/Skills as the codex skill installation mirror, then be pushed by SkillsManager; direct edits inside the codex installation folder are prohibited"
   ],
   "execution_modes": {
     "READ_EXEC": {
-      "goal": "answer, inspect, classify, or route without changing files",
-      "default_actions": [
-        "prefer direct CLI contract output over opening markdown rule files",
-        "open extra files only when the direct contract still leaves a real gap"
-      ]
+      "goal": "inspect this console repo and its Skills surface without mutating tracked files",
+      "default_actions": []
     },
     "WRITE_EXEC": {
-      "goal": "edit files or trigger manager-owned write flows",
-      "default_actions": [
-        "state the intended write scope before editing"
-      ]
+      "goal": "edit console repo artifacts or invoke repo-owned manager write flows",
+      "default_actions": []
     }
   },
   "forbidden_primary_runtime_pattern": [],

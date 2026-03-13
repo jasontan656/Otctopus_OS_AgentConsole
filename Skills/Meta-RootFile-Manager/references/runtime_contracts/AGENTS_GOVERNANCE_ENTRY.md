@@ -27,6 +27,7 @@ anchors:
 - Use this entry for governed `AGENTS.md` work inside `Meta-RootFile-Manager`.
 - `AGENTS.md` is the special dual-surface channel in this skill.
 - Its governed mapping is formed by `AGENTS_human.md + AGENTS_machine.json`.
+- Parent `AGENTS.md` plus parent payload semantics form an inherited surface for child `AGENTS` targets.
 - It covers three AGENTS-specific slices only:
   - asset governance
   - payload governance
@@ -44,3 +45,7 @@ anchors:
 - If the task changes `AGENTS_machine.json` payload content, start from:
   `./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py agents-payload-contract --source-path "<external AGENTS path>" --json`
 - That entry is mandatory and must load `$Meta-Enhance-Prompt` first, compress the user request into the smallest precise payload semantics, then write back payload -> collect -> lint.
+- `lint` is a hard gate for parent-child AGENTS deduplication:
+  - if parent `AGENTS.md` or parent payload already contains a phrase-equivalent semantic, child `AGENTS` surfaces must not repeat it
+  - the check applies across `Part A` and payload in both directions
+  - skill entries are excluded from this parent-child duplicate gate because the same skill may appear in different containers for different purposes

@@ -29,3 +29,4 @@ anchors:
 - `target-contract` must return the resolved channel and managed asset paths for the requested external path.
 - `contract` must expose the skill-level CLI runtime entry set.
 - `agents-payload-contract` must expose the mandatory workflow for `AGENTS_machine.json` payload governance.
+- `lint` must reject child `AGENTS` surfaces that repeat parent `AGENTS.md` or parent payload semantics; skill entries are the only exception.

@@ -30,6 +30,11 @@ LEGACY_OWNER_META_GLOB = "*__owner_meta.json"
 RUNTIME_MANAGED_TARGETS_DIRNAME = "managed_targets"
 ROOTFILE_MANAGER_NAME = "$Meta-RootFile-Manager"
 SKILL_TOKEN_PATTERN = re.compile(r"\$[A-Za-z][A-Za-z0-9._-]*")
+TEXT_TOKEN_PATTERN = re.compile(r"[A-Za-z0-9._/-]+|[\u4e00-\u9fff]+")
+PARENT_DUPLICATE_MIN_TOKEN_WINDOW = 4
+PARENT_DUPLICATE_MIN_EXACT_CHARS = 18
+PARENT_DUPLICATE_EXCLUDED_PAYLOAD_KEYS = {"owner", "entry_role", "repo_name", "default_meta_skill_order"}
+PARENT_DUPLICATE_EXCLUDED_PAYLOAD_PREFIXES = ("$.governed_container", "$.workflow_roots")
 
 
 @dataclass(frozen=True)
@@ -685,6 +690,157 @@ def _validate_default_meta_skill_uniqueness(payload: object) -> list[str]:
     return errors
 
 
+def _normalize_duplicate_text(text: str) -> str:
+    without_skills = SKILL_TOKEN_PATTERN.sub(" ", text)
+    lowered = without_skills.lower()
+    lowered = re.sub(r"[`*_>#\[\](){}\"'“”‘’]+", " ", lowered)
+    lowered = re.sub(r"[^a-z0-9\u4e00-\u9fff._/\-\s]+", " ", lowered)
+    return re.sub(r"\s+", " ", lowered).strip()
+
+
+def _compact_duplicate_text(text: str) -> str:
+    normalized = _normalize_duplicate_text(text)
+    return re.sub(r"[\s._/\-]+", "", normalized)
+
+
+def _tokenize_duplicate_text(text: str) -> list[str]:
+    return TEXT_TOKEN_PATTERN.findall(_normalize_duplicate_text(text))
+
+
+def _is_duplicate_comparable_text(text: str) -> bool:
+    stripped = text.strip()
+    if not stripped:
+        return False
+    if (
+        "Cli_Toolbox.py" in stripped
+        or "target-contract --source-path" in stripped
+        or ".venv_backend_skills/bin/python" in stripped
+    ):
+        return False
+    if stripped.startswith("/home/") or stripped.startswith("<root>/"):
+        return False
+    if "/home/" in stripped or "<root>/" in stripped:
+        return False
+    if re.fullmatch(r"[A-Za-z0-9._/<>=:\"'` -]+", stripped) and "/" in stripped:
+        return False
+    return True
+
+
+def _duplicate_phrase(child_text: str, parent_text: str) -> str | None:
+    if not _is_duplicate_comparable_text(child_text):
+        return None
+    if not _is_duplicate_comparable_text(parent_text):
+        return None
+    child_normalized = _normalize_duplicate_text(child_text)
+    parent_normalized = _normalize_duplicate_text(parent_text)
+    if not child_normalized or not parent_normalized:
+        return None
+    if child_normalized == parent_normalized and len(child_normalized) >= PARENT_DUPLICATE_MIN_EXACT_CHARS:
+        return child_normalized
+
+    child_tokens = _tokenize_duplicate_text(child_text)
+    parent_tokens = _tokenize_duplicate_text(parent_text)
+    if len(child_tokens) >= PARENT_DUPLICATE_MIN_TOKEN_WINDOW and len(parent_tokens) >= PARENT_DUPLICATE_MIN_TOKEN_WINDOW:
+        parent_windows = {
+            tuple(parent_tokens[index : index + PARENT_DUPLICATE_MIN_TOKEN_WINDOW])
+            for index in range(len(parent_tokens) - PARENT_DUPLICATE_MIN_TOKEN_WINDOW + 1)
+        }
+        for index in range(len(child_tokens) - PARENT_DUPLICATE_MIN_TOKEN_WINDOW + 1):
+            window = tuple(child_tokens[index : index + PARENT_DUPLICATE_MIN_TOKEN_WINDOW])
+            if window in parent_windows:
+                return " ".join(window)
+    return None
+
+
+def _iter_part_a_strings(text: str) -> Iterable[tuple[str, str]]:
+    body = extract_external_agents_part_a_body(text)
+    for line_number, line in enumerate(body.splitlines(), start=1):
+        stripped = line.strip()
+        if not stripped:
+            continue
+        stripped = re.sub(r"^\s*(?:[-*]|\d+\.)\s*", "", stripped)
+        if stripped and _is_duplicate_comparable_text(stripped):
+            yield f"part_a[line={line_number}]", stripped
+
+
+def _iter_payload_strings(payload: object, path: str) -> Iterable[tuple[str, str]]:
+    if any(path.startswith(prefix) for prefix in PARENT_DUPLICATE_EXCLUDED_PAYLOAD_PREFIXES):
+        return
+    if isinstance(payload, dict):
+        for key, value in payload.items():
+            if key in PARENT_DUPLICATE_EXCLUDED_PAYLOAD_KEYS:
+                continue
+            yield from _iter_payload_strings(value, f"{path}.{key}")
+        return
+    if isinstance(payload, list):
+        for index, item in enumerate(payload):
+            yield from _iter_payload_strings(item, f"{path}[{index}]")
+        return
+    if isinstance(payload, str) and _is_duplicate_comparable_text(payload):
+        yield path, payload
+
+
+def _parent_agents_source_path(paths: RuntimePaths, source_path: Path) -> Path | None:
+    if is_runtime_local_source(paths, source_path):
+        return None
+    rules = load_scan_rules(paths)
+    governed = {
+        _canonicalize_relative_path(Path(item))
+        for item in rules.get("channels", {}).get("AGENTS_MD", {}).get("governed_source_paths", [])
+    }
+    relative = _canonical_relative_path(paths, source_path)
+    current = relative.parent
+    while True:
+        candidate = Path("AGENTS.md") if str(current) == "." else current / "AGENTS.md"
+        if candidate != relative and candidate in governed:
+            return paths.workspace_root / candidate
+        if str(current) == ".":
+            return None
+        current = current.parent
+
+
+def _validate_parent_agents_duplicates(
+    paths: RuntimePaths,
+    source_path: Path,
+    external_text: str,
+    payload: object,
+) -> list[str]:
+    if not isinstance(payload, dict):
+        return []
+    parent_source_path = _parent_agents_source_path(paths, source_path)
+    if parent_source_path is None or not parent_source_path.exists():
+        return []
+
+    parent_entry = resolve_target_contract(paths, parent_source_path)
+    if parent_entry.get("channel_id") != "AGENTS_MD":
+        return []
+    parent_machine_path = Path(str(parent_entry["managed_files"]["machine"]))
+    if not parent_machine_path.exists():
+        return []
+    parent_payload = read_json(parent_machine_path)
+    if not isinstance(parent_payload, dict):
+        return []
+
+    parent_strings = list(_iter_part_a_strings(parent_source_path.read_text(encoding="utf-8")))
+    parent_strings.extend(_iter_payload_strings(parent_payload, "$"))
+    child_strings = list(_iter_part_a_strings(external_text))
+    child_strings.extend(_iter_payload_strings(payload, "$"))
+
+    errors: list[str] = []
+    parent_relative = _relative_source_key(paths, parent_source_path)
+    for child_path, child_text in child_strings:
+        for parent_path, parent_text in parent_strings:
+            phrase = _duplicate_phrase(child_text, parent_text)
+            if phrase is None:
+                continue
+            errors.append(
+                "parent_agents_duplicate_phrase:"
+                f"{parent_relative}:{child_path}:{parent_path}:{phrase}"
+            )
+            break
+    return errors
+
+
 def validate_external_agents(text: str, expected_owner: str) -> list[str]:
     errors: list[str] = []
     if HOOK_HEADER not in text:
@@ -778,6 +934,20 @@ def validate_managed_agents_pair(
             )
         )
     errors.extend(validate_machine_json(machine_path, expected_owner, payload_schema))
+    if source_path.exists() and machine_path.exists():
+        try:
+            machine_payload = read_json(machine_path)
+        except json.JSONDecodeError:
+            machine_payload = None
+        if isinstance(machine_payload, dict):
+            errors.extend(
+                _validate_parent_agents_duplicates(
+                    paths,
+                    source_path,
+                    source_path.read_text(encoding="utf-8"),
+                    machine_payload,
+                )
+            )
     return errors
 
 
@@ -890,13 +1060,11 @@ def scaffold_external_agents(external_path: Path, owner: str) -> str:
         "`HOOK_LOAD`: Apply this AGENTS contract.\n\n"
         f"{PART_A_OPEN}\n"
         "1. 根入口命令\n"
-        "- 在处理当前目录路径规则之前，必须先运行：\n"
+        f"- 在读取 `{external_path}` 的 runtime contract 前，必须先运行：\n"
         f"- `{command}`\n\n"
-        "2. 待治理骨架\n"
-        "- 该目录已进入治理范围。\n"
-        "- 用户后续应补全该目录所需的具体治理内容。\n\n"
-        "3. 治理链约束\n"
-        "- 更新本文件时及相关内容时,必须使用 $Meta-RootFile-Manager 更新治理映射模版然后再回推至本文件,或者更新本文件但是必须使用技能的collect来反向更新,避免单点更新治理链断裂.\n"
+        "2. 当前治理占位\n"
+        f"- 当前受管容器：`{external_path.parent}`。\n"
+        "- 用户后续应补全该容器专属的治理内容。\n"
         f"{PART_A_CLOSE}\n"
     )
     return upsert_frontmatter_owner(content, owner)

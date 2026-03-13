@@ -56,26 +56,19 @@
       "prettier"
     ]
   },
-  "turn_start_actions": [
-    "use the returned target contract JSON as the runtime rule source"
-  ],
+  "turn_start_actions": [],
   "runtime_constraints": [
     "stay within the concrete repo-local boundary defined by this payload",
     "all skill edits must happen under Otctopus_OS_AgentConsole/Skills as the codex skill installation mirror, then be pushed by SkillsManager; direct edits inside the codex installation folder are prohibited"
   ],
   "execution_modes": {
     "READ_EXEC": {
-      "goal": "answer, inspect, classify, or route without changing files",
-      "default_actions": [
-        "prefer direct CLI contract output over opening markdown rule files",
-        "open extra files only when the direct contract still leaves a real gap"
-      ]
+      "goal": "inspect this console repo and its Skills surface without mutating tracked files",
+      "default_actions": []
     },
     "WRITE_EXEC": {
-      "goal": "edit files or trigger manager-owned write flows",
-      "default_actions": [
-        "state the intended write scope before editing"
-      ]
+      "goal": "edit console repo artifacts or invoke repo-owned manager write flows",
+      "default_actions": []
     }
   },
   "forbidden_primary_runtime_pattern": [],

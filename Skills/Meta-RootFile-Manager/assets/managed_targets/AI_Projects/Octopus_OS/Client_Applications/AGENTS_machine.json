@@ -10,34 +10,22 @@
     "$Dev-VUE3-WebUI-Frontend (frontend governance baseline for Client_Applications)",
     "$Meta-RootFile-Manager (AGENTS governance mapping flow)"
   ],
-  "turn_start_actions": [
-    "load the returned target-contract JSON before following Client_Applications local runtime rules",
-    "classify the turn as READ_EXEC or WRITE_EXEC"
-  ],
-  "runtime_constraints": [
-    "treat CLI JSON as the primary runtime rule source"
-  ],
+  "turn_start_actions": [],
+  "runtime_constraints": [],
   "execution_modes": {
     "READ_EXEC": {
-      "goal": "inspect or answer without changing Client_Applications files",
-      "default_actions": [
-        "prefer the target-contract JSON as the primary runtime entry"
-      ]
+      "goal": "inspect Client_Applications frontend surfaces without mutating tracked files",
+      "default_actions": []
     },
     "WRITE_EXEC": {
-      "goal": "change Client_Applications artifacts under governed frontend rules",
-      "default_actions": [
-        "edit the minimal correct scope that matches the user intent"
-      ]
+      "goal": "edit Client_Applications frontend surfaces under the local governed contract",
+      "default_actions": []
     }
   },
   "repo_local_contract_handoff": [
     "when another governed sub-container becomes active, load its local contract before following sub-container-specific rules"
   ],
-  "forbidden_primary_runtime_pattern": [
-    "Do not treat audit markdown paths as the main runtime instructions.",
-    "Do not bypass the returned target-contract JSON when local runtime rules are required."
-  ],
+  "forbidden_primary_runtime_pattern": [],
   "turn_end_actions": [],
   "repo_name": "Octopus_OS"
 }

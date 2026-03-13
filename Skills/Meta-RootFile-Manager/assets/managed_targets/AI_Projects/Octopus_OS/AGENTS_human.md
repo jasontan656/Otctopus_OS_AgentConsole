@@ -7,15 +7,12 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `Octopus_OS` repository root contain
 
 <part_A>
 1. 根入口命令
-- 在处理当前目录路径规则之前，必须先运行：
+- 在读取 `Octopus_OS` repo 级 runtime contract 前，必须先运行：
 - `<root>/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python <root>/Otctopus_OS_AgentConsole/Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py target-contract --source-path "/home/jasontan656/AI_Projects/Octopus_OS/AGENTS.md" --json`
 
-2. 待治理骨架
-- 该目录已进入治理范围。
-- 用户后续应补全该目录所需的具体治理内容。
-
-3. 治理链约束
-- 更新本文件时及相关内容时,必须使用 $Meta-RootFile-Manager 更新治理映射模版然后再回推至本文件,或者更新本文件但是必须使用技能的collect来反向更新,避免单点更新治理链断裂.
+2. 当前治理占位
+- 当前受管容器：`Octopus_OS`。
+- 用户后续应补全该 repo 根的专属治理内容。
 </part_A>
 
 <part_B>
