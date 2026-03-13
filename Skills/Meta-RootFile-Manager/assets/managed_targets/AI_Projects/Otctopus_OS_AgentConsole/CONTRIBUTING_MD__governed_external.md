@@ -1,3 +1,14 @@
+---
+doc_id: meta_rootfile_manager.assets_managed_targets_ai_projects_otctopus_os_agentconsole_contributing_md_governed_external
+doc_type: topic_atom
+topic: Contributing
+anchors:
+- target: ../../../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # Contributing
 
 ## Current Project State

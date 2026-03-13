@@ -1,12 +1,12 @@
 ---
-doc_id: "dev_octopusos_constitution_projectstructure.tooling.architecture_overview"
-doc_type: "topic_atom"
-topic: "Tooling architecture overview for the OctopusOS project-structure constitution skill"
+doc_id: dev_octopusos_constitution_projectstructure.tooling.architecture_overview
+doc_type: topic_atom
+topic: Tooling architecture overview for the OctopusOS project-structure constitution skill
 anchors:
-  - target: "../Cli_Toolbox_DEVELOPMENT.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "The development entry routes into this overview."
+- target: ../Cli_Toolbox_DEVELOPMENT.md
+  relation: implements
+  direction: upstream
+  reason: The development entry routes into this overview.
 ---
 
 # Architecture Overview

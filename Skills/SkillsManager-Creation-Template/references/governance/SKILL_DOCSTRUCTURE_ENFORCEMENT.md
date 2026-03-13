@@ -1,20 +1,20 @@
 ---
-doc_id: "skill_creation_template.governance.doc_structure_enforcement"
-doc_type: "topic_atom"
-topic: "Mandatory adoption contract for SkillsManager-Doc-Structure inside skill creation and governance"
+doc_id: skill_creation_template.governance.doc_structure_enforcement
+doc_type: topic_atom
+topic: Mandatory adoption contract for SkillsManager-Doc-Structure inside skill creation and governance
 anchors:
-  - target: "../runtime/SKILL_RUNTIME_CONTRACT.md"
-    relation: "expands"
-    direction: "upstream"
-    reason: "The runtime contract names doc-structure governance as mandatory."
-  - target: "../routing/TASK_ROUTING.md"
-    relation: "details"
-    direction: "upstream"
-    reason: "Task routing sends create/govern flows here."
-  - target: "SKILL_AUTHORING_CONTRACT.md"
-    relation: "implements"
-    direction: "downstream"
-    reason: "The authoring contract incorporates this mandatory doc-structure rule."
+- target: ../runtime/SKILL_RUNTIME_OVERVIEW.md
+  relation: expands
+  direction: upstream
+  reason: The runtime contract names doc-structure governance as mandatory.
+- target: ../routing/TASK_ROUTING.md
+  relation: details
+  direction: upstream
+  reason: Task routing sends create/govern flows here.
+- target: SKILL_AUTHORING_RULES.md
+  relation: implements
+  direction: downstream
+  reason: The authoring contract incorporates this mandatory doc-structure rule.
 ---
 
 # SkillsManager-Doc-Structure Enforcement

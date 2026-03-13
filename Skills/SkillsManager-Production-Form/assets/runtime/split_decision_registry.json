@@ -1,0 +1,15 @@
+{
+  "registry_name": "META_SKILL_DOCSTRUCTURE_SPLIT_DECISION_REGISTRY",
+  "registry_version": "v1",
+  "entries": [
+    {
+      "doc_path": "SKILL.md",
+      "doc_id": "skillsmanager_production_form.entry.facade",
+      "rule_id": "body_axis_overload",
+      "fingerprint": "785c938a4a5f76474727981ac449a4374605b517",
+      "decision": "accepted",
+      "note": "Keep facade broad because production-form routes multiple product-form branches from one entry.",
+      "decided_at": "2026-03-13T04:23:21.475Z"
+    }
+  ]
+}

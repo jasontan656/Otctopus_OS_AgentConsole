@@ -1,3 +1,14 @@
+---
+doc_id: workflow_realstate_posting_web.subskills_workflow_realstate_posting_web_headless_references_playwright_cli
+doc_type: topic_atom
+topic: Playwright CLI Reference
+anchors:
+- target: ../../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # Playwright CLI Reference
 
 Use the wrapper script unless the CLI is already installed globally:

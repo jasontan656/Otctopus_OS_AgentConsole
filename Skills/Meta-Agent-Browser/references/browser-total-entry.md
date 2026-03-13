@@ -1,3 +1,14 @@
+---
+doc_id: meta_agent_browser.references_browser_total_entry
+doc_type: topic_atom
+topic: Browser Total Entry
+anchors:
+- target: ../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # Browser Total Entry
 
 ## Purpose

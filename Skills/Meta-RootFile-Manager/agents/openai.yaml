@@ -1,4 +1,4 @@
 interface:
-  display_name: "Meta-RootFile-Manager"
-  short_description: "CLI-first governed root file manager with per-file-type channels"
-  default_prompt: "Use Meta-RootFile-Manager by reading the channel contract, then run target-contract or scan, and only then execute collect, push, or scaffold for the required root file channel."
+  display_name: Meta-RootFile-Manager
+  short_description: CLI-first governed root file manager with per-file-type channels
+  default_prompt: Use $Meta-RootFile-Manager. First run `./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py contract --json`. Treat CLI JSON as the primary runtime source and use markdown mirrors only when the contract still leaves a real gap.

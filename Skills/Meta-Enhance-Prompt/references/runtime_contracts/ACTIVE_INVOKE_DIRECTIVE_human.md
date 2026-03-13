@@ -1,12 +1,12 @@
 ---
-doc_id: "meta_enhance_prompt.runtime.active_invoke_directive"
-doc_type: "topic_atom"
-topic: "Active invoke workflow mirror for Meta-Enhance-Prompt"
+doc_id: meta_enhance_prompt.runtime.active_invoke_directive
+doc_type: topic_atom
+topic: Active invoke workflow mirror for Meta-Enhance-Prompt
 anchors:
-  - target: "../../SKILL.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "This human mirror documents the active invoke workflow routed from the facade."
+- target: ../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This human mirror documents the active invoke workflow routed from the facade.
 ---
 
 # ACTIVE_INVOKE_DIRECTIVE

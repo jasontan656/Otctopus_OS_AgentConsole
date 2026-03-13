@@ -59,7 +59,7 @@ class TestCreateSkillFromTemplateRegressionTest:
             )
             skill_dir = Path(payload["skill_dir"])
             runtime_contract = json.loads(
-                (skill_dir / "references" / "runtime" / "SKILL_RUNTIME_CONTRACT.json").read_text(encoding="utf-8")
+                (skill_dir / "references" / "runtime" / "SKILL_RUNTIME_OVERVIEW.json").read_text(encoding="utf-8")
             )
 
             assert runtime_contract["skill_profile"] == "staged_cli_first"

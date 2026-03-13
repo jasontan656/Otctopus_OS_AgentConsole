@@ -1,12 +1,12 @@
 ---
-doc_id: "dev_telegram_constitution.topic.payments_and_stars"
-doc_type: "topic_atom"
-topic: "Telegram payments and Stars contract"
+doc_id: dev_telegram_constitution.topic.payments_and_stars
+doc_type: topic_atom
+topic: Telegram payments and Stars contract
 anchors:
-  - target: "TELEGRAM_CAPABILITY_LANDSCAPE.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "This doc elaborates the payments and Stars line."
+- target: TELEGRAM_CAPABILITY_LANDSCAPE.md
+  relation: implements
+  direction: upstream
+  reason: This doc elaborates the payments and Stars line.
 ---
 
 # Telegram Payments And Stars Contract

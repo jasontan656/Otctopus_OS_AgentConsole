@@ -1,3 +1,14 @@
+---
+doc_id: skillsmanager_mirror_to_codex.references_tooling_development_modules_mod_sync_mirror
+doc_type: topic_atom
+topic: 模块：cli_toolbox_sync
+anchors:
+- target: ../../../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # 模块：cli_toolbox_sync
 
 ## 模块标识

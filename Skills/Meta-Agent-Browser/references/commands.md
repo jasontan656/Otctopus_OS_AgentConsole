@@ -1,3 +1,14 @@
+---
+doc_id: meta_agent_browser.references_commands
+doc_type: topic_atom
+topic: Command Reference
+anchors:
+- target: ../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # Command Reference
 
 Complete reference for all agent-browser commands. For quick start and common patterns, see SKILL.md.

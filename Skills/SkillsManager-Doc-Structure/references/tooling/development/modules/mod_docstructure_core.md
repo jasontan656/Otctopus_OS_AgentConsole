@@ -1,16 +1,16 @@
 ---
-doc_id: "tooling.module.docstructure_core"
-doc_type: "module_doc"
-topic: "Core TS docstructure engine behind lint and graph workspace building"
+doc_id: tooling.module.docstructure_core
+doc_type: module_doc
+topic: Core TS docstructure engine behind lint and graph workspace building
 anchors:
-  - target: "../../../runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "This module enforces the runtime contract."
-  - target: "../../Cli_Toolbox_DEVELOPMENT.md"
-    relation: "belongs_to"
-    direction: "upstream"
-    reason: "This module doc belongs to the tooling development tree."
+- target: ../../../runtime/SKILL_DOCSTRUCTURE_RUNTIME_OVERVIEW.md
+  relation: implements
+  direction: upstream
+  reason: This module enforces the runtime contract.
+- target: ../../Cli_Toolbox_DEVELOPMENT.md
+  relation: belongs_to
+  direction: upstream
+  reason: This module doc belongs to the tooling development tree.
 ---
 
 # docstructure_core 模块

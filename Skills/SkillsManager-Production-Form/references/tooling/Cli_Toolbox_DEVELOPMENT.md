@@ -1,3 +1,14 @@
+---
+doc_id: skillsmanager_production_form.references_tooling_cli_toolbox_development
+doc_type: topic_atom
+topic: Cli_Toolbox Development
+anchors:
+- target: ../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # Cli_Toolbox Development
 
 ## Entry

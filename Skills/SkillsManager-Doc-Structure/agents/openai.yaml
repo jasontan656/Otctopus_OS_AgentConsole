@@ -1,4 +1,4 @@
 interface:
-  display_name: "SkillsManager-Doc-Structure"
-  short_description: "规范 skill 内部文档结构、单 topic 原子文档与锚点图谱。"
-  default_prompt: "Use SkillsManager-Doc-Structure only inside a skill folder. Enforce single-topic markdown atoms, frontmatter anchors, anchor graph JSON, and TypeScript CLI validation. Keep the skill focused on document-structure governance only."
+  display_name: SkillsManager-Doc-Structure
+  short_description: 规范 skill 内部文档结构、单 topic 原子文档与锚点图谱。
+  default_prompt: Use $SkillsManager-Doc-Structure. First run `./.venv_backend_skills/bin/python Skills/SkillsManager-Doc-Structure/scripts/Cli_Toolbox.py contract --json`. Treat CLI JSON as the primary runtime source and use markdown mirrors only when the contract still leaves a real gap.

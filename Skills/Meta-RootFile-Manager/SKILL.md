@@ -1,9 +1,24 @@
 ---
-name: "Meta-RootFile-Manager"
-description: "集中管理 workspace 内的根级默认受管文件。当前提供 scan / lint / collect / push / scaffold / target-contract CLI，并按文件类型通道治理多个外部路径。"
+name: Meta-RootFile-Manager
+description: 集中管理 workspace 内的根级默认受管文件。当前提供 scan / lint / collect / push / scaffold / target-contract CLI，并按文件类型通道治理多个外部路径。
+metadata:
+  doc_structure:
+    doc_id: meta_rootfile_manager.entry.facade
+    doc_type: skill_facade
+    topic: Entry facade for the Meta-RootFile-Manager skill
+    anchors:
+    - target: ./references/runtime_contracts/SKILL_RUNTIME_CONTRACT_human.md
+      relation: routes_to
+      direction: downstream
+      reason: The facade routes runtime execution to the CLI-first contract.
 ---
 
 # Meta-RootFile-Manager
+
+## Runtime Entry
+- Primary runtime entry: `./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py contract --json`
+- CLI JSON is the primary runtime source; `SKILL.md` only remains as a facade and routing narrative.
+
 
 ## 1. 工具入口
 - 本技能提供可执行 CLI：

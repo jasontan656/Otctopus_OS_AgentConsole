@@ -1,16 +1,16 @@
 ---
-doc_id: "dev_octopusos_constitution_projectstructure.governance.doc_structure_policy"
-doc_type: "topic_atom"
-topic: "Doc-structure policy for the OctopusOS project-structure constitution skill"
+doc_id: dev_octopusos_constitution_projectstructure.governance.doc_structure_policy
+doc_type: topic_atom
+topic: Doc-structure policy for the OctopusOS project-structure constitution skill
 anchors:
-  - target: "../routing/TASK_ROUTING.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "Task routing sends maintenance and governance reads here."
-  - target: "SKILL_EXECUTION_RULES.md"
-    relation: "pairs_with"
-    direction: "lateral"
-    reason: "Structure policy and execution rules are the two core governance atoms of this skill."
+- target: ../routing/TASK_ROUTING.md
+  relation: implements
+  direction: upstream
+  reason: Task routing sends maintenance and governance reads here.
+- target: SKILL_EXECUTION_RULES.md
+  relation: pairs_with
+  direction: lateral
+  reason: Structure policy and execution rules are the two core governance atoms of this skill.
 ---
 
 # Skill Doc-Structure Policy

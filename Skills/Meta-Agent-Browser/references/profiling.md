@@ -1,3 +1,14 @@
+---
+doc_id: meta_agent_browser.references_profiling
+doc_type: topic_atom
+topic: Profiling
+anchors:
+- target: ../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # Profiling
 
 Capture Chrome DevTools performance profiles during browser automation for performance analysis.

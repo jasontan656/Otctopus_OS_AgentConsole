@@ -1,16 +1,16 @@
 ---
-doc_id: "skill_creation_template.asset.runtime_contract_template"
-doc_type: "template_doc"
-topic: "Template for a staged skill runtime contract audit copy"
+doc_id: skill_creation_template.asset.runtime_contract_template
+doc_type: template_doc
+topic: Template for a staged skill runtime contract audit copy
 anchors:
-  - target: "../SKILL_TEMPLATE_STAGED.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "The staged facade template expects this runtime contract template."
-  - target: "../references/governance/SKILL_DOCSTRUCTURE_POLICY_TEMPLATE.md"
-    relation: "governed_by"
-    direction: "upstream"
-    reason: "Even staged runtime contracts must inherit doc-structure governance."
+- target: ../SKILL_TEMPLATE_STAGED.md
+  relation: implements
+  direction: upstream
+  reason: The staged facade template expects this runtime contract template.
+- target: ../references/governance/SKILL_DOCSTRUCTURE_POLICY_TEMPLATE.md
+  relation: governed_by
+  direction: upstream
+  reason: Even staged runtime contracts must inherit doc-structure governance.
 ---
 
 # Runtime Contract Template

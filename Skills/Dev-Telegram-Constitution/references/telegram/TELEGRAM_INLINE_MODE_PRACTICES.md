@@ -1,12 +1,12 @@
 ---
-doc_id: "dev_telegram_constitution.topic.inline_mode_practices"
-doc_type: "topic_atom"
-topic: "Telegram inline mode decision contract"
+doc_id: dev_telegram_constitution.topic.inline_mode_practices
+doc_type: topic_atom
+topic: Telegram inline mode decision contract
 anchors:
-  - target: "TELEGRAM_CAPABILITY_LANDSCAPE.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "This doc elaborates the inline mode line."
+- target: TELEGRAM_CAPABILITY_LANDSCAPE.md
+  relation: implements
+  direction: upstream
+  reason: This doc elaborates the inline mode line.
 ---
 
 # Telegram Inline Mode Contract

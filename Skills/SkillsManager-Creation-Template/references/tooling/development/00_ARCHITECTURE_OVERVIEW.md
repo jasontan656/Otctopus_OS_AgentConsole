@@ -1,20 +1,20 @@
 ---
-doc_id: "skill_creation_template.tooling.architecture_overview"
-doc_type: "tooling_architecture"
-topic: "Architecture overview for the skill template toolbox and generator"
+doc_id: skill_creation_template.tooling.architecture_overview
+doc_type: tooling_architecture
+topic: Architecture overview for the skill template toolbox and generator
 anchors:
-  - target: "../Cli_Toolbox_DEVELOPMENT.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "This doc is routed from the development entry."
-  - target: "../../governance/SKILL_ARCHITECTURE_PLAYBOOK.md"
-    relation: "pairs_with"
-    direction: "lateral"
-    reason: "The toolbox architecture follows the same architecture playbook."
-  - target: "modules/create_skill_from_template.md"
-    relation: "routes_to"
-    direction: "downstream"
-    reason: "Module-level implementation details continue in the module doc."
+- target: ../Cli_Toolbox_DEVELOPMENT.md
+  relation: implements
+  direction: upstream
+  reason: This doc is routed from the development entry.
+- target: ../../governance/SKILL_ARCHITECTURE_PLAYBOOK.md
+  relation: pairs_with
+  direction: lateral
+  reason: The toolbox architecture follows the same architecture playbook.
+- target: modules/create_skill_from_template.md
+  relation: routes_to
+  direction: downstream
+  reason: Module-level implementation details continue in the module doc.
 ---
 
 # Cli_Toolbox 开发文档架构总览

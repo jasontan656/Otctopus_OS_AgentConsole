@@ -1,4 +1,4 @@
 interface:
-  display_name: "Dev Telegram Constitution"
-  short_description: "沉淀 Telegram 作为用户 interface 开发时的能力边界、最佳实践、技术栈与流行依赖。"
-  default_prompt: "请围绕 Dev-Telegram-Constitution 的实际业务目标执行任务；先经过 SKILL.md 与 TASK_ROUTING，再根据问题类型进入 Telegram 能力、技术栈、交付边界或 Mini App 合同文档。"
+  display_name: Dev Telegram Constitution
+  short_description: 沉淀 Telegram 作为用户 interface 开发时的能力边界、最佳实践、技术栈与流行依赖。
+  default_prompt: Use $Dev-Telegram-Constitution. First run `./.venv_backend_skills/bin/python Skills/Dev-Telegram-Constitution/scripts/Cli_Toolbox.py contract --json`. Treat CLI JSON as the primary runtime source and use markdown mirrors only when the contract still leaves a real gap.

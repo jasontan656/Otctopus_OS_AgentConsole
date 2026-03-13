@@ -1,3 +1,14 @@
+---
+doc_id: meta_agent_browser.references_runtime_contracts_runtime_entry_instruction
+doc_type: topic_atom
+topic: Runtime Entry Instruction
+anchors:
+- target: ../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 <part_A>
 # Runtime Entry Instruction
 

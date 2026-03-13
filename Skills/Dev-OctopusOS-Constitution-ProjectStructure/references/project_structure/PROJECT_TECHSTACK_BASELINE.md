@@ -1,16 +1,16 @@
 ---
-doc_id: "dev_octopusos_constitution_projectstructure.project_structure.project_techstack_baseline"
-doc_type: "topic_atom"
-topic: "Project-level baseline tech stack for OctopusOS"
+doc_id: dev_octopusos_constitution_projectstructure.project_structure.project_techstack_baseline
+doc_type: topic_atom
+topic: Project-level baseline tech stack for OctopusOS
 anchors:
-  - target: "FOUNDATION_CAPABILITY_BUNDLE_BOUNDARY.md"
-    relation: "supports"
-    direction: "upstream"
-    reason: "The foundation bundle depends on the declared project tech baseline."
-  - target: "OCTOPUS_OS_TARGET_FOLDER_LAYOUT.md"
-    relation: "supports"
-    direction: "downstream"
-    reason: "The target folder layout materializes the declared tech-object placement."
+- target: FOUNDATION_CAPABILITY_BUNDLE_BOUNDARY.md
+  relation: supports
+  direction: upstream
+  reason: The foundation bundle depends on the declared project tech baseline.
+- target: OCTOPUS_OS_TARGET_FOLDER_LAYOUT.md
+  relation: supports
+  direction: downstream
+  reason: The target folder layout materializes the declared tech-object placement.
 ---
 
 # Project Techstack Baseline

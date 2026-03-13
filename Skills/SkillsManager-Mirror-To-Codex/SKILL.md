@@ -1,9 +1,24 @@
 ---
-name: "SkillsManager-Mirror-To-Codex"
+name: SkillsManager-Mirror-To-Codex
 description: 将产品仓内的 syncable skills 导入 codex skills 安装目录，并在 `Push` / `Install` / `Rename` 三种模式之间使用受控入口完成同步或安装。
+metadata:
+  doc_structure:
+    doc_id: skillsmanager_mirror_to_codex.entry.facade
+    doc_type: skill_facade
+    topic: Entry facade for the SkillsManager-Mirror-To-Codex skill
+    anchors:
+    - target: ./references/runtime_contracts/SKILL_RUNTIME_CONTRACT_human.md
+      relation: routes_to
+      direction: downstream
+      reason: The facade routes runtime execution to the CLI-first contract.
 ---
 
 # SkillsManager-Mirror-To-Codex
+
+## Runtime Entry
+- Primary runtime entry: `./.venv_backend_skills/bin/python Skills/SkillsManager-Mirror-To-Codex/scripts/Cli_Toolbox.py contract --json`
+- CLI JSON is the primary runtime source; `SKILL.md` only remains as a facade and routing narrative.
+
 
 ## 1. 抽象层
 

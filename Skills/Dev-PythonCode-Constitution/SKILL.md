@@ -1,23 +1,24 @@
 ---
-name: "Dev-PythonCode-Constitution"
-description: "关于 Python 代码的规范和指引。"
+name: Dev-PythonCode-Constitution
+description: 关于 Python 代码的规范和指引。
 metadata:
   doc_structure:
-    doc_id: "dev_pythoncode_constitution.entry.facade"
-    doc_type: "skill_facade"
-    topic: "Entry facade for the Python code constitution skill"
+    doc_id: dev_pythoncode_constitution.entry.facade
+    doc_type: skill_facade
+    topic: Entry facade for the Dev-PythonCode-Constitution skill
     anchors:
-      - target: "references/routing/TASK_ROUTING.md"
-        relation: "routes_to"
-        direction: "downstream"
-        reason: "The facade must route readers into the first task branch."
-      - target: "references/governance/SKILL_DOCSTRUCTURE_POLICY.md"
-        relation: "governed_by"
-        direction: "downstream"
-        reason: "Doc-structure policy is a mandatory governance branch."
+    - target: ./references/runtime_contracts/SKILL_RUNTIME_CONTRACT_human.md
+      relation: routes_to
+      direction: downstream
+      reason: The facade routes runtime execution to the CLI-first contract.
 ---
 
 # Dev-PythonCode-Constitution
+
+## Runtime Entry
+- Primary runtime entry: `./.venv_backend_skills/bin/python Skills/Dev-PythonCode-Constitution/scripts/Cli_Toolbox.py contract --json`
+- CLI JSON is the primary runtime source; `SKILL.md` only remains as a facade and routing narrative.
+
 
 ## 1. 技能定位
 - 本文件只做门面入口，不承载深规则正文。

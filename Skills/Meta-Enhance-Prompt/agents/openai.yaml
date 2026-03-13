@@ -1,4 +1,4 @@
 interface:
-  display_name: "Meta-Enhance-Prompt"
-  short_description: "Survey the current repo, supplement missing context, and emit a fixed-shape structured execution contract prompt."
-  default_prompt: "Use $Meta-Enhance-Prompt through CLI-first runtime entry. First call `./.venv_backend_skills/bin/python Skills/Meta-Enhance-Prompt/scripts/Cli_Toolbox.py contract --json`, then `directive --topic active-invoke --json`. Survey the current repo before drafting raw_prompt_output, publish only the filtered six-section contract returned by `scripts/filter_active_invoke_output.py`, and do not add an extra chat-layer summary that repeats GOAL or REPO_CONTEXT_AND_IMPACT outside the contract body."
+  display_name: Meta-Enhance-Prompt
+  short_description: Survey the current repo, supplement missing context, and emit a fixed-shape structured execution contract prompt.
+  default_prompt: Use $Meta-Enhance-Prompt. First run `./.venv_backend_skills/bin/python Skills/Meta-Enhance-Prompt/scripts/Cli_Toolbox.py contract --json`. Treat CLI JSON as the primary runtime source and use markdown mirrors only when the contract still leaves a real gap.

@@ -1,3 +1,14 @@
+---
+doc_id: functional_codexbranchsession_chat.references_tooling_development_modules_answer_responder
+doc_type: topic_atom
+topic: answer_responder 模块开发文档
+anchors:
+- target: ../../../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # answer_responder 模块开发文档
 
 ## 模块标识

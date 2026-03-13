@@ -94,13 +94,6 @@ families:
         role_tag: "semantic-pool"
         status: "active"
         trigger_summary: "当需要在 turn start 加载用户语义词池，或在用户澄清语义时维护动作语义映射时使用。"
-      - canonical_id: "temp-plan"
-        display_name: "temp-plan"
-        prefix: "temp"
-        family: "[Meta]"
-        role_tag: "long-horizon-planning"
-        status: "active"
-        trigger_summary: "当需要快速注入用户当前长期开发意图、技能化优先策略与 OK 边界时使用。"
   - family: "[SKILL-GOV]"
     description: "治理技能命名、注册、模板、镜像同步与同类治理动作的技能族。"
     members:

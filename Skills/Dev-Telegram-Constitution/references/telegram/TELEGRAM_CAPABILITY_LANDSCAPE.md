@@ -1,48 +1,48 @@
 ---
-doc_id: "dev_telegram_constitution.index.capability_landscape"
-doc_type: "index_doc"
-topic: "Telegram capability landscape and routing index"
+doc_id: dev_telegram_constitution.index.capability_landscape
+doc_type: index_doc
+topic: Telegram capability landscape and routing index
 anchors:
-  - target: "../routing/TASK_ROUTING.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "Capability questions should land here first."
-  - target: "TELEGRAM_BOT_INTERFACE_PRACTICES.md"
-    relation: "routes_to"
-    direction: "downstream"
-    reason: "Bot interface is the most common Telegram entry line."
-  - target: "TELEGRAM_INLINE_MODE_PRACTICES.md"
-    relation: "routes_to"
-    direction: "downstream"
-    reason: "Inline mode is a distinct Telegram interaction line."
-  - target: "TELEGRAM_ATTACHMENT_MENU_PRACTICES.md"
-    relation: "routes_to"
-    direction: "downstream"
-    reason: "Attachment menu is a distinct launch surface."
-  - target: "TELEGRAM_MINI_APP_CONTRACT.md"
-    relation: "routes_to"
-    direction: "downstream"
-    reason: "Mini Apps need a dedicated contract."
-  - target: "TELEGRAM_PAYMENTS_AND_STARS.md"
-    relation: "routes_to"
-    direction: "downstream"
-    reason: "Payments and Stars have separate compliance and UX rules."
-  - target: "TELEGRAM_LOGIN_AND_IDENTITY.md"
-    relation: "routes_to"
-    direction: "downstream"
-    reason: "Login and identity are a separate integration line."
-  - target: "TELEGRAM_GAMES_AND_MEDIA.md"
-    relation: "routes_to"
-    direction: "downstream"
-    reason: "Games and media features have distinct constraints."
-  - target: "TELEGRAM_BUSINESS_INTEGRATION.md"
-    relation: "routes_to"
-    direction: "downstream"
-    reason: "Business integration is a dedicated product line."
-  - target: "TELEGRAM_FULL_API_CLIENTS.md"
-    relation: "routes_to"
-    direction: "downstream"
-    reason: "Full Telegram API and custom clients are outside the default Bot API path."
+- target: ../routing/TASK_ROUTING.md
+  relation: implements
+  direction: upstream
+  reason: Capability questions should land here first.
+- target: TELEGRAM_BOT_INTERFACE_PRACTICES.md
+  relation: routes_to
+  direction: downstream
+  reason: Bot interface is the most common Telegram entry line.
+- target: TELEGRAM_INLINE_MODE_PRACTICES.md
+  relation: routes_to
+  direction: downstream
+  reason: Inline mode is a distinct Telegram interaction line.
+- target: TELEGRAM_ATTACHMENT_MENU_PRACTICES.md
+  relation: routes_to
+  direction: downstream
+  reason: Attachment menu is a distinct launch surface.
+- target: TELEGRAM_MINI_APP_RULES.md
+  relation: routes_to
+  direction: downstream
+  reason: Mini Apps need a dedicated contract.
+- target: TELEGRAM_PAYMENTS_AND_STARS.md
+  relation: routes_to
+  direction: downstream
+  reason: Payments and Stars have separate compliance and UX rules.
+- target: TELEGRAM_LOGIN_AND_IDENTITY.md
+  relation: routes_to
+  direction: downstream
+  reason: Login and identity are a separate integration line.
+- target: TELEGRAM_GAMES_AND_MEDIA.md
+  relation: routes_to
+  direction: downstream
+  reason: Games and media features have distinct constraints.
+- target: TELEGRAM_BUSINESS_INTEGRATION.md
+  relation: routes_to
+  direction: downstream
+  reason: Business integration is a dedicated product line.
+- target: TELEGRAM_FULL_API_CLIENTS.md
+  relation: routes_to
+  direction: downstream
+  reason: Full Telegram API and custom clients are outside the default Bot API path.
 ---
 
 # Telegram Capability Landscape
@@ -63,7 +63,7 @@ anchors:
    - 默认文档：`TELEGRAM_ATTACHMENT_MENU_PRACTICES.md`
 4. `Mini App / WebApp`
    - Telegram 内嵌富交互 UI
-   - 默认文档：`TELEGRAM_MINI_APP_CONTRACT.md`
+   - 默认文档：`TELEGRAM_MINI_APP_RULES.md`
 5. `Payments / Telegram Stars`
    - 数字商品、订阅、付费媒体、退款
    - 默认文档：`TELEGRAM_PAYMENTS_AND_STARS.md`

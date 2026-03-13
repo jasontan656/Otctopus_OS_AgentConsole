@@ -1,16 +1,16 @@
 ---
-doc_id: "dev_telegram_constitution.tooling.changelog"
-doc_type: "topic_atom"
-topic: "Tooling changelog for the Telegram interface constitution skill"
+doc_id: dev_telegram_constitution.tooling.changelog
+doc_type: topic_atom
+topic: Tooling changelog for the Telegram interface constitution skill
 anchors:
-  - target: "../Cli_Toolbox_DEVELOPMENT.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "The changelog belongs to the development doc set."
-  - target: "../../governance/SKILL_EXECUTION_RULES.md"
-    relation: "tracks_changes_to"
-    direction: "downstream"
-    reason: "Tooling changes often reflect execution-rule changes."
+- target: ../Cli_Toolbox_DEVELOPMENT.md
+  relation: implements
+  direction: upstream
+  reason: The changelog belongs to the development doc set.
+- target: ../../governance/SKILL_EXECUTION_RULES.md
+  relation: tracks_changes_to
+  direction: downstream
+  reason: Tooling changes often reflect execution-rule changes.
 ---
 
 # Cli_Toolbox 开发文档变更记录

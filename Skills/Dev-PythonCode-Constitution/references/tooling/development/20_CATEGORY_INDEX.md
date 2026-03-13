@@ -1,16 +1,16 @@
 ---
-doc_id: "dev_pythoncode_constitution.tooling.category_index"
-doc_type: "index_doc"
-topic: "Category index for future tooling docs of the Python code constitution skill"
+doc_id: dev_pythoncode_constitution.tooling.category_index
+doc_type: index_doc
+topic: Category index for future tooling docs of the Python code constitution skill
 anchors:
-  - target: "../Cli_Toolbox_DEVELOPMENT.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "The tooling development entry routes readers into this category index."
-  - target: "modules/MODULE_TEMPLATE.md"
-    relation: "routes_to"
-    direction: "downstream"
-    reason: "Future module docs should be linked from this category index."
+- target: ../Cli_Toolbox_DEVELOPMENT.md
+  relation: implements
+  direction: upstream
+  reason: The tooling development entry routes readers into this category index.
+- target: modules/MODULE_TEMPLATE.md
+  relation: routes_to
+  direction: downstream
+  reason: Future module docs should be linked from this category index.
 ---
 
 # Cli_Toolbox 开发文档分类索引

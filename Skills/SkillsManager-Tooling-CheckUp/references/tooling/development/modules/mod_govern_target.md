@@ -1,3 +1,14 @@
+---
+doc_id: skillsmanager_tooling_checkup.references_tooling_development_modules_mod_govern_target
+doc_type: topic_atom
+topic: govern_target 模块开发文档
+anchors:
+- target: ../../../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # govern_target 模块开发文档
 
 ## 模块标识

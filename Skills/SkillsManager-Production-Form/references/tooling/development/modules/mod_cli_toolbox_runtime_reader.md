@@ -1,3 +1,14 @@
+---
+doc_id: skillsmanager_production_form.references_tooling_development_modules_mod_cli_toolbox_runtime_reader
+doc_type: topic_atom
+topic: 'Module: cli_toolbox_runtime_reader'
+anchors:
+- target: ../../../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # Module: cli_toolbox_runtime_reader
 
 ## Responsibilities

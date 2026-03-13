@@ -1,0 +1,15 @@
+{
+  "registry_name": "META_SKILL_DOCSTRUCTURE_SPLIT_DECISION_REGISTRY",
+  "registry_version": "v1",
+  "entries": [
+    {
+      "doc_path": "references/snapshot-refs.md",
+      "doc_id": "meta_agent_browser.references_snapshot_refs",
+      "rule_id": "title_conjunction_en",
+      "fingerprint": "1306c1d408ed5de8124d7f07e7ef3f2e80bcab00",
+      "decision": "accepted",
+      "note": "Keep grouped title because snapshots and refs are one evidence lookup branch.",
+      "decided_at": "2026-03-13T04:23:18.854Z"
+    }
+  ]
+}

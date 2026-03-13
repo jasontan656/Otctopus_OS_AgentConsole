@@ -1,16 +1,16 @@
 ---
-doc_id: "dev_telegram_constitution.topic.bot_interface_practices"
-doc_type: "topic_atom"
-topic: "Telegram bot interface decision contract"
+doc_id: dev_telegram_constitution.topic.bot_interface_practices
+doc_type: topic_atom
+topic: Telegram bot interface decision contract
 anchors:
-  - target: "TELEGRAM_CAPABILITY_LANDSCAPE.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "This doc elaborates the bot interface line."
-  - target: "TELEGRAM_DELIVERY_GUARDRAILS.md"
-    relation: "pairs_with"
-    direction: "lateral"
-    reason: "Bot interface choices should stay aligned with delivery guardrails."
+- target: TELEGRAM_CAPABILITY_LANDSCAPE.md
+  relation: implements
+  direction: upstream
+  reason: This doc elaborates the bot interface line.
+- target: TELEGRAM_DELIVERY_GUARDRAILS.md
+  relation: pairs_with
+  direction: lateral
+  reason: Bot interface choices should stay aligned with delivery guardrails.
 ---
 
 # Telegram Bot Interface Contract

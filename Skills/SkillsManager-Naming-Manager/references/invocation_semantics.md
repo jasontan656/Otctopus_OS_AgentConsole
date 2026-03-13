@@ -1,3 +1,14 @@
+---
+doc_id: skillsmanager_naming_manager.references_invocation_semantics
+doc_type: topic_atom
+topic: 调用语义
+anchors:
+- target: ../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # 调用语义
 
 ## 目标

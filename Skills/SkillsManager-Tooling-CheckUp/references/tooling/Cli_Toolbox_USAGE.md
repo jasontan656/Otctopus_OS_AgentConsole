@@ -1,16 +1,16 @@
 ---
-doc_id: "skills_tooling_checkup.tooling.toolbox_usage"
-doc_type: "topic_atom"
-topic: "Tooling entry contract for the local CLI-first runtime surface"
+doc_id: skills_tooling_checkup.tooling.toolbox_usage
+doc_type: topic_atom
+topic: Tooling entry contract for the local CLI-first runtime surface
 anchors:
-  - target: "Cli_Toolbox_DEVELOPMENT.md"
-    relation: "pairs_with"
-    direction: "lateral"
-    reason: "Usage and development templates should be maintained together."
-  - target: "../governance/SKILL_DOCSTRUCTURE_POLICY.md"
-    relation: "governed_by"
-    direction: "downstream"
-    reason: "Generated tool docs should also respect doc-structure governance."
+- target: Cli_Toolbox_DEVELOPMENT.md
+  relation: pairs_with
+  direction: lateral
+  reason: Usage and development templates should be maintained together.
+- target: ../governance/SKILL_DOCSTRUCTURE_POLICY.md
+  relation: governed_by
+  direction: downstream
+  reason: Generated tool docs should also respect doc-structure governance.
 ---
 
 # Cli_Toolbox 使用文档

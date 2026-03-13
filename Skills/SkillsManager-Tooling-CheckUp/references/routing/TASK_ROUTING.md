@@ -1,16 +1,16 @@
 ---
-doc_id: "skills_tooling_checkup.routing.task_routing"
-doc_type: "routing_doc"
-topic: "Task routing for skills tooling dependency-baseline review and remediation"
+doc_id: skills_tooling_checkup.routing.task_routing
+doc_type: routing_doc
+topic: Task routing for skills tooling dependency-baseline review and remediation
 anchors:
-  - target: "../../SKILL.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "The facade still exposes a human-readable routing mirror."
-  - target: "../governance/SKILL_DOCSTRUCTURE_POLICY.md"
-    relation: "routes_to"
-    direction: "downstream"
-    reason: "Task routing must still pass through the doc-structure policy."
+- target: ../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: The facade still exposes a human-readable routing mirror.
+- target: ../governance/SKILL_DOCSTRUCTURE_POLICY.md
+  relation: routes_to
+  direction: downstream
+  reason: Task routing must still pass through the doc-structure policy.
 ---
 
 # Task Routing

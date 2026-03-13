@@ -1,16 +1,16 @@
 ---
-doc_id: "skills_tooling_checkup.tooling.architecture_overview"
-doc_type: "topic_atom"
-topic: "Architecture overview for the skill-local contract plus directive toolbox"
+doc_id: skills_tooling_checkup.tooling.architecture_overview
+doc_type: topic_atom
+topic: Architecture overview for the skill-local contract plus directive toolbox
 anchors:
-  - target: "../Cli_Toolbox_DEVELOPMENT.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "The development entry routes readers into this architecture overview."
-  - target: "../../governance/SKILL_EXECUTION_RULES.md"
-    relation: "pairs_with"
-    direction: "downstream"
-    reason: "Tooling architecture should stay aligned with execution rules."
+- target: ../Cli_Toolbox_DEVELOPMENT.md
+  relation: implements
+  direction: upstream
+  reason: The development entry routes readers into this architecture overview.
+- target: ../../governance/SKILL_EXECUTION_RULES.md
+  relation: pairs_with
+  direction: downstream
+  reason: Tooling architecture should stay aligned with execution rules.
 ---
 
 # Tooling Architecture Overview

@@ -1,3 +1,14 @@
+---
+doc_id: skillsmanager_mirror_to_codex.references_tooling_development_90_changelog
+doc_type: index_doc
+topic: CHANGELOG
+anchors:
+- target: ../../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # CHANGELOG
 
 ## 2026-03-12

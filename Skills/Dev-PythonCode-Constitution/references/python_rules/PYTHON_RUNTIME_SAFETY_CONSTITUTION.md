@@ -1,16 +1,16 @@
 ---
-doc_id: "dev_pythoncode_constitution.python_rules.runtime_safety"
-doc_type: "topic_atom"
-topic: "Python runtime safety and engineering governance"
+doc_id: dev_pythoncode_constitution.python_rules.runtime_safety
+doc_type: topic_atom
+topic: Python runtime safety and engineering governance
 anchors:
-  - target: "../governance/SKILL_EXECUTION_RULES.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "The execution rules route typing, logging, and subprocess topics here."
-  - target: "../routing/TASK_ROUTING.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "Task routing sends runtime-safety and engineering-governance tasks here."
+- target: ../governance/SKILL_EXECUTION_RULES.md
+  relation: implements
+  direction: upstream
+  reason: The execution rules route typing, logging, and subprocess topics here.
+- target: ../routing/TASK_ROUTING.md
+  relation: implements
+  direction: upstream
+  reason: Task routing sends runtime-safety and engineering-governance tasks here.
 ---
 
 # Python Runtime Safety Constitution

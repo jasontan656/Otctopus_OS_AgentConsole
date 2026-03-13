@@ -1,16 +1,16 @@
 ---
-doc_id: "skill_creation_template.asset.stage_index_template"
-doc_type: "template_doc"
-topic: "Template for the staged skill stage index document"
+doc_id: skill_creation_template.asset.stage_index_template
+doc_type: template_doc
+topic: Template for the staged skill stage index document
 anchors:
-  - target: "README_STAGE_SYSTEM_TEMPLATE.md"
-    relation: "pairs_with"
-    direction: "lateral"
-    reason: "The stage index works with the stage system template."
-  - target: "../SKILL_TEMPLATE_STAGED.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "The staged facade template routes readers into the stage index."
+- target: README_STAGE_SYSTEM_TEMPLATE.md
+  relation: pairs_with
+  direction: lateral
+  reason: The stage index works with the stage system template.
+- target: ../SKILL_TEMPLATE_STAGED.md
+  relation: implements
+  direction: upstream
+  reason: The staged facade template routes readers into the stage index.
 ---
 
 # Stage Index Template

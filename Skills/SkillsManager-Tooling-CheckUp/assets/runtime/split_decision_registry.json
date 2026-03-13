@@ -3,15 +3,6 @@
   "registry_version": "v1",
   "entries": [
     {
-      "doc_path": "references/governance/TOOLING_REMEDIATION_PROTOCOL.md",
-      "doc_id": "skills_tooling_checkup.governance.tooling_remediation_protocol",
-      "rule_id": "body_axis_overload",
-      "fingerprint": "bde81fb6ab74a0b89477df2e6e04d1858750ad76",
-      "decision": "accepted",
-      "note": "This document now holds only the linear remediation flow; examples and gates were split into dedicated topic atoms.",
-      "decided_at": "2026-03-12T00:57:01.159Z"
-    },
-    {
       "doc_path": "references/governance/OBSERVABILITY_AND_OUTPUT_GOVERNANCE.md",
       "doc_id": "skills_tooling_checkup.governance.observability_and_output_governance",
       "rule_id": "new_axis_requires_topic_atom",
@@ -19,6 +10,24 @@
       "decision": "accepted",
       "note": "Runtime observability roots, result roots, targeted output defaults, doc declarations, and migration duties were split into a dedicated governance atom instead of being mixed back into the facade or remediation protocol.",
       "decided_at": "2026-03-12T02:34:00.000Z"
+    },
+    {
+      "doc_path": "references/governance/OBSERVABILITY_AND_OUTPUT_GOVERNANCE.md",
+      "doc_id": "skills_tooling_checkup.governance.observability_and_output_governance",
+      "rule_id": "title_conjunction_en",
+      "fingerprint": "cd9966a79f8e52fb8244a7f134eba399896d3b16",
+      "decision": "accepted",
+      "note": "Keep grouped title because observability and output governance are one policy branch.",
+      "decided_at": "2026-03-13T04:23:19.510Z"
+    },
+    {
+      "doc_path": "references/governance/TOOLING_REMEDIATION_PROTOCOL.md",
+      "doc_id": "skills_tooling_checkup.governance.tooling_remediation_protocol",
+      "rule_id": "body_axis_overload",
+      "fingerprint": "934f6fec3ef78bdfe6105a007a127918b6ef144f",
+      "decision": "accepted",
+      "note": "Keep remediation protocol intact because it is the canonical multi-step workflow document.",
+      "decided_at": "2026-03-13T04:23:20.198Z"
     }
   ]
 }

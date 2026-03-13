@@ -1,16 +1,16 @@
 ---
-doc_id: "dev_pythoncode_constitution.governance.execution_rules"
-doc_type: "topic_atom"
-topic: "Execution rules for Python code guidance and review"
+doc_id: dev_pythoncode_constitution.governance.execution_rules
+doc_type: topic_atom
+topic: Execution rules for Python code guidance and review
 anchors:
-  - target: "SKILL_DOCSTRUCTURE_POLICY.md"
-    relation: "pairs_with"
-    direction: "lateral"
-    reason: "Execution rules and structure policy must evolve together."
-  - target: "../routing/TASK_ROUTING.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "Python code tasks enter the skill through this execution-rules doc."
+- target: SKILL_DOCSTRUCTURE_POLICY.md
+  relation: pairs_with
+  direction: lateral
+  reason: Execution rules and structure policy must evolve together.
+- target: ../routing/TASK_ROUTING.md
+  relation: implements
+  direction: upstream
+  reason: Python code tasks enter the skill through this execution-rules doc.
 ---
 
 # Skill Execution Rules

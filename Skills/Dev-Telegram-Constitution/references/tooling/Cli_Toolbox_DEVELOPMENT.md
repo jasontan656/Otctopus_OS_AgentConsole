@@ -1,16 +1,16 @@
 ---
-doc_id: "dev_telegram_constitution.tooling.toolbox_development"
-doc_type: "topic_atom"
-topic: "Tooling development entry for the Telegram interface constitution skill"
+doc_id: dev_telegram_constitution.tooling.toolbox_development
+doc_type: topic_atom
+topic: Tooling development entry for the Telegram interface constitution skill
 anchors:
-  - target: "Cli_Toolbox_USAGE.md"
-    relation: "pairs_with"
-    direction: "lateral"
-    reason: "Usage and development docs are paired."
-  - target: "development/00_ARCHITECTURE_OVERVIEW.md"
-    relation: "routes_to"
-    direction: "downstream"
-    reason: "The development entry should route readers into the architecture overview."
+- target: Cli_Toolbox_USAGE.md
+  relation: pairs_with
+  direction: lateral
+  reason: Usage and development docs are paired.
+- target: development/00_ARCHITECTURE_OVERVIEW.md
+  relation: routes_to
+  direction: downstream
+  reason: The development entry should route readers into the architecture overview.
 ---
 
 # Cli_Toolbox 开发文档（入口）

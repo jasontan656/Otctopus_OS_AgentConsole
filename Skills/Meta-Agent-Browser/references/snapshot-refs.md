@@ -1,3 +1,14 @@
+---
+doc_id: meta_agent_browser.references_snapshot_refs
+doc_type: topic_atom
+topic: Snapshot and Refs
+anchors:
+- target: ../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # Snapshot and Refs
 
 Compact element references that reduce context usage dramatically for AI agents.

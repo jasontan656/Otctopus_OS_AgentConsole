@@ -1,20 +1,20 @@
 ---
-doc_id: "skill_creation_template.index.doc_tree"
-doc_type: "index_doc"
-topic: "Document tree and domain index for the skill template governance pack"
+doc_id: skill_creation_template.index.doc_tree
+doc_type: index_doc
+topic: Document tree and domain index for the skill template governance pack
 anchors:
-  - target: "../../SKILL.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "The facade routes broad readers here when they need the domain map."
-  - target: "../routing/TASK_ROUTING.md"
-    relation: "pairs_with"
-    direction: "lateral"
-    reason: "Task routing and this index complement each other."
-  - target: "../governance/SKILL_AUTHORING_CONTRACT.md"
-    relation: "routes_to"
-    direction: "downstream"
-    reason: "Governance docs are a primary domain in the tree."
+- target: ../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: The facade routes broad readers here when they need the domain map.
+- target: ../routing/TASK_ROUTING.md
+  relation: pairs_with
+  direction: lateral
+  reason: Task routing and this index complement each other.
+- target: ../governance/SKILL_AUTHORING_RULES.md
+  relation: routes_to
+  direction: downstream
+  reason: Governance docs are a primary domain in the tree.
 ---
 
 # Doc Tree Index

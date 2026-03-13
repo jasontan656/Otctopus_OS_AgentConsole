@@ -1,16 +1,16 @@
 ---
-doc_id: "dev_telegram_constitution.tooling.toolbox_usage"
-doc_type: "topic_atom"
-topic: "Tooling usage entry for the Telegram interface constitution skill"
+doc_id: dev_telegram_constitution.tooling.toolbox_usage
+doc_type: topic_atom
+topic: Tooling usage entry for the Telegram interface constitution skill
 anchors:
-  - target: "Cli_Toolbox_DEVELOPMENT.md"
-    relation: "pairs_with"
-    direction: "lateral"
-    reason: "Usage and development docs should stay aligned."
-  - target: "../governance/SKILL_DOCSTRUCTURE_POLICY.md"
-    relation: "governed_by"
-    direction: "downstream"
-    reason: "Tooling docs should respect doc-structure governance."
+- target: Cli_Toolbox_DEVELOPMENT.md
+  relation: pairs_with
+  direction: lateral
+  reason: Usage and development docs should stay aligned.
+- target: ../governance/SKILL_DOCSTRUCTURE_POLICY.md
+  relation: governed_by
+  direction: downstream
+  reason: Tooling docs should respect doc-structure governance.
 ---
 
 # Cli_Toolbox 使用文档

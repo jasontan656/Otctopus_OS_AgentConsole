@@ -1,6 +1,14 @@
 ---
 doc_work_state: modified
 doc_pack_refs: []
+doc_id: workflow_octopusos_devflow.assets_templates_mother_doc_12_adrs_adr_template
+doc_type: example_doc
+topic: ADR
+anchors:
+- target: ../../../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
 ---
 
 # ADR

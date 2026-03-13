@@ -1,3 +1,14 @@
+---
+doc_id: workflow_octopusos_devflow.assets_templates_acceptance_matrix_template
+doc_type: example_doc
+topic: Acceptance Matrix
+anchors:
+- target: ../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # Acceptance Matrix
 
 ```python

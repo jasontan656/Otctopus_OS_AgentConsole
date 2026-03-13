@@ -1,16 +1,16 @@
 ---
-doc_id: "dev_pythoncode_constitution.tooling.toolbox_development"
-doc_type: "topic_atom"
-topic: "Tooling development entry for the Python code constitution skill"
+doc_id: dev_pythoncode_constitution.tooling.toolbox_development
+doc_type: topic_atom
+topic: Tooling development entry for the Python code constitution skill
 anchors:
-  - target: "Cli_Toolbox_USAGE.md"
-    relation: "pairs_with"
-    direction: "lateral"
-    reason: "Usage and development docs are maintained as a pair."
-  - target: "development/00_ARCHITECTURE_OVERVIEW.md"
-    relation: "routes_to"
-    direction: "downstream"
-    reason: "Tooling development details live in the development subtree."
+- target: Cli_Toolbox_USAGE.md
+  relation: pairs_with
+  direction: lateral
+  reason: Usage and development docs are maintained as a pair.
+- target: development/00_ARCHITECTURE_OVERVIEW.md
+  relation: routes_to
+  direction: downstream
+  reason: Tooling development details live in the development subtree.
 ---
 
 # Cli_Toolbox 开发文档（入口）

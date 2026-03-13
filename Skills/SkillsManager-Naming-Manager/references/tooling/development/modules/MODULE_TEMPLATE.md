@@ -1,3 +1,14 @@
+---
+doc_id: skillsmanager_naming_manager.references_tooling_development_modules_module_template
+doc_type: example_doc
+topic: 模块文档模板说明
+anchors:
+- target: ../../../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # 模块文档模板说明
 
 ## 当前用途

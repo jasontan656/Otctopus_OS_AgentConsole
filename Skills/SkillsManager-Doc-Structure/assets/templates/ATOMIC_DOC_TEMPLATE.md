@@ -1,16 +1,16 @@
 ---
-doc_id: "templates.atomic_doc"
-doc_type: "template_doc"
-topic: "Template for a single-topic atom doc inside a governed skill folder"
+doc_id: templates.atomic_doc
+doc_type: template_doc
+topic: Template for a single-topic atom doc inside a governed skill folder
 anchors:
-  - target: "../../references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md"
-    relation: "conforms_to"
-    direction: "upstream"
-    reason: "This template is defined by the runtime contract."
-  - target: "ROUTING_DOC_TEMPLATE.md"
-    relation: "pairs_with"
-    direction: "cross"
-    reason: "Routing and atomic templates are usually read together when organizing a tree."
+- target: ../../references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_OVERVIEW.md
+  relation: conforms_to
+  direction: upstream
+  reason: This template is defined by the runtime contract.
+- target: ROUTING_DOC_TEMPLATE.md
+  relation: pairs_with
+  direction: cross
+  reason: Routing and atomic templates are usually read together when organizing a tree.
 ---
 
 # Atomic Doc Template

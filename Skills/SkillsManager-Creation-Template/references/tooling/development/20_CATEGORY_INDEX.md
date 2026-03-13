@@ -1,20 +1,20 @@
 ---
-doc_id: "skill_creation_template.index.tooling_category_index"
-doc_type: "index_doc"
-topic: "Category index for Cli_Toolbox development references"
+doc_id: skill_creation_template.index.tooling_category_index
+doc_type: index_doc
+topic: Category index for Cli_Toolbox development references
 anchors:
-  - target: "../Cli_Toolbox_DEVELOPMENT.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "This index is linked from the development entry."
-  - target: "../../indexes/DOC_TREE.md"
-    relation: "pairs_with"
-    direction: "lateral"
-    reason: "The broader doc tree complements this tooling-specific index."
-  - target: "modules/create_skill_from_template.md"
-    relation: "routes_to"
-    direction: "downstream"
-    reason: "The category index routes readers into module docs."
+- target: ../Cli_Toolbox_DEVELOPMENT.md
+  relation: implements
+  direction: upstream
+  reason: This index is linked from the development entry.
+- target: ../../indexes/DOC_TREE.md
+  relation: pairs_with
+  direction: lateral
+  reason: The broader doc tree complements this tooling-specific index.
+- target: modules/create_skill_from_template.md
+  relation: routes_to
+  direction: downstream
+  reason: The category index routes readers into module docs.
 ---
 
 # Cli_Toolbox 开发文档分类索引
@@ -23,8 +23,8 @@ anchors:
 - `统一入口`
   - `scripts/Cli_Toolbox.py`
 - `门面与合同`
-  - `references/runtime/SKILL_RUNTIME_CONTRACT.json`
-  - `references/governance/SKILL_AUTHORING_CONTRACT.md`
+  - `references/runtime/SKILL_RUNTIME_OVERVIEW.json`
+  - `references/governance/SKILL_AUTHORING_RULES.md`
   - `references/governance/SKILL_ARCHITECTURE_PLAYBOOK.md`
   - `references/governance/SKILL_DOCSTRUCTURE_ENFORCEMENT.md`
 - `复杂 staged profile`

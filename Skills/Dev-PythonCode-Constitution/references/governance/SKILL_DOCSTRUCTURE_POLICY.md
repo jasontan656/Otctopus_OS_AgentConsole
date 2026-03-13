@@ -1,16 +1,16 @@
 ---
-doc_id: "dev_pythoncode_constitution.governance.doc_structure_policy"
-doc_type: "topic_atom"
-topic: "Doc-structure policy for the Python code constitution skill"
+doc_id: dev_pythoncode_constitution.governance.doc_structure_policy
+doc_type: topic_atom
+topic: Doc-structure policy for the Python code constitution skill
 anchors:
-  - target: "../routing/TASK_ROUTING.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "The task routing doc sends skill-maintenance tasks here."
-  - target: "SKILL_EXECUTION_RULES.md"
-    relation: "pairs_with"
-    direction: "lateral"
-    reason: "Structure policy and execution rules are the two active governance atoms in this skill."
+- target: ../routing/TASK_ROUTING.md
+  relation: implements
+  direction: upstream
+  reason: The task routing doc sends skill-maintenance tasks here.
+- target: SKILL_EXECUTION_RULES.md
+  relation: pairs_with
+  direction: lateral
+  reason: Structure policy and execution rules are the two active governance atoms in this skill.
 ---
 
 # Skill Doc-Structure Policy

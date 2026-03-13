@@ -1,20 +1,20 @@
 ---
-doc_id: "skill_creation_template.tooling.create_skill_from_template"
-doc_type: "module_doc"
-topic: "Module documentation for the create_skill_from_template generator"
+doc_id: skill_creation_template.tooling.create_skill_from_template
+doc_type: module_doc
+topic: Module documentation for the create_skill_from_template generator
 anchors:
-  - target: "../20_CATEGORY_INDEX.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "The module doc is routed from the tooling category index."
-  - target: "../../../governance/SKILL_AUTHORING_CONTRACT.md"
-    relation: "pairs_with"
-    direction: "lateral"
-    reason: "The generator implements the authoring contract."
-  - target: "../../../runtime/SKILL_RUNTIME_CONTRACT.md"
-    relation: "pairs_with"
-    direction: "lateral"
-    reason: "The generator must stay aligned with the runtime contract."
+- target: ../20_CATEGORY_INDEX.md
+  relation: implements
+  direction: upstream
+  reason: The module doc is routed from the tooling category index.
+- target: ../../../governance/SKILL_AUTHORING_RULES.md
+  relation: pairs_with
+  direction: lateral
+  reason: The generator implements the authoring contract.
+- target: ../../../runtime/SKILL_RUNTIME_OVERVIEW.md
+  relation: pairs_with
+  direction: lateral
+  reason: The generator must stay aligned with the runtime contract.
 ---
 
 # create_skill_from_template 模块开发文档

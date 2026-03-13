@@ -1,16 +1,16 @@
 ---
-doc_id: "dev_telegram_constitution.topic.login_and_identity"
-doc_type: "topic_atom"
-topic: "Telegram login and identity contract"
+doc_id: dev_telegram_constitution.topic.login_and_identity
+doc_type: topic_atom
+topic: Telegram login and identity contract
 anchors:
-  - target: "TELEGRAM_CAPABILITY_LANDSCAPE.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "This doc elaborates the login and identity line."
-  - target: "TELEGRAM_MINI_APP_CONTRACT.md"
-    relation: "pairs_with"
-    direction: "lateral"
-    reason: "Identity and Mini App backend validation often work together."
+- target: TELEGRAM_CAPABILITY_LANDSCAPE.md
+  relation: implements
+  direction: upstream
+  reason: This doc elaborates the login and identity line.
+- target: TELEGRAM_MINI_APP_RULES.md
+  relation: pairs_with
+  direction: lateral
+  reason: Identity and Mini App backend validation often work together.
 ---
 
 # Telegram Login And Identity Contract

@@ -1,3 +1,14 @@
+---
+doc_id: skillsmanager_production_form.references_tooling_cli_toolbox_usage
+doc_type: topic_atom
+topic: Cli_Toolbox Usage
+anchors:
+- target: ../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # Cli_Toolbox Usage
 
 Applies to skill: `SkillsManager-Production-Form`
@@ -14,7 +25,7 @@ Applies to skill: `SkillsManager-Production-Form`
 - Human intent:
   - "Tell me the current operating contract of this console product-form skill."
 - Machine action:
-  - Read `references/runtime/WORKING_CONTRACT.json`.
+  - Read `references/runtime/WORKING_STATE.json`.
 - Output:
   - Contract payload, current mission, hard boundaries, and local history paths.
 

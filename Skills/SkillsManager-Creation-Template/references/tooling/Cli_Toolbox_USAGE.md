@@ -1,20 +1,20 @@
 ---
-doc_id: "skill_creation_template.tooling.usage"
-doc_type: "tooling_usage"
-topic: "Usage guide for the SkillsManager-Creation-Template Cli_Toolbox"
+doc_id: skill_creation_template.tooling.usage
+doc_type: tooling_usage
+topic: Usage guide for the SkillsManager-Creation-Template Cli_Toolbox
 anchors:
-  - target: "../runtime/SKILL_RUNTIME_CONTRACT.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "Tool usage must follow the runtime contract."
-  - target: "../governance/SKILL_AUTHORING_CONTRACT.md"
-    relation: "details"
-    direction: "upstream"
-    reason: "The authoring contract defines what these tools must support."
-  - target: "Cli_Toolbox_DEVELOPMENT.md"
-    relation: "pairs_with"
-    direction: "lateral"
-    reason: "Development documentation complements the usage guide."
+- target: ../runtime/SKILL_RUNTIME_OVERVIEW.md
+  relation: implements
+  direction: upstream
+  reason: Tool usage must follow the runtime contract.
+- target: ../governance/SKILL_AUTHORING_RULES.md
+  relation: details
+  direction: upstream
+  reason: The authoring contract defines what these tools must support.
+- target: Cli_Toolbox_DEVELOPMENT.md
+  relation: pairs_with
+  direction: lateral
+  reason: Development documentation complements the usage guide.
 ---
 
 # Cli_Toolbox 使用文档
@@ -60,7 +60,7 @@ anchors:
   - 我先想知道这个模板技能现在到底要求我按什么结构创建或治理技能。
 - 电脑动作发生了什么：
   - 系统执行 `./.venv_backend_skills/bin/python Skills/SkillsManager-Creation-Template/scripts/Cli_Toolbox.py runtime-contract --json`。
-  - 命令读取 `references/runtime/SKILL_RUNTIME_CONTRACT.json` 并输出结构化合同。
+  - 命令读取 `references/runtime/SKILL_RUNTIME_OVERVIEW.json` 并输出结构化合同。
 - 人类叙事版输出：
   - 你会得到当前模板技能定义的门面 contract、routing 读序、doc-structure 交接边界、profile 支持、模板资产契约和验证闭环。
 
@@ -123,8 +123,8 @@ anchors:
 ## 同步维护要求
 - 工具变更后必须同步更新本文件与 `Cli_Toolbox_DEVELOPMENT.md`。
 - 若变更了 facade/routing/tree、staged 合同面或默认生成资源，还必须同步：
-  - `references/runtime/SKILL_RUNTIME_CONTRACT.json`
-  - `references/governance/SKILL_AUTHORING_CONTRACT.md`
+  - `references/runtime/SKILL_RUNTIME_OVERVIEW.json`
+  - `references/governance/SKILL_AUTHORING_RULES.md`
   - `references/governance/STAGED_PROFILE_REFERENCE.md`
   - `references/governance/SKILL_ARCHITECTURE_PLAYBOOK.md`
   - `references/governance/SKILL_DOCSTRUCTURE_ENFORCEMENT.md`

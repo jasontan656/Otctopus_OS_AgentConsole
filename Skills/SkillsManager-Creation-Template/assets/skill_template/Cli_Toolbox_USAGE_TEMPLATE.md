@@ -1,16 +1,16 @@
 ---
-doc_id: "skill_creation_template.asset.toolbox_usage_template"
-doc_type: "template_doc"
-topic: "Template for a generated skill's Cli_Toolbox usage doc"
+doc_id: skill_creation_template.asset.toolbox_usage_template
+doc_type: template_doc
+topic: Template for a generated skill's Cli_Toolbox usage doc
 anchors:
-  - target: "Cli_Toolbox_DEVELOPMENT_TEMPLATE.md"
-    relation: "pairs_with"
-    direction: "lateral"
-    reason: "Usage and development templates should be maintained together."
-  - target: "references/governance/SKILL_DOCSTRUCTURE_POLICY_TEMPLATE.md"
-    relation: "governed_by"
-    direction: "downstream"
-    reason: "Generated tool docs should also respect doc-structure governance."
+- target: Cli_Toolbox_DEVELOPMENT_TEMPLATE.md
+  relation: pairs_with
+  direction: lateral
+  reason: Usage and development templates should be maintained together.
+- target: references/governance/SKILL_DOCSTRUCTURE_POLICY_TEMPLATE.md
+  relation: governed_by
+  direction: downstream
+  reason: Generated tool docs should also respect doc-structure governance.
 ---
 
 # Cli_Toolbox 使用文档

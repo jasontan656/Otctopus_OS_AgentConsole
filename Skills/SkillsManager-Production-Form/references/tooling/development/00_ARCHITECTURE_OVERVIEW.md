@@ -1,3 +1,14 @@
+---
+doc_id: skillsmanager_production_form.references_tooling_development_00_architecture_overview
+doc_type: index_doc
+topic: Architecture Overview
+anchors:
+- target: ../../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # Architecture Overview
 
 ## Goal
@@ -7,7 +18,7 @@
 - Facade layer:
   - `SKILL.md`
 - Runtime state layer:
-  - `references/runtime/WORKING_CONTRACT.json`
+  - `references/runtime/WORKING_STATE.json`
   - `references/runtime/CURRENT_PRODUCT_INTENT.md`
   - `references/runtime/ITERATION_LOG.md` (legacy seed snapshot)
   - `/home/jasontan656/AI_Projects/Codex_Skill_Runtime/SkillsManager-Production-Form/ITERATION_LOG.md` (active runtime log)

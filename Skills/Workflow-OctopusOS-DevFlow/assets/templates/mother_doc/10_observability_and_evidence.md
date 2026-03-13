@@ -1,6 +1,14 @@
 ---
 doc_work_state: modified
 doc_pack_refs: []
+doc_id: workflow_octopusos_devflow.assets_templates_mother_doc_10_observability_and_evidence
+doc_type: example_doc
+topic: 10 Observability And Evidence
+anchors:
+- target: ../../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
 ---
 
 # 10 Observability And Evidence

@@ -1,3 +1,14 @@
+---
+doc_id: meta_rootfile_manager.references_runtime_contracts_scaffold_stage_contract
+doc_type: topic_atom
+topic: Scaffold Stage Contract
+anchors:
+- target: ../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # Scaffold Stage Contract
 
 - contract_name: `meta_rootfile_manager_scaffold_stage_contract`

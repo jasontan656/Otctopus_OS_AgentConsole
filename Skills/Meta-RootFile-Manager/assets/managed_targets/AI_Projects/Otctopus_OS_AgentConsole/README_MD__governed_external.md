@@ -1,3 +1,14 @@
+---
+doc_id: meta_rootfile_manager.assets_managed_targets_ai_projects_otctopus_os_agentconsole_readme_md_governed_external
+doc_type: topic_atom
+topic: Octopus OS
+anchors:
+- target: ../../../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # Octopus OS
 
 Octopus OS is a natural-language-driven multi-agent console.

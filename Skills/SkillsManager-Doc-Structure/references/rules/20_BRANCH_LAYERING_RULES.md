@@ -1,18 +1,18 @@
 ---
-doc_id: "rules.branch_layering"
-doc_type: "topic_atom"
-topic: "Rules for layering routing branches and keeping tree depth meaningful"
-node_role: "topic_atom"
-domain_type: "rule_doc"
+doc_id: rules.branch_layering
+doc_type: topic_atom
+topic: Rules for layering routing branches and keeping tree depth meaningful
+node_role: topic_atom
+domain_type: rule_doc
 anchors:
-  - target: "00_RULE_SYSTEM_INDEX.md"
-    relation: "belongs_to"
-    direction: "upstream"
-    reason: "This rule is one branch under the rule index."
-  - target: "30_TREE_GRAPH_BINDING_RULES.md"
-    relation: "feeds"
-    direction: "downstream"
-    reason: "Tree layering must be stable before graph binding is added."
+- target: 00_RULE_SYSTEM_INDEX.md
+  relation: belongs_to
+  direction: upstream
+  reason: This rule is one branch under the rule index.
+- target: 30_TREE_GRAPH_BINDING_RULES.md
+  relation: feeds
+  direction: downstream
+  reason: Tree layering must be stable before graph binding is added.
 ---
 
 # Branch Layering Rules

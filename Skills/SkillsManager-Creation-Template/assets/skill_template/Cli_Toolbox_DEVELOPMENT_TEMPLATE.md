@@ -1,16 +1,16 @@
 ---
-doc_id: "skill_creation_template.asset.toolbox_development_template"
-doc_type: "template_doc"
-topic: "Template for a generated skill's Cli_Toolbox development entry"
+doc_id: skill_creation_template.asset.toolbox_development_template
+doc_type: template_doc
+topic: Template for a generated skill's Cli_Toolbox development entry
 anchors:
-  - target: "Cli_Toolbox_USAGE_TEMPLATE.md"
-    relation: "pairs_with"
-    direction: "lateral"
-    reason: "Usage and development templates are paired."
-  - target: "Cli_Toolbox_DEV_ARCHITECTURE_TEMPLATE.md"
-    relation: "routes_to"
-    direction: "downstream"
-    reason: "The development entry should route readers into the architecture template."
+- target: Cli_Toolbox_USAGE_TEMPLATE.md
+  relation: pairs_with
+  direction: lateral
+  reason: Usage and development templates are paired.
+- target: Cli_Toolbox_DEV_ARCHITECTURE_TEMPLATE.md
+  relation: routes_to
+  direction: downstream
+  reason: The development entry should route readers into the architecture template.
 ---
 
 # Cli_Toolbox 开发文档（入口）

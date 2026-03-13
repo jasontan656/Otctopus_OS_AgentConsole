@@ -1,16 +1,16 @@
 ---
-doc_id: "skills_tooling_checkup.tooling.category_index"
-doc_type: "topic_atom"
-topic: "Category index for the local contract and directive modules"
+doc_id: skills_tooling_checkup.tooling.category_index
+doc_type: topic_atom
+topic: Category index for the local contract and directive modules
 anchors:
-  - target: "../Cli_Toolbox_DEVELOPMENT.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "The development entry routes readers into this category index."
-  - target: "modules/MODULE_TEMPLATE.md"
-    relation: "routes_to"
-    direction: "downstream"
-    reason: "If local modules evolve, this index must route readers into their module docs."
+- target: ../Cli_Toolbox_DEVELOPMENT.md
+  relation: implements
+  direction: upstream
+  reason: The development entry routes readers into this category index.
+- target: modules/MODULE_TEMPLATE.md
+  relation: routes_to
+  direction: downstream
+  reason: If local modules evolve, this index must route readers into their module docs.
 ---
 
 # Tooling Category Index

@@ -3,7 +3,7 @@
   "graph_version": "v2",
   "source_skill": "SkillsManager-Doc-Structure",
   "summary": {
-    "nodeCount": 30,
+    "nodeCount": 31,
     "edgeCount": 60,
     "errorCount": 0,
     "warningCount": 0,
@@ -13,11 +13,11 @@
   "nodes": [
     {
       "path": "SKILL.md",
-      "docId": "skill.entry.facade",
+      "docId": "skillsmanager_doc_structure.entry.facade",
       "docType": "skill_facade",
-      "topic": "Entry facade for the document-structure governance skill",
+      "topic": "Entry facade for the SkillsManager-Doc-Structure skill",
       "title": "SkillsManager-Doc-Structure",
-      "anchorCount": 2,
+      "anchorCount": 1,
       "depth": 0
     },
     {
@@ -121,7 +121,7 @@
       "depth": 2
     },
     {
-      "path": "references/metadata/10_DOC_HEADER_CONTRACT.md",
+      "path": "references/metadata/10_DOC_HEADER_RULES.md",
       "docId": "metadata.doc_header",
       "docType": "topic_atom",
       "topic": "Contract for document headers, titles, and topic statements in governed docs",
@@ -132,7 +132,7 @@
       "domainType": "metadata"
     },
     {
-      "path": "references/metadata/20_FRONTMATTER_FIELD_CONTRACT.md",
+      "path": "references/metadata/20_FRONTMATTER_FIELD_RULES.md",
       "docId": "metadata.frontmatter_fields",
       "docType": "topic_atom",
       "topic": "Contract for frontmatter fields used by governed markdown docs",
@@ -143,7 +143,7 @@
       "domainType": "metadata"
     },
     {
-      "path": "references/metadata/30_ANCHOR_WRITING_CONTRACT.md",
+      "path": "references/metadata/30_ANCHOR_WRITING_RULES.md",
       "docId": "metadata.anchor_writing",
       "docType": "topic_atom",
       "topic": "Contract for writing anchors that preserve tree-first readability",
@@ -205,12 +205,21 @@
       "domainType": "rule_doc"
     },
     {
-      "path": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md",
+      "path": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_OVERVIEW.md",
       "docId": "runtime.contract.audit",
       "docType": "runtime_contract",
       "topic": "Audit version of the document-structure runtime contract",
       "title": "Runtime Contract",
       "anchorCount": 2,
+      "depth": 2
+    },
+    {
+      "path": "references/runtime_contracts/SKILL_RUNTIME_CONTRACT_human.md",
+      "docId": "skillsmanager_doc_structure.references_runtime_contracts_skill_runtime_contract",
+      "docType": "topic_atom",
+      "topic": "SkillsManager-Doc-Structure Runtime Contract",
+      "title": "SkillsManager-Doc-Structure Runtime Contract",
+      "anchorCount": 1,
       "depth": 2
     },
     {
@@ -268,7 +277,7 @@
       "depth": 4
     },
     {
-      "path": "references/workflows/00_WORKFLOW_INDEX.md",
+      "path": "references/workflows/00_FLOW_INDEX.md",
       "docId": "workflows.index",
       "docType": "index_doc",
       "topic": "Index of document-architecture workflows inside SkillsManager-Doc-Structure",
@@ -277,7 +286,7 @@
       "depth": 2
     },
     {
-      "path": "references/workflows/10_QUERY_WORKFLOW.md",
+      "path": "references/workflows/10_QUERY_FLOW.md",
       "docId": "workflows.query",
       "docType": "topic_atom",
       "topic": "Workflow for querying the right knowledge track before reading deeper docs",
@@ -288,7 +297,7 @@
       "domainType": "workflow"
     },
     {
-      "path": "references/workflows/20_ARCHITECTURE_ORGANIZATION_WORKFLOW.md",
+      "path": "references/workflows/20_ARCHITECTURE_ORGANIZATION_FLOW.md",
       "docId": "workflows.architecture_organization",
       "docType": "topic_atom",
       "topic": "Workflow for organizing a target skill's document architecture from the entry downward",
@@ -299,7 +308,7 @@
       "domainType": "workflow"
     },
     {
-      "path": "references/workflows/30_SINGLE_DOC_AUTHORING_WORKFLOW.md",
+      "path": "references/workflows/30_SINGLE_DOC_AUTHORING_FLOW.md",
       "docId": "workflows.single_doc_authoring",
       "docType": "topic_atom",
       "topic": "Workflow for authoring one governed markdown file after the tree is already known",
@@ -313,21 +322,14 @@
   "edges": [
     {
       "source": "SKILL.md",
-      "target": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md",
-      "relation": "governed_by",
-      "direction": "downstream",
-      "reason": "The runtime contract defines the document-architecture rules and graph constraints."
-    },
-    {
-      "source": "SKILL.md",
-      "target": "references/rules/00_RULE_SYSTEM_INDEX.md",
+      "target": "references/runtime_contracts/SKILL_RUNTIME_CONTRACT_human.md",
       "relation": "routes_to",
       "direction": "downstream",
-      "reason": "The rule-system index is the first knowledge-track entry after the facade."
+      "reason": "The facade routes runtime execution to the CLI-first contract."
     },
     {
       "source": "assets/templates/ATOMIC_DOC_TEMPLATE.md",
-      "target": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md",
+      "target": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_OVERVIEW.md",
       "relation": "conforms_to",
       "direction": "upstream",
       "reason": "This template is defined by the runtime contract."
@@ -341,7 +343,7 @@
     },
     {
       "source": "assets/templates/INDEX_DOC_TEMPLATE.md",
-      "target": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md",
+      "target": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_OVERVIEW.md",
       "relation": "conforms_to",
       "direction": "upstream",
       "reason": "This index template is defined by the runtime contract."
@@ -355,7 +357,7 @@
     },
     {
       "source": "assets/templates/ROUTING_DOC_TEMPLATE.md",
-      "target": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md",
+      "target": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_OVERVIEW.md",
       "relation": "conforms_to",
       "direction": "upstream",
       "reason": "This routing template is defined by the runtime contract."
@@ -446,7 +448,7 @@
     },
     {
       "source": "references/fewshot/deep_tree_example/routing/restructure/tree/atoms/40_SINGLE_DOC_AUTHORING.md",
-      "target": "references/workflows/30_SINGLE_DOC_AUTHORING_WORKFLOW.md",
+      "target": "references/workflows/30_SINGLE_DOC_AUTHORING_FLOW.md",
       "relation": "pairs_with",
       "direction": "cross",
       "reason": "The single-doc authoring workflow explains how to reproduce this fewshot shape."
@@ -460,48 +462,48 @@
     },
     {
       "source": "references/metadata/00_METADATA_INDEX.md",
-      "target": "references/metadata/10_DOC_HEADER_CONTRACT.md",
+      "target": "references/metadata/10_DOC_HEADER_RULES.md",
       "relation": "indexes",
       "direction": "downstream",
       "reason": "Header writing is the first metadata branch."
     },
     {
-      "source": "references/metadata/10_DOC_HEADER_CONTRACT.md",
+      "source": "references/metadata/10_DOC_HEADER_RULES.md",
       "target": "references/metadata/00_METADATA_INDEX.md",
       "relation": "belongs_to",
       "direction": "upstream",
       "reason": "This contract is one branch under the metadata index."
     },
     {
-      "source": "references/metadata/10_DOC_HEADER_CONTRACT.md",
-      "target": "references/metadata/20_FRONTMATTER_FIELD_CONTRACT.md",
+      "source": "references/metadata/10_DOC_HEADER_RULES.md",
+      "target": "references/metadata/20_FRONTMATTER_FIELD_RULES.md",
       "relation": "feeds",
       "direction": "downstream",
       "reason": "Header and topic choices should align with frontmatter fields."
     },
     {
-      "source": "references/metadata/20_FRONTMATTER_FIELD_CONTRACT.md",
+      "source": "references/metadata/20_FRONTMATTER_FIELD_RULES.md",
       "target": "references/metadata/00_METADATA_INDEX.md",
       "relation": "belongs_to",
       "direction": "upstream",
       "reason": "This contract is one branch under the metadata index."
     },
     {
-      "source": "references/metadata/20_FRONTMATTER_FIELD_CONTRACT.md",
+      "source": "references/metadata/20_FRONTMATTER_FIELD_RULES.md",
       "target": "assets/templates/ATOMIC_DOC_TEMPLATE.md",
       "relation": "details",
       "direction": "downstream",
       "reason": "The atomic template shows how the frontmatter contract is instantiated in markdown form."
     },
     {
-      "source": "references/metadata/30_ANCHOR_WRITING_CONTRACT.md",
+      "source": "references/metadata/30_ANCHOR_WRITING_RULES.md",
       "target": "references/metadata/00_METADATA_INDEX.md",
       "relation": "belongs_to",
       "direction": "upstream",
       "reason": "This contract is one branch under the metadata index."
     },
     {
-      "source": "references/metadata/30_ANCHOR_WRITING_CONTRACT.md",
+      "source": "references/metadata/30_ANCHOR_WRITING_RULES.md",
       "target": "references/rules/30_TREE_GRAPH_BINDING_RULES.md",
       "relation": "implements",
       "direction": "upstream",
@@ -509,7 +511,7 @@
     },
     {
       "source": "references/methodology/SEMANTIC_ROUTING_TREE.md",
-      "target": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md",
+      "target": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_OVERVIEW.md",
       "relation": "expands",
       "direction": "upstream",
       "reason": "This methodology expands the runtime contract with concrete tree rules."
@@ -572,24 +574,31 @@
     },
     {
       "source": "references/rules/30_TREE_GRAPH_BINDING_RULES.md",
-      "target": "references/metadata/30_ANCHOR_WRITING_CONTRACT.md",
+      "target": "references/metadata/30_ANCHOR_WRITING_RULES.md",
       "relation": "details",
       "direction": "downstream",
       "reason": "Anchor-writing rules expand how graph bindings should be written."
     },
     {
-      "source": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md",
+      "source": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_OVERVIEW.md",
       "target": "SKILL.md",
       "relation": "implements",
       "direction": "upstream",
       "reason": "This runtime contract is the concrete rule source behind the skill facade."
     },
     {
-      "source": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md",
+      "source": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_OVERVIEW.md",
       "target": "references/rules/00_RULE_SYSTEM_INDEX.md",
       "relation": "routes_to",
       "direction": "downstream",
       "reason": "The rule-system index expands how docs should be organized before anchors are written."
+    },
+    {
+      "source": "references/runtime_contracts/SKILL_RUNTIME_CONTRACT_human.md",
+      "target": "SKILL.md",
+      "relation": "implements",
+      "direction": "upstream",
+      "reason": "This document belongs to the governed skill tree under the main facade."
     },
     {
       "source": "references/tooling/Cli_Toolbox_DEVELOPMENT.md",
@@ -607,14 +616,14 @@
     },
     {
       "source": "references/tooling/Cli_Toolbox_USAGE.md",
-      "target": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md",
+      "target": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_OVERVIEW.md",
       "relation": "implements",
       "direction": "upstream",
       "reason": "The CLI is the machine-readable execution surface of the runtime contract."
     },
     {
       "source": "references/tooling/Cli_Toolbox_USAGE.md",
-      "target": "references/workflows/10_QUERY_WORKFLOW.md",
+      "target": "references/workflows/10_QUERY_FLOW.md",
       "relation": "routes_to",
       "direction": "downstream",
       "reason": "The query workflow explains how to consume CLI outputs when navigating a target skill."
@@ -663,7 +672,7 @@
     },
     {
       "source": "references/tooling/development/modules/mod_docstructure_core.md",
-      "target": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md",
+      "target": "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_OVERVIEW.md",
       "relation": "implements",
       "direction": "upstream",
       "reason": "This module enforces the runtime contract."
@@ -676,57 +685,57 @@
       "reason": "This module doc belongs to the tooling development tree."
     },
     {
-      "source": "references/workflows/00_WORKFLOW_INDEX.md",
+      "source": "references/workflows/00_FLOW_INDEX.md",
       "target": "SKILL.md",
       "relation": "belongs_to",
       "direction": "upstream",
       "reason": "This index is the workflow-track entry under the skill facade."
     },
     {
-      "source": "references/workflows/00_WORKFLOW_INDEX.md",
-      "target": "references/workflows/10_QUERY_WORKFLOW.md",
+      "source": "references/workflows/00_FLOW_INDEX.md",
+      "target": "references/workflows/10_QUERY_FLOW.md",
       "relation": "indexes",
       "direction": "downstream",
       "reason": "Querying is the first workflow branch."
     },
     {
-      "source": "references/workflows/10_QUERY_WORKFLOW.md",
-      "target": "references/workflows/00_WORKFLOW_INDEX.md",
+      "source": "references/workflows/10_QUERY_FLOW.md",
+      "target": "references/workflows/00_FLOW_INDEX.md",
       "relation": "belongs_to",
       "direction": "upstream",
       "reason": "This workflow is one branch under the workflow index."
     },
     {
-      "source": "references/workflows/10_QUERY_WORKFLOW.md",
+      "source": "references/workflows/10_QUERY_FLOW.md",
       "target": "references/rules/00_RULE_SYSTEM_INDEX.md",
       "relation": "routes_to",
       "direction": "downstream",
       "reason": "Rule-track reading begins after the query workflow selects the correct track."
     },
     {
-      "source": "references/workflows/20_ARCHITECTURE_ORGANIZATION_WORKFLOW.md",
-      "target": "references/workflows/00_WORKFLOW_INDEX.md",
+      "source": "references/workflows/20_ARCHITECTURE_ORGANIZATION_FLOW.md",
+      "target": "references/workflows/00_FLOW_INDEX.md",
       "relation": "belongs_to",
       "direction": "upstream",
       "reason": "This workflow is one branch under the workflow index."
     },
     {
-      "source": "references/workflows/20_ARCHITECTURE_ORGANIZATION_WORKFLOW.md",
+      "source": "references/workflows/20_ARCHITECTURE_ORGANIZATION_FLOW.md",
       "target": "references/fewshot/00_FEWSHOT_INDEX.md",
       "relation": "routes_to",
       "direction": "downstream",
       "reason": "The fewshot track provides reusable deep-tree examples for architecture work."
     },
     {
-      "source": "references/workflows/30_SINGLE_DOC_AUTHORING_WORKFLOW.md",
-      "target": "references/workflows/00_WORKFLOW_INDEX.md",
+      "source": "references/workflows/30_SINGLE_DOC_AUTHORING_FLOW.md",
+      "target": "references/workflows/00_FLOW_INDEX.md",
       "relation": "belongs_to",
       "direction": "upstream",
       "reason": "This workflow is one branch under the workflow index."
     },
     {
-      "source": "references/workflows/30_SINGLE_DOC_AUTHORING_WORKFLOW.md",
-      "target": "references/metadata/20_FRONTMATTER_FIELD_CONTRACT.md",
+      "source": "references/workflows/30_SINGLE_DOC_AUTHORING_FLOW.md",
+      "target": "references/metadata/20_FRONTMATTER_FIELD_RULES.md",
       "relation": "details",
       "direction": "downstream",
       "reason": "Single-doc authoring depends on the frontmatter field contract."
@@ -734,5 +743,5 @@
   ],
   "split_candidates": [],
   "warnings": [],
-  "updated_at": "2026-03-11T22:37:27.285Z"
+  "updated_at": "2026-03-13T04:24:41.252Z"
 }

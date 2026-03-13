@@ -1,3 +1,14 @@
+---
+doc_id: skillsmanager_production_form.references_runtime_current_product_intent
+doc_type: topic_atom
+topic: 当前 console 产品意图
+anchors:
+- target: ../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # 当前 console 产品意图
 
 ## 当前产品身份

@@ -1,0 +1,577 @@
+---
+doc_id: meta_rootfile_manager.references_runtime_contracts_agents_payload_structure
+doc_type: topic_atom
+topic: AGENTS_payload_structure
+anchors:
+- target: ../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
+# AGENTS_payload_structure
+
+Human mirror for `AGENTS_payload_structure.json`.
+
+```json
+{
+  "version": 1,
+  "targets": {
+    "AGENTS.md": {
+      "type": "object",
+      "key_order": [
+        "entry_role",
+        "runtime_source_policy",
+        "default_meta_skill_order",
+        "turn_start_actions",
+        "runtime_constraints",
+        "execution_modes",
+        "repo_local_contract_handoff",
+        "forbidden_primary_runtime_pattern",
+        "turn_end_actions"
+      ],
+      "properties": {
+        "entry_role": {
+          "type": "string"
+        },
+        "runtime_source_policy": {
+          "type": "object",
+          "key_order": [
+            "runtime_rule_source",
+            "audit_fields_are_not_primary_runtime_instructions",
+            "path_metadata_is_not_action_guidance"
+          ],
+          "properties": {
+            "runtime_rule_source": {
+              "type": "string"
+            },
+            "audit_fields_are_not_primary_runtime_instructions": {
+              "type": "boolean"
+            },
+            "path_metadata_is_not_action_guidance": {
+              "type": "boolean"
+            }
+          }
+        },
+        "default_meta_skill_order": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "turn_start_actions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "runtime_constraints": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "execution_modes": {
+          "type": "object",
+          "key_order": [
+            "READ_EXEC",
+            "WRITE_EXEC"
+          ],
+          "properties": {
+            "READ_EXEC": {
+              "type": "object",
+              "key_order": [
+                "goal",
+                "default_actions"
+              ],
+              "properties": {
+                "goal": {
+                  "type": "string"
+                },
+                "default_actions": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "WRITE_EXEC": {
+              "type": "object",
+              "key_order": [
+                "goal",
+                "default_actions"
+              ],
+              "properties": {
+                "goal": {
+                  "type": "string"
+                },
+                "default_actions": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "repo_local_contract_handoff": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "forbidden_primary_runtime_pattern": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "turn_end_actions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "Otctopus_OS_AgentConsole/AGENTS.md": {
+      "type": "object",
+      "key_order": [
+        "entry_role",
+        "runtime_source_policy",
+        "default_meta_skill_order",
+        "peer_summary_policy",
+        "language_policy",
+        "skills_required_techstacks",
+        "turn_start_actions",
+        "runtime_constraints",
+        "execution_modes",
+        "forbidden_primary_runtime_pattern",
+        "turn_end_actions",
+        "repo_name"
+      ],
+      "properties": {
+        "entry_role": {
+          "type": "string"
+        },
+        "runtime_source_policy": {
+          "type": "object",
+          "key_order": [
+            "runtime_rule_source",
+            "audit_fields_are_not_primary_runtime_instructions",
+            "path_metadata_is_not_action_guidance"
+          ],
+          "properties": {
+            "runtime_rule_source": {
+              "type": "string"
+            },
+            "audit_fields_are_not_primary_runtime_instructions": {
+              "type": "boolean"
+            },
+            "path_metadata_is_not_action_guidance": {
+              "type": "boolean"
+            }
+          }
+        },
+        "default_meta_skill_order": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "peer_summary_policy": {
+          "type": "object",
+          "key_order": [
+            "available",
+            "relation",
+            "read_policy",
+            "guidance"
+          ],
+          "properties": {
+            "available": {
+              "type": "boolean"
+            },
+            "relation": {
+              "type": "string"
+            },
+            "read_policy": {
+              "type": "string"
+            },
+            "guidance": {
+              "type": "string"
+            }
+          }
+        },
+        "language_policy": {
+          "type": "object",
+          "key_order": [
+            "conversation_and_internal_coordination",
+            "public_product_readme_and_docs",
+            "wizard_user_interface",
+            "internal_skill_core_and_governance_docs",
+            "git_iteration_logs_for_github"
+          ],
+          "properties": {
+            "conversation_and_internal_coordination": {
+              "type": "string"
+            },
+            "public_product_readme_and_docs": {
+              "type": "string"
+            },
+            "wizard_user_interface": {
+              "type": "string"
+            },
+            "internal_skill_core_and_governance_docs": {
+              "type": "string"
+            },
+            "git_iteration_logs_for_github": {
+              "type": "string"
+            }
+          }
+        },
+        "skills_required_techstacks": {
+          "type": "object",
+          "key_order": [
+            "python_backend",
+            "vue3_typescript_frontend"
+          ],
+          "properties": {
+            "python_backend": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "vue3_typescript_frontend": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "turn_start_actions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "runtime_constraints": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "execution_modes": {
+          "type": "object",
+          "key_order": [
+            "READ_EXEC",
+            "WRITE_EXEC"
+          ],
+          "properties": {
+            "READ_EXEC": {
+              "type": "object",
+              "key_order": [
+                "goal",
+                "default_actions"
+              ],
+              "properties": {
+                "goal": {
+                  "type": "string"
+                },
+                "default_actions": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "WRITE_EXEC": {
+              "type": "object",
+              "key_order": [
+                "goal",
+                "default_actions"
+              ],
+              "properties": {
+                "goal": {
+                  "type": "string"
+                },
+                "default_actions": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "forbidden_primary_runtime_pattern": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "turn_end_actions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "repo_name": {
+          "type": "string"
+        }
+      }
+    },
+    "Octopus_OS/AGENTS.md": {
+      "type": "object",
+      "key_order": [
+        "entry_role",
+        "runtime_source_policy",
+        "default_meta_skill_order",
+        "turn_start_actions",
+        "runtime_constraints",
+        "execution_modes",
+        "repo_local_contract_handoff",
+        "forbidden_primary_runtime_pattern",
+        "turn_end_actions",
+        "repo_name"
+      ],
+      "properties": {
+        "entry_role": {
+          "type": "string"
+        },
+        "runtime_source_policy": {
+          "type": "object",
+          "key_order": [
+            "runtime_rule_source",
+            "audit_fields_are_not_primary_runtime_instructions",
+            "path_metadata_is_not_action_guidance"
+          ],
+          "properties": {
+            "runtime_rule_source": {
+              "type": "string"
+            },
+            "audit_fields_are_not_primary_runtime_instructions": {
+              "type": "boolean"
+            },
+            "path_metadata_is_not_action_guidance": {
+              "type": "boolean"
+            }
+          }
+        },
+        "default_meta_skill_order": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "turn_start_actions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "runtime_constraints": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "execution_modes": {
+          "type": "object",
+          "key_order": [
+            "READ_EXEC",
+            "WRITE_EXEC"
+          ],
+          "properties": {
+            "READ_EXEC": {
+              "type": "object",
+              "key_order": [
+                "goal",
+                "default_actions"
+              ],
+              "properties": {
+                "goal": {
+                  "type": "string"
+                },
+                "default_actions": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "WRITE_EXEC": {
+              "type": "object",
+              "key_order": [
+                "goal",
+                "default_actions"
+              ],
+              "properties": {
+                "goal": {
+                  "type": "string"
+                },
+                "default_actions": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "repo_local_contract_handoff": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "forbidden_primary_runtime_pattern": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "turn_end_actions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "repo_name": {
+          "type": "string"
+        }
+      }
+    },
+    "Octopus_OS/Client_Applications/AGENTS.md": {
+      "type": "object",
+      "key_order": [
+        "entry_role",
+        "runtime_source_policy",
+        "default_meta_skill_order",
+        "turn_start_actions",
+        "runtime_constraints",
+        "execution_modes",
+        "repo_local_contract_handoff",
+        "forbidden_primary_runtime_pattern",
+        "turn_end_actions",
+        "repo_name"
+      ],
+      "properties": {
+        "entry_role": {
+          "type": "string"
+        },
+        "runtime_source_policy": {
+          "type": "object",
+          "key_order": [
+            "runtime_rule_source",
+            "audit_fields_are_not_primary_runtime_instructions",
+            "path_metadata_is_not_action_guidance"
+          ],
+          "properties": {
+            "runtime_rule_source": {
+              "type": "string"
+            },
+            "audit_fields_are_not_primary_runtime_instructions": {
+              "type": "boolean"
+            },
+            "path_metadata_is_not_action_guidance": {
+              "type": "boolean"
+            }
+          }
+        },
+        "default_meta_skill_order": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "turn_start_actions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "runtime_constraints": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "execution_modes": {
+          "type": "object",
+          "key_order": [
+            "READ_EXEC",
+            "WRITE_EXEC"
+          ],
+          "properties": {
+            "READ_EXEC": {
+              "type": "object",
+              "key_order": [
+                "goal",
+                "default_actions"
+              ],
+              "properties": {
+                "goal": {
+                  "type": "string"
+                },
+                "default_actions": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "WRITE_EXEC": {
+              "type": "object",
+              "key_order": [
+                "goal",
+                "default_actions"
+              ],
+              "properties": {
+                "goal": {
+                  "type": "string"
+                },
+                "default_actions": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "repo_local_contract_handoff": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "forbidden_primary_runtime_pattern": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "turn_end_actions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "repo_name": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
+```

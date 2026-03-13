@@ -1,3 +1,14 @@
+---
+doc_id: workflow_realstate_posting_web.subskills_workflow_realstate_posting_web_headed_references_playwright_workflows
+doc_type: topic_atom
+topic: Playwright CLI Workflows
+anchors:
+- target: ../../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # Playwright CLI Workflows
 
 Use the wrapper script and snapshot often.

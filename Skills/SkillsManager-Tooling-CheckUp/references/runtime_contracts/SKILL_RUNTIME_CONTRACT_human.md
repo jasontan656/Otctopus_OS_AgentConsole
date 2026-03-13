@@ -1,3 +1,14 @@
+---
+doc_id: skillsmanager_tooling_checkup.references_runtime_contracts_skill_runtime_contract
+doc_type: topic_atom
+topic: SKILL_RUNTIME_CONTRACT
+anchors:
+- target: ../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # SKILL_RUNTIME_CONTRACT
 
 <part_A>

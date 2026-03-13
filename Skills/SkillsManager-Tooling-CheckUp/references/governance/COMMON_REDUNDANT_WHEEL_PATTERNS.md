@@ -1,16 +1,16 @@
 ---
-doc_id: "skills_tooling_checkup.governance.common_redundant_wheel_patterns"
-doc_type: "topic_atom"
-topic: "Common semantic patterns that suggest skills tooling code may be rebuilding existing dependency capabilities"
+doc_id: skills_tooling_checkup.governance.common_redundant_wheel_patterns
+doc_type: topic_atom
+topic: Common semantic patterns that suggest skills tooling code may be rebuilding existing dependency capabilities
 anchors:
-  - target: "TOOLING_REMEDIATION_PROTOCOL.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "The remediation protocol can route detailed pattern examples into this dedicated atom."
-  - target: "MANDATORY_TECHSTACK_BASELINE.md"
-    relation: "pairs_with"
-    direction: "lateral"
-    reason: "Pattern recognition depends on the current mandatory baseline."
+- target: TOOLING_REMEDIATION_PROTOCOL.md
+  relation: implements
+  direction: upstream
+  reason: The remediation protocol can route detailed pattern examples into this dedicated atom.
+- target: MANDATORY_TECHSTACK_BASELINE.md
+  relation: pairs_with
+  direction: lateral
+  reason: Pattern recognition depends on the current mandatory baseline.
 ---
 
 # Common Redundant Wheel Patterns

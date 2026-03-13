@@ -211,7 +211,7 @@ def main() -> int:
     stage_system_md = rewrite_generated_anchor_targets(
         stage_system_template.safe_substitute(skill_name=skill_name),
         {
-            "../runtime/SKILL_RUNTIME_CONTRACT_TEMPLATE.md": "../../../references/runtime/SKILL_RUNTIME_CONTRACT.md",
+            "../runtime/SKILL_RUNTIME_CONTRACT_TEMPLATE.md": "../../../references/runtime/SKILL_RUNTIME_OVERVIEW.md",
         },
     )
     stage_index_md = rewrite_generated_anchor_targets(
@@ -272,13 +272,13 @@ def main() -> int:
         args.overwrite,
     )
     if args.profile == "staged_cli_first":
-        results[str(skill_dir / "references" / "runtime" / "SKILL_RUNTIME_CONTRACT.json")] = write_text(
-            skill_dir / "references" / "runtime" / "SKILL_RUNTIME_CONTRACT.json",
+        results[str(skill_dir / "references" / "runtime" / "SKILL_RUNTIME_OVERVIEW.json")] = write_text(
+            skill_dir / "references" / "runtime" / "SKILL_RUNTIME_OVERVIEW.json",
             runtime_contract_json,
             args.overwrite,
         )
-        results[str(skill_dir / "references" / "runtime" / "SKILL_RUNTIME_CONTRACT.md")] = write_text(
-            skill_dir / "references" / "runtime" / "SKILL_RUNTIME_CONTRACT.md",
+        results[str(skill_dir / "references" / "runtime" / "SKILL_RUNTIME_OVERVIEW.md")] = write_text(
+            skill_dir / "references" / "runtime" / "SKILL_RUNTIME_OVERVIEW.md",
             runtime_contract_md,
             args.overwrite,
         )

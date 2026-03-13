@@ -1,16 +1,16 @@
 ---
-doc_id: "dev_pythoncode_constitution.python_rules.fat_file"
-doc_type: "topic_atom"
-topic: "Python fat-file governance and split guidance"
+doc_id: dev_pythoncode_constitution.python_rules.fat_file
+doc_type: topic_atom
+topic: Python fat-file governance and split guidance
 anchors:
-  - target: "../governance/SKILL_EXECUTION_RULES.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "The execution rules route Python fat-file work into this rule doc."
-  - target: "../routing/TASK_ROUTING.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "Task routing sends fat-file and lint tasks here."
+- target: ../governance/SKILL_EXECUTION_RULES.md
+  relation: implements
+  direction: upstream
+  reason: The execution rules route Python fat-file work into this rule doc.
+- target: ../routing/TASK_ROUTING.md
+  relation: implements
+  direction: upstream
+  reason: Task routing sends fat-file and lint tasks here.
 ---
 
 # Python Fat File Constitution

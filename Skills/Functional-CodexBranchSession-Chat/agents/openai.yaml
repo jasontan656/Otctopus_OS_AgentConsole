@@ -1,4 +1,4 @@
 interface:
-  display_name: "Functional-CodexBranchSession-Chat"
-  short_description: "按 resume/session id + 关键词定位 assistant 回复，并直接回答用户问题。"
-  default_prompt: "请使用 Functional-CodexBranchSession-Chat：接收 resume_id/session_id、keyword 和 question，定位命中回复后直接输出答案。"
+  display_name: Functional-CodexBranchSession-Chat
+  short_description: 按 resume/session id + 关键词定位 assistant 回复，并直接回答用户问题。
+  default_prompt: Use $Functional-CodexBranchSession-Chat. First run `./.venv_backend_skills/bin/python Skills/Functional-CodexBranchSession-Chat/scripts/Cli_Toolbox.py contract --json`. Treat CLI JSON as the primary runtime source and use markdown mirrors only when the contract still leaves a real gap.

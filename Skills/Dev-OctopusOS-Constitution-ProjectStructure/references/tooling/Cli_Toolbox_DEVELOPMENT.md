@@ -1,16 +1,16 @@
 ---
-doc_id: "dev_octopusos_constitution_projectstructure.tooling.toolbox_development"
-doc_type: "topic_atom"
-topic: "Tooling development status for the OctopusOS project-structure constitution skill"
+doc_id: dev_octopusos_constitution_projectstructure.tooling.toolbox_development
+doc_type: topic_atom
+topic: Tooling development status for the OctopusOS project-structure constitution skill
 anchors:
-  - target: "Cli_Toolbox_USAGE.md"
-    relation: "pairs_with"
-    direction: "lateral"
-    reason: "Development and usage docs must stay aligned."
-  - target: "development/00_ARCHITECTURE_OVERVIEW.md"
-    relation: "routes_to"
-    direction: "downstream"
-    reason: "Tooling development should route into the architecture overview."
+- target: Cli_Toolbox_USAGE.md
+  relation: pairs_with
+  direction: lateral
+  reason: Development and usage docs must stay aligned.
+- target: development/00_ARCHITECTURE_OVERVIEW.md
+  relation: routes_to
+  direction: downstream
+  reason: Tooling development should route into the architecture overview.
 ---
 
 # Cli_Toolbox Development

@@ -3,13 +3,31 @@
   "registry_version": "v1",
   "entries": [
     {
+      "doc_path": "references/governance/SKILL_EXECUTION_RULES.md",
+      "doc_id": "dev_pythoncode_constitution.governance.execution_rules",
+      "rule_id": "body_axis_overload",
+      "fingerprint": "50c5b2b897a6b4ae7be0d1f29d83718432b6ed9e",
+      "decision": "accepted",
+      "note": "Keep execution rules grouped because they are the main operating contract for this skill.",
+      "decided_at": "2026-03-13T04:23:24.829Z"
+    },
+    {
       "doc_path": "references/python_rules/PYTHON_FAT_FILE_CONSTITUTION.md",
       "doc_id": "dev_pythoncode_constitution.python_rules.fat_file",
       "rule_id": "body_axis_overload",
-      "fingerprint": "f5041bdbf4d4fb575f92fc97dd7dbd312d63815d",
+      "fingerprint": "e626adc9bd341f12f2581a97cbaa1eaf721d1868",
       "decision": "accepted",
-      "note": "Keep this document as one cohesive Python fat-file contract because thresholds, split targets, and blocking policy are intentionally consumed together.",
-      "decided_at": "2026-03-11T23:40:22.562Z"
+      "note": "Keep fat-file constitution grouped because thresholds and remedies belong in one policy document.",
+      "decided_at": "2026-03-13T04:23:25.468Z"
+    },
+    {
+      "doc_path": "references/python_rules/PYTHON_PROJECT_INTEGRATION_CONSTITUTION.md",
+      "doc_id": "dev_pythoncode_constitution.python_rules.project_integration",
+      "rule_id": "body_axis_overload",
+      "fingerprint": "5f1b818e0963455ac94bbe853b2e0d1306af5994",
+      "decision": "accepted",
+      "note": "Keep project integration constitution grouped because repo integration rules are one contract surface.",
+      "decided_at": "2026-03-13T04:23:26.116Z"
     }
   ]
 }

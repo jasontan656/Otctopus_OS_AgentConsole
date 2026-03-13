@@ -1,3 +1,14 @@
+---
+doc_id: meta_agent_browser.references_proxy_support
+doc_type: topic_atom
+topic: Proxy Support
+anchors:
+- target: ../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # Proxy Support
 
 Proxy configuration for geo-testing, rate limiting avoidance, and corporate environments.

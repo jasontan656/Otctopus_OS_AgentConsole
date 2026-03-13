@@ -1,3 +1,14 @@
+---
+doc_id: skillsmanager_tooling_checkup.references_runtime_contracts_read_audit_directive
+doc_type: topic_atom
+topic: READ_AUDIT_DIRECTIVE
+anchors:
+- target: ../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # READ_AUDIT_DIRECTIVE
 
 <part_A>

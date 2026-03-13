@@ -1,20 +1,20 @@
 ---
-doc_id: "skill_creation_template.governance.staged_profile_reference"
-doc_type: "topic_atom"
-topic: "Reference for when and how to use the staged_cli_first profile"
+doc_id: skill_creation_template.governance.staged_profile_reference
+doc_type: topic_atom
+topic: Reference for when and how to use the staged_cli_first profile
 anchors:
-  - target: "../routing/PROFILE_ROUTING.md"
-    relation: "details"
-    direction: "upstream"
-    reason: "Profile routing directs readers here when staged_cli_first is selected."
-  - target: "SKILL_AUTHORING_CONTRACT.md"
-    relation: "expands"
-    direction: "upstream"
-    reason: "This reference specializes the authoring contract for the staged profile."
-  - target: "../runtime/SKILL_RUNTIME_CONTRACT.md"
-    relation: "pairs_with"
-    direction: "lateral"
-    reason: "The runtime contract enumerates the staged output surface."
+- target: ../routing/PROFILE_ROUTING.md
+  relation: details
+  direction: upstream
+  reason: Profile routing directs readers here when staged_cli_first is selected.
+- target: SKILL_AUTHORING_RULES.md
+  relation: expands
+  direction: upstream
+  reason: This reference specializes the authoring contract for the staged profile.
+- target: ../runtime/SKILL_RUNTIME_OVERVIEW.md
+  relation: pairs_with
+  direction: lateral
+  reason: The runtime contract enumerates the staged output surface.
 ---
 
 # Staged Profile Reference

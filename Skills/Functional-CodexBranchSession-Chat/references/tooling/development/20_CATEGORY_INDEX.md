@@ -1,3 +1,14 @@
+---
+doc_id: functional_codexbranchsession_chat.references_tooling_development_20_category_index
+doc_type: index_doc
+topic: Cli_Toolbox 开发文档分类索引
+anchors:
+- target: ../../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # Cli_Toolbox 开发文档分类索引
 
 ## 分类导航

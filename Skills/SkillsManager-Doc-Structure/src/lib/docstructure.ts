@@ -62,13 +62,13 @@ async function resolveContext(targetRootInput: string): Promise<ResolvedContext>
   }
 
   const targetMatrix = path.join(targetRoot, 'assets', 'runtime', 'anchor_query_matrix.json')
-  const targetRuntimeContract = path.join(targetRoot, 'references', 'runtime', 'SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.json')
+  const targetRuntimeContract = path.join(targetRoot, 'references', 'runtime', 'SKILL_DOCSTRUCTURE_RUNTIME_OVERVIEW.json')
   const matrixPath = (await fileExists(targetMatrix))
     ? targetMatrix
     : path.join(currentRoot, 'assets', 'runtime', 'anchor_query_matrix.json')
   const runtimeContractPath = (await fileExists(targetRuntimeContract))
     ? targetRuntimeContract
-    : path.join(currentRoot, 'references', 'runtime', 'SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.json')
+    : path.join(currentRoot, 'references', 'runtime', 'SKILL_DOCSTRUCTURE_RUNTIME_OVERVIEW.json')
 
   return {
     currentSkillRoot: currentRoot,

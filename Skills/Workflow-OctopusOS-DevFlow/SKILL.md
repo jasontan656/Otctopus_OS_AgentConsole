@@ -1,9 +1,24 @@
 ---
-name: "Workflow-OctopusOS-DevFlow"
-description: "开发闭环 workflow 技能；当前先保持原骨架，后续再逐步通用化。"
+name: Workflow-OctopusOS-DevFlow
+description: 开发闭环 workflow 技能；当前先保持原骨架，后续再逐步通用化。
+metadata:
+  doc_structure:
+    doc_id: workflow_octopusos_devflow.entry.facade
+    doc_type: skill_facade
+    topic: Entry facade for the Workflow-OctopusOS-DevFlow skill
+    anchors:
+    - target: ./references/runtime_contracts/SKILL_RUNTIME_CONTRACT_human.md
+      relation: routes_to
+      direction: downstream
+      reason: The facade routes runtime execution to the CLI-first contract.
 ---
 
 # Workflow-OctopusOS-DevFlow
+
+## Runtime Entry
+- Primary runtime entry: `./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py contract --json`
+- CLI JSON is the primary runtime source; `SKILL.md` only remains as a facade and routing narrative.
+
 
 ## 1. 定位
 - 本文件只做门面入口，不承载规则正文。
@@ -34,7 +49,7 @@ description: "开发闭环 workflow 技能；当前先保持原骨架，后续�
 ## 2. 必读顺序
 1. 顶层常驻文档只保留：
    - `rules/OCTOPUS_SKILL_HARD_RULES.md`
-   - `references/tooling/SKILL_TOOLING_WORKFLOW_CONTRACT.md`
+   - `references/tooling/SKILL_TOOLING_EXECUTION_PLAYBOOK.md`
    - `/home/jasontan656/AI_Projects/AGENTS.md`
    - `<docs_root>/AGENTS.md`（若存在）
    - `/home/jasontan656/.codex/skills/Dev-OctopusOS-Constitution-ProjectStructure/SKILL.md`（当 `docs_root` 尚未固定时）
@@ -55,7 +70,7 @@ description: "开发闭环 workflow 技能；当前先保持原骨架，后续�
 - 规则层：
   - `rules/OCTOPUS_SKILL_HARD_RULES.md`
 - 工作流层：
-  - `references/tooling/SKILL_TOOLING_WORKFLOW_CONTRACT.md`
+  - `references/tooling/SKILL_TOOLING_EXECUTION_PLAYBOOK.md`
 - 模板层：
   - `assets/templates/mother_doc/*`
   - `assets/templates/execution_atom_plan_validation_packs/*`
@@ -116,7 +131,7 @@ Workflow-OctopusOS-DevFlow/
 │   └── OCTOPUS_SKILL_HARD_RULES.md
 ├── references/
 │   └── tooling/
-│       └── SKILL_TOOLING_WORKFLOW_CONTRACT.md
+│       └── SKILL_TOOLING_EXECUTION_PLAYBOOK.md
 ├── assets/
 │   └── templates/
 ├── scripts/

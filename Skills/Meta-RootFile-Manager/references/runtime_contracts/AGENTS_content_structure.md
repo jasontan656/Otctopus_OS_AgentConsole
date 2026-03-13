@@ -1,3 +1,14 @@
+---
+doc_id: meta_rootfile_manager.references_runtime_contracts_agents_content_structure
+doc_type: topic_atom
+topic: AGENTS Content Structure Contract
+anchors:
+- target: ../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # AGENTS Content Structure Contract
 
 ## Purpose

@@ -1,20 +1,16 @@
 ---
-name: "Meta-Enhance-Prompt"
-description: "将用户提示词强化为固定模板的结构化执行合同。先完整调研当前 repo 与用户目标的关系、影响面与覆盖面，再补足目标、输入、输出、边界与验证，最后仅通过固定 CLI tool 输出最终 prompt。Manual invoke: $Meta-Enhance-Prompt."
+name: Meta-Enhance-Prompt
+description: '将用户提示词强化为固定模板的结构化执行合同。先完整调研当前 repo 与用户目标的关系、影响面与覆盖面，再补足目标、输入、输出、边界与验证，最后仅通过固定 CLI tool 输出最终 prompt。Manual invoke: $Meta-Enhance-Prompt.'
 metadata:
   doc_structure:
-    doc_id: "meta_enhance_prompt.entry.facade"
-    doc_type: "skill_facade"
-    topic: "Entry facade for the Meta-Enhance-Prompt skill"
+    doc_id: meta_enhance_prompt.entry.facade
+    doc_type: skill_facade
+    topic: Entry facade for the Meta-Enhance-Prompt skill
     anchors:
-      - target: "./references/runtime_contracts/SKILL_RUNTIME_CONTRACT_human.md"
-        relation: "governed_by"
-        direction: "downstream"
-        reason: "The runtime contract is the primary execution entry for model-facing use."
-      - target: "./references/runtime_contracts/ACTIVE_INVOKE_DIRECTIVE_human.md"
-        relation: "routes_to"
-        direction: "downstream"
-        reason: "The active invoke directive is the first runtime branch after the facade."
+    - target: ./references/runtime_contracts/SKILL_RUNTIME_CONTRACT_human.md
+      relation: routes_to
+      direction: downstream
+      reason: The facade routes runtime execution to the CLI-first contract.
 ---
 
 # Meta Enhance Prompt

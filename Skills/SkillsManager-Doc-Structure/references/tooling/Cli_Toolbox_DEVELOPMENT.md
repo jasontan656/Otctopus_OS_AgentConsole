@@ -1,16 +1,16 @@
 ---
-doc_id: "tooling.development.entry"
-doc_type: "tooling_development"
-topic: "Development guidance for the document-structure CLI, metadata contract, and graph core"
+doc_id: tooling.development.entry
+doc_type: tooling_development
+topic: Development guidance for the document-structure CLI, metadata contract, and graph core
 anchors:
-  - target: "development/00_ARCHITECTURE_OVERVIEW.md"
-    relation: "routes_to"
-    direction: "downstream"
-    reason: "Architecture overview expands the CLI and core-library split."
-  - target: "development/modules/mod_docstructure_core.md"
-    relation: "indexes"
-    direction: "downstream"
-    reason: "The core module doc explains the graph-building engine."
+- target: development/00_ARCHITECTURE_OVERVIEW.md
+  relation: routes_to
+  direction: downstream
+  reason: Architecture overview expands the CLI and core-library split.
+- target: development/modules/mod_docstructure_core.md
+  relation: indexes
+  direction: downstream
+  reason: The core module doc explains the graph-building engine.
 ---
 
 # Cli_Toolbox Development

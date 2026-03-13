@@ -1,16 +1,16 @@
 ---
-doc_id: "skills_tooling_checkup.governance.mandatory_techstack_baseline"
-doc_type: "topic_atom"
-topic: "Mandatory repo-local tech stack baseline for skills tooling remediation"
+doc_id: skills_tooling_checkup.governance.mandatory_techstack_baseline
+doc_type: topic_atom
+topic: Mandatory repo-local tech stack baseline for skills tooling remediation
 anchors:
-  - target: "SKILL_EXECUTION_RULES.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "Execution rules delegate concrete dependency-baseline details to this document."
-  - target: "TOOLING_REMEDIATION_PROTOCOL.md"
-    relation: "pairs_with"
-    direction: "lateral"
-    reason: "Baseline and remediation protocol must stay aligned."
+- target: SKILL_EXECUTION_RULES.md
+  relation: implements
+  direction: upstream
+  reason: Execution rules delegate concrete dependency-baseline details to this document.
+- target: TOOLING_REMEDIATION_PROTOCOL.md
+  relation: pairs_with
+  direction: lateral
+  reason: Baseline and remediation protocol must stay aligned.
 ---
 
 # Mandatory Techstack Baseline

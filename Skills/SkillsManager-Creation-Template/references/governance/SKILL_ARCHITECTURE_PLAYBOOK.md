@@ -1,20 +1,20 @@
 ---
-doc_id: "skill_creation_template.governance.architecture_playbook"
-doc_type: "topic_atom"
-topic: "Architecture playbook for template-pack governance and skill reconstruction"
+doc_id: skill_creation_template.governance.architecture_playbook
+doc_type: topic_atom
+topic: Architecture playbook for template-pack governance and skill reconstruction
 anchors:
-  - target: "../runtime/SKILL_RUNTIME_CONTRACT.md"
-    relation: "expands"
-    direction: "upstream"
-    reason: "The runtime contract points here for architecture methodology."
-  - target: "SKILL_AUTHORING_CONTRACT.md"
-    relation: "pairs_with"
-    direction: "lateral"
-    reason: "The playbook operationalizes the authoring contract."
-  - target: "SKILL_DOCSTRUCTURE_ENFORCEMENT.md"
-    relation: "governed_by"
-    direction: "upstream"
-    reason: "The playbook treats doc-structure governance as a mandatory architectural decision."
+- target: ../runtime/SKILL_RUNTIME_OVERVIEW.md
+  relation: expands
+  direction: upstream
+  reason: The runtime contract points here for architecture methodology.
+- target: SKILL_AUTHORING_RULES.md
+  relation: pairs_with
+  direction: lateral
+  reason: The playbook operationalizes the authoring contract.
+- target: SKILL_DOCSTRUCTURE_ENFORCEMENT.md
+  relation: governed_by
+  direction: upstream
+  reason: The playbook treats doc-structure governance as a mandatory architectural decision.
 ---
 
 # Skill Architecture Playbook

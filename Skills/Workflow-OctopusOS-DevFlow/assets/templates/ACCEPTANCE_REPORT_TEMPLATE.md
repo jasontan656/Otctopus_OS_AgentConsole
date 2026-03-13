@@ -1,3 +1,14 @@
+---
+doc_id: workflow_octopusos_devflow.assets_templates_acceptance_report_template
+doc_type: example_doc
+topic: Acceptance Report
+anchors:
+- target: ../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # Acceptance Report
 
 ```python

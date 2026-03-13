@@ -1,16 +1,16 @@
 ---
-doc_id: "skill_creation_template.asset.execution_rules_template"
-doc_type: "template_doc"
-topic: "Template for a generated skill's execution rules document"
+doc_id: skill_creation_template.asset.execution_rules_template
+doc_type: template_doc
+topic: Template for a generated skill's execution rules document
 anchors:
-  - target: "SKILL_DOCSTRUCTURE_POLICY_TEMPLATE.md"
-    relation: "pairs_with"
-    direction: "lateral"
-    reason: "Execution rules and doc-structure policy should stay aligned."
-  - target: "../routing/TASK_ROUTING_TEMPLATE.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "Task routing should send readers here for deep execution rules."
+- target: SKILL_DOCSTRUCTURE_POLICY_TEMPLATE.md
+  relation: pairs_with
+  direction: lateral
+  reason: Execution rules and doc-structure policy should stay aligned.
+- target: ../routing/TASK_ROUTING_TEMPLATE.md
+  relation: implements
+  direction: upstream
+  reason: Task routing should send readers here for deep execution rules.
 ---
 
 # Skill Execution Rules Template

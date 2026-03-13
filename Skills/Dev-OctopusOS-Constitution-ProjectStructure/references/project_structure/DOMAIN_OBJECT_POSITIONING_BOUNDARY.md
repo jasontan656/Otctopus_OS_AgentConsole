@@ -1,16 +1,16 @@
 ---
-doc_id: "dev_octopusos_constitution_projectstructure.project_structure.domain_object_positioning_boundary"
-doc_type: "topic_atom"
-topic: "Project-level positioning boundary for domain objects inside OctopusOS"
+doc_id: dev_octopusos_constitution_projectstructure.project_structure.domain_object_positioning_boundary
+doc_type: topic_atom
+topic: Project-level positioning boundary for domain objects inside OctopusOS
 anchors:
-  - target: "OCTOPUS_OS_HUB_POSITIONING_MODEL.md"
-    relation: "pairs_with"
-    direction: "lateral"
-    reason: "Object positioning refines the hub model."
-  - target: "FOLDER_CONTAINER_PLANNING_RULES.md"
-    relation: "supports"
-    direction: "downstream"
-    reason: "Folder and container planning depends on object classification."
+- target: OCTOPUS_OS_HUB_POSITIONING_MODEL.md
+  relation: pairs_with
+  direction: lateral
+  reason: Object positioning refines the hub model.
+- target: FOLDER_CONTAINER_PLANNING_RULES.md
+  relation: supports
+  direction: downstream
+  reason: Folder and container planning depends on object classification.
 ---
 
 # Domain Object Positioning Boundary

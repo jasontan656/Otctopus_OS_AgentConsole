@@ -1,24 +1,24 @@
 ---
-doc_id: "dev_telegram_constitution.topic.interface_surfaces"
-doc_type: "topic_atom"
-topic: "Telegram interface surfaces and capability decision contract"
+doc_id: dev_telegram_constitution.topic.interface_surfaces
+doc_type: topic_atom
+topic: Telegram interface surfaces and capability decision contract
 anchors:
-  - target: "../routing/TASK_ROUTING.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "Task routing sends Telegram capability questions here."
-  - target: "TELEGRAM_CAPABILITY_LANDSCAPE.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "Capability landscape should be read before surface selection."
-  - target: "TELEGRAM_STACK_BASELINE.md"
-    relation: "pairs_with"
-    direction: "lateral"
-    reason: "Capability choice and stack choice should be read together."
-  - target: "TELEGRAM_MINI_APP_CONTRACT.md"
-    relation: "routes_to"
-    direction: "downstream"
-    reason: "Mini App questions should continue into the dedicated contract."
+- target: ../routing/TASK_ROUTING.md
+  relation: implements
+  direction: upstream
+  reason: Task routing sends Telegram capability questions here.
+- target: TELEGRAM_CAPABILITY_LANDSCAPE.md
+  relation: implements
+  direction: upstream
+  reason: Capability landscape should be read before surface selection.
+- target: TELEGRAM_STACK_BASELINE.md
+  relation: pairs_with
+  direction: lateral
+  reason: Capability choice and stack choice should be read together.
+- target: TELEGRAM_MINI_APP_RULES.md
+  relation: routes_to
+  direction: downstream
+  reason: Mini App questions should continue into the dedicated contract.
 ---
 
 # Telegram Interface Surface Contract

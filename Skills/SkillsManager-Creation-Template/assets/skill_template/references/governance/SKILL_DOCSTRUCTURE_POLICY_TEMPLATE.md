@@ -1,16 +1,16 @@
 ---
-doc_id: "skill_creation_template.asset.doc_structure_policy_template"
-doc_type: "template_doc"
-topic: "Template for a generated skill's doc-structure policy"
+doc_id: skill_creation_template.asset.doc_structure_policy_template
+doc_type: template_doc
+topic: Template for a generated skill's doc-structure policy
 anchors:
-  - target: "../routing/TASK_ROUTING_TEMPLATE.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "Generated skills should reach doc-structure policy through routing."
-  - target: "SKILL_EXECUTION_RULES_TEMPLATE.md"
-    relation: "pairs_with"
-    direction: "lateral"
-    reason: "Doc-structure policy and execution rules are the two core governance atoms."
+- target: ../routing/TASK_ROUTING_TEMPLATE.md
+  relation: implements
+  direction: upstream
+  reason: Generated skills should reach doc-structure policy through routing.
+- target: SKILL_EXECUTION_RULES_TEMPLATE.md
+  relation: pairs_with
+  direction: lateral
+  reason: Doc-structure policy and execution rules are the two core governance atoms.
 ---
 
 # Skill Doc-Structure Policy Template

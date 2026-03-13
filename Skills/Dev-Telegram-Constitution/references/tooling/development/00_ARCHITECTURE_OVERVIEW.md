@@ -1,16 +1,16 @@
 ---
-doc_id: "dev_telegram_constitution.tooling.architecture_overview"
-doc_type: "topic_atom"
-topic: "Tooling architecture overview for the Telegram interface constitution skill"
+doc_id: dev_telegram_constitution.tooling.architecture_overview
+doc_type: topic_atom
+topic: Tooling architecture overview for the Telegram interface constitution skill
 anchors:
-  - target: "../Cli_Toolbox_DEVELOPMENT.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "The architecture overview is routed from the development entry."
-  - target: "../../governance/SKILL_EXECUTION_RULES.md"
-    relation: "pairs_with"
-    direction: "downstream"
-    reason: "Tooling architecture should stay aligned with execution rules."
+- target: ../Cli_Toolbox_DEVELOPMENT.md
+  relation: implements
+  direction: upstream
+  reason: The architecture overview is routed from the development entry.
+- target: ../../governance/SKILL_EXECUTION_RULES.md
+  relation: pairs_with
+  direction: downstream
+  reason: Tooling architecture should stay aligned with execution rules.
 ---
 
 # Cli_Toolbox 开发文档架构总览

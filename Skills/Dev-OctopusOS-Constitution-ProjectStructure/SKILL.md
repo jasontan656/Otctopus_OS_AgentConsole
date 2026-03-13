@@ -1,23 +1,24 @@
 ---
-name: "Dev-OctopusOS-Constitution-ProjectStructure"
-description: "治理整个章鱼OS项目的整体架构、项目结构与模块插拔定位，不负责具体域内实现细节。"
+name: Dev-OctopusOS-Constitution-ProjectStructure
+description: 治理整个章鱼OS项目的整体架构、项目结构与模块插拔定位，不负责具体域内实现细节。
 metadata:
   doc_structure:
-    doc_id: "dev_octopusos_constitution_projectstructure.entry.facade"
-    doc_type: "skill_facade"
-    topic: "Entry facade for the OctopusOS project-structure constitution skill"
+    doc_id: dev_octopusos_constitution_projectstructure.entry.facade
+    doc_type: skill_facade
+    topic: Entry facade for the Dev-OctopusOS-Constitution-ProjectStructure skill
     anchors:
-      - target: "references/routing/TASK_ROUTING.md"
-        relation: "routes_to"
-        direction: "downstream"
-        reason: "The facade routes readers into the first project-structure branch."
-      - target: "references/governance/SKILL_DOCSTRUCTURE_POLICY.md"
-        relation: "governed_by"
-        direction: "downstream"
-        reason: "Doc-structure policy is the mandatory governance branch."
+    - target: ./references/runtime_contracts/SKILL_RUNTIME_CONTRACT_human.md
+      relation: routes_to
+      direction: downstream
+      reason: The facade routes runtime execution to the CLI-first contract.
 ---
 
 # Dev-OctopusOS-Constitution-ProjectStructure
+
+## Runtime Entry
+- Primary runtime entry: `./.venv_backend_skills/bin/python Skills/Dev-OctopusOS-Constitution-ProjectStructure/scripts/Cli_Toolbox.py contract --json`
+- CLI JSON is the primary runtime source; `SKILL.md` only remains as a facade and routing narrative.
+
 
 ## 1. 技能定位
 - 本文件只做门面入口，不承载深规则正文。
@@ -33,7 +34,7 @@ metadata:
    - `references/project_structure/OCTOPUS_OS_HUB_POSITIONING_MODEL.md`
    - `references/project_structure/DOMAIN_OBJECT_POSITIONING_BOUNDARY.md`
 5. 若任务在问模块插拔、能力依赖、底座 bundle 或常驻能力边界，再读取：
-   - `references/project_structure/CAPABILITY_MODULE_HOTPLUG_CONTRACT.md`
+   - `references/project_structure/CAPABILITY_MODULE_HOTPLUG_RULES.md`
    - `references/project_structure/FOUNDATION_CAPABILITY_BUNDLE_BOUNDARY.md`
    - `references/project_structure/PROJECT_TECHSTACK_BASELINE.md`
 6. 若任务在问项目目录、容器拆分、部署对象与文件夹规划，再读取：
@@ -49,7 +50,7 @@ metadata:
 - 项目结构层：
   - `references/project_structure/OCTOPUS_OS_HUB_POSITIONING_MODEL.md`
   - `references/project_structure/DOMAIN_OBJECT_POSITIONING_BOUNDARY.md`
-  - `references/project_structure/CAPABILITY_MODULE_HOTPLUG_CONTRACT.md`
+  - `references/project_structure/CAPABILITY_MODULE_HOTPLUG_RULES.md`
   - `references/project_structure/FOUNDATION_CAPABILITY_BUNDLE_BOUNDARY.md`
   - `references/project_structure/PROJECT_TECHSTACK_BASELINE.md`
   - `references/project_structure/FOLDER_CONTAINER_PLANNING_RULES.md`

@@ -1,3 +1,14 @@
+---
+doc_id: functional_codexbranchsession_chat.references_tooling_development_modules_module_template
+doc_type: example_doc
+topic: <module_id> 模块开发文档模板
+anchors:
+- target: ../../../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # <module_id> 模块开发文档模板
 
 ## 模块标识

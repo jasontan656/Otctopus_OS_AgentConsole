@@ -1,3 +1,14 @@
+---
+doc_id: workflow_realstate_posting_web.subskills_workflow_realstate_posting_web_headless_references_wsl_mcp_methodology
+doc_type: topic_atom
+topic: WSL MCP Browser Methodology (Headless Branch)
+anchors:
+- target: ../../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # WSL MCP Browser Methodology (Headless Branch)
 
 ## Scope

@@ -1,12 +1,12 @@
 ---
-doc_id: "meta_enhance_prompt.runtime.output_governance_contract"
-doc_type: "topic_atom"
-topic: "Output governance mirror for Meta-Enhance-Prompt"
+doc_id: meta_enhance_prompt.runtime.output_governance_contract
+doc_type: topic_atom
+topic: Output governance mirror for Meta-Enhance-Prompt
 anchors:
-  - target: "../../SKILL.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "This human mirror records the output governance contract routed from the facade."
+- target: ../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This human mirror records the output governance contract routed from the facade.
 ---
 
 # OUTPUT_GOVERNANCE_CONTRACT

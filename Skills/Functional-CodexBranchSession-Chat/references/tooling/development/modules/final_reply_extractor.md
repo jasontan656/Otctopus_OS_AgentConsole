@@ -1,3 +1,14 @@
+---
+doc_id: functional_codexbranchsession_chat.references_tooling_development_modules_final_reply_extractor
+doc_type: topic_atom
+topic: final_reply_extractor 模块开发文档
+anchors:
+- target: ../../../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # final_reply_extractor 模块开发文档
 
 ## 模块标识

@@ -1,0 +1,15 @@
+{
+  "registry_name": "META_SKILL_DOCSTRUCTURE_SPLIT_DECISION_REGISTRY",
+  "registry_version": "v1",
+  "entries": [
+    {
+      "doc_path": "SKILL.md",
+      "doc_id": "skillsmanager_naming_manager.entry.facade",
+      "rule_id": "body_axis_overload",
+      "fingerprint": "bb91c61eff0cfbc983c20753de7cc41e5202bf78",
+      "decision": "accepted",
+      "note": "Keep facade broad because naming-manager routes multiple naming governance branches from one entry.",
+      "decided_at": "2026-03-13T04:23:20.837Z"
+    }
+  ]
+}

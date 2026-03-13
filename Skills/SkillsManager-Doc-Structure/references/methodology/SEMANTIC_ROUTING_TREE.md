@@ -1,16 +1,16 @@
 ---
-doc_id: "methodology.semantic_routing_tree"
-doc_type: "methodology_doc"
-topic: "Tree-first routing methodology for organizing skill-internal markdown docs"
+doc_id: methodology.semantic_routing_tree
+doc_type: methodology_doc
+topic: Tree-first routing methodology for organizing skill-internal markdown docs
 anchors:
-  - target: "../runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md"
-    relation: "expands"
-    direction: "upstream"
-    reason: "This methodology expands the runtime contract with concrete tree rules."
-  - target: "../rules/00_RULE_SYSTEM_INDEX.md"
-    relation: "belongs_to"
-    direction: "downstream"
-    reason: "The rule-system index routes readers from this methodology into narrower rule docs."
+- target: ../runtime/SKILL_DOCSTRUCTURE_RUNTIME_OVERVIEW.md
+  relation: expands
+  direction: upstream
+  reason: This methodology expands the runtime contract with concrete tree rules.
+- target: ../rules/00_RULE_SYSTEM_INDEX.md
+  relation: belongs_to
+  direction: downstream
+  reason: The rule-system index routes readers from this methodology into narrower rule docs.
 ---
 
 # Semantic Routing Tree

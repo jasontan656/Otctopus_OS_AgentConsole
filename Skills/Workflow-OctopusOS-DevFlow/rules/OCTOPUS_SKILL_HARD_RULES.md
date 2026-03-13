@@ -1,3 +1,14 @@
+---
+doc_id: workflow_octopusos_devflow.rules_octopus_skill_hard_rules
+doc_type: topic_atom
+topic: OCTOPUS Skill Hard Rules
+anchors:
+- target: ../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # OCTOPUS Skill Hard Rules
 
 适用技能：
@@ -14,7 +25,7 @@
 - `acceptance`
 4. 顶层常驻文档固定为：
 - `rules/OCTOPUS_SKILL_HARD_RULES.md`
-- `references/tooling/SKILL_TOOLING_WORKFLOW_CONTRACT.md`
+- `references/tooling/SKILL_TOOLING_EXECUTION_PLAYBOOK.md`
 - `/home/jasontan656/AI_Projects/AGENTS.md`
 - `<docs_root>/AGENTS.md`（若存在）
 - `/home/jasontan656/.codex/skills/Dev-OctopusOS-Constitution-ProjectStructure/SKILL.md`（当 `docs_root` 尚未固定时）

@@ -1,16 +1,16 @@
 ---
-doc_id: "tooling.usage.cli"
-doc_type: "tooling_usage"
-topic: "CLI usage for querying document architecture, validating tree shape, and rebuilding self graph"
+doc_id: tooling.usage.cli
+doc_type: tooling_usage
+topic: CLI usage for querying document architecture, validating tree shape, and rebuilding self graph
 anchors:
-  - target: "../runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "The CLI is the machine-readable execution surface of the runtime contract."
-  - target: "../workflows/10_QUERY_WORKFLOW.md"
-    relation: "routes_to"
-    direction: "downstream"
-    reason: "The query workflow explains how to consume CLI outputs when navigating a target skill."
+- target: ../runtime/SKILL_DOCSTRUCTURE_RUNTIME_OVERVIEW.md
+  relation: implements
+  direction: upstream
+  reason: The CLI is the machine-readable execution surface of the runtime contract.
+- target: ../workflows/10_QUERY_FLOW.md
+  relation: routes_to
+  direction: downstream
+  reason: The query workflow explains how to consume CLI outputs when navigating a target skill.
 ---
 
 # Cli_Toolbox Usage

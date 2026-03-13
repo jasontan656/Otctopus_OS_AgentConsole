@@ -55,7 +55,7 @@ describe('SkillsManager-Doc-Structure TS runtime', () => {
     expect(contract.contract_name).toBe('META_SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT')
     expect(contract.semantic_split_contract.navigation_model).toBe('tree_first_graph_second')
     expect(contract.knowledge_tracks.rules_track_entry).toBe('references/rules/00_RULE_SYSTEM_INDEX.md')
-    expect(contract.workflow_tracks.single_doc_workflow_entry).toBe('references/workflows/30_SINGLE_DOC_AUTHORING_WORKFLOW.md')
+    expect(contract.workflow_tracks.single_doc_workflow_entry).toBe('references/workflows/30_SINGLE_DOC_AUTHORING_FLOW.md')
     expect(contract.frontmatter_contract.optional_fields).toContain('node_role')
   })
 

@@ -1,12 +1,12 @@
 ---
-doc_id: "dev_telegram_constitution.topic.games_and_media"
-doc_type: "topic_atom"
-topic: "Telegram games and media contract"
+doc_id: dev_telegram_constitution.topic.games_and_media
+doc_type: topic_atom
+topic: Telegram games and media contract
 anchors:
-  - target: "TELEGRAM_CAPABILITY_LANDSCAPE.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "This doc elaborates the games and media line."
+- target: TELEGRAM_CAPABILITY_LANDSCAPE.md
+  relation: implements
+  direction: upstream
+  reason: This doc elaborates the games and media line.
 ---
 
 # Telegram Games And Media Contract

@@ -1,28 +1,28 @@
 ---
-doc_id: "skills_tooling_checkup.governance.tooling_remediation_protocol"
-doc_type: "topic_atom"
-topic: "Protocol for reviewing and remediating self-built tooling wheels in installed skills"
+doc_id: skills_tooling_checkup.governance.tooling_remediation_protocol
+doc_type: topic_atom
+topic: Protocol for reviewing and remediating self-built tooling wheels in installed skills
 anchors:
-  - target: "SKILL_EXECUTION_RULES.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "Execution rules hand off concrete remediation flow to this protocol."
-  - target: "OBSERVABILITY_AND_OUTPUT_GOVERNANCE.md"
-    relation: "pairs_with"
-    direction: "lateral"
-    reason: "Remediation flow must explicitly absorb runtime-log, output-root, and migration governance."
-  - target: "MANDATORY_TECHSTACK_BASELINE.md"
-    relation: "pairs_with"
-    direction: "lateral"
-    reason: "Review steps depend on the mandatory baseline."
-  - target: "COMMON_REDUNDANT_WHEEL_PATTERNS.md"
-    relation: "routes_to"
-    direction: "downstream"
-    reason: "Concrete pattern examples live in a separate atomic document."
-  - target: "REMEDIATION_GATES.md"
-    relation: "routes_to"
-    direction: "downstream"
-    reason: "Replacement gates live in their own atomic document."
+- target: SKILL_EXECUTION_RULES.md
+  relation: implements
+  direction: upstream
+  reason: Execution rules hand off concrete remediation flow to this protocol.
+- target: OBSERVABILITY_AND_OUTPUT_GOVERNANCE.md
+  relation: pairs_with
+  direction: lateral
+  reason: Remediation flow must explicitly absorb runtime-log, output-root, and migration governance.
+- target: MANDATORY_TECHSTACK_BASELINE.md
+  relation: pairs_with
+  direction: lateral
+  reason: Review steps depend on the mandatory baseline.
+- target: COMMON_REDUNDANT_WHEEL_PATTERNS.md
+  relation: routes_to
+  direction: downstream
+  reason: Concrete pattern examples live in a separate atomic document.
+- target: REMEDIATION_GATES.md
+  relation: routes_to
+  direction: downstream
+  reason: Replacement gates live in their own atomic document.
 ---
 
 # Tooling Remediation Protocol

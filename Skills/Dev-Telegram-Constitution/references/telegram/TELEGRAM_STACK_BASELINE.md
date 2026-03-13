@@ -1,16 +1,16 @@
 ---
-doc_id: "dev_telegram_constitution.topic.stack_baseline"
-doc_type: "topic_atom"
-topic: "Telegram stack decision contract and dependency state"
+doc_id: dev_telegram_constitution.topic.stack_baseline
+doc_type: topic_atom
+topic: Telegram stack decision contract and dependency state
 anchors:
-  - target: "../routing/TASK_ROUTING.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "Task routing sends framework and dependency questions here."
-  - target: "TELEGRAM_DELIVERY_GUARDRAILS.md"
-    relation: "pairs_with"
-    direction: "lateral"
-    reason: "Stack choices should stay aligned with delivery mode."
+- target: ../routing/TASK_ROUTING.md
+  relation: implements
+  direction: upstream
+  reason: Task routing sends framework and dependency questions here.
+- target: TELEGRAM_DELIVERY_GUARDRAILS.md
+  relation: pairs_with
+  direction: lateral
+  reason: Stack choices should stay aligned with delivery mode.
 ---
 
 # Telegram Stack Decision Contract

@@ -1,16 +1,16 @@
 ---
-doc_id: "dev_telegram_constitution.routing.task_routing"
-doc_type: "routing_doc"
-topic: "Task routing for the Telegram interface constitution skill"
+doc_id: dev_telegram_constitution.routing.task_routing
+doc_type: routing_doc
+topic: Task routing for the Telegram interface constitution skill
 anchors:
-  - target: "../../SKILL.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "The skill facade routes into this task routing doc."
-  - target: "../governance/SKILL_DOCSTRUCTURE_POLICY.md"
-    relation: "routes_to"
-    direction: "downstream"
-    reason: "Telegram task routing must always pass through the doc-structure policy."
+- target: ../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: The skill facade routes into this task routing doc.
+- target: ../governance/SKILL_DOCSTRUCTURE_POLICY.md
+  relation: routes_to
+  direction: downstream
+  reason: Telegram task routing must always pass through the doc-structure policy.
 ---
 
 # Task Routing
@@ -41,5 +41,5 @@ anchors:
 ## 分支四：Mini App / WebApp 合同
 - 先读 `../governance/SKILL_DOCSTRUCTURE_POLICY.md`
 - 再读 `../governance/SKILL_EXECUTION_RULES.md`
-- 再进入 `../telegram/TELEGRAM_MINI_APP_CONTRACT.md`
+- 再进入 `../telegram/TELEGRAM_MINI_APP_RULES.md`
 - 适用：Mini App 容器边界、init data 验证、前后端协同、Bot 与 Mini App 的强制分工

@@ -1,16 +1,16 @@
 ---
-doc_id: "skills_tooling_checkup.governance.execution_rules"
-doc_type: "topic_atom"
-topic: "Execution rules for reviewing and remediating self-built tooling wheels in installed skills"
+doc_id: skills_tooling_checkup.governance.execution_rules
+doc_type: topic_atom
+topic: Execution rules for reviewing and remediating self-built tooling wheels in installed skills
 anchors:
-  - target: "SKILL_DOCSTRUCTURE_POLICY.md"
-    relation: "pairs_with"
-    direction: "lateral"
-    reason: "Execution rules and doc-structure policy should stay aligned."
-  - target: "../routing/TASK_ROUTING.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "Task routing should send readers here for deep execution rules."
+- target: SKILL_DOCSTRUCTURE_POLICY.md
+  relation: pairs_with
+  direction: lateral
+  reason: Execution rules and doc-structure policy should stay aligned.
+- target: ../routing/TASK_ROUTING.md
+  relation: implements
+  direction: upstream
+  reason: Task routing should send readers here for deep execution rules.
 ---
 
 # Skill Execution Rules

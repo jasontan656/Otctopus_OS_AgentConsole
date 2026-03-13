@@ -1,16 +1,16 @@
 ---
-doc_id: "templates.routing_doc"
-doc_type: "template_doc"
-topic: "Template for a single-axis routing doc inside a governed skill folder"
+doc_id: templates.routing_doc
+doc_type: template_doc
+topic: Template for a single-axis routing doc inside a governed skill folder
 anchors:
-  - target: "../../references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md"
-    relation: "conforms_to"
-    direction: "upstream"
-    reason: "This routing template is defined by the runtime contract."
-  - target: "INDEX_DOC_TEMPLATE.md"
-    relation: "pairs_with"
-    direction: "cross"
-    reason: "Routing and index templates are often used together when shaping a tree."
+- target: ../../references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_OVERVIEW.md
+  relation: conforms_to
+  direction: upstream
+  reason: This routing template is defined by the runtime contract.
+- target: INDEX_DOC_TEMPLATE.md
+  relation: pairs_with
+  direction: cross
+  reason: Routing and index templates are often used together when shaping a tree.
 ---
 
 # Routing Doc Template

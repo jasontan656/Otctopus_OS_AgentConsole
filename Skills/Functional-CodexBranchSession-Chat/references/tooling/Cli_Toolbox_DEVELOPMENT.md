@@ -1,3 +1,14 @@
+---
+doc_id: functional_codexbranchsession_chat.references_tooling_cli_toolbox_development
+doc_type: topic_atom
+topic: Cli_Toolbox 开发文档（入口）
+anchors:
+- target: ../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # Cli_Toolbox 开发文档（入口）
 
 适用技能：`Functional-CodexBranchSession-Chat`
@@ -13,7 +24,7 @@
 5. Final Reply 提取模块：`references/tooling/development/modules/final_reply_extractor.md`
 6. Answer Responder 模块：`references/tooling/development/modules/answer_responder.md`
 7. 模块模板：`references/tooling/development/modules/MODULE_TEMPLATE.md`
-8. 可观测契约：`references/tooling/OBSERVABILITY_CONTRACT.md`
+8. 可观测契约：`references/tooling/OBSERVABILITY_POLICY.md`
 9. 变更记录：`references/tooling/development/90_CHANGELOG.md`
 
 ## 文档分类规则

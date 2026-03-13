@@ -1,32 +1,32 @@
 ---
-name: "${skill_name}"
+name: ${skill_name}
 description: ${description}
-doc_id: "skill_creation_template.asset.staged_skill_template"
-doc_type: "template_doc"
-topic: "Staged skill facade template asset"
+doc_id: skill_creation_template.asset.staged_skill_template
+doc_type: template_doc
+topic: Staged skill facade template asset
 anchors:
-  - target: "references/routing/TASK_ROUTING_TEMPLATE.md"
-    relation: "implements"
-    direction: "downstream"
-    reason: "This asset routes to the task routing template in the current template pack."
-  - target: "runtime/SKILL_RUNTIME_CONTRACT_TEMPLATE.md"
-    relation: "governed_by"
-    direction: "downstream"
-    reason: "The staged facade template depends on the staged runtime contract template."
+- target: references/routing/TASK_ROUTING_TEMPLATE.md
+  relation: implements
+  direction: downstream
+  reason: This asset routes to the task routing template in the current template pack.
+- target: runtime/SKILL_RUNTIME_CONTRACT_TEMPLATE.md
+  relation: governed_by
+  direction: downstream
+  reason: The staged facade template depends on the staged runtime contract template.
 metadata:
   doc_structure:
-    doc_id: "${skill_name}.entry.facade"
-    doc_type: "skill_facade"
-    topic: "Entry facade for the staged skill ${skill_name}"
+    doc_id: ${skill_name}.entry.facade
+    doc_type: skill_facade
+    topic: Entry facade for the staged skill ${skill_name}
     anchors:
-      - target: "references/routing/TASK_ROUTING.md"
-        relation: "routes_to"
-        direction: "downstream"
-        reason: "The staged facade should still route readers through task routing."
-      - target: "references/runtime/SKILL_RUNTIME_CONTRACT.md"
-        relation: "governed_by"
-        direction: "downstream"
-        reason: "Staged skills must declare runtime governance explicitly."
+    - target: references/routing/TASK_ROUTING.md
+      relation: routes_to
+      direction: downstream
+      reason: The staged facade should still route readers through task routing.
+    - target: references/runtime/SKILL_RUNTIME_OVERVIEW.md
+      relation: governed_by
+      direction: downstream
+      reason: Staged skills must declare runtime governance explicitly.
 ---
 
 # ${skill_name}
@@ -37,7 +37,7 @@ metadata:
 - 各阶段的读取边界、命令边界与 graph 角色以 runtime contract 与 stage contracts 为准。
 
 ## 2. 必读顺序
-1. 先读取 `references/runtime/SKILL_RUNTIME_CONTRACT.json`。
+1. 先读取 `references/runtime/SKILL_RUNTIME_OVERVIEW.json`。
 2. 再读取 `references/routing/TASK_ROUTING.md`。
 3. 再读取 `references/governance/SKILL_DOCSTRUCTURE_POLICY.md`。
 4. 进入 `references/stages/00_STAGE_INDEX.md`，再按阶段进入当前所需合同。
@@ -49,8 +49,8 @@ metadata:
   - `references/governance/SKILL_DOCSTRUCTURE_POLICY.md`
   - `references/governance/SKILL_EXECUTION_RULES.md`
 - 运行合同层：
-  - `references/runtime/SKILL_RUNTIME_CONTRACT.json`
-  - `references/runtime/SKILL_RUNTIME_CONTRACT.md`
+  - `references/runtime/SKILL_RUNTIME_OVERVIEW.json`
+  - `references/runtime/SKILL_RUNTIME_OVERVIEW.md`
 - 阶段层：
   - `references/stages/00_STAGE_INDEX.md`
 

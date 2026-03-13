@@ -1,16 +1,16 @@
 ---
-doc_id: "dev_pythoncode_constitution.tooling.toolbox_usage"
-doc_type: "topic_atom"
-topic: "Tooling usage status for the Python code constitution skill"
+doc_id: dev_pythoncode_constitution.tooling.toolbox_usage
+doc_type: topic_atom
+topic: Tooling usage status for the Python code constitution skill
 anchors:
-  - target: "Cli_Toolbox_DEVELOPMENT.md"
-    relation: "pairs_with"
-    direction: "lateral"
-    reason: "Usage and development status should be updated together."
-  - target: "../governance/SKILL_DOCSTRUCTURE_POLICY.md"
-    relation: "governed_by"
-    direction: "downstream"
-    reason: "Tooling docs remain part of the governed doc tree."
+- target: Cli_Toolbox_DEVELOPMENT.md
+  relation: pairs_with
+  direction: lateral
+  reason: Usage and development status should be updated together.
+- target: ../governance/SKILL_DOCSTRUCTURE_POLICY.md
+  relation: governed_by
+  direction: downstream
+  reason: Tooling docs remain part of the governed doc tree.
 ---
 
 # Cli_Toolbox 使用文档

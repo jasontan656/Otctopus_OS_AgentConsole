@@ -1,20 +1,20 @@
 ---
-doc_id: "dev_octopusos_constitution_projectstructure.project_structure.folder_container_planning_rules"
-doc_type: "topic_atom"
-topic: "Folder and deployment-container planning rules for OctopusOS"
+doc_id: dev_octopusos_constitution_projectstructure.project_structure.folder_container_planning_rules
+doc_type: topic_atom
+topic: Folder and deployment-container planning rules for OctopusOS
 anchors:
-  - target: "../routing/TASK_ROUTING.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "Task routing sends folder and container planning questions here."
-  - target: "DOMAIN_OBJECT_POSITIONING_BOUNDARY.md"
-    relation: "requires"
-    direction: "upstream"
-    reason: "Planning folders and containers depends on object classification."
-  - target: "OCTOPUS_OS_TARGET_FOLDER_LAYOUT.md"
-    relation: "supports"
-    direction: "downstream"
-    reason: "This planning rule is materialized by the concrete target folder layout."
+- target: ../routing/TASK_ROUTING.md
+  relation: implements
+  direction: upstream
+  reason: Task routing sends folder and container planning questions here.
+- target: DOMAIN_OBJECT_POSITIONING_BOUNDARY.md
+  relation: requires
+  direction: upstream
+  reason: Planning folders and containers depends on object classification.
+- target: OCTOPUS_OS_TARGET_FOLDER_LAYOUT.md
+  relation: supports
+  direction: downstream
+  reason: This planning rule is materialized by the concrete target folder layout.
 ---
 
 # Folder Container Planning Rules

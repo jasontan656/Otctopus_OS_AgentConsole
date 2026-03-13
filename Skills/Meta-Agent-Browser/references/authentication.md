@@ -1,3 +1,14 @@
+---
+doc_id: meta_agent_browser.references_authentication
+doc_type: topic_atom
+topic: Authentication Patterns
+anchors:
+- target: ../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # Authentication Patterns
 
 Login flows, session persistence, OAuth, 2FA, and authenticated browsing.

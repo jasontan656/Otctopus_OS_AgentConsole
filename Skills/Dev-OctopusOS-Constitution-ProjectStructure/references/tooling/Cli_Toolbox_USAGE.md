@@ -1,12 +1,12 @@
 ---
-doc_id: "dev_octopusos_constitution_projectstructure.tooling.toolbox_usage"
-doc_type: "topic_atom"
-topic: "Tooling usage status for the OctopusOS project-structure constitution skill"
+doc_id: dev_octopusos_constitution_projectstructure.tooling.toolbox_usage
+doc_type: topic_atom
+topic: Tooling usage status for the OctopusOS project-structure constitution skill
 anchors:
-  - target: "Cli_Toolbox_DEVELOPMENT.md"
-    relation: "pairs_with"
-    direction: "lateral"
-    reason: "Usage and development notes should stay aligned."
+- target: Cli_Toolbox_DEVELOPMENT.md
+  relation: pairs_with
+  direction: lateral
+  reason: Usage and development notes should stay aligned.
 ---
 
 # Cli_Toolbox Usage

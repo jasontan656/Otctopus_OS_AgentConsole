@@ -1,12 +1,12 @@
 ---
-doc_id: "dev_telegram_constitution.tooling.category_index"
-doc_type: "topic_atom"
-topic: "Tooling category index for the Telegram interface constitution skill"
+doc_id: dev_telegram_constitution.tooling.category_index
+doc_type: topic_atom
+topic: Tooling category index for the Telegram interface constitution skill
 anchors:
-  - target: "../Cli_Toolbox_DEVELOPMENT.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "The category index is routed from the development entry."
+- target: ../Cli_Toolbox_DEVELOPMENT.md
+  relation: implements
+  direction: upstream
+  reason: The category index is routed from the development entry.
 ---
 
 # Cli_Toolbox 开发文档分类索引

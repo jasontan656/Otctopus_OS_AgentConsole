@@ -1,3 +1,14 @@
+---
+doc_id: skillsmanager_mirror_to_codex.references_tooling_cli_toolbox_development
+doc_type: topic_atom
+topic: Cli_Toolbox 开发文档（入口）
+anchors:
+- target: ../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # Cli_Toolbox 开发文档（入口）
 
 ## 命名约束

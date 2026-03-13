@@ -1,16 +1,16 @@
 ---
-doc_id: "dev_pythoncode_constitution.tooling.module.python_lint_runner"
-doc_type: "topic_atom"
-topic: "Implementation notes for the Python lint runner"
+doc_id: dev_pythoncode_constitution.tooling.module.python_lint_runner
+doc_type: topic_atom
+topic: Implementation notes for the Python lint runner
 anchors:
-  - target: "../20_CATEGORY_INDEX.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "The category index routes readers into this module doc."
-  - target: "../90_CHANGELOG.md"
-    relation: "pairs_with"
-    direction: "lateral"
-    reason: "Changes to the lint runner should be tracked in the changelog."
+- target: ../20_CATEGORY_INDEX.md
+  relation: implements
+  direction: upstream
+  reason: The category index routes readers into this module doc.
+- target: ../90_CHANGELOG.md
+  relation: pairs_with
+  direction: lateral
+  reason: Changes to the lint runner should be tracked in the changelog.
 ---
 
 # python_lint_runner 模块文档

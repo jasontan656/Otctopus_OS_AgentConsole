@@ -1,4 +1,4 @@
 interface:
-  display_name: "WorkFlow-RealState-Posting-Web"
-  short_description: "房源发布网页自动化 family/router skill，只在无头或有头两条分支之间路由。"
-  default_prompt: "使用 WorkFlow-RealState-Posting-Web 时，只接受一个模式参数：无头模式或有头模式；先路由到对应分支文档，再执行具体工作流，不要在 family 根目录直接执行发布动作。"
+  display_name: WorkFlow-RealState-Posting-Web
+  short_description: 房源发布网页自动化 family/router skill，只在无头或有头两条分支之间路由。
+  default_prompt: Use $WorkFlow-RealState-Posting-Web. First run `./.venv_backend_skills/bin/python Skills/WorkFlow-RealState-Posting-Web/scripts/Cli_Toolbox.py contract --json`. Treat CLI JSON as the primary runtime source and use markdown mirrors only when the contract still leaves a real gap.

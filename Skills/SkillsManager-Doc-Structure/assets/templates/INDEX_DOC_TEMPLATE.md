@@ -1,16 +1,16 @@
 ---
-doc_id: "templates.index_doc"
-doc_type: "template_doc"
-topic: "Template for a pure index doc inside a governed skill folder"
+doc_id: templates.index_doc
+doc_type: template_doc
+topic: Template for a pure index doc inside a governed skill folder
 anchors:
-  - target: "../../references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md"
-    relation: "conforms_to"
-    direction: "upstream"
-    reason: "This index template is defined by the runtime contract."
-  - target: "ATOMIC_DOC_TEMPLATE.md"
-    relation: "pairs_with"
-    direction: "cross"
-    reason: "Indexes often route toward downstream atomic docs."
+- target: ../../references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_OVERVIEW.md
+  relation: conforms_to
+  direction: upstream
+  reason: This index template is defined by the runtime contract.
+- target: ATOMIC_DOC_TEMPLATE.md
+  relation: pairs_with
+  direction: cross
+  reason: Indexes often route toward downstream atomic docs.
 ---
 
 # Index Doc Template

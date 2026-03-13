@@ -1,3 +1,14 @@
+---
+doc_id: meta_rootfile_manager.references_stages_scan_rules
+doc_type: topic_atom
+topic: Scan Rules
+anchors:
+- target: ../../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # Scan Rules
 
 - Scan remains a discovery-only phase.

@@ -1,16 +1,16 @@
 ---
-doc_id: "dev_pythoncode_constitution.tooling.module_template"
-doc_type: "topic_atom"
-topic: "Template for future tooling modules in the Python code constitution skill"
+doc_id: dev_pythoncode_constitution.tooling.module_template
+doc_type: topic_atom
+topic: Template for future tooling modules in the Python code constitution skill
 anchors:
-  - target: "../20_CATEGORY_INDEX.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "Future module docs are routed from the tooling category index."
-  - target: "../90_CHANGELOG.md"
-    relation: "pairs_with"
-    direction: "lateral"
-    reason: "Module changes should remain traceable in the changelog."
+- target: ../20_CATEGORY_INDEX.md
+  relation: implements
+  direction: upstream
+  reason: Future module docs are routed from the tooling category index.
+- target: ../90_CHANGELOG.md
+  relation: pairs_with
+  direction: lateral
+  reason: Module changes should remain traceable in the changelog.
 ---
 
 # 模块文档模板

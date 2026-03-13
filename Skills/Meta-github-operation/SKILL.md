@@ -1,9 +1,24 @@
 ---
-name: "Meta-github-operation"
-description: "受限 GitHub control plane：仅服务 Octopus_OS 与 Otctopus_OS_AgentConsole 两个仓库的状态、提交、推送、远端信息与开发/发布分流约束。"
+name: Meta-github-operation
+description: 受限 GitHub control plane：仅服务 Octopus_OS 与 Otctopus_OS_AgentConsole 两个仓库的状态、提交、推送、远端信息与开发/发布分流约束。
+metadata:
+  doc_structure:
+    doc_id: meta_github_operation.entry.facade
+    doc_type: skill_facade
+    topic: Entry facade for the Meta-github-operation skill
+    anchors:
+    - target: ./references/runtime_contracts/SKILL_RUNTIME_CONTRACT_human.md
+      relation: routes_to
+      direction: downstream
+      reason: The facade routes runtime execution to the CLI-first contract.
 ---
 
 # Meta-github-operation
+
+## Runtime Entry
+- Primary runtime entry: `./.venv_backend_skills/bin/python Skills/Meta-github-operation/scripts/Cli_Toolbox.py contract --json`
+- CLI JSON is the primary runtime source; `SKILL.md` only remains as a facade and routing narrative.
+
 
 ## Status
 

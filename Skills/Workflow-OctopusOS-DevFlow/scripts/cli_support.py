@@ -206,7 +206,7 @@ def workflow_contract_document(
     )
     top_level_resident_docs = [
         "rules/OCTOPUS_SKILL_HARD_RULES.md",
-        "references/tooling/SKILL_TOOLING_WORKFLOW_CONTRACT.md",
+        "references/tooling/SKILL_TOOLING_EXECUTION_PLAYBOOK.md",
         str(ROOT_AGENTS_PATH),
     ]
     project_agents_path = runtime["project_agents_path"]

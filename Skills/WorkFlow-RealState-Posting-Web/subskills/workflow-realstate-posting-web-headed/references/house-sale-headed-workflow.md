@@ -1,3 +1,14 @@
+---
+doc_id: workflow_realstate_posting_web.subskills_workflow_realstate_posting_web_headed_references_house_sale_headed_workflow
+doc_type: topic_atom
+topic: HouseSale Headed Publish Workflow (Fixed)
+anchors:
+- target: ../../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # HouseSale Headed Publish Workflow (Fixed)
 
 ## Scope

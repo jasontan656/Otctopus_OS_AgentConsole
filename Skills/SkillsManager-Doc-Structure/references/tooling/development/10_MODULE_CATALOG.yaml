@@ -6,7 +6,7 @@ maintain_rules:
   required_docs:
     - references/tooling/Cli_Toolbox_USAGE.md
     - references/tooling/Cli_Toolbox_DEVELOPMENT.md
-    - references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.json
+    - references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_OVERVIEW.json
 modules:
   - module_id: docstructure_core
     tool_alias:

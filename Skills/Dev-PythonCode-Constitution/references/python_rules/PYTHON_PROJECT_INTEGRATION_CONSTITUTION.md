@@ -1,16 +1,16 @@
 ---
-doc_id: "dev_pythoncode_constitution.python_rules.project_integration"
-doc_type: "topic_atom"
-topic: "Python project integration governance"
+doc_id: dev_pythoncode_constitution.python_rules.project_integration
+doc_type: topic_atom
+topic: Python project integration governance
 anchors:
-  - target: "../governance/SKILL_EXECUTION_RULES.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "The execution rules route pytest, resource-loading, and pyproject integration topics here."
-  - target: "../routing/TASK_ROUTING.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "Task routing sends project-integration governance work into this atom."
+- target: ../governance/SKILL_EXECUTION_RULES.md
+  relation: implements
+  direction: upstream
+  reason: The execution rules route pytest, resource-loading, and pyproject integration topics here.
+- target: ../routing/TASK_ROUTING.md
+  relation: implements
+  direction: upstream
+  reason: Task routing sends project-integration governance work into this atom.
 ---
 
 # Python Project Integration Constitution

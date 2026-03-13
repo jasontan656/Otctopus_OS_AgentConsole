@@ -1,12 +1,12 @@
 ---
-doc_id: "dev_telegram_constitution.topic.business_integration"
-doc_type: "topic_atom"
-topic: "Telegram Business integration contract"
+doc_id: dev_telegram_constitution.topic.business_integration
+doc_type: topic_atom
+topic: Telegram Business integration contract
 anchors:
-  - target: "TELEGRAM_CAPABILITY_LANDSCAPE.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "This doc elaborates the business integration line."
+- target: TELEGRAM_CAPABILITY_LANDSCAPE.md
+  relation: implements
+  direction: upstream
+  reason: This doc elaborates the business integration line.
 ---
 
 # Telegram Business Integration Contract

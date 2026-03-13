@@ -1,3 +1,14 @@
+---
+doc_id: functional_codexbranchsession_chat.references_tooling_cli_toolbox_usage
+doc_type: topic_atom
+topic: Cli_Toolbox 使用文档
+anchors:
+- target: ../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # Cli_Toolbox 使用文档
 
 适用技能：`Functional-CodexBranchSession-Chat`
@@ -75,4 +86,4 @@
   - `references/tooling/development/20_CATEGORY_INDEX.md`
   - 对应模块文档（`references/tooling/development/modules/*.md`）
 - 可观测约束文档：
-  - `references/tooling/OBSERVABILITY_CONTRACT.md`（包含 `machine.jsonl`、`human.log`、`Codex_Skill_Runtime` 锚点）。
+  - `references/tooling/OBSERVABILITY_POLICY.md`（包含 `machine.jsonl`、`human.log`、`Codex_Skill_Runtime` 锚点）。

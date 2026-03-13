@@ -1,20 +1,16 @@
 ---
-name: "SkillsManager-Tooling-CheckUp"
-description: "治理已安装 skills 内部工具代码是否绕开 repo 既定依赖栈，并通过语义审查覆盖日志落盘、产物落点与迁移责任的技能。"
+name: SkillsManager-Tooling-CheckUp
+description: 治理已安装 skills 内部工具代码是否绕开 repo 既定依赖栈，并通过语义审查覆盖日志落盘、产物落点与迁移责任的技能。
 metadata:
   doc_structure:
-    doc_id: "SkillsManager-Tooling-CheckUp.entry.facade"
-    doc_type: "skill_facade"
-    topic: "Entry facade for the skills tooling checkup skill"
+    doc_id: skillsmanager_tooling_checkup.entry.facade
+    doc_type: skill_facade
+    topic: Entry facade for the SkillsManager-Tooling-CheckUp skill
     anchors:
-      - target: "references/routing/TASK_ROUTING.md"
-        relation: "routes_to"
-        direction: "downstream"
-        reason: "The human facade still keeps a routing mirror for audit readability."
-      - target: "references/governance/SKILL_DOCSTRUCTURE_POLICY.md"
-        relation: "governed_by"
-        direction: "downstream"
-        reason: "Doc-structure policy remains a mandatory governance branch."
+    - target: ./references/runtime_contracts/SKILL_RUNTIME_CONTRACT_human.md
+      relation: routes_to
+      direction: downstream
+      reason: The facade routes runtime execution to the CLI-first contract.
 ---
 
 # SkillsManager-Tooling-CheckUp

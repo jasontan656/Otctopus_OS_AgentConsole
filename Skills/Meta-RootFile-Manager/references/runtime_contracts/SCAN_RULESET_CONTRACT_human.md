@@ -1,0 +1,88 @@
+---
+doc_id: meta_rootfile_manager.references_runtime_contracts_scan_ruleset_contract
+doc_type: topic_atom
+topic: meta_default_md_manager_scan_ruleset_contract
+anchors:
+- target: ../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
+# meta_default_md_manager_scan_ruleset_contract
+
+Human mirror for `SCAN_RULESET_CONTRACT.json`.
+
+```json
+{
+  "version": 1,
+  "contract_name": "meta_default_md_manager_scan_ruleset_contract",
+  "contract_version": "1.0.0",
+  "validation_mode": "archival",
+  "tool_state": "active",
+  "required_fields": [
+    "contract_name",
+    "contract_version",
+    "validation_mode"
+  ],
+  "optional_fields": [
+    "notes"
+  ],
+  "scan_rule_assets": {
+    "governed_source_paths": {
+      "required": true,
+      "description": "The exact governed external targets for the current active scope.",
+      "default_values": [
+        "AGENTS.md",
+        "Otctopus_OS_AgentConsole/AGENTS.md"
+      ]
+    },
+    "disallowed_list": {
+      "required": true,
+      "source_type": "external_rule_asset",
+      "description": "Blacklist-driven path exclusion for governed scan results."
+    },
+    "exact_filename_rules": {
+      "required": true,
+      "default_values": [
+        "AGENTS.md"
+      ],
+      "description": "Exact managed filenames."
+    },
+    "keyword_rules": {
+      "required": false,
+      "supported_shape": {
+        "keyword": "contract",
+        "file_ext": "*.md"
+      },
+      "description": "Optional keyword-driven file discovery rules."
+    }
+  },
+  "managed_boundary": {
+    "current_governed_filename_set": [
+      "AGENTS.md"
+    ],
+    "current_governed_source_paths": [
+      "AGENTS.md",
+      "Otctopus_OS_AgentConsole/AGENTS.md"
+    ],
+    "default_disallowed_roots": [
+      "Octopus_OS"
+    ]
+  },
+  "output_policy": {
+    "allowed_modes": [
+      "stdout",
+      "json"
+    ],
+    "json_output_must_write_under": "Codex_Skill_Runtime/<skill_name>/scan/"
+  },
+  "lint_policy": {
+    "run_after_scan": true,
+    "fail_if_structure_template_missing": true,
+    "structure_template_map": {
+      "AGENTS.md": "references/runtime_contracts/AGENTS_content_structure.md"
+    }
+  }
+}
+```

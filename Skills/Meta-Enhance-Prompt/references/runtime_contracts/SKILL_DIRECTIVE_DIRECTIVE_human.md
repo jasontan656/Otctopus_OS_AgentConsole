@@ -1,12 +1,12 @@
 ---
-doc_id: "meta_enhance_prompt.runtime.skill_directive_instruction"
-doc_type: "topic_atom"
-topic: "Skill directive mirror for Meta-Enhance-Prompt runtime entry"
+doc_id: meta_enhance_prompt.runtime.skill_directive_instruction
+doc_type: topic_atom
+topic: Skill directive mirror for Meta-Enhance-Prompt runtime entry
 anchors:
-  - target: "../../SKILL.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "This human mirror documents the CLI-first runtime entry routed from the facade."
+- target: ../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This human mirror documents the CLI-first runtime entry routed from the facade.
 ---
 
 # SKILL_DIRECTIVE_DIRECTIVE

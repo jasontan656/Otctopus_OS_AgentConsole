@@ -1,12 +1,12 @@
 ---
-doc_id: "dev_telegram_constitution.topic.full_api_clients"
-doc_type: "topic_atom"
-topic: "Telegram full API and custom client contract"
+doc_id: dev_telegram_constitution.topic.full_api_clients
+doc_type: topic_atom
+topic: Telegram full API and custom client contract
 anchors:
-  - target: "TELEGRAM_CAPABILITY_LANDSCAPE.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "This doc elaborates the full API line."
+- target: TELEGRAM_CAPABILITY_LANDSCAPE.md
+  relation: implements
+  direction: upstream
+  reason: This doc elaborates the full API line.
 ---
 
 # Telegram Full API And Custom Clients Contract

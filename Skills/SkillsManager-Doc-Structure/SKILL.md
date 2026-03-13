@@ -1,23 +1,24 @@
 ---
-name: "SkillsManager-Doc-Structure"
-description: "治理 skills 内部 markdown 文档树、metadata 与 anchor graph 的技能。"
+name: SkillsManager-Doc-Structure
+description: 治理 skills 内部 markdown 文档树、metadata 与 anchor graph 的技能。
 metadata:
   doc_structure:
-    doc_id: "skill.entry.facade"
-    doc_type: "skill_facade"
-    topic: "Entry facade for the document-structure governance skill"
+    doc_id: skillsmanager_doc_structure.entry.facade
+    doc_type: skill_facade
+    topic: Entry facade for the SkillsManager-Doc-Structure skill
     anchors:
-      - target: "references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md"
-        relation: "governed_by"
-        direction: "downstream"
-        reason: "The runtime contract defines the document-architecture rules and graph constraints."
-      - target: "references/rules/00_RULE_SYSTEM_INDEX.md"
-        relation: "routes_to"
-        direction: "downstream"
-        reason: "The rule-system index is the first knowledge-track entry after the facade."
+    - target: ./references/runtime_contracts/SKILL_RUNTIME_CONTRACT_human.md
+      relation: routes_to
+      direction: downstream
+      reason: The facade routes runtime execution to the CLI-first contract.
 ---
 
 # SkillsManager-Doc-Structure
+
+## Runtime Entry
+- Primary runtime entry: `./.venv_backend_skills/bin/python Skills/SkillsManager-Doc-Structure/scripts/Cli_Toolbox.py contract --json`
+- CLI JSON is the primary runtime source; `SKILL.md` only remains as a facade and routing narrative.
+
 
 ## 1. 定位
 - 本文件提供文档结构技能的入口节点与轨道分流。
@@ -41,7 +42,7 @@ metadata:
 4. 再进入元信息轨：
    - `references/metadata/00_METADATA_INDEX.md`
 5. 再进入 workflow 轨：
-   - `references/workflows/00_WORKFLOW_INDEX.md`
+   - `references/workflows/00_FLOW_INDEX.md`
 6. 若任务涉及 CLI 与 graph rebuild，再读取：
    - `references/tooling/Cli_Toolbox_USAGE.md`
    - `references/tooling/Cli_Toolbox_DEVELOPMENT.md`
@@ -53,7 +54,7 @@ metadata:
 
 ## 3. 分类入口
 - 运行合同层：
-  - `references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT.md`
+  - `references/runtime/SKILL_DOCSTRUCTURE_RUNTIME_OVERVIEW.md`
 - 规则轨：
   - `references/rules/00_RULE_SYSTEM_INDEX.md`
   - `references/methodology/SEMANTIC_ROUTING_TREE.md`
@@ -62,7 +63,7 @@ metadata:
 - 元信息轨：
   - `references/metadata/00_METADATA_INDEX.md`
 - workflow 轨：
-  - `references/workflows/00_WORKFLOW_INDEX.md`
+  - `references/workflows/00_FLOW_INDEX.md`
 - 工具层：
   - `scripts/Cli_Toolbox.ts`
 - 模板层：

@@ -1,3 +1,14 @@
+---
+doc_id: meta_agent_browser.references_session_management
+doc_type: topic_atom
+topic: Session Management
+anchors:
+- target: ../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # Session Management
 
 Multiple isolated browser sessions with state persistence and concurrent browsing.

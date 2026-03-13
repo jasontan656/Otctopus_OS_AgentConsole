@@ -1,16 +1,16 @@
 ---
-doc_id: "skill_creation_template.tooling.changelog"
-doc_type: "changelog"
-topic: "Change log for the skill template toolbox and governance pack"
+doc_id: skill_creation_template.tooling.changelog
+doc_type: changelog
+topic: Change log for the skill template toolbox and governance pack
 anchors:
-  - target: "../Cli_Toolbox_DEVELOPMENT.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "The changelog belongs to the development references set."
-  - target: "../../runtime/SKILL_RUNTIME_CONTRACT.md"
-    relation: "tracks_changes_to"
-    direction: "cross"
-    reason: "Runtime contract changes must be traceable in the changelog."
+- target: ../Cli_Toolbox_DEVELOPMENT.md
+  relation: implements
+  direction: upstream
+  reason: The changelog belongs to the development references set.
+- target: ../../runtime/SKILL_RUNTIME_OVERVIEW.md
+  relation: tracks_changes_to
+  direction: cross
+  reason: Runtime contract changes must be traceable in the changelog.
 ---
 
 # Cli_Toolbox 开发文档变更记录

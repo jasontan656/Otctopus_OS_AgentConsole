@@ -1,23 +1,24 @@
 ---
-name: "Dev-Telegram-Constitution"
+name: Dev-Telegram-Constitution
 description: 将 Telegram 作为用户 interface 开发时的能力边界、交互裁决、技术栈选型状态与执行门禁写清楚。
 metadata:
   doc_structure:
-    doc_id: "Dev-Telegram-Constitution.entry.facade"
-    doc_type: "skill_facade"
-    topic: "Entry facade for the Telegram interface constitution skill"
+    doc_id: dev_telegram_constitution.entry.facade
+    doc_type: skill_facade
+    topic: Entry facade for the Dev-Telegram-Constitution skill
     anchors:
-      - target: "references/routing/TASK_ROUTING.md"
-        relation: "routes_to"
-        direction: "downstream"
-        reason: "The facade must route readers into the first task branch."
-      - target: "references/governance/SKILL_DOCSTRUCTURE_POLICY.md"
-        relation: "governed_by"
-        direction: "downstream"
-        reason: "Doc-structure policy is a mandatory governance branch."
+    - target: ./references/runtime_contracts/SKILL_RUNTIME_CONTRACT_human.md
+      relation: routes_to
+      direction: downstream
+      reason: The facade routes runtime execution to the CLI-first contract.
 ---
 
 # Dev-Telegram-Constitution
+
+## Runtime Entry
+- Primary runtime entry: `./.venv_backend_skills/bin/python Skills/Dev-Telegram-Constitution/scripts/Cli_Toolbox.py contract --json`
+- CLI JSON is the primary runtime source; `SKILL.md` only remains as a facade and routing narrative.
+
 
 ## 1. 技能定位
 - 本文件只做门面入口，不承载深规则正文。
@@ -37,7 +38,7 @@ metadata:
 6. 若任务在判定 webhook、回调、消息流、风控、安全边界，再读取：
    - `references/telegram/TELEGRAM_DELIVERY_GUARDRAILS.md`
 7. 若任务在判定 Mini App / WebApp 的前后端边界与验证合同，再读取：
-   - `references/telegram/TELEGRAM_MINI_APP_CONTRACT.md`
+   - `references/telegram/TELEGRAM_MINI_APP_RULES.md`
 
 ## 3. 分类入口
 - 路由层：
@@ -50,7 +51,7 @@ metadata:
   - `references/telegram/TELEGRAM_INTERFACE_SURFACES.md`
   - `references/telegram/TELEGRAM_STACK_BASELINE.md`
   - `references/telegram/TELEGRAM_DELIVERY_GUARDRAILS.md`
-  - `references/telegram/TELEGRAM_MINI_APP_CONTRACT.md`
+  - `references/telegram/TELEGRAM_MINI_APP_RULES.md`
   - `references/telegram/TELEGRAM_BOT_INTERFACE_PRACTICES.md`
   - `references/telegram/TELEGRAM_INLINE_MODE_PRACTICES.md`
   - `references/telegram/TELEGRAM_ATTACHMENT_MENU_PRACTICES.md`

@@ -1,16 +1,16 @@
 ---
-doc_id: "skill_creation_template.asset.toolbox_architecture_template"
-doc_type: "template_doc"
-topic: "Template for a generated skill's tooling architecture overview"
+doc_id: skill_creation_template.asset.toolbox_architecture_template
+doc_type: template_doc
+topic: Template for a generated skill's tooling architecture overview
 anchors:
-  - target: "Cli_Toolbox_DEVELOPMENT_TEMPLATE.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "The architecture template is routed from the development entry template."
-  - target: "references/governance/SKILL_EXECUTION_RULES_TEMPLATE.md"
-    relation: "pairs_with"
-    direction: "downstream"
-    reason: "Tooling architecture should stay aligned with execution rules."
+- target: Cli_Toolbox_DEVELOPMENT_TEMPLATE.md
+  relation: implements
+  direction: upstream
+  reason: The architecture template is routed from the development entry template.
+- target: references/governance/SKILL_EXECUTION_RULES_TEMPLATE.md
+  relation: pairs_with
+  direction: downstream
+  reason: Tooling architecture should stay aligned with execution rules.
 ---
 
 # Cli_Toolbox 开发文档架构总览

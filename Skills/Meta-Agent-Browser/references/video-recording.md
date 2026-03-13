@@ -1,3 +1,14 @@
+---
+doc_id: meta_agent_browser.references_video_recording
+doc_type: topic_atom
+topic: Video Recording
+anchors:
+- target: ../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # Video Recording
 
 Capture browser automation as video for debugging, documentation, or verification.

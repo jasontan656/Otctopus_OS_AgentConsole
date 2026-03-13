@@ -2,6 +2,16 @@
 name: Meta-Agent-Browser
 description: Manual-invoke browser automation skill for the external agent-browser tool, with CLI-first runtime contracts, fallback routing, and governed output defaults.
 allowed-tools: Bash(agent-browser:*), Bash(./.venv_backend_skills/bin/python Skills/Meta-Agent-Browser/scripts/Cli_Toolbox.py:*)
+metadata:
+  doc_structure:
+    doc_id: meta_agent_browser.entry.facade
+    doc_type: skill_facade
+    topic: Entry facade for the Meta-Agent-Browser skill
+    anchors:
+    - target: ./references/runtime_contracts/SKILL_RUNTIME_CONTRACT_human.md
+      relation: routes_to
+      direction: downstream
+      reason: The facade routes runtime execution to the CLI-first contract.
 ---
 
 # Meta-Agent-Browser

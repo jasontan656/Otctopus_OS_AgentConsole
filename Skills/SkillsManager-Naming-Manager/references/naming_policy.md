@@ -1,0 +1,70 @@
+---
+doc_id: skillsmanager_naming_manager.references_naming_policy
+doc_type: topic_atom
+topic: 命名合同
+anchors:
+- target: ../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
+# 命名合同
+
+## 目标
+- 为所有技能定义统一、可长期治理的命名结构，避免目录名、显示名、自然语言称呼和 family 归属彼此漂移。
+
+## 核心字段
+- `canonical_id`
+  - 技能的唯一安装名与注册主键。
+  - 必须遵循所在治理族群的命名合同，不能与目录名、frontmatter `name`、显式调用名分离。
+  - 对技能治理系列，统一使用 `SkillsManager-*` 的 Title-Case 连字符形式。
+  - 例：`SkillsManager-Naming-Manager`、`Meta-RootFile-Manager`、`Temp-Plan`
+- `display_name`
+  - 面向人类展示的标题。
+  - 若某技能族群要求“调用名 = 安装名 = 目录名”，则 `display_name` 应与 `canonical_id` 保持一致。
+  - 例：`SkillsManager-Naming-Manager`
+- `prefix`
+  - 技能族的第一层治理前缀。
+  - 用于自然语言中的“某 prefix 系列”。
+  - 例：`SkillsManager`、`meta`、`octopus`
+- `family`
+  - 某 prefix 下的语义簇。
+  - 用于表达“一组承担相近职责的技能”。
+  - 可使用稳定 family code。
+  - 例：`governance`、`template`、`browser`、`[SKILL-GOV]`
+- `role_tag`
+  - 更细粒度的职责标签。
+  - 例：`manager`、`router`、`template`、`installer`
+
+## 命名分层
+- 第一层是 `canonical_id`，它决定安装路径与 registry 主键。
+- 第二层是 `display_name`，它只影响人类可读性，不影响 registry 主键。
+- 第三层是 `prefix/family/role_tag`，它们负责组织与批量调用语义。
+
+## 约束
+- 不要把人类展示标题直接当安装名使用。
+- 不要让目录名和 frontmatter `name` 分离。
+- 不要只靠“看起来像同类”来判断 family；必须显式登记。
+- prefix 应该稀少、稳定，不能每建一个技能就发明一个新 prefix。
+
+## 推荐判断顺序
+1. 先定这个技能是不是一个长期存在的能力单元。
+2. 再定它的 `prefix` 属于哪一类。
+3. 再定它的 `family`。
+4. 最后定唯一 `canonical_id` 与展示层 `display_name`。
+
+## 当前可接受的经验性前缀示意
+- `SkillsManager`
+  - 专门用于技能命名、创建、文档结构、镜像同步、产品形态与相关治理动作的技能管理系列。
+- `meta`
+  - Meta 层治理、思维、流程、规则技能。
+- `octopus`
+  - 明确属于 Octopus 体系的业务或交付技能。
+
+## Not OK
+- 同一技能在不同地方使用多个 `canonical_id`。
+- 只修改显示名，不同步确认 prefix/family 是否仍成立。
+- 把“Meta-xxx”这种展示风格误当成真正的 canonical 规则来源。
+- 让技能治理系列继续混用 `skill-*`、`Skills-*` 与 `SkillsManager-*` 三套前缀。
+- 想表达治理族群时只在文案里写“这一类技能”，但不在 registry 中落下像 `[SKILL-GOV]` 这样的稳定 family code。

@@ -80,7 +80,7 @@ DISCOVERY_SCOPE_POLICY = {
 PHASE_READ_POLICY = {
     "top_level_resident_docs": [
         "rules/OCTOPUS_SKILL_HARD_RULES.md",
-        "references/tooling/SKILL_TOOLING_WORKFLOW_CONTRACT.md",
+        "references/tooling/SKILL_TOOLING_EXECUTION_PLAYBOOK.md",
         str(ROOT_AGENTS_PATH),
         "<docs_root>/AGENTS.md when present",
         "Dev-OctopusOS-Constitution-ProjectStructure/SKILL.md when docs_root is not yet fixed",

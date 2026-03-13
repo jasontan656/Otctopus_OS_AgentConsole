@@ -1,3 +1,14 @@
+---
+doc_id: workflow_octopusos_devflow.assets_templates_execution_atom_plan_validation_packs_00_index
+doc_type: example_doc
+topic: Execution_atom_plan&validation_packs Index
+anchors:
+- target: ../../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # Execution_atom_plan&validation_packs Index
 
 ```python

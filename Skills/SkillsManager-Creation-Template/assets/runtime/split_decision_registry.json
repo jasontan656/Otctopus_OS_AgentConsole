@@ -3,40 +3,40 @@
   "registry_version": "v1",
   "entries": [
     {
-      "doc_path": "references/tooling/development/00_ARCHITECTURE_OVERVIEW.md",
-      "doc_id": "skill_creation_template.tooling.architecture_overview",
-      "rule_id": "body_axis_overload",
-      "fingerprint": "2ccba049d5749a83101cad0558a7edf92a683983",
-      "decision": "accepted",
-      "note": "This architecture overview stays as one tooling-architecture topic; module details and index navigation are already split into sibling docs.",
-      "decided_at": "2026-03-11T15:04:27.745Z"
-    },
-    {
       "doc_path": "references/governance/SKILL_ARCHITECTURE_PLAYBOOK.md",
       "doc_id": "skill_creation_template.governance.architecture_playbook",
       "rule_id": "body_axis_overload",
-      "fingerprint": "75e5ef0f04147cdf04b44f7178d4f935ccfe910b",
+      "fingerprint": "72bfdef9fa0f2227de8293ede47fab0c3b76e3e7",
       "decision": "accepted",
-      "note": "This playbook intentionally remains one architecture atom because it defines the cross-document reconstruction order and ownership boundary between template facade governance and downstream doc-structure governance.",
-      "decided_at": "2026-03-11T22:37:17.623Z"
+      "note": "Keep architecture playbook intact because it is the single overview before template atoms.",
+      "decided_at": "2026-03-13T04:23:22.158Z"
     },
     {
-      "doc_path": "references/runtime/SKILL_RUNTIME_CONTRACT.md",
+      "doc_path": "references/runtime/SKILL_RUNTIME_OVERVIEW.md",
       "doc_id": "skill_creation_template.runtime.contract_audit",
       "rule_id": "body_axis_overload",
-      "fingerprint": "bf1f816080943a944714c98d0b52896d1874b808",
+      "fingerprint": "1fba3b3c1e556fe258e41beae79d2f88f4a93edd",
       "decision": "accepted",
-      "note": "This runtime contract audit copy intentionally stays aggregated because it mirrors one machine contract and is consumed as a single contract surface.",
-      "decided_at": "2026-03-11T22:37:17.681Z"
+      "note": "Keep runtime overview grouped because it summarizes the staged template runtime surface in one place.",
+      "decided_at": "2026-03-13T04:23:22.831Z"
     },
     {
       "doc_path": "references/tooling/Cli_Toolbox_USAGE.md",
       "doc_id": "skill_creation_template.tooling.usage",
       "rule_id": "body_axis_overload",
-      "fingerprint": "9c8b9b6f85d79321780ed4d086af71ce00632e4c",
+      "fingerprint": "882eec26bce1ca57574c4718e464a3d270f10349",
       "decision": "accepted",
-      "note": "This usage guide intentionally stays as one tooling entry because the toolbox is consumed through a single operator-facing surface before readers branch into narrower development docs.",
-      "decided_at": "2026-03-11T22:37:17.698Z"
+      "note": "Keep usage guide grouped because command families are meant to be read together.",
+      "decided_at": "2026-03-13T04:23:23.526Z"
+    },
+    {
+      "doc_path": "references/tooling/development/00_ARCHITECTURE_OVERVIEW.md",
+      "doc_id": "skill_creation_template.tooling.architecture_overview",
+      "rule_id": "body_axis_overload",
+      "fingerprint": "75447dc42f3070d6487449809cb6d58684cf48c7",
+      "decision": "accepted",
+      "note": "Keep architecture overview grouped because it is the top-level toolbox map.",
+      "decided_at": "2026-03-13T04:23:24.198Z"
     }
   ]
 }

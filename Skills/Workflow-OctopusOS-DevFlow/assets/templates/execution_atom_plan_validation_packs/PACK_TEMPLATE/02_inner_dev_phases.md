@@ -1,3 +1,14 @@
+---
+doc_id: workflow_octopusos_devflow.assets_templates_execution_atom_plan_validation_packs_pack_template_02_inner_dev_phases
+doc_type: example_doc
+topic: Inner Dev Phases
+anchors:
+- target: ../../../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # Inner Dev Phases
 
 ```python

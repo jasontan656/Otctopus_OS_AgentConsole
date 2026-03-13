@@ -1,4 +1,4 @@
 interface:
-  display_name: "SkillsManager-Mirror-To-Codex"
-  short_description: "在 Push/Install 双模式之间自动导航，把 mirror skill 导入 codex 安装目录。"
-  default_prompt: "Use SkillsManager-Mirror-To-Codex to route mirror skills into the codex install directory. First detect whether the target skill already exists. If it exists, use Push mode to overwrite via scripts/Cli_Toolbox.py. If it does not exist, use Install mode: validate/fix the skill format with $Skill-creator first, then install with $Skill-installer."
+  display_name: SkillsManager-Mirror-To-Codex
+  short_description: 在 Push/Install 双模式之间自动导航，把 mirror skill 导入 codex 安装目录。
+  default_prompt: Use $SkillsManager-Mirror-To-Codex. First run `./.venv_backend_skills/bin/python Skills/SkillsManager-Mirror-To-Codex/scripts/Cli_Toolbox.py contract --json`. Treat CLI JSON as the primary runtime source and use markdown mirrors only when the contract still leaves a real gap.

@@ -1,27 +1,24 @@
 ---
-name: "SkillsManager-Creation-Template"
-description: "提供受治理技能模板与统一 Cli_Toolbox，用于创建或改造 basic 与 staged_cli_first 技能。"
+name: SkillsManager-Creation-Template
+description: 提供受治理技能模板与统一 Cli_Toolbox，用于创建或改造 basic 与 staged_cli_first 技能。
 metadata:
   doc_structure:
-    doc_id: "skill_creation_template.entry.facade"
-    doc_type: "skill_facade"
-    topic: "Entry facade for the governed skill template control plane"
+    doc_id: skillsmanager_creation_template.entry.facade
+    doc_type: skill_facade
+    topic: Entry facade for the SkillsManager-Creation-Template skill
     anchors:
-      - target: "references/runtime/SKILL_RUNTIME_CONTRACT.md"
-        relation: "governed_by"
-        direction: "downstream"
-        reason: "The runtime contract defines the executable template governance contract."
-      - target: "references/routing/TASK_ROUTING.md"
-        relation: "routes_to"
-        direction: "downstream"
-        reason: "Task routing is the first semantic branch after the facade."
-      - target: "references/indexes/DOC_TREE.md"
-        relation: "routes_to"
-        direction: "downstream"
-        reason: "The doc tree index lists the narrowed document domains."
+    - target: ./references/runtime_contracts/SKILL_RUNTIME_CONTRACT_human.md
+      relation: routes_to
+      direction: downstream
+      reason: The facade routes runtime execution to the CLI-first contract.
 ---
 
 # SkillsManager-Creation-Template
+
+## Runtime Entry
+- Primary runtime entry: `./.venv_backend_skills/bin/python Skills/SkillsManager-Creation-Template/scripts/Cli_Toolbox.py contract --json`
+- CLI JSON is the primary runtime source; `SKILL.md` only remains as a facade and routing narrative.
+
 
 ## 1. 技能定位
 - 本文件只做门面入口，不承载模板治理正文。
@@ -37,14 +34,14 @@ metadata:
 
 ## 3. 分类入口
 - 运行合同层：
-  - `references/runtime/SKILL_RUNTIME_CONTRACT.json`
-  - `references/runtime/SKILL_RUNTIME_CONTRACT.md`
+  - `references/runtime/SKILL_RUNTIME_OVERVIEW.json`
+  - `references/runtime/SKILL_RUNTIME_OVERVIEW.md`
 - 路由层：
   - `references/routing/TASK_ROUTING.md`
   - `references/routing/PROFILE_ROUTING.md`
 - 治理层：
   - `references/governance/SKILL_DOCSTRUCTURE_ENFORCEMENT.md`
-  - `references/governance/SKILL_AUTHORING_CONTRACT.md`
+  - `references/governance/SKILL_AUTHORING_RULES.md`
   - `references/governance/SKILL_ARCHITECTURE_PLAYBOOK.md`
   - `references/governance/STAGED_PROFILE_REFERENCE.md`
 - 资产与索引层：

@@ -1,16 +1,16 @@
 ---
-doc_id: "dev_octopusos_constitution_projectstructure.project_structure.hub_positioning_model"
-doc_type: "topic_atom"
-topic: "System-level hub positioning model of OctopusOS"
+doc_id: dev_octopusos_constitution_projectstructure.project_structure.hub_positioning_model
+doc_type: topic_atom
+topic: System-level hub positioning model of OctopusOS
 anchors:
-  - target: "../routing/TASK_ROUTING.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "Task routing sends hub-model questions here."
-  - target: "DOMAIN_OBJECT_POSITIONING_BOUNDARY.md"
-    relation: "pairs_with"
-    direction: "lateral"
-    reason: "The hub model needs object-positioning boundaries to stay precise."
+- target: ../routing/TASK_ROUTING.md
+  relation: implements
+  direction: upstream
+  reason: Task routing sends hub-model questions here.
+- target: DOMAIN_OBJECT_POSITIONING_BOUNDARY.md
+  relation: pairs_with
+  direction: lateral
+  reason: The hub model needs object-positioning boundaries to stay precise.
 ---
 
 # OctopusOS Hub Positioning Model

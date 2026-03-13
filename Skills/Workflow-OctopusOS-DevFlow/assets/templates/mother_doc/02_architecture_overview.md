@@ -1,6 +1,14 @@
 ---
 doc_work_state: modified
 doc_pack_refs: []
+doc_id: workflow_octopusos_devflow.assets_templates_mother_doc_02_architecture_overview
+doc_type: example_doc
+topic: 02 Architecture Overview
+anchors:
+- target: ../../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
 ---
 
 # 02 Architecture Overview

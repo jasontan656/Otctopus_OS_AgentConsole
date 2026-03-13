@@ -1,16 +1,16 @@
 ---
-doc_id: "dev_pythoncode_constitution.tooling.changelog"
-doc_type: "topic_atom"
-topic: "Tooling changelog for the Python code constitution skill"
+doc_id: dev_pythoncode_constitution.tooling.changelog
+doc_type: topic_atom
+topic: Tooling changelog for the Python code constitution skill
 anchors:
-  - target: "../Cli_Toolbox_DEVELOPMENT.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "The changelog belongs to the tooling development doc set."
-  - target: "../../governance/SKILL_EXECUTION_RULES.md"
-    relation: "tracks_changes_to"
-    direction: "downstream"
-    reason: "Tooling changes may affect execution rules."
+- target: ../Cli_Toolbox_DEVELOPMENT.md
+  relation: implements
+  direction: upstream
+  reason: The changelog belongs to the tooling development doc set.
+- target: ../../governance/SKILL_EXECUTION_RULES.md
+  relation: tracks_changes_to
+  direction: downstream
+  reason: Tooling changes may affect execution rules.
 ---
 
 # Cli_Toolbox 开发文档变更记录

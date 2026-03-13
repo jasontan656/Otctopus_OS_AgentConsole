@@ -1,18 +1,18 @@
 ---
-doc_id: "rules.tree_graph_binding"
-doc_type: "topic_atom"
-topic: "Rules for binding graph cross-links onto a stable primary tree"
-node_role: "topic_atom"
-domain_type: "rule_doc"
+doc_id: rules.tree_graph_binding
+doc_type: topic_atom
+topic: Rules for binding graph cross-links onto a stable primary tree
+node_role: topic_atom
+domain_type: rule_doc
 anchors:
-  - target: "00_RULE_SYSTEM_INDEX.md"
-    relation: "belongs_to"
-    direction: "upstream"
-    reason: "This rule is one branch under the rule index."
-  - target: "../metadata/30_ANCHOR_WRITING_CONTRACT.md"
-    relation: "details"
-    direction: "downstream"
-    reason: "Anchor-writing rules expand how graph bindings should be written."
+- target: 00_RULE_SYSTEM_INDEX.md
+  relation: belongs_to
+  direction: upstream
+  reason: This rule is one branch under the rule index.
+- target: ../metadata/30_ANCHOR_WRITING_RULES.md
+  relation: details
+  direction: downstream
+  reason: Anchor-writing rules expand how graph bindings should be written.
 ---
 
 # Tree Graph Binding Rules

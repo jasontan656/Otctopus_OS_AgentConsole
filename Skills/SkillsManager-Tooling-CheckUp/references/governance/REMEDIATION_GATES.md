@@ -1,16 +1,16 @@
 ---
-doc_id: "skills_tooling_checkup.governance.remediation_gates"
-doc_type: "topic_atom"
-topic: "Gates and prohibitions that must hold before replacing self-built tooling code with mandatory baseline dependencies"
+doc_id: skills_tooling_checkup.governance.remediation_gates
+doc_type: topic_atom
+topic: Gates and prohibitions that must hold before replacing self-built tooling code with mandatory baseline dependencies
 anchors:
-  - target: "TOOLING_REMEDIATION_PROTOCOL.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "The remediation protocol depends on these explicit gates."
-  - target: "SKILL_EXECUTION_RULES.md"
-    relation: "pairs_with"
-    direction: "lateral"
-    reason: "Execution rules and remediation gates must stay aligned."
+- target: TOOLING_REMEDIATION_PROTOCOL.md
+  relation: implements
+  direction: upstream
+  reason: The remediation protocol depends on these explicit gates.
+- target: SKILL_EXECUTION_RULES.md
+  relation: pairs_with
+  direction: lateral
+  reason: Execution rules and remediation gates must stay aligned.
 ---
 
 # Remediation Gates

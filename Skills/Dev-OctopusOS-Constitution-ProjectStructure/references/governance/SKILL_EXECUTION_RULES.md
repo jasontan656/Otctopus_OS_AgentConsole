@@ -1,16 +1,16 @@
 ---
-doc_id: "dev_octopusos_constitution_projectstructure.governance.execution_rules"
-doc_type: "topic_atom"
-topic: "Execution rules for OctopusOS project-structure governance"
+doc_id: dev_octopusos_constitution_projectstructure.governance.execution_rules
+doc_type: topic_atom
+topic: Execution rules for OctopusOS project-structure governance
 anchors:
-  - target: "SKILL_DOCSTRUCTURE_POLICY.md"
-    relation: "pairs_with"
-    direction: "lateral"
-    reason: "Execution rules and structure policy must evolve together."
-  - target: "../routing/TASK_ROUTING.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "Task routing sends project-structure decisions here first."
+- target: SKILL_DOCSTRUCTURE_POLICY.md
+  relation: pairs_with
+  direction: lateral
+  reason: Execution rules and structure policy must evolve together.
+- target: ../routing/TASK_ROUTING.md
+  relation: implements
+  direction: upstream
+  reason: Task routing sends project-structure decisions here first.
 ---
 
 # Skill Execution Rules

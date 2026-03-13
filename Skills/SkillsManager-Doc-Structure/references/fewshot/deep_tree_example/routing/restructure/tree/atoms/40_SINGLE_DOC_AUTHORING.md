@@ -1,18 +1,18 @@
 ---
-doc_id: "fewshot.example.single_doc_authoring"
-doc_type: "example_doc"
-topic: "Atomic fewshot leaf for single-doc authoring inside a deep tree"
-node_role: "topic_atom"
-domain_type: "fewshot"
+doc_id: fewshot.example.single_doc_authoring
+doc_type: example_doc
+topic: Atomic fewshot leaf for single-doc authoring inside a deep tree
+node_role: topic_atom
+domain_type: fewshot
 anchors:
-  - target: "../30_DOC_TREE_ROUTING.md"
-    relation: "belongs_to"
-    direction: "upstream"
-    reason: "This atom belongs to the doc-tree routing layer."
-  - target: "../../../../../../workflows/30_SINGLE_DOC_AUTHORING_WORKFLOW.md"
-    relation: "pairs_with"
-    direction: "cross"
-    reason: "The single-doc authoring workflow explains how to reproduce this fewshot shape."
+- target: ../30_DOC_TREE_ROUTING.md
+  relation: belongs_to
+  direction: upstream
+  reason: This atom belongs to the doc-tree routing layer.
+- target: ../../../../../../workflows/30_SINGLE_DOC_AUTHORING_FLOW.md
+  relation: pairs_with
+  direction: cross
+  reason: The single-doc authoring workflow explains how to reproduce this fewshot shape.
 ---
 
 # Single Doc Authoring Example

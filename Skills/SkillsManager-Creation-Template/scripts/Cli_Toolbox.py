@@ -5,13 +5,39 @@ import argparse
 import json
 import subprocess
 from pathlib import Path
+from typing import TypedDict, cast
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 SKILL_ROOT = SCRIPT_DIR.parent
 
 
-def emit(payload: dict[str, object], as_json: bool) -> int:
+class ToolEntryPayload(TypedDict):
+    script: str
+    commands: dict[str, str]
+
+
+class RuntimeContractPayload(TypedDict, total=False):
+    contract_name: str
+    contract_version: str
+    skill_name: str
+    runtime_source_policy: dict[str, object]
+    tool_entry: ToolEntryPayload
+    must_use_sequence: list[str]
+    skill_root: str
+
+
+class TextAssetPayload(TypedDict):
+    status: str
+    asset: str
+    path: str
+    content: str
+
+
+Payload = RuntimeContractPayload | TextAssetPayload
+
+
+def emit(payload: Payload, as_json: bool) -> int:
     if as_json:
         print(json.dumps(payload, ensure_ascii=False, indent=2))
         return 0
@@ -20,7 +46,7 @@ def emit(payload: dict[str, object], as_json: bool) -> int:
     return 0
 
 
-def text_payload(path: Path, asset_name: str) -> dict[str, object]:
+def text_payload(path: Path, asset_name: str) -> TextAssetPayload:
     return {
         "status": "ok",
         "asset": asset_name,
@@ -29,7 +55,7 @@ def text_payload(path: Path, asset_name: str) -> dict[str, object]:
     }
 
 
-def cmd_create_skill_from_template(args) -> int:
+def cmd_create_skill_from_template(args: argparse.Namespace) -> int:
     cmd = [
         "python3",
         str(SCRIPT_DIR / "create_skill_from_template.py"),
@@ -53,32 +79,32 @@ def cmd_create_skill_from_template(args) -> int:
     return 0
 
 
-def cmd_skill_template(args) -> int:
+def cmd_skill_template(args: argparse.Namespace) -> int:
     return emit(text_payload(SKILL_ROOT / "assets" / "skill_template" / "SKILL_TEMPLATE.md", "skill_template"), args.json)
 
 
-def cmd_staged_skill_template(args) -> int:
+def cmd_staged_skill_template(args: argparse.Namespace) -> int:
     return emit(
         text_payload(SKILL_ROOT / "assets" / "skill_template" / "SKILL_TEMPLATE_STAGED.md", "staged_skill_template"),
         args.json,
     )
 
 
-def cmd_openai_template(args) -> int:
+def cmd_openai_template(args: argparse.Namespace) -> int:
     return emit(text_payload(SKILL_ROOT / "assets" / "skill_template" / "openai_template.yaml", "openai_template"), args.json)
 
 
-def cmd_contract_reference(args) -> int:
+def cmd_contract_reference(args: argparse.Namespace) -> int:
     return emit(
         text_payload(
-            SKILL_ROOT / "references" / "governance" / "SKILL_AUTHORING_CONTRACT.md",
+            SKILL_ROOT / "references" / "governance" / "SKILL_AUTHORING_RULES.md",
             "contract_reference",
         ),
         args.json,
     )
 
 
-def cmd_staged_skill_reference(args) -> int:
+def cmd_staged_skill_reference(args: argparse.Namespace) -> int:
     return emit(
         text_payload(
             SKILL_ROOT / "references" / "governance" / "STAGED_PROFILE_REFERENCE.md",
@@ -88,7 +114,7 @@ def cmd_staged_skill_reference(args) -> int:
     )
 
 
-def cmd_runtime_contract_template(args) -> int:
+def cmd_runtime_contract_template(args: argparse.Namespace) -> int:
     return emit(
         text_payload(
             SKILL_ROOT / "assets" / "skill_template" / "runtime" / "SKILL_RUNTIME_CONTRACT_TEMPLATE.json",
@@ -98,7 +124,7 @@ def cmd_runtime_contract_template(args) -> int:
     )
 
 
-def cmd_architecture_playbook(args) -> int:
+def cmd_architecture_playbook(args: argparse.Namespace) -> int:
     return emit(
         text_payload(
             SKILL_ROOT / "references" / "governance" / "SKILL_ARCHITECTURE_PLAYBOOK.md",
@@ -108,8 +134,11 @@ def cmd_architecture_playbook(args) -> int:
     )
 
 
-def cmd_runtime_contract(args) -> int:
-    payload = json.loads((SKILL_ROOT / "references" / "runtime" / "SKILL_RUNTIME_CONTRACT.json").read_text(encoding="utf-8"))
+def cmd_runtime_contract(args: argparse.Namespace) -> int:
+    payload = cast(
+        RuntimeContractPayload,
+        json.loads((SKILL_ROOT / "references" / "runtime" / "SKILL_RUNTIME_OVERVIEW.json").read_text(encoding="utf-8")),
+    )
     return emit(payload, args.json)
 
 

@@ -1,16 +1,16 @@
 ---
-doc_id: "dev_octopusos_constitution_projectstructure.project_structure.octopus_os_target_folder_layout"
-doc_type: "topic_atom"
-topic: "Concrete target folder layout for the Octopus_OS repository"
+doc_id: dev_octopusos_constitution_projectstructure.project_structure.octopus_os_target_folder_layout
+doc_type: topic_atom
+topic: Concrete target folder layout for the Octopus_OS repository
 anchors:
-  - target: "FOLDER_CONTAINER_PLANNING_RULES.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "This document materializes the folder and container planning rules."
-  - target: "DOMAIN_OBJECT_POSITIONING_BOUNDARY.md"
-    relation: "requires"
-    direction: "upstream"
-    reason: "The concrete layout follows the declared object classification."
+- target: FOLDER_CONTAINER_PLANNING_RULES.md
+  relation: implements
+  direction: upstream
+  reason: This document materializes the folder and container planning rules.
+- target: DOMAIN_OBJECT_POSITIONING_BOUNDARY.md
+  relation: requires
+  direction: upstream
+  reason: The concrete layout follows the declared object classification.
 ---
 
 # Octopus_OS Target Folder Layout

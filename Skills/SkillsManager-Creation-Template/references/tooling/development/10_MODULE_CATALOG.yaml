@@ -7,7 +7,7 @@ maintain_rules:
     - references/tooling/Cli_Toolbox_USAGE.md
     - references/tooling/Cli_Toolbox_DEVELOPMENT.md
     - references/tooling/development/20_CATEGORY_INDEX.md
-    - references/governance/SKILL_AUTHORING_CONTRACT.md
+    - references/governance/SKILL_AUTHORING_RULES.md
     - references/governance/SKILL_DOCSTRUCTURE_ENFORCEMENT.md
     - tests/test_create_skill_from_template_regression.py
 modules:

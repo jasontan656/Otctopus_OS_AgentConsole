@@ -1,16 +1,16 @@
 ---
-doc_id: "dev_telegram_constitution.topic.attachment_menu_practices"
-doc_type: "topic_atom"
-topic: "Telegram attachment menu decision contract"
+doc_id: dev_telegram_constitution.topic.attachment_menu_practices
+doc_type: topic_atom
+topic: Telegram attachment menu decision contract
 anchors:
-  - target: "TELEGRAM_CAPABILITY_LANDSCAPE.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "This doc elaborates the attachment menu line."
-  - target: "TELEGRAM_MINI_APP_CONTRACT.md"
-    relation: "pairs_with"
-    direction: "lateral"
-    reason: "Attachment menu often launches Mini Apps."
+- target: TELEGRAM_CAPABILITY_LANDSCAPE.md
+  relation: implements
+  direction: upstream
+  reason: This doc elaborates the attachment menu line.
+- target: TELEGRAM_MINI_APP_RULES.md
+  relation: pairs_with
+  direction: lateral
+  reason: Attachment menu often launches Mini Apps.
 ---
 
 # Telegram Attachment Menu Contract

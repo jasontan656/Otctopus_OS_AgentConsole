@@ -1,3 +1,14 @@
+---
+doc_id: workflow_octopusos_devflow.assets_templates_requirement_atom_template
+doc_type: example_doc
+topic: Requirement Atom
+anchors:
+- target: ../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # Requirement Atom
 
 ```python

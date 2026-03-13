@@ -1,3 +1,14 @@
+---
+doc_id: skillsmanager_naming_manager.references_rename_and_reorg_protocol
+doc_type: topic_atom
+topic: 重命名与重组协议
+anchors:
+- target: ../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # 重命名与重组协议
 
 ## 目标

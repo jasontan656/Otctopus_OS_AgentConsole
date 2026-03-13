@@ -1,3 +1,14 @@
+---
+doc_id: skillsmanager_naming_manager.references_tooling_cli_toolbox_usage
+doc_type: topic_atom
+topic: Cli_Toolbox 使用文档
+anchors:
+- target: ../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # Cli_Toolbox 使用文档
 
 适用技能：`SkillsManager-Naming-Manager`
@@ -8,8 +19,8 @@
 
 ## 使用方式
 - 读取入口：
-  - `references/naming_contract.md`
-  - `references/registry_contract.md`
+  - `references/naming_policy.md`
+  - `references/registry_policy.md`
   - `references/invocation_semantics.md`
   - `references/rename_and_reorg_protocol.md`
 - 若任务需要真正创建、改名或安装具体技能，转由其他技能处理：

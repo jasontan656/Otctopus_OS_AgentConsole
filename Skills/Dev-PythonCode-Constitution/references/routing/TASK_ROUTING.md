@@ -1,20 +1,20 @@
 ---
-doc_id: "dev_pythoncode_constitution.routing.task_routing"
-doc_type: "routing_doc"
-topic: "Route readers by Python code task intent"
+doc_id: dev_pythoncode_constitution.routing.task_routing
+doc_type: routing_doc
+topic: Route readers by Python code task intent
 anchors:
-  - target: "../../SKILL.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "This routing doc is the first branch below the skill facade."
-  - target: "../governance/SKILL_DOCSTRUCTURE_POLICY.md"
-    relation: "routes_to"
-    direction: "downstream"
-    reason: "Skill maintenance and structure changes must pass through doc-structure policy."
-  - target: "../governance/SKILL_EXECUTION_RULES.md"
-    relation: "routes_to"
-    direction: "downstream"
-    reason: "Python code queries and review tasks should enter the execution rules doc."
+- target: ../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This routing doc is the first branch below the skill facade.
+- target: ../governance/SKILL_DOCSTRUCTURE_POLICY.md
+  relation: routes_to
+  direction: downstream
+  reason: Skill maintenance and structure changes must pass through doc-structure policy.
+- target: ../governance/SKILL_EXECUTION_RULES.md
+  relation: routes_to
+  direction: downstream
+  reason: Python code queries and review tasks should enter the execution rules doc.
 ---
 
 # Task Routing

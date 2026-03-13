@@ -1,16 +1,16 @@
 ---
-doc_id: "dev_octopusos_constitution_projectstructure.project_structure.foundation_capability_bundle_boundary"
-doc_type: "topic_atom"
-topic: "Boundary of the always-on foundation capability bundle in OctopusOS"
+doc_id: dev_octopusos_constitution_projectstructure.project_structure.foundation_capability_bundle_boundary
+doc_type: topic_atom
+topic: Boundary of the always-on foundation capability bundle in OctopusOS
 anchors:
-  - target: "CAPABILITY_MODULE_HOTPLUG_CONTRACT.md"
-    relation: "pairs_with"
-    direction: "lateral"
-    reason: "The foundation bundle is governed as a special module bundle."
-  - target: "FOLDER_CONTAINER_PLANNING_RULES.md"
-    relation: "supports"
-    direction: "downstream"
-    reason: "Bundle boundaries affect folder and container planning."
+- target: CAPABILITY_MODULE_HOTPLUG_RULES.md
+  relation: pairs_with
+  direction: lateral
+  reason: The foundation bundle is governed as a special module bundle.
+- target: FOLDER_CONTAINER_PLANNING_RULES.md
+  relation: supports
+  direction: downstream
+  reason: Bundle boundaries affect folder and container planning.
 ---
 
 # Foundation Capability Bundle Boundary

@@ -1,3 +1,14 @@
+---
+doc_id: meta_rootfile_manager.references_runtime_contracts_rootfile_mapped_copy_structure
+doc_type: topic_atom
+topic: Root File Mapped Copy Structure
+anchors:
+- target: ../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # Root File Mapped Copy Structure
 
 - This file defines the governed internal mapping shape for non-`AGENTS.md` root files.

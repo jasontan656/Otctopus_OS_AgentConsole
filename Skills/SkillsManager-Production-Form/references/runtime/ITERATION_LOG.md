@@ -1,3 +1,14 @@
+---
+doc_id: skillsmanager_production_form.references_runtime_iteration_log
+doc_type: topic_atom
+topic: SkillsManager-Production-Form Iteration Log Seed Snapshot
+anchors:
+- target: ../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # SkillsManager-Production-Form Iteration Log Seed Snapshot
 
 This file is no longer the active log sink.

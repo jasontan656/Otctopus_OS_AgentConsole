@@ -1,3 +1,14 @@
+---
+doc_id: skillsmanager_mirror_to_codex.references_tooling_development_20_category_index
+doc_type: index_doc
+topic: 分类索引
+anchors:
+- target: ../../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # 分类索引
 
 ## SYNC_SCOPE

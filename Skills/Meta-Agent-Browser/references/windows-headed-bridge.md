@@ -1,3 +1,14 @@
+---
+doc_id: meta_agent_browser.references_windows_headed_bridge
+doc_type: topic_atom
+topic: Windows Headed Bridge
+anchors:
+- target: ../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # Windows Headed Bridge
 
 ## Scope

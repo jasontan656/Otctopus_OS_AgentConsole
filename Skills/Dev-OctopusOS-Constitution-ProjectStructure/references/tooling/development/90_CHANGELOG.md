@@ -1,12 +1,12 @@
 ---
-doc_id: "dev_octopusos_constitution_projectstructure.tooling.changelog"
-doc_type: "index_doc"
-topic: "Tooling changelog for the OctopusOS project-structure constitution skill"
+doc_id: dev_octopusos_constitution_projectstructure.tooling.changelog
+doc_type: index_doc
+topic: Tooling changelog for the OctopusOS project-structure constitution skill
 anchors:
-  - target: "../Cli_Toolbox_DEVELOPMENT.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "The development entry routes into this changelog."
+- target: ../Cli_Toolbox_DEVELOPMENT.md
+  relation: implements
+  direction: upstream
+  reason: The development entry routes into this changelog.
 ---
 
 # Changelog

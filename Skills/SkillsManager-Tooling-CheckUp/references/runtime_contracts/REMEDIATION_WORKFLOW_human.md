@@ -1,3 +1,14 @@
+---
+doc_id: skillsmanager_tooling_checkup.references_runtime_contracts_remediation_workflow
+doc_type: topic_atom
+topic: REMEDIATION_WORKFLOW
+anchors:
+- target: ../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # REMEDIATION_WORKFLOW
 
 <part_A>

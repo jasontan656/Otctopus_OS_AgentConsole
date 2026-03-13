@@ -1,3 +1,14 @@
+---
+doc_id: workflow_octopusos_devflow.references_research_github_reference_scan_2026_03_06
+doc_type: topic_atom
+topic: GitHub Reference Scan for Octopus Backend Skill
+anchors:
+- target: ../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # GitHub Reference Scan for Octopus Backend Skill
 
 ## Goal

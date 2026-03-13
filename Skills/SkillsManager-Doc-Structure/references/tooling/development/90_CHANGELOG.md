@@ -1,16 +1,16 @@
 ---
-doc_id: "tooling.changelog"
-doc_type: "changelog"
-topic: "Change log for SkillsManager-Doc-Structure"
+doc_id: tooling.changelog
+doc_type: changelog
+topic: Change log for SkillsManager-Doc-Structure
 anchors:
-  - target: "00_ARCHITECTURE_OVERVIEW.md"
-    relation: "tracks_changes_to"
-    direction: "upstream"
-    reason: "The changelog records architecture shifts against the overview."
-  - target: "modules/mod_docstructure_core.md"
-    relation: "tracks_changes_to"
-    direction: "upstream"
-    reason: "The changelog also records core engine changes."
+- target: 00_ARCHITECTURE_OVERVIEW.md
+  relation: tracks_changes_to
+  direction: upstream
+  reason: The changelog records architecture shifts against the overview.
+- target: modules/mod_docstructure_core.md
+  relation: tracks_changes_to
+  direction: upstream
+  reason: The changelog also records core engine changes.
 ---
 
 # Change Log

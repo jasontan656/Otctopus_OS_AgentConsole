@@ -1,3 +1,14 @@
+---
+doc_id: skillsmanager_production_form.references_runtime_log_entry_template
+doc_type: example_doc
+topic: Iteration Log Entry Template
+anchors:
+- target: ../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # Iteration Log Entry Template
 
 Use this shape for every new local console-productization entry:

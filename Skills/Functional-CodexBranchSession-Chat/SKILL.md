@@ -1,9 +1,24 @@
 ---
-name: "Functional-CodexBranchSession-Chat"
+name: Functional-CodexBranchSession-Chat
 description: 接收 resume/session id 与问题（可选关键词）定位会话证据，并基于证据直接回答用户问题。
+metadata:
+  doc_structure:
+    doc_id: functional_codexbranchsession_chat.entry.facade
+    doc_type: skill_facade
+    topic: Entry facade for the Functional-CodexBranchSession-Chat skill
+    anchors:
+    - target: ./references/runtime_contracts/SKILL_RUNTIME_CONTRACT_human.md
+      relation: routes_to
+      direction: downstream
+      reason: The facade routes runtime execution to the CLI-first contract.
 ---
 
 # Functional-CodexBranchSession-Chat
+
+## Runtime Entry
+- Primary runtime entry: `./.venv_backend_skills/bin/python Skills/Functional-CodexBranchSession-Chat/scripts/Cli_Toolbox.py contract --json`
+- CLI JSON is the primary runtime source; `SKILL.md` only remains as a facade and routing narrative.
+
 
 ## 1. 目标
 - 接收用户输入的 `resume_id/session_id + question`（`keyword` 可选），定位指定 session 中的目标 assistant 回复与主题证据。
@@ -87,7 +102,7 @@ description: 接收 resume/session id 与问题（可选关键词）定位会话
 - `Session 定位模块` -> `references/tooling/development/modules/session_locator.md`
 - `Final Reply 提取模块` -> `references/tooling/development/modules/final_reply_extractor.md`
 - `Answer Responder 模块` -> `references/tooling/development/modules/answer_responder.md`
-- `可观测契约` -> `references/tooling/OBSERVABILITY_CONTRACT.md`
+- `可观测契约` -> `references/tooling/OBSERVABILITY_POLICY.md`
 
 ## 7. 架构契约
 ```text
@@ -101,7 +116,7 @@ Functional-CodexBranchSession-Chat/
 │   └── tooling/
 │       ├── Cli_Toolbox_USAGE.md
 │       ├── Cli_Toolbox_DEVELOPMENT.md
-│       ├── OBSERVABILITY_CONTRACT.md
+│       ├── OBSERVABILITY_POLICY.md
 │       └── development/
 │           ├── 00_ARCHITECTURE_OVERVIEW.md
 │           ├── 10_MODULE_CATALOG.yaml

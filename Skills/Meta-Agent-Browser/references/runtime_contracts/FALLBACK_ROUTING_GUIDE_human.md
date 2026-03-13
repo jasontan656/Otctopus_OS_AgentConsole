@@ -1,3 +1,14 @@
+---
+doc_id: meta_agent_browser.references_runtime_contracts_fallback_routing_guide
+doc_type: routing_doc
+topic: Fallback Routing Guide
+anchors:
+- target: ../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 <part_A>
 # Fallback Routing Guide
 

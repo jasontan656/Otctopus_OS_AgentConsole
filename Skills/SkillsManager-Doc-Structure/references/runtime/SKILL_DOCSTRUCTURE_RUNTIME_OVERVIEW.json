@@ -1,0 +1,96 @@
+{
+  "contract_name": "META_SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT",
+  "contract_version": "v6",
+  "skill_name": "SkillsManager-Doc-Structure",
+  "scope": "skill_internal_doc_architecture_only",
+  "primary_goal": "Govern tree-first markdown document architecture inside a skill folder starting at the entry handoff, with anchors, metadata contracts, fewshot examples, and a TypeScript CLI.",
+  "thinking_chain": [
+    "entry_track_selection",
+    "knowledge_track_selection",
+    "workflow_track_selection",
+    "doc_inventory",
+    "frontmatter_contract_check",
+    "anchor_graph_check",
+    "atomicity_signal_check",
+    "rewrite_or_split",
+    "graph_emit"
+  ],
+  "commands": {
+    "runtime_contract": "npm run cli -- runtime-contract --json",
+    "lint_doc_anchors": "npm run cli -- lint-doc-anchors --target <skill_root> --json",
+    "lint_split_points": "npm run cli -- lint-split-points --target <skill_root> --json",
+    "register_split_decision": "npm run cli -- register-split-decision --target <skill_root> --doc <doc_path> --rule <rule_id> --decision <accepted|split_required> --note <text> --json",
+    "build_anchor_graph": "npm run cli -- build-anchor-graph --target <skill_root> --json",
+    "rebuild_self_graph": "npm run cli -- rebuild-self-graph --json"
+  },
+  "knowledge_tracks": {
+    "rules_track_entry": "references/rules/00_RULE_SYSTEM_INDEX.md",
+    "fewshot_track_entry": "references/fewshot/00_FEWSHOT_INDEX.md",
+    "metadata_track_entry": "references/metadata/00_METADATA_INDEX.md"
+  },
+  "workflow_tracks": {
+    "query_workflow_entry": "references/workflows/10_QUERY_FLOW.md",
+    "architecture_workflow_entry": "references/workflows/20_ARCHITECTURE_ORGANIZATION_FLOW.md",
+    "single_doc_workflow_entry": "references/workflows/30_SINGLE_DOC_AUTHORING_FLOW.md"
+  },
+  "frontmatter_contract": {
+    "template_path": "assets/templates/DOC_FRONTMATTER_TEMPLATE.yaml",
+    "template_assets": [
+      "assets/templates/ROUTING_DOC_TEMPLATE.md",
+      "assets/templates/INDEX_DOC_TEMPLATE.md",
+      "assets/templates/ATOMIC_DOC_TEMPLATE.md"
+    ],
+    "required_fields": [
+      "doc_id",
+      "doc_type",
+      "topic",
+      "anchors"
+    ],
+    "optional_fields": [
+      "node_role",
+      "domain_type"
+    ],
+    "skill_md_metadata_path": "metadata.doc_structure"
+  },
+  "graph_contract": {
+    "matrix_path": "assets/runtime/anchor_query_matrix.json",
+    "self_graph_path": "assets/runtime/self_anchor_graph.json",
+    "min_anchor_count_per_doc": 1,
+    "target_must_be_markdown": true
+  },
+  "semantic_split_contract": {
+    "navigation_model": "tree_first_graph_second",
+    "node_roles": [
+      "entry_node",
+      "routing_doc",
+      "topic_atom",
+      "index_doc",
+      "example_doc"
+    ],
+    "role_rules": {
+      "entry_node": "Treat the entry node as the first handoff into the document tree.",
+      "routing_doc": "Carry one branching axis only and route readers into the next narrower branch.",
+      "topic_atom": "Carry one stable topic only and keep local rules self-contained.",
+      "index_doc": "List or route documents without becoming the main rule body.",
+      "example_doc": "Show a real tree arrangement that can be reused as fewshot."
+    },
+    "split_triggers": [
+      "one document mixes multiple independent semantic axes",
+      "one document mixes read and write paths",
+      "one document mixes multiple languages, platforms, or environments",
+      "the reader cannot tell which child doc to read next"
+    ],
+    "stop_split_conditions": [
+      "the document carries one stable topic",
+      "the reader no longer needs a major branch decision inside the document",
+      "further splitting would create fragments without independent semantic value"
+    ],
+    "routing_principles": [
+      "always enter through a stable entry node before deep rules",
+      "separate rules, fewshot examples, and metadata into different top-level tracks",
+      "prefer branch docs before dumping many leaf docs",
+      "use graph cross-links only after the primary tree path is clear"
+    ],
+    "split_decision_registry_path": "assets/runtime/split_decision_registry.json"
+  }
+}

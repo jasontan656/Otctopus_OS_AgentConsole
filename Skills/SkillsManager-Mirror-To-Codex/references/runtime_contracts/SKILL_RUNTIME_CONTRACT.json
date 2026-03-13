@@ -1,0 +1,20 @@
+{
+  "contract_name": "skillsmanager_mirror_to_codex_runtime_contract",
+  "contract_version": "1.0.0",
+  "skill_name": "SkillsManager-Mirror-To-Codex",
+  "runtime_source_policy": {
+    "primary_runtime_source": "CLI_JSON",
+    "human_markdown_role": "narrative_mirror",
+    "markdown_is_not_primary_instruction_source": true
+  },
+  "tool_entry": {
+    "script": "scripts/Cli_Toolbox.py",
+    "commands": {
+      "contract": "./.venv_backend_skills/bin/python Skills/SkillsManager-Mirror-To-Codex/scripts/Cli_Toolbox.py contract --json"
+    }
+  },
+  "must_use_sequence": [
+    "Read the runtime contract through the CLI JSON entry before deep references.",
+    "Treat SKILL.md as a facade and route deeper only after the contract is known."
+  ]
+}

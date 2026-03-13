@@ -1,3 +1,14 @@
+---
+doc_id: meta_rootfile_manager.references_runtime_contracts_push_stage_contract
+doc_type: topic_atom
+topic: Push Stage Contract
+anchors:
+- target: ../../SKILL.md
+  relation: implements
+  direction: upstream
+  reason: This document belongs to the governed skill tree under the main facade.
+---
+
 # Push Stage Contract
 
 - contract_name: `meta_rootfile_manager_push_stage_contract`

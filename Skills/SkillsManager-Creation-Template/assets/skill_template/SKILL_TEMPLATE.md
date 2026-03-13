@@ -1,32 +1,32 @@
 ---
-name: "${skill_name}"
+name: ${skill_name}
 description: ${description}
-doc_id: "skill_creation_template.asset.basic_skill_template"
-doc_type: "template_doc"
-topic: "Basic skill facade template asset"
+doc_id: skill_creation_template.asset.basic_skill_template
+doc_type: template_doc
+topic: Basic skill facade template asset
 anchors:
-  - target: "references/routing/TASK_ROUTING_TEMPLATE.md"
-    relation: "implements"
-    direction: "downstream"
-    reason: "This asset routes to the task routing template in the current template pack."
-  - target: "references/governance/SKILL_DOCSTRUCTURE_POLICY_TEMPLATE.md"
-    relation: "governed_by"
-    direction: "downstream"
-    reason: "The template pack governs basic facades through the doc-structure policy template."
+- target: references/routing/TASK_ROUTING_TEMPLATE.md
+  relation: implements
+  direction: downstream
+  reason: This asset routes to the task routing template in the current template pack.
+- target: references/governance/SKILL_DOCSTRUCTURE_POLICY_TEMPLATE.md
+  relation: governed_by
+  direction: downstream
+  reason: The template pack governs basic facades through the doc-structure policy template.
 metadata:
   doc_structure:
-    doc_id: "${skill_name}.entry.facade"
-    doc_type: "skill_facade"
-    topic: "Entry facade for ${skill_name}"
+    doc_id: ${skill_name}.entry.facade
+    doc_type: skill_facade
+    topic: Entry facade for ${skill_name}
     anchors:
-      - target: "references/routing/TASK_ROUTING.md"
-        relation: "routes_to"
-        direction: "downstream"
-        reason: "The facade must route readers into the first task branch."
-      - target: "references/governance/SKILL_DOCSTRUCTURE_POLICY.md"
-        relation: "governed_by"
-        direction: "downstream"
-        reason: "Doc-structure policy is a mandatory governance branch."
+    - target: references/routing/TASK_ROUTING.md
+      relation: routes_to
+      direction: downstream
+      reason: The facade must route readers into the first task branch.
+    - target: references/governance/SKILL_DOCSTRUCTURE_POLICY.md
+      relation: governed_by
+      direction: downstream
+      reason: Doc-structure policy is a mandatory governance branch.
 ---
 
 # ${skill_name}

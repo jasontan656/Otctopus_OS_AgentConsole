@@ -1,9 +1,24 @@
 ---
-name: "WorkFlow-RealState-Posting-Web"
-description: "Family index for real-estate posting web automation. Route with exactly one mode parameter: `无头模式` or `有头模式`."
+name: WorkFlow-RealState-Posting-Web
+description: 'Family index for real-estate posting web automation. Route with exactly one mode parameter: `无头模式` or `有头模式`.'
+metadata:
+  doc_structure:
+    doc_id: workflow_realstate_posting_web.entry.facade
+    doc_type: skill_facade
+    topic: Entry facade for the WorkFlow-RealState-Posting-Web skill
+    anchors:
+    - target: ./references/runtime_contracts/SKILL_RUNTIME_CONTRACT_human.md
+      relation: routes_to
+      direction: downstream
+      reason: The facade routes runtime execution to the CLI-first contract.
 ---
 
 # WorkFlow-RealState-Posting-Web
+
+## Runtime Entry
+- Primary runtime entry: `./.venv_backend_skills/bin/python Skills/WorkFlow-RealState-Posting-Web/scripts/Cli_Toolbox.py contract --json`
+- CLI JSON is the primary runtime source; `SKILL.md` only remains as a facade and routing narrative.
+
 
 ## Purpose
 - Provide one workflow entrypoint for房源发布类网页自动化。
@@ -18,8 +33,8 @@ description: "Family index for real-estate posting web automation. Route with ex
 - This is a family/router skill.
 - Do not execute publish workflow directly from family root.
 - Always route to one subskill reference first:
-  - `references/subskills/workflow-realstate-posting-web-headless.md`
-  - `references/subskills/workflow-realstate-posting-web-headed.md`
+  - `references/subskills/realstate-posting-web-headless-route.md`
+  - `references/subskills/realstate-posting-web-headed-route.md`
 
 ## Routing Parameters (Hard)
 - Accept exactly one mode parameter:
@@ -45,8 +60,8 @@ description: "Family index for real-estate posting web automation. Route with ex
 ## Subskill Reference Map
 ```yaml
 subskill_reference_map:
-  workflow-realstate-posting-web-headless: references/subskills/workflow-realstate-posting-web-headless.md
-  workflow-realstate-posting-web-headed: references/subskills/workflow-realstate-posting-web-headed.md
+  workflow-realstate-posting-web-headless: references/subskills/realstate-posting-web-headless-route.md
+  workflow-realstate-posting-web-headed: references/subskills/realstate-posting-web-headed-route.md
 ```
 
 ## Trigger Scope

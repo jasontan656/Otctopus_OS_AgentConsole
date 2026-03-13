@@ -1,16 +1,16 @@
 ---
-doc_id: "tooling.architecture.overview"
-doc_type: "tooling_architecture"
-topic: "Architecture overview of the TS CLI and markdown graph core"
+doc_id: tooling.architecture.overview
+doc_type: tooling_architecture
+topic: Architecture overview of the TS CLI and markdown graph core
 anchors:
-  - target: "modules/mod_docstructure_core.md"
-    relation: "indexes"
-    direction: "downstream"
-    reason: "The core module doc explains the doc graph engine."
-  - target: "../Cli_Toolbox_DEVELOPMENT.md"
-    relation: "belongs_to"
-    direction: "upstream"
-    reason: "This overview belongs to the CLI development entry."
+- target: modules/mod_docstructure_core.md
+  relation: indexes
+  direction: downstream
+  reason: The core module doc explains the doc graph engine.
+- target: ../Cli_Toolbox_DEVELOPMENT.md
+  relation: belongs_to
+  direction: upstream
+  reason: This overview belongs to the CLI development entry.
 ---
 
 # Architecture Overview

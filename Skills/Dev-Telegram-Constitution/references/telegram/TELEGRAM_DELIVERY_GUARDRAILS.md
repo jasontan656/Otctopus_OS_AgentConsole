@@ -1,16 +1,16 @@
 ---
-doc_id: "dev_telegram_constitution.topic.delivery_guardrails"
-doc_type: "topic_atom"
-topic: "Telegram delivery, callback, webhook, and safety guardrails"
+doc_id: dev_telegram_constitution.topic.delivery_guardrails
+doc_type: topic_atom
+topic: Telegram delivery, callback, webhook, and safety guardrails
 anchors:
-  - target: "../routing/TASK_ROUTING.md"
-    relation: "implements"
-    direction: "upstream"
-    reason: "Task routing sends delivery and safety questions here."
-  - target: "TELEGRAM_MINI_APP_CONTRACT.md"
-    relation: "routes_to"
-    direction: "downstream"
-    reason: "Mini App delivery questions continue into the dedicated contract."
+- target: ../routing/TASK_ROUTING.md
+  relation: implements
+  direction: upstream
+  reason: Task routing sends delivery and safety questions here.
+- target: TELEGRAM_MINI_APP_RULES.md
+  relation: routes_to
+  direction: downstream
+  reason: Mini App delivery questions continue into the dedicated contract.
 ---
 
 # Telegram Delivery Guardrails
@@ -75,4 +75,4 @@ anchors:
 
 ## 例外与门禁
 - 如果任务只是“如何写一个 bot handler”，本文不足以承接具体代码实现，应切到具体语言 skill。
-- 如果任务是“如何设计 Mini App 与 Bot 协同”，必须继续读取 `TELEGRAM_MINI_APP_CONTRACT.md`。
+- 如果任务是“如何设计 Mini App 与 Bot 协同”，必须继续读取 `TELEGRAM_MINI_APP_RULES.md`。
