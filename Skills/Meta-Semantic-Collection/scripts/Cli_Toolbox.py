@@ -5,6 +5,7 @@ import argparse
 import difflib
 import json
 from pathlib import Path
+from typing import TypedDict
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent
@@ -12,10 +13,22 @@ SKILL_ROOT = SCRIPT_DIR.parent
 PAYLOAD_PATH = SKILL_ROOT / "assets" / "runtime" / "semantic_pool_payload.json"
 
 
-def load_payload(path: Path) -> list[dict[str, object]]:
-    payload = json.loads(path.read_text(encoding="utf-8"))
-    validate_payload(payload)
-    return payload
+class SemanticEntry(TypedDict):
+    collection: list[str]
+    action_semantic_description: str
+
+
+class UpsertSummary(TypedDict):
+    action: str
+    target_index: int
+    terms: list[str]
+    description: str
+
+
+def load_semantic_pool_entries(path: Path) -> list[SemanticEntry]:
+    entries = json.loads(path.read_text(encoding="utf-8"))
+    validate_payload(entries)
+    return entries
 
 
 def validate_payload(payload: object) -> None:
@@ -44,15 +57,15 @@ def validate_payload(payload: object) -> None:
             seen_terms[normalized] = description.strip()
 
 
-def dump_payload(payload: list[dict[str, object]]) -> str:
-    return json.dumps(payload, ensure_ascii=False, indent=2) + "\n"
+def dump_semantic_pool_entries(entries: list[SemanticEntry]) -> str:
+    return json.dumps(entries, ensure_ascii=False, indent=2) + "\n"
 
 
-def emit(payload: dict[str, object], as_json: bool) -> int:
+def emit(document: dict[str, object], as_json: bool) -> int:
     if as_json:
-        print(json.dumps(payload, ensure_ascii=False, indent=2))
+        print(json.dumps(document, ensure_ascii=False, indent=2))
         return 0
-    for key, value in payload.items():
+    for key, value in document.items():
         if isinstance(value, (dict, list)):
             print(f"{key}:")
             print(json.dumps(value, ensure_ascii=False, indent=2))
@@ -62,7 +75,7 @@ def emit(payload: dict[str, object], as_json: bool) -> int:
 
 
 def build_runtime_contract(payload_path: Path) -> dict[str, object]:
-    semantic_pool = load_payload(payload_path)
+    semantic_pool = load_semantic_pool_entries(payload_path)
     return {
         "contract_name": "META_SEMANTIC_COLLECTION_RUNTIME_CONTRACT",
         "contract_version": "v1",
@@ -120,13 +133,17 @@ def make_diff(before: str, after: str, path: Path) -> str:
     return "\n".join(lines)
 
 
-def upsert_payload(payload: list[dict[str, object]], terms: list[str], description: str) -> tuple[list[dict[str, object]], dict[str, object]]:
+def upsert_semantic_pool_entries(
+    entries: list[SemanticEntry],
+    terms: list[str],
+    description: str,
+) -> tuple[list[SemanticEntry], UpsertSummary]:
     normalized_terms = normalize_terms(terms)
     normalized_description = description.strip()
     if not normalized_description:
         raise ValueError("description must be non-empty")
 
-    updated = json.loads(json.dumps(payload, ensure_ascii=False))
+    updated: list[SemanticEntry] = json.loads(json.dumps(entries, ensure_ascii=False))
     exact_desc_indexes = [
         idx for idx, entry in enumerate(updated) if entry["action_semantic_description"].strip() == normalized_description
     ]
@@ -168,7 +185,7 @@ def upsert_payload(payload: list[dict[str, object]], terms: list[str], descripti
     updated = [entry for entry in updated if entry["collection"]]
     validate_payload(updated)
 
-    summary = {
+    summary: UpsertSummary = {
         "action": action,
         "target_index": target_index,
         "terms": normalized_terms,
@@ -177,17 +194,17 @@ def upsert_payload(payload: list[dict[str, object]], terms: list[str], descripti
     return updated, summary
 
 
-def cmd_runtime_contract(args) -> int:
+def cmd_runtime_contract(args: argparse.Namespace) -> int:
     payload = build_runtime_contract(Path(args.payload_path))
     return emit(payload, args.json)
 
 
-def cmd_upsert_payload(args) -> int:
+def cmd_upsert_payload(args: argparse.Namespace) -> int:
     payload_path = Path(args.payload_path)
-    payload = load_payload(payload_path)
-    before_text = dump_payload(payload)
-    updated_payload, summary = upsert_payload(payload, list(args.term or []), args.description)
-    after_text = dump_payload(updated_payload)
+    entries = load_semantic_pool_entries(payload_path)
+    before_text = dump_semantic_pool_entries(entries)
+    updated_entries, summary = upsert_semantic_pool_entries(entries, list(args.term or []), args.description)
+    after_text = dump_semantic_pool_entries(updated_entries)
     diff_text = make_diff(before_text, after_text, payload_path)
 
     result = {
@@ -195,14 +212,14 @@ def cmd_upsert_payload(args) -> int:
         "payload_path": str(payload_path),
         "summary": summary,
         "diff": diff_text,
-        "resulting_contract_preview": build_runtime_contract_from_payload(payload_path, updated_payload),
+        "resulting_contract_preview": build_runtime_contract_from_entries(payload_path, updated_entries),
     }
     if not args.dry_run:
         payload_path.write_text(after_text, encoding="utf-8")
     return emit(result, args.json)
 
 
-def build_runtime_contract_from_payload(payload_path: Path, semantic_pool: list[dict[str, object]]) -> dict[str, object]:
+def build_runtime_contract_from_entries(payload_path: Path, semantic_pool: list[SemanticEntry]) -> dict[str, object]:
     validate_payload(semantic_pool)
     return {
         "contract_name": "META_SEMANTIC_COLLECTION_RUNTIME_CONTRACT",

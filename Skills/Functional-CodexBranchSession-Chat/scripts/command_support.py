@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any
+import argparse
 
 from answer_packet_support import build_answer_packet, print_json
 from evidence_rows_support import iter_session_evidence
@@ -8,7 +8,7 @@ from query_match_support import collect_topic_evidence, select_message, select_m
 from session_locator_support import find_session_files, iter_assistant_messages, resolve_codex_home, resolve_query_id
 
 
-def cmd_locate_session(args: Any) -> int:
+def cmd_locate_session(args: argparse.Namespace) -> int:
     try:
         query_id = resolve_query_id(args.session_id, args.resume_id)
     except ValueError as exc:
@@ -41,7 +41,7 @@ def cmd_locate_session(args: Any) -> int:
     return 0
 
 
-def cmd_extract_final_reply(args: Any) -> int:
+def cmd_extract_final_reply(args: argparse.Namespace) -> int:
     try:
         query_id = resolve_query_id(args.session_id, args.resume_id)
     except ValueError as exc:
@@ -90,7 +90,7 @@ def cmd_extract_final_reply(args: Any) -> int:
     return 0
 
 
-def cmd_answer_question(args: Any) -> int:
+def cmd_answer_question(args: argparse.Namespace) -> int:
     try:
         query_id = resolve_query_id(args.session_id, args.resume_id)
     except ValueError as exc:

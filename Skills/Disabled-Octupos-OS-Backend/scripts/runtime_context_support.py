@@ -55,7 +55,7 @@ def is_indexed(repo: Path, graph_runtime_root: Path) -> bool:
     return False
 
 
-def graph_preflight_payload(repo: Path, allow_missing_index: bool, graph_runtime_root: Path) -> dict:
+def graph_preflight_summary(repo: Path, allow_missing_index: bool, graph_runtime_root: Path) -> dict:
     indexed = is_indexed(repo, graph_runtime_root)
     substantial = repo_has_substantial_code(repo)
     if indexed:
@@ -82,7 +82,7 @@ def graph_preflight_payload(repo: Path, allow_missing_index: bool, graph_runtime
     }
 
 
-def graph_postflight_payload(repo: Path, graph_runtime_root: Path) -> dict:
+def graph_postflight_summary(repo: Path, graph_runtime_root: Path) -> dict:
     indexed = is_indexed(repo, graph_runtime_root)
     return {
         "repo": str(repo),

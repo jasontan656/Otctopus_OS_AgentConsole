@@ -7,21 +7,21 @@ from pathlib import Path
 
 from cli_support import ACCEPTANCE_MATRIX_PATH, ACCEPTANCE_REPORT_PATH, CODEBASE_ROOT, CONSTRUCTION_PLAN_ROOT, MOTHER_DOC_PATH, MOTHER_DOC_ROOT, RUNTIME_ROOT
 from cli_support import STAGES, TEMPLATES
-from cli_support import acceptance_lint_payload, graph_postflight_payload, graph_preflight_payload
-from cli_support import construction_plan_init_payload, construction_plan_lint_payload, mother_doc_archive_payload
-from cli_support import mother_doc_init_payload, mother_doc_lint_payload, mother_doc_state_sync_payload, target_scaffold_payload, workflow_contract_payload
-from stage_contract_support import stage_command_contract_payload, stage_doc_contract_payload, stage_graph_contract_payload
-from target_runtime_support import resolve_target_runtime, target_runtime_contract_payload
-def print_payload(payload: dict, as_json: bool) -> int:
+from cli_support import acceptance_lint_result, graph_postflight_summary, graph_preflight_summary
+from cli_support import construction_plan_init_result, construction_plan_lint_summary, mother_doc_archive_result
+from cli_support import mother_doc_init_result, mother_doc_lint_summary, mother_doc_state_sync_result, target_scaffold_result, workflow_contract_document
+from stage_contract_support import stage_command_contract_spec, stage_doc_contract_spec, stage_graph_contract_spec
+from target_runtime_support import resolve_target_runtime, target_runtime_contract_document
+def print_document(document: dict[str, object], as_json: bool) -> int:
     if as_json:
-        print(json.dumps(payload, indent=2))
+        print(json.dumps(document, indent=2))
     else:
-        for key, value in payload.items():
+        for key, value in document.items():
             print(f"{key}: {value}")
     return 0
 def cmd_workflow_contract(args: argparse.Namespace) -> int:
-    return print_payload(
-        workflow_contract_payload(
+    return print_document(
+        workflow_contract_document(
             target_root=args.target_root,
             development_docs_root=args.development_docs_root,
             docs_root=args.docs_root,
@@ -35,7 +35,7 @@ def cmd_workflow_contract(args: argparse.Namespace) -> int:
 
 
 def cmd_target_runtime_contract(args: argparse.Namespace) -> int:
-    payload = target_runtime_contract_payload(
+    document = target_runtime_contract_document(
         target_root=args.target_root,
         development_docs_root=args.development_docs_root,
         docs_root=args.docs_root,
@@ -44,8 +44,8 @@ def cmd_target_runtime_contract(args: argparse.Namespace) -> int:
         graph_runtime_root=args.graph_runtime_root,
         project_agents=args.project_agents,
     )
-    print_payload(payload, args.json)
-    return 0 if payload["status"] == "pass" else 1
+    print_document(document, args.json)
+    return 0 if document["status"] == "pass" else 1
 
 
 def _resolve_runtime(args: argparse.Namespace) -> dict[str, object]:
@@ -61,7 +61,7 @@ def _resolve_runtime(args: argparse.Namespace) -> dict[str, object]:
 
 
 def _emit_runtime_not_ready(runtime: dict[str, object], as_json: bool) -> int:
-    payload = {
+    document = {
         "status": "fail",
         "reason": "target_runtime_not_ready",
         "missing_prerequisites": runtime["missing_prerequisites"],
@@ -70,7 +70,7 @@ def _emit_runtime_not_ready(runtime: dict[str, object], as_json: bool) -> int:
         "module_dir": runtime["module_dir"],
         "docs_root": str(runtime["docs_root"]),
     }
-    print_payload(payload, as_json)
+    print_document(document, as_json)
     return 1
 
 
@@ -78,11 +78,11 @@ def cmd_stage_checklist(args: argparse.Namespace) -> int:
     runtime = _resolve_runtime(args)
     if not runtime["ready_for_service"]:
         return _emit_runtime_not_ready(runtime, args.json)
-    payload = {
+    document = {
         "stage": args.stage,
         **STAGES[args.stage],
         "target_runtime_precheck_required": True,
-        "target_runtime_contract": target_runtime_contract_payload(
+        "target_runtime_contract": target_runtime_contract_document(
             target_root=args.target_root,
             development_docs_root=args.development_docs_root,
             docs_root=args.docs_root,
@@ -100,72 +100,72 @@ def cmd_stage_checklist(args: argparse.Namespace) -> int:
             "graph_runtime_root": str(runtime["graph_runtime_root"]),
         },
     }
-    return print_payload(payload, args.json)
+    return print_document(document, args.json)
 def _cmd_stage_contract(args: argparse.Namespace, kind: str) -> int:
     runtime = _resolve_runtime(args)
     if not runtime["ready_for_service"]:
         return _emit_runtime_not_ready(runtime, args.json)
     factories = {
-        "doc": lambda: stage_doc_contract_payload(
+        "doc": lambda: stage_doc_contract_spec(
             args.stage,
             Path(runtime["mother_doc_root"]),
             runtime,
         ),
-        "command": lambda: stage_command_contract_payload(
+        "command": lambda: stage_command_contract_spec(
             args.stage,
             Path(runtime["mother_doc_root"]),
             Path(runtime["construction_plan_root"]),
             Path(runtime["codebase_root"]),
             runtime,
         ),
-        "graph": lambda: stage_graph_contract_payload(
+        "graph": lambda: stage_graph_contract_spec(
             args.stage,
             Path(runtime["codebase_root"]),
             Path(runtime["graph_runtime_root"]),
         ),
     }
-    return print_payload(factories[kind](), args.json)
+    return print_document(factories[kind](), args.json)
 def cmd_graph_preflight(args: argparse.Namespace) -> int:
     runtime = _resolve_runtime(args)
     if not runtime["ready_for_service"] and args.repo is None:
         return _emit_runtime_not_ready(runtime, args.json)
     repo = args.repo or str(runtime["codebase_root"])
     graph_runtime_root = Path(args.graph_runtime_root or runtime["graph_runtime_root"]).resolve()
-    payload = graph_preflight_payload(Path(repo).resolve(), args.allow_missing_index, graph_runtime_root)
-    return print_payload(payload, args.json)
+    document = graph_preflight_summary(Path(repo).resolve(), args.allow_missing_index, graph_runtime_root)
+    return print_document(document, args.json)
 def cmd_graph_postflight(args: argparse.Namespace) -> int:
     runtime = _resolve_runtime(args)
     if not runtime["ready_for_service"] and args.repo is None:
         return _emit_runtime_not_ready(runtime, args.json)
     repo = args.repo or str(runtime["codebase_root"])
     graph_runtime_root = Path(args.graph_runtime_root or runtime["graph_runtime_root"]).resolve()
-    payload = graph_postflight_payload(Path(repo).resolve(), graph_runtime_root)
-    return print_payload(payload, args.json)
+    document = graph_postflight_summary(Path(repo).resolve(), graph_runtime_root)
+    return print_document(document, args.json)
 def cmd_target_scaffold(args: argparse.Namespace) -> int:
     runtime = _resolve_runtime(args)
-    payload, status_code = target_scaffold_payload(runtime, args.force)
-    print_payload(payload, args.json)
+    document, status_code = target_scaffold_result(runtime, args.force)
+    print_document(document, args.json)
     return status_code
 
 
 def cmd_template_index(args: argparse.Namespace) -> int:
-    payload = {name: str(path) for name, path in TEMPLATES.items()}
-    return print_payload(payload, args.json)
+    document = {name: str(path) for name, path in TEMPLATES.items()}
+    return print_document(document, args.json)
 def cmd_mother_doc_init(args: argparse.Namespace) -> int:
     runtime = _resolve_runtime(args)
     if not runtime["ready_for_service"] and args.target is None:
         return _emit_runtime_not_ready(runtime, args.json)
     target = Path(args.target or runtime["mother_doc_root"]).resolve()
-    payload, status_code = mother_doc_init_payload(target, args.force)
-    print_payload(payload, args.json)
+    document, status_code = mother_doc_init_result(target, args.force)
+    print_document(document, args.json)
     return status_code
 def cmd_mother_doc_archive(args: argparse.Namespace) -> int:
     runtime = _resolve_runtime(args)
     if not runtime["ready_for_service"] and args.target is None:
         return _emit_runtime_not_ready(runtime, args.json)
     target = Path(args.target or runtime["mother_doc_root"]).resolve()
-    payload, status_code = mother_doc_archive_payload(target, args.force, args.archive_slug)
-    print_payload(payload, args.json)
+    document, status_code = mother_doc_archive_result(target, args.force, args.archive_slug)
+    print_document(document, args.json)
     return status_code
 def cmd_construction_plan_init(args: argparse.Namespace) -> int:
     runtime = _resolve_runtime(args)
@@ -173,51 +173,51 @@ def cmd_construction_plan_init(args: argparse.Namespace) -> int:
         return _emit_runtime_not_ready(runtime, args.json)
     target = Path(args.target or runtime["construction_plan_root"]).resolve()
     design_plan_path = Path(args.design_plan or Path(runtime["mother_doc_root"]) / "08_dev_execution_plan.md").resolve()
-    payload, status_code = construction_plan_init_payload(target, design_plan_path, args.force)
-    print_payload(payload, args.json)
+    document, status_code = construction_plan_init_result(target, design_plan_path, args.force)
+    print_document(document, args.json)
     return status_code
 def cmd_construction_plan_lint(args: argparse.Namespace) -> int:
     runtime = _resolve_runtime(args)
     if not runtime["ready_for_service"] and args.path is None:
         return _emit_runtime_not_ready(runtime, args.json)
     target = args.path or str(runtime["construction_plan_root"])
-    payload = construction_plan_lint_payload(Path(target).resolve())
-    print_payload(payload, args.json)
-    return 0 if payload["status"] == "pass" else 1
+    document = construction_plan_lint_summary(Path(target).resolve())
+    print_document(document, args.json)
+    return 0 if document["status"] == "pass" else 1
 def cmd_mother_doc_lint(args: argparse.Namespace) -> int:
     runtime = _resolve_runtime(args)
     if not runtime["ready_for_service"] and args.path is None and args.mother_doc is None:
         return _emit_runtime_not_ready(runtime, args.json)
     target = args.path or args.mother_doc or str(runtime["mother_doc_root"])
-    payload = mother_doc_lint_payload(Path(target).resolve())
-    print_payload(payload, args.json)
-    return 0 if payload["status"] == "pass" else 1
+    document = mother_doc_lint_summary(Path(target).resolve())
+    print_document(document, args.json)
+    return 0 if document["status"] == "pass" else 1
 def cmd_mother_doc_state_sync(args: argparse.Namespace) -> int:
     runtime = _resolve_runtime(args)
     if not runtime["ready_for_service"] and args.path is None:
         return _emit_runtime_not_ready(runtime, args.json)
     target = Path(args.path or runtime["mother_doc_root"]).resolve()
-    payload = mother_doc_state_sync_payload(
+    document = mother_doc_state_sync_result(
         target,
         args.doc_ref,
         args.from_state,
         args.to_state,
         args.pack_ref,
     )
-    print_payload(payload, args.json)
-    return 0 if payload["status"] == "pass" else 1
+    print_document(document, args.json)
+    return 0 if document["status"] == "pass" else 1
 def cmd_acceptance_lint(args: argparse.Namespace) -> int:
     runtime = _resolve_runtime(args)
     if not runtime["ready_for_service"] and args.matrix_path is None and args.report_path is None:
         return _emit_runtime_not_ready(runtime, args.json)
-    payload = acceptance_lint_payload(
+    document = acceptance_lint_result(
         Path(args.matrix_path or runtime["acceptance_matrix_path"]).resolve(),
         Path(args.report_path or runtime["acceptance_report_path"]).resolve(),
         Path(runtime["codebase_root"]),
         Path(runtime["target_root"]),
     )
-    print_payload(payload, args.json)
-    return 0 if payload["status"] == "pass" else 1
+    print_document(document, args.json)
+    return 0 if document["status"] == "pass" else 1
 def add_runtime_scope_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--target-root", default=None)
     parser.add_argument("--development-docs-root", default=None)

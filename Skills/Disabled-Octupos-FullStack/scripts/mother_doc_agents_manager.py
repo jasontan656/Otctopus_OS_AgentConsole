@@ -7,7 +7,7 @@ from typing import Iterator
 
 from agents_target_runtime import (
     DEFAULT_WORKSPACE_ROOT,
-    build_default_machine_payload,
+    build_default_machine_contract,
     extract_external_agents_part_a_body,
     extract_internal_part_a,
     managed_human_path,
@@ -195,7 +195,7 @@ def collect_from_scan(skill_root: Path) -> dict[str, object]:
     machine_payload = (
         _load_json(managed_machine_path(skill_root))
         if managed_machine_path(skill_root).exists()
-        else build_default_machine_payload()
+        else build_default_machine_contract()
     )
     _write_json(managed_machine_path(skill_root), machine_payload)
     _write_text(

@@ -7,13 +7,13 @@ from stage_contract_support import (
     get_stage_command_contract,
     get_stage_doc_contract,
     get_stage_graph_contract,
-    get_stage_payload,
+    get_stage_summary,
 )
 
 
 def emit_stage_payload(stage_name: str, *, as_json: bool) -> int:
     payload = {
-        **get_stage_payload(stage_name),
+        **get_stage_summary(stage_name),
         "top_level_resident_docs": TOP_LEVEL_RESIDENT_DOCS,
         "stage_doc_contract": get_stage_doc_contract(stage_name),
         "stage_command_contract": get_stage_command_contract(stage_name),

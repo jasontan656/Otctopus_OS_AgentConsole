@@ -49,18 +49,15 @@ def add_common_report_args(parser: argparse.ArgumentParser) -> None:
         default=[],
         help="Limit operation to an exact external source path. Repeatable.",
     )
-    parser.add_argument(
-        "--report-path",
-        help="Optional custom JSON report path. When set, also writes the report there.",
-    )
+    parser.add_argument("--report-path", help="Optional custom JSON report path. When set, also writes the report there.")
 
 
-def emit(payload: dict, as_json: bool) -> None:
+def emit(report: dict[str, object], as_json: bool) -> None:
     if as_json:
-        print(json.dumps(payload, indent=2, ensure_ascii=False))
+        print(json.dumps(report, indent=2, ensure_ascii=False))
         return
-    print(payload["summary"])
-    for line in payload.get("details", []):
+    print(report["summary"])
+    for line in report.get("details", []):
         print(line)
 
 

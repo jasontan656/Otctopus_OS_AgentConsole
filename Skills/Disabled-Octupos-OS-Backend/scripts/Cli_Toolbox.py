@@ -7,75 +7,75 @@ from pathlib import Path
 
 from cli_support import ACCEPTANCE_MATRIX_PATH, ACCEPTANCE_REPORT_PATH, CODEBASE_ROOT, CONSTRUCTION_PLAN_ROOT, MOTHER_DOC_PATH, MOTHER_DOC_ROOT, RUNTIME_ROOT
 from cli_support import STAGES, TEMPLATES
-from cli_support import acceptance_lint_payload, graph_postflight_payload, graph_preflight_payload
-from cli_support import construction_plan_init_payload, construction_plan_lint_payload, mother_doc_archive_payload
-from cli_support import mother_doc_init_payload, mother_doc_lint_payload, workflow_contract_payload
-from stage_contract_support import stage_command_contract_payload, stage_doc_contract_payload, stage_graph_contract_payload
-def print_payload(payload: dict, as_json: bool) -> int:
+from cli_support import acceptance_lint_result, graph_postflight_summary, graph_preflight_summary
+from cli_support import construction_plan_init_result, construction_plan_lint_summary, mother_doc_archive_result
+from cli_support import mother_doc_init_result, mother_doc_lint_summary, workflow_contract_document
+from stage_contract_support import stage_command_contract_spec, stage_doc_contract_spec, stage_graph_contract_spec
+def print_document(document: dict[str, object], as_json: bool) -> int:
     if as_json:
-        print(json.dumps(payload, indent=2))
+        print(json.dumps(document, indent=2))
     else:
-        for key, value in payload.items():
+        for key, value in document.items():
             print(f"{key}: {value}")
     return 0
 def cmd_workflow_contract(args: argparse.Namespace) -> int:
-    return print_payload(workflow_contract_payload(), args.json)
+    return print_document(workflow_contract_document(), args.json)
 def cmd_stage_checklist(args: argparse.Namespace) -> int:
-    payload = {"stage": args.stage, **STAGES[args.stage]}
-    return print_payload(payload, args.json)
+    document = {"stage": args.stage, **STAGES[args.stage]}
+    return print_document(document, args.json)
 def _cmd_stage_contract(args: argparse.Namespace, kind: str) -> int:
     factories = {
-        "doc": lambda: stage_doc_contract_payload(args.stage, MOTHER_DOC_ROOT),
-        "command": lambda: stage_command_contract_payload(args.stage, MOTHER_DOC_ROOT, CONSTRUCTION_PLAN_ROOT, CODEBASE_ROOT),
-        "graph": lambda: stage_graph_contract_payload(args.stage, CODEBASE_ROOT),
+        "doc": lambda: stage_doc_contract_spec(args.stage, MOTHER_DOC_ROOT),
+        "command": lambda: stage_command_contract_spec(args.stage, MOTHER_DOC_ROOT, CONSTRUCTION_PLAN_ROOT, CODEBASE_ROOT),
+        "graph": lambda: stage_graph_contract_spec(args.stage, CODEBASE_ROOT),
     }
-    return print_payload(factories[kind](), args.json)
+    return print_document(factories[kind](), args.json)
 def cmd_graph_preflight(args: argparse.Namespace) -> int:
     repo = args.repo or args.codebase_root or str(CODEBASE_ROOT)
-    payload = graph_preflight_payload(Path(repo).resolve(), args.allow_missing_index)
-    return print_payload(payload, args.json)
+    document = graph_preflight_summary(Path(repo).resolve(), args.allow_missing_index)
+    return print_document(document, args.json)
 def cmd_graph_postflight(args: argparse.Namespace) -> int:
     repo = args.repo or args.codebase_root or str(CODEBASE_ROOT)
-    payload = graph_postflight_payload(Path(repo).resolve())
-    return print_payload(payload, args.json)
+    document = graph_postflight_summary(Path(repo).resolve())
+    return print_document(document, args.json)
 def cmd_template_index(args: argparse.Namespace) -> int:
-    payload = {name: str(path) for name, path in TEMPLATES.items()}
-    return print_payload(payload, args.json)
+    document = {name: str(path) for name, path in TEMPLATES.items()}
+    return print_document(document, args.json)
 def cmd_mother_doc_init(args: argparse.Namespace) -> int:
     target = Path(args.target or MOTHER_DOC_ROOT).resolve()
-    payload, status_code = mother_doc_init_payload(target, args.force)
-    print_payload(payload, args.json)
+    document, status_code = mother_doc_init_result(target, args.force)
+    print_document(document, args.json)
     return status_code
 def cmd_mother_doc_archive(args: argparse.Namespace) -> int:
     target = Path(args.target or MOTHER_DOC_ROOT).resolve()
-    payload, status_code = mother_doc_archive_payload(target, args.force, args.archive_slug)
-    print_payload(payload, args.json)
+    document, status_code = mother_doc_archive_result(target, args.force, args.archive_slug)
+    print_document(document, args.json)
     return status_code
 def cmd_construction_plan_init(args: argparse.Namespace) -> int:
     target = Path(args.target or CONSTRUCTION_PLAN_ROOT).resolve()
     design_plan_path = Path(args.design_plan or MOTHER_DOC_ROOT / "08_dev_execution_plan.md").resolve()
-    payload, status_code = construction_plan_init_payload(target, design_plan_path, args.force)
-    print_payload(payload, args.json)
+    document, status_code = construction_plan_init_result(target, design_plan_path, args.force)
+    print_document(document, args.json)
     return status_code
 def cmd_construction_plan_lint(args: argparse.Namespace) -> int:
     target = args.path or str(CONSTRUCTION_PLAN_ROOT)
-    payload = construction_plan_lint_payload(Path(target).resolve())
-    print_payload(payload, args.json)
-    return 0 if payload["status"] == "pass" else 1
+    document = construction_plan_lint_summary(Path(target).resolve())
+    print_document(document, args.json)
+    return 0 if document["status"] == "pass" else 1
 def cmd_mother_doc_lint(args: argparse.Namespace) -> int:
     target = args.path or args.mother_doc or str(MOTHER_DOC_ROOT)
-    payload = mother_doc_lint_payload(Path(target).resolve())
-    print_payload(payload, args.json)
-    return 0 if payload["status"] == "pass" else 1
+    document = mother_doc_lint_summary(Path(target).resolve())
+    print_document(document, args.json)
+    return 0 if document["status"] == "pass" else 1
 def cmd_acceptance_lint(args: argparse.Namespace) -> int:
-    payload = acceptance_lint_payload(
+    document = acceptance_lint_result(
         Path(args.matrix_path).resolve(),
         Path(args.report_path).resolve(),
         CODEBASE_ROOT,
         RUNTIME_ROOT,
     )
-    print_payload(payload, args.json)
-    return 0 if payload["status"] == "pass" else 1
+    print_document(document, args.json)
+    return 0 if document["status"] == "pass" else 1
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest="command", required=True)

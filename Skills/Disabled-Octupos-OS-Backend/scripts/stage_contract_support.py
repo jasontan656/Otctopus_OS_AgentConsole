@@ -6,7 +6,7 @@ import re
 # contract_name: octopus_backend_stage_contract_support
 # contract_version: 1.0.0
 # validation_mode: strict
-# required_fields: stage_doc_contract_payload, stage_command_contract_payload, stage_graph_contract_payload
+# required_fields: stage_doc_contract_spec, stage_command_contract_spec, stage_graph_contract_spec
 # optional_fields: []
 
 
@@ -28,7 +28,7 @@ def _latest_archived_mother_doc(mother_doc_root: Path) -> Path | None:
     return candidates[0][1]
 
 
-def stage_doc_contract_payload(stage: str, mother_doc_root: Path | None = None) -> dict[str, object]:
+def stage_doc_contract_spec(stage: str, mother_doc_root: Path | None = None) -> dict[str, object]:
     stage_data = STAGES[stage]
     payload = {
         "stage": stage,
@@ -44,7 +44,7 @@ def stage_doc_contract_payload(stage: str, mother_doc_root: Path | None = None) 
     return payload
 
 
-def stage_command_contract_payload(stage: str, mother_doc_root: Path, construction_plan_root: Path, codebase_root: Path) -> dict[str, object]:
+def stage_command_contract_spec(stage: str, mother_doc_root: Path, construction_plan_root: Path, codebase_root: Path) -> dict[str, object]:
     latest_archive = _latest_archived_mother_doc(mother_doc_root)
     commands = {
         "mother_doc": {
@@ -101,7 +101,7 @@ def stage_command_contract_payload(stage: str, mother_doc_root: Path, constructi
     return {"stage": stage, **commands[stage]}
 
 
-def stage_graph_contract_payload(stage: str, codebase_root: Path) -> dict[str, object]:
+def stage_graph_contract_spec(stage: str, codebase_root: Path) -> dict[str, object]:
     graph_role = STAGES[stage]["graph_role"]
     recommended_commands = {
         "mother_doc": [f"./.venv_backend_skills/bin/python Skills/Disabled-Octupos-OS-Backend/scripts/Cli_Toolbox.py graph-preflight --repo {codebase_root} --allow-missing-index --json"],

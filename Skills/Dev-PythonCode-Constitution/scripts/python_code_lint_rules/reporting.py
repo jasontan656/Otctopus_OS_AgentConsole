@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from collections import Counter, defaultdict
 from pathlib import Path
-from typing import Any
 
 from python_code_lint_rules.shared import is_nested_scope_path, is_test_fixture_path
 
@@ -86,7 +85,7 @@ def _batch_fix(issue_kind: str, gate: str) -> str:
     return "apply the matching fix at the narrowest valid source of truth"
 
 
-def _normalize_line_hits(value: Any) -> list[int]:
+def _normalize_line_hits(value: object) -> list[int]:
     if not isinstance(value, list):
         return []
     hits: list[int] = []
@@ -96,7 +95,7 @@ def _normalize_line_hits(value: Any) -> list[int]:
     return hits
 
 
-def _normalize_violation_detail(gate: dict[str, Any], violation: dict[str, Any]) -> dict[str, Any]:
+def _normalize_violation_detail(gate: dict[str, object], violation: dict[str, object]) -> dict[str, object]:
     path_text = str(violation.get("path", ""))
     reason = str(violation.get("reason", "unknown_reason"))
     gate_name = str(gate.get("gate", "unknown_gate"))
@@ -127,12 +126,12 @@ def _normalize_violation_detail(gate: dict[str, Any], violation: dict[str, Any])
     }
 
 
-def _top_patterns(details: list[dict[str, Any]]) -> list[str]:
+def _top_patterns(details: list[dict[str, object]]) -> list[str]:
     counter = Counter(str(detail["category"]) for detail in details if detail.get("category"))
     return [pattern for pattern, _count in counter.most_common(3)]
 
 
-def _recommended_first_action(gate_name: str, details: list[dict[str, Any]]) -> str:
+def _recommended_first_action(gate_name: str, details: list[dict[str, object]]) -> str:
     if not details:
         return "no action needed"
     issue_kinds = Counter(str(detail["issue_kind"]) for detail in details)
@@ -145,12 +144,12 @@ def _recommended_first_action(gate_name: str, details: list[dict[str, Any]]) -> 
     return "fix the dominant cluster first instead of editing isolated violations one by one"
 
 
-def _build_clusters(details: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
+def _build_clusters(details: list[dict[str, object]]) -> list[dict[str, object]]:
+    grouped: dict[str, list[dict[str, object]]] = defaultdict(list)
     for detail in details:
         grouped[str(detail["cluster_key"])].append(detail)
 
-    clusters: list[dict[str, Any]] = []
+    clusters: list[dict[str, object]] = []
     for cluster_key, rows in sorted(grouped.items()):
         sample = rows[0]
         clusters.append(
@@ -168,9 +167,9 @@ def _build_clusters(details: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return clusters
 
 
-def build_report(root: Path, gates: list[dict[str, Any]], rule_files: dict[str, str]) -> dict[str, Any]:
-    enriched_gates: list[dict[str, Any]] = []
-    details: list[dict[str, Any]] = []
+def build_report(root: Path, gates: list[dict[str, object]], rule_files: dict[str, str]) -> dict[str, object]:
+    enriched_gates: list[dict[str, object]] = []
+    details: list[dict[str, object]] = []
 
     for gate in gates:
         gate_copy = dict(gate)
@@ -188,9 +187,9 @@ def build_report(root: Path, gates: list[dict[str, Any]], rule_files: dict[str, 
         if cluster is not None:
             detail["shared_root_cause"] = cluster["shared_root_cause"]
 
-    gate_diagnostics: list[dict[str, Any]] = []
-    details_by_gate: dict[str, list[dict[str, Any]]] = defaultdict(list)
-    clusters_by_gate: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    gate_diagnostics: list[dict[str, object]] = []
+    details_by_gate: dict[str, list[dict[str, object]]] = defaultdict(list)
+    clusters_by_gate: dict[str, list[dict[str, object]]] = defaultdict(list)
     for detail in details:
         details_by_gate[str(detail["gate"])].append(detail)
     for cluster in clusters:

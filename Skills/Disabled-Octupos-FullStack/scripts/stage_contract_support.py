@@ -44,7 +44,7 @@ def get_stage_graph_contract(stage_name: str) -> dict[str, object]:
     }
 
 
-def get_stage_payload(stage_name: str) -> dict[str, object]:
+def get_stage_summary(stage_name: str) -> dict[str, object]:
     checklist = get_stage_checklist(stage_name)
     if stage_name == "mother_doc":
         requires: list[str] = []

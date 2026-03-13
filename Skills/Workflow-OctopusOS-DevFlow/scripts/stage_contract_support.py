@@ -7,14 +7,14 @@ from target_runtime_support import latest_archived_iteration, resolve_target_run
 # contract_name: octopus_devflow_stage_contract_support
 # contract_version: 1.0.0
 # validation_mode: strict
-# required_fields: stage_doc_contract_payload, stage_command_contract_payload, stage_graph_contract_payload
+# required_fields: stage_doc_contract_spec, stage_command_contract_spec, stage_graph_contract_spec
 # optional_fields: []
 
 
 ARCHIVE_DIR_PATTERN = re.compile(r"^(\d{2})_.+")
 
 
-def stage_doc_contract_payload(
+def stage_doc_contract_spec(
     stage: str,
     mother_doc_root: Path | None = None,
     target_runtime: dict[str, object] | None = None,
@@ -39,7 +39,7 @@ def stage_doc_contract_payload(
     return payload
 
 
-def stage_command_contract_payload(
+def stage_command_contract_spec(
     stage: str,
     mother_doc_root: Path,
     construction_plan_root: Path,
@@ -148,7 +148,7 @@ def stage_command_contract_payload(
     return {"stage": stage, **commands[stage]}
 
 
-def stage_graph_contract_payload(stage: str, codebase_root: Path, graph_runtime_root: Path | None = None) -> dict[str, object]:
+def stage_graph_contract_spec(stage: str, codebase_root: Path, graph_runtime_root: Path | None = None) -> dict[str, object]:
     graph_role = STAGES[stage]["graph_role"]
     graph_root = graph_runtime_root or resolve_target_runtime(codebase_root=codebase_root)["graph_runtime_root"]
     recommended_commands = {

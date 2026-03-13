@@ -77,7 +77,7 @@ def _aggregate_content(files: list[Path]) -> str:
     return "\n".join(chunks)
 
 
-def mother_doc_lint_payload(path: Path) -> dict:
+def mother_doc_lint_summary(path: Path) -> dict:
     root, single_file_input_detected = _detect_mother_doc_root(path)
     exists = root.exists()
     missing_entry_ids, resolved_entries = required_entry_hits(root) if exists else (

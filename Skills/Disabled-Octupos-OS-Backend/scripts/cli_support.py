@@ -4,12 +4,12 @@ import re
 import shutil
 from pathlib import Path
 
-from acceptance_contract_support import acceptance_lint_payload
-from construction_plan_support import construction_plan_init_payload, construction_plan_lint_payload
+from acceptance_contract_support import acceptance_lint_result
+from construction_plan_support import construction_plan_init_result, construction_plan_lint_summary
 from mother_doc_contract import MOTHER_DOC_FORBIDDEN_TERMS, MOTHER_DOC_REQUIRED_FILES, MOTHER_DOC_REQUIRED_SIGNALS
-from mother_doc_lint_support import mother_doc_lint_payload
-from runtime_context_support import graph_postflight_payload as build_graph_postflight_payload
-from runtime_context_support import graph_preflight_payload as build_graph_preflight_payload
+from mother_doc_lint_support import mother_doc_lint_summary
+from runtime_context_support import graph_postflight_summary as build_graph_postflight_summary
+from runtime_context_support import graph_preflight_summary as build_graph_preflight_summary
 from workflow_contract_data import ACCEPTANCE_LINT_POLICY, ADR_REQUIRED_SECTIONS, ACCEPTANCE_FIELDS
 from workflow_contract_data import ACCEPTANCE_MATRIX_FIELDS, BASELINE_MODES, BLOCKED_STATES
 from workflow_contract_data import DESIGN_PHASE_PLAN_SECTIONS, DISCOVERY_SCOPE_POLICY
@@ -41,7 +41,7 @@ ACCEPTANCE_REPORT_PATH = ACCEPTANCE_ROOT / "acceptance_report.md"
 ARCHIVE_DIR_PATTERN = re.compile(r"^(\d{2})_.+")
 
 
-def mother_doc_init_payload(target: Path, force: bool) -> tuple[dict, int]:
+def mother_doc_init_result(target: Path, force: bool) -> tuple[dict, int]:
     template_root = Path(TEMPLATES["mother_doc_root"]).resolve()
     preexisting_items = [child for child in target.iterdir()] if target.exists() else []
     if preexisting_items and not force:
@@ -89,7 +89,7 @@ def _mother_doc_archive_slug(root: Path, override_slug: str | None) -> str:
     return "project"
 
 
-def mother_doc_archive_payload(active_root: Path, force: bool, archive_slug: str | None) -> tuple[dict, int]:
+def mother_doc_archive_result(active_root: Path, force: bool, archive_slug: str | None) -> tuple[dict, int]:
     if not active_root.exists():
         return {"status": "fail", "target": str(active_root), "reason": "mother_doc_missing"}, 1
     docs_root = active_root.parent
@@ -106,9 +106,9 @@ def mother_doc_archive_payload(active_root: Path, force: bool, archive_slug: str
     if archive_dir.exists() and force:
         shutil.rmtree(archive_dir)
     active_root.rename(archive_dir)
-    init_payload, init_status = mother_doc_init_payload(active_root, force=False)
+    init_result, init_status = mother_doc_init_result(active_root, force=False)
     if init_status != 0:
-        return {"status": "fail", "archive_dir": str(archive_dir), "reason": "archive_created_but_reinit_failed", "reinit_payload": init_payload}, 1
+        return {"status": "fail", "archive_dir": str(archive_dir), "reason": "archive_created_but_reinit_failed", "reinit_result": init_result}, 1
     return {
         "status": "pass",
         "archived_root": str(archive_dir),
@@ -117,7 +117,7 @@ def mother_doc_archive_payload(active_root: Path, force: bool, archive_slug: str
         "archive_slug": archive_dir.name.split("_", 1)[1],
     }, 0
 
-def workflow_contract_payload() -> dict:
+def workflow_contract_document() -> dict:
     return {
         "stage_order": list(STAGES.keys()),
         "stage_objectives": {name: data["objective"] for name, data in STAGES.items()},
@@ -166,9 +166,9 @@ def workflow_contract_payload() -> dict:
     }
 
 
-def graph_preflight_payload(repo: Path, allow_missing_index: bool) -> dict:
-    return build_graph_preflight_payload(repo, allow_missing_index, GRAPH_RUNTIME_ROOT)
+def graph_preflight_summary(repo: Path, allow_missing_index: bool) -> dict:
+    return build_graph_preflight_summary(repo, allow_missing_index, GRAPH_RUNTIME_ROOT)
 
 
-def graph_postflight_payload(repo: Path) -> dict:
-    return build_graph_postflight_payload(repo, GRAPH_RUNTIME_ROOT)
+def graph_postflight_summary(repo: Path) -> dict:
+    return build_graph_postflight_summary(repo, GRAPH_RUNTIME_ROOT)

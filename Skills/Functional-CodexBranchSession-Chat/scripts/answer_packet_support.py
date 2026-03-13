@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-from typing import Any, Dict, List, Set
 
 
 OBSERVABILITY_CHANNELS = {
@@ -13,8 +12,8 @@ OBSERVABILITY_CHANNELS = {
 }
 
 
-def extract_signal_tags(evidence_bundle: List[Dict[str, Any]]) -> List[str]:
-    tags: Set[str] = set()
+def extract_signal_tags(evidence_bundle: list[dict[str, object]]) -> list[str]:
+    tags: set[str] = set()
     for row in evidence_bundle:
         for term in row.get("matched_terms", []):
             if isinstance(term, str) and term.startswith("signal:"):
@@ -26,8 +25,8 @@ def build_grounded_draft(
     question: str,
     core_claim: str,
     answer_mode: str,
-    signal_tags: List[str],
-    evidence_bundle: List[Dict[str, Any]],
+    signal_tags: list[str],
+    evidence_bundle: list[dict[str, object]],
 ) -> str:
     has_lint_all = "lint_all" in signal_tags
     has_large_output = "large_output" in signal_tags
@@ -63,12 +62,12 @@ def build_grounded_draft(
 
 
 def build_answer_packet(
-    selected_message: Dict[str, Any],
+    selected_message: dict[str, object],
     question: str,
     session_id: str,
     answer_mode: str,
-    evidence_bundle: List[Dict[str, Any]],
-) -> Dict[str, Any]:
+    evidence_bundle: list[dict[str, object]],
+) -> dict[str, object]:
     text = str(selected_message["text"])
     keyword = str(selected_message.get("keyword", ""))
     lines = [line.strip() for line in text.splitlines() if line.strip()]
@@ -121,8 +120,8 @@ def build_answer_packet(
     }
 
 
-def print_json(payload: Dict[str, Any]) -> None:
-    audit_payload = dict(payload)
+def print_json(document: dict[str, object]) -> None:
+    audit_payload = dict(document)
     audit_payload.setdefault("audit_trace", "branch_chat_toolbox")
     audit_payload.setdefault("run_id", "run_id:branch_chat_cli")
     audit_payload.setdefault("trace_id", "trace_id:print_json")

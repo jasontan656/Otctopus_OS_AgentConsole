@@ -101,7 +101,7 @@ def _resolve_workspace_root(skill_root: Path) -> Path:
     return DEFAULT_WORKSPACE_ROOT
 
 
-def build_default_machine_payload() -> dict[str, object]:
+def build_default_machine_contract() -> dict[str, object]:
     return {
         "entry_role": "octopus_os_root_runtime_entry",
         "runtime_source_policy": {
@@ -146,10 +146,10 @@ def build_default_machine_payload() -> dict[str, object]:
     }
 
 
-def load_machine_payload(skill_root: Path) -> dict[str, object]:
+def load_machine_contract(skill_root: Path) -> dict[str, object]:
     path = managed_machine_path(skill_root)
     if not path.exists():
-        return build_default_machine_payload()
+        return build_default_machine_contract()
     return _load_json(path)
 
 
@@ -159,7 +159,7 @@ def load_target_contract(skill_root: Path, relative_path: str, file_kind: str) -
     if file_kind != "agents":
         raise ValueError(f"unsupported file_kind: {file_kind}")
     workspace_root = _resolve_workspace_root(skill_root)
-    payload = load_machine_payload(skill_root)
+    payload = load_machine_contract(skill_root)
     return {
         "relative_path": ROOT_RELATIVE_PATH,
         "file_kind": "agents",

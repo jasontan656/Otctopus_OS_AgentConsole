@@ -5,7 +5,7 @@ import configparser
 from functools import lru_cache
 from pathlib import Path
 import tomllib
-from typing import Any, Iterable, Iterator
+from typing import Iterable, Iterator
 
 IGNORE_DIRS = {
     ".git",
@@ -54,6 +54,12 @@ TEXT_EXTS = {".py", ".json", ".yaml", ".yml", ".md", ".sql", ".toml", ".sh", ".b
 SOURCE_EXTS = {".py", ".sql", ".yaml", ".yml", ".json", ".md", ".toml"}
 SKIP_PREFIXES = {("references",), ("tests",), ("scripts", "python_code_lint_rules")}
 NESTED_SKIP_DIRS = {"references", "tests"}
+NON_GOVERNED_SKILL_ROOTS = {
+    ".system",
+    "SkillsManager-Doc-Structure",
+    "SkillsManager-Tooling-CheckUp",
+    "SkillsManager-Creation-Template",
+}
 IO_PATTERNS = ("requests.", "httpx.", "fetch(", "axios(", "sqlalchemy", "psycopg", "redis.", "pymongo", "subprocess", "socket", "aiohttp", "requests.get(", "httpx.get(")
 RAW_PAYLOAD_PATTERNS = ("telegram_update", "callback_query", "webapp_data", "raw_payload", "raw_update", "incoming_update")
 PYTHON_PATH_HINTS = (
@@ -106,6 +112,15 @@ def is_ignored_path(path: Path, root: Path) -> bool:
     return any(is_ignored_dir_name(part) for part in directory_parts)
 
 
+def _is_non_governed_skill_root_path(path: Path, root: Path) -> bool:
+    if root.name not in {"Skills", "skills"}:
+        return False
+    parts = path.relative_to(root).parts
+    if not parts:
+        return False
+    return parts[0] in NON_GOVERNED_SKILL_ROOTS
+
+
 def should_skip(path: Path, root: Path) -> bool:
     parts = path.relative_to(root).parts
     if any(parts[:len(prefix)] == prefix for prefix in SKIP_PREFIXES):
@@ -115,7 +130,7 @@ def should_skip(path: Path, root: Path) -> bool:
 
 def iter_tree(root: Path) -> Iterator[Path]:
     for path in root.rglob("*"):
-        if is_ignored_path(path, root) or should_skip(path, root):
+        if is_ignored_path(path, root) or _is_non_governed_skill_root_path(path, root) or should_skip(path, root):
             continue
         yield path
 
@@ -181,7 +196,7 @@ def parse_python_ast(path: Path) -> tuple[ast.AST | None, str]:
         return None, text
 
 
-def load_toml(path: Path) -> dict[str, Any] | None:
+def load_toml(path: Path) -> dict[str, object] | None:
     try:
         return tomllib.loads(read_text(path))
     except tomllib.TOMLDecodeError:
@@ -276,13 +291,19 @@ def dotted_name(node: ast.AST | None) -> str | None:
     return None
 
 
-def make_violation(path: str, reason: str, **extra: Any) -> dict[str, Any]:
-    payload: dict[str, Any] = {"path": path, "reason": reason}
+def make_violation(path: str, reason: str, **extra: object) -> dict[str, object]:
+    payload: dict[str, object] = {"path": path, "reason": reason}
     payload.update(extra)
     return payload
 
 
-def make_gate(gate: str, violations: list[dict[str, Any]], checked: int, *, rule_file: str | None = None) -> dict[str, object]:
+def make_gate(
+    gate: str,
+    violations: list[dict[str, object]],
+    checked: int,
+    *,
+    rule_file: str | None = None,
+) -> dict[str, object]:
     return {
         "gate": gate,
         "status": "pass" if not violations else "fail",

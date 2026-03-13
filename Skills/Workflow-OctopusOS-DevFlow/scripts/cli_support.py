@@ -4,8 +4,8 @@ import re
 import shutil
 from pathlib import Path
 
-from acceptance_contract_support import acceptance_lint_payload
-from construction_plan_support import construction_plan_init_payload, construction_plan_lint_payload
+from acceptance_contract_support import acceptance_lint_result
+from construction_plan_support import construction_plan_init_result, construction_plan_lint_summary
 from devflow_agents_support import scaffold_and_collect_devflow_agents
 from mother_doc_contract import (
     MOTHER_DOC_FORBIDDEN_TERMS,
@@ -15,10 +15,10 @@ from mother_doc_contract import (
     MOTHER_DOC_REQUIRED_SIGNALS,
     MOTHER_DOC_WORK_STATES,
 )
-from mother_doc_lint_support import mother_doc_lint_payload
+from mother_doc_lint_support import mother_doc_lint_summary
 from mother_doc_state_support import sync_doc_states
-from runtime_context_support import graph_postflight_payload as build_graph_postflight_payload
-from runtime_context_support import graph_preflight_payload as build_graph_preflight_payload
+from runtime_context_support import graph_postflight_summary as build_graph_postflight_summary
+from runtime_context_support import graph_preflight_summary as build_graph_preflight_summary
 from workflow_contract_data import ACCEPTANCE_LINT_POLICY, ADR_REQUIRED_SECTIONS, ACCEPTANCE_FIELDS
 from workflow_contract_data import ACCEPTANCE_MATRIX_FIELDS, BASELINE_MODES, BLOCKED_STATES
 from workflow_contract_data import DESIGN_PHASE_PLAN_SECTIONS, DISCOVERY_SCOPE_POLICY
@@ -30,7 +30,7 @@ from target_runtime_support import (
     ROOT_AGENTS_PATH,
     latest_archived_iteration,
     resolve_target_runtime,
-    target_runtime_contract_payload,
+    target_runtime_contract_document,
 )
 
 DEFAULT_RUNTIME = resolve_target_runtime()
@@ -47,7 +47,7 @@ ACCEPTANCE_REPORT_PATH = Path(DEFAULT_RUNTIME["acceptance_report_path"])
 ARCHIVE_DIR_PATTERN = re.compile(r"^(\d{2})_.+")
 
 
-def mother_doc_init_payload(target: Path, force: bool) -> tuple[dict, int]:
+def mother_doc_init_result(target: Path, force: bool) -> tuple[dict, int]:
     template_root = Path(TEMPLATES["mother_doc_root"]).resolve()
     preexisting_items = [child for child in target.iterdir()] if target.exists() else []
     if preexisting_items and not force:
@@ -78,7 +78,7 @@ def mother_doc_init_payload(target: Path, force: bool) -> tuple[dict, int]:
     }, 0
 
 
-def target_scaffold_payload(runtime: dict[str, object], force: bool) -> tuple[dict, int]:
+def target_scaffold_result(runtime: dict[str, object], force: bool) -> tuple[dict, int]:
     if not runtime["ready_for_service"]:
         return {
             "status": "fail",
@@ -101,16 +101,16 @@ def target_scaffold_payload(runtime: dict[str, object], force: bool) -> tuple[di
 
     mother_doc_root = Path(runtime["mother_doc_root"])
     if not mother_doc_root.exists():
-        mother_doc_payload, mother_doc_status = mother_doc_init_payload(mother_doc_root, force=False)
+        mother_doc_result, mother_doc_status = mother_doc_init_result(mother_doc_root, force=False)
         if mother_doc_status != 0:
-            return {"status": "fail", "reason": "mother_doc_init_failed", "payload": mother_doc_payload}, 1
-        operations.append({"kind": "mother_doc_init", "payload": mother_doc_payload})
-        created_items.extend(mother_doc_payload["created_files"])
+            return {"status": "fail", "reason": "mother_doc_init_failed", "result": mother_doc_result}, 1
+        operations.append({"kind": "mother_doc_init", "result": mother_doc_result})
+        created_items.extend(mother_doc_result["created_files"])
 
     construction_plan_root = Path(runtime["construction_plan_root"])
     if not construction_plan_root.exists():
         design_plan_path = mother_doc_root / "08_dev_execution_plan.md"
-        construction_payload, construction_status = construction_plan_init_payload(
+        construction_result, construction_status = construction_plan_init_result(
             construction_plan_root,
             design_plan_path,
             force=False,
@@ -119,10 +119,10 @@ def target_scaffold_payload(runtime: dict[str, object], force: bool) -> tuple[di
             return {
                 "status": "fail",
                 "reason": "construction_plan_init_failed",
-                "payload": construction_payload,
+                "result": construction_result,
             }, 1
-        operations.append({"kind": "construction_plan_init", "payload": construction_payload})
-        created_items.extend(construction_payload["created_packs"])
+        operations.append({"kind": "construction_plan_init", "result": construction_result})
+        created_items.extend(construction_result["created_packs"])
 
     return {
         "status": "pass",
@@ -152,7 +152,7 @@ def _mother_doc_archive_slug(root: Path, override_slug: str | None) -> str:
     return "project"
 
 
-def mother_doc_archive_payload(active_root: Path, force: bool, archive_slug: str | None) -> tuple[dict, int]:
+def mother_doc_archive_result(active_root: Path, force: bool, archive_slug: str | None) -> tuple[dict, int]:
     if not active_root.exists():
         return {"status": "fail", "target": str(active_root), "reason": "mother_doc_missing"}, 1
     docs_root = active_root.parent
@@ -169,9 +169,9 @@ def mother_doc_archive_payload(active_root: Path, force: bool, archive_slug: str
     if archive_dir.exists() and force:
         shutil.rmtree(archive_dir)
     active_root.rename(archive_dir)
-    init_payload, init_status = mother_doc_init_payload(active_root, force=False)
+    init_result, init_status = mother_doc_init_result(active_root, force=False)
     if init_status != 0:
-        return {"status": "fail", "archive_dir": str(archive_dir), "reason": "archive_created_but_reinit_failed", "reinit_payload": init_payload}, 1
+        return {"status": "fail", "archive_dir": str(archive_dir), "reason": "archive_created_but_reinit_failed", "reinit_result": init_result}, 1
     return {
         "status": "pass",
         "archived_root": str(archive_dir),
@@ -180,7 +180,7 @@ def mother_doc_archive_payload(active_root: Path, force: bool, archive_slug: str
         "archive_slug": archive_dir.name.split("_", 1)[1],
     }, 0
 
-def workflow_contract_payload(
+def workflow_contract_document(
     *,
     target_root: str | Path | None = None,
     development_docs_root: str | Path | None = None,
@@ -226,7 +226,7 @@ def workflow_contract_payload(
         ],
         "top_level_resident_docs": top_level_resident_docs,
         "stage_switch_protocol": PHASE_READ_POLICY["stage_switch_protocol"],
-        "target_runtime_contract": target_runtime_contract_payload(
+        "target_runtime_contract": target_runtime_contract_document(
             target_root=target_root,
             development_docs_root=development_docs_root,
             docs_root=docs_root,
@@ -272,15 +272,15 @@ def workflow_contract_payload(
     }
 
 
-def mother_doc_state_sync_payload(
+def mother_doc_state_sync_result(
     root: Path,
     doc_refs: list[str],
     from_state: str,
     to_state: str,
     pack_ref: str | None,
 ) -> dict:
-    payload = sync_doc_states(root, doc_refs, from_state, to_state, pack_ref)
-    payload.update(
+    result = sync_doc_states(root, doc_refs, from_state, to_state, pack_ref)
+    result.update(
         {
             "root": str(root),
             "doc_refs": doc_refs,
@@ -288,12 +288,12 @@ def mother_doc_state_sync_payload(
             "frontmatter_fields": MOTHER_DOC_FRONTMATTER_REQUIRED_FIELDS,
         }
     )
-    return payload
+    return result
 
 
-def graph_preflight_payload(repo: Path, allow_missing_index: bool, graph_runtime_root: Path) -> dict:
-    return build_graph_preflight_payload(repo, allow_missing_index, graph_runtime_root)
+def graph_preflight_summary(repo: Path, allow_missing_index: bool, graph_runtime_root: Path) -> dict:
+    return build_graph_preflight_summary(repo, allow_missing_index, graph_runtime_root)
 
 
-def graph_postflight_payload(repo: Path, graph_runtime_root: Path) -> dict:
-    return build_graph_postflight_payload(repo, graph_runtime_root)
+def graph_postflight_summary(repo: Path, graph_runtime_root: Path) -> dict:
+    return build_graph_postflight_summary(repo, graph_runtime_root)

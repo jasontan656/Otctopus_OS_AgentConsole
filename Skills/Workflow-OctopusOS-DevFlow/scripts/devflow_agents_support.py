@@ -51,7 +51,7 @@ def render_external_agents(runtime: dict[str, object]) -> str:
     return _render_template(EXTERNAL_AGENTS_TEMPLATE, replacements)
 
 
-def render_machine_payload(runtime: dict[str, object]) -> MachineAgentsPayload:
+def render_machine_contract(runtime: dict[str, object]) -> MachineAgentsPayload:
     replacements = {
         "target_root": str(runtime["target_root"]),
         "development_docs_root": str(runtime["development_docs_root"]),
@@ -121,7 +121,7 @@ def scaffold_and_collect_devflow_agents(runtime: dict[str, object]) -> dict[str,
     machine_path = _managed_machine_path(target_contract)
     machine_path.parent.mkdir(parents=True, exist_ok=True)
     machine_path.write_text(
-        json.dumps(render_machine_payload(runtime), indent=2, ensure_ascii=False) + "\n",
+        json.dumps(render_machine_contract(runtime), indent=2, ensure_ascii=False) + "\n",
         encoding="utf-8",
     )
     external_agents_path.write_text(render_external_agents(runtime), encoding="utf-8")

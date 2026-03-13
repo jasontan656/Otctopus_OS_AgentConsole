@@ -9,7 +9,7 @@ from workflow_policy_contract import ACCEPTANCE_LINT_POLICY
 # contract_version: 1.0.0
 # validation_mode: strict
 # required_fields:
-#   - acceptance_lint_payload
+#   - acceptance_lint_result
 # optional_fields: []
 
 
@@ -56,7 +56,7 @@ def _resolve_evidence_path(raw: str, codebase_root: Path, runtime_root: Path) ->
     return codebase_root / token
 
 
-def acceptance_lint_payload(matrix_path: Path, report_path: Path, codebase_root: Path, runtime_root: Path) -> dict:
+def acceptance_lint_result(matrix_path: Path, report_path: Path, codebase_root: Path, runtime_root: Path) -> dict:
     violations: list[dict[str, str]] = []
     matrix_rows = _parse_markdown_table(matrix_path)
     report_rows = _parse_markdown_table(report_path)

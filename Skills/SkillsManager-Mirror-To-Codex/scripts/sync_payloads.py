@@ -12,7 +12,7 @@ RENAME_WORKFLOW = [
 ]
 
 
-def build_install_payload(
+def build_install_route(
     *,
     scope: str,
     skill_name: str | None,
@@ -51,7 +51,7 @@ def build_install_payload(
     }
 
 
-def build_push_payload(
+def build_push_result(
     *,
     scope: str,
     skill_name: str | None,
@@ -85,7 +85,7 @@ def build_push_payload(
     }
 
 
-def build_rename_payload(
+def build_rename_result(
     *,
     skill_name: str,
     requested_skill_name: str | None,

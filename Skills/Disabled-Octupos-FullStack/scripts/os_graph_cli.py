@@ -9,7 +9,7 @@ from os_graph_core import (
     ENGINE_COMMANDS,
     emit_subprocess,
     engine_run,
-    status_payload,
+    status_summary,
     sync_doc_bindings,
     sync_evidence,
     write_map,
@@ -32,7 +32,7 @@ def _build_parser() -> argparse.ArgumentParser:
 
     status = subparsers.add_parser("status", help="show OS_graph runtime and vendored engine readiness")
     status.add_argument("--json", action="store_true")
-    status.set_defaults(func=lambda args: _emit(status_payload(), as_json=args.json))
+    status.set_defaults(func=lambda args: _emit(status_summary(), as_json=args.json))
 
     sync_docs = subparsers.add_parser("sync-doc-bindings", help="index Mother_Doc/docs into document nodes, edges, and frontend layer views")
     sync_docs.add_argument("--json", action="store_true")

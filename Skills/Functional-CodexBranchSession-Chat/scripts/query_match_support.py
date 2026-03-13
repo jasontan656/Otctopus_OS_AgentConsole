@@ -1,9 +1,8 @@
 from __future__ import annotations
 
 import re
-from typing import Any, Dict, List
 
-from session_locator_support import trim_text
+from session_locator_support import AssistantMessage, trim_text
 
 
 TOKEN_RE = re.compile(r"[A-Za-z0-9_]+|[\u4e00-\u9fff]+")
@@ -41,8 +40,8 @@ STOPWORDS = {
 }
 
 
-def tokenize_query(text: str) -> List[str]:
-    terms: List[str] = []
+def tokenize_query(text: str) -> list[str]:
+    terms: list[str] = []
     for token in TOKEN_RE.findall(text.lower()):
         if token in STOPWORDS or len(token) <= 1:
             continue
@@ -59,15 +58,15 @@ def tokenize_query(text: str) -> List[str]:
 
 def score_text_against_query(
     text: str,
-    query_terms: List[str],
+    query_terms: list[str],
     keyword: str,
     case_sensitive: bool,
-) -> tuple[float, List[str]]:
+) -> tuple[float, list[str]]:
     hay = text if case_sensitive else text.casefold()
     needle = keyword if case_sensitive else keyword.casefold()
 
     score = 0.0
-    matched_terms: List[str] = []
+    matched_terms: list[str] = []
     keyword_hit = False
     if needle:
         if needle in hay:
@@ -106,14 +105,14 @@ def score_text_against_query(
 
 
 def collect_topic_evidence(
-    evidence_rows: List[Dict[str, Any]],
+    evidence_rows: list[dict[str, object]],
     question: str,
     keyword: str,
     case_sensitive: bool,
     evidence_limit: int,
-) -> List[Dict[str, Any]]:
+) -> list[dict[str, object]]:
     query_terms = tokenize_query(f"{question} {keyword}")
-    scored_rows: List[Dict[str, Any]] = []
+    scored_rows: list[dict[str, object]] = []
     total = max(1, len(evidence_rows))
     source_weights = {
         "message:assistant": 1.0,
@@ -160,7 +159,11 @@ def collect_topic_evidence(
     return scored_rows[: max(1, evidence_limit)]
 
 
-def select_message(messages: List[Dict[str, Any]], keyword: str | None, case_sensitive: bool) -> Dict[str, Any] | None:
+def select_message(
+    messages: list[AssistantMessage],
+    keyword: str | None,
+    case_sensitive: bool,
+) -> AssistantMessage | None:
     if not messages:
         return None
     if not keyword:
@@ -184,7 +187,7 @@ def select_message(messages: List[Dict[str, Any]], keyword: str | None, case_sen
     return selected
 
 
-def select_message_by_question(messages: List[Dict[str, Any]], question: str) -> Dict[str, Any] | None:
+def select_message_by_question(messages: list[AssistantMessage], question: str) -> AssistantMessage | None:
     if not messages:
         return None
     query_terms = tokenize_query(question)

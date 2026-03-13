@@ -10,9 +10,9 @@ import subprocess
 from pathlib import Path
 from pathlib import PurePosixPath
 from typing import List
-from sync_payloads import build_install_payload
-from sync_payloads import build_push_payload
-from sync_payloads import build_rename_payload
+from sync_payloads import build_install_route
+from sync_payloads import build_push_result
+from sync_payloads import build_rename_result
 
 VALID_SKILL_SEGMENT_RE = re.compile(r"^[A-Za-z0-9._-]+$")
 RSYNC_EXCLUDES = (
@@ -281,7 +281,7 @@ def _rename_push(
         os.replace(old_destination, new_destination)
         renamed_path = True
 
-    return build_rename_payload(
+    return build_rename_result(
         skill_name=normalized_skill_name,
         requested_skill_name=requested_skill_name,
         source_skill_name=source_skill_name,
@@ -360,7 +360,7 @@ def main() -> int:
         resolved_mode = "push" if destination_exists else "install"
 
     if resolved_mode == "install":
-        payload = build_install_payload(
+        payload = build_install_route(
             scope=args.scope,
             skill_name=normalized_skill_name,
             requested_skill_name=args.skill_name,
@@ -377,7 +377,7 @@ def main() -> int:
         print(json.dumps(payload, ensure_ascii=False, indent=2))
         return 0
 
-    payload = build_push_payload(
+    payload = build_push_result(
         scope=args.scope,
         skill_name=normalized_skill_name,
         requested_skill_name=args.skill_name,

@@ -6,7 +6,6 @@ import shutil
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
 
 
 SKILL_NAME = "Meta-RootFile-Manager"
@@ -107,7 +106,7 @@ def ensure_parent(path: Path, dry_run: bool) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
 
 
-def read_json(path: Path) -> Any:
+def read_json(path: Path) -> object:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
@@ -118,7 +117,7 @@ def write_text(path: Path, content: str, dry_run: bool) -> None:
     path.write_text(content, encoding="utf-8")
 
 
-def write_json(path: Path, payload: Any, dry_run: bool) -> None:
+def write_json(path: Path, payload: object, dry_run: bool) -> None:
     write_text(path, json.dumps(payload, indent=2, ensure_ascii=False) + "\n", dry_run)
 
 
@@ -149,11 +148,11 @@ def prune_legacy_managed_target_dirs(paths: RuntimePaths, dry_run: bool) -> list
     return removed
 
 
-def load_scan_rules(paths: RuntimePaths) -> dict[str, Any]:
+def load_scan_rules(paths: RuntimePaths) -> dict[str, object]:
     return read_json(paths.scan_rules_path)
 
 
-def load_payload_structure_contract(paths: RuntimePaths) -> dict[str, Any]:
+def load_agents_structure_contract(paths: RuntimePaths) -> dict[str, object]:
     return read_json(paths.mirror_skill_root / PAYLOAD_STRUCTURE_CONTRACT_RELATIVE_PATH)
 
 
@@ -195,7 +194,7 @@ def extract_external_agents_part_a(text: str) -> str:
     return render_external_agents(body, prefix)
 
 
-def render_internal_agents_human(part_a_text: str, machine_payload: Any) -> str:
+def render_internal_agents_human(part_a_text: str, machine_payload: object) -> str:
     part_a = extract_external_agents_part_a(part_a_text).rstrip()
     payload = json.dumps(machine_payload, indent=2, ensure_ascii=False)
     return f"{part_a}\n\n{PART_B_OPEN}\n\n```json\n{payload}\n```\n{PART_B_CLOSE}\n"
@@ -207,7 +206,7 @@ def extract_internal_part_a(human_text: str) -> str:
     return human_text.rstrip() + "\n"
 
 
-def load_machine_payload(machine_path: Path) -> Any:
+def load_machine_payload(machine_path: Path) -> object:
     if machine_path.exists():
         return read_json(machine_path)
     return {}
@@ -240,24 +239,24 @@ def _relative_source_key(paths: RuntimePaths, source_path: Path) -> str:
     return str(_canonical_relative_path(paths, source_path))
 
 
-def _payload_schema_for_source(paths: RuntimePaths, source_path: Path) -> dict[str, Any] | None:
-    contract = load_payload_structure_contract(paths)
+def _payload_schema_for_source(paths: RuntimePaths, source_path: Path) -> dict[str, object] | None:
+    contract = load_agents_structure_contract(paths)
     targets = contract.get("targets", {})
     return targets.get(_relative_source_key(paths, source_path))
 
 
-def list_channels(paths: RuntimePaths) -> dict[str, dict[str, Any]]:
+def list_channels(paths: RuntimePaths) -> dict[str, dict[str, object]]:
     return load_scan_rules(paths).get("channels", {})
 
 
-def find_channel_by_file_kind(paths: RuntimePaths, file_kind: str) -> tuple[str, dict[str, Any]] | None:
+def find_channel_by_file_kind(paths: RuntimePaths, file_kind: str) -> tuple[str, dict[str, object]] | None:
     for channel_id, channel in list_channels(paths).items():
         if channel.get("file_kind") == file_kind:
             return channel_id, channel
     return None
 
 
-def find_channel_for_source_path(paths: RuntimePaths, source_path: Path) -> tuple[str, dict[str, Any]] | None:
+def find_channel_for_source_path(paths: RuntimePaths, source_path: Path) -> tuple[str, dict[str, object]] | None:
     relative = _relative_source_key(paths, source_path)
     for channel_id, channel in list_channels(paths).items():
         governed = channel.get("governed_source_paths", [])
@@ -266,7 +265,12 @@ def find_channel_for_source_path(paths: RuntimePaths, source_path: Path) -> tupl
     return None
 
 
-def build_entry(paths: RuntimePaths, source_path: Path, channel_id: str, channel: dict[str, Any]) -> dict[str, Any]:
+def build_entry(
+    paths: RuntimePaths,
+    source_path: Path,
+    channel_id: str,
+    channel: dict[str, object],
+) -> dict[str, object]:
     managed_dir = derive_managed_dir(paths, source_path)
     managed_files = {
         key: str((managed_dir / filename).resolve())
@@ -298,14 +302,14 @@ def match_scan_rules(
     source_paths: list[str] | None = None,
     *,
     include_missing: bool = False,
-) -> list[dict[str, Any]]:
+) -> list[dict[str, object]]:
     rules = load_scan_rules(paths)
     disallowed = rules.get("disallowed_path_keywords", [])
     only_filters = only_filters or []
     normalized_source_paths = {
         str(Path(item).expanduser().resolve()) for item in (source_paths or [])
     }
-    results: list[dict[str, Any]] = []
+    results: list[dict[str, object]] = []
     for channel_id, channel in list_channels(paths).items():
         for relative in channel.get("governed_source_paths", []):
             source_path = (paths.workspace_root / relative).resolve()
@@ -332,7 +336,7 @@ def _validate_tag_wrapper(text: str, open_tag: str, close_tag: str, label: str) 
     return errors
 
 
-def _extract_fenced_json_payload(block: str) -> tuple[Any | None, list[str]]:
+def _extract_fenced_json_payload(block: str) -> tuple[object | None, list[str]]:
     stripped = block.strip()
     if not stripped.startswith("```json\n") or not stripped.endswith("\n```"):
         return None, ["part_b_json_fence_invalid"]
@@ -345,7 +349,7 @@ def _extract_fenced_json_payload(block: str) -> tuple[Any | None, list[str]]:
         return None, [f"part_b_invalid_json:{exc.msg}"]
 
 
-def _validate_payload_value(payload: Any, schema: dict[str, Any], path: str) -> list[str]:
+def _validate_payload_value(payload: object, schema: dict[str, object], path: str) -> list[str]:
     errors: list[str] = []
     expected_type = schema.get("type")
     type_map = {
@@ -400,7 +404,7 @@ def validate_external_agents(text: str) -> list[str]:
     return errors
 
 
-def validate_internal_human_agents(text: str, payload_schema: dict[str, Any] | None = None) -> list[str]:
+def validate_internal_human_agents(text: str, payload_schema: dict[str, object] | None = None) -> list[str]:
     errors: list[str] = []
     if HOOK_HEADER not in text:
         errors.append("missing_hook_header")
@@ -423,7 +427,7 @@ def validate_internal_human_agents(text: str, payload_schema: dict[str, Any] | N
     return errors
 
 
-def validate_machine_json(machine_path: Path, payload_schema: dict[str, Any] | None = None) -> list[str]:
+def validate_machine_json(machine_path: Path, payload_schema: dict[str, object] | None = None) -> list[str]:
     if not machine_path.exists():
         return ["missing_machine_json"]
     try:
@@ -466,7 +470,7 @@ def validate_plain_mapping(source_path: Path, mapped_path: Path) -> list[str]:
     return errors
 
 
-def lint_external_entry(paths: RuntimePaths, entry: dict[str, Any]) -> list[str]:
+def lint_external_entry(paths: RuntimePaths, entry: dict[str, object]) -> list[str]:
     source_path = Path(entry["source_path"])
     if not source_path.exists():
         return ["missing_external_source"]
@@ -475,7 +479,7 @@ def lint_external_entry(paths: RuntimePaths, entry: dict[str, Any]) -> list[str]
     return []
 
 
-def lint_managed_entry(paths: RuntimePaths, entry: dict[str, Any]) -> list[str]:
+def lint_managed_entry(paths: RuntimePaths, entry: dict[str, object]) -> list[str]:
     source_path = Path(entry["source_path"])
     errors = lint_external_entry(paths, entry)
     if entry["mapping_mode"] == "agents_ab":
@@ -499,7 +503,7 @@ def report_path(paths: RuntimePaths, stage: str) -> Path:
 def write_stage_report(
     paths: RuntimePaths,
     stage: str,
-    payload: Any,
+    payload: object,
     dry_run: bool,
     custom_report_path: str | None = None,
 ) -> Path:
@@ -570,7 +574,7 @@ def scaffold_plain_external(_file_kind: str) -> str:
     return ""
 
 
-def resolve_target_contract(paths: RuntimePaths, source_path: Path) -> dict[str, Any]:
+def resolve_target_contract(paths: RuntimePaths, source_path: Path) -> dict[str, object]:
     found = find_channel_for_source_path(paths, source_path)
     if found is None:
         raise FileNotFoundError("governed_target_not_found")

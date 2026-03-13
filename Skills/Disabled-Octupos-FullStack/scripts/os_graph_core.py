@@ -72,7 +72,7 @@ def ensure_engine() -> None:
         _run(["npm", "run", "build"], ENGINE_ROOT)
 
 
-def engine_ready_payload() -> dict[str, object]:
+def engine_ready_summary() -> dict[str, object]:
     return {
         "engine_asset_root": str(ENGINE_ROOT),
         "engine_root": str(ENGINE_ROOT),
@@ -420,10 +420,10 @@ def sync_evidence() -> dict[str, object]:
     return {"written_files": written, "evidence_node_count": len(evidence_nodes), "status_doc_count": len(status_index)}
 
 
-def status_payload() -> dict[str, object]:
+def status_summary() -> dict[str, object]:
     ensure_runtime_layout()
     return {
-        **engine_ready_payload(),
+        **engine_ready_summary(),
         "graph_root": str(GRAPH_ROOT),
         "document_root": str(DOC_ROOT),
         "runtime_dirs": [str(RUNTIME_ROOT / item) for item in RUNTIME_DIRS],

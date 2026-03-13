@@ -189,7 +189,7 @@ def resolve_target_runtime(
     }
 
 
-def target_runtime_contract_payload(
+def target_runtime_contract_document(
     *,
     target_root: str | Path | None = None,
     development_docs_root: str | Path | None = None,

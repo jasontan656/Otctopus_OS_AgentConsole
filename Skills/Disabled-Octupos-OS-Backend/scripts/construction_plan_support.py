@@ -10,7 +10,7 @@ from construction_plan_rendering import render_pack_registry, render_root_index,
 from construction_plan_schema import machine_schema_violations
 
 
-def construction_plan_init_payload(target: Path, design_plan_path: Path, force: bool) -> tuple[dict, int]:
+def construction_plan_init_result(target: Path, design_plan_path: Path, force: bool) -> tuple[dict, int]:
     if target.exists() and any(target.iterdir()) and not force:
         return {"status": "fail", "target": str(target), "reason": "target_not_empty", "hint": "rerun with --force to overwrite the execution_atom_plan_validation_packs skeleton"}, 1
     if target.exists() and force:
@@ -27,7 +27,7 @@ def construction_plan_init_payload(target: Path, design_plan_path: Path, force: 
     return {"status": "pass", "target": str(target), "created_packs": pack_dirs, "construction_plan_lint_command": f"./.venv_backend_skills/bin/python Skills/Disabled-Octupos-OS-Backend/scripts/Cli_Toolbox.py construction-plan-lint --path {target} --json"}, 0
 
 
-def construction_plan_lint_payload(path: Path) -> dict:
+def construction_plan_lint_summary(path: Path) -> dict:
     root = path if path.is_dir() else path.parent if path.name == "00_index.md" else path
     exists = root.exists()
     pack_dirs = sorted([pack_dir for pack_dir in root.iterdir() if pack_dir.is_dir() and PACK_DIR_PATTERN.match(pack_dir.name)]) if exists else []

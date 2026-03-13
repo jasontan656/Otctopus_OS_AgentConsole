@@ -3,7 +3,18 @@ from __future__ import annotations
 import json
 import os
 from pathlib import Path
-from typing import Any, Dict, Iterable, List
+from typing import Iterable, TypedDict
+
+
+class AssistantMessage(TypedDict, total=False):
+    timestamp: str
+    source_file: str
+    line_number: int
+    text: str
+    keyword: str
+    keyword_matched: bool
+    matched_terms: list[str]
+    selection_mode: str
 
 
 def resolve_query_id(session_id: str | None, resume_id: str | None) -> str:
@@ -34,7 +45,7 @@ def resolve_codex_home(override: str | None) -> Path:
     )
 
 
-def find_session_files(codex_home: Path, session_id: str) -> List[Path]:
+def find_session_files(codex_home: Path, session_id: str) -> list[Path]:
     sessions_root = codex_home / "sessions"
     if not sessions_root.exists():
         raise FileNotFoundError(f"Sessions root not found: {sessions_root}")
@@ -42,10 +53,10 @@ def find_session_files(codex_home: Path, session_id: str) -> List[Path]:
     return sorted(path for path in sessions_root.rglob(pattern) if path.is_file())
 
 
-def content_to_text(content: Any) -> str:
+def content_to_text(content: object) -> str:
     if not isinstance(content, list):
         return ""
-    chunks: List[str] = []
+    chunks: list[str] = []
     for item in content:
         if not isinstance(item, dict):
             continue
@@ -62,8 +73,8 @@ def trim_text(text: str, max_len: int = 600) -> str:
     return clean[: max_len - 3] + "..."
 
 
-def iter_assistant_messages(session_files: Iterable[Path]) -> List[Dict[str, Any]]:
-    messages: List[Dict[str, Any]] = []
+def iter_assistant_messages(session_files: Iterable[Path]) -> list[AssistantMessage]:
+    messages: list[AssistantMessage] = []
     for path in session_files:
         with path.open("r", encoding="utf-8", errors="replace") as handle:
             for line_no, line in enumerate(handle, start=1):

@@ -51,11 +51,11 @@ def scaffold_graph_runtime_tree(graph_root: Path, *, dry_run: bool) -> list[str]
     return created
 
 
-def emit_contract(payload: dict[str, object], *, as_json: bool) -> int:
+def emit_contract(document: dict[str, object], *, as_json: bool) -> int:
     if as_json:
-        print(json.dumps(payload, ensure_ascii=False, indent=2))
+        print(json.dumps(document, ensure_ascii=False, indent=2))
     else:
-        for key, value in payload.items():
+        for key, value in document.items():
             print(f"{key}: {value}")
     return 0
 
