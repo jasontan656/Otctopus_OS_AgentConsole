@@ -6,7 +6,7 @@
   "mission": "Continuously maintain the console directory as a product-shaped surface, preserve local design history for skills-as-console productization decisions, and keep the project narrative aligned around an AI-native customizable personal assistant methodology.",
   "current_product_target": {
     "brand_name": "Octopus OS",
-    "engineering_repo": "octopus-os-agent-console",
+    "engineering_repo": "Otctopus_OS_AgentConsole",
     "console_root": "Skills/",
     "product_positioning": "console directory maintained as the product surface for the governed skill stack",
     "current_phase": "continuous console productization around the Skills directory",
@@ -14,7 +14,7 @@
     "runtime_strategy": "maximize GPT-5.4 with high reasoning effort plus Codex CLI native capability while minimizing token overhead through skill-first behavior shaping"
   },
   "hard_boundaries": [
-    "the editable source of truth stays inside octopus-os-agent-console/Skills rather than ~/.codex/skills",
+    "the editable source of truth stays inside Otctopus_OS_AgentConsole/Skills rather than ~/.codex/skills",
     "the Skills directory should be maintained as a coherent console product surface instead of a loose scratch area",
     "when console productization touches rootfile-managed files, their body changes must go through Meta-RootFile-Manager rather than direct external edits",
     "the project should express behavior through atomic skills, workflows, governance contracts, and tool entrypoints rather than ad-hoc prompt patches",

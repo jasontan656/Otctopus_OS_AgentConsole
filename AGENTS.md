@@ -4,11 +4,11 @@
 
 <part_A>
 1. 根入口命令
-- 在处理 `octopus-os-agent-console` 路径规则之前，必须先运行：
-- `./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py target-contract --source-path "/home/jasontan656/AI_Projects/octopus-os-agent-console/AGENTS.md" --json`
+- 在处理 `Otctopus_OS_AgentConsole` 路径规则之前，必须先运行：
+- `./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py target-contract --source-path "/home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/AGENTS.md" --json`
 
 2. 当前受管 repo 身份
-- Current concrete repo: `octopus-os-agent-console`
+- Current concrete repo: `Otctopus_OS_AgentConsole`
 - Current target kind: `AGENTS.md`
 - `AGENTS.md` 应保持为 thin runtime entry；具体 routing/update 规则以返回的 JSON contract 为准。
 - same-level `README.md` 已可用，可作为对外产品摘要入口。
@@ -25,25 +25,25 @@
 
 5. 路径治理规范
 - 产品运行态路径必须先识别唯一 `root`，再从 `root` 推导；禁止把作者机器上的绝对路径、`AI_Projects` 字面量或 `~/.codex` 当成唯一真源。
-- 受本 repo 治理的产品路径默认包括：`<root>/.codex`、`<root>/console`、`<root>/Codex_Skill_Runtime`、`<root>/Codex_Skills_Result`、`<root>/Octopus_OS`、`<root>/octopus-os-agent-console` 以及其他 root 下的受管 sibling 项目目录。
+- 受本 repo 治理的产品路径默认包括：`<root>/.codex`、`<root>/console`、`<root>/Codex_Skill_Runtime`、`<root>/Codex_Skills_Result`、`<root>/Octopus_OS`、`<root>/Otctopus_OS_AgentConsole` 以及其他 root 下的受管 sibling 项目目录。
 - skill 自身局部资源（如 `SKILL.md`、`references/`、`assets/`、`scripts/`）可相对当前 skill root 解析；但产品运行态路径、repo 镜像路径、runtime/result 路径、外部工作区路径必须回到 `root` 推导。
 - 若当前机器处于 attach-existing-codex 场景，`<root>/.codex` 可以暂时不存在；此时仅 Codex home 允许回退到显式 `CODEX_HOME` 或检测到的现有 Codex 安装，其他产品路径仍必须保持 root-first。
 - 新增或改写 skill / installer / contract / prompt 时，必须优先使用这套 root-first 规则，避免把旧机器路径重新写回 repo。
 
 6. 同回合要求
-- 如果本回合写入 `octopus-os-agent-console`，必须从一开始就纳入 Git traceability；若任务内容涉及 Python 相关编辑，还必须把 `Dev-PythonCode-Constitution-Backend` 的阅读与 lint 纳入同回合范围。
-- skill mirror 根目录固定为 `octopus-os-agent-console/Skills/`；repo 根目录保留给产品文档、产品工具与正常代码库入口。
-- 如果本回合编辑 skill，必须先在 `octopus-os-agent-console/Skills/` 中的 mirror 副本完成编辑，禁止直接编辑 codex 安装目录下的对应 skill。
+- 如果本回合写入 `Otctopus_OS_AgentConsole`，必须从一开始就纳入 Git traceability；若任务内容涉及 Python 相关编辑，还必须把 `Dev-PythonCode-Constitution-Backend` 的阅读与 lint 纳入同回合范围。
+- skill mirror 根目录固定为 `Otctopus_OS_AgentConsole/Skills/`；repo 根目录保留给产品文档、产品工具与正常代码库入口。
+- 如果本回合编辑 skill，必须先在 `Otctopus_OS_AgentConsole/Skills/` 中的 mirror 副本完成编辑，禁止直接编辑 codex 安装目录下的对应 skill。
 - skill 编辑完成后，若目标 skill 已存在于 codex 安装目录，必须同回合执行 `$SkillsManager-Mirror-To-Codex` 的 `Push`；若目标 skill 是新建且 codex 安装目录中尚不存在，必须同回合执行 `$SkillsManager-Mirror-To-Codex` 的 `Install`。
 - 若任务内容涉及 Python 相关编辑，结束前必须完成 `Dev-PythonCode-Constitution-Backend` 的 lint。
-- 如果本回合写入了 `octopus-os-agent-console`，必须同回合 commit-and-push。
+- 如果本回合写入了 `Otctopus_OS_AgentConsole`，必须同回合 commit-and-push。
 
 7. Repo-local skills 依赖环境
 - 与 skills 执行相关的 Python 依赖，必须安装到 repo 根目录下的 `./.venv_backend_skills`，禁止依赖全局 Python site-packages。
 - `./requirements-backend_skills.lock.txt` 是 Python 依赖锁定清单；当新增、升级、删除 Python 依赖时，必须同回合同步更新它。
 - 与 skills 执行相关的前端依赖，必须安装并锁定在 repo 根目录下的 `./frontend_skills/` 中；该目录下的 `package.json` 与 `package-lock.json` 是前端依赖真源。
 - 若当前任务需要新增 repo-local 依赖，允许 AI 根据任务内容自行决定所需依赖并直接安装；但安装位置只能是本 repo 的 `*_skills` 环境或其受管 manifest/lock 所在目录。
-- 若后续出现其他类型依赖，也必须优先落在 `octopus-os-agent-console` 目录内的 repo-local `*_skills` 环境或其对应 manifest/lock 文件中，禁止把全局环境当成长期依赖承载层。
+- 若后续出现其他类型依赖，也必须优先落在 `Otctopus_OS_AgentConsole` 目录内的 repo-local `*_skills` 环境或其对应 manifest/lock 文件中，禁止把全局环境当成长期依赖承载层。
 - 当依赖集合发生变化时，必须同时保持 `Meta-RootFile-Manager` 内的治理映射模版与外部 `AGENTS.md` 内容同步。
 
 8. Skills 必用 tech stack 基线

@@ -4,7 +4,8 @@ import datetime as dt
 import json
 import os
 from pathlib import Path
-from typing import Any
+
+from runtime_pain_types import ObservabilityLogResult, RuntimePainBatchOutput
 
 MACHINE_LOG_NAME = "machine.jsonl"
 HUMAN_LOG_NAME = "human.log"
@@ -29,7 +30,7 @@ def _is_blocked_runtime_parent(path: Path) -> bool:
     text = str(path.resolve()).replace("\\", "/")
     return (
         "/.codex/skills" in text
-        or "/octopus-os-agent-console" in text
+        or "/Otctopus_OS_AgentConsole" in text
         or "/Codex_Skills_Mirror" in text
     )
 
@@ -48,7 +49,7 @@ def _discover_runtime_root_from_cwd() -> Path | None:
 
 def _discover_runtime_root_from_repo() -> Path | None:
     script_path = Path(__file__).resolve()
-    repo_root = next((parent for parent in script_path.parents if parent.name == "octopus-os-agent-console"), None)
+    repo_root = next((parent for parent in script_path.parents if parent.name == "Otctopus_OS_AgentConsole"), None)
     if repo_root is None:
         return None
     candidate = (repo_root.parent / "Codex_Skill_Runtime").resolve()
@@ -76,7 +77,7 @@ def _resolve_runtime_log_dir(run_id: str) -> Path:
     return (base / "Meta-Runtime-Selfcheck" / "logs" / "runtime_pain_batch" / run_id).resolve()
 
 
-def attach_observability_logs(*, run_id: str, mode: str, output: dict[str, Any]) -> dict[str, Any]:
+def attach_observability_logs(*, run_id: str, mode: str, output: RuntimePainBatchOutput) -> ObservabilityLogResult:
     payload = (
         output.get("runtime_pain_batch_selfcheck_v1", {})
         if isinstance(output.get("runtime_pain_batch_selfcheck_v1", {}), dict)
@@ -125,7 +126,7 @@ def attach_observability_logs(*, run_id: str, mode: str, output: dict[str, Any])
             "human_log_path": str(human_path),
             "human_renderer": HUMAN_RENDERER,
         }
-    except Exception as exc:  # noqa: BLE001
+    except (OSError, TypeError, ValueError) as exc:
         return {
             "status": "error",
             "run_id": run_id,

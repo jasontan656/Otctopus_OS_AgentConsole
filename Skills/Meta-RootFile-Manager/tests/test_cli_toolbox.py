@@ -56,7 +56,7 @@ class TestCliToolbox:
         self.tempdir = tempfile.TemporaryDirectory()
         self.root = Path(self.tempdir.name)
         self.workspace = self.root / "AI_Projects"
-        self.repo_root = self.workspace / "octopus-os-agent-console"
+        self.repo_root = self.workspace / "Otctopus_OS_AgentConsole"
         self.skill_root = self.repo_root / "Skills" / "Meta-RootFile-Manager"
         self.installed = self.root / ".codex" / "skills" / "Meta-RootFile-Manager"
         self.runtime = self.workspace / "Codex_Skill_Runtime" / "Meta-RootFile-Manager"
@@ -100,11 +100,11 @@ class TestCliToolbox:
         write(root_assets / "AGENTS_human.md", render_internal_human("workspace root", payload()))
         write(root_assets / "AGENTS_machine.json", json.dumps(payload(), ensure_ascii=False, indent=2) + "\n")
         write(
-            root_assets / "octopus-os-agent-console" / "AGENTS_human.md",
+            root_assets / "Otctopus_OS_AgentConsole" / "AGENTS_human.md",
             render_internal_human("repo root", payload()),
         )
         write(
-            root_assets / "octopus-os-agent-console" / "AGENTS_machine.json",
+            root_assets / "Otctopus_OS_AgentConsole" / "AGENTS_machine.json",
             json.dumps(payload(), ensure_ascii=False, indent=2) + "\n",
         )
 
@@ -151,7 +151,7 @@ class TestCliToolbox:
             / "assets"
             / "managed_targets"
             / "AI_Projects"
-            / "octopus-os-agent-console"
+            / "Otctopus_OS_AgentConsole"
             / "README_MD__governed_external.md"
         )
         installed = (
@@ -159,7 +159,7 @@ class TestCliToolbox:
             / "assets"
             / "managed_targets"
             / "AI_Projects"
-            / "octopus-os-agent-console"
+            / "Otctopus_OS_AgentConsole"
             / "README_MD__governed_external.md"
         )
         assert managed.read_text(encoding="utf-8") == "# Console\n"
@@ -171,7 +171,7 @@ class TestCliToolbox:
             / "assets"
             / "managed_targets"
             / "AI_Projects"
-            / "octopus-os-agent-console"
+            / "Otctopus_OS_AgentConsole"
             / "README_MD__governed_external.md"
         )
         write(managed, "# Updated\n")
@@ -215,7 +215,7 @@ class TestCliToolbox:
             / "assets"
             / "managed_targets"
             / "AI_Projects"
-            / "octopus-os-agent-console"
+            / "Otctopus_OS_AgentConsole"
             / "README_MD__governed_external.md"
         )
         write(managed, "# Drift\n")

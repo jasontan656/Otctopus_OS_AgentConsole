@@ -5,7 +5,7 @@
 <part_A>
 1. 根入口命令
 - 在处理当前目录路径规则之前，必须先运行：
-- `<root>/octopus-os-agent-console/.venv_backend_skills/bin/python <root>/octopus-os-agent-console/Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py target-contract --source-path "/home/jasontan656/AI_Projects/Octopus_OS/AGENTS.md" --json`
+- `<root>/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python <root>/Otctopus_OS_AgentConsole/Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py target-contract --source-path "/home/jasontan656/AI_Projects/Octopus_OS/AGENTS.md" --json`
 
 2. 待治理骨架
 - 该目录已进入治理范围。

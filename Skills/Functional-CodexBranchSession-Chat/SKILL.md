@@ -63,7 +63,7 @@ description: 接收 resume/session id 与问题（可选关键词）定位会话
   - 提供 `keyword` 但未命中 assistant 消息，必须返回 `status=error` + 可用候选提示。
   - 未提供 `keyword` 且 session 无 assistant 消息，必须返回 `status=error`。
 - 目录边界：
-  - 技能实现仅落地于 `octopus-os-agent-console/Skills/Functional-CodexBranchSession-Chat`。
+  - 技能实现仅落地于 `Otctopus_OS_AgentConsole/Skills/Functional-CodexBranchSession-Chat`。
 - 运行观测契约：
   - 必须保留双通道日志：`machine.jsonl`（机器可解析）与 `human.log`（人类可读）。
   - 日志根目录锚点：`<root>/Codex_Skill_Runtime/Functional-CodexBranchSession-Chat/`。

@@ -9,7 +9,7 @@ from runtime_context_support import is_indexed, repo_has_substantial_code
 
 def _resolve_repo_root() -> Path:
     script_path = Path(__file__).resolve()
-    repo_root = next((parent for parent in script_path.parents if parent.name == "octopus-os-agent-console"), None)
+    repo_root = next((parent for parent in script_path.parents if parent.name == "Otctopus_OS_AgentConsole"), None)
     if repo_root is None:
         raise RuntimeError("cannot resolve repo root from Workflow-OctopusOS-DevFlow script path")
     return repo_root

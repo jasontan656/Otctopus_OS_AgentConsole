@@ -21,7 +21,7 @@ UNIX_ABS_RE = re.compile(r'(?<![A-Za-z0-9_])/(?:home|Users|opt|var|tmp|etc|srv|m
 WINDOWS_ABS_RE = re.compile(r'(?<![A-Za-z0-9_])[A-Za-z]:\\\\[^\s"\'`]+')
 FILE_URI_RE = re.compile(r'file:///[^\s"\'`]+')
 OCTOPUS_ESCAPE_RE = re.compile(r'["\'`](?:\.\./){2,}[^"\'`\n]*["\'`]')
-WORKSPACE_MANAGER_ROOTS = {"Codex_Skills_Mirror", "octopus-os-agent-console", "AI_Projects"}
+WORKSPACE_MANAGER_ROOTS = {"Codex_Skills_Mirror", "Otctopus_OS_AgentConsole", "AI_Projects"}
 RULE_FILE = "Dev-PythonCode-Constitution-Backend/scripts/python_code_lint_rules/modules/absolute_path.py"
 def _has_ai_projects_prefix(text: str) -> bool:
     return "AI_Projects/" in text or "/AI_Projects/" in text or "AI_Projects\\" in text

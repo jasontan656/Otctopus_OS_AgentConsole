@@ -14,7 +14,7 @@ from runtime_contract_support import (
 
 def _resolve_product_root() -> Path:
     script_path = Path(__file__).resolve()
-    repo_root = next((parent for parent in script_path.parents if parent.name == "octopus-os-agent-console"), None)
+    repo_root = next((parent for parent in script_path.parents if parent.name == "Otctopus_OS_AgentConsole"), None)
     if repo_root is None:
         raise RuntimeError("cannot resolve product root from Meta-github-operation script path")
     return repo_root.parent
@@ -93,7 +93,7 @@ def push_contract_payload() -> PushContractPayload:
         "optional_fields": ["remote_policy"],
         "entry": "push",
         "purpose": "Group push-related Git traceability tools and rules behind one explicit CLI-readable runtime entry.",
-        "allowed_repos": ["Octopus_OS", "octopus-os-agent-console"],
+        "allowed_repos": ["Octopus_OS", "Otctopus_OS_AgentConsole"],
         "commands": commands,
         "remote_policy": {
             "Octopus_OS": {
@@ -107,7 +107,7 @@ def push_contract_payload() -> PushContractPayload:
                     ],
                 }
             },
-            "octopus-os-agent-console": {
+            "Otctopus_OS_AgentConsole": {
                 "origin": {
                     "role": "private_dev_remote",
                     "automation_write_allowed": True,
@@ -139,8 +139,8 @@ def push_contract_payload() -> PushContractPayload:
             "Remote write flows must run serially per repo; do not parallelize push, commit-and-push, repo-bootstrap publish, or remote baseline publication.",
             "Bootstrap flows may create or verify private GitHub repositories only for registered repos and should default to private visibility.",
             "Bootstrap flows should refresh local ignore hygiene for logs, temp files, virtual environments, caches, and .env-like files before the first or follow-up push.",
-            "For octopus-os-agent-console, automatic iteration pushes must go to origin only.",
-            "For octopus-os-agent-console, public-release is currently disabled because development has not reached publishable closure and no release workflow is designed yet.",
+            "For Otctopus_OS_AgentConsole, automatic iteration pushes must go to origin only.",
+            "For Otctopus_OS_AgentConsole, public-release is currently disabled because development has not reached publishable closure and no release workflow is designed yet.",
         ],
         "runtime_governance": runtime_governance_payload(),
     }
@@ -177,7 +177,7 @@ def rollback_contract_payload() -> RollbackContractPayload:
         "optional_fields": [],
         "entry": "rollback",
         "purpose": "Group rollback-related Git restore tools and rules behind one explicit CLI-readable runtime entry.",
-        "allowed_repos": ["Octopus_OS", "octopus-os-agent-console"],
+        "allowed_repos": ["Octopus_OS", "Otctopus_OS_AgentConsole"],
         "commands": commands,
         "runtime_governance": runtime_governance_payload(),
         "rules": [
@@ -197,7 +197,7 @@ def baseline_contract_payload() -> BaselineContractPayload:
         },
     ]
     release_publication_state: ReleasePublicationState = {
-        "octopus-os-agent-console": {
+        "Otctopus_OS_AgentConsole": {
             "public-release": {
                 "status": "disabled",
                 "disabled_reason": "development has not reached a publishable closure and the release workflow is not designed yet",
@@ -212,7 +212,7 @@ def baseline_contract_payload() -> BaselineContractPayload:
         "optional_fields": ["release_publication_state"],
         "entry": "baseline",
         "purpose": "Create a named rollback anchor without overloading push semantics.",
-        "allowed_repos": ["Octopus_OS", "octopus-os-agent-console"],
+        "allowed_repos": ["Octopus_OS", "Otctopus_OS_AgentConsole"],
         "commands": commands,
         "release_publication_state": release_publication_state,
         "runtime_governance": runtime_governance_payload(),
@@ -221,6 +221,6 @@ def baseline_contract_payload() -> BaselineContractPayload:
             "Clean repos should prefer tag-only baselines instead of empty traceability commits.",
             "Dirty repos may create a scoped baseline commit before tagging.",
             "Remote baseline publication must remain within the registered repos.",
-            "For octopus-os-agent-console, do not publish baselines to public-release while the public release flow is disabled.",
+            "For Otctopus_OS_AgentConsole, do not publish baselines to public-release while the public release flow is disabled.",
         ],
     }

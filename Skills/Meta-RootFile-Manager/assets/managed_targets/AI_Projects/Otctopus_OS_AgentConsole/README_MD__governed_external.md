@@ -124,7 +124,7 @@ This repository includes a third-party-derived code component inside `Skills/Met
 
 ## Directory Transition
 
-The product engineering name is now `octopus-os-agent-console`.
+The product engineering name is now `Otctopus_OS_AgentConsole`.
 Internally, this repository still acts as the governed source that maps syncable skill roots from `Skills/` into `~/.codex/skills`.
 
 ## Repository Layout

@@ -26,7 +26,7 @@ class RepoSpec:
 
 def _resolve_product_root() -> Path:
     script_path = Path(__file__).resolve()
-    repo_root = next((parent for parent in script_path.parents if parent.name == "octopus-os-agent-console"), None)
+    repo_root = next((parent for parent in script_path.parents if parent.name == "Otctopus_OS_AgentConsole"), None)
     if repo_root is None:
         raise RuntimeError("cannot resolve product root from Meta-github-operation script path")
     return repo_root.parent
@@ -34,7 +34,7 @@ def _resolve_product_root() -> Path:
 
 PRODUCT_ROOT = _resolve_product_root()
 OCTOPUS_OS_REPO_ROOT = (PRODUCT_ROOT / "Octopus_OS").resolve()
-PRODUCT_REPO_ROOT = (PRODUCT_ROOT / "octopus-os-agent-console").resolve()
+PRODUCT_REPO_ROOT = (PRODUCT_ROOT / "Otctopus_OS_AgentConsole").resolve()
 
 
 REPO_REGISTRY: dict[str, RepoSpec] = {}
@@ -55,8 +55,8 @@ REPO_REGISTRY: dict[str, RepoSpec] = {
             ),
         ),
     ),
-    "octopus-os-agent-console": RepoSpec(
-        name="octopus-os-agent-console",
+    "Otctopus_OS_AgentConsole": RepoSpec(
+        name="Otctopus_OS_AgentConsole",
         path=PRODUCT_REPO_ROOT,
         remotes=(
             RemoteSpec(
@@ -87,10 +87,10 @@ REPO_REGISTRY: dict[str, RepoSpec] = {
 
 REPO_ALIASES: dict[str, str] = {
     "octopus_os": "Octopus_OS",
-    "skills_mirror": "octopus-os-agent-console",
-    "codex_skills_mirror": "octopus-os-agent-console",
-    "Codex_Skills_Mirror": "octopus-os-agent-console",
-    "octopus_os_agent_console": "octopus-os-agent-console",
+    "skills_mirror": "Otctopus_OS_AgentConsole",
+    "codex_skills_mirror": "Otctopus_OS_AgentConsole",
+    "Codex_Skills_Mirror": "Otctopus_OS_AgentConsole",
+    "otctopus_os_agent_console": "Otctopus_OS_AgentConsole",
 }
 
 

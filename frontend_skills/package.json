@@ -1,8 +1,8 @@
 {
-  "name": "octopus-os-agent-console-frontend-skills",
+  "name": "otctopus-os-agent-console-frontend-skills",
   "private": true,
   "version": "0.0.0",
-  "description": "Repo-local frontend dependency environment for octopus-os-agent-console skills workflows.",
+  "description": "Repo-local frontend dependency environment for Otctopus_OS_AgentConsole skills workflows.",
   "packageManager": "npm@11.7.0",
   "scripts": {
     "lint:eslint": "eslint .",

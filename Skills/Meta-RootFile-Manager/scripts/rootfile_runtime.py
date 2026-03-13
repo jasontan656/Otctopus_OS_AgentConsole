@@ -18,7 +18,7 @@ PART_B_CLOSE = "</part_B>"
 PAYLOAD_STRUCTURE_CONTRACT_RELATIVE_PATH = Path(
     "references/runtime_contracts/AGENTS_payload_structure.json"
 )
-REPO_ROOT_CANONICAL_NAME = "octopus-os-agent-console"
+REPO_ROOT_CANONICAL_NAME = "Otctopus_OS_AgentConsole"
 SKILLS_DIR_NAME = "Skills"
 REPO_ROOT_COMPAT_ALIASES = {
     "Codex_Skills_Mirror": REPO_ROOT_CANONICAL_NAME,

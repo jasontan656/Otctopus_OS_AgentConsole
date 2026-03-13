@@ -4,7 +4,7 @@
 
 - Product brand: `Octopus OS`
 - Public subtitle: `Natural-Language-Driven Multi-Agent Console`
-- Engineering repository name: `octopus-os-agent-console`
+- Engineering repository name: `Otctopus_OS_AgentConsole`
 
 ## What This Repository Is
 

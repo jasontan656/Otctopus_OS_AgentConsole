@@ -8,6 +8,7 @@ import os
 import re
 import subprocess
 import sys
+from json import JSONDecodeError
 from pathlib import Path
 from typing import Any
 
@@ -40,7 +41,7 @@ DIAGNOSE_TOKEN = ">"
 
 def _default_codex_home() -> Path:
     script_path = Path(__file__).resolve()
-    repo_root = next((parent for parent in script_path.parents if parent.name == "octopus-os-agent-console"), None)
+    repo_root = next((parent for parent in script_path.parents if parent.name == "Otctopus_OS_AgentConsole"), None)
     if repo_root is not None:
         local_codex_home = (repo_root.parent / ".codex").resolve()
         if local_codex_home.exists():
@@ -132,7 +133,7 @@ def _latest_session_id(history_path: Path) -> str:
                 continue
             try:
                 payload = json.loads(raw)
-            except Exception:
+            except JSONDecodeError:
                 continue
             sid = str(payload.get("session_id", "") or "").strip()
             if sid:
@@ -162,7 +163,7 @@ def _run_memory_runtime(memory_runtime: Path, args: list[str]) -> dict[str, Any]
             continue
         try:
             return json.loads(candidate)
-        except Exception:
+        except JSONDecodeError:
             continue
     raise RuntimeError(f"memory_runtime_non_json_output; cmd={' '.join(cmd)}; stdout={stdout[:280]}")
 

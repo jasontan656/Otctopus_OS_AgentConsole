@@ -11,6 +11,7 @@ from pathlib import Path
 SKILL_ROOT = Path(__file__).resolve().parents[1]
 TOOLBOX = SKILL_ROOT / "scripts" / "Cli_Toolbox.py"
 BATCH_SCRIPT = SKILL_ROOT / "scripts" / "runtime_pain_batch.py"
+SCRIPTS_ROOT = SKILL_ROOT / "scripts"
 
 
 class TestMetaRuntimeSelfcheckSmoke:
@@ -97,3 +98,45 @@ class TestMetaRuntimeSelfcheckSmoke:
                 "smoke-run",
             )
             assert machine_log_path.exists()
+
+    def test_execute_command_list_runs_argv_safe_command(self) -> None:
+        script = (
+            "import json\n"
+            "from runtime_pain_repair_exec import execute_command_list\n"
+            "result = execute_command_list(commands=['python -c \"print(123)\"'], timeout_sec=5, workdir='.', change_detection_root='')\n"
+            "print(json.dumps(result))\n"
+        )
+        result = subprocess.run(
+            [sys.executable, "-c", script],
+            cwd=str(SCRIPTS_ROOT),
+            text=True,
+            capture_output=True,
+            check=False,
+            env=os.environ.copy(),
+        )
+        assert result.returncode == 0, result.stderr
+        payload = json.loads(result.stdout)
+        assert payload["success_commands"] == 1
+        assert payload["failed_commands"] == 0
+        assert payload["runs"][0]["stdout_preview"] == "123"
+
+    def test_execute_command_list_blocks_shell_operator_command(self) -> None:
+        script = (
+            "import json\n"
+            "from runtime_pain_repair_exec import execute_command_list\n"
+            "result = execute_command_list(commands=['python -c \"print(1)\" && python -c \"print(2)\"'], timeout_sec=5, workdir='.', change_detection_root='')\n"
+            "print(json.dumps(result))\n"
+        )
+        result = subprocess.run(
+            [sys.executable, "-c", script],
+            cwd=str(SCRIPTS_ROOT),
+            text=True,
+            capture_output=True,
+            check=False,
+            env=os.environ.copy(),
+        )
+        assert result.returncode == 0, result.stderr
+        payload = json.loads(result.stdout)
+        assert payload["preflight_failed_commands"] == 1
+        assert payload["runs"][0]["status"] == "preflight_blocked"
+        assert payload["runs"][0]["preflight_reason_code"] == "preflight_shell_operator_unsupported"

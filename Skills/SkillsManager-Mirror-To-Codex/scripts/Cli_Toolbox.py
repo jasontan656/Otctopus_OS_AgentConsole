@@ -24,7 +24,7 @@ RSYNC_EXCLUDES = (
 SYSTEM_SKILL_NAMESPACE = ".system"
 SYSTEM_SKILL_MARKER = ".codex-system-skills.marker"
 SKILLS_DIR_NAME = "Skills"
-CANONICAL_MIRROR_REPO_NAME = "octopus-os-agent-console"
+CANONICAL_MIRROR_REPO_NAME = "Otctopus_OS_AgentConsole"
 LEGACY_MIRROR_REPO_NAME = "Codex_Skills_Mirror"
 FORBIDDEN_CODEX_ROOT_FILES = ("AGENTS.md",)
 

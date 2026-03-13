@@ -46,7 +46,7 @@ class TestMetaGithubOperationCliTests:
         assert any(command["name"] == "repo-bootstrap" for command in push_payload["commands"])
         assert not (any(command["name"] == "baseline-create" for command in push_payload["commands"]))
         assert (
-            push_payload["remote_policy"]["octopus-os-agent-console"]["origin"]["role"]
+            push_payload["remote_policy"]["Otctopus_OS_AgentConsole"]["origin"]["role"]
             == "private_dev_remote"
         )
         assert push_payload["remote_policy"]["Octopus_OS"]["origin"]["role"] == "private_primary_remote"
@@ -54,7 +54,7 @@ class TestMetaGithubOperationCliTests:
         assert push_payload["runtime_governance"]["claims_dir"].endswith("/meta-github-operation/claims")
         assert push_payload["runtime_governance"]["result_root"].endswith("/meta-github-operation")
         assert push_payload["runtime_governance"]["push_lock_dir"].endswith("/meta-github-operation/push_locks")
-        assert not push_payload["remote_policy"]["octopus-os-agent-console"]["public-release"][
+        assert not push_payload["remote_policy"]["Otctopus_OS_AgentConsole"]["public-release"][
             "automation_write_allowed"
         ]
         assert any("serially per repo" in rule for rule in push_payload["rules"])
@@ -65,7 +65,7 @@ class TestMetaGithubOperationCliTests:
         assert [command["name"] for command in baseline_payload["commands"]] == ["baseline-create"]
         assert baseline_payload["runtime_governance"]["result_policy"].startswith("This skill does not emit")
         assert (
-            baseline_payload["release_publication_state"]["octopus-os-agent-console"]["public-release"]["status"]
+            baseline_payload["release_publication_state"]["Otctopus_OS_AgentConsole"]["public-release"]["status"]
             == "disabled"
         )
 
@@ -288,9 +288,9 @@ class TestMetaGithubOperationCliTests:
             assert payload["push"]["remote"] == "origin"
 
     def test_remote_info_exposes_managed_remote_policy(self) -> None:
-        payload = json.loads(self.run_cli("remote-info", "--repo", "octopus-os-agent-console", "--json").stdout)
+        payload = json.loads(self.run_cli("remote-info", "--repo", "Otctopus_OS_AgentConsole", "--json").stdout)
         policy = payload["managed_remote_policy"]
-        assert policy["repo"] == "octopus-os-agent-console"
+        assert policy["repo"] == "Otctopus_OS_AgentConsole"
         assert any(item["name"] == "origin" for item in policy["remotes"])
         blocked = next(item for item in policy["remotes"] if item["name"] == "public-release")
         assert blocked["status"] == "disabled"
@@ -299,13 +299,13 @@ class TestMetaGithubOperationCliTests:
     def test_remote_policy_blocks_public_release_writes_for_product_repo(self) -> None:
         with pytest.raises(ValueError, match="remote_write_blocked"):
             ensure_remote_write_allowed(
-                "octopus-os-agent-console",
+                "Otctopus_OS_AgentConsole",
                 "public-release",
                 operation="push",
             )
 
     def test_remote_policy_payload_marks_public_release_disabled(self) -> None:
-        payload = remote_policy_payload("octopus-os-agent-console")
+        payload = remote_policy_payload("Otctopus_OS_AgentConsole")
         blocked = next(item for item in payload["remotes"] if item["name"] == "public-release")
         assert blocked["role"] == "future_public_release_remote"
         assert not (blocked["manual_publish_allowed"])

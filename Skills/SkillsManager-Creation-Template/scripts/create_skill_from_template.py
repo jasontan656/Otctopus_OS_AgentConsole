@@ -15,7 +15,7 @@ HEADING_TAG_RE = re.compile(r"^(##\s+[1-7]\.\s+[^\n（(]+?)\s*[（(][^）)\n]+[�
 
 def _default_target_root() -> Path:
     script_path = Path(__file__).resolve()
-    repo_root = next((parent for parent in script_path.parents if parent.name == "octopus-os-agent-console"), None)
+    repo_root = next((parent for parent in script_path.parents if parent.name == "Otctopus_OS_AgentConsole"), None)
     if repo_root is not None:
         local_skills_root = (repo_root.parent / ".codex" / "skills").resolve()
         if local_skills_root.exists():

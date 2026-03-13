@@ -4,6 +4,7 @@ import re
 from typing import Any
 
 from runtime_pain_observability import normalize_text
+from runtime_pain_types import RuntimePainGroup
 
 _SUSPECT_PLACEHOLDER_RE = re.compile(r"<[^>\s]+>")
 _SELF_REPAIR_RE = re.compile(r"\bruntime_pain_batch\.py\b", re.IGNORECASE)
@@ -92,7 +93,7 @@ def _looks_like_thread_scope_status_command(command: str) -> bool:
     return False
 
 
-def _iter_raw_candidates(group: dict[str, Any]) -> list[str]:
+def _iter_raw_candidates(group: RuntimePainGroup) -> list[str]:
     outputs: list[str] = []
 
     diagnosis_card = _as_dict(group.get("diagnosis_card_v2"))
@@ -116,7 +117,7 @@ def _iter_raw_candidates(group: dict[str, Any]) -> list[str]:
     return outputs
 
 
-def extract_group_repair_commands(group: dict[str, Any]) -> list[str]:
+def extract_group_repair_commands(group: RuntimePainGroup) -> list[str]:
     if not isinstance(group, dict):
         return []
 

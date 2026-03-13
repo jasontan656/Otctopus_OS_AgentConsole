@@ -120,7 +120,7 @@
         }
       }
     },
-    "octopus-os-agent-console/AGENTS.md": {
+    "Otctopus_OS_AgentConsole/AGENTS.md": {
       "type": "object",
       "key_order": [
         "entry_role",

@@ -6,7 +6,8 @@ import subprocess
 import time
 import re
 from pathlib import Path
-from typing import Any
+
+from runtime_pain_types import ChangeDetectionResult, CommandExecutionResult, CommandRunResult
 
 from runtime_pain_observability import normalize_text
 
@@ -26,7 +27,9 @@ _LEGACY_SED_SUFFIX_ALIASES = (
     ("/postrun/errors.json", "/postrun_manifest.json"),
     ("/constitution_lint_rules/governance_rules.py", "/constitution_lint_rules/registry.py"),
 )
-_MIRROR_DIR_ALIASES = ("octopus-os-agent-console", "Codex_Skills_Mirror")
+_MIRROR_DIR_ALIASES = ("Otctopus_OS_AgentConsole", "Codex_Skills_Mirror")
+_PATH_RESOLUTION_EXCEPTIONS = (OSError, RuntimeError, ValueError)
+_SUBPROCESS_EXECUTION_EXCEPTIONS = (OSError, ValueError, subprocess.SubprocessError)
 
 
 def _build_known_multi_repo_container_paths() -> frozenset[Path]:
@@ -36,17 +39,17 @@ def _build_known_multi_repo_container_paths() -> frozenset[Path]:
     if env_workspace_root:
         try:
             candidates.add(Path(env_workspace_root).expanduser().resolve())
-        except Exception:
+        except _PATH_RESOLUTION_EXCEPTIONS:
             pass
 
     probe_roots: list[Path] = []
     try:
         probe_roots.append(Path.cwd().resolve())
-    except Exception:
+    except _PATH_RESOLUTION_EXCEPTIONS:
         pass
     try:
         probe_roots.append(Path.home().resolve())
-    except Exception:
+    except _PATH_RESOLUTION_EXCEPTIONS:
         pass
 
     visited: set[Path] = set()
@@ -63,7 +66,7 @@ def _build_known_multi_repo_container_paths() -> frozenset[Path]:
             if runtime_path.exists():
                 try:
                     candidates.add(runtime_path.resolve())
-                except Exception:
+                except _PATH_RESOLUTION_EXCEPTIONS:
                     pass
 
     return frozenset(candidates)
@@ -85,7 +88,7 @@ def _extract_command_paths(command: str) -> list[str]:
 
         try:
             path = Path(token).expanduser().resolve()
-        except Exception:
+        except _PATH_RESOLUTION_EXCEPTIONS:
             continue
 
         base = str(path.parent if path.is_file() else path)
@@ -145,7 +148,7 @@ def _looks_like_glob(path_token: str) -> bool:
 def _is_known_multi_repo_container(path_value: Path) -> bool:
     try:
         resolved = path_value.resolve()
-    except Exception:
+    except _PATH_RESOLUTION_EXCEPTIONS:
         return False
     return resolved in _KNOWN_MULTI_REPO_CONTAINER_PATHS
 
@@ -476,7 +479,7 @@ def preflight(*, command: str, workdir: str | None) -> tuple[bool, str, str]:
             return ok, reason_code, detail
         try:
             tokens = shlex.split(segment)
-        except Exception:
+        except ValueError:
             tokens = []
         executable = str(tokens[0] or "").strip().lower() if tokens else ""
         if executable == "cd":
@@ -498,7 +501,7 @@ def _detect_repo_root(candidate_dir: str, timeout_sec: int) -> str:
             text=True,
             timeout=max(1, int(timeout_sec)),
         )
-    except Exception:
+    except _SUBPROCESS_EXECUTION_EXCEPTIONS:
         return ""
 
     if proc.returncode != 0:
@@ -513,7 +516,7 @@ def _resolve_default_repo_root(change_detection_root: str, timeout_sec: int) -> 
 
     try:
         cwd = str(Path.cwd())
-    except Exception:
+    except _PATH_RESOLUTION_EXCEPTIONS:
         return ""
 
     return _detect_repo_root(cwd, timeout_sec)
@@ -536,7 +539,7 @@ def _git_path_snapshot(repo_root: str, timeout_sec: int) -> set[str]:
                 text=True,
                 timeout=max(1, int(timeout_sec)),
             )
-        except Exception:
+        except _SUBPROCESS_EXECUTION_EXCEPTIONS:
             continue
 
         if proc.returncode != 0:
@@ -554,7 +557,7 @@ def detect_preexisting_changes(
     *,
     change_detection_root: str | None,
     timeout_sec: int,
-) -> dict[str, Any]:
+) -> ChangeDetectionResult:
     resolved_timeout = max(1, int(timeout_sec))
     repo_root = _resolve_default_repo_root(str(change_detection_root or "").strip(), resolved_timeout)
     snapshot = _git_path_snapshot(repo_root, resolved_timeout) if repo_root else set()
@@ -572,12 +575,12 @@ def execute_command_list(
     timeout_sec: int,
     workdir: str,
     change_detection_root: str | None = None,
-) -> dict[str, Any]:
+) -> CommandExecutionResult:
     resolved_timeout = max(1, int(timeout_sec))
     resolved_workdir = str(workdir or "").strip() or None
     default_repo_root = _resolve_default_repo_root(str(change_detection_root or "").strip(), resolved_timeout)
 
-    runs: list[dict[str, Any]] = []
+    runs: list[CommandRunResult] = []
     all_changed_paths: set[str] = set()
     change_detection_supported = bool(default_repo_root)
     preflight_reason_codes: list[str] = []
@@ -589,6 +592,46 @@ def execute_command_list(
             continue
 
         started_ts = time.time()
+        try:
+            tokens = shlex.split(cmd)
+        except ValueError as exc:
+            preflight_failed_commands += 1
+            preflight_reason_codes.append("preflight_parse_error")
+            runs.append(
+                {
+                    "index": idx,
+                    "command": cmd,
+                    "status": "preflight_blocked",
+                    "exit_code": -1,
+                    "duration_sec": round(max(0.0, time.time() - started_ts), 3),
+                    "stdout_preview": "",
+                    "stderr_preview": normalize_text(str(exc), limit=400),
+                    "changed_paths": [],
+                    "changed_file_count": 0,
+                    "preflight_reason_code": "preflight_parse_error",
+                }
+            )
+            continue
+
+        if any(token in {"&&", "||", "|", ";"} for token in tokens):
+            preflight_failed_commands += 1
+            preflight_reason_codes.append("preflight_shell_operator_unsupported")
+            runs.append(
+                {
+                    "index": idx,
+                    "command": cmd,
+                    "status": "preflight_blocked",
+                    "exit_code": -1,
+                    "duration_sec": round(max(0.0, time.time() - started_ts), 3),
+                    "stdout_preview": "",
+                    "stderr_preview": "shell operators are not supported; split the command into separate argv-safe entries",
+                    "changed_paths": [],
+                    "changed_file_count": 0,
+                    "preflight_reason_code": "preflight_shell_operator_unsupported",
+                }
+            )
+            continue
+
         preflight_ok, preflight_reason_code, preflight_detail = preflight(
             command=cmd,
             workdir=resolved_workdir,
@@ -613,6 +656,25 @@ def execute_command_list(
             )
             continue
 
+        executable = str(tokens[0] or "").strip().lower() if tokens else ""
+        if executable == "cd":
+            cd_targets = _extract_positional_targets(tokens)
+            resolved_workdir = str(_resolve_runtime_path(cd_targets[0], resolved_workdir)) if cd_targets else resolved_workdir
+            runs.append(
+                {
+                    "index": idx,
+                    "command": cmd,
+                    "status": "ok",
+                    "exit_code": 0,
+                    "duration_sec": round(max(0.0, time.time() - started_ts), 3),
+                    "stdout_preview": "",
+                    "stderr_preview": "",
+                    "changed_paths": [],
+                    "changed_file_count": 0,
+                }
+            )
+            continue
+
         command_repo_root = ""
         for candidate in _extract_command_paths(cmd):
             command_repo_root = _detect_repo_root(candidate, resolved_timeout)
@@ -632,8 +694,7 @@ def execute_command_list(
 
         try:
             proc = subprocess.run(
-                cmd,
-                shell=True,
+                tokens,
                 capture_output=True,
                 text=True,
                 cwd=resolved_workdir,
@@ -647,7 +708,7 @@ def execute_command_list(
             status = "timeout"
             stdout_preview = normalize_text(str(exc.stdout or "").strip(), limit=400)
             stderr_preview = normalize_text(str(exc.stderr or "").strip(), limit=400)
-        except Exception as exc:
+        except _SUBPROCESS_EXECUTION_EXCEPTIONS as exc:
             stderr_preview = normalize_text(str(exc), limit=400)
 
         after_snapshot = _git_path_snapshot(active_repo_root, resolved_timeout) if active_repo_root else set()

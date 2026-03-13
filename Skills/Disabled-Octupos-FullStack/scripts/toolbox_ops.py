@@ -21,7 +21,7 @@ from mother_doc_status import sync_status_tree, sync_status_tree_from_git
 
 def _resolve_product_root() -> Path:
     script_path = Path(__file__).resolve()
-    repo_root = next((parent for parent in script_path.parents if parent.name == "octopus-os-agent-console"), None)
+    repo_root = next((parent for parent in script_path.parents if parent.name == "Otctopus_OS_AgentConsole"), None)
     if repo_root is None:
         raise RuntimeError("cannot resolve product root from Disabled-Octupos-FullStack script path")
     return repo_root.parent

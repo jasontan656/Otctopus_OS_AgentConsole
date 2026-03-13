@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import Any
 
+from runtime_pain_types import NarrativePackage, RuntimePainEvent
+
 _ACTIVITY_RULES = (
     ("governance_gate.py", "当时在执行治理门禁检查，目的是验证本轮改动是否可放行。"),
     ("l2_structure_lint.py", "当时在执行结构一致性检查，目的是确认结构层级和索引完整。"),
@@ -592,8 +594,8 @@ def build_narrative_package(
     total_items: int,
     priority_top: str,
     remediation_action: str,
-    events_sorted: list[dict[str, Any]],
-) -> dict[str, Any]:
+    events_sorted: list[RuntimePainEvent],
+) -> NarrativePackage:
     first = events_sorted[0] if events_sorted else {}
     command_preview = _pick_text([first.get("command_preview", ""), first.get("command_signature", "")])
     actual_result = _pick_text([first.get("outcome", ""), first.get("summary", ""), first.get("title", "")])

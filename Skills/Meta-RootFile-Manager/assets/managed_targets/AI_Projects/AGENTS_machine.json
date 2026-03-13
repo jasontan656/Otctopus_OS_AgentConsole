@@ -16,7 +16,7 @@
   ],
   "turn_start_actions": [
     "validate root AGENTS exists",
-    "if the task is skill-related, load the repo-local target contract for /home/jasontan656/AI_Projects/octopus-os-agent-console/AGENTS.md before skill-specific actions",
+    "if the task is skill-related, load the repo-local target contract for /home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/AGENTS.md before skill-specific actions",
     "classify the turn as READ_EXEC or WRITE_EXEC",
     "apply the default meta sequence before concrete execution"
   ],
@@ -24,7 +24,7 @@
     "treat CLI JSON as the primary runtime rule source",
     "do not use audit markdown as the primary execution guide",
     "choose READ_EXEC or WRITE_EXEC by actual write intent, not by file type alone",
-    "for any skill-related task, load the octopus-os-agent-console repo-local contract before skill-specific reads, writes, sync, install, registry, lint, or Git actions",
+    "for any skill-related task, load the Otctopus_OS_AgentConsole repo-local contract before skill-specific reads, writes, sync, install, registry, lint, or Git actions",
     "when a concrete repo path becomes active, load that repo-local contract before repo-specific write, lint, or Git actions"
   ],
   "execution_modes": {

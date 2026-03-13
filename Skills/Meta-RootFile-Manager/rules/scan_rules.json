@@ -9,7 +9,7 @@
         "AGENTS.md",
         "Octopus_OS/AGENTS.md",
         "Octopus_OS/Client_Applications/AGENTS.md",
-        "octopus-os-agent-console/AGENTS.md"
+        "Otctopus_OS_AgentConsole/AGENTS.md"
       ],
       "managed_files": {
         "human": "AGENTS_human.md",
@@ -22,7 +22,7 @@
       "mapping_mode": "plain_copy",
       "governed_source_paths": [
         "Octopus_OS/README.md",
-        "octopus-os-agent-console/README.md"
+        "Otctopus_OS_AgentConsole/README.md"
       ],
       "managed_files": {
         "mapped": "README_MD__governed_external.md"
@@ -33,7 +33,7 @@
       "file_kind": "CHANGELOG.md",
       "mapping_mode": "plain_copy",
       "governed_source_paths": [
-        "octopus-os-agent-console/CHANGELOG.md"
+        "Otctopus_OS_AgentConsole/CHANGELOG.md"
       ],
       "managed_files": {
         "mapped": "CHANGELOG_MD__governed_external.md"
@@ -44,7 +44,7 @@
       "file_kind": "CONTRIBUTING.md",
       "mapping_mode": "plain_copy",
       "governed_source_paths": [
-        "octopus-os-agent-console/CONTRIBUTING.md"
+        "Otctopus_OS_AgentConsole/CONTRIBUTING.md"
       ],
       "managed_files": {
         "mapped": "CONTRIBUTING_MD__governed_external.md"
@@ -55,7 +55,7 @@
       "file_kind": "SECURITY.md",
       "mapping_mode": "plain_copy",
       "governed_source_paths": [
-        "octopus-os-agent-console/SECURITY.md"
+        "Otctopus_OS_AgentConsole/SECURITY.md"
       ],
       "managed_files": {
         "mapped": "SECURITY_MD__governed_external.md"
@@ -66,7 +66,7 @@
       "file_kind": "CODE_OF_CONDUCT.md",
       "mapping_mode": "plain_copy",
       "governed_source_paths": [
-        "octopus-os-agent-console/CODE_OF_CONDUCT.md"
+        "Otctopus_OS_AgentConsole/CODE_OF_CONDUCT.md"
       ],
       "managed_files": {
         "mapped": "CODE_OF_CONDUCT_MD__governed_external.md"
@@ -77,7 +77,7 @@
       "file_kind": "LICENSE",
       "mapping_mode": "plain_copy",
       "governed_source_paths": [
-        "octopus-os-agent-console/LICENSE"
+        "Otctopus_OS_AgentConsole/LICENSE"
       ],
       "managed_files": {
         "mapped": "LICENSE__governed_external.txt"
@@ -89,7 +89,7 @@
       "mapping_mode": "plain_copy",
       "governed_source_paths": [
         "Octopus_OS/.gitignore",
-        "octopus-os-agent-console/.gitignore"
+        "Otctopus_OS_AgentConsole/.gitignore"
       ],
       "managed_files": {
         "mapped": "GITIGNORE__governed_external.txt"
@@ -100,7 +100,7 @@
       "file_kind": "pytest.ini",
       "mapping_mode": "plain_copy",
       "governed_source_paths": [
-        "octopus-os-agent-console/pytest.ini"
+        "Otctopus_OS_AgentConsole/pytest.ini"
       ],
       "managed_files": {
         "mapped": "PYTEST_INI__governed_external.ini"
@@ -147,7 +147,7 @@
       "file_kind": "requirements-backend_skills.lock.txt",
       "mapping_mode": "plain_copy",
       "governed_source_paths": [
-        "octopus-os-agent-console/requirements-backend_skills.lock.txt"
+        "Otctopus_OS_AgentConsole/requirements-backend_skills.lock.txt"
       ],
       "managed_files": {
         "mapped": "REQUIREMENTS_BACKEND_SKILLS_LOCK_TXT__governed_external.txt"

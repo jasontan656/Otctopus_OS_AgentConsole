@@ -119,7 +119,7 @@ def _resolve_workspace_root(raw: str | None, install_root: Path) -> Path:
 def _resolve_state_root(raw: str | None) -> Path:
     if raw:
         return Path(raw).expanduser().resolve()
-    return (Path.home() / ".octopus-os-agent-console" / "install_sessions").resolve()
+    return (Path.home() / ".Otctopus_OS_AgentConsole" / "install_sessions").resolve()
 
 
 def _require_supported_runtime_target(runtime_target: str | None) -> str:

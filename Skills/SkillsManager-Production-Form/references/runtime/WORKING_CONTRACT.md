@@ -13,7 +13,7 @@
 
 ## Current Console Focus
 - Brand: `Octopus OS`
-- Engineering repository: `octopus-os-agent-console`
+- Engineering repository: `Otctopus_OS_AgentConsole`
 - Console root: `Skills/`
 - Positioning: console directory maintained as the product surface for the governed skill stack
 - Current phase: continuous console productization around the Skills directory

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import argparse
 import json
 import os
 from pathlib import Path
@@ -19,6 +20,7 @@ from runtime_pain_repair import (
     select_current_group,
     select_current_groups,
 )
+from runtime_pain_types import CommandExecutionResult, RuntimePainBatchOutput
 from runtime_pain_batch_support import (
     DEFAULT_HISTORY,
     DEFAULT_MEMORY_RUNTIME,
@@ -38,7 +40,7 @@ from runtime_pain_batch_support import (
     _run_memory_runtime,
 )
 
-def _sum_execution_results(values: list[dict[str, Any]]) -> dict[str, Any]:
+def _sum_execution_results(values: list[CommandExecutionResult]) -> CommandExecutionResult:
     if not values:
         return {
             "total_commands": 0,
@@ -53,7 +55,7 @@ def _sum_execution_results(values: list[dict[str, Any]]) -> dict[str, Any]:
             "preflight_reason_codes": [],
         }
 
-    aggregated_runs: list[dict[str, Any]] = []
+    aggregated_runs: list[dict[str, object]] = []
     total_commands = 0
     total_success = 0
     total_failed = 0
@@ -138,7 +140,7 @@ def _normalize_manual_prefix(prefix: str, repo_root: str) -> str:
         if value_path.is_absolute():
             relative = value_path.resolve().relative_to(root_path)
             return str(relative).replace("\\", "/").rstrip("/")
-    except Exception:
+    except (OSError, RuntimeError, ValueError):
         return value
     return value
 
@@ -176,7 +178,7 @@ def _filter_changed_paths(paths: list[str], manual_path_prefixes: list[str], *, 
     return filtered
 
 
-def _emit_report_only_output(*, run_id: str, mode: str, output: dict[str, Any]) -> None:
+def _emit_report_only_output(*, run_id: str, mode: str, output: RuntimePainBatchOutput) -> None:
     attach_observability_logs(run_id=run_id, mode=mode, output=output)
     report_only_output = _build_report_only_output(
         status=str(output.get("status", "ok") or "ok"),
@@ -185,7 +187,7 @@ def _emit_report_only_output(*, run_id: str, mode: str, output: dict[str, Any]) 
     print(json.dumps(report_only_output, ensure_ascii=False, indent=2, sort_keys=True))
 
 
-def run_with_args(args: Any) -> int:
+def run_with_args(args: argparse.Namespace) -> int:
     mode = _detect_mode(mode=args.mode, raw_tokens=list(args.mode_token or []))
     run_id = new_run_id(mode)
     memory_runtime_raw = str(args.memory_runtime or "").strip()
@@ -241,7 +243,7 @@ def run_with_args(args: Any) -> int:
     )
     selected_pending_groups = pending_groups(grouped_rows)
     all_resolved_before = len(selected_pending_groups) == 0
-    output: dict[str, Any] = {
+    output: RuntimePainBatchOutput = {
         "status": "ok",
         "runtime_pain_batch_selfcheck_v1": {
             "run_id": run_id,

@@ -14,7 +14,7 @@ description: 将产品仓内的 syncable skills 导入 codex skills 安装目录
   - `Install`
 - 为显式重命名场景提供第三个独立入口：
   - `Rename`
-- 将 product repo 根目录固定为可见工程路径：`/home/jasontan656/AI_Projects/octopus-os-agent-console`。
+- 将 product repo 根目录固定为可见工程路径：`/home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole`。
 
 ### 1.2 统一入口
 - 本技能唯一 CLI 入口：`scripts/Cli_Toolbox.py`
@@ -42,7 +42,7 @@ description: 将产品仓内的 syncable skills 导入 codex skills 安装目录
 - `.system/*` 技能在 codex 安装目录使用小写规范名；工具必须自动把 mirror 侧实际目录名映射到安装目录规范名。
 - `Rename` 模式下必须显式提供 `--rename-from`，且旧名与新名不得相同。
 - 只允许在 skills 边界目录内工作，禁止越界路径拼接。
-- 若本回合此前已对 `octopus-os-agent-console` 发生实际写入，则在完成真正写操作后，必须同回合执行该仓库自己的 Git 留痕收尾。
+- 若本回合此前已对 `Otctopus_OS_AgentConsole` 发生实际写入，则在完成真正写操作后，必须同回合执行该仓库自己的 Git 留痕收尾。
 
 ## 2. Push 模式
 

@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import Any
 
+from runtime_pain_types import FocusGroupSummary, RuntimePainGroup
+
 
 def _as_dict(value: Any) -> dict[str, Any]:
     return value if isinstance(value, dict) else {}
@@ -19,7 +21,7 @@ def _first_text(values: list[Any]) -> str:
     return next((str(row) for row in values if str(row).strip()), "")
 
 
-def build_focus_group(groups: list[dict[str, Any]]) -> dict[str, Any]:
+def build_focus_group(groups: list[RuntimePainGroup]) -> FocusGroupSummary:
     if not groups:
         return {}
     focus = _as_dict(groups[0])

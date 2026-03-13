@@ -5,7 +5,7 @@
 <part_A>
 1. 根入口命令
 - 在处理当前模块开发文档与施工闭环之前，必须先运行：
-- `<root>/octopus-os-agent-console/.venv_backend_skills/bin/python <root>/octopus-os-agent-console/Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py target-contract --source-path "{{external_agents_path}}" --json`
+- `<root>/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python <root>/Otctopus_OS_AgentConsole/Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py target-contract --source-path "{{external_agents_path}}" --json`
 
 2. 模块开发文档容器
 - 当前目标项目根：`{{target_root}}`
@@ -19,7 +19,7 @@
 3. DevFlow 闭环入口
 - 当前模块的开发文档、任务包、evidence 与 acceptance 闭环由 `$Workflow-OctopusOS-DevFlow` 治理。
 - 进入任何阶段前，必须先运行：
-- `<root>/octopus-os-agent-console/.venv_backend_skills/bin/python <root>/octopus-os-agent-console/Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py target-runtime-contract --target-root "{{target_root}}" --module-dir "{{module_dir}}" --json`
+- `<root>/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python <root>/Otctopus_OS_AgentConsole/Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py target-runtime-contract --target-root "{{target_root}}" --module-dir "{{module_dir}}" --json`
 - 若当前模块已经存在 mother_doc、编号归档、execution packs 或 graph，必须先复用当前脉络；禁止另起脱节文档线。
 
 4. 治理链约束

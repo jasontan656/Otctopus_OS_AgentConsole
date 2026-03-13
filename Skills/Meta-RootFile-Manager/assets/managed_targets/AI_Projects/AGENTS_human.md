@@ -5,11 +5,11 @@
 <part_A>
 1. 根入口命令
 - 在处理 workspace root 路径规则之前，必须先运行：
-- `<root>/octopus-os-agent-console/.venv_backend_skills/bin/python <root>/octopus-os-agent-console/Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py target-contract --source-path "/home/jasontan656/AI_Projects/AGENTS.md" --json`
+- `<root>/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python <root>/Otctopus_OS_AgentConsole/Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py target-contract --source-path "/home/jasontan656/AI_Projects/AGENTS.md" --json`
 
 2. 技能类任务附加入口
 - 任何时候只要任务涉及技能、技能镜像、技能安装、技能同步、技能注册、技能治理或技能运行时，必须阅读：
-- `<root>/octopus-os-agent-console/.venv_backend_skills/bin/python <root>/octopus-os-agent-console/Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py target-contract --source-path "/home/jasontan656/AI_Projects/octopus-os-agent-console/AGENTS.md" --json`
+- `<root>/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python <root>/Otctopus_OS_AgentConsole/Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py target-contract --source-path "/home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/AGENTS.md" --json`
 
 3. 语言规范
 - 对话输出必须使用中文为主。
@@ -19,8 +19,8 @@
 4. 当前受管 repo 边界
 - `$meta-github-operation` 当前仅管理以下 repo：
 - `Octopus_OS`
-- `octopus-os-agent-console`
-- `octopus-os-agent-console` 仍承担与 `~/.codex/skills` 的受控映射关系
+- `Otctopus_OS_AgentConsole`
+- `Otctopus_OS_AgentConsole` 仍承担与 `~/.codex/skills` 的受控映射关系
 
 5. Multi-AGENT 工作模式
 - Multi-AGENT work mode 下，同一文件夹在工作过程中可能出现未预期的并行改动。
@@ -51,7 +51,7 @@
   ],
   "turn_start_actions": [
     "validate root AGENTS exists",
-    "if the task is skill-related, load the repo-local target contract for /home/jasontan656/AI_Projects/octopus-os-agent-console/AGENTS.md before skill-specific actions",
+    "if the task is skill-related, load the repo-local target contract for /home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/AGENTS.md before skill-specific actions",
     "classify the turn as READ_EXEC or WRITE_EXEC",
     "apply the default meta sequence before concrete execution"
   ],
@@ -59,7 +59,7 @@
     "treat CLI JSON as the primary runtime rule source",
     "do not use audit markdown as the primary execution guide",
     "choose READ_EXEC or WRITE_EXEC by actual write intent, not by file type alone",
-    "for any skill-related task, load the octopus-os-agent-console repo-local contract before skill-specific reads, writes, sync, install, registry, lint, or Git actions",
+    "for any skill-related task, load the Otctopus_OS_AgentConsole repo-local contract before skill-specific reads, writes, sync, install, registry, lint, or Git actions",
     "when a concrete repo path becomes active, load that repo-local contract before repo-specific write, lint, or Git actions"
   ],
   "execution_modes": {

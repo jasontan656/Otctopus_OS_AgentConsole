@@ -34,7 +34,7 @@ def _request(url: str) -> bytes:
 
 def _codex_home() -> str:
     script_path = Path(__file__).resolve()
-    repo_root = next((parent for parent in script_path.parents if parent.name == "octopus-os-agent-console"), None)
+    repo_root = next((parent for parent in script_path.parents if parent.name == "Otctopus_OS_AgentConsole"), None)
     if repo_root is not None:
         local_codex_home = (repo_root.parent / ".codex").resolve()
         if local_codex_home.exists():

@@ -1,25 +1,31 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, Callable
 
 from runtime_pain_observability import normalize_text
 from runtime_pain_repair_candidates import extract_group_repair_commands
 from runtime_pain_repair_exec import detect_preexisting_changes, execute_command_list
+from runtime_pain_types import (
+    MemoryRuntimeResponse,
+    RepairWriteRecord,
+    RepairWriteResult,
+    RunMemoryRuntime,
+    RuntimePainGroup,
+)
 
 
 def resolve_group_batch(
     *,
-    run_memory_runtime: Callable[[Path, list[str]], dict[str, Any]],
+    run_memory_runtime: RunMemoryRuntime,
     memory_runtime: Path,
     session_id: str,
     thread_id: str,
-    target_groups: list[dict[str, Any]],
+    target_groups: list[RuntimePainGroup],
     resolved_by: str,
     turn_id: str,
     dry_run: bool,
-) -> dict[str, Any]:
-    writes: list[dict[str, Any]] = []
+) -> RepairWriteResult:
+    writes: list[RepairWriteRecord] = []
     for group in target_groups:
         group_key = str(group.get("pain_group_key", "") or "")
         group_topic = str(group.get("pain_topic", "") or "")
@@ -80,7 +86,7 @@ def resolve_group_batch(
                 args.extend(["--thread-id", item_thread_id])
 
             try:
-                out = run_memory_runtime(memory_runtime, args)
+                out: MemoryRuntimeResponse = run_memory_runtime(memory_runtime, args)
                 writes.append(
                     {
                         "optimization_id": opt_id,
@@ -93,7 +99,7 @@ def resolve_group_batch(
                         "thread_id": item_thread_id,
                     }
                 )
-            except Exception as exc:
+            except (RuntimeError, OSError, ValueError) as exc:
                 writes.append(
                     {
                         "optimization_id": opt_id,
@@ -113,8 +119,8 @@ def resolve_group_batch(
     }
 
 
-def pending_groups(groups: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    pending: list[dict[str, Any]] = []
+def pending_groups(groups: list[RuntimePainGroup]) -> list[RuntimePainGroup]:
+    pending: list[RuntimePainGroup] = []
     for group in groups:
         if not isinstance(group, dict):
             continue
@@ -136,7 +142,11 @@ def _ordered_request_keys(requested_keys: list[str] | tuple[str, ...] | set[str]
     return ordered
 
 
-def select_current_groups(*, groups: list[dict[str, Any]], requested_keys: list[str] | set[str] | tuple[str, ...]) -> list[dict[str, Any]]:
+def select_current_groups(
+    *,
+    groups: list[RuntimePainGroup],
+    requested_keys: list[str] | set[str] | tuple[str, ...],
+) -> list[RuntimePainGroup]:
     pending = pending_groups(groups)
     if not pending:
         return []
@@ -152,17 +162,17 @@ def select_current_groups(*, groups: list[dict[str, Any]], requested_keys: list[
     return [groups_by_key[key] for key in requested if key in groups_by_key]
 
 
-def select_current_group(*, groups: list[dict[str, Any]], requested_keys: set[str]) -> dict[str, Any]:
+def select_current_group(*, groups: list[RuntimePainGroup], requested_keys: set[str]) -> RuntimePainGroup:
     selected = select_current_groups(groups=groups, requested_keys=requested_keys)
     return selected[0] if selected else {}
 
 
 def find_next_group(
     *,
-    groups: list[dict[str, Any]],
+    groups: list[RuntimePainGroup],
     selected_group_key: str = "",
     selected_group_keys: list[str] | set[str] | tuple[str, ...] | None = None,
-) -> dict[str, Any]:
+) -> RuntimePainGroup:
     skip_keys = set(_ordered_request_keys(selected_group_keys or []))
     selected = str(selected_group_key or "").strip()
     if selected:
@@ -176,7 +186,7 @@ def find_next_group(
     return {}
 
 
-def compact_group(group: dict[str, Any]) -> dict[str, Any]:
+def compact_group(group: RuntimePainGroup) -> RuntimePainGroup:
     if not isinstance(group, dict):
         return {}
     return {
@@ -191,7 +201,7 @@ def compact_group(group: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def build_completion_message(*, next_group: dict[str, Any], all_resolved: bool) -> str:
+def build_completion_message(*, next_group: RuntimePainGroup, all_resolved: bool) -> str:
     if all_resolved:
         return "全部修复，没有其他痛点可修了。"
 

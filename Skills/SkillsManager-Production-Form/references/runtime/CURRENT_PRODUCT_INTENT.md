@@ -2,14 +2,14 @@
 
 ## 当前产品身份
 - 产品品牌：`Octopus OS`
-- 当前工程仓名称：`octopus-os-agent-console`
+- 当前工程仓名称：`Otctopus_OS_AgentConsole`
 - 当前 console 根目录：`Skills/`
 - 当前维护对象：`将 Skills 目录持续维护为 console 产品形态`
 - 当前产品角色：`通过规范、技能、工作流与工具治理，把模型塑造成可持续成长的高级个人助理`
 
 ## 当前核心判断
 - `Skills/` 目录不应继续被当成零散 skill 堆放区，而应被维护成具有明确边界、命名、注册与运行面规则的 console 产品源面。
-- `octopus-os-agent-console` 同时承担：
+- `Otctopus_OS_AgentConsole` 同时承担：
   - console 产品门面
   - skills mirror authoring source
   - skill governance runtime entry

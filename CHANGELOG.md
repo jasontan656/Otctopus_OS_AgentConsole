@@ -5,7 +5,7 @@ All notable public-release changes to Octopus OS should be documented in this fi
 ## Maintenance Policy
 
 - the public changelog is release-facing
-- the private development repository `octopus-os-agent-console_AI_dev` remains the high-frequency iteration stream
+- the private development repository `Otctopus_OS_AgentConsole_AI_dev` remains the high-frequency iteration stream
 - release entries should be condensed summaries of the relevant development-period GitHub messages
 - the goal is to let the development repository stay fast while the public changelog stays readable
 
