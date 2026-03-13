@@ -23,24 +23,21 @@ anchors:
 
 # AGENTS Governance Entry
 
-## Purpose
-- This is the single human entry for governed `AGENTS.md` work inside `Meta-RootFile-Manager`.
-- Use this entry instead of choosing between multiple parallel AGENTS references in `SKILL.md`.
-
-## When To Use
-- You need to understand how governed `AGENTS.md` assets are organized.
-- You need to change `AGENTS_machine.json` payload content.
-- You need to validate the required `AGENTS.md` / `AGENTS_human.md` / `AGENTS_machine.json` structure.
+## Scope
+- Use this entry for governed `AGENTS.md` work inside `Meta-RootFile-Manager`.
+- It covers three AGENTS-specific slices only:
+  - asset governance
+  - payload governance
+  - structure contract
 
 ## Downstream Slices
 - [AGENTS 资产治理模型](./AGENTS_ASSET_GOVERNANCE.md)
-  - Use when the task is about `external / internal human / internal machine` surface roles, ownership, or maintenance boundaries.
+  - Use for `external / internal human / internal machine` surface roles, ownership, and maintenance boundaries.
 - [AGENTS Payload 治理合同](./AGENTS_PAYLOAD_GOVERNANCE_CONTRACT_human.md)
-  - Use when the task changes `AGENTS_machine.json` payload semantics or needs the mandatory `$Meta-Enhance-Prompt -> writeback -> collect -> lint` workflow.
+  - Use for `AGENTS_machine.json` payload semantics and the mandatory `$Meta-Enhance-Prompt -> writeback -> collect -> lint` workflow.
 - [AGENTS 结构合同](./AGENTS_content_structure.md)
-  - Use when the task is about required blocks, wrappers, frontmatter, JSON fence shape, or lint structure rules.
+  - Use for required blocks, wrappers, frontmatter, JSON fence shape, and lint structure rules.
 
-## Entry Rule
-- Treat this file as the only human entry for AGENTS governance from `SKILL.md`.
-- If the task changes `AGENTS_machine.json` payload content, the executable runtime entry is still:
+## Executable Entry
+- If the task changes `AGENTS_machine.json` payload content, start from:
   `./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py agents-payload-contract --source-path "<external AGENTS path>" --json`
