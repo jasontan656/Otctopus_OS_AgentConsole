@@ -23,6 +23,10 @@ anchors:
   relation: routes_to
   direction: downstream
   reason: Open-source project analysis is a third stable branch of this skill.
+- target: ../runtime/BOOKS_AND_READINGS_ZONE_POLICY.md
+  relation: routes_to
+  direction: downstream
+  reason: Books and readings management is a fourth stable branch of this skill.
 ---
 
 # Task Routing
@@ -79,3 +83,17 @@ anchors:
 
 ## 分支十四：核对分析报告结构
 - 当任务需要判断一份报告是否“有头有尾、证据完整”时，先读 `../runtime/PROJECT_ANALYSIS_REPORT_STRUCTURE.md`。
+
+## 分支十五：管理书籍与阅读物集中区
+- 当任务涉及书籍、阅读资料、读书笔记或网页阅读物时，先读 `../runtime/BOOKS_AND_READINGS_ZONE_POLICY.md`。
+- 该分支负责书籍区承载目录、统一命名与根 README 导航。
+
+## 分支十六：执行书籍迁移与整理
+- 当任务涉及把一批书籍或阅读资料迁入书籍区时，先读 `../runtime/ORGANIZE_BOOKS_AND_READINGS_FLOW.md`。
+- 该分支负责迁移、重命名和资料包落位。
+
+## 分支十七：维护书籍导航 README
+- 当任务涉及补书目、更新导航或同步最新命名时，先读 `../runtime/BOOK_LIBRARY_README_MAINTENANCE_FLOW.md`。
+
+## 分支十八：核对书籍命名
+- 当任务需要决定书籍或阅读资料的统一名字时，先读 `../runtime/BOOK_NAMING_RULE.md`。
