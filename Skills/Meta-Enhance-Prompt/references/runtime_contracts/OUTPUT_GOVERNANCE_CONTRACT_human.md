@@ -28,19 +28,22 @@ anchors:
   "instruction": [
     "Runtime logs must default under the governed runtime root derived from the active workspace or codex home fallback.",
     "Final outputs must support an explicit --output-path and otherwise default under the governed result root.",
-    "CLI stdout remains available for direct consumption, but file artifacts must still land in the governed roots."
+    "The file written by --output-path must contain the publication body only, never the JSON machine payload.",
+    "CLI stdout remains available for direct consumption, but JSON mode stdout and text publication artifacts must stay semantically separate."
   ],
   "workflow": [
     "Resolve the workspace-aware runtime root and result root.",
     "Append machine and human run logs under the runtime root.",
-    "Write the emitted result to the explicit path or the default result path for the active mode."
+    "Write the emitted publication body to the explicit path or the default result path for the active mode.",
+    "If JSON mode is enabled, emit the machine payload to stdout only and keep the file artifact as plain publication text."
   ],
   "rules": [
     "Do not hardcode author-machine absolute workspace paths.",
     "Do not silently write result files under the skill source tree or the installed codex skill tree.",
-    "Preserve stdout delivery while making governed file artifacts discoverable."
+    "Preserve stdout delivery while making governed file artifacts discoverable.",
+    "Do not mirror the same JSON payload into both stdout and the publication output file."
   ],
-  "migration_note": "Legacy behavior previously emitted stdout/stderr only. The governed implementation now keeps stdout while also materializing result and runtime log artifacts under the resolved governed roots."
+  "migration_note": "Legacy behavior previously emitted stdout/stderr only, and later JSON mode also wrote JSON payloads into output artifacts. The governed implementation now keeps machine payloads on stdout while materializing only plain publication text and runtime logs under the resolved governed roots."
 }
 ```
 </part_B>

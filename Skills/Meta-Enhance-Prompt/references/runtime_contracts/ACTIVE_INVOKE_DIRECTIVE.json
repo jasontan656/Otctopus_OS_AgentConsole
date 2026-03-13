@@ -7,17 +7,19 @@
   "instruction": [
     "Require the raw prompt to already contain GOAL, REPO_CONTEXT_AND_IMPACT, INPUTS, OUTPUTS, BOUNDARIES, and VALIDATION.",
     "Reject missing required sections instead of auto-filling placeholders.",
-    "Emit only the filtered final prompt or the machine-readable failure payload."
+    "Emit only the filtered final prompt or the machine-readable failure payload.",
+    "When the contract body is later published in chat, do not paraphrase or restate GOAL or REPO_CONTEXT_AND_IMPACT outside the contract itself."
   ],
   "workflow": [
     "Read the raw prompt output produced after repo survey.",
     "Run scripts/filter_active_invoke_output.py --mode active_invoke.",
-    "Write runtime logs under the governed runtime root and write the result to the explicit output path or governed result root.",
+    "Write runtime logs under the governed runtime root and write the pure prompt body to the explicit output path or governed result root.",
     "Publish the filtered final output only if validation succeeds."
   ],
   "rules": [
     "Do not claim repo context was surveyed when the raw prompt does not contain it.",
     "Do not output methodology sections, rollback narration, or temporary field names.",
-    "Keep the final prompt in the fixed six-section shape."
+    "Keep the final prompt in the fixed six-section shape.",
+    "Do not add an extra chat-layer summary that repeats GOAL or REPO_CONTEXT_AND_IMPACT before the contract body."
   ]
 }

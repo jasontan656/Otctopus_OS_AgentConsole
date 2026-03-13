@@ -25,11 +25,8 @@ def _emit_error(code: int, message: str, as_json: bool, *, mode_decision: str) -
     payload = {"mode_decision": mode_decision, "filter_exit_code": code, "filter_exit_message": message, "publish_blocked": True}
     mode = mode_decision.removesuffix("_mode") or "runtime_error"
     run_id = new_run_id(mode)
-    rendered_output = json.dumps(payload, ensure_ascii=False) + "\n"
-    artifact_path = write_output_artifact(mode=mode, rendered_output=rendered_output, as_json=True, output_path=None)
-    log_paths = attach_runtime_logs(run_id=run_id, mode=mode, status="error", output_path=artifact_path, payload=payload)
+    log_paths = attach_runtime_logs(run_id=run_id, mode=mode, status="error", output_path=pathlib.Path("publish_blocked"), payload=payload)
     payload["run_id"] = run_id
-    payload["output_path"] = str(artifact_path)
     payload["runtime_logs"] = log_paths
     if as_json:
         sys.stdout.write(json.dumps(payload, ensure_ascii=False) + "\n")
@@ -38,9 +35,17 @@ def _emit_error(code: int, message: str, as_json: bool, *, mode_decision: str) -
     return code
 
 
-def _persist_and_emit(*, payload: RuntimePayloadRecord, rendered_output: str, as_json: bool, output_path: str | None, mode: str) -> int:
+def _persist_and_emit(
+    *,
+    payload: RuntimePayloadRecord,
+    publication_output: str,
+    stdout_output: str,
+    as_json: bool,
+    output_path: str | None,
+    mode: str,
+) -> int:
     run_id = new_run_id(mode)
-    artifact_path = write_output_artifact(mode=mode, rendered_output=rendered_output, as_json=as_json, output_path=output_path)
+    artifact_path = write_output_artifact(mode=mode, rendered_output=publication_output, output_path=output_path)
     log_paths = attach_runtime_logs(run_id=run_id, mode=mode, status="ok", output_path=artifact_path, payload=payload)
     payload["run_id"] = run_id
     payload["output_path"] = str(artifact_path)
@@ -48,7 +53,7 @@ def _persist_and_emit(*, payload: RuntimePayloadRecord, rendered_output: str, as
     if as_json:
         sys.stdout.write(json.dumps(payload, ensure_ascii=False) + "\n")
     else:
-        sys.stdout.write(rendered_output)
+        sys.stdout.write(stdout_output)
     return EXIT_SUCCESS
 
 
@@ -80,14 +85,12 @@ def main() -> int:
             "publish_blocked": False,
             "resolved_skills": payload.get("resolved_skills", []),
             "intent_summary": payload.get("intent_summary", ""),
+            "chat_publish_policy": "When publishing an active_invoke contract in chat, do not restate GOAL or REPO_CONTEXT_AND_IMPACT outside the contract body.",
         }
-        if args.json:
-            rendered_output = json.dumps(response_payload, ensure_ascii=False) + "\n"
-        else:
-            rendered_output = final_output
         return _persist_and_emit(
             payload=response_payload,
-            rendered_output=rendered_output,
+            publication_output=final_output,
+            stdout_output=final_output,
             as_json=args.json,
             output_path=args.output_path,
             mode="skill_directive",
@@ -123,14 +126,12 @@ def main() -> int:
         "filter_exit_code": EXIT_SUCCESS,
         "filter_exit_message": "success",
         "publish_blocked": False,
+        "chat_publish_policy": "If the final prompt is pasted in chat or referenced via output_path, do not paraphrase or restate GOAL or REPO_CONTEXT_AND_IMPACT outside the contract body.",
     }
-    if args.json:
-        rendered_output = json.dumps(response_payload, ensure_ascii=False) + "\n"
-    else:
-        rendered_output = final_prompt
     return _persist_and_emit(
         payload=response_payload,
-        rendered_output=rendered_output,
+        publication_output=final_prompt,
+        stdout_output=final_prompt,
         as_json=args.json,
         output_path=args.output_path,
         mode="active_invoke",

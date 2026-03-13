@@ -26,6 +26,7 @@ class RuntimePayloadRecord(TypedDict, total=False):
     final_prompt_copy_paste: str
     final_skill_read_directive: str
     intent_summary: str
+    chat_publish_policy: str
     run_id: str
     output_path: str
     runtime_logs: RuntimeLogPaths
@@ -33,7 +34,7 @@ class RuntimePayloadRecord(TypedDict, total=False):
 
 def _repo_root_from_script() -> Path | None:
     script_path = Path(__file__).resolve()
-    return next((parent for parent in script_path.parents if parent.name == "octopus-os-agent-console"), None)
+    return next((parent for parent in script_path.parents if parent.name == "Otctopus_OS_AgentConsole"), None)
 
 
 def _workspace_root_from_cwd() -> Path | None:
@@ -76,13 +77,13 @@ def new_run_id(mode: str) -> str:
     return f"meta-enhance-prompt-{normalized_mode}-{stamp}"
 
 
-def default_output_path(*, mode: str, as_json: bool) -> Path:
-    filename = "latest.json" if as_json else "latest.txt"
+def default_output_path(*, mode: str) -> Path:
+    filename = "latest.txt"
     return (governed_result_root() / mode / filename).resolve()
 
 
-def write_output_artifact(*, mode: str, rendered_output: str, as_json: bool, output_path: str | None) -> Path:
-    target = Path(output_path).expanduser().resolve() if output_path else default_output_path(mode=mode, as_json=as_json)
+def write_output_artifact(*, mode: str, rendered_output: str, output_path: str | None) -> Path:
+    target = Path(output_path).expanduser().resolve() if output_path else default_output_path(mode=mode)
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(rendered_output, encoding="utf-8")
     return target

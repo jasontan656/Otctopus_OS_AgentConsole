@@ -45,11 +45,13 @@
     "Do not treat SKILL.md or legacy markdown docs as the primary runtime instruction source.",
     "Do not auto-fill missing contract sections with placeholder defaults.",
     "Do not publish a final prompt when required sections are missing.",
-    "Do not emit only path pointers when the runtime needs direct CLI guidance."
+    "Do not emit only path pointers when the runtime needs direct CLI guidance.",
+    "Do not restate GOAL or REPO_CONTEXT_AND_IMPACT outside the final contract body when publishing in chat.",
+    "Keep JSON stdout semantics separate from text publication artifacts."
   ],
   "runtime_output_policy": {
     "runtime_log_policy": "Append machine and human logs under the governed runtime root for each run.",
-    "result_policy": "Write the emitted result to an explicit output path when provided, otherwise default under the governed result root.",
+    "result_policy": "Write the emitted publication body to an explicit output path when provided, otherwise default under the governed result root.",
     "default_runtime_root": "Codex_Skill_Runtime/Meta-Enhance-Prompt",
     "default_result_root": "Codex_Skills_Result/Meta-Enhance-Prompt"
   }

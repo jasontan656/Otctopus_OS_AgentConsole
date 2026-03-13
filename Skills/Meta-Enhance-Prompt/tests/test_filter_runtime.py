@@ -84,7 +84,9 @@ class TestMetaEnhancePromptRuntime:
             assert machine_log.exists()
             assert human_log.exists()
             assert "GOAL:" in payload["final_prompt_copy_paste"]
+            assert output_path.read_text(encoding="utf-8") == payload["final_prompt_copy_paste"]
             assert "Codex_Skills_Result/Meta-Enhance-Prompt/active_invoke" in str(output_path)
+            assert payload["chat_publish_policy"].startswith("If the final prompt is pasted in chat")
 
     def test_skill_directive_error_keeps_skill_directive_mode(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -117,6 +119,59 @@ class TestMetaEnhancePromptRuntime:
             resolved = payload["resolved_skills"][0]
             assert "Cli_Toolbox.py contract --json" in resolved["contract_command"]
             assert "directive --topic active-invoke --json" in resolved["active_invoke_command"]
+            assert payload["chat_publish_policy"].startswith("When publishing an active_invoke contract in chat")
+
+    def test_json_stdout_and_output_file_are_split(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_path = Path(tmp) / "active_prompt.txt"
+            completed = self.run_filter(
+                "--mode",
+                "active_invoke",
+                "--input-text",
+                "\n".join(
+                    [
+                        "GOAL: Repair contract",
+                        "REPO_CONTEXT_AND_IMPACT:",
+                        "- Survey repo",
+                        "INPUTS:",
+                        "- User request",
+                        "OUTPUTS:",
+                        "- Final prompt",
+                        "BOUNDARIES:",
+                        "- No extra scope",
+                        "VALIDATION:",
+                        "- Six sections remain",
+                    ]
+                ),
+                "--json",
+                "--output-path",
+                str(output_path),
+                workspace_root=Path(tmp),
+            )
+
+            payload = json.loads(completed.stdout)
+            assert completed.stdout.lstrip().startswith("{")
+            assert payload["output_path"] == str(output_path.resolve())
+            assert output_path.read_text(encoding="utf-8") == payload["final_prompt_copy_paste"]
+            assert not output_path.read_text(encoding="utf-8").lstrip().startswith("{")
+
+    def test_skill_directive_json_output_path_writes_plain_text_directive(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_path = Path(tmp) / "directive.txt"
+            completed = self.run_filter(
+                "--mode",
+                "skill_directive",
+                "--input-text",
+                "$Meta-Enhance-Prompt strengthen prompt",
+                "--json",
+                "--output-path",
+                str(output_path),
+                workspace_root=Path(tmp),
+            )
+
+            payload = json.loads(completed.stdout)
+            assert output_path.read_text(encoding="utf-8") == payload["final_skill_read_directive"]
+            assert not output_path.read_text(encoding="utf-8").lstrip().startswith("{")
 
     def test_toolbox_contract_and_directive_read_runtime_assets(self) -> None:
         contract = self.run_toolbox("contract", "--json")
