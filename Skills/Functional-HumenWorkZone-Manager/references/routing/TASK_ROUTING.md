@@ -35,6 +35,10 @@ anchors:
   relation: routes_to
   direction: downstream
   reason: Company and document management is a sixth stable branch of this skill.
+- target: ../runtime/EXTERNAL_RESEARCH_REPORTS_ZONE_POLICY.md
+  relation: routes_to
+  direction: downstream
+  reason: External research report management is a seventh stable branch of this skill.
 ---
 
 # Task Routing
@@ -133,3 +137,17 @@ anchors:
 
 ## 分支二十六：核对公司目录命名
 - 当任务需要决定公司目录名，或判断某个目录是否符合统一公司命名规则时，先读 `../runtime/COMPANY_FOLDER_NAMING_RULE.md`。
+
+## 分支二十七：管理外部调研报告集中区
+- 当任务涉及从外部收集回来的调研报告、资料包、AI 整理报告或附带证据附件时，先读 `../runtime/EXTERNAL_RESEARCH_REPORTS_ZONE_POLICY.md`。
+- 该分支负责外部调研报告承载目录、统一命名和中央 README 导航。
+
+## 分支二十八：执行外部调研报告迁移与收纳
+- 当任务涉及把某个调研报告目录从其他地方迁入 `Human_Work_Zone` 时，先读 `../runtime/ORGANIZE_EXTERNAL_RESEARCH_REPORTS_FLOW.md`。
+- 该分支负责整目录迁移、按内容重命名和迁入后的第一轮登记。
+
+## 分支二十九：维护外部调研报告清单 README
+- 当任务涉及补报告清单、更新报告说明或调整状态时，先读 `../runtime/EXTERNAL_RESEARCH_REPORTS_README_MAINTENANCE_FLOW.md`。
+
+## 分支三十：核对外部调研报告命名
+- 当任务需要决定调研报告目录名、主报告文件名或资料包文件名时，先读 `../runtime/EXTERNAL_RESEARCH_REPORT_NAMING_RULE.md`。
