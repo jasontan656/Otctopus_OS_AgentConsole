@@ -3,40 +3,40 @@
   "registry_version": "v1",
   "entries": [
     {
+      "doc_path": "references/telegram/TELEGRAM_LOGIN_AND_IDENTITY.md",
+      "doc_id": "dev_telegram_constitution.topic.login_and_identity",
+      "rule_id": "title_conjunction_en",
+      "fingerprint": "538dc049308996a868a901831c8dc6e0d93cb647",
+      "decision": "accepted",
+      "note": "Keep grouped title because login and identity are governed as one access branch.",
+      "decided_at": "2026-03-13T03:15:07.716Z"
+    },
+    {
       "doc_path": "references/telegram/TELEGRAM_FULL_API_CLIENTS.md",
       "doc_id": "dev_telegram_constitution.topic.full_api_clients",
       "rule_id": "title_conjunction_en",
-      "fingerprint": "437a03690b3dc11b99cc3556619771c1e0adf845",
+      "fingerprint": "e19336ab889618a5a8895dbf7fda044727b861da",
       "decision": "accepted",
-      "note": "Full API and custom clients remain one capability line after adding payload examples.",
-      "decided_at": "2026-03-13T02:54:31.640Z"
-    },
-    {
-      "doc_path": "references/telegram/TELEGRAM_GAMES_AND_MEDIA.md",
-      "doc_id": "dev_telegram_constitution.topic.games_and_media",
-      "rule_id": "title_conjunction_en",
-      "fingerprint": "64d7ae49987f94b1c679af370f4641fcf5171d3f",
-      "decision": "accepted",
-      "note": "Games and media remain one grouped capability line after adding payload examples.",
-      "decided_at": "2026-03-13T02:54:31.652Z"
+      "note": "Keep grouped title because Full API and custom clients are one governance branch.",
+      "decided_at": "2026-03-13T03:15:07.726Z"
     },
     {
       "doc_path": "references/telegram/TELEGRAM_PAYMENTS_AND_STARS.md",
       "doc_id": "dev_telegram_constitution.topic.payments_and_stars",
       "rule_id": "title_conjunction_en",
-      "fingerprint": "c30351efc32a9f0d33a1f766743d90b3a6b7081d",
+      "fingerprint": "4c78e4e2862db2ef73dd2ee3b68ad3c7e2a4a03e",
       "decision": "accepted",
-      "note": "Payments and Stars remain one payment line after adding payload examples.",
-      "decided_at": "2026-03-13T02:54:31.702Z"
+      "note": "Keep grouped title because payments and Stars are one monetization branch.",
+      "decided_at": "2026-03-13T03:15:07.773Z"
     },
     {
-      "doc_path": "references/telegram/TELEGRAM_LOGIN_AND_IDENTITY.md",
-      "doc_id": "dev_telegram_constitution.topic.login_and_identity",
+      "doc_path": "references/telegram/TELEGRAM_GAMES_AND_MEDIA.md",
+      "doc_id": "dev_telegram_constitution.topic.games_and_media",
       "rule_id": "title_conjunction_en",
-      "fingerprint": "007d7143e0550749089e5932cee9b8062ca5a628",
+      "fingerprint": "30370b4e54ccac63c1d06d4f951a454766a01d04",
       "decision": "accepted",
-      "note": "Login and identity remain one integration line after adding payload examples and auth callback shapes.",
-      "decided_at": "2026-03-13T02:54:39.496Z"
+      "note": "Keep grouped title because this branch governs both Telegram Games and media sharing together",
+      "decided_at": "2026-03-13T03:15:13.569Z"
     }
   ]
 }

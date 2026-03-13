@@ -29,17 +29,17 @@ anchors:
 - `init data` 必须在服务端验证，不能只在前端信任 Telegram 注入值。
 - Mini App 内产生的业务动作，必须和后端 session / token / state machine 对齐。
 
-## 推荐技术栈
+## 已裁决技术栈
 - 容器桥接：`@telegram-apps/sdk` + `@telegram-apps/bridge`
 - 前端：沿用项目主前端栈，例如 `Vue3 + TypeScript`
 - 后端：继续使用项目主服务栈，不为 Mini App 单独发明一套后端框架
 
-## 官方最佳实践
+## 官方硬约束
 - 把 `Telegram.WebApp.initData` 送到 bot/backend 验证，而不是只在前端使用。[Mini Apps](https://core.telegram.org/bots/webapps)
 - 主 Mini App、直达 `startapp` 链接、Inline 中 `Switch to Mini App` 都是官方支持的入口，需要按产品目标选择。[Mini Apps](https://core.telegram.org/bots/webapps)
 - 可通过 `@BotFather` 配置 loading screen、main Mini App 等容器层能力。[Mini Apps](https://core.telegram.org/bots/webapps)
 
-## 社区最佳实践
+## 社区落地共识
 - 先规划用户路径，再接 SDK；常见顺序是：定义 flow -> 接 BotFather -> 做移动端 UI -> 接 SDK -> 做后端验证 -> 真机测试。
   参考：telegram-mini-app.dev 的 Mini App guide 总结了这一套落地顺序。[Community Guide](https://www.telegram-mini-app.dev/blog/telegram-mini-app-guide)
 - 使用 Telegram 容器的 back button、safe area、viewport、theme，避免做成“看起来像普通网页但在 Telegram 里很别扭”的 UI。[Community Guide](https://www.telegram-mini-app.dev/blog/telegram-mini-app-guide)
@@ -106,13 +106,13 @@ anchors:
 ```
 
 ## 局部规则
-- Mini App 页面应假设用户主要在移动端内打开。
-- 任何需要长时间编辑、复杂筛选和多字段输入的流程，都优先在 Mini App 完成，而不是消息流硬拼。
-- Mini App 与 Bot 消息流应有明确分工：
+- Mini App 页面默认按移动端内打开来设计。
+- 任何需要长时间编辑、复杂筛选和多字段输入的流程，落在 Mini App，不在消息流里硬拼。
+- Mini App 与 Bot 消息流必须有明确分工：
   - Bot：提醒、入口、确认、轻操作
   - Mini App：复杂表单、富展示、批量编辑、面板式交互
 - Mini App 退出、刷新、网络抖动后必须能恢复关键上下文，不能把关键状态只放在前端内存里。
 
 ## 例外与门禁
-- 如果一个需求完全可以用 `Inline Keyboard + callback_query` 完成，就不要强行上 Mini App。
+- 如果一个需求完全可以用 `Inline Keyboard + callback_query` 完成，就不上 Mini App。
 - 如果任务开始讨论具体页面组件、布局、动效和 design system，切到 `Dev-VUE3-WebUI-Frontend`。

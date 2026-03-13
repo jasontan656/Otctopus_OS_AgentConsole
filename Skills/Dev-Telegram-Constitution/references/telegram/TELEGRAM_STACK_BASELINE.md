@@ -1,7 +1,7 @@
 ---
 doc_id: "dev_telegram_constitution.topic.stack_baseline"
 doc_type: "topic_atom"
-topic: "Telegram stack and dependency baseline"
+topic: "Telegram stack decision contract and dependency state"
 anchors:
   - target: "../routing/TASK_ROUTING.md"
     relation: "implements"
@@ -13,74 +13,70 @@ anchors:
     reason: "Stack choices should stay aligned with delivery mode."
 ---
 
-# Telegram Stack Baseline
+# Telegram Stack Decision Contract
 
 ## 本地目的
-- 给 Telegram interface 开发提供语言栈、框架与依赖的推荐基线。
-- 避免每次都从零比较 Python / TypeScript / Mini App 组合。
+- 给 Telegram interface 开发提供语言栈、框架与依赖的裁决状态。
+- 避免每次都把候选依赖误写成既定选型。
 
 ## 当前边界
-- 本文只回答“选什么栈更合适”，不替代具体代码实现。
-- 版本与生态判断以当前公开官方文档为准；下列基线按 2026-03-13 核对过一次。
+- 本文只回答“哪些栈已经定版、哪些仍待用户裁决”，不替代具体代码实现。
+- 版本与生态判断以当前公开官方文档为准；下列状态按 2026-03-13 核对过一次。
 
-## 推荐栈矩阵
-- `Python + Bot API + 常规业务 Bot`
-  - 默认优先：`python-telegram-bot`
-  - 当前公开 stable docs：`v22.6`
-  - 适合：常规命令流、回调交互、Webhook/long polling、文档可读性优先的团队。
-- `Python + asyncio + 明确事件路由 / 高并发 Bot`
-  - 默认优先：`aiogram`
-  - 当前公开 docs：`3.26.0`
-  - 适合：router/middleware/filter 明确、异步边界清楚、吞吐要求更高的 Bot。
-- `TypeScript / Node.js + Bot API`
-  - 默认优先：`grammY`
-  - 适合：TypeScript 优先、插件式能力组合、和前端/Node 工具链一致的团队。
-- `TypeScript / Node.js + 历史项目`
-  - 可延续：`Telegraf`
-  - 适合：已有 Telegraf 资产或团队经验。
-  - 不建议为新项目仅因历史知名度而优先于 `grammY`。
-- `Telegram Mini App frontend`
-  - 默认优先：`@telegram-apps/sdk` + `@telegram-apps/bridge`
-  - 再叠加项目既有前端栈，例如 `Vue3 + TypeScript`。
-  - UI 细节与组件系统仍由 `Dev-VUE3-WebUI-Frontend` 接管。
+## 当前选型状态
+- `Telegram Bot API`：已裁决为默认主路径。
+- `用户账号自动化 / MTProto / Full API`：未单独立项时禁止默认进入。
+- `Mini App frontend bridge`：已裁决为 `@telegram-apps/sdk` + `@telegram-apps/bridge`。
+- `Python Bot 主实现栈`：待用户裁决。
+- `TypeScript Bot 主实现栈`：待用户裁决。
 
-## 推荐辅助依赖
+## Python 候选裁决集
+- 方案 A `PTB 主线`
+  - 排序：第一候选。
+  - 组件：`python-telegram-bot[webhooks,rate-limiter,job-queue,callback-data]`、`FastAPI`、`pydantic`、`httpx`、`orjson`。
+  - 进入条件：常规命令流、回调交互、Inline、Payments、Webhook/long polling、以文档可读性作为第一约束。
+  - 不进入条件：项目明确要求以 router/middleware/FSM 为主组织事件层，且高并发异步边界是第一约束。
+  - 说明：`python-telegram-bot` 当前官方 stable docs 为 `v22.6`，默认 networking backend 依赖 `httpx`，并提供 `AIORateLimiter`、`JobQueue` 等官方扩展入口。
+- 方案 B `aiogram 主线`
+  - 排序：第二候选。
+  - 组件：`aiogram`、`FastAPI`、`redis`、`pydantic`、`httpx`、`orjson`。
+  - 进入条件：asyncio-first、router/middleware/filter/FSM 分层是第一约束，且需要更强的事件管线控制。
+  - 不进入条件：团队更看重文档可读性、PTB 生态例子、较低的认知门槛。
+  - 说明：`aiogram` 当前公开 docs 可核到 `3.22.0`；其 3.x 线强调 router、middleware、flags、FSM storage 和 pydantic validation。
+- 方案 C `自写 Bot API wrapper`
+  - 状态：禁止默认采用。
+  - 禁止理由：重复造轮子，且会失去成熟生态对 update type、Bot API 兼容、rate limit 与支付能力的维护。
+
+## 固定辅助依赖裁决
 - `pydantic`
-  - 用于 Telegram update、callback data、Mini App init data 派生 DTO 的显式结构化。
+  - 状态：已裁决。
+  - 用途：对 Telegram update、callback data、Mini App init data 派生 DTO 做显式结构化。
 - `httpx`
-  - Python 侧统一外部 HTTP 调用边界。
-- `FastAPI` 或 `Starlette`
-  - 当 Telegram webhook 需要和现有 HTTP 服务共栈时使用。
-- `@grammyjs/*` 插件族
-  - 在 `grammY` 路线下按需补 session、menu、conversations 等能力。
-
-## Python 依赖推荐
-- `python-telegram-bot`
-  - 默认推荐给“消息/按钮/回调/支付/Inline”完整覆盖的 Python Bot。
-- `python-telegram-bot[rate-limiter]`
-  - 用于广播、群发、批量编辑等节流场景；官方对应 `AIORateLimiter`。
-- `python-telegram-bot[job-queue]`
-  - 用于定时任务、延迟执行、重试编排；官方对应 `JobQueue`。
-- `python-telegram-bot[callback-data]`
-  - 用于 arbitrary callback data 场景。
-- `python-telegram-bot[webhooks]`
-  - 用于 webhook 部署。
-- `aiogram`
-  - 默认推荐给 asyncio-first、router/middleware/FSM 分层更强的 Python Bot。
-- `redis`
-  - `aiogram` 做生产级 FSM/session storage 时的常用依赖。
-- `FastAPI` 或 `Starlette`
-  - 用于 webhook 共栈。
-- `APScheduler`
-  - 若不走 PTB `job-queue`，可作为统一调度层。
+  - 状态：已裁决。
+  - 用途：统一 Python 侧外部 HTTP 调用边界；PTB 默认 networking backend 也依赖它。
+- `FastAPI`
+  - 状态：第一候选。
+  - 用途：Webhook 与现有 HTTP 服务共栈时的首选承载层。
+- `Starlette`
+  - 状态：备选。
+  - 用途：仅在需要极薄 ASGI 层且团队已熟悉时采用。
 - `orjson`
-  - 大量 update/webhook 解析和日志落盘时可选。
+  - 状态：已裁决为生产增强依赖。
+  - 用途：大量 update/webhook 解析和日志落盘。
+- `redis`
+  - 状态：条件性依赖。
+  - 进入条件：需要分布式 session、FSM storage、异步队列协同时启用。
 
 ## 选型规则
-- 新项目若以 Python 为主、可读性优先，默认先选 `python-telegram-bot`。
-- 新项目若以 TypeScript 为主，默认先选 `grammY`，除非团队已有稳定 `Telegraf` 存量。
-- 若 Telegram 只是一个渠道，而核心系统仍在 Python 服务内，不要为了 Telegram 单独把整个后端改成 Node。
-- Mini App frontend 栈应跟项目主前端栈对齐，不要为了 Telegram 容器单独再造第二套前端规范。
+- 在用户没有定版前，AI 只能引用候选方案，不得直接写死 `python-telegram-bot` 或 `aiogram` 代码。
+- 若项目主后端是 Python，Telegram 作为渠道接入时，不为了渠道单独把主后端改成 Node。
+- Mini App frontend 栈必须跟项目主前端栈对齐，不为 Telegram 容器额外造第二套前端规范。
+- TypeScript Bot 路线待用户裁决；在没有明确要求前，不主动把主实现栈切到 Node。
+
+## AI 执行门禁
+- 若任务是“先定规范再开发”，而 `Python Bot 主实现栈` 仍未裁决，AI 必须先返回候选方案差异，不得直接产出框架实现代码。
+- 若用户明确指定 `python-telegram-bot` 或 `aiogram`，从该刻起视为已裁决，可在后续任务中按该栈执行。
+- 若用户只说“Python 做 Telegram”，当前默认先向用户主推方案 A，再等待用户定版。
 
 ## 当前主源
 - Telegram Bot API: `https://core.telegram.org/bots/api`
@@ -90,28 +86,25 @@ anchors:
 - grammY docs: `https://grammy.dev/`
 - Telegraf docs: `https://telegraf.js.org/`
 
-## 推荐 Python 组合包
-- `轻量消息型 Bot`
-```text
-python-telegram-bot
-pydantic
-httpx
-```
-- `生产 webhook Bot`
+## Python 组合包候选
+- `候选 A：PTB 生产 webhook Bot`
 ```text
 python-telegram-bot[webhooks,rate-limiter,job-queue,callback-data]
+FastAPI
 pydantic
 httpx
 orjson
 ```
-- `高并发 asyncio Bot`
+- `候选 B：aiogram 高并发 Bot`
 ```text
 aiogram
+FastAPI
 redis
 pydantic
 httpx
+orjson
 ```
-- `Mini App 配套 Python 后端`
+- `候选 C：Mini App 配套 Python 后端`
 ```text
 FastAPI
 python-telegram-bot or aiogram

@@ -49,7 +49,7 @@ anchors:
 
 ## 目标
 - 把 Telegram 面向开发者的主线能力一次性列清，并给后续 AI 一个默认裁决入口。
-- 先回答“这条需求属于哪条主线”，再进入具体最佳实践文档。
+- 先回答“这条需求属于哪条主线”，再进入具体合同文档。
 
 ## 主线能力总览
 1. `Bot Interface`
@@ -84,7 +84,8 @@ anchors:
 - 只要目标是“做一个 Telegram 内的用户入口”，默认从 `Bot Interface`、`Inline Mode`、`Mini App` 三者中选。
 - 只要需求涉及支付，必须额外读取 `Payments / Stars` 文档。
 - 只要需求涉及身份登录或把 Telegram 账号接到站外系统，必须额外读取 `Login / Identity` 文档。
-- 只要需求开始要求“像完整 Telegram 客户端一样控制更多对象”，默认视为 `Full API / Custom Clients`，不再沿用 Bot API 的默认建议。
+- 只要需求开始要求“像完整 Telegram 客户端一样控制更多对象”，默认视为 `Full API / Custom Clients`，不再沿用 Bot API 的默认路径。
+- 未经显式立项，不进入 `Full Telegram API / Custom Clients`。
 
 ## 官方主源
 - Bot Features: `https://core.telegram.org/bots/features`
