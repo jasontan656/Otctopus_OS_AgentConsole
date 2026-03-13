@@ -148,7 +148,6 @@ Human mirror for `AGENTS_payload_structure.json`.
         "runtime_source_policy",
         "default_meta_skill_order",
         "peer_summary_policy",
-        "language_policy",
         "skills_required_techstacks",
         "turn_start_actions",
         "runtime_constraints",
@@ -208,33 +207,6 @@ Human mirror for `AGENTS_payload_structure.json`.
               "type": "string"
             },
             "guidance": {
-              "type": "string"
-            }
-          }
-        },
-        "language_policy": {
-          "type": "object",
-          "key_order": [
-            "conversation_and_internal_coordination",
-            "public_product_readme_and_docs",
-            "wizard_user_interface",
-            "internal_skill_core_and_governance_docs",
-            "git_iteration_logs_for_github"
-          ],
-          "properties": {
-            "conversation_and_internal_coordination": {
-              "type": "string"
-            },
-            "public_product_readme_and_docs": {
-              "type": "string"
-            },
-            "wizard_user_interface": {
-              "type": "string"
-            },
-            "internal_skill_core_and_governance_docs": {
-              "type": "string"
-            },
-            "git_iteration_logs_for_github": {
               "type": "string"
             }
           }

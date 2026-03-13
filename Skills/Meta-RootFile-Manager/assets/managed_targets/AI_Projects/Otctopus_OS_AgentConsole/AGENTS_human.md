@@ -69,6 +69,7 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `Otctopus_OS_AgentConsole` repositor
     "path_metadata_is_not_action_guidance": true
   },
   "default_meta_skill_order": [
+    "$SkillsManager-Production-Form (console product form and Skills surface governance)",
     "$meta-github-operation (Git traceability for repo writes)",
     "$SkillsManager-Mirror-To-Codex (sync edited skills to codex install)",
     "$SkillsManager-Creation-Template (default governed skill creation baseline)",
@@ -80,13 +81,6 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `Otctopus_OS_AgentConsole` repositor
     "relation": "same_level_summary",
     "read_policy": "available_for_public_product_summary",
     "guidance": "same-level README.md is available and should be treated as the public English product summary for this repo"
-  },
-  "language_policy": {
-    "conversation_and_internal_coordination": "Chinese-first",
-    "public_product_readme_and_docs": "English-only",
-    "wizard_user_interface": "Bilingual English/Chinese required",
-    "internal_skill_core_and_governance_docs": "Chinese allowed for internal iteration",
-    "git_iteration_logs_for_github": "English-preferred"
   },
   "skills_required_techstacks": {
     "python_backend": [
@@ -125,25 +119,18 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `Otctopus_OS_AgentConsole` repositor
     "use the returned target contract JSON as the runtime rule source",
     "if the task needs repo-local dependencies, read the backend/frontend skills environment manifests before installing or invoking tooling",
     "if the task needs new repo-local dependencies, the AI may choose them from task evidence and install them into the governed *_skills environments before use",
-    "if the task touches Skills/, read skills_required_techstacks first and treat it as the mandatory baseline before introducing new stacks or writing custom equivalents",
-    "if the turn touches language surfaces, enforce outward English docs and inward Chinese development boundaries before editing"
+    "if the task touches Skills/, read skills_required_techstacks first and treat it as the mandatory baseline before introducing new stacks or writing custom equivalents"
   ],
   "runtime_constraints": [
     "stay within the concrete repo-local boundary defined by this payload",
     "product/runtime paths must resolve from the product root; do not hardcode author-machine absolute paths or treat AI_Projects literals as the only valid install root",
     "skill-local resources may resolve from current skill roots, but repo mirrors, codex runtime paths, result paths, and product workspaces must use root-first derivation",
     "when <root>/.codex is absent, only Codex home lookup may fall back to explicit CODEX_HOME or an attached existing Codex installation; other governed product paths remain root-first",
-    "public-facing product README and docs must remain English-only",
-    "end-user wizard and installation TUI surfaces must support both English and Chinese",
-    "skill core docs, governance contracts, and internal iteration artifacts may remain Chinese-first",
-    "GitHub-facing product iteration logs and commit subjects should prefer English wording",
     "skills runtime dependencies must be installed into repo-local *_skills environments or their tracked manifest/lock files, not global environments",
     "the AI may decide which repo-local dependencies are needed for the active task, but every installation must stay inside the governed repo-local environments and be reflected in the tracked lock or manifest files",
     "when the task touches Skills/, treat skills_required_techstacks as the mandatory baseline and do not reinvent equivalent local parsing, lint, markdown, schema, test, CLI, or runtime stacks without an explicit user override",
     "keep requirements-backend_skills.lock.txt in sync with the Python dependencies installed into .venv_backend_skills",
-    "keep frontend_skills/package.json and frontend_skills/package-lock.json in sync with the frontend dependency set used by skills tasks",
-    "all product-repo skill roots live under Otctopus_OS_AgentConsole/Skills and repo root is not a syncable skill container",
-    "product-facing docs and product tools must not be pushed into the codex installation directory; only syncable skill roots and .system may flow downstream"
+    "keep frontend_skills/package.json and frontend_skills/package-lock.json in sync with the frontend dependency set used by skills tasks"
   ],
   "execution_modes": {
     "READ_EXEC": {
@@ -158,9 +145,7 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `Otctopus_OS_AgentConsole` repositor
       "goal": "edit files or trigger manager-owned write flows",
       "default_actions": [
         "state the intended write scope before editing",
-        "edit the minimal correct scope that matches the user intent",
-        "for public product surfaces, keep English-only wording and avoid leaking internal Chinese governance content",
-        "for skill edits, write only the mirror copy under Otctopus_OS_AgentConsole/Skills and do not directly edit the codex installed copy"
+        "edit the minimal correct scope that matches the user intent"
       ]
     }
   },
