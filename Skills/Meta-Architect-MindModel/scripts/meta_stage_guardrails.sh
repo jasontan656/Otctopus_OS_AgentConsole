@@ -35,12 +35,13 @@ case "$stage" in
     echo "[DO][Read-only] read/retrieve/analyze/report only"
     echo "[DONT][Read-only] no disk writes"
     echo "[DO][Meta-Reasoning-Chain] keep claim/support/unknowns per step in single-layer reasoning outputs"
-    echo "[DONT][Meta-keyword-first-edit] do not run edit flow in read-only branch"
+    echo "[DO][Meta-keyword-first-edit] keep runtime hook active all time; in read-only branch use it only as a no-write classification and edit-blocking hook"
     ;;
   WRITE_EXEC)
     print_common_header "WRITE_EXEC"
-    echo "[DO][Meta-keyword-first-edit] replacement-first; print old->new->reason before additive edits"
-    echo "[DONT][Meta-keyword-first-edit] no additive-first edits when replacement can satisfy intent"
+    echo "[DO][Meta-keyword-first-edit] keep runtime hook active all time and enforce delete > replace > add before any write"
+    echo "[DO][Meta-keyword-first-edit] print old->new->reason before additive edits"
+    echo "[DONT][Meta-keyword-first-edit] no additive-first edits when replacement can satisfy intent, even while the runtime hook stays continuously active"
     echo "[DO][Meta-refactor-behavior] define OEC (consumer/observables/invariants/witness) before refactor"
     echo "[DONT][Meta-refactor-behavior] do not change observable behavior unless in allowed_deltas"
     echo "[DO][Meta-github-operation] if this write turn touched Octopus_OS or Otctopus_OS_AgentConsole, finish same-turn GitHub traceability before closing"

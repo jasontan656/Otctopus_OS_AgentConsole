@@ -1,4 +1,0 @@
-interface:
-  display_name: Workflow-OctopusOS-DevFlow
-  short_description: 开发闭环 workflow 技能；当前先保持原骨架，后续再逐步通用化。
-  default_prompt: Use $Workflow-OctopusOS-DevFlow. First run `./.venv_backend_skills/bin/python Skills/Workflow-OctopusOS-DevFlow/scripts/Cli_Toolbox.py contract --json`. Treat CLI JSON as the primary runtime source and use markdown mirrors only when the contract still leaves a real gap.

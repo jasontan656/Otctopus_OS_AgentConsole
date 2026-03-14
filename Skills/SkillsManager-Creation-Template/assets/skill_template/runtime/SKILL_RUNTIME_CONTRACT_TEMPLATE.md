@@ -30,17 +30,12 @@ anchors:
 
 ## Required Shape
 - `skill_name`: `${skill_name}`
-- `skill_profile`: `staged_cli_first`
+- `skill_mode`: `executable_workflow_skill`
 - `SKILL.md` role: `entry_only_facade`
 - `facade_contract_owner`: `SkillsManager-Creation-Template`
 - required section layout:
-  - `技能定位`
-  - `必读顺序`
-  - `分类入口`
-  - `适用域`
-  - `执行入口`
-  - `读取原则`
-  - `结构索引`
+  - `Immediate Contract`
+  - `Structured Entry`
 
 ## Required Stage Surface
 - `stage-checklist`
@@ -50,6 +45,7 @@ anchors:
 
 ## Governance Rules
 - `SKILL.md` 必须保持门面化。
+- `SKILL.md` 只能保留 `Immediate Contract` 与 `Structured Entry` 两段。
 - `SkillsManager-Doc-Structure` 必须显式应用在入口 handoff 之后的 routing doc、index doc、topic docs 与 anchors 上。
 - 运行态规则必须从 machine-readable contracts 消费，不得把 markdown 当真实规则源。
 - staged skill 必须显式定义 resident docs、stage order 和 stage-switch discard policy。

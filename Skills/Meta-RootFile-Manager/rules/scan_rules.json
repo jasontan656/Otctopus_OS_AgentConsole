@@ -6,6 +6,7 @@
       "file_kind": "AGENTS.md",
       "mapping_mode": "agents_ab",
       "governed_source_paths": [
+        ".codex/skills/AGENTS.md",
         "AGENTS.md",
         "Octopus_OS/AGENTS.md",
         "Octopus_OS/Client_Applications/AGENTS.md",

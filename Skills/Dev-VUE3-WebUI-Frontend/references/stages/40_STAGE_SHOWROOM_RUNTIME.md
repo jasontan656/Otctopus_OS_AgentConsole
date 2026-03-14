@@ -28,5 +28,5 @@ anchors:
 
 ## 交付要求
 - `frontend_dev_contracts/` 与阶段合同能够独立描述通用前端规范。
-- 具体产品运行时需求落到产品仓的 `Workflow-OctopusOS-DevFlow mother_doc`。
+- 具体产品运行时需求落到产品仓的 `Workflow-CentralFlow1-OctopusOS mother_doc`。
 - 当前 skill 内不再保留会误导读者的产品级 UI 代码、依赖或需求目录。

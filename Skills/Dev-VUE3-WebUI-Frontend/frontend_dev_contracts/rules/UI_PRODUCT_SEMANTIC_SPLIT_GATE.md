@@ -37,4 +37,4 @@ anchors:
 
 ## 与产品 mother doc 的关系
 - 这是前端专项语义拆分门禁，目标是降低 AI 阅读成本和实现漂移。
-- 它不替代 `Workflow-OctopusOS-DevFlow` 的阶段治理，也不替代 `SkillsManager-Doc-Structure` 的方法论本体。
+- 它不替代 `Workflow-CentralFlow1-OctopusOS` 的阶段治理，也不替代 `SkillsManager-Doc-Structure` 的方法论本体。

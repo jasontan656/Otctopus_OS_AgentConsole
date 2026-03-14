@@ -7,7 +7,7 @@
     "path_metadata_is_not_action_guidance": true
   },
   "default_meta_skill_order": [
-    "$Workflow-OctopusOS-DevFlow (this skill drives the development here and is responsible for mother doc edits.)",
+    "$Workflow-CentralFlow1-OctopusOS (this skill drives the development here and is responsible for mother doc edits.)",
     "$Meta-RootFile-Manager (AGENTS governance mapping flow)"
   ],
   "turn_start_actions": [],

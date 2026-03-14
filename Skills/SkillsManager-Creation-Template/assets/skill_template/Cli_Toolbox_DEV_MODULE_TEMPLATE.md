@@ -28,9 +28,10 @@ anchors:
 - 输出：
 - 失败模式：
 
-## profile 适配
-- `basic`:
-- `staged_cli_first`:
+## skill_mode 适配
+- `guide_only`:
+- `guide_with_tool`:
+- `executable_workflow_skill`:
 
 ## 回归检查
 ```bash

@@ -43,15 +43,104 @@ def render_internal_human(part_a_body: str, payload: dict) -> str:
     )
 
 
+def workspace_part_a() -> str:
+    return (
+        "1. 根入口命令\n"
+        "- 在处理 workspace root 路径规则之前，必须先运行：\n"
+        "- `placeholder_root_command`\n"
+        "- 当前环境为 `WSL`；若需要调用系统 Python，使用 `python3`。\n\n"
+        "2. 技能类任务附加入口\n"
+        "- 任何时候只要任务涉及技能、技能镜像、技能安装、技能同步、技能注册、技能治理或技能运行时，必须阅读：\n"
+        "- `placeholder_repo_contract`\n\n"
+        "3. 语言规范\n"
+        "- 对话输出必须使用中文为主。\n"
+        "- 起草与写回文档时默认使用中文为主，英文为辅。\n"
+        "- 英文只用于技术栈、路径、命令、环境变量、API 名、函数名、类名与其他工程向标识符。\n\n"
+        "4. 当前受管 repo 边界\n"
+        "- `$meta-github-operation` 当前仅管理以下 repo：\n"
+        "- `Octopus_OS`\n"
+        "- `Otctopus_OS_AgentConsole`\n"
+        "- `Otctopus_OS_AgentConsole` 仍承担与 `~/.codex/skills` 的受控映射关系\n\n"
+        "5. Multi-AGENT 工作模式\n"
+        "- Multi-AGENT work mode 下，同一文件夹在工作过程中可能出现未预期的并行改动。\n"
+        "- 当出现与当前任务无关的并行变更时，应忽略这些无关变更，只关注与当前任务直接相关的文件。\n\n"
+        "6. 治理链约束\n"
+        "- 更新本文件时及相关内容时,必须使用 $Meta-RootFile-Manager 更新治理映射模版然后再回推至本文件,或者更新本文件但是必须使用技能的collect来反向更新,避免单点更新治理链断裂.\n"
+    )
+
+
 def payload() -> dict:
     return {
+        "owner": "placeholder_owner",
         "entry_role": "repo_runtime_entry",
         "runtime_source_policy": {
             "runtime_rule_source": "CLI_JSON",
             "audit_fields_are_not_primary_runtime_instructions": True,
             "path_metadata_is_not_action_guidance": True,
         },
+        "default_meta_skill_order": [
+            "placeholder_skill_1",
+            "placeholder_skill_2",
+            "placeholder_skill_3",
+            "placeholder_skill_4",
+            "placeholder_skill_5",
+            "placeholder_skill_6",
+            "placeholder_skill_7",
+        ],
+        "turn_start_actions": [
+            "placeholder_turn_start_1",
+            "placeholder_turn_start_2",
+            "placeholder_turn_start_3",
+            "placeholder_turn_start_4",
+        ],
+        "runtime_constraints": [
+            "placeholder_constraint_1",
+            "placeholder_constraint_2",
+            "placeholder_constraint_3",
+            "placeholder_constraint_4",
+        ],
+        "execution_modes": {
+            "READ_EXEC": {
+                "goal": "placeholder_read_goal",
+                "default_actions": [
+                    "placeholder_read_action_1",
+                    "placeholder_read_action_2",
+                ],
+            },
+            "WRITE_EXEC": {
+                "goal": "default to full-coverage edits for the intended change",
+                "default_actions": [
+                    "Default to full-coverage edits, proactively explore to avoid omissions, and use the meta skill stack to strengthen the result."
+                ],
+            },
+        },
+        "repo_local_contract_handoff": [
+            "placeholder_handoff_1",
+            "placeholder_handoff_2",
+            "placeholder_handoff_3",
+        ],
+        "forbidden_primary_runtime_pattern": [],
+        "turn_end_actions": [
+            "placeholder_turn_end_1",
+            "placeholder_turn_end_2",
+            "placeholder_turn_end_3",
+            "placeholder_turn_end_4",
+            "placeholder_turn_end_5",
+            "placeholder_turn_end_6",
+            "placeholder_turn_end_7",
+            "placeholder_turn_end_8",
+        ],
     }
+
+
+def resolve_replace_me(value: object, resolved: str = "resolved_value") -> object:
+    if isinstance(value, dict):
+        return {key: resolve_replace_me(item, resolved) for key, item in value.items()}
+    if isinstance(value, list):
+        return [resolve_replace_me(item, resolved) for item in value]
+    if isinstance(value, str):
+        return value.replace("replace_me", resolved)
+    return value
 
 
 class TestCliToolbox:
@@ -100,7 +189,7 @@ class TestCliToolbox:
 
     def _seed_managed_agents(self) -> None:
         root_assets = self.skill_root / "assets" / "managed_targets" / "AI_Projects"
-        write(root_assets / "AGENTS_human.md", render_internal_human("workspace root", payload()))
+        write(root_assets / "AGENTS_human.md", render_internal_human(workspace_part_a(), payload()))
         write(root_assets / "AGENTS_machine.json", json.dumps(payload(), ensure_ascii=False, indent=2) + "\n")
         write(
             root_assets / "Otctopus_OS_AgentConsole" / "AGENTS_human.md",
@@ -119,9 +208,9 @@ class TestCliToolbox:
             parents=True, exist_ok=True
         )
 
-    def run_cli(self, *args: str, expect_ok: bool = True) -> dict:
+    def run_cli(self, *args: str, workspace_root: Path | None = None, expect_ok: bool = True) -> dict:
         env = os.environ.copy()
-        env["MDM_WORKSPACE_ROOT"] = str(self.workspace)
+        env["MDM_WORKSPACE_ROOT"] = str(workspace_root or self.workspace)
         env["MDM_MIRROR_SKILL_ROOT"] = str(self.skill_root)
         env["MDM_INSTALLED_SKILL_ROOT"] = str(self.installed)
         env["MDM_RUNTIME_ROOT"] = str(self.runtime)
@@ -217,6 +306,84 @@ class TestCliToolbox:
         )
         assert managed.exists()
 
+    def test_scaffold_creates_agents_template_with_complete_payload(self) -> None:
+        target_dir = self.workspace / "NewRepo"
+        result = self.run_cli(
+            "scaffold",
+            "--json",
+            "--target-dir",
+            str(target_dir),
+            "--file-kind",
+            "AGENTS.md",
+        )
+        assert result["operation_count"] == 1
+
+        external_path = target_dir / "AGENTS.md"
+        external_text = external_path.read_text(encoding="utf-8")
+        assert "2. 技能类任务附加入口" in external_text
+        assert "6. 治理链约束" in external_text
+        assert external_text.count("- replace_me") == 6
+
+        managed_dir = (
+            self.skill_root
+            / "assets"
+            / "managed_targets"
+            / "AI_Projects"
+            / "NewRepo"
+        )
+        managed_machine = managed_dir / "AGENTS_machine.json"
+        payload = json.loads(managed_machine.read_text(encoding="utf-8"))
+        root_template = json.loads(
+            (
+                self.skill_root
+                / "assets"
+                / "managed_targets"
+                / "AI_Projects"
+                / "AGENTS_machine.json"
+            ).read_text(encoding="utf-8")
+        )
+        assert list(payload.keys()) == list(root_template.keys())
+        assert payload["entry_role"] == "replace_me"
+        assert payload["runtime_source_policy"]["runtime_rule_source"] == "CLI_JSON"
+        assert payload["runtime_source_policy"]["audit_fields_are_not_primary_runtime_instructions"] is True
+        assert payload["runtime_source_policy"]["path_metadata_is_not_action_guidance"] is True
+        assert payload["default_meta_skill_order"] == ["replace_me"]
+        assert payload["turn_start_actions"] == ["replace_me"]
+        assert payload["runtime_constraints"] == ["replace_me"]
+        assert payload["execution_modes"]["READ_EXEC"]["goal"] == "replace_me"
+        assert payload["execution_modes"]["READ_EXEC"]["default_actions"] == ["replace_me"]
+        assert payload["execution_modes"]["WRITE_EXEC"]["goal"] == (
+            "default to full-coverage edits for the intended change"
+        )
+        assert payload["execution_modes"]["WRITE_EXEC"]["default_actions"] == [
+            "Default to full-coverage edits, proactively explore to avoid omissions, and use the meta skill stack to strengthen the result."
+        ]
+        assert payload["repo_local_contract_handoff"] == ["replace_me"]
+        assert payload["forbidden_primary_runtime_pattern"] == []
+        assert payload["turn_end_actions"] == ["replace_me"]
+
+    def test_lint_fails_after_scaffold_for_new_agents_target_until_writeback(self) -> None:
+        target_dir = self.workspace / "NewRepo"
+        self.run_cli(
+            "scaffold",
+            "--json",
+            "--target-dir",
+            str(target_dir),
+            "--file-kind",
+            "AGENTS.md",
+        )
+        result = self.run_cli(
+            "lint",
+            "--json",
+            "--source-path",
+            str(target_dir / "AGENTS.md"),
+            expect_ok=False,
+        )
+        assert result["failed_count"] == 1
+        error_text = "\n".join(result["failures"][0]["errors"])
+        assert "external_replace_me_remaining" in error_text
+        assert "payload_replace_me_remaining" in error_text
+
     def test_lint_detects_plain_mapping_drift(self) -> None:
         self.run_cli("collect", "--json", "--source-path", str(self.repo_root / "README.md"))
         managed = (
@@ -249,6 +416,8 @@ class TestCliToolbox:
         assert result["skill_name"] == "Meta-RootFile-Manager"
         assert "agents_payload_contract" in result["tool_entry"]["commands"]
         assert "agents-payload-contract" in result["tool_entry"]["commands"]["agents_payload_contract"]
+        assert "new_writeback" in result["tool_entry"]["commands"]
+        assert "new-writeback" in result["tool_entry"]["commands"]["new_writeback"]
 
     def test_agents_payload_contract_returns_targeted_workflow(self) -> None:
         result = self.run_cli(
@@ -272,6 +441,105 @@ class TestCliToolbox:
             expect_ok=False,
         )
         assert result["error"] == "agents_payload_contract_requires_agents_target"
+
+    def test_new_writeback_rejects_replace_me_leftover(self) -> None:
+        target_dir = self.workspace / "NewRepo"
+        self.run_cli(
+            "scaffold",
+            "--json",
+            "--target-dir",
+            str(target_dir),
+            "--file-kind",
+            "AGENTS.md",
+        )
+        result = self.run_cli(
+            "new-writeback",
+            "--json",
+            "--source-path",
+            str(target_dir / "AGENTS.md"),
+            expect_ok=False,
+        )
+        error_text = "\n".join(result["failures"][0]["errors"])
+        assert "external_replace_me_remaining" in error_text
+        assert "payload_replace_me_remaining" in error_text
+
+    def test_new_writeback_finalizes_agents_after_fill(self) -> None:
+        target_dir = self.workspace / "NewRepo"
+        self.run_cli(
+            "scaffold",
+            "--json",
+            "--target-dir",
+            str(target_dir),
+            "--file-kind",
+            "AGENTS.md",
+        )
+        external_path = target_dir / "AGENTS.md"
+        managed_machine = (
+            self.skill_root
+            / "assets"
+            / "managed_targets"
+            / "AI_Projects"
+            / "NewRepo"
+            / "AGENTS_machine.json"
+        )
+        managed_human = managed_machine.with_name("AGENTS_human.md")
+
+        write(
+            external_path,
+            external_path.read_text(encoding="utf-8").replace("replace_me", "resolved_value"),
+        )
+        payload = json.loads(managed_machine.read_text(encoding="utf-8"))
+        resolved_payload = resolve_replace_me(payload)
+        write(managed_machine, json.dumps(resolved_payload, ensure_ascii=False, indent=2) + "\n")
+
+        result = self.run_cli(
+            "new-writeback",
+            "--json",
+            "--source-path",
+            str(external_path),
+        )
+        assert result["operation_count"] == 1
+        assert "replace_me" not in managed_human.read_text(encoding="utf-8")
+
+    def test_lint_rejects_non_cli_root_entry_for_codex_skills_target(self) -> None:
+        source_path = self.root / ".codex" / "skills" / "AGENTS.md"
+        owner = self.run_cli(
+            "target-contract",
+            "--source-path",
+            str(source_path),
+            "--json",
+            workspace_root=self.root,
+        )["owner"]
+        write(
+            source_path,
+            render_external_agents(
+                (
+                    "1. 根入口命令\n"
+                    "- 这里不能写说明句子\n\n"
+                    "2. 技能类任务附加入口\n"
+                    "- N/A\n\n"
+                    "3. 语言规范\n"
+                    "- N/A\n\n"
+                    "4. 当前受管 repo 边界\n"
+                    "- 禁止直接在 `/tmp/.codex/skills` 安装目录修改技能。\n\n"
+                    "5. Multi-AGENT 工作模式\n"
+                    "- N/A\n\n"
+                    "6. 治理链约束\n"
+                    "- N/A\n"
+                ),
+                owner=owner,
+            ),
+        )
+        result = self.run_cli(
+            "lint",
+            "--json",
+            "--source-path",
+            str(source_path),
+            workspace_root=self.root,
+            expect_ok=False,
+        )
+        error_text = "\n".join(result["failures"][0]["errors"])
+        assert "codex_skills_root_entry_command_invalid" in error_text
 
     def test_lint_rejects_skill_name_repeated_outside_default_meta_skill_order(self) -> None:
         governed_owner = (
@@ -486,6 +754,21 @@ class TestCliToolbox:
             / "Development_Docs"
             / "AGENTS_human.md"
         ).exists()
+        runtime_payload = json.loads(
+            (
+                self.runtime
+                / "managed_targets"
+                / "sandbox"
+                / "sample_repo"
+                / "Development_Docs"
+                / "AGENTS_machine.json"
+            ).read_text(encoding="utf-8")
+        )
+        assert runtime_payload["entry_role"] == "replace_me"
+        assert runtime_payload["default_meta_skill_order"][0] == "replace_me"
+        assert runtime_payload["execution_modes"]["WRITE_EXEC"]["default_actions"] == [
+            "Default to full-coverage edits, proactively explore to avoid omissions, and use the meta skill stack to strengthen the result."
+        ]
 
     def test_collect_runtime_local_agents_updates_runtime_managed_pair(self) -> None:
         target_dir = self.runtime / "sandbox" / "sample_repo" / "Development_Docs"

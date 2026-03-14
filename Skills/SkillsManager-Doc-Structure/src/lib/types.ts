@@ -77,6 +77,9 @@ export interface RuntimeContractPayload {
   contract_name: string
   contract_version: string
   skill_name: string
+  target_skill_mode?: string
+  applicability?: string
+  notes?: string[]
   scope: string
   primary_goal: string
   thinking_chain: string[]
@@ -145,8 +148,10 @@ export interface SkillDocRecord extends GraphNodeRecord {
 }
 
 export interface DocGraphWorkspace {
-  status: 'pass' | 'pass_with_warnings' | 'fail'
+  status: 'pass' | 'pass_with_warnings' | 'fail' | 'skipped'
   targetRoot: string
+  targetSkillMode: string
+  applicability: 'enforced' | 'skipped_guide_only'
   updatedAt: string
   runtimeContract: RuntimeContractPayload
   matrix: AnchorMatrix
@@ -166,4 +171,5 @@ export interface DocGraphWorkspace {
   splitCandidates: SplitCandidate[]
   warnings: ScanWarning[]
   errors: ScanError[]
+  notes: string[]
 }

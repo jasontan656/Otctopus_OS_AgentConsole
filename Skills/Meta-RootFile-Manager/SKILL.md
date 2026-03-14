@@ -24,6 +24,7 @@ metadata:
 - 本技能提供可执行 CLI：
   - `contract`
   - `scaffold`
+  - `new-writeback`
   - `scan`
   - `lint`
   - `collect`
@@ -69,9 +70,9 @@ metadata:
 - `scaffold`
   - 说明：在外部目标目录创建第一版 root file，并同时创建技能内治理映射。
   - 阅读入口：`references/runtime_contracts/SCAFFOLD_STAGE_CONTRACT.md`
-- `new-file`
-  - 说明：为新的 root file 类型开通独立 channel，并定义其内部映射承载命名。
-  - 阅读入口：`references/runtime_contracts/NEW_FILE_STAGE_CONTRACT.md`
+- `new-writeback`
+  - 说明：由 agent 按用户需求回填 scaffold 生成的 `AGENTS.md + AGENTS_machine.json`，并要求不再残留 `replace_me`。
+  - 阅读入口：`references/runtime_contracts/NEW_WRITEBACK_STAGE_CONTRACT.md`
 - `scan`
   - 说明：按 channel 注册表发现当前已经受管的外部目标。
   - 阅读入口：`references/runtime_contracts/SCAN_STAGE_CONTRACT.md`
@@ -93,6 +94,7 @@ metadata:
 - [Root File 映射副本合同](references/runtime_contracts/ROOTFILE_MAPPED_COPY_STRUCTURE.md)
 - [技能运行合同](references/runtime_contracts/SKILL_RUNTIME_CONTRACT.md)
 - [新增文件类型合同](references/runtime_contracts/NEW_FILE_STAGE_CONTRACT.md)
+- [New Writeback 阶段合同](references/runtime_contracts/NEW_WRITEBACK_STAGE_CONTRACT.md)
 - [Scan 阶段合同](references/runtime_contracts/SCAN_STAGE_CONTRACT.md)
 - [Collect 阶段合同](references/runtime_contracts/COLLECT_STAGE_CONTRACT.md)
 - [Push 阶段合同](references/runtime_contracts/PUSH_STAGE_CONTRACT.md)

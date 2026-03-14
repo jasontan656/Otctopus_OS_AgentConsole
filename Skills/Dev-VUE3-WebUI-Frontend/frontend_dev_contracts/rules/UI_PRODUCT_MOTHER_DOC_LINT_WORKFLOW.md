@@ -64,5 +64,5 @@ anchors:
 - `assets/runtime/product_spatial_field_relation_registry.json`
 
 ## 责任边界
-- 该 lint 属于前端 skill 的专项门禁，不属于 `Workflow-OctopusOS-DevFlow` 的规则本体。
+- 该 lint 属于前端 skill 的专项门禁，不属于 `Workflow-CentralFlow1-OctopusOS` 的规则本体。
 - `Workflow` 可以消费 lint 结果，但不应内置这些前端裁决标准。

@@ -38,3 +38,9 @@ anchors:
   - 将 `SkillsManager-Doc-Structure` 写入 runtime contract、authoring contract、playbook 与模板资产，升为显式执行合同。
   - basic / staged 模板生成结果新增 task routing、doc-structure policy 与 execution rules。
   - tooling 文档、生成器与回归测试同步切换到新结构。
+- 2026-03-15
+  - 将 `guide_with_tool` 与 `executable_workflow_skill` 的 `SKILL.md` façade 从 7 段收口为 2 段：
+    - `Immediate Contract`
+    - `Structured Entry`
+  - 将详细命令清单、结构索引与解释性规则正文下沉到 routing、topic、index 与 tooling docs。
+  - `runtime overview`、runtime contract 模板与生成回归测试同步切换到两段式 façade 合同。

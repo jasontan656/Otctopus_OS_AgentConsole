@@ -10,69 +10,75 @@ anchors:
 - target: SKILL_DOCSTRUCTURE_ENFORCEMENT.md
   relation: governed_by
   direction: upstream
-  reason: Doc-structure governance is a mandatory part of this authoring contract.
+  reason: Doc-structure governance is a mandatory part of this authoring contract for non-guide_only skills.
 - target: ../routing/PROFILE_ROUTING.md
   relation: details
   direction: upstream
-  reason: Profile routing decides which profile branch this contract should be combined with.
+  reason: Skill-mode routing decides which branch this contract should be combined with.
 ---
 
 # Skill Authoring Contract
 
 ## 合同目标
 - 用受治理模板创建或重构 skill，不接受“先生成一个胖门面，再靠后补丁慢慢拆”的做法。
-- 这里约束的是可执行的 skill 结构，而不是一次性写作格式。
-- `SkillsManager-Doc-Structure` 在本合同中是强制组成部分：创建新 skill 与治理既有 skill 时都必须显式应用。
-- `SKILL.md` 的入口门面 contract 由本技能负责；`SkillsManager-Doc-Structure` 从入口节点往下治理文档树。
+- 这里约束的是稳定的技能结构，不是一次性写作格式。
+- `SKILL.md` 的入口门面 contract 由本技能负责；`SkillsManager-Doc-Structure` 从入口节点往下治理 `guide_with_tool` 与 `executable_workflow_skill` 的文档树。
+
+## 顶层 skill_mode 契约
+- 每个新 skill 都必须在 `SKILL.md` 顶层 frontmatter 声明：
+  - `skill_mode: guide_only`
+  - `skill_mode: guide_with_tool`
+  - `skill_mode: executable_workflow_skill`
+- 旧 `profile` 参数只允许作为生成器兼容输入，不允许继续写回目标 skill。
 
 ## 门面契约
-- `SKILL.md` 必须是 `entry-only facade`。
-- 门面只能保留：
-  - 技能定位
+- `guide_only`
+  - `SKILL.md` 就是技能本体。
+  - 不要求额外 routing doc、runtime contract 或专属 CLI。
+- `guide_with_tool`
+  - `SKILL.md` 必须是 `entry-only facade`。
+  - 门面只能保留两段：
+    - `Immediate Contract`
+    - `Structured Entry`
+- `executable_workflow_skill`
+  - 在 `guide_with_tool` 的两段 façade 规则上，再补 runtime/stage 合同入口。
+  - 阶段正文不得回填到门面。
+- `Immediate Contract` 只保留：
+  - 技能主轴与最小职责边界
+  - 真实规则源优先级
+  - 立即生效的硬约束
+  - 影响后续分流的 mode/stage 轴线
+  - 明确排除域
+- `Structured Entry` 只保留：
   - 必读顺序
-  - 分类入口
-  - 适用域
-  - 执行入口
-  - 读取原则
-  - 结构索引
-- 门面必须把读者路由到 routing doc，而不是直接承载 authoring 正文。
-- 模板或治理类 skill 原有的 `技能本体 / 规则说明` 双段式约定保留，但应优先放在 routing doc 之后的 topic atom 中；只有在不破坏极简门面的前提下才允许出现在 facade。
-- 门面契约属于模板治理面，由本技能持续维护。
+  - 第一层 routing/index/runtime/tooling 入口
+  - 最小可执行入口命令
+- 详细命令清单、结构索引、长篇适用域说明、解释性规则正文，都必须下沉到 routing、topic atom、index 或 tooling docs。
 
 ## 文档结构契约
-- skill 内 markdown 结构必须满足：
-  - 顶层先有由模板定义的 facade。
-  - facade 后至少有一层 routing doc。
-  - 深规则落到单 topic 原子文档。
-  - 索引文档只做导航，不承担主规则正文。
-- 进入 facade 之后的文档树组织与 metadata/anchors 由 `SkillsManager-Doc-Structure` 继续治理。
-- 所有 markdown 文档都必须具备 `doc_structure` frontmatter 与至少一个 anchor。
-- 读写路径、阶段路径、语言路径等独立轴线不得混在同一个 routing doc 里。
+- `guide_only`
+  - 不受 `SkillsManager-Doc-Structure` 的 tree/anchor/split lint 约束。
+- `guide_with_tool`
+  - 必须具备 facade -> routing -> topic atom 的清晰主路径。
+  - 所有下沉 markdown 文档都必须具备 frontmatter 与 anchors。
+- `executable_workflow_skill`
+  - 与 `guide_with_tool` 共用文档树基线，再叠加 runtime/stage 合同树。
 
-## Profile 契约
-- `basic`
-  - 适用于单主轴、低阶段复杂度 skill。
-  - 生成结果至少要具备：facade、task routing、doc-structure policy、execution rules、tooling docs。
-  - 若存在运行态规则，必须补齐 runtime contract。
-- `staged_cli_first`
-  - 适用于多阶段、多门禁、强窄域读取 skill。
-  - 除 basic 的 facade/routing/governance 结构外，还必须补齐 runtime contract、stage index 与 stage contract 四件套。
-  - 阶段合同必须分离 machine-readable contracts 与 markdown 导航文档。
-
-## 工具与资产契约
-- 工具入口统一使用 `scripts/Cli_Toolbox.py`。
-- 工具变更时，必须同步更新：
-  - `references/tooling/Cli_Toolbox_USAGE.md`
-  - `references/tooling/Cli_Toolbox_DEVELOPMENT.md`
-  - `references/tooling/development/10_MODULE_CATALOG.yaml`
-  - 受影响模块文档
-- 模板资产变更时，必须同步更新：
-  - `assets/skill_template/`
-  - `scripts/create_skill_from_template.py`
-  - `tests/test_create_skill_from_template_regression.py`
+## 工具与运行时契约
+- `guide_only`
+  - 不要求 `agents/openai.yaml`
+  - 不要求 `references/runtime*`
+  - `SkillsManager-Tooling-CheckUp` 对其不执行 CLI/runtime-contract shape 审计
+- `guide_with_tool`
+  - 可有专属 lint/audit/check 工具
+  - 不要求 CLI-first dual-file runtime_contracts
+- `executable_workflow_skill`
+  - 必须具备 CLI-first runtime contracts
+  - 必须具备 stage index 与 stage contract 四件套
 
 ## 验收门禁
-- `SKILL.md` 是极简 facade，且已把读者路由到下一层文档。
-- routing docs 与 atomic docs 已形成清晰 tree，anchors 已补齐 graph。
-- `basic` 与 `staged_cli_first` 的生成结果与各自 profile 输出面一致。
-- 若 skill 有运行态规则，则 CLI JSON、machine-readable contract、markdown audit copy 三者闭环完整。
+- `skill_mode` 与实际文件树一致。
+- `guide_only` 只有 `SKILL.md`。
+- `guide_with_tool` 与 `executable_workflow_skill` 的 `SKILL.md` 只保留 `Immediate Contract` 与 `Structured Entry` 两段。
+- `guide_with_tool` 与 `executable_workflow_skill` 已形成清晰 tree，anchors 已补齐 graph。
+- `executable_workflow_skill` 的 runtime/stage 合同面完整。

@@ -19,7 +19,7 @@ anchors:
 - 架构与边界：`00_ARCHITECTURE_OVERVIEW.md`
 - 模块清单与映射：`10_MODULE_CATALOG.yaml`
 - 路由与治理：按需补充 `references/routing/` 与 `references/governance/`
-- 复杂技能 profile：按需补充 `references/stages/` 与 `assets/templates/stages/`
+- 复杂技能 `skill_mode`：按需补充 `references/stages/` 与 `assets/templates/stages/`
 - 模块文档：`modules/`
 - 变更记录：`90_CHANGELOG.md`
 

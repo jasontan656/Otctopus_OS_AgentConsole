@@ -40,6 +40,8 @@ STANDARD_WRITE_EXEC_ACTION = (
     "Default to full-coverage edits, proactively explore to avoid omissions, "
     "and use the meta skill stack to strengthen the result."
 )
+SCAFFOLD_REPLACE_ME = "replace_me"
+SCAFFOLD_NOT_APPLICABLE = "N/A"
 PARENT_DUPLICATE_ALLOWED_NORMALIZED_STRINGS = {
     " ".join(TEXT_TOKEN_PATTERN.findall(_text)).lower()
     for _text in (STANDARD_WRITE_EXEC_GOAL, STANDARD_WRITE_EXEC_ACTION)
@@ -212,6 +214,21 @@ def load_agents_structure_contract(paths: RuntimePaths) -> dict[str, object]:
     return read_json(paths.mirror_skill_root / PAYLOAD_STRUCTURE_CONTRACT_RELATIVE_PATH)
 
 
+def _default_agents_payload_schema(paths: RuntimePaths) -> dict[str, object] | None:
+    contract = load_agents_structure_contract(paths)
+    targets = contract.get("targets", {})
+    default_schema = targets.get("AGENTS.md")
+    return default_schema if isinstance(default_schema, dict) else None
+
+
+def _root_agents_template_human_path(paths: RuntimePaths) -> Path:
+    return paths.managed_targets_root / "AGENTS_human.md"
+
+
+def _root_agents_template_machine_path(paths: RuntimePaths) -> Path:
+    return paths.managed_targets_root / "AGENTS_machine.json"
+
+
 def ensure_within_workspace(paths: RuntimePaths, target_path: Path) -> Path:
     resolved = target_path.expanduser().resolve()
     resolved.relative_to(paths.workspace_root)
@@ -266,6 +283,97 @@ def load_machine_payload(machine_path: Path) -> object:
     if machine_path.exists():
         return read_json(machine_path)
     return {}
+
+
+def _iter_replace_me_payload_paths(payload: object, path: str) -> Iterable[str]:
+    if isinstance(payload, dict):
+        for key, value in payload.items():
+            yield from _iter_replace_me_payload_paths(value, f"{path}.{key}")
+        return
+    if isinstance(payload, list):
+        for index, item in enumerate(payload):
+            yield from _iter_replace_me_payload_paths(item, f"{path}[{index}]")
+        return
+    if isinstance(payload, str) and SCAFFOLD_REPLACE_ME in payload:
+        yield path
+
+
+def validate_agents_writeback_completion(external_text: str, payload: object) -> list[str]:
+    errors: list[str] = []
+    part_a_body = extract_external_agents_part_a_body(external_text)
+    for line_number, line in enumerate(part_a_body.splitlines(), start=1):
+        if SCAFFOLD_REPLACE_ME in line:
+            errors.append(f"external_replace_me_remaining:part_a[line={line_number}]")
+    for path in _iter_replace_me_payload_paths(payload, "$"):
+        errors.append(f"payload_replace_me_remaining:{path}")
+    return errors
+
+
+def _extract_part_a_sections(text: str) -> dict[str, list[str]]:
+    sections: dict[str, list[str]] = {}
+    current_heading: str | None = None
+    for line in extract_external_agents_part_a_body(text).splitlines():
+        stripped = line.strip()
+        if not stripped:
+            continue
+        if re.match(r"^\d+\.\s+", stripped):
+            current_heading = stripped
+            sections.setdefault(current_heading, [])
+            continue
+        if current_heading is None:
+            continue
+        item = re.sub(r"^\s*[-*]\s*", "", stripped)
+        if item:
+            sections[current_heading].append(item)
+    return sections
+
+
+def _strip_inline_command_wrapper(text: str) -> str:
+    stripped = text.strip()
+    if stripped.startswith("`") and stripped.endswith("`") and stripped.count("`") == 2:
+        return stripped[1:-1]
+    return stripped
+
+
+def _repo_root_for_runtime_paths(paths: RuntimePaths) -> Path:
+    detected = _detect_repo_root_from_skill_root(paths.mirror_skill_root)
+    if detected is not None:
+        return detected
+    return (paths.workspace_root / REPO_ROOT_CANONICAL_NAME).resolve()
+
+
+def build_agents_payload_contract_command(paths: RuntimePaths, source_path: Path) -> str:
+    repo_root = _repo_root_for_runtime_paths(paths)
+    python_path = repo_root / ".venv_backend_skills" / "bin" / "python"
+    script_path = paths.mirror_skill_root / "scripts" / "Cli_Toolbox.py"
+    command = (
+        f'{python_path} {script_path} agents-payload-contract --source-path "{source_path.resolve()}" --json'
+    )
+    if source_path.parts[-3:] == (".codex", "skills", "AGENTS.md"):
+        return f"MDM_WORKSPACE_ROOT={source_path.resolve().parents[2]} {command}"
+    try:
+        source_path.resolve().relative_to(paths.workspace_root)
+    except ValueError:
+        command = f"MDM_WORKSPACE_ROOT={source_path.resolve().parents[2]} {command}"
+    return command
+
+
+def validate_source_specific_external_agents(
+    paths: RuntimePaths,
+    source_path: Path,
+    text: str,
+) -> list[str]:
+    if source_path.parts[-3:] != (".codex", "skills", "AGENTS.md"):
+        return []
+    sections = _extract_part_a_sections(text)
+    root_entry_items = sections.get("1. 根入口命令", [])
+    if len(root_entry_items) != 1:
+        return ["codex_skills_root_entry_command_count_invalid"]
+    actual_command = _strip_inline_command_wrapper(root_entry_items[0])
+    expected_command = build_agents_payload_contract_command(paths, source_path)
+    if actual_command != expected_command:
+        return [f"codex_skills_root_entry_command_invalid:{actual_command}"]
+    return []
 
 
 def _canonicalize_relative_path(relative_path: Path) -> Path:
@@ -484,7 +592,11 @@ def validate_markdown_owner(text: str, expected_owner: str) -> list[str]:
 def _payload_schema_for_source(paths: RuntimePaths, source_path: Path) -> dict[str, object] | None:
     contract = load_agents_structure_contract(paths)
     targets = contract.get("targets", {})
-    return targets.get(_relative_source_key(paths, source_path))
+    schema = targets.get(_relative_source_key(paths, source_path))
+    if isinstance(schema, dict):
+        return schema
+    default_schema = targets.get("AGENTS.md")
+    return default_schema if isinstance(default_schema, dict) else None
 
 
 def list_channels(paths: RuntimePaths) -> dict[str, dict[str, object]]:
@@ -982,17 +1094,20 @@ def validate_managed_agents_pair(
             )
         )
     errors.extend(validate_machine_json(machine_path, expected_owner, payload_schema))
+    external_text = source_path.read_text(encoding="utf-8") if source_path.exists() else None
     if source_path.exists() and machine_path.exists():
         try:
             machine_payload = read_json(machine_path)
         except json.JSONDecodeError:
             machine_payload = None
         if isinstance(machine_payload, dict):
+            if external_text is not None:
+                errors.extend(validate_agents_writeback_completion(external_text, machine_payload))
             errors.extend(
                 _validate_parent_agents_duplicates(
                     paths,
                     source_path,
-                    source_path.read_text(encoding="utf-8"),
+                    external_text or "",
                     machine_payload,
                 )
             )
@@ -1021,7 +1136,10 @@ def lint_external_entry(paths: RuntimePaths, entry: dict[str, object]) -> list[s
     if not source_path.exists():
         return ["missing_external_source"]
     if entry["mapping_mode"] == "agents_ab":
-        return validate_external_agents(source_path.read_text(encoding="utf-8"), str(entry["owner"]))
+        text = source_path.read_text(encoding="utf-8")
+        errors = validate_external_agents(text, str(entry["owner"]))
+        errors.extend(validate_source_specific_external_agents(paths, source_path, text))
+        return errors
     return []
 
 
@@ -1094,32 +1212,147 @@ def add_governed_source_path(
         sync_file_to_installed(paths, paths.scan_rules_path, dry_run)
 
 
+def _render_part_a_template_from_root(paths: RuntimePaths) -> str | None:
+    template_path = _root_agents_template_human_path(paths)
+    if not template_path.exists():
+        return None
+    template_text = template_path.read_text(encoding="utf-8")
+    body = extract_external_agents_part_a_body(template_text)
+    section_titles = [
+        line.strip()
+        for line in body.splitlines()
+        if re.match(r"^\d+\.\s+", line.strip())
+    ]
+    if not section_titles:
+        return None
+    rendered_lines: list[str] = []
+    for index, title in enumerate(section_titles):
+        if index > 0:
+            rendered_lines.append("")
+        rendered_lines.append(title)
+        rendered_lines.append("- replace_me")
+    rendered = "\n".join(rendered_lines).strip()
+    if rendered:
+        return rendered
+    for line in body.splitlines():
+        stripped = line.strip()
+        if not stripped:
+            rendered_lines.append("")
+            continue
+        if re.match(r"^\d+\.\s+", stripped):
+            rendered_lines.append(stripped)
+            continue
+        if stripped.startswith("- "):
+            rendered_lines.append("- replace_me")
+            continue
+        rendered_lines.append("replace_me")
+    return "\n".join(rendered_lines).strip()
+
+
+def _scaffold_agents_string_value(path: str) -> str:
+    if path == "$.entry_role":
+        return SCAFFOLD_REPLACE_ME
+    if path == "$.runtime_source_policy.runtime_rule_source":
+        return "CLI_JSON"
+    if path == "$.execution_modes.READ_EXEC.goal":
+        return SCAFFOLD_REPLACE_ME
+    if path == "$.execution_modes.WRITE_EXEC.goal":
+        return STANDARD_WRITE_EXEC_GOAL
+    if path.endswith(".repo_name"):
+        return SCAFFOLD_NOT_APPLICABLE
+    return SCAFFOLD_REPLACE_ME
+
+
+def _scaffold_agents_value_from_root_template(value: object, path: str, owner: str) -> object:
+    if path == "$.owner":
+        return owner
+    if path.startswith("$.runtime_source_policy"):
+        return value
+    if path.startswith("$.execution_modes.WRITE_EXEC"):
+        return value
+    if isinstance(value, dict):
+        return {
+            key: _scaffold_agents_value_from_root_template(item, f"{path}.{key}", owner)
+            for key, item in value.items()
+        }
+    if isinstance(value, list):
+        if path == "$.execution_modes.WRITE_EXEC.default_actions":
+            return value
+        if not value:
+            return []
+        return [
+            _scaffold_agents_value_from_root_template(value[0], f"{path}[0]", owner)
+        ]
+    if isinstance(value, str):
+        return _scaffold_agents_string_value(path)
+    if isinstance(value, bool):
+        return value
+    return SCAFFOLD_NOT_APPLICABLE
+
+
+def _scaffold_agents_value_from_schema(schema: dict[str, object], path: str, owner: str) -> object:
+    schema_type = schema.get("type")
+    if schema_type == "object":
+        properties = schema.get("properties", {})
+        if not isinstance(properties, dict):
+            return {}
+        return {
+            key: _scaffold_agents_value_from_schema(properties[key], f"{path}.{key}", owner)
+            for key in schema.get("key_order", [])
+            if key in properties
+        }
+    if schema_type == "array":
+        if path == "$.execution_modes.WRITE_EXEC.default_actions":
+            return [STANDARD_WRITE_EXEC_ACTION]
+        return []
+    if schema_type == "string":
+        if path == "$.owner":
+            return owner
+        return _scaffold_agents_string_value(path)
+    if schema_type == "boolean":
+        if path in {
+            "$.runtime_source_policy.audit_fields_are_not_primary_runtime_instructions",
+            "$.runtime_source_policy.path_metadata_is_not_action_guidance",
+        }:
+            return True
+        return False
+    return SCAFFOLD_NOT_APPLICABLE
+
+
+def scaffold_agents_machine_payload(paths: RuntimePaths, source_path: Path, owner: str) -> dict[str, object]:
+    template_path = _root_agents_template_machine_path(paths)
+    if template_path.exists():
+        template_payload = read_json(template_path)
+        if isinstance(template_payload, dict):
+            payload = _scaffold_agents_value_from_root_template(template_payload, "$", owner)
+            if isinstance(payload, dict):
+                payload["owner"] = owner
+                return payload
+    schema = _payload_schema_for_source(paths, source_path) or _default_agents_payload_schema(paths)
+    if schema is None:
+        return {"owner": owner}
+    payload = _scaffold_agents_value_from_schema(schema, "$", owner)
+    if not isinstance(payload, dict):
+        return {"owner": owner}
+    payload["owner"] = owner
+    return payload
+
+
 def scaffold_external_agents(external_path: Path, owner: str) -> str:
-    script_path = Path(__file__).resolve()
-    repo_root = next((parent for parent in script_path.parents if parent.name == REPO_ROOT_CANONICAL_NAME), None)
-    if repo_root is None:
-        raise RuntimeError("cannot resolve Meta-RootFile-Manager repo root")
-    command = (
-        f"python3 {repo_root / 'Skills' / 'Meta-RootFile-Manager' / 'scripts' / 'Cli_Toolbox.py'} "
-        f'target-contract --source-path "{external_path}" --json'
+    return upsert_frontmatter_owner(
+        render_external_agents(_render_part_a_template_from_root(detect_paths(__file__)) or "1. 根入口命令\n- replace_me"),
+        owner,
     )
-    content = (
-        f"{HOOK_HEADER}\n\n"
-        "`HOOK_LOAD`: Apply this AGENTS contract.\n\n"
-        f"{PART_A_OPEN}\n"
-        "1. 根入口命令\n"
-        f"- 在读取 `{external_path}` 的 runtime contract 前，必须先运行：\n"
-        f"- `{command}`\n\n"
-        "2. 当前治理占位\n"
-        f"- 当前受管容器：`{external_path.parent}`。\n"
-        "- 用户后续应补全该容器专属的治理内容。\n"
-        f"{PART_A_CLOSE}\n"
-    )
-    return upsert_frontmatter_owner(content, owner)
 
 
-def scaffold_internal_agents_human(external_path: Path, owner: str) -> str:
-    return render_internal_agents_human(scaffold_external_agents(external_path, owner), {"owner": owner})
+def scaffold_internal_agents_human(
+    paths: RuntimePaths,
+    external_path: Path,
+    owner: str,
+    machine_payload: dict[str, object] | None = None,
+) -> str:
+    payload = machine_payload if machine_payload is not None else scaffold_agents_machine_payload(paths, external_path, owner)
+    return render_internal_agents_human(scaffold_external_agents(external_path, owner), payload)
 
 
 def scaffold_plain_external(_file_kind: str) -> str:

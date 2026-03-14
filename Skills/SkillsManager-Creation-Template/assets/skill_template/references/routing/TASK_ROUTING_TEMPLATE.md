@@ -6,7 +6,7 @@ anchors:
 - target: ../../SKILL_TEMPLATE.md
   relation: implements
   direction: upstream
-  reason: The basic facade template routes into this task routing template.
+  reason: The guide_with_tool facade template routes into this task routing template.
 - target: ../governance/SKILL_DOCSTRUCTURE_POLICY_TEMPLATE.md
   relation: routes_to
   direction: downstream

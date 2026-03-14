@@ -19,7 +19,8 @@
       "lint": "./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py lint --json",
       "collect": "./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py collect --json",
       "push": "./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py push --json",
-      "scaffold": "./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py scaffold --json --target-dir \"<external dir>\""
+      "scaffold": "./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py scaffold --json --target-dir \"<external dir>\"",
+      "new_writeback": "./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py new-writeback --json --source-path \"<external AGENTS path>\""
     }
   },
   "must_use_sequence": [
@@ -27,7 +28,8 @@
     "When editing a governed target, call target-contract for the concrete external path.",
     "When editing any AGENTS_machine.json payload, call agents-payload-contract for the corresponding external AGENTS.md before modifying payload content.",
     "Treat returned JSON payloads as the primary runtime instruction source.",
-    "For AGENTS payload edits, complete collect and lint after writeback."
+    "For AGENTS payload edits, complete collect and lint after writeback.",
+    "Use new-writeback to finalize scaffolded AGENTS targets after replace_me fields are concretely filled or set to N/A."
   ],
   "special_channels": [
     "AGENTS_MD"
@@ -40,6 +42,7 @@
     "Do not edit AGENTS_machine.json payloads ad hoc; go through agents-payload-contract first.",
     "Do not add extra reminders, extra routing, or extra obligations beyond the user request when normalizing payload semantics.",
     "Do not bypass collect and lint after AGENTS payload writeback.",
+    "Do not leave replace_me in an AGENTS target that is being finalized by new-writeback.",
     "Do not repeat parent AGENTS part_a or parent payload semantics inside child AGENTS surfaces; lint must reject parent-child duplicates except skill entries."
   ],
   "registry_source": "rules/scan_rules.json"

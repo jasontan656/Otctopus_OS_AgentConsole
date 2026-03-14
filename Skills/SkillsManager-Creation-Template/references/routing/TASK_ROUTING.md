@@ -14,7 +14,7 @@ anchors:
 - target: ../routing/PROFILE_ROUTING.md
   relation: routes_to
   direction: downstream
-  reason: Profile-sensitive tasks must continue through profile routing.
+  reason: Skill-mode-sensitive tasks must continue through skill-mode routing.
 - target: ../indexes/DOC_TREE.md
   relation: routes_to
   direction: downstream
@@ -24,7 +24,7 @@ anchors:
 # Task Routing
 
 ## 当前分叉轴线
-- 本文只按“任务意图”分流，不处理 profile 选择或工具细节。
+- 本文只按“任务意图”分流，不处理 `skill_mode` 选择或工具细节。
 
 ## 分支一：创建新 skill
 - 先读：`../governance/SKILL_DOCSTRUCTURE_ENFORCEMENT.md`
@@ -36,7 +36,7 @@ anchors:
 ## 分支二：治理既有 skill
 - 先读：`../governance/SKILL_DOCSTRUCTURE_ENFORCEMENT.md`
 - 再读：`../governance/SKILL_AUTHORING_RULES.md`
-- 若涉及 profile 深化，再转入：`PROFILE_ROUTING.md`
+- 若涉及模板类型重构，再转入：`PROFILE_ROUTING.md`
 - 若涉及模板包联动，再补：`../indexes/DOC_TREE.md`
 
 ## 分支三：维护模板包与生成器

@@ -13,8 +13,8 @@ anchors:
 
 <part_A>
 - 本 guide 说明如何用本技能治理“目标 skill 的运行时形态”。
-- 模型运行时应先调用 `./.venv_backend_skills/bin/python Skills/SkillsManager-Tooling-CheckUp/scripts/Cli_Toolbox.py govern-target --target-skill-root <path> --json` 获取目标感知审计结果。
-- 人类可以看本 mirror；模型仍应以 Part B payload 为主。
+- `govern-target` 在审计前必须先看目标 `SKILL.md` 的 `skill_mode`。
+- `guide_only` 直接豁免，`guide_with_tool` 放松 runtime-contract 形态检查，`executable_workflow_skill` 保持完整 CLI-first shape enforcement。
 </part_A>
 
 <part_B>
@@ -22,24 +22,25 @@ anchors:
 ```json
 {
   "directive_name": "skills_tooling_checkup_target_shape_governance_guide",
-  "directive_version": "1.0.0",
+  "directive_version": "1.1.0",
   "doc_kind": "guide",
   "topic": "target-shape-governance",
-  "purpose": "Govern a target skill so runtime-facing contract, workflow, instruction, and guide assets become CLI-first dual-file outputs.",
+  "purpose": "Govern a target skill so shape enforcement matches its declared skill_mode instead of forcing one global CLI-first shape.",
   "instruction": [
     "Use govern-target with --target-skill-root to audit the target skill against the governed shape.",
-    "Treat every runtime-facing contract/workflow/instruction/guide asset as dual-file: *_human.md plus same-name .json.",
-    "Keep SKILL.md as a facade, but make the model enter the target skill through CLI JSON rather than markdown path chains."
+    "Read target SKILL.md skill_mode first and branch the audit policy before flagging violations.",
+    "Only executable_workflow_skill requires full CLI-first dual-file runtime_contracts enforcement."
   ],
   "workflow": [
-    "Audit the target skill root for runtime_contracts, dual-file pairs, facade CLI-first wording, and agent prompt CLI-first wording.",
-    "List markdown-only legacy runtime assets and json-only orphan runtime assets that still violate the governed shape.",
-    "Rewrite the target skill so runtime instructions are emitted by tool output, then validate with the target skill's own tests and repo-local lint."
+    "If skill_mode=guide_only, return exempt/skip guidance and stop the CLI/runtime-contract shape audit.",
+    "If skill_mode=guide_with_tool, skip CLI-first dual-file runtime_contract checks and route the user to tooling/remediation directives for actual tooling code governance.",
+    "If skill_mode=executable_workflow_skill, audit runtime_contracts, dual-file pairs, facade CLI-first wording, and agent prompt CLI-first wording, then validate with the target skill's own tests and repo-local lint."
   ],
   "rules": [
     "Payload JSON must contain the contract content itself, not a pointer telling the model to read another file.",
     "Human markdown mirrors may keep narrative Part A, but Part B must mirror the same JSON payload emitted by the tool.",
-    "govern-target is an audit and governance-entry surface; it does not by itself rewrite the target skill."
+    "govern-target is an audit and governance-entry surface; it does not by itself rewrite the target skill.",
+    "guide_only must not be marked non-compliant merely because it lacks runtime_contracts or CLI-first prompts."
   ]
 }
 ```

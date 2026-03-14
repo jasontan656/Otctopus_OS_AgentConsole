@@ -77,6 +77,7 @@ metadata:
 
 ## 4. 适用域
 - 适用于：skills 内 markdown 文档树设计、分叉节点设计、单 topic 原子文档、fewshot 样例树、frontmatter/anchors、graph JSON、文档 lint、self graph 重建。
+- `guide_only` 目标技能为显式豁免形态：本技能读取其 `skill_mode` 后应返回 skip，而不是继续进入 graph/split lint。
 
 ## 5. 执行入口
 - 完整工具入口必须在 skill 根目录执行：
@@ -91,6 +92,8 @@ metadata:
 ## 6. 读取原则
 - 入口节点负责把读者送到对应知识轨与 workflow 轨。
 - 文档结构规则以 CLI JSON 与下沉合同为准。
+- 进入目标 skill 后先读取 `SKILL.md` 顶层 `skill_mode`。
+- 若 `skill_mode=guide_only`，本技能只返回 `skipped` / `skipped_for_guide_only` 结果，不强行要求文档树。
 - 文档树应先确定当前应进入哪一条知识轨，再确定对应 workflow。
 - 文档结构应先形成清晰 tree，再用 anchors 把必要的跨层关系织成 graph。
 - 若文档承担多个 topic 或多个独立分叉轴线，应优先拆分而不是堆补丁。

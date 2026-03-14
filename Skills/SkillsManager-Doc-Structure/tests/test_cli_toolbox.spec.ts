@@ -43,6 +43,16 @@ async function createSplitCandidateSkill(): Promise<string> {
   return skillRoot
 }
 
+async function createGuideOnlySkill(): Promise<string> {
+  const skillRoot = await createTempSkill()
+  await writeFile(
+    path.join(skillRoot, 'SKILL.md'),
+    `---\nname: "temp-guide-only"\ndescription: "temporary guide only skill"\nskill_mode: "guide_only"\n---\n\n# Temp Guide Only\n\n## 1. 技能定位\n- all guidance lives here\n`,
+    'utf8',
+  )
+  return skillRoot
+}
+
 afterEach(async () => {
   for (const tempDir of tempDirs.splice(0, tempDirs.length)) {
     await rm(tempDir, { recursive: true, force: true })
@@ -62,8 +72,22 @@ describe('SkillsManager-Doc-Structure TS runtime', () => {
   it('builds a doc graph workspace for the current skill', async () => {
     const workspace = await buildDocGraphWorkspace(path.resolve(__dirname, '..'))
     expect(workspace.status).toBe('pass')
+    expect(workspace.applicability).toBe('enforced')
     expect(workspace.graph.nodes.length).toBeGreaterThan(0)
     expect(workspace.graph.nodes.some((node) => node.path === 'references/fewshot/00_FEWSHOT_INDEX.md')).toBe(true)
+  })
+
+  it('skips graph lint for guide_only skills', async () => {
+    const skillRoot = await createGuideOnlySkill()
+    const contract = await loadRuntimeContract(skillRoot)
+    const workspace = await buildDocGraphWorkspace(skillRoot)
+
+    expect(contract.target_skill_mode).toBe('guide_only')
+    expect(contract.applicability).toBe('skipped_for_guide_only')
+    expect(workspace.status).toBe('skipped')
+    expect(workspace.applicability).toBe('skipped_guide_only')
+    expect(workspace.summary.nodeCount).toBe(0)
+    expect(workspace.notes[0]).toContain('guide_only')
   })
 
   it('captures optional node metadata fields when present', async () => {

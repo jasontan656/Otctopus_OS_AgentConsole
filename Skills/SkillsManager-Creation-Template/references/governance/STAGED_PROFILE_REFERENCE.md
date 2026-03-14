@@ -1,33 +1,33 @@
 ---
-doc_id: skill_creation_template.governance.staged_profile_reference
+doc_id: skill_creation_template.governance.executable_workflow_reference
 doc_type: topic_atom
-topic: Reference for when and how to use the staged_cli_first profile
+topic: Reference for when and how to use the executable_workflow_skill mode
 anchors:
 - target: ../routing/PROFILE_ROUTING.md
   relation: details
   direction: upstream
-  reason: Profile routing directs readers here when staged_cli_first is selected.
+  reason: Skill-mode routing directs readers here when executable_workflow_skill is selected.
 - target: SKILL_AUTHORING_RULES.md
   relation: expands
   direction: upstream
-  reason: This reference specializes the authoring contract for the staged profile.
+  reason: This reference specializes the authoring contract for executable workflow skills.
 - target: ../runtime/SKILL_RUNTIME_OVERVIEW.md
   relation: pairs_with
   direction: lateral
-  reason: The runtime contract enumerates the staged output surface.
+  reason: The runtime contract enumerates the executable workflow output surface.
 ---
 
-# Staged Profile Reference
+# Executable Workflow Reference
 
-## 何时进入 staged_cli_first
+## 何时进入 executable_workflow_skill
 - 目标 skill 存在明确阶段顺序，而不是单一主轴动作。
 - 当前阶段的读物边界、命令边界、graph 角色需要分别暴露。
 - 阶段切换需要显式 discard policy，不能把上一阶段 focus 残留到下一阶段。
 
-## staged profile 必需结构
+## 必需结构
 - entry facade：`SKILL.md`
 - task routing：至少一层 routing doc
-- doc-structure governance：至少一份明确声明 SkillsManager-Doc-Structure 必须应用的原子文档
+- doc-structure governance：至少一份明确声明 `SkillsManager-Doc-Structure` 必须应用的原子文档
 - runtime contract：JSON + markdown 审计版
 - stage index：`references/stages/00_STAGE_INDEX.md`
 - stage system template kit：
@@ -49,7 +49,7 @@ anchors:
 - 依赖单一仓库现实的 hard-coded env 或 graph 语义。
 
 ## 作者检查清单
-- 这个 skill 真需要 staged，而不是 basic 吗？
+- 这个 skill 真需要 executable workflow，而不是 guide_with_tool 吗？
 - 是否已经先建 facade/routing/tree，再去补 stage contracts？
 - resident docs 是否少而清楚？
 - discard policy 是否已经写进 runtime contract 和 stage docs？

@@ -60,7 +60,7 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `AI_Projects` workspace root 的 run
     "$Meta-Impact-Investigation (ensure the coverage of user request before conclusion or edits)",
     "$Meta-Architect-MindModel (think from the architecture level and reject one-sided thinking)",
     "$Meta-reasoningchain (project the future shape to align the target state)",
-    "$Meta-keyword-first-edit (prefer delete > replace > add when editing)",
+    "$Meta-keyword-first-edit (runtime hook,must be used all time,prefer delete > replace > add when editing)",
     "$Meta-Agent-Browser (applicable only when the task is frontend or browser-related)"
   ],
   "turn_start_actions": [

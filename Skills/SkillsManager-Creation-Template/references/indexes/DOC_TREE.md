@@ -23,13 +23,13 @@ anchors:
 - `references/runtime/`
   - 本技能自己的运行合同与审计版说明。
 - `references/routing/`
-  - 按任务意图和 profile 继续分流的 routing docs。
+  - 按任务意图和 `skill_mode` 继续分流的 routing docs。
 - `references/governance/`
-  - authoring contract、architecture playbook、staged profile reference、doc-structure enforcement。
+  - authoring contract、architecture playbook、executable workflow reference、doc-structure enforcement。
 - `references/tooling/`
   - `Cli_Toolbox` 的使用文档、开发入口和模块级开发文档。
 - `assets/skill_template/`
-  - `basic` 与 `staged_cli_first` 模板资产，以及运行合同模板与 stage kit。
+  - `guide_only`、`guide_with_tool`、`executable_workflow_skill` 模板资产，以及运行合同模板与 stage kit。
 - `tests/`
   - 生成器回归与后续结构验证入口。
 

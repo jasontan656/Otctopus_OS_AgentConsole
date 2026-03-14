@@ -42,7 +42,7 @@ metadata:
    - 依赖基线判断：`--topic techstack-baseline`
    - 本技能工具面：`--topic tooling-entry`
    - 目标技能形态治理：`--topic target-shape-governance`
-3. 真正进入目标 skill 前，再按目标 skill 自己的 CLI-first/runtime contract 入口补齐其局部合同。
+3. 真正进入目标 skill 前，先看目标 `SKILL.md` 的 `skill_mode`，再按目标 skill 自己的 runtime 入口补齐其局部合同。
 4. 只有当 CLI JSON 仍留下真实语义缺口时，才打开 human markdown mirror 或 legacy reference docs。
 
 ## 4. 运行时资产治理模型
@@ -57,6 +57,10 @@ metadata:
 ## 5. 维护入口
 - 门面不再把模型主入口路由为 markdown 文件链。
 - 若任务目标是治理某个具体 skill 的运行时形态，必须优先使用 `govern-target --target-skill-root <path> --json` 获取目标感知审计结果。
+- `govern-target` 会先读取目标 `SKILL.md` 的 `skill_mode`：
+  - `guide_only`：跳过 CLI/runtime-contract shape 审计
+  - `guide_with_tool`：不强推 CLI-first dual-file runtime_contracts
+  - `executable_workflow_skill`：保持完整 CLI-first dual-file 审计
 - 真正的改写、测试与 lint 仍通过目标 skill 已有命令完成，而不是把本技能扩张成目标 skill 的替代执行器。
 - 若任务涉及 Python 代码修改，回合末必须对具体 Python 目标范围执行 `Dev-PythonCode-Constitution` lint。
 

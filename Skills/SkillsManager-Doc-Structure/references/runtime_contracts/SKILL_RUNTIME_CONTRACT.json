@@ -1,6 +1,6 @@
 {
   "contract_name": "skillsmanager_doc_structure_runtime_contract",
-  "contract_version": "1.0.0",
+  "contract_version": "1.1.0",
   "skill_name": "SkillsManager-Doc-Structure",
   "runtime_source_policy": {
     "primary_runtime_source": "CLI_JSON",
@@ -24,6 +24,7 @@
     "Read the runtime contract through the CLI JSON entry before deep references.",
     "When the task needs lint, graph rebuild, or split-decision writes, enter through the skill-local npm CLI from the skill root.",
     "Do not assume the Python wrapper exposes lint-doc-anchors or lint-split-points; it only mirrors the contract payload.",
-    "Treat SKILL.md as a facade and route deeper only after the contract is known."
+    "Treat SKILL.md as a facade and route deeper only after the contract is known.",
+    "Read target SKILL.md skill_mode before enforcing doc-tree lint; guide_only must return a skipped applicability result instead of structural errors."
   ]
 }

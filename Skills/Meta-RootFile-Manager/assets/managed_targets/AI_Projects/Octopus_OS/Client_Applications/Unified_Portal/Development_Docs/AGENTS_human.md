@@ -1,13 +1,13 @@
 ---
-doc_id: meta_rootfile_manager.assets_managed_targets_ai_projects_octopus_os_client_applications_unified_portal_development_docs_agents
-doc_type: topic_atom
-topic: Agents
+doc_id: workflow_centralflow1_octopusos.assets_templates_agents_external_agents
+doc_type: example_doc
+topic: External Agents
+owner: "由 `$Meta-RootFile-Manager` 作为 `Octopus_OS/Client_Applications/Unified_Portal/Development_Docs` container 的 runtime entry owner 负责治理；当前通过 `AGENTS_MD` 通道受管并同步这个入口文件。"
 anchors:
-- target: ../../../../../../../SKILL.md
+- target: ../../../SKILL.md
   relation: implements
   direction: upstream
   reason: This document belongs to the governed skill tree under the main facade.
-owner: "由 `$Meta-RootFile-Manager` 作为 `Octopus_OS/Client_Applications/Unified_Portal/Development_Docs` container 的 runtime entry owner 负责治理；当前通过 `AGENTS_MD` 通道受管并同步这个入口文件。"
 ---
 
 [AGENT RUNTIME HOOK - ABSOLUTE ENFORCEMENT]
@@ -16,20 +16,46 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `Octopus_OS/Client_Applications/Unif
 
 <part_A>
 1. 根入口命令
-- 在处理当前模块开发文档与施工闭环之前，必须先运行：
+- 在处理当前模块开发文档、任务包、证据回写与 acceptance 收口之前，必须先运行：
 - `<root>/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python <root>/Otctopus_OS_AgentConsole/Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py target-contract --source-path "/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs/AGENTS.md" --json`
 
-2. 当前容器定位
-- 当前对象是 `Unified_Portal` 的 `Development_Docs` 受管入口。
-- 具体 docs/codebase roots、逻辑主题标识与 hook 锚点以 `Part B` machine payload 为准。
+2. 当前受管边界
+- 当前 repo/workspace 根边界：`/home/jasontan656/AI_Projects`
+- 当前开发文档根：`/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs`
+- 当前代码对象根：`/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal`
+- 当前受管 docs root：`/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs`
+- 当前逻辑主题标识：`Unified_Portal`
+- mother doc root：`/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs/mother_doc`
+- execution packs root：`/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs/mother_doc/execution_atom_plan_validation_packs`
+- graph root：`/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs/graph`
 
 3. DevFlow 闭环入口
-- 当前模块开发闭环由 `$Workflow-OctopusOS-DevFlow` 驱动。
-- 阶段前置检查、读物边界、命令入口与 graph 角色，不在本文件重复展开；一律从该 skill 的 CLI JSON contract 读取。
+- 当前模块的开发文档、任务包、graph、evidence 与 acceptance 闭环由 `$Workflow-CentralFlow1-OctopusOS` 治理。
+- 进入任何阶段前，必须先运行：
+- `<root>/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python <root>/Otctopus_OS_AgentConsole/Skills/Workflow-CentralFlow1-OctopusOS/scripts/Cli_Toolbox.py target-runtime-contract --target-root "/home/jasontan656/AI_Projects" --development-docs-root "/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs" --docs-root "/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs" --module-dir "Unified_Portal" --json`
+- 然后必须运行：
+- `<root>/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python <root>/Otctopus_OS_AgentConsole/Skills/Workflow-CentralFlow1-OctopusOS/scripts/Cli_Toolbox.py stage-checklist --stage <mother_doc|construction_plan|implementation|acceptance> --target-root "/home/jasontan656/AI_Projects" --development-docs-root "/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs" --docs-root "/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs" --module-dir "Unified_Portal" --json`
+- 若当前模块已经存在 mother_doc、编号归档、execution packs 或 graph，必须先复用当前脉络；禁止另起脱节文档线。
+- 若模块容器已具备使用条件但缺少 `AGENTS.md`、mother_doc、task packs 或 graph，必须先执行 `target-scaffold` 一次性补齐骨架。
 
-4. 治理链约束
-- 本文件只承载外部 `Part A`。
-- 更新本文件必须通过 `$Meta-RootFile-Manager` 的 `collect` / `push` / `scaffold` 闭环。
+4. 阶段读取与切换
+- 单阶段执行时，只允许读取顶层常驻文档、当前阶段 checklist，以及当前阶段 `stage-doc-contract / stage-command-contract / stage-graph-contract` 指定的对象。
+- 多阶段连续执行时，阶段切换后只保留顶层常驻文档，并且必须重新读取目标阶段 checklist，丢弃上一阶段临时 focus、临时 notes 与阶段局部判断。
+- implementation 只允许读取 active pack 与该 pack 显式声明的 `source_mother_doc_refs`；不得通读整个 mother doc 树。
+- acceptance 只允许保留交付裁决需要的证据；不得把 implementation 局部调试 focus 直接带入 acceptance。
+
+5. 证据回写与 turn end 闭合
+- 证据骨架与任务包文件由 `$Workflow-CentralFlow1-OctopusOS target-scaffold / construction-plan-init` 创建；不得自行发明平替结构。
+- implementation 一旦发生真实改动，必须按 active pack 回写 `phase_status.jsonl`、`evidence_registry.json`、`03_validation_and_writeback.md`；必要时回写 `pack_manifest.yaml` 与 `inner_phase_plan.json`。
+- 若实现偏离 active pack，必须先回写当前 pack；若设计意图也变化，再回写对应 mother doc 原子文档与 `08_dev_execution_plan.md`。
+- acceptance 必须把 requirement 级裁决回写到当前 acceptance 容器；`implemented=true`、`tested=true`、`witnessed=true` 只能引用当前磁盘上真实存在的证据。
+- turn end 不得停在“代码已改但证据未补”的状态；若当前 turn 发生实现、验证、acceptance 或 mother doc 合同变更，必须先补齐本阶段规定的 writeback，再允许结束。
+- 若 acceptance 文档领先于真实证据、evidence path 不存在、或 `ref` 状态早于 acceptance closeout / graph postflight，必须先回退或修正，不得伪装成完成态。
+
+6. 治理链约束
+- 本文件属于 `Meta-RootFile-Manager` 的受管外部 `AGENTS.md`，外部文件只允许承载 `Part A`。
+- 更新本文件时，必须使用 `$Meta-RootFile-Manager` 的 `collect` / `push` / `scaffold` 流程，避免治理链断裂。
+- 本文件只负责固定当前模块的 DevFlow 闭环入口、受管边界与 turn end 闭合动作；字段 schema、模板细节、lint 口径与阶段语义一律以下沉 skill 合同为准。
 </part_A>
 
 <part_B>
@@ -38,20 +64,38 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `Octopus_OS/Client_Applications/Unif
 {
   "owner": "由 `$Meta-RootFile-Manager` 作为 `Octopus_OS/Client_Applications/Unified_Portal/Development_Docs` container 的 runtime entry owner 负责治理；当前通过 `AGENTS_MD` 通道受管并同步这个入口文件。",
   "entry_role": "devflow_module_docs_entry",
-  "default_meta_skill_order": [
-    "$Dev-VUE3-WebUI-Frontend (run lint always for mother doc edits.)"
-  ],
   "governed_container": {
+    "target_root": "/home/jasontan656/AI_Projects",
     "development_docs_root": "/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs",
     "codebase_root": "/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal",
-    "module_dir": "Unified_Portal"
+    "module_dir": "Unified_Portal",
+    "module_docs_root": "/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs"
+  },
+  "workflow_roots": {
+    "mother_doc_root": "/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs/mother_doc",
+    "construction_plan_root": "/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs/mother_doc/execution_atom_plan_validation_packs",
+    "graph_runtime_root": "/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs/graph",
+    "acceptance_root": "/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs/mother_doc/acceptance"
   },
   "workflow_contract": {
-    "required_skill": "Workflow-OctopusOS-DevFlow"
+    "required_skill": "Workflow-CentralFlow1-OctopusOS",
+    "required_preflight": [
+      "target-runtime-contract",
+      "stage-checklist"
+    ],
+    "reuse_policy": [
+      "reuse_existing_mother_doc_when_present",
+      "reuse_existing_execution_packs_when_present",
+      "reuse_existing_graph_when_present"
+    ],
+    "governance_chain": [
+      "Meta-RootFile-Manager scaffold/collect/push",
+      "Workflow-CentralFlow1-OctopusOS four-stage delivery loop"
+    ]
   },
   "turn_end_contract_hooks": {
     "frontend_skill_backflow": {
-      "enabled": true,
+      "enabled": false,
       "target_skill": "Dev-VUE3-WebUI-Frontend",
       "scope_root": "/home/jasontan656/AI_Projects/Octopus_OS/Client_Applications/Unified_Portal/Development_Docs/mother_doc/04_frontend_contract_layer",
       "required_frontmatter_keys": [

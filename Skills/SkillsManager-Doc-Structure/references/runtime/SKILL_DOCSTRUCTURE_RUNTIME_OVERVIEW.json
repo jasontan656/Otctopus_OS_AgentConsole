@@ -1,9 +1,9 @@
 {
   "contract_name": "META_SKILL_DOCSTRUCTURE_RUNTIME_CONTRACT",
-  "contract_version": "v6",
+  "contract_version": "v7",
   "skill_name": "SkillsManager-Doc-Structure",
   "scope": "skill_internal_doc_architecture_only",
-  "primary_goal": "Govern tree-first markdown document architecture inside a skill folder starting at the entry handoff, with anchors, metadata contracts, fewshot examples, and a TypeScript CLI.",
+  "primary_goal": "Govern tree-first markdown document architecture inside a skill folder starting at the entry handoff, with anchors, metadata contracts, fewshot examples, and a TypeScript CLI, while explicitly skipping guide_only skills.",
   "thinking_chain": [
     "entry_track_selection",
     "knowledge_track_selection",
@@ -52,6 +52,10 @@
     ],
     "skill_md_metadata_path": "metadata.doc_structure"
   },
+  "notes": [
+    "Targets with skill_mode=guide_only are exempt from doc-tree graph and split lint.",
+    "CLI responses annotate target_skill_mode and applicability at runtime."
+  ],
   "graph_contract": {
     "matrix_path": "assets/runtime/anchor_query_matrix.json",
     "self_graph_path": "assets/runtime/self_anchor_graph.json",

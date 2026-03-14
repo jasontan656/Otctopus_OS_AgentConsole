@@ -1,4 +1,4 @@
 interface:
   display_name: "Meta-keyword-first-edit"
-  short_description: "常驻编辑方法论：删掉重写优先，其次 keyword first 替换，最后才新增。"
-  default_prompt: "使用 Meta-keyword-first-edit 时，先完整阅读目标对象，再按删掉重写 > keyword first 替换 > 新增的优先级做无痕改写，避免局部补丁式叠加。"
+  short_description: "默认 runtime hook：始终启用，且在任何编辑意图下坚持 delete > replace > add。"
+  default_prompt: "将 Meta-keyword-first-edit 作为贯穿整个运行时的默认 runtime hook 持续启用。只要当前回合存在编辑、改写、更新、重构、迁移或结构调整意图，就必须先完整阅读目标对象，再按删掉重写 > keyword first 替换 > 新增的固定优先级执行无痕修改，避免局部补丁式叠加。"

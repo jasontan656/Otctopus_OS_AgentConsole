@@ -25,6 +25,7 @@ export class DocStructureError extends Error {}
 interface ResolvedContext {
   currentSkillRoot: string
   targetRoot: string
+  targetSkillMode: string
   matrixPath: string
   runtimeContractPath: string
   selfGraphPath: string
@@ -54,12 +55,22 @@ async function fileExists(candidate: string): Promise<boolean> {
   }
 }
 
+async function readTargetSkillMode(skillPath: string): Promise<string> {
+  const raw = await fs.readFile(skillPath, 'utf8')
+  const parsed = matter(raw)
+  return typeof parsed.data.skill_mode === 'string' && parsed.data.skill_mode.trim()
+    ? parsed.data.skill_mode.trim()
+    : 'legacy_unspecified'
+}
+
 async function resolveContext(targetRootInput: string): Promise<ResolvedContext> {
   const currentRoot = currentSkillRoot()
   const targetRoot = path.resolve(targetRootInput)
-  if (!(await fileExists(path.join(targetRoot, 'SKILL.md')))) {
+  const skillPath = path.join(targetRoot, 'SKILL.md')
+  if (!(await fileExists(skillPath))) {
     throw new DocStructureError(`target is not a skill root: ${targetRoot}`)
   }
+  const targetSkillMode = await readTargetSkillMode(skillPath)
 
   const targetMatrix = path.join(targetRoot, 'assets', 'runtime', 'anchor_query_matrix.json')
   const targetRuntimeContract = path.join(targetRoot, 'references', 'runtime', 'SKILL_DOCSTRUCTURE_RUNTIME_OVERVIEW.json')
@@ -73,6 +84,7 @@ async function resolveContext(targetRootInput: string): Promise<ResolvedContext>
   return {
     currentSkillRoot: currentRoot,
     targetRoot,
+    targetSkillMode,
     matrixPath,
     runtimeContractPath,
     selfGraphPath: path.join(targetRoot, 'assets', 'runtime', 'self_anchor_graph.json'),
@@ -390,7 +402,45 @@ async function scanDocuments(context: ResolvedContext): Promise<{
 
 export async function buildDocGraphWorkspace(targetRootInput: string): Promise<DocGraphWorkspace> {
   const context = await resolveContext(targetRootInput)
-  const { matrix, runtimeContract, docs, edges, splitCandidates, errors, warnings } = await scanDocuments(context)
+  const runtimeContract = await readJsonFile<RuntimeContractPayload>(context.runtimeContractPath)
+  if (context.targetSkillMode === 'guide_only') {
+    return {
+      status: 'skipped',
+      targetRoot: context.targetRoot,
+      targetSkillMode: context.targetSkillMode,
+      applicability: 'skipped_guide_only',
+      updatedAt: new Date().toISOString(),
+      runtimeContract: {
+        ...runtimeContract,
+        target_skill_mode: context.targetSkillMode,
+        applicability: 'skipped_for_guide_only',
+        notes: [
+          'guide_only skill skips SkillsManager-Doc-Structure graph and split lint',
+        ],
+      },
+      matrix: await readJsonFile<AnchorMatrix>(context.matrixPath),
+      summary: {
+        nodeCount: 0,
+        edgeCount: 0,
+        errorCount: 0,
+        warningCount: 0,
+        splitCandidateCount: 0,
+        blockingSplitCandidateCount: 0,
+      },
+      graph: {
+        nodes: [],
+        edges: [],
+      },
+      docs: [],
+      splitCandidates: [],
+      warnings: [],
+      errors: [],
+      notes: [
+        'guide_only skill keeps all guidance inside SKILL.md and is exempt from doc-structure tree lint',
+      ],
+    }
+  }
+  const { matrix, docs, edges, splitCandidates, errors, warnings } = await scanDocuments(context)
 
   const graphNodes: GraphNodeRecord[] = docs.map((doc) => ({
     path: doc.path,
@@ -414,8 +464,14 @@ export async function buildDocGraphWorkspace(targetRootInput: string): Promise<D
   return {
     status,
     targetRoot: context.targetRoot,
+    targetSkillMode: context.targetSkillMode,
+    applicability: 'enforced',
     updatedAt: new Date().toISOString(),
-    runtimeContract,
+    runtimeContract: {
+      ...runtimeContract,
+      target_skill_mode: context.targetSkillMode,
+      applicability: 'enforced',
+    },
     matrix,
     summary: {
       nodeCount: graphNodes.length,
@@ -433,12 +489,21 @@ export async function buildDocGraphWorkspace(targetRootInput: string): Promise<D
     splitCandidates,
     warnings,
     errors,
+    notes: [],
   }
 }
 
 export async function loadRuntimeContract(targetRootInput: string): Promise<RuntimeContractPayload> {
   const context = await resolveContext(targetRootInput)
-  return readJsonFile<RuntimeContractPayload>(context.runtimeContractPath)
+  const contract = await readJsonFile<RuntimeContractPayload>(context.runtimeContractPath)
+  return {
+    ...contract,
+    target_skill_mode: context.targetSkillMode,
+    applicability: context.targetSkillMode === 'guide_only' ? 'skipped_for_guide_only' : 'enforced',
+    notes: context.targetSkillMode === 'guide_only'
+      ? ['guide_only skill skips SkillsManager-Doc-Structure runtime lint and graph rebuild']
+      : contract.notes,
+  }
 }
 
 export async function rebuildSelfGraph(targetRootInput: string): Promise<{ graphPath: string; workspace: DocGraphWorkspace }> {

@@ -1,0 +1,87 @@
+{
+  "registry_name": "META_SKILL_DOCSTRUCTURE_SPLIT_DECISION_REGISTRY",
+  "registry_version": "v1",
+  "entries": [
+    {
+      "doc_path": "SKILL.md",
+      "doc_id": "workflow_centralflow1_octopusos.entry.facade",
+      "rule_id": "body_axis_overload",
+      "fingerprint": "633fe1485a7189921f157c1c892c6d97be41eb6b",
+      "decision": "accepted",
+      "note": "Keep facade broad because this workflow skill intentionally routes multiple execution branches from one entry.",
+      "decided_at": "2026-03-13T04:23:13.018Z"
+    },
+    {
+      "doc_path": "assets/templates/execution_atom_plan_validation_packs/PACK_TEMPLATE/01_scope_and_intent.md",
+      "doc_id": "workflow_centralflow1_octopusos.assets_templates_execution_atom_plan_validation_packs_pack_template_01_scope_and_intent",
+      "rule_id": "title_conjunction_en",
+      "fingerprint": "7886606bb6f549a388a9840ff07f1c2df2056861",
+      "decision": "accepted",
+      "note": "Keep grouped title because scope and intent are one template section.",
+      "decided_at": "2026-03-13T04:23:13.672Z"
+    },
+    {
+      "doc_path": "assets/templates/execution_atom_plan_validation_packs/PACK_TEMPLATE/03_validation_and_writeback.md",
+      "doc_id": "workflow_centralflow1_octopusos.assets_templates_execution_atom_plan_validation_packs_pack_template_03_validation_and_writeback",
+      "rule_id": "title_conjunction_en",
+      "fingerprint": "c2fcff6faa56cdbcc4226c60f8f8d170854b1969",
+      "decision": "accepted",
+      "note": "Keep grouped title because validation and writeback are one delivery closure section.",
+      "decided_at": "2026-03-13T04:23:14.310Z"
+    },
+    {
+      "doc_path": "assets/templates/mother_doc/07_env_and_deploy.md",
+      "doc_id": "workflow_centralflow1_octopusos.assets_templates_mother_doc_07_env_and_deploy",
+      "rule_id": "title_conjunction_en",
+      "fingerprint": "c6193f50f382fb517c246b77bc5b21659d57e38a",
+      "decision": "accepted",
+      "note": "Keep grouped title because environment and deployment are one operational branch.",
+      "decided_at": "2026-03-13T04:23:14.957Z"
+    },
+    {
+      "doc_path": "assets/templates/mother_doc/10_observability_and_evidence.md",
+      "doc_id": "workflow_centralflow1_octopusos.assets_templates_mother_doc_10_observability_and_evidence",
+      "rule_id": "title_conjunction_en",
+      "fingerprint": "db682b9db917171c00e2ba2f96c492cc57f877d2",
+      "decision": "accepted",
+      "note": "Keep grouped title because observability and evidence are governed together.",
+      "decided_at": "2026-03-13T04:23:15.622Z"
+    },
+    {
+      "doc_path": "assets/templates/mother_doc/11_risks_and_blockers.md",
+      "doc_id": "workflow_centralflow1_octopusos.assets_templates_mother_doc_11_risks_and_blockers",
+      "rule_id": "title_conjunction_en",
+      "fingerprint": "8110c76ae576f3add2919bbda326729ae53af5ed",
+      "decision": "accepted",
+      "note": "Keep grouped title because risks and blockers are one escalation branch.",
+      "decided_at": "2026-03-13T04:23:16.279Z"
+    },
+    {
+      "doc_path": "references/tooling/SKILL_TOOLING_EXECUTION_PLAYBOOK.md",
+      "doc_id": "workflow_centralflow1_octopusos.references_tooling_skill_tooling_workflow_playbook",
+      "rule_id": "title_conjunction_en",
+      "fingerprint": "b69d794b565a4eb1196814ea9247a31827014721",
+      "decision": "accepted",
+      "note": "Keep grouped title because tooling execution is intentionally documented as one playbook.",
+      "decided_at": "2026-03-13T04:23:16.913Z"
+    },
+    {
+      "doc_path": "references/tooling/SKILL_TOOLING_EXECUTION_PLAYBOOK.md",
+      "doc_id": "workflow_centralflow1_octopusos.references_tooling_skill_tooling_workflow_playbook",
+      "rule_id": "body_axis_overload",
+      "fingerprint": "b69d794b565a4eb1196814ea9247a31827014721",
+      "decision": "accepted",
+      "note": "Keep playbook intact because it is the canonical overview before deeper tooling modules.",
+      "decided_at": "2026-03-13T04:23:17.555Z"
+    },
+    {
+      "doc_path": "rules/OCTOPUS_SKILL_HARD_RULES.md",
+      "doc_id": "workflow_centralflow1_octopusos.rules_octopus_skill_hard_rules",
+      "rule_id": "body_axis_overload",
+      "fingerprint": "838b1f6d8ed282e7b7d150910536f91b03006262",
+      "decision": "accepted",
+      "note": "Keep hard rules together because they operate as one enforcement surface.",
+      "decided_at": "2026-03-13T04:23:18.229Z"
+    }
+  ]
+}

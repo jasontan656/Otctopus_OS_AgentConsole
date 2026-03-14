@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "stage": "new-writeback",
+  "tool_state": "active",
+  "purpose": "Finalize scaffolded AGENTS targets after the agent fills the skeleton according to the user request.",
+  "instruction": [
+    "new-writeback applies to scaffolded AGENTS.md targets only",
+    "new-writeback requires external AGENTS.md and AGENTS_machine.json to contain no replace_me",
+    "new-writeback re-renders the paired AGENTS_human.md and then runs lint"
+  ],
+  "workflow": [
+    "agent fills external AGENTS.md according to the user request",
+    "agent fills AGENTS_machine.json according to the user request",
+    "new-writeback checks for replace_me leftovers",
+    "new-writeback re-renders AGENTS_human.md",
+    "new-writeback runs lint before closing"
+  ],
+  "rules": [
+    "replace every replace_me with a concrete final value or N/A before running new-writeback",
+    "do not use new-writeback as a substitute for deciding user intent"
+  ]
+}

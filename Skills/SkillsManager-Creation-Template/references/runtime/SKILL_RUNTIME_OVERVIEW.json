@@ -1,13 +1,13 @@
 {
   "contract_name": "META_SKILL_TEMPLATE_RUNTIME_CONTRACT",
-  "contract_version": "v4",
-  "validation_mode": "cli_first_doc_structure",
+  "contract_version": "v5",
+  "validation_mode": "skill_mode_governed_template",
   "required_fields": [
     "skill_name",
     "authoring_model",
     "routing_protocol",
     "doc_structure_governance",
-    "profile_support",
+    "skill_mode_support",
     "tool_contracts",
     "asset_contracts",
     "governance_rules",
@@ -18,31 +18,27 @@
   ],
   "skill_name": "SkillsManager-Creation-Template",
   "authoring_model": {
-    "skill_md_role": "entry_only_facade",
-    "ownership": "This section owns the target skill's SKILL.md facade contract.",
+    "skill_md_role": "entry_only_facade_except_guide_only",
+    "ownership": "This section owns the target skill's SKILL.md facade contract and skill_mode classification.",
     "facade_sections": [
-      "技能定位",
-      "必读顺序",
-      "分类入口",
-      "适用域",
-      "执行入口",
-      "读取原则",
-      "结构索引"
+      "Immediate Contract",
+      "Structured Entry"
     ],
-    "facade_constraint": "SKILL.md may route readers and state stable boundaries only; deep governance must live in routing or topic docs."
+    "guide_only_exception": "guide_only is the single-file exception and keeps its full guidance inside SKILL.md.",
+    "facade_constraint": "Only immediate hard constraints and first-hop structured routing may remain in SKILL.md."
   },
   "routing_protocol": {
     "first_command": "./.venv_backend_skills/bin/python Skills/SkillsManager-Creation-Template/scripts/Cli_Toolbox.py runtime-contract --json",
     "task_routing_doc": "references/routing/TASK_ROUTING.md",
-    "profile_routing_doc": "references/routing/PROFILE_ROUTING.md",
+    "skill_mode_routing_doc": "references/routing/PROFILE_ROUTING.md",
     "required_read_sequence": [
       "runtime-contract",
       "references/routing/TASK_ROUTING.md",
       "references/governance/SKILL_DOCSTRUCTURE_ENFORCEMENT.md",
-      "references/routing/PROFILE_ROUTING.md when profile selection is required",
+      "references/routing/PROFILE_ROUTING.md when skill_mode selection is required",
       "contract-reference",
       "architecture-playbook",
-      "staged-skill-reference when profile=staged_cli_first",
+      "executable-workflow-reference when skill_mode=executable_workflow_skill",
       "create-skill-from-template"
     ],
     "machine_rule_source": "Cli_Toolbox JSON outputs plus generated machine-readable contracts",
@@ -67,15 +63,30 @@
       "skill_md_metadata_path": "metadata.doc_structure",
       "governance_start_point": "entry_handoff_below_skill_md"
     },
+    "mode_exemption": {
+      "guide_only": "guide_only skips downstream doc-structure tree enforcement and keeps all guidance inside SKILL.md."
+    },
     "required_topic_docs": [
       "references/governance/SKILL_DOCSTRUCTURE_ENFORCEMENT.md",
       "references/governance/SKILL_AUTHORING_RULES.md",
       "references/governance/SKILL_ARCHITECTURE_PLAYBOOK.md"
     ]
   },
-  "profile_support": {
-    "basic": {
-      "target_shape": "single-axis skill control plane with facade, task routing, and minimal governance atoms",
+  "skill_mode_support": {
+    "guide_only": {
+      "target_shape": "single-file methodology skill with no extra docs or dedicated CLI",
+      "required_generated_paths": [
+        "SKILL.md"
+      ],
+      "forbidden_default_paths": [
+        "agents/openai.yaml",
+        "references/",
+        "assets/",
+        "tests/"
+      ]
+    },
+    "guide_with_tool": {
+      "target_shape": "facade-first methodology skill with doc tree and optional lint/audit/check tooling",
       "required_generated_paths": [
         "SKILL.md",
         "agents/openai.yaml",
@@ -86,13 +97,13 @@
         "references/tooling/Cli_Toolbox_DEVELOPMENT.md"
       ],
       "optional_generated_paths": [
-        "references/runtime/",
-        "assets/templates/",
+        "scripts/",
+        "assets/",
         "tests/"
       ]
     },
-    "staged_cli_first": {
-      "target_shape": "staged skill control plane with facade, routing, governance atoms, runtime contract, and stage contract kit",
+    "executable_workflow_skill": {
+      "target_shape": "staged executable skill with facade, routing, governance atoms, runtime contract, and stage contract kit",
       "required_generated_paths": [
         "SKILL.md",
         "agents/openai.yaml",
@@ -118,24 +129,31 @@
   },
   "tool_contracts": {
     "Cli_Toolbox.create_skill_from_template": "Create or refactor a skill from the governed template pack.",
-    "Cli_Toolbox.skill_template": "Return the basic facade template that already assumes doc-structure governance.",
-    "Cli_Toolbox.staged_skill_template": "Return the staged facade template that routes readers into stage contracts.",
+    "Cli_Toolbox.guide-only-template": "Return the guide_only single-file template.",
+    "Cli_Toolbox.guide-with-tool-template": "Return the guide_with_tool facade template.",
+    "Cli_Toolbox.executable-workflow-template": "Return the executable_workflow_skill facade template.",
+    "Cli_Toolbox.skill-template": "Compatibility alias for guide-with-tool-template.",
+    "Cli_Toolbox.staged-skill-template": "Compatibility alias for executable-workflow-template.",
     "Cli_Toolbox.openai_template": "Return the interface metadata template.",
     "Cli_Toolbox.contract_reference": "Return the authoring contract for governed skills.",
-    "Cli_Toolbox.staged_skill_reference": "Return the generalized staged profile reference.",
-    "Cli_Toolbox.runtime_contract_template": "Return the staged runtime contract template asset.",
+    "Cli_Toolbox.executable-workflow-reference": "Return the executable workflow reference.",
+    "Cli_Toolbox.staged-skill-reference": "Compatibility alias for executable-workflow-reference.",
+    "Cli_Toolbox.runtime_contract_template": "Return the executable workflow runtime contract template asset.",
     "Cli_Toolbox.architecture_playbook": "Return the architecture playbook for skill authoring.",
     "Cli_Toolbox.runtime_contract": "Return this skill's own runtime contract."
   },
   "asset_contracts": {
-    "basic_assets": [
+    "guide_only_assets": [
+      "assets/skill_template/SKILL_TEMPLATE_GUIDE_ONLY.md"
+    ],
+    "guide_with_tool_assets": [
       "assets/skill_template/SKILL_TEMPLATE.md",
       "assets/skill_template/references/routing/TASK_ROUTING_TEMPLATE.md",
       "assets/skill_template/references/governance/SKILL_DOCSTRUCTURE_POLICY_TEMPLATE.md",
       "assets/skill_template/references/governance/SKILL_EXECUTION_RULES_TEMPLATE.md",
       "assets/skill_template/openai_template.yaml"
     ],
-    "staged_assets": [
+    "executable_workflow_assets": [
       "assets/skill_template/SKILL_TEMPLATE_STAGED.md",
       "assets/skill_template/references/routing/TASK_ROUTING_TEMPLATE.md",
       "assets/skill_template/references/governance/SKILL_DOCSTRUCTURE_POLICY_TEMPLATE.md",
@@ -146,32 +164,31 @@
       "assets/skill_template/stages/README_STAGE_SYSTEM_TEMPLATE.md",
       "assets/skill_template/stages/STAGE_TEMPLATE/*"
     ],
-    "generated_output_expectation": "generated skills must be facade-first, doc-structure-complete, and directly editable without post-generation structural rescue"
+    "generated_output_expectation": "generated skills must match the declared skill_mode exactly instead of being structurally rescued after generation"
   },
   "governance_rules": [
-    "SKILL.md must remain an entry-only facade, not a mixed governance body.",
+    "Every generated skill must declare top-level skill_mode in SKILL.md.",
+    "guide_only is the only single-file exception and must not silently grow a shadow doc tree.",
+    "guide_with_tool remains facade-first and doc-structure-governed, but does not require CLI-first dual-file runtime_contracts.",
+    "executable_workflow_skill must explicitly define resident docs, stage order, stage checklist, stage doc contract, stage command contract, stage graph contract, and stage-switch discard policy.",
+    "SKILL.md must remain an entry-only facade for all modes except guide_only.",
+    "The facade may keep only Immediate Contract and Structured Entry; detailed command inventories, structure indexes, and explanatory prose must stay below the facade.",
     "The facade contract of the target skill is governed here by SkillsManager-Creation-Template.",
-    "SkillsManager-Doc-Structure is mandatory for both new-skill creation and existing-skill governance.",
-    "SkillsManager-Doc-Structure starts from the entry handoff below SKILL.md and governs the downstream document tree.",
-    "Keep the primary reading path as facade -> routing -> topic atom before adding graph cross-links.",
-    "The existing 技能本体 / 规则说明 convention may survive only in routing or topic docs where it remains semantically local.",
-    "If a skill has runtime rules, the model must consume machine-readable contracts through CLI outputs instead of treating markdown as the runtime rule source.",
-    "staged_cli_first skills must explicitly define resident docs, stage order, stage checklist, stage doc contract, stage command contract, stage graph contract, and stage-switch discard policy.",
-    "Template clusters must separate human-readable markdown anchors from machine-readable contracts.",
+    "SkillsManager-Doc-Structure is mandatory for guide_with_tool and executable_workflow_skill.",
+    "SkillsManager-Tooling-CheckUp shape governance must skip CLI/runtime-contract enforcement for guide_only and relax it for guide_with_tool.",
     "Prefer whole-template rewrites over patch stacking when the architecture contract changes.",
     "When template governance changes, update facade, runtime contracts, routing docs, references, assets, generator logic, tooling docs, and regression checks together."
   ],
   "validation_closure": [
     "run toolbox self-check commands",
-    "run SkillsManager-Doc-Structure lints on SkillsManager-Creation-Template",
-    "generate at least one basic skill sandbox",
-    "generate at least one staged skill sandbox",
-    "run SkillsManager-Doc-Structure lints on generated sandboxes",
-    "verify staged assets include stage checklist and contract quartet",
-    "keep tooling docs and regression tests in sync with generator behavior"
+    "generate at least one guide_only sandbox",
+    "generate at least one guide_with_tool sandbox",
+    "generate at least one executable_workflow_skill sandbox",
+    "run SkillsManager-Doc-Structure lint on generated guide_with_tool and executable_workflow_skill sandboxes",
+    "verify guide_only skips doc-structure and target-shape enforcement",
+    "verify executable workflow assets include stage checklist and contract quartet"
   ],
   "notes": [
-    "This contract governs SkillsManager-Creation-Template itself.",
-    "The skill now treats SkillsManager-Doc-Structure as an explicit mandatory contract."
+    "This contract governs SkillsManager-Creation-Template itself."
   ]
 }

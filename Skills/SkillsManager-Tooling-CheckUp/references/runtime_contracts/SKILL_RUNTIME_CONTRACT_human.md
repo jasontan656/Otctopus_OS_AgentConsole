@@ -12,12 +12,12 @@ anchors:
 # SKILL_RUNTIME_CONTRACT
 
 <part_A>
-- 人类阅读入口：本文件说明 `SkillsManager-Tooling-CheckUp` 已切换为 CLI-first runtime contract。
+- 人类阅读入口：本文件说明 `SkillsManager-Tooling-CheckUp` 已切换为 skill_mode-aware 的 CLI-first runtime contract。
 - 模型运行时入口固定为：
   - `./.venv_backend_skills/bin/python Skills/SkillsManager-Tooling-CheckUp/scripts/Cli_Toolbox.py contract --json`
   - `./.venv_backend_skills/bin/python Skills/SkillsManager-Tooling-CheckUp/scripts/Cli_Toolbox.py directive --topic <topic> --json`
+- `govern-target` 在审计前必须先读取目标 `SKILL.md` 的 `skill_mode`。
 - 人类可以阅读本 markdown 的叙事部分，但模型应总是优先消费 Part B 的 JSON payload。
-- 若 JSON payload 仍有真实语义缺口，才允许把 legacy reference docs 当补充证据，而不是主指令源。
 </part_A>
 
 <part_B>
@@ -25,7 +25,7 @@ anchors:
 ```json
 {
   "contract_name": "skills_tooling_checkup_runtime_contract",
-  "contract_version": "2.0.0",
+  "contract_version": "2.1.0",
   "skill_name": "SkillsManager-Tooling-CheckUp",
   "runtime_source_policy": {
     "primary_runtime_source": "CLI_JSON",
@@ -76,7 +76,7 @@ anchors:
     {
       "topic": "target-shape-governance",
       "doc_kind": "guide",
-      "use_when": "The task is about governing another skill into the CLI-first dual-file runtime shape."
+      "use_when": "The task is about governing another skill into the shape required by its declared skill_mode."
     }
   ],
   "hard_constraints": [
@@ -88,7 +88,8 @@ anchors:
   "target_skill_handoff": [
     "After this skill clarifies the review or remediation workflow, enter the target skill through its own CLI-first or repo-local runtime contract path.",
     "Use the target skill's existing tests and lint commands for behavior verification.",
-    "If Python files are edited, run Dev-PythonCode-Constitution lint on the concrete Python target scope before closing the turn."
+    "If Python files are edited, run Dev-PythonCode-Constitution lint on the concrete Python target scope before closing the turn.",
+    "govern-target must read target SKILL.md skill_mode first: guide_only is exempt, guide_with_tool relaxes CLI/runtime-contract shape checks, executable_workflow_skill keeps full CLI-first dual-file enforcement."
   ]
 }
 ```

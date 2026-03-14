@@ -14,48 +14,44 @@ anchors:
 - target: SKILL_DOCSTRUCTURE_ENFORCEMENT.md
   relation: governed_by
   direction: upstream
-  reason: The playbook treats doc-structure governance as a mandatory architectural decision.
+  reason: The playbook treats doc-structure governance as a mandatory architectural decision for non-guide_only skills.
 ---
 
 # Skill Architecture Playbook
 
 ## 设计目标
-- 让新 skill 从第一版起就具备 `facade -> routing -> topic atom` 的稳定主路径。
-- 让 `basic` 与 `staged_cli_first` 共享同一套文档结构治理，再按 profile 拉开合同深度。
-- 让模板包、生成器、tooling docs、回归测试和 anchors 始终围绕同一套结构演进。
-- 让门面 contract 与入口之后的文档树 contract 分别落在正确的治理技能里。
+- 让新 skill 从第一版起就匹配明确的 `skill_mode`，而不是靠后续补丁猜类型。
+- 让 `guide_with_tool` 与 `executable_workflow_skill` 共享同一套文档结构治理，再按执行深度拉开合同面。
+- 让 `guide_only` 保持真正极简，不把“只多一个 references”当成可接受的架构漂移。
 
-## 基线架构
-- 顶层 `SKILL.md` 只做 entry facade。
-- 第二层至少存在一个单轴 routing doc，负责把读者继续送入更窄域的治理文档。
-- 深层规则落到单 topic 文档，避免一个文档同时承担 profile 选择、工具说明和工作流细节。
-- 索引文档只负责目录树与导航，不承担主规则正文。
-- 顶层门面 contract 由模板技能定义，入口之后的树形分层由 `SkillsManager-Doc-Structure` 落地。
+## 三类架构基线
+- `guide_only`
+  - 单文件方法论
+  - 所有语义留在 `SKILL.md`
+  - 不引入 shadow tree
+- `guide_with_tool`
+  - 顶层 `SKILL.md` 只做 entry facade
+  - 第二层至少存在一个单轴 routing doc
+  - 深规则落到单 topic 文档
+  - 工具面可存在，但只是辅助
+- `executable_workflow_skill`
+  - 在 `guide_with_tool` 基线上增加 runtime contract、resident docs、stage index 与 stage contract 四件套
+  - 阶段切换需要显式 discard policy
 
-## 为什么必须接入 SkillsManager-Doc-Structure
-- 模板技能如果不显式接入 `SkillsManager-Doc-Structure`，生成器很容易继续输出“巨型门面 + 补丁式拆分”。
-- 对既有 skill 的治理也不能只修 `SKILL.md`；必须同时考虑 routing docs、atomic docs、anchors 与 graph。
-- 因此，文档结构治理不是附属建议，而是模板包本身的架构硬约束。
-
-## Profile 选择原则
-- `basic`
-  - 目标是单主轴 control plane。
-  - 需要 facade、至少一层 routing，以及最小治理原子文档。
-  - 若没有运行态规则，不强制 runtime contract。
-- `staged_cli_first`
-  - 目标是多阶段 control plane。
-  - 需要在 basic 的 facade/routing/governance 基线上，再增加 runtime contract、stage index、resident docs 和 stage contract 四件套。
-  - 阶段切换时显式丢弃上一阶段 focus。
+## 为什么不能继续用 profile 思维
+- 这次变化不是“模板深浅”，而是“治理责任模型”变化。
+- `guide_only` 不是旧 `basic` 的弱化版，而是显式豁免文档树和 CLI shape 治理的独立形态。
+- 因此主合同必须升到 `skill_mode`，而不是继续在 `profile` 上堆例外。
 
 ## 模板包治理顺序
-1. 先改 runtime contract，明确新的结构合同。
-2. 再改治理文档树，保证 facade、routing、atomic docs 的分工清楚。
-3. 再改模板资产，让生成骨架与治理树一致。
-4. 再改生成器和 `Cli_Toolbox`，保证输出与读取入口同步。
-5. 最后补 tooling docs、anchors、graph 与回归测试。
+1. 先改 runtime contract，明确三类 `skill_mode` 合同。
+2. 再改 routing/governance docs，保证门面、routing、原子文档、豁免边界清楚。
+3. 再改模板资产，让生成骨架与合同一致。
+4. 再改生成器与 `Cli_Toolbox`，保证输出和读取入口同步。
+5. 最后补测试与验证脚本。
 
 ## 反模式
-- 保留一个继续混装 facade、规则正文、模板资产说明的 `SKILL.md`。
-- 只改模板 markdown，不同步生成器、tooling docs 和测试。
-- 为兼容旧写法继续保留模糊中间层，而不是直接建立清晰的新路由树。
-- 把 `技能本体 / 规则说明` 双段式当作继续膨胀门面的理由。
+- 用 `guide_only` 生成单文件后，再偷偷补 references/doc tree。
+- 让 `guide_with_tool` 被错误推成 CLI-first dual-file runtime_contracts。
+- 继续把 `basic/staged_cli_first` 当成新技能的主命名。
+- 只改文档不改生成器、只改生成器不改治理器。

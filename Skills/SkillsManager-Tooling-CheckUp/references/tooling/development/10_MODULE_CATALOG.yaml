@@ -9,8 +9,10 @@ maintain_rules:
     - references/tooling/Cli_Toolbox_DEVELOPMENT.md
     - references/tooling/development/20_CATEGORY_INDEX.md
     - references/runtime_contracts/
-profile_support:
-  - basic
+skill_mode_support:
+  - guide_only
+  - guide_with_tool
+  - executable_workflow_skill
 modules:
   - module_id: contract
     entrypoint: scripts/Cli_Toolbox.py
@@ -41,4 +43,4 @@ modules:
       development: references/tooling/development/modules/mod_govern_target.md
     responsibilities:
       - "对目标 skill 输出形态治理审计结果"
-      - "检查 dual-file runtime assets 与 CLI-first facade 是否齐备"
+      - "按 skill_mode 分流 shape 审计边界"

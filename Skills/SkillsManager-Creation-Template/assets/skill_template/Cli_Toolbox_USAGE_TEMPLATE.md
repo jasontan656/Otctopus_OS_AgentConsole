@@ -64,7 +64,7 @@ anchors:
 - 若 skill 已采用 facade + routing + atomic docs 结构，还需同步更新：
   - `references/routing/`
   - `references/governance/`
-- 若技能采用 staged CLI-first 复杂 profile，还应补齐：
+- 若技能采用 `executable_workflow_skill`，还应补齐：
   - `references/runtime/`
   - `references/stages/`
   - `assets/templates/stages/`

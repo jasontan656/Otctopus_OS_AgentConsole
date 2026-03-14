@@ -38,7 +38,7 @@ metadata:
    - `npm run cli -- stage-doc-contract --stage <stage> --json`
    - `npm run cli -- stage-command-contract --stage <stage> --json`
    - `npm run cli -- stage-graph-contract --stage <stage> --json`
-4. 若任务落到具体产品运行时需求，转入产品侧 `Workflow-OctopusOS-DevFlow` mother doc，而不是继续在本技能内沉淀产品需求。
+4. 若任务落到具体产品运行时需求，转入产品侧 `Workflow-CentralFlow1-OctopusOS` mother doc，而不是继续在本技能内沉淀产品需求。
 
 ## 3. 分类入口
 - 运行合同层：
@@ -75,7 +75,7 @@ metadata:
   - `npm run cli -- build-product-doc-graph --docs-root <development_docs_root> [--write-assets] --json`
   - `npm run cli -- lint-product-mother-doc --docs-root <development_docs_root> [--write-assets] --json`
 - 产品运行时需求入口：
-  - 由具体产品仓的 `Workflow-OctopusOS-DevFlow mother_doc` 承载
+  - 由具体产品仓的 `Workflow-CentralFlow1-OctopusOS mother_doc` 承载
 
 ## 6. 读取原则
 - `SKILL.md` 只负责路由，不承担阶段正文。
