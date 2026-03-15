@@ -8,10 +8,22 @@ metadata:
     doc_type: skill_facade
     topic: Entry facade for the SkillsManager-Creation-Template skill
     anchors:
-    - target: ./path/00_SKILL_ENTRY.md
+    - target: ./path/template_creation/guide_only/00_GUIDE_ONLY_ENTRY.md
       relation: routes_to
       direction: downstream
-      reason: The facade routes readers into the single path-first entry doc.
+      reason: guide_only creation is a top-level function entry.
+    - target: ./path/template_creation/guide_with_tool/00_GUIDE_WITH_TOOL_ENTRY.md
+      relation: routes_to
+      direction: downstream
+      reason: guide_with_tool creation is a top-level function entry.
+    - target: ./path/template_creation/executable_workflow_skill/00_EXECUTABLE_WORKFLOW_ENTRY.md
+      relation: routes_to
+      direction: downstream
+      reason: executable_workflow_skill creation is a top-level function entry.
+    - target: ./path/maintenance/00_MAINTENANCE_ENTRY.md
+      relation: routes_to
+      direction: downstream
+      reason: template maintenance is a top-level function entry.
 ---
 
 # SkillsManager-Creation-Template
@@ -26,8 +38,8 @@ metadata:
 - 不适用于：直接代替目标 skill 编写业务语义，或承担技能创建后的文档结构治理职责。
 
 ### 2. 技能约束
-- `SKILL.md` 只保留三段：`模型立刻需要知道的事情`、`唯一入口` 与 `目录结构图`。
-- `SKILL.md` 只指向一个下一级 md；不并列暴露多个深层文件。
+- `SKILL.md` 只保留三段：`模型立刻需要知道的事情`、`功能入口` 与 `目录结构图`。
+- `SKILL.md` 只暴露功能入口层；不并列暴露深层正文。
 - 物理目录组织必须跟随阅读顺序逐级向下，不允许“一个入口文件夹平铺所有后续文件，再仅靠内联控制读序”。
 - 根目录只保留：`SKILL.md`、`path/`、`agents/`、`scripts/`。
 - 不允许继续保留：`references/`、`assets/`、`tests/` 作为主组织轴。
@@ -40,11 +52,17 @@ metadata:
 
 ### 3. 顶层常驻合同
 - 全局合同直接写在本门面中，不额外外跳到 CLI 合同。
-- 后续阅读只沿 `path/00_SKILL_ENTRY.md` 继续下沉。
+- 后续阅读只沿当前选中的功能入口继续下沉。
 
-## 2. 唯一入口
-- [技能主入口]：`path/00_SKILL_ENTRY.md`
-  - 作用：把读者送入唯一的 path-first 起点，再按行为分支逐层收窄到当前动作闭环。
+## 2. 功能入口
+- [guide_only]：`path/template_creation/guide_only/00_GUIDE_ONLY_ENTRY.md`
+  - 作用：创建最小技能形态，只落 `SKILL.md / agents`。
+- [guide_with_tool]：`path/template_creation/guide_with_tool/00_GUIDE_WITH_TOOL_ENTRY.md`
+  - 作用：创建单线闭环技能；允许多入口，但入口内不能再分叉。
+- [executable_workflow_skill]：`path/template_creation/executable_workflow_skill/00_EXECUTABLE_WORKFLOW_ENTRY.md`
+  - 作用：创建复合 workflow 技能；入口内允许继续下沉到复合步骤。
+- [模板维护]：`path/maintenance/00_MAINTENANCE_ENTRY.md`
+  - 作用：维护三种模板的注册位置，不进入创建链路。
 
 ## 3. 目录结构图
 ```text
@@ -52,7 +70,6 @@ SkillsManager-Creation-Template/
 ├── SKILL.md
 ├── agents/
 ├── path/
-│   ├── 00_SKILL_ENTRY.md
 │   ├── template_creation/
 │   └── maintenance/
 └── scripts/

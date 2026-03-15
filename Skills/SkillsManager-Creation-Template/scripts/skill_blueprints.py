@@ -82,8 +82,8 @@ def render_skill_md(skill_name: str, description: str, skill_mode: str) -> str:
             "- 根目录组织固定为 `SKILL.md / path / agents / scripts`。",
         ]
         mode_constraints = [
-            "- `SKILL.md` 只保留：`模型立刻需要知道的事情`、`唯一入口`、`目录结构图`。",
-            "- `SKILL.md` 只能暴露入口层，不回填 workflow 正文。",
+            "- `SKILL.md` 只保留：`模型立刻需要知道的事情`、`功能入口`、`目录结构图`。",
+            "- `SKILL.md` 只能暴露功能入口层，不回填 workflow 正文。",
             "- 每个入口进入后都必须沿 `contract -> tools -> execution -> validation` 单线闭环到底。",
             "- 允许多个平行入口，但不允许某个入口内部再次分叉。",
             "- 命令脚本本体统一放在 `scripts/`；tool/lint 说明写在对应入口的 `tools` 节点里。",
@@ -96,8 +96,8 @@ def render_skill_md(skill_name: str, description: str, skill_mode: str) -> str:
             "- 根目录组织固定为 `SKILL.md / path / agents / scripts`。",
         ]
         mode_constraints = [
-            "- `SKILL.md` 只保留：`模型立刻需要知道的事情`、`唯一入口`、`目录结构图`。",
-            "- `SKILL.md` 只能暴露入口层，不回填复合 workflow 正文。",
+            "- `SKILL.md` 只保留：`模型立刻需要知道的事情`、`功能入口`、`目录结构图`。",
+            "- `SKILL.md` 只能暴露功能入口层，不回填复合 workflow 正文。",
             "- 入口进入后允许先经过 `contract -> tools -> workflow_index`，再下沉到复合步骤。",
             "- 复合步骤自身继续承载自己的 `contract -> tools -> execution -> validation`。",
             "- 命令脚本本体统一放在 `scripts/`；命令说明写在入口或步骤自己的 `tools` 节点里。",
@@ -121,10 +121,10 @@ def render_skill_md(skill_name: str, description: str, skill_mode: str) -> str:
         "    doc_type: skill_facade",
         f"    topic: Entry facade for {skill_name}",
         "    anchors:",
-        "    - target: path/00_SKILL_ENTRY.md",
+        "    - target: path/primary_flow/00_PRIMARY_FLOW_ENTRY.md",
         "      relation: routes_to",
         "      direction: downstream",
-        "      reason: The facade exposes only the entry layer.",
+        "      reason: The facade exposes the default function entry.",
         "---",
         "",
     ]
@@ -140,11 +140,11 @@ def render_skill_md(skill_name: str, description: str, skill_mode: str) -> str:
         "",
         "### 3. 顶层常驻合同",
         "- 全局合同直接写在本门面中，不额外外跳到 CLI 合同。",
-        "- 后续阅读只沿 `path/00_SKILL_ENTRY.md` 继续下沉。",
+        "- 后续阅读只沿当前选中的功能入口继续下沉。",
         "",
-        "## 2. 唯一入口",
-        "- [技能主入口]：`path/00_SKILL_ENTRY.md`",
-        "  - 作用：先进入入口层，再按当前模式的协议继续向下读取。",
+        "## 2. 功能入口",
+        "- [primary_flow]：`path/primary_flow/00_PRIMARY_FLOW_ENTRY.md`",
+        "  - 作用：默认功能入口；后续如扩展更多入口，应与它平行出现。",
         "",
         "## 3. 目录结构图",
         "```text",
@@ -161,12 +161,12 @@ def render_openai_yaml(skill_name: str, skill_mode: str) -> str:
         default_prompt = f"请直接读取 {skill_name} 的 SKILL.md 完成任务，不要假设存在 path/ 或 scripts/。"
     elif skill_mode == GUIDE_WITH_TOOL_MODE:
         default_prompt = (
-            f"请围绕 {skill_name} 的真实业务目标执行任务；先读取 SKILL.md 与 path/00_SKILL_ENTRY.md，"
+            f"请围绕 {skill_name} 的真实业务目标执行任务；先读取 SKILL.md 并进入匹配的功能入口，"
             "进入某个入口后沿单线 workflow 读到底，不要在入口内部再次分叉。"
         )
     else:
         default_prompt = (
-            f"请围绕 {skill_name} 的真实业务目标执行任务；先读取 SKILL.md 与 path/00_SKILL_ENTRY.md，"
+            f"请围绕 {skill_name} 的真实业务目标执行任务；先读取 SKILL.md 并进入匹配的功能入口，"
             "进入入口后按复合 workflow 逐层下沉到步骤级文档。"
         )
     return dedent(
@@ -196,13 +196,12 @@ def runtime_contract_payload(skill_name: str, skill_mode: str) -> dict[str, obje
         "skill_name": skill_name,
         "skill_mode": skill_mode,
         "root_shape": ["SKILL.md", "path", "agents", "scripts"],
-        "entry_doc": "path/00_SKILL_ENTRY.md",
+        "entry_doc": "path/primary_flow/00_PRIMARY_FLOW_ENTRY.md",
         "layout_rule": "Folder layout must mirror reading order.",
     }
     if skill_mode == GUIDE_WITH_TOOL_MODE:
         payload["reading_protocol"] = [
             "SKILL.md",
-            "path/00_SKILL_ENTRY.md",
             "entry_doc",
             "contract",
             "tools",
@@ -218,7 +217,6 @@ def runtime_contract_payload(skill_name: str, skill_mode: str) -> dict[str, obje
 
     payload["reading_protocol"] = [
         "SKILL.md",
-        "path/00_SKILL_ENTRY.md",
         "entry_doc",
         "contract",
         "tools",
@@ -284,7 +282,6 @@ def render_generated_test_script(skill_name: str, skill_mode: str) -> str:
         expected_paths = [
             "SKILL.md",
             "agents/openai.yaml",
-            "path/00_SKILL_ENTRY.md",
             "path/primary_flow/00_PRIMARY_FLOW_ENTRY.md",
             "path/primary_flow/10_CONTRACT.md",
             "path/primary_flow/15_TOOLS.md",
@@ -297,7 +294,6 @@ def render_generated_test_script(skill_name: str, skill_mode: str) -> str:
         expected_paths = [
             "SKILL.md",
             "agents/openai.yaml",
-            "path/00_SKILL_ENTRY.md",
             "path/primary_flow/00_PRIMARY_FLOW_ENTRY.md",
             "path/primary_flow/10_CONTRACT.md",
             "path/primary_flow/15_TOOLS.md",
@@ -366,10 +362,10 @@ def render_linear_entry_doc(skill_name: str) -> str:
         doc_type: path_doc
         topic: Primary linear entry for {skill_name}
         anchors:
-        - target: ../00_SKILL_ENTRY.md
+        - target: ../../SKILL.md
           relation: implements
           direction: upstream
-          reason: The entry index routes here.
+          reason: The facade routes directly to this function entry.
         - target: 10_CONTRACT.md
           relation: routes_to
           direction: downstream
@@ -492,7 +488,7 @@ def render_linear_execution_doc(skill_name: str) -> str:
 def render_linear_validation_doc(skill_name: str) -> str:
     checks = [
         "结果目录包含 `SKILL.md / path / agents / scripts`。",
-        "入口索引位于 `path/00_SKILL_ENTRY.md`。",
+        "功能入口位于 `path/primary_flow/00_PRIMARY_FLOW_ENTRY.md`。",
         "默认主入口位于 `path/primary_flow/`，并形成单线闭环。",
         "不存在 `references/`、`assets/`、`tests/`。",
     ]
@@ -525,10 +521,10 @@ def render_compound_entry_doc(skill_name: str) -> str:
         doc_type: path_doc
         topic: Primary compound entry for {skill_name}
         anchors:
-        - target: ../00_SKILL_ENTRY.md
+        - target: ../../SKILL.md
           relation: implements
           direction: upstream
-          reason: The entry index routes here.
+          reason: The facade routes directly to this function entry.
         - target: 10_CONTRACT.md
           relation: routes_to
           direction: downstream
@@ -792,7 +788,7 @@ def render_compound_step_validation_doc(skill_name: str, step_name: str, next_do
 def render_compound_flow_validation_doc(skill_name: str) -> str:
     checks = [
         "结果目录包含 `SKILL.md / path / agents / scripts`。",
-        "`path/00_SKILL_ENTRY.md` 是入口层索引。",
+        "`path/primary_flow/00_PRIMARY_FLOW_ENTRY.md` 是默认功能入口。",
         "`path/primary_flow/20_WORKFLOW_INDEX.md` 已列出复合步骤。",
         "每个步骤目录都包含自己的 `contract -> tools -> execution -> validation`。",
         "不存在 `references/`、`assets/`、`tests/`。",
@@ -826,7 +822,6 @@ def build_generated_skill_files(skill_name: str, description: str, skill_mode: s
     if skill_mode == GUIDE_ONLY_MODE:
         return files
 
-    files["path/00_SKILL_ENTRY.md"] = render_generated_skill_entry_doc(skill_name)
     files["scripts/Cli_Toolbox.py"] = render_generated_toolbox_script(skill_name, skill_mode)
     files["scripts/test_skill_layout.py"] = render_generated_test_script(skill_name, skill_mode)
 

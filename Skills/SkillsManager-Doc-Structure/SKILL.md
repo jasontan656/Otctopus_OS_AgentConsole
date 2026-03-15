@@ -8,10 +8,22 @@ metadata:
     doc_type: skill_facade
     topic: Entry facade for the SkillsManager-Doc-Structure skill
     anchors:
-    - target: ./path/00_SKILL_ENTRY.md
+    - target: ./path/primary_flow/21_TARGET_SHAPE.md
       relation: routes_to
       direction: downstream
-      reason: The facade exposes only the next-hop entry layer.
+      reason: target-shape checking is a top-level function entry.
+    - target: ./path/primary_flow/22_PATH_CHAINING.md
+      relation: routes_to
+      direction: downstream
+      reason: path-chaining checking is a top-level function entry.
+    - target: ./path/primary_flow/23_DOC_WRITING.md
+      relation: routes_to
+      direction: downstream
+      reason: doc-role checking is a top-level function entry.
+    - target: ./path/primary_flow/24_ANCHOR_LINT.md
+      relation: routes_to
+      direction: downstream
+      reason: anchor checking is a top-level function entry.
 ---
 
 # SkillsManager-Doc-Structure
@@ -39,11 +51,17 @@ metadata:
 
 ### 3. 顶层常驻合同
 - 全局合同直接写在本门面中，不额外外跳到 CLI 合同。
-- 后续阅读只沿 `path/00_SKILL_ENTRY.md` 继续下沉。
+- 后续阅读只沿当前选中的治理功能入口继续下沉。
 
-## 2. 唯一入口
-- [技能主入口]：`path/00_SKILL_ENTRY.md`
-  - 作用：把读者送入文档结构治理主线，按单线顺序读取根形态、链路衔接、文档职责与 anchor lint。
+## 2. 功能入口
+- [目标形态检查]：`path/primary_flow/21_TARGET_SHAPE.md`
+  - 作用：判断目标技能属于哪种形态，以及该形态的根组织是否成立。
+- [链路衔接检查]：`path/primary_flow/22_PATH_CHAINING.md`
+  - 作用：检查门面到各层节点的下一跳是否按阅读顺序逐级下沉。
+- [文档职责检查]：`path/primary_flow/23_DOC_WRITING.md`
+  - 作用：检查不同节点是否承担了正确职责，没有越层或回流。
+- [锚点检查]：`path/primary_flow/24_ANCHOR_LINT.md`
+  - 作用：检查 anchors 是否只连接必要关系，没有替代物理结构。
 
 ## 3. 目录结构图
 ```text

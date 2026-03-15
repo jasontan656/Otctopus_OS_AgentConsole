@@ -22,7 +22,6 @@ anchors:
 ├── agents/
 │   └── openai.yaml
 ├── path/
-│   ├── 00_SKILL_ENTRY.md
 │   └── primary_flow/
 │       ├── 00_PRIMARY_FLOW_ENTRY.md
 │       ├── 10_CONTRACT.md
@@ -35,13 +34,12 @@ anchors:
 ```
 
 ## 门面目标
-- `SKILL.md` 只保留：模型立刻需要知道的事情、唯一入口、目录结构图。
-- `SKILL.md` 只指向 `path/00_SKILL_ENTRY.md`。
+- `SKILL.md` 只保留：模型立刻需要知道的事情、功能入口、目录结构图。
+- `SKILL.md` 直接暴露功能入口，而不是再多套一层 root 索引。
 - 门面不回填深层正文。
 
 ## 路径目标
-- `path/00_SKILL_ENTRY.md` 是入口层索引。
-- 默认骨架提供一个主入口 `path/primary_flow/`。
+- 默认骨架提供一个功能入口 `path/primary_flow/`。
 - 若后续新增平行入口，每个入口内部仍必须保持单线闭环：
   - `contract`
   - `tools`

@@ -23,7 +23,6 @@ anchors:
 ## 当前动作必须满足什么
 - 输出至少包含：
   - `SKILL.md`
-  - `path/00_SKILL_ENTRY.md`
   - `path/primary_flow/00_PRIMARY_FLOW_ENTRY.md`
   - `path/primary_flow/10_CONTRACT.md`
   - `path/primary_flow/15_TOOLS.md`

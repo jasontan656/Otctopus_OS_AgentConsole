@@ -70,10 +70,10 @@ skill_mode: guide_with_tool
 metadata:
   doc_structure:
     anchors:
-    - target: path/00_SKILL_ENTRY.md
+    - target: path/primary_flow/00_PRIMARY_FLOW_ENTRY.md
       relation: routes_to
       direction: downstream
-      reason: facade routes to path
+      reason: facade routes to function entry
 ---
 
 # Temp Linear
@@ -86,10 +86,10 @@ metadata:
 - path first
 
 ### 3. 顶层常驻合同
-- `path/00_SKILL_ENTRY.md`
+- choose one function entry
 
-## 2. 唯一入口
-- [技能主入口]：`path/00_SKILL_ENTRY.md`
+## 2. 功能入口
+- [primary_flow]：`path/primary_flow/00_PRIMARY_FLOW_ENTRY.md`
 
 ## 3. 目录结构图
 ```text
@@ -103,25 +103,6 @@ temp-linear/
     )
     _write(root / "agents" / "openai.yaml", "interface:\n  display_name: temp-linear\n")
     _write(root / "scripts" / "Cli_Toolbox.py", "print('linear')\n")
-    _write(
-        root / "path" / "00_SKILL_ENTRY.md",
-        """---
-anchors:
-- target: primary_flow/00_PRIMARY_FLOW_ENTRY.md
-  relation: routes_to
-  direction: downstream
-  reason: entry routes to primary flow
----
-
-# Entry
-
-## 当前动作
-- route to the only path
-
-## 下一跳列表
-- [primary_flow]：`primary_flow/00_PRIMARY_FLOW_ENTRY.md`
-""",
-    )
     _write(
         root / "path" / "primary_flow" / "00_PRIMARY_FLOW_ENTRY.md",
         """---
@@ -256,10 +237,14 @@ skill_mode: guide_with_tool
 metadata:
   doc_structure:
     anchors:
-    - target: path/00_SKILL_ENTRY.md
+    - target: path/template_creation/00_TEMPLATE_CREATION_ENTRY.md
       relation: routes_to
       direction: downstream
-      reason: facade routes to path
+      reason: facade routes to a function entry
+    - target: path/maintenance/00_MAINTENANCE_ENTRY.md
+      relation: routes_to
+      direction: downstream
+      reason: facade routes to another function entry
 ---
 
 # Temp Branch
@@ -272,10 +257,11 @@ metadata:
 - path first
 
 ### 3. 顶层常驻合同
-- `path/00_SKILL_ENTRY.md`
+- choose one function entry
 
-## 2. 唯一入口
-- [技能主入口]：`path/00_SKILL_ENTRY.md`
+## 2. 功能入口
+- [template_creation]：`path/template_creation/00_TEMPLATE_CREATION_ENTRY.md`
+- [maintenance]：`path/maintenance/00_MAINTENANCE_ENTRY.md`
 
 ## 3. 目录结构图
 ```text
@@ -289,27 +275,6 @@ temp-branch/
     )
     _write(root / "agents" / "openai.yaml", "interface:\n  display_name: temp-branch\n")
     _write(root / "scripts" / "Cli_Toolbox.py", "print('branch')\n")
-    _write(
-        root / "path" / "00_SKILL_ENTRY.md",
-        """---
-anchors:
-- target: template_creation/00_TEMPLATE_CREATION_ENTRY.md
-  relation: routes_to
-  direction: downstream
-  reason: entry routes to template creation
-- target: maintenance/00_MAINTENANCE_ENTRY.md
-  relation: routes_to
-  direction: downstream
-  reason: entry routes to maintenance
----
-
-# Entry
-
-## 下一跳列表
-- [template_creation]：`template_creation/00_TEMPLATE_CREATION_ENTRY.md`
-- [maintenance]：`maintenance/00_MAINTENANCE_ENTRY.md`
-""",
-    )
     _write(
         root / "path" / "template_creation" / "00_TEMPLATE_CREATION_ENTRY.md",
         """---

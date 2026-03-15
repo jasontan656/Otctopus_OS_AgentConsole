@@ -3,10 +3,10 @@ doc_id: skill_creation_template.path.template_creation.entry
 doc_type: path_doc
 topic: Behavior entry for template creation
 anchors:
-- target: ../00_SKILL_ENTRY.md
+- target: ../../SKILL.md
   relation: implements
   direction: upstream
-  reason: The main skill entry routes readers here for template creation.
+  reason: The facade routes readers here for template creation.
 - target: guide_only/00_GUIDE_ONLY_ENTRY.md
   relation: routes_to
   direction: downstream

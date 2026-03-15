@@ -3,10 +3,10 @@ doc_id: skill_creation_template.path.maintenance.entry
 doc_type: path_doc
 topic: Maintenance entry for template registry only
 anchors:
-- target: ../00_SKILL_ENTRY.md
+- target: ../../SKILL.md
   relation: implements
   direction: upstream
-  reason: The main skill entry routes readers here for maintenance.
+  reason: The facade routes readers here for maintenance.
 - target: template_registry/00_TEMPLATE_REGISTRY.md
   relation: routes_to
   direction: downstream

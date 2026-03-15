@@ -206,7 +206,7 @@ def _lint_markdown_section(markdown_path: Path, body: str) -> list[str]:
 def _lint_facade(target_root: Path, shape_kind: str) -> list[str]:
     errors: list[str] = []
     skill_md = target_root / "SKILL.md"
-    text = _read_text(skill_md)
+    frontmatter, text = _parse_frontmatter(skill_md)
     if shape_kind == "facade_only":
         required_sections = [
             "## 1. 模型立刻需要知道的事情",
@@ -216,14 +216,17 @@ def _lint_facade(target_root: Path, shape_kind: str) -> list[str]:
     else:
         required_sections = [
             "## 1. 模型立刻需要知道的事情",
-            "## 2. 唯一入口",
+            "## 2. 功能入口",
             "## 3. 目录结构图",
         ]
     for section in required_sections:
         if section not in text:
             errors.append(f"SKILL.md is missing section: {section}")
-    if shape_kind != "facade_only" and "`path/00_SKILL_ENTRY.md`" not in text:
-        errors.append("SKILL.md does not expose path/00_SKILL_ENTRY.md as the only root entry")
+    if shape_kind != "facade_only":
+        targets = _markdown_targets(skill_md, frontmatter, text)
+        path_targets = [target for target in targets if target.startswith("path/") and target.endswith(".md")]
+        if not path_targets:
+            errors.append("SKILL.md does not expose any path-based function entry")
     return errors
 
 
@@ -326,9 +329,6 @@ def lint_reading_chain(target_root: Path) -> dict[str, Any]:
         }
 
     path_root = target_root / "path"
-    skill_entry = path_root / "00_SKILL_ENTRY.md"
-    if not skill_entry.is_file():
-        errors.append(f"missing path entry: {skill_entry}")
     entry_dirs = _discover_entry_dirs(path_root)
     if not entry_dirs:
         errors.append(f"{path_root} does not expose any entry directories")

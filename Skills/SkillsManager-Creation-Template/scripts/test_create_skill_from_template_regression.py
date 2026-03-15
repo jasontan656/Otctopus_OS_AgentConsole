@@ -73,12 +73,12 @@ class TestCreateSkillFromTemplateRegressionTest:
             assert payload["resources_created"] == ["path", "agents", "scripts"]
             assert "skill_mode: guide_with_tool" in skill_md
             assert "## 1. 模型立刻需要知道的事情" in skill_md
-            assert "## 2. 唯一入口" in skill_md
+            assert "## 2. 功能入口" in skill_md
             assert "## 3. 目录结构图" in skill_md
-            assert "[技能主入口]" in skill_md
+            assert "[primary_flow]" in skill_md
             assert runtime_contract["skill_mode"] == "guide_with_tool"
-            assert runtime_contract["entry_doc"] == "path/00_SKILL_ENTRY.md"
-            assert (skill_dir / "path" / "00_SKILL_ENTRY.md").exists()
+            assert runtime_contract["entry_doc"] == "path/primary_flow/00_PRIMARY_FLOW_ENTRY.md"
+            assert (skill_dir / "path" / "primary_flow" / "00_PRIMARY_FLOW_ENTRY.md").exists()
             assert (skill_dir / "path" / "primary_flow" / "10_CONTRACT.md").exists()
             assert (skill_dir / "path" / "primary_flow" / "15_TOOLS.md").exists()
             assert (skill_dir / "path" / "primary_flow" / "20_EXECUTION.md").exists()
@@ -113,12 +113,12 @@ class TestCreateSkillFromTemplateRegressionTest:
 
             assert payload["skill_mode"] == "executable_workflow_skill"
             assert "## 1. 模型立刻需要知道的事情" in skill_md
-            assert "## 2. 唯一入口" in skill_md
+            assert "## 2. 功能入口" in skill_md
             assert "## 3. 目录结构图" in skill_md
-            assert "[技能主入口]" in skill_md
+            assert "[primary_flow]" in skill_md
             assert runtime_contract["skill_mode"] == "executable_workflow_skill"
             assert runtime_contract["compound_protocol"]["workflow_index_doc"] == "path/primary_flow/20_WORKFLOW_INDEX.md"
-            assert (skill_dir / "path" / "00_SKILL_ENTRY.md").exists()
+            assert (skill_dir / "path" / "primary_flow" / "00_PRIMARY_FLOW_ENTRY.md").exists()
             assert (skill_dir / "path" / "primary_flow" / "15_TOOLS.md").exists()
             assert (skill_dir / "path" / "primary_flow" / "20_WORKFLOW_INDEX.md").exists()
             assert (skill_dir / "path" / "primary_flow" / "steps" / "step_01" / "00_STEP_ENTRY.md").exists()
