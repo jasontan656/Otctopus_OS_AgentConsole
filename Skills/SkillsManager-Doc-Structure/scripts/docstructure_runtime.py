@@ -149,6 +149,29 @@ def _discover_entry_dirs(path_root: Path) -> list[Path]:
     return entry_dirs
 
 
+def _discover_zero_docs(node_dir: Path) -> list[Path]:
+    return sorted(path for path in node_dir.glob("00_*.md") if path.is_file())
+
+
+def _classify_node_dir(node_dir: Path) -> str:
+    zero_docs = _discover_zero_docs(node_dir)
+    if not zero_docs:
+        return "not_a_node"
+
+    subdirs = sorted(child for child in node_dir.iterdir() if child.is_dir() and not child.name.startswith("."))
+    markdown_names = {path.name for path in node_dir.glob("*.md")}
+    linear_required = {"10_CONTRACT.md", "20_EXECUTION.md", "30_VALIDATION.md"}
+    compound_required = {"10_CONTRACT.md", "15_TOOLS.md", "20_WORKFLOW_INDEX.md", "30_VALIDATION.md"}
+
+    if compound_required.issubset(markdown_names) and (node_dir / "steps").is_dir():
+        return "compound_loop"
+    if linear_required.issubset(markdown_names) and not subdirs:
+        return "linear_loop"
+    if subdirs:
+        return "branch_index"
+    return "terminal_index"
+
+
 def _markdown_targets(markdown_path: Path, frontmatter: dict[str, Any], body: str) -> list[str]:
     targets: list[str] = []
     anchors = frontmatter.get("anchors")
@@ -206,11 +229,7 @@ def _lint_facade(target_root: Path, shape_kind: str) -> list[str]:
 
 def _lint_linear_entry(entry_dir: Path) -> list[str]:
     errors: list[str] = []
-    required_files = {
-        "00_" + entry_dir.name.upper() + "_ENTRY.md": None,
-    }
-    del required_files
-    expected_names = {"10_CONTRACT.md", "15_TOOLS.md", "20_EXECUTION.md", "30_VALIDATION.md"}
+    expected_names = {"10_CONTRACT.md", "20_EXECUTION.md", "30_VALIDATION.md"}
     actual_names = {path.name for path in entry_dir.glob("*.md")}
     missing = sorted(expected_names - actual_names)
     if missing:
@@ -218,6 +237,40 @@ def _lint_linear_entry(entry_dir: Path) -> list[str]:
     subdirs = [child.name for child in entry_dir.iterdir() if child.is_dir()]
     if subdirs:
         errors.append(f"{entry_dir} must stay linear and cannot contain subdirectories: {', '.join(sorted(subdirs))}")
+    return errors
+
+
+def _lint_terminal_index(entry_dir: Path) -> list[str]:
+    errors: list[str] = []
+    zero_docs = _discover_zero_docs(entry_dir)
+    if len(zero_docs) != 1:
+        errors.append(f"{entry_dir} terminal index must contain exactly one 00_*.md file")
+    extra_markdown = [path.name for path in entry_dir.glob("*.md") if not path.name.startswith("00_")]
+    if extra_markdown:
+        errors.append(f"{entry_dir} terminal index must not carry extra markdown files: {', '.join(sorted(extra_markdown))}")
+    return errors
+
+
+def _lint_branch_index(entry_dir: Path, target_root: Path) -> list[str]:
+    errors: list[str] = []
+    zero_docs = _discover_zero_docs(entry_dir)
+    if len(zero_docs) != 1:
+        errors.append(f"{entry_dir} branch index must contain exactly one 00_*.md file")
+    child_dirs = sorted(child for child in entry_dir.iterdir() if child.is_dir() and not child.name.startswith("."))
+    if not child_dirs:
+        errors.append(f"{entry_dir} branch index must expose child node directories")
+        return errors
+
+    frontmatter, body = _parse_frontmatter(zero_docs[0])
+    if not _markdown_targets(zero_docs[0], frontmatter, body):
+        errors.append(f"{zero_docs[0].relative_to(target_root)} branch index entry does not expose any downstream targets")
+
+    for child_dir in child_dirs:
+        child_kind = _classify_node_dir(child_dir)
+        if child_kind == "not_a_node":
+            errors.append(f"{child_dir} is not a valid child node under branch index {entry_dir}")
+            continue
+        errors.extend(_lint_node_dir(child_dir, target_root))
     return errors
 
 
@@ -247,6 +300,19 @@ def _lint_compound_entry(entry_dir: Path) -> list[str]:
     return errors
 
 
+def _lint_node_dir(entry_dir: Path, target_root: Path) -> list[str]:
+    node_kind = _classify_node_dir(entry_dir)
+    if node_kind == "linear_loop":
+        return _lint_linear_entry(entry_dir)
+    if node_kind == "compound_loop":
+        return _lint_compound_entry(entry_dir)
+    if node_kind == "branch_index":
+        return _lint_branch_index(entry_dir, target_root)
+    if node_kind == "terminal_index":
+        return _lint_terminal_index(entry_dir)
+    return [f"{entry_dir} is not a valid node directory"]
+
+
 def lint_reading_chain(target_root: Path) -> dict[str, Any]:
     payload = _resolve_target_shape(target_root)
     errors = _lint_facade(target_root, payload["shape_kind"])
@@ -270,19 +336,18 @@ def lint_reading_chain(target_root: Path) -> dict[str, Any]:
     for markdown_path in sorted(target_root.rglob("*.md")):
         if markdown_path.parts[-2:-1] == ("agents",):
             continue
+        if markdown_path.name == "SKILL.md":
+            continue
+        parent_kind = _classify_node_dir(markdown_path.parent)
         frontmatter, body = _parse_frontmatter(markdown_path)
-        errors.extend(_lint_markdown_section(markdown_path.relative_to(target_root), body))
-        if markdown_path.name != "SKILL.md":
+        if parent_kind in {"linear_loop", "compound_loop", "branch_index"} and markdown_path.name.startswith("00_"):
+            errors.extend(_lint_markdown_section(markdown_path.relative_to(target_root), body))
             targets = _markdown_targets(markdown_path, frontmatter, body)
-            if markdown_path.name.startswith("00_") and not targets:
+            if not targets:
                 errors.append(f"{markdown_path.relative_to(target_root)} does not expose any next-hop markdown target")
 
-    if payload["shape_kind"] == "linear_path":
-        for entry_dir in entry_dirs:
-            errors.extend(_lint_linear_entry(entry_dir))
-    else:
-        for entry_dir in entry_dirs:
-            errors.extend(_lint_compound_entry(entry_dir))
+    for entry_dir in entry_dirs:
+        errors.extend(_lint_node_dir(entry_dir, target_root))
 
     return {
         "status": "ok" if not errors else "error",

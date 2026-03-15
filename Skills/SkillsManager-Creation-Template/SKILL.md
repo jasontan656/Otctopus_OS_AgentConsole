@@ -1,6 +1,7 @@
 ---
 name: SkillsManager-Creation-Template
 description: 提供受治理技能模板与统一 Cli_Toolbox，用于创建或改造 `guide_only`、`guide_with_tool`、`executable_workflow_skill` 三类技能。
+skill_mode: guide_with_tool
 metadata:
   doc_structure:
     doc_id: skillsmanager_creation_template.entry.facade

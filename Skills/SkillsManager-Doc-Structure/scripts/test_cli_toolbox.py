@@ -246,6 +246,157 @@ anchors:
     )
 
 
+def _branch_index_skill(root: Path) -> None:
+    _write(
+        root / "SKILL.md",
+        """---
+name: temp-branch
+description: branch index skill
+skill_mode: guide_with_tool
+metadata:
+  doc_structure:
+    anchors:
+    - target: path/00_SKILL_ENTRY.md
+      relation: routes_to
+      direction: downstream
+      reason: facade routes to path
+---
+
+# Temp Branch
+
+## 1. 模型立刻需要知道的事情
+### 1. 总览
+- branch index skill
+
+### 2. 技能约束
+- path first
+
+### 3. 顶层常驻合同
+- `path/00_SKILL_ENTRY.md`
+
+## 2. 唯一入口
+- [技能主入口]：`path/00_SKILL_ENTRY.md`
+
+## 3. 目录结构图
+```text
+temp-branch/
+├── SKILL.md
+├── agents/
+├── path/
+└── scripts/
+```
+""",
+    )
+    _write(root / "agents" / "openai.yaml", "interface:\n  display_name: temp-branch\n")
+    _write(root / "scripts" / "Cli_Toolbox.py", "print('branch')\n")
+    _write(
+        root / "path" / "00_SKILL_ENTRY.md",
+        """---
+anchors:
+- target: template_creation/00_TEMPLATE_CREATION_ENTRY.md
+  relation: routes_to
+  direction: downstream
+  reason: entry routes to template creation
+- target: maintenance/00_MAINTENANCE_ENTRY.md
+  relation: routes_to
+  direction: downstream
+  reason: entry routes to maintenance
+---
+
+# Entry
+
+## 下一跳列表
+- [template_creation]：`template_creation/00_TEMPLATE_CREATION_ENTRY.md`
+- [maintenance]：`maintenance/00_MAINTENANCE_ENTRY.md`
+""",
+    )
+    _write(
+        root / "path" / "template_creation" / "00_TEMPLATE_CREATION_ENTRY.md",
+        """---
+anchors:
+- target: guide_only/00_GUIDE_ONLY_ENTRY.md
+  relation: routes_to
+  direction: downstream
+  reason: branch routes to leaf loop
+---
+
+# Template Creation Entry
+
+## 下一跳列表
+- [guide_only]：`guide_only/00_GUIDE_ONLY_ENTRY.md`
+""",
+    )
+    _write(
+        root / "path" / "template_creation" / "guide_only" / "00_GUIDE_ONLY_ENTRY.md",
+        """---
+anchors:
+- target: 10_CONTRACT.md
+  relation: routes_to
+  direction: downstream
+  reason: leaf loop starts from contract
+---
+
+# Guide Only Entry
+
+## 下一跳列表
+- [contract]：`10_CONTRACT.md`
+""",
+    )
+    for name, next_name in [
+        ("10_CONTRACT.md", "12_TEMPLATE.md"),
+        ("12_TEMPLATE.md", "20_EXECUTION.md"),
+        ("20_EXECUTION.md", "30_VALIDATION.md"),
+    ]:
+        _write(
+            root / "path" / "template_creation" / "guide_only" / name,
+            f"""# {name}
+
+## 下一跳列表
+- [next]：`{next_name}`
+""",
+        )
+    _write(
+        root / "path" / "template_creation" / "guide_only" / "30_VALIDATION.md",
+        """# Validation
+
+## 完成结果
+- done
+""",
+    )
+    _write(
+        root / "path" / "maintenance" / "00_MAINTENANCE_ENTRY.md",
+        """---
+anchors:
+- target: template_registry/00_TEMPLATE_REGISTRY.md
+  relation: routes_to
+  direction: downstream
+  reason: maintenance routes to registry
+---
+
+# Maintenance Entry
+
+## 下一跳列表
+- [registry]：`template_registry/00_TEMPLATE_REGISTRY.md`
+""",
+    )
+    _write(
+        root / "path" / "maintenance" / "template_registry" / "00_TEMPLATE_REGISTRY.md",
+        """---
+anchors:
+- target: ../../template_creation/guide_only/12_TEMPLATE.md
+  relation: routes_to
+  direction: downstream
+  reason: terminal index exposes a registered target
+---
+
+# Template Registry
+
+## 已注册模板位置
+- `../../template_creation/guide_only/12_TEMPLATE.md`
+""",
+    )
+
+
 def test_runtime_contract_reports_python_surface() -> None:
     payload = _run_cli("runtime-contract")
     assert payload["status"] == "ok"
@@ -286,4 +437,12 @@ def test_structure_lint_does_not_require_fixed_body_headings() -> None:
         root = Path(temp_dir) / "temp-linear-free-body"
         _linear_skill(root)
         payload = _run_cli("lint-reading-chain", "--target", str(root))
+        assert payload["status"] == "ok"
+
+
+def test_branch_index_skill_passes_docstructure() -> None:
+    with tempfile.TemporaryDirectory() as temp_dir:
+        root = Path(temp_dir) / "temp-branch"
+        _branch_index_skill(root)
+        payload = _run_cli("lint-docstructure", "--target", str(root))
         assert payload["status"] == "ok"

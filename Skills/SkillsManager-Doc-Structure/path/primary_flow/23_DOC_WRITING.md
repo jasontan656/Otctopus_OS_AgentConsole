@@ -35,3 +35,5 @@ anchors:
 - [校验节点规则]：`23F_VALIDATION_NODE_RULES.md`
 - [workflow index 规则]：`23G_WORKFLOW_INDEX_RULES.md`
 - [step 节点规则]：`23H_STEP_NODE_RULES.md`
+- [分支索引节点规则]：`23I_BRANCH_INDEX_RULES.md`
+- [终止索引节点规则]：`23J_TERMINAL_INDEX_RULES.md`
