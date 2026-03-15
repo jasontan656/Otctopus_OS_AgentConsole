@@ -1,6 +1,6 @@
 ---
 name: Functional-BrainStorm
-description: 纯方法论脑暴技能；用于外部调研、实现思路发散、方案对比、风险挖掘与落地收敛。
+description: 当用户要求外部调研时，或主动召唤时触发；用于外部调研、实现思路发散、方案对比、风险挖掘与落地收敛。
 skill_mode: guide_only
 metadata:
   doc_structure:
