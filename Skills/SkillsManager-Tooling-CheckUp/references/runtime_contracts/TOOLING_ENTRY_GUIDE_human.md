@@ -29,7 +29,7 @@ anchors:
   "instruction": [
     "The local toolbox entrypoint is scripts/Cli_Toolbox.py and it is now the primary runtime instruction source for this skill.",
     "Models must call contract first, then directive by topic, instead of walking markdown files for runtime guidance.",
-    "Humans may read the *_human.md mirrors in references/runtime_contracts, but those mirrors must carry the same Part B JSON payload as the CLI output."
+    "When auditing a target skill, only judge its tooling surface and do not require the target to adopt this skill's own runtime asset layout."
   ],
   "workflow": [
     "Call contract to discover runtime constraints and directive topics.",
@@ -37,9 +37,9 @@ anchors:
     "Only use legacy governance or tooling markdown as secondary evidence when the JSON payload still leaves a real gap."
   ],
   "rules": [
-    "Do not reintroduce a markdown-first path chain in the facade or agent default prompt.",
-    "Do not let the human mirror drift from the same-name JSON payload.",
-    "Any future contract, workflow, instruction, or guide added for runtime consumption must be stored as *_human.md plus same-name .json."
+    "Do not reinterpret target skill shape issues as tooling violations.",
+    "Do not require a target skill to adopt references/runtime_contracts or CLI-first facade wording just because it ships scripts/.",
+    "Judge only the target's actual tooling surface, execution entry, dependency-baseline drift, and output governance evidence."
   ]
 }
 ```

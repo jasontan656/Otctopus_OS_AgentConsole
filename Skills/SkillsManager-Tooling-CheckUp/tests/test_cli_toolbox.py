@@ -53,30 +53,19 @@ class CliToolboxTests(unittest.TestCase):
     def test_govern_target_reports_non_compliant_target(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             target_root = Path(tmp_dir) / "Example-Skill"
-            (target_root / "agents").mkdir(parents=True)
             (target_root / "scripts").mkdir(parents=True)
-            (target_root / "references" / "runtime_contracts").mkdir(parents=True)
-            (target_root / "references" / "governance").mkdir(parents=True)
             (target_root / "SKILL.md").write_text(
                 "---\nname: Example Skill\ndescription: example\n---\n\n# Example Skill\n",
                 encoding="utf-8",
             )
-            (target_root / "agents" / "openai.yaml").write_text("interface:\n  default_prompt: \"read markdown\"\n", encoding="utf-8")
-            (target_root / "scripts" / "Cli_Toolbox.py").write_text("print('tooling')\n", encoding="utf-8")
-            (target_root / "references" / "runtime_contracts" / "EXAMPLE_CONTRACT_human.md").write_text(
-                "<part_A>\ntext\n</part_A>\n\n<part_B>\n\n```json\n{}\n```\n</part_B>\n",
-                encoding="utf-8",
-            )
-            (target_root / "references" / "governance" / "LEGACY_CONTRACT.md").write_text("# legacy\n", encoding="utf-8")
+            (target_root / "scripts" / "runner.py").write_text("print('tooling')\n", encoding="utf-8")
 
             completed = run_cli("govern-target", "--target-skill-root", str(target_root), "--json")
             self.assertEqual(completed.returncode, 0, completed.stderr)
             payload = json.loads(completed.stdout)
             self.assertFalse(payload["compliant"])
-            self.assertIn("references/runtime_contracts/EXAMPLE_CONTRACT_human.md", payload["audit"]["missing_json_payloads"])
-            self.assertIn("references/governance/LEGACY_CONTRACT.md", payload["audit"]["legacy_markdown_only_assets"])
-            self.assertFalse(payload["audit"]["agent_prompt_cli_first"])
             self.assertTrue(payload["audit"]["tooling_surface_detected"])
+            self.assertFalse(payload["audit"]["cli_entry_present"])
             self.assertEqual(payload["action"], "govern_target_skill_tooling")
 
     def test_govern_target_reports_no_tooling_surface_detected(self) -> None:
@@ -95,7 +84,7 @@ class CliToolboxTests(unittest.TestCase):
             self.assertEqual(payload["audit"]["audit_mode"], "no_tooling_surface_detected")
             self.assertFalse(payload["audit"]["tooling_surface_detected"])
 
-    def test_govern_target_requires_runtime_surface_when_tooling_exists(self) -> None:
+    def test_govern_target_accepts_tooling_surface_with_explicit_cli_entry(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             target_root = Path(tmp_dir) / "Tooling-Skill"
             (target_root / "scripts").mkdir(parents=True)
@@ -108,7 +97,7 @@ class CliToolboxTests(unittest.TestCase):
             completed = run_cli("govern-target", "--target-skill-root", str(target_root), "--json")
             self.assertEqual(completed.returncode, 0, completed.stderr)
             payload = json.loads(completed.stdout)
-            self.assertFalse(payload["compliant"])
+            self.assertTrue(payload["compliant"])
             self.assertEqual(payload["audit"]["audit_mode"], "tooling_surface_audit")
             self.assertTrue(payload["audit"]["tooling_surface_detected"])
 

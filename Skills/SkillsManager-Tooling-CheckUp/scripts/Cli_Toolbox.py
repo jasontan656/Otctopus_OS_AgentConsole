@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import re
 from pathlib import Path
 from typing import TypedDict, cast
 
@@ -13,9 +12,6 @@ RUNTIME_CONTRACTS_ROOT = SKILL_ROOT / "references" / "runtime_contracts"
 CONTRACT_PATH = RUNTIME_CONTRACTS_ROOT / "SKILL_RUNTIME_CONTRACT.json"
 DIRECTIVE_INDEX_PATH = RUNTIME_CONTRACTS_ROOT / "DIRECTIVE_INDEX.json"
 TOOLING_ENTRY_GUIDE_PATH = RUNTIME_CONTRACTS_ROOT / "TOOLING_ENTRY_GUIDE.json"
-RUNTIME_DOC_KEYWORDS = ("CONTRACT", "WORKFLOW", "INSTRUCTION", "GUIDE")
-
-
 class ToolEntry(TypedDict):
     script: str
     commands: dict[str, str]
@@ -55,14 +51,6 @@ class GovernAudit(TypedDict):
     tooling_surface_detected: bool
     scripts_dir_exists: bool
     cli_entry_present: bool
-    runtime_contract_dir_exists: bool
-    facade_cli_first: bool
-    agent_prompt_cli_first: bool
-    paired_runtime_assets: list[str]
-    missing_human_mirrors: list[str]
-    missing_json_payloads: list[str]
-    legacy_markdown_only_assets: list[str]
-    orphan_json_assets: list[str]
     notes: list[str]
 
 
@@ -133,31 +121,6 @@ def emit(payload: Payload, as_json: bool) -> int:
     return 0
 
 
-def _looks_like_runtime_doc(path: Path) -> bool:
-    upper_name = path.name.upper()
-    return any(keyword in upper_name for keyword in RUNTIME_DOC_KEYWORDS)
-
-
-def _is_cli_first_text(text: str) -> bool:
-    return (
-        "Cli_Toolbox.py" in text
-        and "--json" in text
-        and (
-            "contract" in text
-            or "directive" in text
-            or "govern-target" in text
-        )
-    )
-
-
-def _expected_json_for_human(human_path: Path) -> Path:
-    return human_path.with_name(human_path.name.removesuffix("_human.md") + ".json")
-
-
-def _expected_human_for_json(json_path: Path) -> Path:
-    return json_path.with_name(f"{json_path.stem}_human.md")
-
-
 def _detect_cli_entry(scripts_dir: Path) -> bool:
     if not scripts_dir.is_dir():
         return False
@@ -167,14 +130,9 @@ def _detect_cli_entry(scripts_dir: Path) -> bool:
 
 def _audit_target_skill_root(target_root: Path) -> GovernAudit:
     scripts_dir = target_root / "scripts"
-    runtime_contract_dir = target_root / "references" / "runtime_contracts"
-    skill_path = target_root / "SKILL.md"
-    agent_path = target_root / "agents" / "openai.yaml"
     scripts_dir_exists = scripts_dir.is_dir()
     cli_entry_present = _detect_cli_entry(scripts_dir)
-    facade_cli_first = skill_path.exists() and _is_cli_first_text(skill_path.read_text(encoding="utf-8"))
-    agent_prompt_cli_first = agent_path.exists() and _is_cli_first_text(agent_path.read_text(encoding="utf-8"))
-    tooling_surface_detected = scripts_dir_exists or runtime_contract_dir.exists() or facade_cli_first or agent_prompt_cli_first
+    tooling_surface_detected = scripts_dir_exists
 
     if not tooling_surface_detected:
         return {
@@ -182,81 +140,22 @@ def _audit_target_skill_root(target_root: Path) -> GovernAudit:
             "tooling_surface_detected": False,
             "scripts_dir_exists": False,
             "cli_entry_present": False,
-            "runtime_contract_dir_exists": False,
-            "facade_cli_first": False,
-            "agent_prompt_cli_first": False,
-            "paired_runtime_assets": [],
-            "missing_human_mirrors": [],
-            "missing_json_payloads": [],
-            "legacy_markdown_only_assets": [],
-            "orphan_json_assets": [],
             "notes": [
                 "no governed tooling surface was detected under the target skill root",
                 "shape governance remains out of scope for SkillsManager-Tooling-CheckUp",
             ],
         }
 
-    paired_runtime_assets: list[str] = []
-    missing_human_mirrors: list[str] = []
-    missing_json_payloads: list[str] = []
-    legacy_markdown_only_assets: list[str] = []
-    orphan_json_assets: list[str] = []
     notes: list[str] = []
 
-    if runtime_contract_dir.exists():
-        for json_path in sorted(runtime_contract_dir.glob("*.json")):
-            if json_path.name == "DIRECTIVE_INDEX.json":
-                continue
-            human_path = _expected_human_for_json(json_path)
-            if human_path.exists():
-                paired_runtime_assets.append(str(json_path.relative_to(target_root)))
-            else:
-                missing_human_mirrors.append(str(json_path.relative_to(target_root)))
-        for human_path in sorted(runtime_contract_dir.glob("*_human.md")):
-            json_path = _expected_json_for_human(human_path)
-            if not json_path.exists():
-                missing_json_payloads.append(str(human_path.relative_to(target_root)))
-    else:
-        notes.append("target skill has no references/runtime_contracts directory")
-    if not facade_cli_first:
-        notes.append("skill facade does not present a clear CLI-first runtime entry")
-    if not agent_prompt_cli_first:
-        notes.append("agent default prompt does not present a clear CLI-first runtime entry")
     if scripts_dir_exists and not cli_entry_present:
         notes.append("scripts/ exists but no explicit Cli_Toolbox entry was detected")
-
-    references_root = target_root / "references"
-    for md_path in sorted(references_root.rglob("*.md")) if references_root.exists() else []:
-        if md_path.name == "SKILL.md" or md_path.name.endswith("_human.md"):
-            continue
-        if "runtime_contracts" in md_path.parts:
-            continue
-        if md_path.parts[-3:-1] == ("tooling", "development") or "modules" in md_path.parts:
-            continue
-        if _looks_like_runtime_doc(md_path):
-            legacy_markdown_only_assets.append(str(md_path.relative_to(target_root)))
-
-    for json_path in sorted(references_root.rglob("*.json")) if references_root.exists() else []:
-        if "runtime_contracts" in json_path.parts:
-            continue
-        if json_path.parts[-3:-1] == ("tooling", "development") or "modules" in json_path.parts:
-            continue
-        if _looks_like_runtime_doc(json_path):
-            orphan_json_assets.append(str(json_path.relative_to(target_root)))
 
     return {
         "audit_mode": "tooling_surface_audit",
         "tooling_surface_detected": True,
         "scripts_dir_exists": scripts_dir_exists,
         "cli_entry_present": cli_entry_present,
-        "runtime_contract_dir_exists": runtime_contract_dir.exists(),
-        "facade_cli_first": facade_cli_first,
-        "agent_prompt_cli_first": agent_prompt_cli_first,
-        "paired_runtime_assets": paired_runtime_assets,
-        "missing_human_mirrors": missing_human_mirrors,
-        "missing_json_payloads": missing_json_payloads,
-        "legacy_markdown_only_assets": legacy_markdown_only_assets,
-        "orphan_json_assets": orphan_json_assets,
         "notes": notes,
     }
 
@@ -269,20 +168,6 @@ def _build_recommended_actions(audit: GovernAudit) -> list[str]:
     actions: list[str] = []
     if audit["scripts_dir_exists"] and not audit["cli_entry_present"]:
         actions.append("review scripts/ and expose one explicit Cli_Toolbox entry if this target intends to ship a governed CLI surface")
-    if not audit["runtime_contract_dir_exists"]:
-        actions.append("create references/runtime_contracts and move runtime-facing contract assets there")
-    if not audit["facade_cli_first"]:
-        actions.append("rewrite SKILL.md so the model enters through CLI JSON instead of markdown path chains")
-    if not audit["agent_prompt_cli_first"]:
-        actions.append("rewrite agents/openai.yaml default_prompt so it points to CLI JSON entry commands")
-    if audit["missing_human_mirrors"]:
-        actions.append("create *_human.md mirrors for runtime JSON assets that currently lack them")
-    if audit["missing_json_payloads"]:
-        actions.append("create same-name .json payload files for *_human.md runtime assets that currently lack them")
-    if audit["legacy_markdown_only_assets"]:
-        actions.append("migrate legacy markdown-only contract/workflow/instruction/guide assets into runtime_contracts dual-file form")
-    if audit["orphan_json_assets"]:
-        actions.append("review JSON runtime assets outside runtime_contracts and either pair them with *_human.md or relocate them")
     if not actions:
         actions.append("target skill already satisfies the governed tooling runtime surface")
     return actions
@@ -352,13 +237,7 @@ def cmd_govern_target(args: argparse.Namespace) -> int:
     governance_contract = cast(DirectivePayload, read_json(TOOLING_ENTRY_GUIDE_PATH))
     audit = _audit_target_skill_root(target_root)
     compliant = (not audit["tooling_surface_detected"]) or (
-        audit["runtime_contract_dir_exists"]
-        and audit["facade_cli_first"]
-        and audit["agent_prompt_cli_first"]
-        and not audit["missing_human_mirrors"]
-        and not audit["missing_json_payloads"]
-        and not audit["legacy_markdown_only_assets"]
-        and not audit["orphan_json_assets"]
+        audit["cli_entry_present"]
     )
     payload: GovernTargetPayload = {
         "status": "ok",
