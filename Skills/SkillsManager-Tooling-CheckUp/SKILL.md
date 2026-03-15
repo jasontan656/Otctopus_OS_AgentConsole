@@ -32,12 +32,10 @@ metadata:
 - 适用于：治理日志落盘、默认产物落点、定向输出、历史迁移责任。
 - 适用于：治理本地 CLI 的命令命名、参数契约、JSON 输出、错误返回与 runtime-facing assets 一致性。
 - 适用于：检查带 `scripts/` 且带 `path/` 的技能，是否提供可工作的 `read-path-context`，并能把文档真源编译成完整链路上下文。
-- 不适用于：目标技能形态治理，包括 skill root 结构、`SKILL.md` 门面组织、path chain 组织、reading-chain 组织。
-- 不适用于：Python / TypeScript 语言专属代码规范正文；这类规则交由对应 constitution 技能。
 
 ## 3. 运行时边界
-- 本技能只治理 tooling surface，不反向要求目标技能继承本技能自己的 `references/runtime_contracts/` 或 CLI-first 门面形态。
-- 对 path 技能的要求只有一条新增硬规则：
+- 本技能只治理 tooling surface，不接管目标技能的门面和文档组织。
+- 对 path 技能的硬要求是：
   - 若目标技能同时存在 `scripts/` 与 `path/`，且不是 `guide_only`，则必须提供可工作的 `read-path-context`。
 - `read-path-context` 的职责是：
   - 接收一个功能入口
@@ -53,7 +51,7 @@ metadata:
 4. 只有当 JSON 仍留下真实语义缺口时，才回读 human mirror 或 legacy 参考文档。
 
 ## 5. 约束
-- 不得把目标技能缺少某种 root 形态误判成 tooling 违规。
+- 不得把目标技能的文档形态问题误判成 tooling 违规。
 - 不得把 `reading_chain` 的组织规则解释成由本技能治理；本技能只检查 path 技能是否能用 CLI 正确编译这条链。
 - 不得把 Python 胖文件、typing 风格、异常风格等语言规范重新写回本技能。
 - 若目标技能的 `read-path-context` 输出顺序错误、漏节点、跨链污染或 JSON 不稳定，应判为 tooling 违规。

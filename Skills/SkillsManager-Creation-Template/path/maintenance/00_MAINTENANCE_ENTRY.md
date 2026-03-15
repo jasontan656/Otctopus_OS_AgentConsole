@@ -12,9 +12,8 @@ reading_chain:
 # Maintenance Entry
 
 ## 这个入口是干什么的
-- 本入口只处理模板注册维护，不处理新模板创建。
-- 本技能不再承载“如何维护文档结构规则”或“如何维护技能自身 workflow”的说明。
-- 这些内容后续统一由 `SkillsManager-Doc-Structure` 承载。
+- 本入口承载模板注册维护。
+- 这里登记三类模板的实际位置，并作为模板查看入口。
 
 ## 下一跳列表
 - [模板维护]：`template_registry/00_TEMPLATE_REGISTRY.md`

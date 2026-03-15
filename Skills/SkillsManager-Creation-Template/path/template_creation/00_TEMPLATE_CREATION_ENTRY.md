@@ -20,13 +20,12 @@ reading_chain:
 # Template Creation Entry
 
 ## 这个入口是干什么的
-- 本入口只处理模板创建行为。
+- 本入口承载三类模板创建入口。
 - 你在这里先决定当前要走哪条 `skill_mode` 线路，再进入该线路自己的动作闭环。
 - 新生成的 skill root 必须遵守目标模板自己的根形态：
   - `guide_only`：`SKILL.md / agents`
   - 其余 path 技能：`SKILL.md / path / agents / scripts`
 - 每条 `skill_mode` 线路内部都必须显式包含自己的模板节点，方便查看该模式要生成的目标技能形态。
-- 技能创建完成后的文档组织、`reading_chain` 写法与门面约束，不在本入口继续展开；后续统一交给 `SkillsManager-Doc-Structure`。
 
 ## 下一跳列表
 - [guide_only]：`guide_only/00_GUIDE_ONLY_ENTRY.md`

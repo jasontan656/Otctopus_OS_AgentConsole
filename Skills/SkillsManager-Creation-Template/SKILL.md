@@ -31,25 +31,19 @@ metadata:
 
 ## 1. 模型立刻需要知道的事情
 ### 1. 总览
-- 本技能只负责两件事：一键落盘三种技能模板，以及维护这三种模板的位置注册。
+- 本技能用于创建三种技能模板，并查看这些模板的注册位置。
 - 当前模板分三类 `skill_mode`：`guide_only`、`guide_with_tool`、`executable_workflow_skill`。
 - 其中 `guide_with_tool` 的语义应理解为单线入口内的 `tool/lint` 能力面，而不是强制每个技能都必须提供业务工具。
-- 本技能自身已改为 `path-first / next-hop-only / action-closed-loop` 展示面。
-- 技能创建完成后的文档组织、`reading_chain` 写法、`SKILL.md` 约束与链路维护，后续统一交给 `SkillsManager-Doc-Structure`。
-- 不适用于：直接代替目标 skill 编写业务语义，或承担技能创建后的文档结构治理职责。
 
 ### 2. 技能约束
-- `SKILL.md` 只保留三段：`模型立刻需要知道的事情`、`功能入口` 与 `目录结构图`。
-- `SKILL.md` 只暴露功能入口层；不并列暴露深层正文。
-- 物理目录组织必须跟随阅读顺序逐级向下，不允许“一个入口文件夹平铺所有后续文件，再仅靠内联控制读序”。
-- 根目录只保留：`SKILL.md`、`path/`、`agents/`、`scripts/`。
-- 不允许继续保留：`references/`、`assets/`、`tests/` 作为主组织轴。
 - 模型沿单条线路阅读时，应优先进入当前动作闭环：
   - `contract`
   - `tools`（可选）
   - `execution`
   - `validation`
-- 命令脚本本体统一位于 `scripts/`；命令说明必须写在对应节点文档里。
+- `guide_only` 目标形态只生成 `SKILL.md / agents`。
+- 其余两类模板会生成 `SKILL.md / path / agents / scripts`。
+- 带 `scripts/` 的模板目标态包含 `read-path-context`。
 
 ### 3. 顶层常驻合同
 - 全局合同直接写在本门面中，不额外外跳到 CLI 合同。
