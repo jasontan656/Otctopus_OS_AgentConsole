@@ -37,11 +37,10 @@ metadata:
   - `execution`
   - `validation`
 - 命令脚本本体统一位于 `scripts/`；命令说明必须写在对应节点文档里。
-- 真实规则源以 `runtime-contract --json` 与 machine-readable contract 为准；markdown 负责窄域导航与行为收敛。
 
 ### 3. 顶层常驻合同
-- `./.venv_backend_skills/bin/python Skills/SkillsManager-Creation-Template/scripts/Cli_Toolbox.py runtime-contract --json`
-- `path/00_SKILL_ENTRY.md`
+- 全局合同直接写在本门面中，不额外外跳到 CLI 合同。
+- 后续阅读只沿 `path/00_SKILL_ENTRY.md` 继续下沉。
 
 ## 2. 唯一入口
 - [技能主入口]：`path/00_SKILL_ENTRY.md`

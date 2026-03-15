@@ -36,11 +36,10 @@ metadata:
 - 规则不再集中写成总则；每条规则必须跟着自己的工作步骤下沉到 `path/` 链路里。
 - CLI 只做硬结构 lint：根结构、线性/复合线性、下一跳存在性、anchor 存在性。
 - “每一层具体写得对不对”属于模型语义审查，不由 CLI 把正文模板硬编码死。
-- 真实规则源以 `./scripts/Cli_Toolbox.py runtime-contract --json` 为准；markdown 负责窄域导航和方法论阅读顺序。
 
 ### 3. 顶层常驻合同
-- `./scripts/Cli_Toolbox.py runtime-contract --json`
-- `path/00_SKILL_ENTRY.md`
+- 全局合同直接写在本门面中，不额外外跳到 CLI 合同。
+- 后续阅读只沿 `path/00_SKILL_ENTRY.md` 继续下沉。
 
 ## 2. 唯一入口
 - [技能主入口]：`path/00_SKILL_ENTRY.md`

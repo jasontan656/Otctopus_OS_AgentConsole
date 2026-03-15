@@ -139,8 +139,8 @@ def render_skill_md(skill_name: str, description: str, skill_mode: str) -> str:
         *mode_constraints,
         "",
         "### 3. 顶层常驻合同",
-        "- `./scripts/Cli_Toolbox.py runtime-contract --json`",
-        "- `path/00_SKILL_ENTRY.md`",
+        "- 全局合同直接写在本门面中，不额外外跳到 CLI 合同。",
+        "- 后续阅读只沿 `path/00_SKILL_ENTRY.md` 继续下沉。",
         "",
         "## 2. 唯一入口",
         "- [技能主入口]：`path/00_SKILL_ENTRY.md`",
@@ -445,7 +445,7 @@ def render_linear_tools_doc(skill_name: str, script_name: str) -> str:
         # Primary Flow Tool/Lint Surface
 
         ## 当前动作要用什么命令
-        - `python3 ./scripts/{script_name} runtime-contract --json`
+        - [在这里列出当前入口真正需要的命令。]
         - 当前节点承载该入口自己的 tool/lint 说明。
         - [如需新增入口专属命令或 lint，只在当前入口自己的 tools 节点内补充。]
 
@@ -603,7 +603,7 @@ def render_compound_tools_doc(skill_name: str, script_name: str) -> str:
         # Primary Flow Tools
 
         ## 当前动作要用什么命令
-        - `python3 ./scripts/{script_name} runtime-contract --json`
+        - [在这里列出当前入口真正需要的命令。]
         - [若某个步骤需要额外命令，应写入该步骤自己的 tools 节点。]
 
         ## 下一跳列表
@@ -721,7 +721,7 @@ def render_compound_step_tools_doc(skill_name: str, step_name: str, script_name:
         # {step_name} Tools
 
         ## 当前动作要用什么命令
-        - `python3 ./scripts/{script_name} runtime-contract --json`
+        - [在这里列出当前步骤真正需要的命令。]
         - [若当前步骤需要更多命令，只在这里继续补充。]
 
         ## 下一跳列表

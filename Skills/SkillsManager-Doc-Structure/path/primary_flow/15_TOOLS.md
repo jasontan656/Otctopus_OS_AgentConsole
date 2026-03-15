@@ -16,7 +16,6 @@ anchors:
 # 主治理链路 Tool/Lint 能力面
 
 ## 当前动作要用什么命令
-- `python3 ./scripts/Cli_Toolbox.py runtime-contract --json`
 - `python3 ./scripts/Cli_Toolbox.py inspect-target --target <skill_root> --json`
 - `python3 ./scripts/Cli_Toolbox.py lint-root-shape --target <skill_root> --json`
 - `python3 ./scripts/Cli_Toolbox.py lint-reading-chain --target <skill_root> --json`

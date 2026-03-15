@@ -1,4 +1,4 @@
 interface:
   display_name: SkillsManager-Doc-Structure
   short_description: 治理技能内部文档组织方式、链路衔接方式与 anchor lint。
-  default_prompt: Use $SkillsManager-Doc-Structure. Read `./scripts/Cli_Toolbox.py runtime-contract --json` first, then `path/00_SKILL_ENTRY.md`. Treat this skill as a Python lint/methodology surface: it validates root shape, facade scope, path chaining, and anchor resolution inside the target skill. Do not assume any `references/`, `assets/`, or TypeScript runtime exists.
+  default_prompt: Use $SkillsManager-Doc-Structure. Read `SKILL.md` and then `path/00_SKILL_ENTRY.md`. Treat this skill as a Python lint/methodology surface: it validates root shape, facade scope, path chaining, and anchor resolution inside the target skill. Do not assume any `references/`, `assets/`, or TypeScript runtime exists.
