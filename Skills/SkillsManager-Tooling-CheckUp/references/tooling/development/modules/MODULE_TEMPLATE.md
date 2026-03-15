@@ -28,10 +28,10 @@ anchors:
 - 输出：
 - 失败模式：
 
-## skill_mode 适配
-- `guide_only`:
-- `guide_with_tool`:
-- `executable_workflow_skill`:
+## 适用 tooling surface
+- CLI entry:
+- runtime-facing assets:
+- output governance:
 
 ## 回归检查
 ```bash

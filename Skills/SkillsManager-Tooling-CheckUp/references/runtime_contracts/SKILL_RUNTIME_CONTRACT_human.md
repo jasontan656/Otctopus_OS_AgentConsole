@@ -12,11 +12,11 @@ anchors:
 # SKILL_RUNTIME_CONTRACT
 
 <part_A>
-- 人类阅读入口：本文件说明 `SkillsManager-Tooling-CheckUp` 已切换为 skill_mode-aware 的 CLI-first runtime contract。
+- 人类阅读入口：本文件说明 `SkillsManager-Tooling-CheckUp` 使用 CLI-first runtime contract。
 - 模型运行时入口固定为：
   - `./.venv_backend_skills/bin/python Skills/SkillsManager-Tooling-CheckUp/scripts/Cli_Toolbox.py contract --json`
   - `./.venv_backend_skills/bin/python Skills/SkillsManager-Tooling-CheckUp/scripts/Cli_Toolbox.py directive --topic <topic> --json`
-- `govern-target` 在审计前必须先读取目标 `SKILL.md` 的 `skill_mode`。
+- `govern-target` 只负责目标 skill 的 tooling surface 审计，不承担目标技能形态治理。
 - 人类可以阅读本 markdown 的叙事部分，但模型应总是优先消费 Part B 的 JSON payload。
 </part_A>
 
@@ -25,7 +25,7 @@ anchors:
 ```json
 {
   "contract_name": "skills_tooling_checkup_runtime_contract",
-  "contract_version": "2.1.0",
+  "contract_version": "2.2.0",
   "skill_name": "SkillsManager-Tooling-CheckUp",
   "runtime_source_policy": {
     "primary_runtime_source": "CLI_JSON",
@@ -72,24 +72,20 @@ anchors:
       "topic": "tooling-entry",
       "doc_kind": "guide",
       "use_when": "The task needs the local toolbox surface, command examples, or human/model boundary guidance."
-    },
-    {
-      "topic": "target-shape-governance",
-      "doc_kind": "guide",
-      "use_when": "The task is about governing another skill into the shape required by its declared skill_mode."
     }
   ],
   "hard_constraints": [
     "Do not treat markdown path chains as the main runtime instructions.",
     "Do not output path metadata instead of direct action guidance.",
     "Do not invent a parallel governance flow when the directive payload already answers the active question.",
+    "Do not use this skill to govern target skill root shape, SKILL.md facade shape, path chain shape, or anchor graph shape.",
     "Do not edit the codex installed copy directly; edit the mirror copy and sync downstream after validation."
   ],
   "target_skill_handoff": [
     "After this skill clarifies the review or remediation workflow, enter the target skill through its own CLI-first or repo-local runtime contract path.",
     "Use the target skill's existing tests and lint commands for behavior verification.",
     "If Python files are edited, run Dev-PythonCode-Constitution lint on the concrete Python target scope before closing the turn.",
-    "govern-target must read target SKILL.md skill_mode first: guide_only is exempt, guide_with_tool relaxes CLI/runtime-contract shape checks, executable_workflow_skill keeps full CLI-first dual-file enforcement."
+    "Use govern-target only for tooling surface audits: CLI entry, runtime-facing assets, dependency-baseline drift, and output governance."
   ]
 }
 ```

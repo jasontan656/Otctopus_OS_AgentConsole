@@ -36,7 +36,7 @@ anchors:
 - 运行时指令源已经切换为 `references/runtime_contracts/*.json`。
 - `*_human.md` 仅承载人类叙事 Part A 与镜像用 Part B，不再作为模型主运行时入口。
 - legacy governance docs 仍可作为人类 authoring / audit reference，但不再是门面直接路由的主执行面。
-- `govern-target` 是面向目标 skill 的形态治理入口，负责输出目标感知的审计结果，而不是直接代替用户重写目标 skill。
+- `govern-target` 是面向目标 skill 的 tooling surface 审计入口，负责输出目标感知的审计结果，而不是直接代替用户重写目标 skill。
 
 ## 同步维护约束（强制）
 - 修改 `scripts/Cli_Toolbox.py` 后，必须同步更新：

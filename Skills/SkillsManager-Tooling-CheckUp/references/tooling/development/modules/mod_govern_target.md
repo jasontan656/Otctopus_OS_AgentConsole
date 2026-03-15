@@ -17,7 +17,7 @@ anchors:
 - `entrypoint`: `scripts/Cli_Toolbox.py`
 
 ## 职责
-- 针对目标 skill root 输出运行时形态治理审计结果。
+- 针对目标 skill root 输出 tooling surface 审计结果。
 - 检查 dual-file runtime assets、SKILL.md facade、`agents/openai.yaml` 是否已经切到 CLI-first。
 
 ## 输入输出契约
@@ -25,7 +25,7 @@ anchors:
   - `--target-skill-root <path>`
   - `--json`
 - 输出：
-  - 目标 skill 的形态治理合同
+  - 目标 skill 的 tooling 审计合同
   - 审计结果
   - 推荐修正动作
 - 失败模式：

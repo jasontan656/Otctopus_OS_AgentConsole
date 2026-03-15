@@ -7,20 +7,13 @@ import re
 from pathlib import Path
 from typing import TypedDict, cast
 
-import yaml
-
-
 SCRIPT_DIR = Path(__file__).resolve().parent
 SKILL_ROOT = SCRIPT_DIR.parent
 RUNTIME_CONTRACTS_ROOT = SKILL_ROOT / "references" / "runtime_contracts"
 CONTRACT_PATH = RUNTIME_CONTRACTS_ROOT / "SKILL_RUNTIME_CONTRACT.json"
 DIRECTIVE_INDEX_PATH = RUNTIME_CONTRACTS_ROOT / "DIRECTIVE_INDEX.json"
-TARGET_GOVERNANCE_CONTRACT_PATH = RUNTIME_CONTRACTS_ROOT / "TARGET_SHAPE_GOVERNANCE_GUIDE.json"
+TOOLING_ENTRY_GUIDE_PATH = RUNTIME_CONTRACTS_ROOT / "TOOLING_ENTRY_GUIDE.json"
 RUNTIME_DOC_KEYWORDS = ("CONTRACT", "WORKFLOW", "INSTRUCTION", "GUIDE")
-GUIDE_ONLY_MODE = "guide_only"
-GUIDE_WITH_TOOL_MODE = "guide_with_tool"
-EXECUTABLE_WORKFLOW_MODE = "executable_workflow_skill"
-FRONTMATTER_RE = re.compile(r"^---\s*\n(.*?)\n---\s*\n?", re.DOTALL)
 
 
 class ToolEntry(TypedDict):
@@ -58,8 +51,10 @@ class DirectivePayload(TypedDict):
 
 
 class GovernAudit(TypedDict):
-    skill_mode: str
     audit_mode: str
+    tooling_surface_detected: bool
+    scripts_dir_exists: bool
+    cli_entry_present: bool
     runtime_contract_dir_exists: bool
     facade_cli_first: bool
     agent_prompt_cli_first: bool
@@ -75,7 +70,6 @@ class GovernTargetPayload(TypedDict):
     status: str
     action: str
     target_skill_root: str
-    skill_mode: str
     governance_contract: DirectivePayload
     audit: GovernAudit
     compliant: bool
@@ -164,28 +158,30 @@ def _expected_human_for_json(json_path: Path) -> Path:
     return json_path.with_name(f"{json_path.stem}_human.md")
 
 
-def _read_skill_mode(skill_path: Path) -> str:
-    if not skill_path.exists():
-        return EXECUTABLE_WORKFLOW_MODE
-    text = skill_path.read_text(encoding="utf-8")
-    match = FRONTMATTER_RE.match(text)
-    if not match:
-        return EXECUTABLE_WORKFLOW_MODE
-    payload = yaml.safe_load(match.group(1)) or {}
-    if not isinstance(payload, dict):
-        return EXECUTABLE_WORKFLOW_MODE
-    raw = payload.get("skill_mode")
-    if raw in {GUIDE_ONLY_MODE, GUIDE_WITH_TOOL_MODE, EXECUTABLE_WORKFLOW_MODE}:
-        return cast(str, raw)
-    return EXECUTABLE_WORKFLOW_MODE
+def _detect_cli_entry(scripts_dir: Path) -> bool:
+    if not scripts_dir.is_dir():
+        return False
+    patterns = ("Cli_Toolbox.py", "Cli_Toolbox.ts", "Cli_Toolbox.js")
+    return any((scripts_dir / name).exists() for name in patterns)
 
 
 def _audit_target_skill_root(target_root: Path) -> GovernAudit:
-    skill_mode = _read_skill_mode(target_root / "SKILL.md")
-    if skill_mode == GUIDE_ONLY_MODE:
+    scripts_dir = target_root / "scripts"
+    runtime_contract_dir = target_root / "references" / "runtime_contracts"
+    skill_path = target_root / "SKILL.md"
+    agent_path = target_root / "agents" / "openai.yaml"
+    scripts_dir_exists = scripts_dir.is_dir()
+    cli_entry_present = _detect_cli_entry(scripts_dir)
+    facade_cli_first = skill_path.exists() and _is_cli_first_text(skill_path.read_text(encoding="utf-8"))
+    agent_prompt_cli_first = agent_path.exists() and _is_cli_first_text(agent_path.read_text(encoding="utf-8"))
+    tooling_surface_detected = scripts_dir_exists or runtime_contract_dir.exists() or facade_cli_first or agent_prompt_cli_first
+
+    if not tooling_surface_detected:
         return {
-            "skill_mode": skill_mode,
-            "audit_mode": "guide_only_exempt",
+            "audit_mode": "no_tooling_surface_detected",
+            "tooling_surface_detected": False,
+            "scripts_dir_exists": False,
+            "cli_entry_present": False,
             "runtime_contract_dir_exists": False,
             "facade_cli_first": False,
             "agent_prompt_cli_first": False,
@@ -195,29 +191,11 @@ def _audit_target_skill_root(target_root: Path) -> GovernAudit:
             "legacy_markdown_only_assets": [],
             "orphan_json_assets": [],
             "notes": [
-                "guide_only skill skips CLI-first and runtime-contract shape governance",
-                "guide_only skill is not audited for document-tree shape by SkillsManager-Tooling-CheckUp",
-            ],
-        }
-    if skill_mode == GUIDE_WITH_TOOL_MODE:
-        return {
-            "skill_mode": skill_mode,
-            "audit_mode": "guide_with_tool_runtime_shape_skipped",
-            "runtime_contract_dir_exists": False,
-            "facade_cli_first": False,
-            "agent_prompt_cli_first": False,
-            "paired_runtime_assets": [],
-            "missing_human_mirrors": [],
-            "missing_json_payloads": [],
-            "legacy_markdown_only_assets": [],
-            "orphan_json_assets": [],
-            "notes": [
-                "guide_with_tool skill does not require CLI-first dual-file runtime_contracts shape",
-                "use remediation, techstack-baseline, and output-governance directives to govern actual tooling code",
+                "no governed tooling surface was detected under the target skill root",
+                "shape governance remains out of scope for SkillsManager-Tooling-CheckUp",
             ],
         }
 
-    runtime_contract_dir = target_root / "references" / "runtime_contracts"
     paired_runtime_assets: list[str] = []
     missing_human_mirrors: list[str] = []
     missing_json_payloads: list[str] = []
@@ -240,16 +218,12 @@ def _audit_target_skill_root(target_root: Path) -> GovernAudit:
                 missing_json_payloads.append(str(human_path.relative_to(target_root)))
     else:
         notes.append("target skill has no references/runtime_contracts directory")
-
-    skill_path = target_root / "SKILL.md"
-    facade_cli_first = skill_path.exists() and _is_cli_first_text(skill_path.read_text(encoding="utf-8"))
     if not facade_cli_first:
         notes.append("skill facade does not present a clear CLI-first runtime entry")
-
-    agent_path = target_root / "agents" / "openai.yaml"
-    agent_prompt_cli_first = agent_path.exists() and _is_cli_first_text(agent_path.read_text(encoding="utf-8"))
     if not agent_prompt_cli_first:
         notes.append("agent default prompt does not present a clear CLI-first runtime entry")
+    if scripts_dir_exists and not cli_entry_present:
+        notes.append("scripts/ exists but no explicit Cli_Toolbox entry was detected")
 
     references_root = target_root / "references"
     for md_path in sorted(references_root.rglob("*.md")) if references_root.exists() else []:
@@ -271,8 +245,10 @@ def _audit_target_skill_root(target_root: Path) -> GovernAudit:
             orphan_json_assets.append(str(json_path.relative_to(target_root)))
 
     return {
-        "skill_mode": skill_mode,
-        "audit_mode": "executable_workflow_shape_governance",
+        "audit_mode": "tooling_surface_audit",
+        "tooling_surface_detected": True,
+        "scripts_dir_exists": scripts_dir_exists,
+        "cli_entry_present": cli_entry_present,
         "runtime_contract_dir_exists": runtime_contract_dir.exists(),
         "facade_cli_first": facade_cli_first,
         "agent_prompt_cli_first": agent_prompt_cli_first,
@@ -286,15 +262,13 @@ def _audit_target_skill_root(target_root: Path) -> GovernAudit:
 
 
 def _build_recommended_actions(audit: GovernAudit) -> list[str]:
-    if audit["skill_mode"] == GUIDE_ONLY_MODE:
+    if not audit["tooling_surface_detected"]:
         return [
-            "guide_only skill keeps all runtime guidance in SKILL.md and is exempt from CLI/runtime-contract shape enforcement"
-        ]
-    if audit["skill_mode"] == GUIDE_WITH_TOOL_MODE:
-        return [
-            "guide_with_tool skill should stay on facade + doc-tree + optional lint/audit tooling shape instead of CLI-first dual-file runtime_contracts"
+            "no governed tooling surface was detected; stop and do not reinterpret this target as a shape-governance problem"
         ]
     actions: list[str] = []
+    if audit["scripts_dir_exists"] and not audit["cli_entry_present"]:
+        actions.append("review scripts/ and expose one explicit Cli_Toolbox entry if this target intends to ship a governed CLI surface")
     if not audit["runtime_contract_dir_exists"]:
         actions.append("create references/runtime_contracts and move runtime-facing contract assets there")
     if not audit["facade_cli_first"]:
@@ -310,7 +284,7 @@ def _build_recommended_actions(audit: GovernAudit) -> list[str]:
     if audit["orphan_json_assets"]:
         actions.append("review JSON runtime assets outside runtime_contracts and either pair them with *_human.md or relocate them")
     if not actions:
-        actions.append("target skill already satisfies the governed dual-file and CLI-first shape")
+        actions.append("target skill already satisfies the governed tooling runtime surface")
     return actions
 
 
@@ -375,9 +349,9 @@ def cmd_govern_target(args: argparse.Namespace) -> int:
         )
         return 1
 
-    governance_contract = cast(DirectivePayload, read_json(TARGET_GOVERNANCE_CONTRACT_PATH))
+    governance_contract = cast(DirectivePayload, read_json(TOOLING_ENTRY_GUIDE_PATH))
     audit = _audit_target_skill_root(target_root)
-    compliant = audit["skill_mode"] in {GUIDE_ONLY_MODE, GUIDE_WITH_TOOL_MODE} or (
+    compliant = (not audit["tooling_surface_detected"]) or (
         audit["runtime_contract_dir_exists"]
         and audit["facade_cli_first"]
         and audit["agent_prompt_cli_first"]
@@ -388,9 +362,8 @@ def cmd_govern_target(args: argparse.Namespace) -> int:
     )
     payload: GovernTargetPayload = {
         "status": "ok",
-        "action": "govern_target_skill_shape",
+        "action": "govern_target_skill_tooling",
         "target_skill_root": str(target_root),
-        "skill_mode": audit["skill_mode"],
         "governance_contract": governance_contract,
         "audit": audit,
         "compliant": compliant,

@@ -9,10 +9,6 @@ maintain_rules:
     - references/tooling/Cli_Toolbox_DEVELOPMENT.md
     - references/tooling/development/20_CATEGORY_INDEX.md
     - references/runtime_contracts/
-skill_mode_support:
-  - guide_only
-  - guide_with_tool
-  - executable_workflow_skill
 modules:
   - module_id: contract
     entrypoint: scripts/Cli_Toolbox.py
@@ -42,5 +38,5 @@ modules:
       usage: references/tooling/Cli_Toolbox_USAGE.md
       development: references/tooling/development/modules/mod_govern_target.md
     responsibilities:
-      - "对目标 skill 输出形态治理审计结果"
-      - "按 skill_mode 分流 shape 审计边界"
+      - "对目标 skill 输出 tooling surface 审计结果"
+      - "检查 CLI 入口、runtime-facing assets 与输出治理约束"
