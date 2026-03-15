@@ -59,6 +59,7 @@ def runtime_contract_payload() -> dict[str, Any]:
             "lint-root-shape",
             "lint-reading-chain",
             "compile-reading-chain",
+            "read-contract-context",
             "read-path-context",
             "lint-docstructure",
         ],

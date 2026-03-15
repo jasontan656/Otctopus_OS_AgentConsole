@@ -291,6 +291,7 @@ def test_runtime_contract_reports_reading_chain_surface() -> None:
     payload = _run_cli("runtime-contract")
     assert payload["status"] == "ok"
     assert "compile-reading-chain" in payload["commands"]
+    assert "read-contract-context" in payload["commands"]
     assert "read-path-context" in payload["commands"]
 
 
@@ -324,6 +325,13 @@ def test_compile_linear_chain_returns_compiled_markdown() -> None:
 
 def test_self_read_path_context_compiles_this_skill() -> None:
     payload = _run_cli("read-path-context", "--entry", "target_shape", "--selection", "facade_only,next_hop,skill_facade")
+    assert payload["status"] == "ok"
+    assert payload["resolved_chain"][0] == "SKILL.md"
+    assert any(item.endswith("21_TARGET_SHAPE.md") for item in payload["resolved_chain"])
+
+
+def test_self_read_contract_context_compiles_this_skill() -> None:
+    payload = _run_cli("read-contract-context", "--entry", "target_shape", "--selection", "facade_only,next_hop,skill_facade")
     assert payload["status"] == "ok"
     assert payload["resolved_chain"][0] == "SKILL.md"
     assert any(item.endswith("21_TARGET_SHAPE.md") for item in payload["resolved_chain"])

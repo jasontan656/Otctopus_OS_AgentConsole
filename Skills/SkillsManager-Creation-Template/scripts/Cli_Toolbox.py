@@ -224,11 +224,12 @@ def build_parser() -> argparse.ArgumentParser:
         sub.add_argument("--json", action="store_true")
         sub.set_defaults(func=func)
 
-    read_context = subparsers.add_parser("read-path-context")
-    read_context.add_argument("--entry", required=True)
-    read_context.add_argument("--selection", default="")
-    read_context.add_argument("--json", action="store_true")
-    read_context.set_defaults(func=cmd_read_path_context)
+    for name in ("read-path-context", "read-contract-context"):
+        read_context = subparsers.add_parser(name)
+        read_context.add_argument("--entry", required=True)
+        read_context.add_argument("--selection", default="")
+        read_context.add_argument("--json", action="store_true")
+        read_context.set_defaults(func=cmd_read_path_context)
     return parser
 
 

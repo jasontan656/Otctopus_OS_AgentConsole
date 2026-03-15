@@ -57,10 +57,11 @@ def main() -> int:
     )
     compile_parser.add_argument("--json", action="store_true")
 
-    self_compile_parser = subparsers.add_parser("read-path-context", help="Compile this skill's own reading chain")
-    self_compile_parser.add_argument("--entry", required=True, help="Top-level entry key declared in SKILL.md reading_chain")
-    self_compile_parser.add_argument("--selection", default="", help="Comma-separated branch keys used when the chain hits a branch node")
-    self_compile_parser.add_argument("--json", action="store_true")
+    for name in ("read-path-context", "read-contract-context"):
+        self_compile_parser = subparsers.add_parser(name, help="Compile this skill's own reading chain into one contract context")
+        self_compile_parser.add_argument("--entry", required=True, help="Top-level entry key declared in SKILL.md reading_chain")
+        self_compile_parser.add_argument("--selection", default="", help="Comma-separated branch keys used when the chain hits a branch node")
+        self_compile_parser.add_argument("--json", action="store_true")
 
     doc_lint_parser = subparsers.add_parser("lint-docstructure", help="Lint target skill docstructure")
     _add_target_argument(doc_lint_parser)
@@ -84,7 +85,7 @@ def main() -> int:
         target_root = Path(args.target).expanduser().resolve()
         selection = [item.strip() for item in args.selection.split(",") if item.strip()]
         return _print_payload(compile_reading_chain(target_root, args.entry, selection), args.json)
-    if args.command == "read-path-context":
+    if args.command in {"read-path-context", "read-contract-context"}:
         selection = [item.strip() for item in args.selection.split(",") if item.strip()]
         return _print_payload(compile_reading_chain(SKILL_ROOT, args.entry, selection), args.json)
     if args.command == "lint-docstructure":

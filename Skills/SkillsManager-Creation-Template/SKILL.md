@@ -43,7 +43,7 @@ metadata:
   - `validation`
 - `guide_only` 目标形态只生成 `SKILL.md / agents`。
 - 其余两类模板会生成 `SKILL.md / path / agents / scripts`。
-- 带 `scripts/` 的模板目标态包含 `read-path-context`。
+- 带 `scripts/` 的模板目标态包含 `read-contract-context`；`read-path-context` 可作为等价别名保留。
 
 ### 3. 顶层常驻合同
 - 全局合同直接写在本门面中，不额外外跳到 CLI 合同。
@@ -54,10 +54,13 @@ metadata:
   - 作用：创建最小技能形态，只落 `SKILL.md / agents`。
 - [guide_with_tool]：`path/template_creation/guide_with_tool/00_GUIDE_WITH_TOOL_ENTRY.md`
   - 作用：创建单线闭环技能；允许多入口，但入口内不能再分叉。
+  - 快捷阅读：`python3 ./scripts/Cli_Toolbox.py read-contract-context --entry guide_with_tool --json`
 - [executable_workflow_skill]：`path/template_creation/executable_workflow_skill/00_EXECUTABLE_WORKFLOW_ENTRY.md`
   - 作用：创建复合 workflow 技能；入口内允许继续下沉到复合步骤。
+  - 快捷阅读：`python3 ./scripts/Cli_Toolbox.py read-contract-context --entry executable_workflow --json`
 - [模板维护]：`path/maintenance/00_MAINTENANCE_ENTRY.md`
   - 作用：维护三种模板的注册位置，不进入创建链路。
+  - 快捷阅读：`python3 ./scripts/Cli_Toolbox.py read-contract-context --entry maintenance --json`
 
 ## 3. 目录结构图
 ```text

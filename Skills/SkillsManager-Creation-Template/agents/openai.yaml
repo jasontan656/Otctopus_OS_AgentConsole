@@ -1,4 +1,4 @@
 interface:
   display_name: SkillsManager-Creation-Template
   short_description: 提供受治理技能模板与统一 Cli_Toolbox，用于创建或改造三类 `skill_mode` 技能。
-  default_prompt: Use $SkillsManager-Creation-Template. Read `SKILL.md`, choose the matching function entry, and continue downward only through that entry's workflow node.
+  default_prompt: Use $SkillsManager-Creation-Template.

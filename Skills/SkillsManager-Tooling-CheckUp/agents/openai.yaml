@@ -1,4 +1,4 @@
 interface:
   display_name: SkillsManager-Tooling-CheckUp
-  short_description: 检查已安装 skills 的 tooling code 是否绕开 repo 必用依赖栈自造轮子，并治理日志落盘、产物落点与迁移责任。
-  default_prompt: Use $SkillsManager-Tooling-CheckUp. First run `./.venv_backend_skills/bin/python Skills/SkillsManager-Tooling-CheckUp/scripts/Cli_Toolbox.py contract --json`. Treat CLI JSON as the primary runtime source and use markdown mirrors only when the contract still leaves a real gap.
+  short_description: 治理目标技能内部 CLI 与 tooling surface，重点检查依赖基线、输出落点、CLI 契约、职责边界与整改闭环。
+  default_prompt: Use $SkillsManager-Tooling-CheckUp.

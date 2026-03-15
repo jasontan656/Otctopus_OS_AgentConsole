@@ -83,7 +83,7 @@ def render_skill_md(skill_name: str, description: str, skill_mode: str) -> str:
         f"- 当前形态为 `{skill_mode}`。",
         "- `SKILL.md + path/*.md` 承载完整正文。",
         "- 功能入口通过 `reading_chain` 继续下沉。",
-        "- `scripts/` 提供 `read-path-context`。",
+        "- `scripts/` 提供 `read-contract-context` 与 `read-path-context`。",
     ]
     if skill_mode == GUIDE_WITH_TOOL_MODE:
         constraints = [
@@ -117,6 +117,7 @@ def render_skill_md(skill_name: str, description: str, skill_mode: str) -> str:
         "## 2. 功能入口",
         "- [primary_flow]：`path/primary_flow/00_PRIMARY_FLOW_ENTRY.md`",
         "  - 作用：默认功能入口；如需新增入口，应与它平行出现。",
+        "  - 快捷阅读：`python3 ./scripts/Cli_Toolbox.py read-contract-context --entry primary_flow --json`",
         "",
         "## 3. 目录结构图",
         "```text",
@@ -130,12 +131,9 @@ def render_skill_md(skill_name: str, description: str, skill_mode: str) -> str:
 def render_openai_yaml(skill_name: str, skill_mode: str) -> str:
     display_name = title_from_slug(skill_name)
     if skill_mode == GUIDE_ONLY_MODE:
-        default_prompt = f"请直接读取 {skill_name} 的 SKILL.md 完成任务，不要假设存在 path/ 或 scripts/。"
+        default_prompt = f"Use ${skill_name}."
     else:
-        default_prompt = (
-            f"请先读取 {skill_name} 的 SKILL.md 选择功能入口；若需要快速获得完整链路上下文，"
-            "优先调用本地 CLI 的 read-path-context。"
-        )
+        default_prompt = f"Use ${skill_name}."
     return dedent(
         f"""\
         version: 1
@@ -161,7 +159,7 @@ def runtime_contract_payload(skill_name: str, skill_mode: str) -> dict[str, obje
 
     payload["root_shape"] = ["SKILL.md", "path", "agents", "scripts"]
     payload["entry_doc"] = "path/primary_flow/00_PRIMARY_FLOW_ENTRY.md"
-    payload["commands"] = ["runtime-contract", "read-path-context"]
+    payload["commands"] = ["runtime-contract", "read-contract-context", "read-path-context"]
     payload["layout_rule"] = "Folder layout must mirror reading order."
     payload["compiler_rule"] = "CLI compiles reading_chain into one context payload; docs remain the only source of truth."
     if skill_mode == GUIDE_WITH_TOOL_MODE:
@@ -285,14 +283,15 @@ def render_generated_toolbox_script(skill_name: str, skill_mode: str) -> str:
             "    subparsers = parser.add_subparsers(dest='command', required=True)",
             "    runtime_contract = subparsers.add_parser('runtime-contract')",
             "    runtime_contract.add_argument('--json', action='store_true')",
-            "    read_context = subparsers.add_parser('read-path-context')",
-            "    read_context.add_argument('--entry', required=True)",
-            "    read_context.add_argument('--selection', default='')",
-            "    read_context.add_argument('--json', action='store_true')",
+            "    for name in ('read-path-context', 'read-contract-context'):",
+            "        read_context = subparsers.add_parser(name)",
+            "        read_context.add_argument('--entry', required=True)",
+            "        read_context.add_argument('--selection', default='')",
+            "        read_context.add_argument('--json', action='store_true')",
             "    args = parser.parse_args()",
             "    if args.command == 'runtime-contract':",
             "        payload = RUNTIME_CONTRACT",
-            "    elif args.command == 'read-path-context':",
+            "    elif args.command in {'read-path-context', 'read-contract-context'}:",
             "        selection = [item.strip() for item in args.selection.split(',') if item.strip()]",
             "        payload = _compile(args.entry, selection)",
             "    else:",
@@ -346,7 +345,7 @@ def render_generated_test_script(skill_name: str, skill_mode: str) -> str:
         """\
         def test_read_path_context() -> None:
             completed = subprocess.run(
-                ["python3", str(SKILL_ROOT / "scripts" / "Cli_Toolbox.py"), "read-path-context", "--entry", "primary_flow", "--json"],
+                ["python3", str(SKILL_ROOT / "scripts" / "Cli_Toolbox.py"), "read-contract-context", "--entry", "primary_flow", "--json"],
                 check=True,
                 capture_output=True,
                 text=True,
@@ -447,7 +446,7 @@ def _linear_tools_doc(skill_name: str) -> str:
         # Primary Flow Tool/Lint Surface
 
         ## 当前动作要用什么命令
-        - `python3 ./scripts/Cli_Toolbox.py read-path-context --entry primary_flow --json`
+        - `python3 ./scripts/Cli_Toolbox.py read-contract-context --entry primary_flow --json`
         - [在这里列出当前入口真正需要的其他命令。]
 
         ## 下一跳列表
@@ -475,7 +474,7 @@ def _linear_execution_doc(skill_name: str) -> str:
         ## 当前动作怎么做
         1. 明确当前入口的真实业务主轴与边界。
         2. 命令脚本放在 `scripts/`，命令说明写在 `15_TOOLS.md`。
-        3. 让 `read-path-context` 可以把当前链路完整编译出来。
+        3. 让 `read-contract-context` 可以把当前链路完整编译出来。
 
         ## 下一跳列表
         - [validation]：`30_VALIDATION.md`
@@ -496,7 +495,7 @@ def _linear_validation_doc(skill_name: str) -> str:
 
         ## 当前动作如何校验
         - 结果目录包含 `SKILL.md / path / agents / scripts`。
-        - `read-path-context --entry primary_flow --json` 能输出完整链路上下文。
+        - `read-contract-context --entry primary_flow --json` 能输出完整链路上下文。
         - 不存在 `references/`、`assets/`、`tests/`。
         """
     )
@@ -571,7 +570,7 @@ def _compound_tools_doc(skill_name: str) -> str:
         # Primary Flow Tools
 
         ## 当前动作要用什么命令
-        - `python3 ./scripts/Cli_Toolbox.py read-path-context --entry primary_flow --selection step_01 --json`
+        - `python3 ./scripts/Cli_Toolbox.py read-contract-context --entry primary_flow --selection step_01 --json`
         - [若某个步骤需要额外命令，应写入该步骤自己的 tools 节点。]
 
         ## 下一跳列表
@@ -757,7 +756,7 @@ def _compound_flow_validation_doc(skill_name: str) -> str:
         ## 当前动作如何校验
         - 结果目录包含 `SKILL.md / path / agents / scripts`。
         - `path/primary_flow/20_WORKFLOW_INDEX.md` 已列出复合步骤。
-        - `read-path-context` 支持通过 `--selection` 编译具体步骤链路。
+        - `read-contract-context` 支持通过 `--selection` 编译具体步骤链路。
         """
     )
 

@@ -69,7 +69,7 @@ class TestCreateSkillFromTemplateRegressionTest:
             )
             runtime_contract = json.loads(toolbox_output.stdout)
             compiled_output = subprocess.run(
-                ["python3", str(skill_dir / "scripts" / "Cli_Toolbox.py"), "read-path-context", "--entry", "primary_flow", "--json"],
+                ["python3", str(skill_dir / "scripts" / "Cli_Toolbox.py"), "read-contract-context", "--entry", "primary_flow", "--json"],
                 text=True,
                 capture_output=True,
                 check=True,
@@ -86,6 +86,7 @@ class TestCreateSkillFromTemplateRegressionTest:
             assert "[primary_flow]" in skill_md
             assert runtime_contract["skill_mode"] == "guide_with_tool"
             assert runtime_contract["entry_doc"] == "path/primary_flow/00_PRIMARY_FLOW_ENTRY.md"
+            assert "read-contract-context" in runtime_contract["commands"]
             assert "read-path-context" in runtime_contract["commands"]
             assert compiled_payload["status"] == "ok"
             assert "Primary Flow Entry" in compiled_payload["compiled_markdown"]
@@ -125,7 +126,7 @@ class TestCreateSkillFromTemplateRegressionTest:
                 [
                     "python3",
                     str(skill_dir / "scripts" / "Cli_Toolbox.py"),
-                    "read-path-context",
+                    "read-contract-context",
                     "--entry",
                     "primary_flow",
                     "--selection",
@@ -144,6 +145,7 @@ class TestCreateSkillFromTemplateRegressionTest:
             assert "## 2. 功能入口" in skill_md
             assert "## 3. 目录结构图" in skill_md
             assert "[primary_flow]" in skill_md
+            assert "read-contract-context" in runtime_contract["commands"]
             assert runtime_contract["skill_mode"] == "executable_workflow_skill"
             assert "read-path-context" in runtime_contract["commands"]
             assert compiled_payload["status"] == "ok"
