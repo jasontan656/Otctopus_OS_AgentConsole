@@ -18,7 +18,7 @@ reading_chain:
 ## 当前动作必须满足的约束
 - `push` 只做 mirror -> codex 覆盖同步，不接管安装修正。
 - `scope=all` 时，只允许同步 skills 根与 `.system/`，不得把产品门面、产品工具和顶层文档直接推入 codex 安装目录。
-- 同步使用 `rsync -a --delete --checksum` 语义。
+- 同步使用 `rsync -a --delete --delete-excluded --checksum` 语义。
 - codex 根的禁留项需要在全量 push 后移除。
 
 ## 下一跳列表

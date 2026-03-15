@@ -221,7 +221,7 @@ def _rsync(src: Path, dst: Path, dry_run: bool) -> list[str]:
         raise FileNotFoundError(f"source does not exist: {src}")
 
     dst.parent.mkdir(parents=True, exist_ok=True)
-    cmd = ["rsync", "-a", "--delete", "--checksum"]
+    cmd = ["rsync", "-a", "--delete", "--delete-excluded", "--checksum"]
     for pattern in RSYNC_EXCLUDES:
         cmd.extend(["--exclude", pattern])
     if dry_run:
