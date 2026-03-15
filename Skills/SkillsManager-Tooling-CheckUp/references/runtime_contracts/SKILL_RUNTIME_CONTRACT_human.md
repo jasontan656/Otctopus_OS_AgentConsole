@@ -25,7 +25,7 @@ anchors:
 ```json
 {
   "contract_name": "skills_tooling_checkup_runtime_contract",
-  "contract_version": "2.3.0",
+  "contract_version": "2.4.0",
   "skill_name": "SkillsManager-Tooling-CheckUp",
   "runtime_source_policy": {
     "primary_runtime_source": "CLI_JSON",
@@ -64,6 +64,16 @@ anchors:
       "use_when": "The task mentions runtime logs, audit files, default outputs, directed outputs, or migration duties."
     },
     {
+      "topic": "cli-surface",
+      "doc_kind": "contract",
+      "use_when": "The task audits command naming, argument contract, JSON output shape, error shape, or explicit CLI entry expectations."
+    },
+    {
+      "topic": "tooling-boundary",
+      "doc_kind": "guide",
+      "use_when": "The task needs parser/schema/helper/lint/test/glue responsibility boundaries or must distinguish tooling from domain policy."
+    },
+    {
       "topic": "techstack-baseline",
       "doc_kind": "guide",
       "use_when": "The task must decide whether existing repo-local dependencies already cover the needed capability."
@@ -85,7 +95,8 @@ anchors:
     "After this skill clarifies the review or remediation workflow, enter the target skill through its own governed workflow and local execution commands.",
     "Use the target skill's existing tests and lint commands for behavior verification.",
     "If Python files are edited, run Dev-PythonCode-Constitution lint on the concrete Python target scope before closing the turn.",
-    "Use govern-target only for tooling surface audits: scripts surface, explicit CLI entry, dependency-baseline drift, and output governance."
+    "Use govern-target only for tooling surface audits: scripts surface, explicit CLI entry, dependency-baseline drift, and output governance.",
+    "Delegate Python or TypeScript language-style rules, fat-file policy, and language-specific lint baselines to the relevant language constitution instead of restating them here."
   ]
 }
 ```

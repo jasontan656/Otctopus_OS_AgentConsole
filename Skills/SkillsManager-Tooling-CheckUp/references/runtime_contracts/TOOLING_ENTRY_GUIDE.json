@@ -12,6 +12,7 @@
   "workflow": [
     "Call contract to discover runtime constraints and directive topics.",
     "Call directive with the active topic to obtain direct instruction, workflow, and rules.",
+    "Use cli-surface for command/parameter/output contracts, tooling-boundary for parser/helper/schema/lint/test/glue responsibilities, techstack-baseline for dependency replacement, and output-governance for write-path governance.",
     "Only use legacy governance or tooling markdown as secondary evidence when the JSON payload still leaves a real gap."
   ],
   "rules": [

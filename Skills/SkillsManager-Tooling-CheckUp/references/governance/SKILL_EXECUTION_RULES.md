@@ -25,9 +25,12 @@ anchors:
 - 若任务涉及落盘治理，必须同时读代码和目标技能文档，确认 `/home/jasontan656/AI_Projects/Codex_Skill_Runtime` 与 `/home/jasontan656/AI_Projects/Codex_Skills_Result` 是否被显式声明并真正用于对应语义。
 - 若目标技能存在“定向产物”语义，必须确认其工具入口支持或要求显式落点；未指定落点时，默认值必须回退到 `/home/jasontan656/AI_Projects/Codex_Skills_Result`。
 - 若目标技能已有历史日志或产物散落在非受管目录，修正范围必须覆盖代码切换、文档声明和旧内容迁移责任，不能只改新增路径。
+- 若任务涉及 CLI 命令、参数、JSON 输出或错误返回，必须补读 runtime 的 `cli-surface` 合同。
+- 若任务涉及 parser / schema / helper / lint / test / glue 的职责归属，必须补读 runtime 的 `tooling-boundary` guide。
 - 只有当替换后能减少自实现复杂度、且不丢失现有行为语义时，才应进入修正。
 - 修正时优先删除冗余自实现，再接入现有依赖；同步维护目标 skill 的测试、文档、类型和契约。
 - 本技能本身现在提供 CLI-first runtime contract 与 directive 输出；真正的目标 skill 执行与验证仍必须借助目标 skill 既有命令或 repo 已有治理命令完成。
+- 若问题本质上是 Python 代码规范、胖文件阈值或语言专属 lint，不在本技能内裁决，应交回对应语言 constitution。
 
 ## 例外与门禁
 - 若当前 repo 合同没有把某个库声明为必用基线，即使它“更标准”，本技能也不能自行把它当成既定依赖要求。

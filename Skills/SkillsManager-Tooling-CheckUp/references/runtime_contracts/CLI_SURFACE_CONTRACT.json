@@ -1,0 +1,22 @@
+{
+  "directive_name": "skills_tooling_checkup_cli_surface_contract",
+  "directive_version": "1.0.0",
+  "doc_kind": "contract",
+  "topic": "cli-surface",
+  "purpose": "Define the governed contract for target skill CLI surfaces without imposing facade or root-shape requirements.",
+  "instruction": [
+    "A governed tooling surface must expose one explicit CLI entry when scripts/ exists and the skill intends runtime invocation through local tools.",
+    "CLI commands should use stable verb-style or noun-action names, keep option names descriptive, and avoid ambiguous short aliases unless the target skill already standardizes them.",
+    "Machine-readable mode must return structured JSON payloads for normal success and structured JSON errors for known failures instead of relying on prose-only stdout."
+  ],
+  "workflow": [
+    "Confirm whether the target scripts surface is intended for direct runtime use or only internal helper execution.",
+    "If the surface is user- or model-facing, inspect command names, required options, JSON mode, and known error returns.",
+    "Record gaps in command clarity, output shape, exit semantics, or argument contract before proposing remediation."
+  ],
+  "rules": [
+    "Do not require the target skill to adopt this skill's contract/directive command names.",
+    "Do not treat internal helper scripts with no governed public entry as malformed just because they are not exposed as standalone CLIs.",
+    "Require explicit and stable JSON success/error shapes only for surfaces that claim governed runtime use."
+  ]
+}

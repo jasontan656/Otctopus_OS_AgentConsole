@@ -48,3 +48,4 @@ anchors:
 - 若目标代码正在手写这些依赖已经直接覆盖的通用能力，应优先判断为可疑重复造轮子。
 - 若目标代码是 domain-specific orchestration、repo-specific policy、或依赖无法直接表达的语义，则不应机械替换。
 - “可疑重复造轮子”不是自动替换命令；只有在行为边界清楚、可验证、不丢语义时才进入修正。
+- 本文不负责 Python/TypeScript 语言代码规范正文；胖文件、typing、异常风格与语言专属 lint 细则应交回对应 constitution。

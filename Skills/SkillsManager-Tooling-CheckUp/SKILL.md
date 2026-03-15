@@ -34,6 +34,7 @@ metadata:
 - 适用于：审查 parser / schema / helper / lint / test / glue code 的职责边界，避免工具脚本越权承担 domain 规则。
 - 不适用于：新增 repo 依赖、发明新的治理工具、替代目标 skill 的 domain 规则源、在证据不足时臆断“所有自写代码都应该被库替换”。
 - 不适用于：目标技能形态治理，包括 skill root 结构、`SKILL.md` 门面组织、path chain 组织、anchor graph 组织。
+- 不适用于：Python/TypeScript 语言专属代码规范正文，例如胖文件阈值、typing 风格、异常风格、import side effect、language-specific lint 细则。
 - 若修正落在 Python 代码，仍要遵守 `Dev-PythonCode-Constitution`；若修正落在 Vue3 / TypeScript tooling code，仍要遵守目标前端 skill 的既有合同。
 
 ## 3. 必读顺序
@@ -42,6 +43,8 @@ metadata:
    - 只读检查：`--topic read-audit`
    - 进入修正：`--topic remediation`
    - 日志/产物治理：`--topic output-governance`
+   - CLI 表面合同：`--topic cli-surface`
+   - 模块职责边界：`--topic tooling-boundary`
    - 依赖基线判断：`--topic techstack-baseline`
    - 本技能工具面：`--topic tooling-entry`
 3. 真正进入目标 skill 前，先确认目标是否存在受管 tooling surface，再按目标 skill 自己已有的治理链路和局部执行入口补齐其局部合同。
@@ -58,7 +61,7 @@ metadata:
 
 ## 5. 目标技能 tooling 审计边界
 - `govern-target` 只检查目标技能是否存在 `scripts/` tooling surface，以及其中是否暴露了明确 CLI 入口。
-- `govern-target` 可以继续基于证据审查依赖基线漂移、日志落盘、产物落点与脚本职责边界。
+- `govern-target` 可以继续基于证据审查依赖基线漂移、CLI 表面合同、日志落盘、产物落点与脚本职责边界。
 - `govern-target` 不得要求目标技能采用本技能自己的 `references/runtime_contracts/`、`*_human.md + .json`、`SKILL.md CLI-first` 或 `agents/openai.yaml CLI-first` 形态。
 - 目标技能如何组织门面、path、anchors 与文档链路，属于 `SkillsManager-Creation-Template` 与 `SkillsManager-Doc-Structure` 的治理范围。
 
@@ -81,6 +84,7 @@ metadata:
 - 不得把“缺少某种 skill root 形态”误判成 tooling 违规；形态治理不是本技能职责。
 - 不得把“缺少 references/runtime_contracts、门面不是 CLI-first、agent prompt 不是 CLI-first”误判成目标技能 tooling 违规；这些不是目标技能必须继承的 tooling 形态。
 - 不得把 parser / schema / helper / lint / test / glue code 的存在本身视为违规；只有当它们越过职责边界或重复实现 repo 基线能力时才进入整改。
+- 不得把 Python 代码规范、胖文件治理或 language-specific lint 细则重新写回本技能；这些应继续交给 `Dev-PythonCode-Constitution` 或对应语言治理技能。
 - 新增任何 runtime-facing contract/workflow/instruction/guide 时，必须继续遵守 `*_human.md + same-name .json` 双文件形态。
 
 ## 9. 结构索引

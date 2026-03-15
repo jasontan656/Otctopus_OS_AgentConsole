@@ -7,11 +7,13 @@
   "instruction": [
     "Lock the target skill path and the concrete tooling file scope before reading details.",
     "Use this skill to judge semantic redundancy against the repo-local mandatory tech stack baseline, not by filename or function-name resemblance alone.",
-    "If runtime logs or outputs are in scope, also consume the output-governance directive before concluding."
+    "If the task touches CLI contract, command surface, or output shape, also consume the cli-surface directive before concluding.",
+    "If runtime logs or outputs are in scope, also consume the output-governance directive before concluding.",
+    "If the target issue is really about Python or TypeScript language style rather than tooling boundary, hand it off to the relevant language constitution instead of restating those rules here."
   ],
   "workflow": [
     "Read the target skill facade or runtime contract only far enough to discover its local execution surface.",
-    "Compare target behavior against the repo-local mandatory baseline and the common redundant wheel patterns.",
+    "Compare target behavior against the repo-local mandatory baseline, CLI-surface contract, tooling-boundary guide, and common redundant wheel patterns as needed.",
     "State which conclusions are proven, which are still unknown, and whether remediation is justified."
   ],
   "rules": [

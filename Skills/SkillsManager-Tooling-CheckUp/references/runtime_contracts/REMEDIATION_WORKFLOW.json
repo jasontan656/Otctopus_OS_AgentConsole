@@ -7,11 +7,12 @@
   "instruction": [
     "Enter remediation only after read-only evidence shows the target implementation is replaceable without semantic loss.",
     "Prefer delete or shrink over stacking adapters on top of redundant custom code.",
-    "When outputs are in scope, remediation must include code path changes, default path changes, document declaration changes, and historical migration responsibility."
+    "When outputs are in scope, remediation must include code path changes, default path changes, document declaration changes, and historical migration responsibility.",
+    "When the issue is only language-specific code style or file-shape, do not remediate it here; hand it off to the relevant language constitution."
   ],
   "workflow": [
     "Read the target skill local contract and execution surface before editing.",
-    "Use the techstack-baseline and output-governance directives to confirm replacement gates are satisfied.",
+    "Use the techstack-baseline, cli-surface, tooling-boundary, and output-governance directives as needed to confirm replacement gates are satisfied.",
     "Rewrite the minimal correct scope, then validate with the target skill's existing tests and lint commands.",
     "If Python files changed, finish by running Dev-PythonCode-Constitution lint on the concrete target scope."
   ],

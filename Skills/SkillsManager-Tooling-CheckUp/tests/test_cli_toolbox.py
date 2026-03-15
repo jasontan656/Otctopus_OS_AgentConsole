@@ -36,6 +36,9 @@ class CliToolboxTests(unittest.TestCase):
         payload = json.loads(completed.stdout)
         self.assertEqual(payload["contract_name"], "skills_tooling_checkup_runtime_contract")
         self.assertEqual(payload["tool_entry"]["commands"]["contract"], "./.venv_backend_skills/bin/python Skills/SkillsManager-Tooling-CheckUp/scripts/Cli_Toolbox.py contract --json")
+        topics = {item["topic"] for item in payload["directive_topics"]}
+        self.assertIn("cli-surface", topics)
+        self.assertIn("tooling-boundary", topics)
 
     def test_directive_returns_known_topic(self) -> None:
         completed = run_cli("directive", "--topic", "read-audit", "--json")
@@ -43,6 +46,13 @@ class CliToolboxTests(unittest.TestCase):
         payload = json.loads(completed.stdout)
         self.assertEqual(payload["topic"], "read-audit")
         self.assertEqual(payload["doc_kind"], "instruction")
+
+    def test_directive_returns_cli_surface_topic(self) -> None:
+        completed = run_cli("directive", "--topic", "cli-surface", "--json")
+        self.assertEqual(completed.returncode, 0, completed.stderr)
+        payload = json.loads(completed.stdout)
+        self.assertEqual(payload["topic"], "cli-surface")
+        self.assertEqual(payload["doc_kind"], "contract")
 
     def test_directive_rejects_unknown_topic(self) -> None:
         completed = run_cli("directive", "--topic", "missing-topic", "--json")

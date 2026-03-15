@@ -11,12 +11,13 @@
   ],
   "workflow": [
     "Map the target implementation to the capability it is trying to provide.",
-    "Check whether the mandatory baseline already covers that capability directly enough to remove the custom implementation.",
-    "If the target logic is domain-specific or repo-specific beyond the baseline, keep it or narrow the rewrite scope."
+    "Check whether the mandatory baseline already covers that capability directly enough to replace, shrink, or delete the custom implementation.",
+    "If the target logic still carries repo-specific orchestration, compatibility semantics, or domain policy beyond the baseline, keep that layer and only remove the truly generic wheel."
   ],
   "rules": [
     "Do not add new dependency requirements from this guide alone.",
     "Do not force replacement when the baseline cannot preserve target semantics.",
-    "Pattern resemblance is only a suspicion signal; behavior alignment remains mandatory."
+    "Pattern resemblance is only a suspicion signal; behavior alignment remains mandatory.",
+    "Do not restate Python or TypeScript code-style rules here; this guide only decides capability overlap against existing dependencies."
   ]
 }

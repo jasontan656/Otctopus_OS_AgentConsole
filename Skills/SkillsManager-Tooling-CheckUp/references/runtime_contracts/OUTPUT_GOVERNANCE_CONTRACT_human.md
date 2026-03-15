@@ -32,14 +32,16 @@ anchors:
     "Directed-output skills must support or require an explicit output path; if omitted, the default must still fall back to /home/jasontan656/AI_Projects/Codex_Skills_Result."
   ],
   "workflow": [
-    "Inspect code semantics for write paths, fallback paths, and user-controlled output arguments.",
+    "Inspect code semantics for write paths, fallback paths, temporary debug paths, and user-controlled output arguments.",
+    "Distinguish runtime logs, audit traces, generic results, and directed exports; each category must have a governed destination and reason.",
     "Inspect skill-facing docs or runtime contracts to confirm the same paths are declared, not merely implied in code.",
     "If legacy artifacts exist outside governed roots, include migration or explicit disposition rules in the remediation scope."
   ],
   "rules": [
     "Do not treat string grep alone as output governance proof.",
     "Do not declare governance complete when code, docs, defaults, and migration duties are not all closed.",
-    "Do not silently preserve scattered historical paths without a declared migration or retention policy."
+    "Do not silently preserve scattered historical paths without a declared migration or retention policy.",
+    "Do not let temporary debug dumps or audit traces fall back to arbitrary working directories just because they are not final user outputs."
   ]
 }
 ```
