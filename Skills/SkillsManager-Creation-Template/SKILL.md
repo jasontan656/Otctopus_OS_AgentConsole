@@ -7,39 +7,56 @@ metadata:
     doc_type: skill_facade
     topic: Entry facade for the SkillsManager-Creation-Template skill
     anchors:
-    - target: ./references/runtime/SKILL_RUNTIME_OVERVIEW.md
+    - target: ./path/00_SKILL_ENTRY.md
       relation: routes_to
       direction: downstream
-      reason: The facade routes runtime execution to the runtime overview contract.
+      reason: The facade routes readers into the single path-first entry doc.
 ---
 
 # SkillsManager-Creation-Template
 
-## 1. Immediate Contract
-- Primary runtime entry: `./.venv_backend_skills/bin/python Skills/SkillsManager-Creation-Template/scripts/Cli_Toolbox.py runtime-contract --json`
-- `SKILL.md` 只保留 `Immediate Contract` 与 `Structured Entry` 两段，不承载模板治理正文。
-- 本技能负责把“创建新技能”“治理既有 skill”“维护模板资产与生成器”收敛为同一套模板控制面。
+## 1. 模型立刻需要知道的事情
+### 1. 总览
+- 本技能只负责两件事：一键落盘三种技能模板，以及维护这三种模板的位置注册。
 - 当前模板分三类 `skill_mode`：`guide_only`、`guide_with_tool`、`executable_workflow_skill`。
-- 真实规则源以 CLI JSON 与 machine-readable contracts 为准；markdown 只做人类审计与窄域导航。
-- `guide_only` 是单文件例外；只有 `guide_with_tool` 与 `executable_workflow_skill` 必须保持极简 façade。
-- 若某段内容既不是模型必须立刻知道的约束，也不是下一跳结构化入口，就必须下沉到 routing、topic、index 或 tooling docs。
-- 不适用于：直接代替目标 skill 编写业务语义，或替代 mirror / git / installer 职责。
+- 其中 `guide_with_tool` 的语义应理解为单线入口内的 `tool/lint` 能力面，而不是强制每个技能都必须提供业务工具。
+- 本技能自身已改为 `path-first / next-hop-only / action-closed-loop` 展示面。
+- 技能创建完成后的文档组织、锚点写法、`SKILL.md` 约束与链路维护，后续统一交给 `SkillsManager-Doc-Structure`。
+- 不适用于：直接代替目标 skill 编写业务语义，或承担技能创建后的文档结构治理职责。
 
-## 2. Structured Entry
-1. 先读取 `./.venv_backend_skills/bin/python Skills/SkillsManager-Creation-Template/scripts/Cli_Toolbox.py runtime-contract --json`。
-2. 再读取 `references/routing/TASK_ROUTING.md`，按任务意图分流。
-3. 若任务涉及 `skill_mode` 选择，再读取 `references/routing/PROFILE_ROUTING.md`。
-4. 若任务涉及新建或治理 skill 结构，必须读取 `references/governance/SKILL_DOCSTRUCTURE_ENFORCEMENT.md`。
-5. 真正动手前，再按分支进入 `SKILL_AUTHORING_RULES.md`、`SKILL_ARCHITECTURE_PLAYBOOK.md`、`STAGED_PROFILE_REFERENCE.md`、`DOC_TREE.md` 或 tooling docs。
-- 入口：
-  - `references/runtime/SKILL_RUNTIME_OVERVIEW.json`
-  - `references/runtime/SKILL_RUNTIME_OVERVIEW.md`
-  - `references/routing/TASK_ROUTING.md`
-  - `references/routing/PROFILE_ROUTING.md`
-  - `references/governance/SKILL_DOCSTRUCTURE_ENFORCEMENT.md`
-  - `references/governance/SKILL_AUTHORING_RULES.md`
-  - `references/governance/SKILL_ARCHITECTURE_PLAYBOOK.md`
-  - `references/governance/STAGED_PROFILE_REFERENCE.md`
-  - `references/indexes/DOC_TREE.md`
-  - `references/tooling/Cli_Toolbox_USAGE.md`
-  - `./.venv_backend_skills/bin/python Skills/SkillsManager-Creation-Template/scripts/Cli_Toolbox.py create-skill-from-template --skill-name <name> --target-root <path> --skill-mode <guide_only|guide_with_tool|executable_workflow_skill> --overwrite`
+### 2. 技能约束
+- `SKILL.md` 只保留三段：`模型立刻需要知道的事情`、`唯一入口` 与 `目录结构图`。
+- `SKILL.md` 只指向一个下一级 md；不并列暴露多个深层文件。
+- 物理目录组织必须跟随阅读顺序逐级向下，不允许“一个入口文件夹平铺所有后续文件，再仅靠内联控制读序”。
+- 根目录只保留：`SKILL.md`、`path/`、`agents/`、`scripts/`。
+- 不允许继续保留：`references/`、`assets/`、`tests/` 作为主组织轴。
+- 模型沿单条线路阅读时，应优先进入当前动作闭环：
+  - `contract`
+  - `tools`（可选）
+  - `execution`
+  - `validation`
+- 命令脚本本体统一位于 `scripts/`；命令说明必须写在对应节点文档里。
+- 真实规则源以 `runtime-contract --json` 与 machine-readable contract 为准；markdown 负责窄域导航与行为收敛。
+
+### 3. 顶层常驻合同
+- `./.venv_backend_skills/bin/python Skills/SkillsManager-Creation-Template/scripts/Cli_Toolbox.py runtime-contract --json`
+- `path/00_SKILL_ENTRY.md`
+
+## 2. 唯一入口
+- [技能主入口]：`path/00_SKILL_ENTRY.md`
+  - 作用：把读者送入唯一的 path-first 起点，再按行为分支逐层收窄到当前动作闭环。
+
+## 3. 目录结构图
+```text
+SkillsManager-Creation-Template/
+├── SKILL.md
+├── agents/
+├── path/
+│   ├── 00_SKILL_ENTRY.md
+│   ├── template_creation/
+│   └── maintenance/
+└── scripts/
+```
+- `path/`：本技能唯一的文档承载面，所有合同、执行说明与校验说明都随节点下沉。
+- `scripts/`：CLI 工具、生成器与测试脚本所在目录。
+- `agents/`：agent runtime config。

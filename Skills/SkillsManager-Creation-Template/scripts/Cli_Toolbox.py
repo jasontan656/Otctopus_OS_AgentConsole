@@ -5,26 +5,12 @@ import argparse
 import json
 import subprocess
 from pathlib import Path
-from typing import TypedDict, cast
+from typing import TypedDict
 
+from skill_blueprints import GUIDE_WITH_TOOL_MODE, SKILL_MODE_CHOICES, runtime_contract_payload
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 SKILL_ROOT = SCRIPT_DIR.parent
-
-
-class ToolEntryPayload(TypedDict):
-    script: str
-    commands: dict[str, str]
-
-
-class RuntimeContractPayload(TypedDict, total=False):
-    contract_name: str
-    contract_version: str
-    skill_name: str
-    runtime_source_policy: dict[str, object]
-    tool_entry: ToolEntryPayload
-    must_use_sequence: list[str]
-    skill_root: str
 
 
 class TextAssetPayload(TypedDict):
@@ -34,16 +20,15 @@ class TextAssetPayload(TypedDict):
     content: str
 
 
-Payload = RuntimeContractPayload | TextAssetPayload
-SKILL_MODE_CHOICES = ("guide_only", "guide_with_tool", "executable_workflow_skill")
-
-
-def emit(payload: Payload, as_json: bool) -> int:
+def emit(payload: object, as_json: bool) -> int:
     if as_json:
         print(json.dumps(payload, ensure_ascii=False, indent=2))
         return 0
-    for key, value in payload.items():
-        print(f"{key}: {value}")
+    if isinstance(payload, dict):
+        for key, value in payload.items():
+            print(f"{key}: {value}")
+        return 0
+    print(payload)
     return 0
 
 
@@ -64,8 +49,6 @@ def cmd_create_skill_from_template(args: argparse.Namespace) -> int:
         args.skill_name,
         "--target-root",
         args.target_root,
-        "--resources",
-        args.resources,
         "--description",
         args.description,
     ]
@@ -82,14 +65,20 @@ def cmd_create_skill_from_template(args: argparse.Namespace) -> int:
 
 def cmd_guide_only_template(args: argparse.Namespace) -> int:
     return emit(
-        text_payload(SKILL_ROOT / "assets" / "skill_template" / "SKILL_TEMPLATE_GUIDE_ONLY.md", "guide_only_template"),
+        text_payload(
+            SKILL_ROOT / "path" / "template_creation" / "guide_only" / "12_TEMPLATE.md",
+            "guide_only_template",
+        ),
         args.json,
     )
 
 
 def cmd_guide_with_tool_template(args: argparse.Namespace) -> int:
     return emit(
-        text_payload(SKILL_ROOT / "assets" / "skill_template" / "SKILL_TEMPLATE.md", "guide_with_tool_template"),
+        text_payload(
+            SKILL_ROOT / "path" / "template_creation" / "guide_with_tool" / "12_TEMPLATE.md",
+            "guide_with_tool_template",
+        ),
         args.json,
     )
 
@@ -97,67 +86,25 @@ def cmd_guide_with_tool_template(args: argparse.Namespace) -> int:
 def cmd_executable_workflow_template(args: argparse.Namespace) -> int:
     return emit(
         text_payload(
-            SKILL_ROOT / "assets" / "skill_template" / "SKILL_TEMPLATE_STAGED.md",
+            SKILL_ROOT / "path" / "template_creation" / "executable_workflow_skill" / "12_TEMPLATE.md",
             "executable_workflow_template",
         ),
         args.json,
     )
 
 
-def cmd_openai_template(args: argparse.Namespace) -> int:
-    return emit(text_payload(SKILL_ROOT / "assets" / "skill_template" / "openai_template.yaml", "openai_template"), args.json)
-
-
-def cmd_contract_reference(args: argparse.Namespace) -> int:
+def cmd_template_registry(args: argparse.Namespace) -> int:
     return emit(
         text_payload(
-            SKILL_ROOT / "references" / "governance" / "SKILL_AUTHORING_RULES.md",
-            "contract_reference",
-        ),
-        args.json,
-    )
-
-
-def cmd_staged_skill_reference(args: argparse.Namespace) -> int:
-    return emit(
-        text_payload(
-            SKILL_ROOT / "references" / "governance" / "STAGED_PROFILE_REFERENCE.md",
-            "staged_skill_reference",
-        ),
-        args.json,
-    )
-
-
-def cmd_executable_workflow_reference(args: argparse.Namespace) -> int:
-    return cmd_staged_skill_reference(args)
-
-
-def cmd_runtime_contract_template(args: argparse.Namespace) -> int:
-    return emit(
-        text_payload(
-            SKILL_ROOT / "assets" / "skill_template" / "runtime" / "SKILL_RUNTIME_CONTRACT_TEMPLATE.json",
-            "runtime_contract_template",
-        ),
-        args.json,
-    )
-
-
-def cmd_architecture_playbook(args: argparse.Namespace) -> int:
-    return emit(
-        text_payload(
-            SKILL_ROOT / "references" / "governance" / "SKILL_ARCHITECTURE_PLAYBOOK.md",
-            "architecture_playbook",
+            SKILL_ROOT / "path" / "maintenance" / "template_registry" / "00_TEMPLATE_REGISTRY.md",
+            "template_registry",
         ),
         args.json,
     )
 
 
 def cmd_runtime_contract(args: argparse.Namespace) -> int:
-    payload = cast(
-        RuntimeContractPayload,
-        json.loads((SKILL_ROOT / "references" / "runtime" / "SKILL_RUNTIME_OVERVIEW.json").read_text(encoding="utf-8")),
-    )
-    return emit(payload, args.json)
+    return emit(runtime_contract_payload("SkillsManager-Creation-Template", GUIDE_WITH_TOOL_MODE), args.json)
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -167,7 +114,6 @@ def build_parser() -> argparse.ArgumentParser:
     create_skill = subparsers.add_parser("create-skill-from-template")
     create_skill.add_argument("--skill-name", required=True)
     create_skill.add_argument("--target-root", required=True)
-    create_skill.add_argument("--resources", default="scripts,references,assets,tests")
     create_skill.add_argument("--description", default="")
     create_skill.add_argument("--skill-mode", choices=SKILL_MODE_CHOICES)
     create_skill.add_argument("--overwrite", action="store_true")
@@ -179,12 +125,7 @@ def build_parser() -> argparse.ArgumentParser:
         ("executable-workflow-template", cmd_executable_workflow_template),
         ("skill-template", cmd_guide_with_tool_template),
         ("staged-skill-template", cmd_executable_workflow_template),
-        ("openai-template", cmd_openai_template),
-        ("contract-reference", cmd_contract_reference),
-        ("staged-skill-reference", cmd_staged_skill_reference),
-        ("executable-workflow-reference", cmd_executable_workflow_reference),
-        ("runtime-contract-template", cmd_runtime_contract_template),
-        ("architecture-playbook", cmd_architecture_playbook),
+        ("template-registry", cmd_template_registry),
         ("runtime-contract", cmd_runtime_contract),
     ):
         sub = subparsers.add_parser(name)
