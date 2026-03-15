@@ -57,17 +57,16 @@ def render_skill_md(skill_name: str, description: str, skill_mode: str) -> str:
             "",
             "## 1. 模型立刻需要知道的事情",
             "### 1. 总览",
-            f"- 本技能采用 `{skill_mode}` 形态。",
-            "- 本文件既是门面，也是完整技能正文的唯一承载面。",
-            "- 根目录只保留 `SKILL.md / agents`。",
+            "- 当前形态为最小技能。",
+            "- `SKILL.md` 承载完整正文。",
+            "- 根目录包含 `SKILL.md / agents`。",
             "",
             "### 2. 技能约束",
-            "- 不生成 `path/`。",
-            "- 不生成 `scripts/`。",
-            "- 不提供链路编译型 CLI。",
+            "- 不使用 `path/`。",
+            "- 不使用 `scripts/`。",
             "",
             "### 3. 顶层常驻合同",
-            "- `SKILL.md` 本身就是唯一入口与唯一正文。",
+            "- 阅读从 `SKILL.md` 开始，也在 `SKILL.md` 内结束。",
             "",
             "## 2. 技能正文",
             "- [在此直接填写目标技能的完整正文，不要假设存在 `path/` 或 `scripts/`。]",
@@ -81,10 +80,10 @@ def render_skill_md(skill_name: str, description: str, skill_mode: str) -> str:
         return "\n".join(frontmatter + body)
 
     overview = [
-        f"- 本技能采用 `{skill_mode}` 形态。",
-        "- `SKILL.md + path/*.md` 是结构化真源。",
-        "- frontmatter 中的 `reading_chain` 定义模型阅读顺序与 CLI 路径编译顺序。",
-        "- `scripts/` 必须提供 `read-path-context`，把选中链路编译成完整上下文 JSON。",
+        f"- 当前形态为 `{skill_mode}`。",
+        "- `SKILL.md + path/*.md` 承载完整正文。",
+        "- 功能入口通过 `reading_chain` 继续下沉。",
+        "- `scripts/` 提供 `read-path-context`。",
     ]
     if skill_mode == GUIDE_WITH_TOOL_MODE:
         constraints = [

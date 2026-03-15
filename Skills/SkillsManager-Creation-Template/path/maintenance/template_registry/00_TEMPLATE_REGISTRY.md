@@ -6,10 +6,6 @@ topic: Single template registry for creation template maintenance
 
 # Template Registry
 
-## 这个文件是干什么的
-- `[模板维护]` 分支只保留这一个注册文件。
-- 它不承载模板本体，只登记三条创建链路里实际模板文件的位置。
-
 ## 已注册模板位置
 1. [guide_only]：`../../template_creation/guide_only/12_TEMPLATE.md`
 2. [guide_with_tool]：`../../template_creation/guide_with_tool/12_TEMPLATE.md`
@@ -19,9 +15,3 @@ topic: Single template registry for creation template maintenance
 - [guide_only 模板位置]：`../../template_creation/guide_only/12_TEMPLATE.md`
 - [guide_with_tool 模板位置]：`../../template_creation/guide_with_tool/12_TEMPLATE.md`
 - [executable_workflow_skill 模板位置]：`../../template_creation/executable_workflow_skill/12_TEMPLATE.md`
-
-## 维护要求
-- 若任一创建链路的模板文件位置发生变化，必须先更新这里。
-- 模板本体始终留在各自创建链路中；这里不复制模板内容。
-- 生成器、CLI 与回归断言必须与这里的注册位置保持同步。
-- 技能创建完成后的文档结构、`reading_chain` 与门面规则，不在本技能维护范围内。

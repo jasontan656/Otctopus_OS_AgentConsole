@@ -34,15 +34,9 @@ metadata:
 - 适用于：检查带 `scripts/` 且带 `path/` 的技能，是否提供可工作的 `read-path-context`，并能把文档真源编译成完整链路上下文。
 
 ## 3. 运行时边界
-- 本技能只治理 tooling surface，不接管目标技能的门面和文档组织。
-- 对 path 技能的硬要求是：
-  - 若目标技能同时存在 `scripts/` 与 `path/`，且不是 `guide_only`，则必须提供可工作的 `read-path-context`。
-- `read-path-context` 的职责是：
-  - 接收一个功能入口
-  - 沿目标技能 frontmatter 中的 `reading_chain` 逐级向下
-  - 输出稳定 JSON
-  - 返回完整 `resolved_chain / segments / compiled_markdown`
-- CLI 是文档真源的编译器，不是另一套独立真源。
+- 带 `scripts/ + path/` 且不是 `guide_only` 的技能，需要提供可工作的 `read-path-context`。
+- `read-path-context` 读取一个功能入口，沿 `reading_chain` 向下，返回 `resolved_chain / segments / compiled_markdown`。
+- CLI 输出的是文档链的编译结果，不是另一套独立真源。
 
 ## 4. 必读顺序
 1. 先执行 `contract --json`。
@@ -51,10 +45,10 @@ metadata:
 4. 只有当 JSON 仍留下真实语义缺口时，才回读 human mirror 或 legacy 参考文档。
 
 ## 5. 约束
-- 不得把目标技能的文档形态问题误判成 tooling 违规。
-- 不得把 `reading_chain` 的组织规则解释成由本技能治理；本技能只检查 path 技能是否能用 CLI 正确编译这条链。
-- 不得把 Python 胖文件、typing 风格、异常风格等语言规范重新写回本技能。
-- 若目标技能的 `read-path-context` 输出顺序错误、漏节点、跨链污染或 JSON 不稳定，应判为 tooling 违规。
+- 文档形态问题不算 tooling 违规。
+- `reading_chain` 的组织规则不在本技能内裁决；这里只检查 CLI 是否能正确编译它。
+- Python 胖文件、typing 风格、异常风格等语言规范继续交给对应 constitution。
+- 若 `read-path-context` 输出顺序错误、漏节点、跨链污染或 JSON 不稳定，应判为 tooling 违规。
 
 ## 6. 参考入口
 - Runtime 合同：`references/runtime_contracts/SKILL_RUNTIME_CONTRACT.json`

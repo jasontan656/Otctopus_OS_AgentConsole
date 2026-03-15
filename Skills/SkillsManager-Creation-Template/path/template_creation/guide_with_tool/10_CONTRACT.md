@@ -27,7 +27,7 @@ reading_chain:
   - `agents/openai.yaml`
   - `scripts/Cli_Toolbox.py`
   - `scripts/test_skill_layout.py`
-- 门面保持极简，不回填深规则正文。
+- 深层正文沿当前入口继续下沉。
 - 入口层可以后续扩展为多入口索引，但任何入口内部都不得再次分叉。
 - `15_TOOLS.md` 节点承载当前入口自己的 tool/lint 说明；若该技能只有 lint，也仍然在这里写清楚。
 - 不得生成：
