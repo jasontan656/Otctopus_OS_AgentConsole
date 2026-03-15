@@ -49,26 +49,29 @@ anchors:
   - `OpenTelemetry`
 
 ## 对象归属
-- `Octopus_Hub`：
-  - 主要承载 `Python 3.12 + FastAPI + Pydantic v2`
-  - 作用：提供中枢 API、路由与生命周期控制
+- `Development_Docs/`：
+  - 承载项目级非运行态治理资料，例如架构说明、技术基线、graph/runtime 索引与 repo 级证据入口
+  - 它不是应用运行对象，不承载 `FastAPI` 或业务代码
 - `Foundation_Bundle`：
   - 主要承载 `Python 3.12 + FastAPI + Pydantic v2 + SQLAlchemy 2 + Alembic + Celery + structlog + OpenTelemetry`
-  - 作用：提供业务必经的底层执行能力
-- `Capability_Modules/*`：
+  - 作用：作为后端根容器统一承载平台能力、业务模块、集成适配与基础设施合同
+- `Foundation_Bundle/Domain_Modules/*`：
   - 默认沿用服务端项目级基线 `Python 3.12 + FastAPI + Pydantic v2`
   - 是否使用 `SQLAlchemy 2`、`Celery` 等由模块依赖决定，但不得绕过 `Foundation_Bundle` 的项目级合同
-- `Client_Applications/Unified_Portal`：
+- `Client_Applications/`：
   - 固定承载 `Vue 3 + TypeScript + Vite`
-  - 作用：作为章鱼OS面向人类用户的统一客户端应用对象，而不是系统中枢
-  - 项目结构层当前只固定其对象根与 `Development_Docs/`；具体前端目录形态下沉到客户端域实现阶段决定
-- `Integration_Adapters/OpenAPI_Adapter` 与 `Integration_Adapters/Webhook_Adapter`：
+  - 作用：作为章鱼OS当前单一前端实现根，而不是系统中枢
+  - `Unified_Portal` 继续作为当前单一客户端产品语义存在，但物理路径不再包一层 `Unified_Portal/` 目录；产品级开发文档统一收敛到 repo 根 `Development_Docs/`
+- `Foundation_Bundle/Integration_Adapters/OpenAPI_Adapter` 与 `Foundation_Bundle/Integration_Adapters/Webhook_Adapter`：
   - 默认承载服务端项目级基线
-  - 作用：把外部协议接入中枢或业务模块
-- `Infra_Contracts/*`：
+  - 作用：把外部协议接入 `Foundation_Bundle` 或业务模块
+- `Foundation_Bundle/Infra_Contracts/*`：
   - 只声明 `PostgreSQL`、`Redis`、`MongoDB`、`Kafka`、`ClickHouse`、`OpenSearch`、`Object_Storage` 在系统中的位置和接入约束
   - 不承载应用层实现代码
+- `Deploy_Guide/`：
+  - 承载 `Docker`、`Docker Compose`、环境模板、CI 与部署门禁说明
+  - 它不是业务代码对象，但属于项目级交付必需容器
 
 ## 排除项
-- `Nginx`、`Traefik`、`Caddy` 这类边缘代理不是章鱼OS当前阶段的宪法级核心对象；如后续需要接入，应作为 `Deploy/` 或入口适配附属物治理。
+- `Nginx`、`Traefik`、`Caddy` 这类边缘代理不是章鱼OS当前阶段的宪法级核心对象；如后续需要接入，应作为 `Deploy_Guide/` 或入口适配附属物治理。
 - 前端状态管理、UI 组件库、后端内部包管理、测试框架等域内细节，不在本文固定范围内。

@@ -12,7 +12,8 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `Octopus_OS` repository root contain
 
 2. 当前治理占位
 - 当前受管容器：`Octopus_OS`。
-- 用户后续应补全该 repo 根的专属治理内容。
+- Development related task must go through `$Workflow-CentralFlow2-OctppusOS`。
+- 当任务进入 `Development_Docs` 或 `mother_doc` 写入时，先跳转到 `/home/jasontan656/AI_Projects/Octopus_OS/Development_Docs/AGENTS.md` 再执行。
 </part_A>
 
 <part_B>
@@ -33,7 +34,9 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `Octopus_OS` repository root contain
     "$Meta-RootFile-Manager (AGENTS governance mapping flow)"
   ],
   "turn_start_actions": [],
-  "runtime_constraints": [],
+  "runtime_constraints": [
+    "Development related task must go through `$Workflow-CentralFlow2-OctppusOS`."
+  ],
   "execution_modes": {
     "READ_EXEC": {
       "goal": "inspect or answer without changing Octopus_OS files",
@@ -48,7 +51,9 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `Octopus_OS` repository root contain
       ]
     }
   },
-  "repo_local_contract_handoff": [],
+  "repo_local_contract_handoff": [
+    "When the task becomes Development_Docs or mother_doc related, route execution into `/home/jasontan656/AI_Projects/Octopus_OS/Development_Docs/AGENTS.md` before writing."
+  ],
   "forbidden_primary_runtime_pattern": [],
   "turn_end_actions": [],
   "repo_name": "Octopus_OS"

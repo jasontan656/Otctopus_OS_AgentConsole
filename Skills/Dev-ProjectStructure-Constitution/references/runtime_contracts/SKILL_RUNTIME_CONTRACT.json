@@ -1,6 +1,6 @@
 {
   "contract_name": "dev_projectstructure_constitution_runtime_contract",
-  "contract_version": "3.1.0",
+  "contract_version": "4.1.0",
   "skill_name": "Dev-ProjectStructure-Constitution",
   "runtime_source_policy": {
     "primary_runtime_source": "CLI_JSON",
@@ -17,6 +17,27 @@
     "Read the runtime contract through the CLI JSON entry before deep references.",
     "Treat SKILL.md as a facade and route deeper only after the contract is known."
   ],
+  "project_structure_constitution": {
+    "authoritative_root_dirs": [
+      "Client_Applications",
+      "Development_Docs",
+      "Foundation_Bundle",
+      "Deploy_Guide"
+    ],
+    "removed_legacy_root_dirs": [
+      "Mother_Doc",
+      "Octopus_Hub",
+      "System_Manifests",
+      "Capability_Modules",
+      "Integration_Adapters",
+      "Infra_Contracts",
+      "Deploy"
+    ],
+    "project_doc_policy": "Project-wide development documentation, architecture notes, evidence, current frontend product mother_doc, and graph/runtime registry assets belong in Development_Docs, README.md, or an owning object's Development_Docs.",
+    "client_root_policy": "The single frontend implementation root lives directly in Client_Applications; do not create Client_Applications/Unified_Portal or Client_Applications/*/Development_Docs for the current Octopus_OS phase.",
+    "backend_root_policy": "All backend platform capabilities, business modules, integration adapters, and infrastructure contracts must converge under Foundation_Bundle.",
+    "delivery_root_policy": "Deployment scripts, CI, environment templates, and gatekeeping assets must converge under Deploy_Guide."
+  },
   "naming_constitution": {
     "object_root_rule": "Object root directories express object identity only.",
     "capability_dir_rule": "Do not pre-create abstract role directories such as Common/Core at project-structure level; pre-create only real capability boundaries or real object responsibilities.",

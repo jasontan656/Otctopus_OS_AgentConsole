@@ -12,6 +12,7 @@
   "workflow": [
     "Confirm whether the user request is read-only or write execution.",
     "If the task writes files, resolve the managed zone first and keep the destination under Human_Work_Zone.",
+    "Temporary governance files must still land inside the registered Temporary_Files zone; do not create ad hoc sibling folders at the Human_Work_Zone root.",
     "When intake changes folder names, preserve content bodies and only normalize the container name and inventory entries.",
     "After file placement changes, update the relevant zone README before closing the turn."
   ],

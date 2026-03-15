@@ -18,10 +18,10 @@ anchors:
 ## 当前分叉轴线
 - 本文只按“章鱼OS项目结构任务意图”分流，不处理域内实现细节。
 
-## 分支一：问项目整体定位与中枢边界
+## 分支一：问项目整体定位、对象归属与跨对象合同
 - 先读 `../governance/SKILL_EXECUTION_RULES.md`。
-- 再读 `../project_structure/OCTOPUS_OS_HUB_POSITIONING_MODEL.md`。
-- 若问题涉及“某域在章鱼OS里算什么对象”，再补 `../project_structure/DOMAIN_OBJECT_POSITIONING_BOUNDARY.md`。
+- 再读 `../project_structure/DOMAIN_OBJECT_POSITIONING_BOUNDARY.md`。
+- 若问题涉及“当前阶段技术对象归属已经定成什么”，再补 `../project_structure/PROJECT_TECHSTACK_BASELINE.md`。
 
 ## 分支二：问模块插拔、依赖关系与底座能力
 - 先读 `../governance/SKILL_EXECUTION_RULES.md`。

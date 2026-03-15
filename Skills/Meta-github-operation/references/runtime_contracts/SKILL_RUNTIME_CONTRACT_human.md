@@ -14,3 +14,6 @@ anchors:
 - Primary runtime entry: `./.venv_backend_skills/bin/python Skills/Meta-github-operation/scripts/Cli_Toolbox.py contract --json`
 - CLI JSON is the primary runtime source.
 - `SKILL.md` remains a facade and narrative mirror.
+- This skill is a default runtime hook for Git traceability in `Octopus_OS` and `Otctopus_OS_AgentConsole`.
+- AI traceable record remotes are the default write target.
+- Human-controlled remotes remain available, but only when the human explicitly requests that write.

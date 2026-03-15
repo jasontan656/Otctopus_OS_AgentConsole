@@ -1,4 +1,6 @@
-interface:
-  display_name: SkillsManager-Mirror-To-Codex
-  short_description: 在 Push/Install 双模式之间自动导航，把 mirror skill 导入 codex 安装目录。
-  default_prompt: Use $SkillsManager-Mirror-To-Codex. First run `./.venv_backend_skills/bin/python Skills/SkillsManager-Mirror-To-Codex/scripts/Cli_Toolbox.py contract --json`. Treat CLI JSON as the primary runtime source and use markdown mirrors only when the contract still leaves a real gap.
+version: 1
+agent:
+  name: Skillsmanager Mirror To Codex
+  description: SkillsManager-Mirror-To-Codex skill agent for guide_with_tool
+  default_prompt: |
+    Use $SkillsManager-Mirror-To-Codex.

@@ -30,9 +30,9 @@ metadata:
 1. 先读取 `references/routing/TASK_ROUTING.md`。
 2. 再读取 `references/governance/SKILL_DOCSTRUCTURE_POLICY.md`。
 3. 再读取 `references/governance/SKILL_EXECUTION_RULES.md`。
-4. 若任务在问章鱼OS整体定位、中枢边界或对象归属，再读取：
-   - `references/project_structure/OCTOPUS_OS_HUB_POSITIONING_MODEL.md`
+4. 若任务在问章鱼OS整体定位、对象归属或跨对象合同，再读取：
    - `references/project_structure/DOMAIN_OBJECT_POSITIONING_BOUNDARY.md`
+   - `references/project_structure/PROJECT_TECHSTACK_BASELINE.md`
 5. 若任务在问模块插拔、能力依赖、底座 bundle 或常驻能力边界，再读取：
    - `references/project_structure/CAPABILITY_MODULE_HOTPLUG_RULES.md`
    - `references/project_structure/FOUNDATION_CAPABILITY_BUNDLE_BOUNDARY.md`
@@ -48,7 +48,6 @@ metadata:
   - `references/governance/SKILL_DOCSTRUCTURE_POLICY.md`
   - `references/governance/SKILL_EXECUTION_RULES.md`
 - 项目结构层：
-  - `references/project_structure/OCTOPUS_OS_HUB_POSITIONING_MODEL.md`
   - `references/project_structure/DOMAIN_OBJECT_POSITIONING_BOUNDARY.md`
   - `references/project_structure/CAPABILITY_MODULE_HOTPLUG_RULES.md`
   - `references/project_structure/FOUNDATION_CAPABILITY_BUNDLE_BOUNDARY.md`
@@ -61,7 +60,7 @@ metadata:
   - `references/tooling/*`
 
 ## 4. 适用域
-- 适用于：章鱼OS整体架构设计、项目级对象定位、模块热插拔边界、底座能力常驻边界、项目目录/容器规划、未来 lint 门禁的结构性依据。
+- 适用于：章鱼OS整体架构设计、项目级对象定位、跨对象合同边界、模块热插拔边界、底座能力常驻边界、项目目录/容器规划、未来 lint 门禁的结构性依据。
 - 适用于：固定章鱼OS当前阶段的项目级技术选型，并声明这些技术在系统中的定位与归属。
 - 适用于：判断一个域在章鱼OS中应被视为“完整对象”“底座能力模块”还是“入口/适配层对象”。
 - 不适用于：具体前端实现规范、具体后端域模型设计、具体数据库 schema、具体页面组件架构、具体业务工作流细则。
@@ -80,6 +79,11 @@ metadata:
 - 逻辑解耦优先于物理拆分；本技能允许“逻辑上可插拔、物理上先 bundle 部署”的过渡形态。
 - 物理路径一次只表达一层语义：对象身份、能力边界、运行态、阶段态不得堆叠进同一层目录名。
 - 不预置 `Common/`、`Core/` 这类高抽象内部角色骨架；只有真实代表未来可独立演化或拆部署的能力目录，才允许在项目结构层预留。
+- 章鱼OS当前采用全栈开发项目骨架；顶层固定收敛为 `Development_Docs/`、`Client_Applications/`、`Foundation_Bundle/`、`Deploy_Guide/` 与仓库元文件。
+- `Development_Docs/` 承载项目级开发文档、当前单一前端产品的 mother_doc/graph/runtime 资产、架构说明与阶段证据；它是 repo 级文档容器，不是某个运行对象。
+- `Client_Applications/` 当前直接作为单一前端实现根使用；不再额外包一层 `Unified_Portal/` 对象壳，也不再在其下嵌套 `Development_Docs/`。
+- `Foundation_Bundle/` 是后端根容器；业务模块、集成适配与基础设施合同都要下沉到这个后端根内，而不是继续平铺在仓库顶层。
+- `Deploy_Guide/` 承载部署脚本、环境模板、门禁、CI 与上线说明；部署相关资产不再使用旧顶层 `Deploy/`。
 - 项目结构层默认只治理到 `容器 -> 服务/模块对象 -> Development_Docs/`；除 `Development_Docs/` 外，不再预置 `Assets/`、`Channels/` 或其他对象级固定子目录。
 
 ## 7. 结构索引

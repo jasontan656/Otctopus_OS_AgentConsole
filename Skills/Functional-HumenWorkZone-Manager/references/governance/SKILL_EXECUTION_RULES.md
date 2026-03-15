@@ -39,6 +39,10 @@ anchors:
   relation: routes_to
   direction: downstream
   reason: External research report handling needs a dedicated governed branch.
+- target: ../runtime/TEMPORARY_FILES_ZONE_POLICY.md
+  relation: routes_to
+  direction: downstream
+  reason: Temporary file handling needs a dedicated governed branch.
 ---
 
 # Skill Execution Rules
@@ -54,6 +58,7 @@ anchors:
 - `Human_Work_Zone/Open_Source_Project_Analysis` 是开源项目分析集中区。
 - `Human_Work_Zone/Books_and_Readings` 是书籍与阅读物集中管理区。
 - `Human_Work_Zone/Temporary_Projects` 是临时项目集中管理区。
+- `Human_Work_Zone/Temporary_Files` 是临时文件集中治理区。
 - `Human_Work_Zone/Company_Documents` 是公司&文档集中管理区。
 - `Human_Work_Zone/External_Research_Reports` 是外部调研报告集中管理区。
 - 开源项目相关动作必须优先落到集中管理区规则，不再把“开源 repo 随手散放”视为目标形态。
@@ -61,6 +66,7 @@ anchors:
 - 开源项目分析相关动作必须优先落到分析区规则，不再把“只在对话里说答案、不留上下文和证据”视为目标形态。
 - 书籍与阅读物相关动作必须优先落到书籍区规则，不再把“零散散放在学习目录里”视为目标形态。
 - 临时项目相关动作必须优先落到临时项目区规则，不再把“先丢在 workspace 根层，之后再说”视为目标形态。
+- 临时治理文件相关动作必须优先落到临时文件区规则，不再把“先散放在 Human_Work_Zone 根层或下载目录里，之后再说”视为目标形态。
 - 公司资料相关动作必须优先落到公司文档区规则，不再把“分散放在 GoogleDriveDump 或根层某个旧文件夹里”视为目标形态。
 - 外部调研报告相关动作必须优先落到外部调研报告区规则，不再把“散放在 GoogleDriveDump、下载目录或临时文件夹里”视为目标形态。
 
@@ -90,6 +96,11 @@ anchors:
   - 项目目录名是否符合临时项目命名规则
   - `Temporary_Projects/README.md` 是否已经追加条目
   - 条目是否写清基础作用、项目 README 链接和当前状态
+- 若任务涉及临时治理文件，至少要同步考虑：
+  - 是否落到了 `Temporary_Files`
+  - 当前任务更适合直接创建文件还是先创建一个主题子目录
+  - `Temporary_Files/README.md` 是否已经追加条目
+  - 条目是否写清文件或子目录路径、用途说明和当前状态
 - 若任务涉及公司资料，至少要同步考虑：
   - 是否迁入了 `Company_Documents`
   - 公司目录名是否符合统一命名规则
@@ -110,6 +121,7 @@ anchors:
 - 若用户针对开源项目提问，默认需要把答案沉淀成可追溯报告，而不是只在当轮对话给一句结论。
 - 若用户要求整理书籍或阅读物，默认允许批量迁移和重命名，但应保持内容本体不变。
 - 若用户要求收纳某个临时项目，默认允许整体迁移到 `Temporary_Projects`；除非用户明确要求，不自动删减内部内容。
+- 若用户要求治理一批临时 markdown 或其他零散文件，默认允许把它们收纳到 `Temporary_Files`；模型可按当时意图决定文件名或主题子目录名，但不得越出该受管区。
 - 若用户要求收纳公司资料，默认允许整体迁移到 `Company_Documents`；这一步只做收纳和命名，不提前替代未来的公司专属管理技能。
 - 若用户要求收纳外部调研报告，默认允许整体迁移到 `External_Research_Reports`；这一步只做收纳、重命名和导航，不提前扩写成知识库。
 
@@ -134,6 +146,8 @@ anchors:
 - 临时项目迁移流程：`../runtime/ORGANIZE_TEMPORARY_PROJECT_FLOW.md`
 - 临时项目清单维护流程：`../runtime/TEMP_PROJECT_README_MAINTENANCE_FLOW.md`
 - 临时项目命名规则：`../runtime/TEMP_PROJECT_NAMING_RULE.md`
+- 临时文件区规则：`../runtime/TEMPORARY_FILES_ZONE_POLICY.md`
+- 临时文件收纳流程：`../runtime/ORGANIZE_TEMPORARY_FILES_FLOW.md`
 - 公司文档区规则：`../runtime/COMPANY_DOCUMENTS_ZONE_POLICY.md`
 - 公司资料迁移流程：`../runtime/ORGANIZE_COMPANY_DOCUMENTS_FLOW.md`
 - 公司清单维护流程：`../runtime/COMPANY_DOCUMENTS_README_MAINTENANCE_FLOW.md`

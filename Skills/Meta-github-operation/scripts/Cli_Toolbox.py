@@ -201,13 +201,19 @@ def commit_and_push_command(
     use_all: Annotated[bool, typer.Option("--all")] = False,
     allow_empty: Annotated[bool, typer.Option("--allow-empty")] = False,
     remote: Annotated[str, typer.Option("--remote")] = "origin",
+    human_explicit_request: Annotated[bool, typer.Option("--human-explicit-request")] = False,
     branch: Annotated[str | None, typer.Option("--branch")] = None,
     force_with_lease: Annotated[bool, typer.Option("--force-with-lease")] = False,
     json_output: JsonOption = False,
 ) -> None:
     repo_name, repo_root = _resolve_repo_root(repo, repo_path)
     normalized_message = normalize_traceability_message(message)
-    ensure_remote_write_allowed(repo_name, remote, operation="commit-and-push")
+    ensure_remote_write_allowed(
+        repo_name,
+        remote,
+        operation="commit-and-push",
+        human_explicit_request=human_explicit_request,
+    )
     scope = _resolve_scope(
         repo_root,
         repo_name=repo_name,
@@ -236,12 +242,18 @@ def push_command(
     repo: RepoNameOption = None,
     repo_path: RepoPathOption = None,
     remote: Annotated[str, typer.Option("--remote")] = "origin",
+    human_explicit_request: Annotated[bool, typer.Option("--human-explicit-request")] = False,
     branch: Annotated[str | None, typer.Option("--branch")] = None,
     force_with_lease: Annotated[bool, typer.Option("--force-with-lease")] = False,
     json_output: JsonOption = False,
 ) -> None:
     repo_name, repo_root = _resolve_repo_root(repo, repo_path)
-    ensure_remote_write_allowed(repo_name, remote, operation="push")
+    ensure_remote_write_allowed(
+        repo_name,
+        remote,
+        operation="push",
+        human_explicit_request=human_explicit_request,
+    )
     payload = {"repo": repo_name, "repo_root": str(repo_root)}
     with serial_push_lock(repo_name, "push") as push_lock:
         payload["push_lock"] = push_lock
@@ -263,6 +275,7 @@ def repo_bootstrap_command(
     owner: Annotated[str | None, typer.Option("--owner")] = None,
     repo_name: Annotated[str | None, typer.Option("--repo-name")] = None,
     remote: Annotated[str, typer.Option("--remote")] = "origin",
+    human_explicit_request: Annotated[bool, typer.Option("--human-explicit-request")] = False,
     visibility: Annotated[Literal["private", "public", "internal"], typer.Option("--visibility")] = "private",
     message: Annotated[str | None, typer.Option("--message")] = None,
     use_all: Annotated[bool, typer.Option("--all")] = False,
@@ -270,7 +283,12 @@ def repo_bootstrap_command(
     json_output: JsonOption = False,
 ) -> None:
     repo_name_resolved, repo_root = _resolve_repo_root(repo, repo_path)
-    ensure_remote_write_allowed(repo_name_resolved, remote, operation="repo-bootstrap")
+    ensure_remote_write_allowed(
+        repo_name_resolved,
+        remote,
+        operation="repo-bootstrap",
+        human_explicit_request=human_explicit_request,
+    )
     normalized_message = normalize_traceability_message(message) if message else None
     payload = {
         "repo": repo_name_resolved,
@@ -307,6 +325,7 @@ def baseline_create_command(
     auto_scope: Annotated[bool, typer.Option("--auto-scope")] = False,
     use_all: Annotated[bool, typer.Option("--all")] = False,
     remote: Annotated[str, typer.Option("--remote")] = "origin",
+    human_explicit_request: Annotated[bool, typer.Option("--human-explicit-request")] = False,
     branch: Annotated[str | None, typer.Option("--branch")] = None,
     json_output: JsonOption = False,
 ) -> None:
@@ -344,7 +363,12 @@ def baseline_create_command(
 
     payload["tag_result"] = create_annotated_tag(repo_root, tag_name=tag_name, message=resolved_message)
     if publish == "remote":
-        ensure_remote_write_allowed(repo_name, remote, operation="baseline-create:publish")
+        ensure_remote_write_allowed(
+            repo_name,
+            remote,
+            operation="baseline-create:publish",
+            human_explicit_request=human_explicit_request,
+        )
         with serial_push_lock(repo_name, "baseline-create:publish") as push_lock:
             published = {
                 "push_lock": push_lock,

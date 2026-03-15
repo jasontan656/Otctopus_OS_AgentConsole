@@ -47,18 +47,19 @@ class TestMetaGithubOperationCliTests:
         assert not (any(command["name"] == "baseline-create" for command in push_payload["commands"]))
         assert (
             push_payload["remote_policy"]["Otctopus_OS_AgentConsole"]["origin"]["role"]
-            == "private_dev_remote"
+            == "private_ai_daily_remote"
         )
-        assert push_payload["remote_policy"]["Octopus_OS"]["origin"]["role"] == "private_primary_remote"
+        assert push_payload["remote_policy"]["Octopus_OS"]["origin"]["role"] == "private_ai_daily_remote"
+        assert push_payload["remote_policy"]["Octopus_OS"]["human-sync"]["manual_publish_allowed"]
         assert push_payload["runtime_governance"]["skill_runtime_root"].endswith("/meta-github-operation")
         assert push_payload["runtime_governance"]["claims_dir"].endswith("/meta-github-operation/claims")
         assert push_payload["runtime_governance"]["result_root"].endswith("/meta-github-operation")
         assert push_payload["runtime_governance"]["push_lock_dir"].endswith("/meta-github-operation/push_locks")
-        assert not push_payload["remote_policy"]["Otctopus_OS_AgentConsole"]["public-release"][
-            "automation_write_allowed"
-        ]
+        assert not push_payload["remote_policy"]["Otctopus_OS_AgentConsole"]["public-release"]["automation_write_allowed"]
+        assert push_payload["remote_policy"]["Otctopus_OS_AgentConsole"]["public-release"]["manual_publish_allowed"]
         assert any("serially per repo" in rule for rule in push_payload["rules"])
         assert any("problem solved" in rule for rule in push_payload["rules"])
+        assert any("--human-explicit-request" not in command["name"] for command in push_payload["commands"])
 
         baseline_payload = json.loads(self.run_cli("baseline-contract", "--json").stdout)
         assert baseline_payload["entry"] == "baseline"
@@ -66,7 +67,7 @@ class TestMetaGithubOperationCliTests:
         assert baseline_payload["runtime_governance"]["result_policy"].startswith("This skill does not emit")
         assert (
             baseline_payload["release_publication_state"]["Otctopus_OS_AgentConsole"]["public-release"]["status"]
-            == "disabled"
+            == "human_explicit_only"
         )
 
         rollback_payload = json.loads(self.run_cli("rollback-contract", "--json").stdout)
@@ -293,8 +294,9 @@ class TestMetaGithubOperationCliTests:
         assert policy["repo"] == "Otctopus_OS_AgentConsole"
         assert any(item["name"] == "origin" for item in policy["remotes"])
         blocked = next(item for item in policy["remotes"] if item["name"] == "public-release")
-        assert blocked["status"] == "disabled"
+        assert blocked["status"] == "enabled"
         assert not (blocked["automation_write_allowed"])
+        assert blocked["manual_publish_allowed"]
 
     def test_remote_policy_blocks_public_release_writes_for_product_repo(self) -> None:
         with pytest.raises(ValueError, match="remote_write_blocked"):
@@ -304,12 +306,26 @@ class TestMetaGithubOperationCliTests:
                 operation="push",
             )
 
-    def test_remote_policy_payload_marks_public_release_disabled(self) -> None:
+    def test_remote_policy_payload_marks_public_release_manual_only(self) -> None:
         payload = remote_policy_payload("Otctopus_OS_AgentConsole")
         blocked = next(item for item in payload["remotes"] if item["name"] == "public-release")
-        assert blocked["role"] == "future_public_release_remote"
-        assert not (blocked["manual_publish_allowed"])
-        assert "publishable closure" in blocked["disabled_reason"]
+        assert blocked["role"] == "human_explicit_public_release_remote"
+        assert blocked["manual_publish_allowed"]
+        assert blocked["disabled_reason"] is None
+
+    def test_remote_policy_allows_human_explicit_write_on_manual_only_remotes(self) -> None:
+        ensure_remote_write_allowed(
+            "Otctopus_OS_AgentConsole",
+            "public-release",
+            operation="push",
+            human_explicit_request=True,
+        )
+        ensure_remote_write_allowed(
+            "Octopus_OS",
+            "human-sync",
+            operation="push",
+            human_explicit_request=True,
+        )
 
     def test_ensure_gitignore_patterns_adds_common_local_only_assets(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

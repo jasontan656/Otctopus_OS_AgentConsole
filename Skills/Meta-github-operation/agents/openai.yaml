@@ -1,4 +1,4 @@
 interface:
   display_name: Meta-github-operation
-  short_description: 受限 GitHub control plane，仅服务 Octopus_OS 与 Otctopus_OS_AgentConsole，并对开发仓/发布仓分流、runtime claims 落盘与结果根目录施加硬约束。
-  default_prompt: Use $Meta-github-operation. First run `./.venv_backend_skills/bin/python Skills/Meta-github-operation/scripts/Cli_Toolbox.py contract --json`. Treat CLI JSON as the primary runtime source and use markdown mirrors only when the contract still leaves a real gap.
+  short_description: AI 主动使用的 runtime hook GitHub control plane，仅服务 Octopus_OS 与 Otctopus_OS_AgentConsole；默认治理 traceable record remote，并对人类显式门禁 remote 施加硬约束。
+  default_prompt: Use $Meta-github-operation as the default runtime hook for Git traceability in Octopus_OS and Otctopus_OS_AgentConsole. First run `./.venv_backend_skills/bin/python Skills/Meta-github-operation/scripts/Cli_Toolbox.py contract --json`. Treat CLI JSON as the primary runtime source, use the traceable record remote by default, and only touch human-controlled remotes when the user explicitly requests it.

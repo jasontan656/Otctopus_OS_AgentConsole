@@ -98,34 +98,44 @@ def push_contract_payload() -> PushContractPayload:
         "remote_policy": {
             "Octopus_OS": {
                 "origin": {
-                    "role": "private_primary_remote",
+                    "role": "private_ai_daily_remote",
                     "automation_write_allowed": True,
                     "status": "enabled",
                     "notes": [
                         "Repository is expected to remain private/closed-source.",
-                        "Bootstrap flows should keep the remote repository name aligned with the local repository name.",
+                        "Origin should point to the Octopus_OS_AI repository for AI daily pushes.",
+                    ],
+                },
+                "human-sync": {
+                    "role": "private_human_explicit_remote",
+                    "automation_write_allowed": False,
+                    "manual_publish_allowed": True,
+                    "status": "enabled",
+                    "notes": [
+                        "Repository is expected to remain private/closed-source.",
+                        "human-sync should point to the Octopus_OS_humen repository.",
+                        "Use this remote only when the human explicitly asks for a push.",
                     ],
                 }
-            },
-            "Otctopus_OS_AgentConsole": {
-                "origin": {
-                    "role": "private_dev_remote",
+                },
+                "Otctopus_OS_AgentConsole": {
+                    "origin": {
+                    "role": "private_ai_daily_remote",
                     "automation_write_allowed": True,
                     "status": "enabled",
                     "notes": [
-                        "Use for automatic iteration pushes and same-turn Git traceability.",
-                        "This remote is the default target for commit-and-push and push flows.",
+                        "Use for AI daily iteration pushes and same-turn Git traceability.",
+                        "This remote should point to the Otctopus_OS_AgentConsole_AI_dev repository.",
                     ],
                 },
                 "public-release": {
-                    "role": "future_public_release_remote",
+                    "role": "human_explicit_public_release_remote",
                     "automation_write_allowed": False,
-                    "manual_publish_allowed": False,
-                    "status": "disabled",
-                    "disabled_reason": "development has not reached a publishable closure and the release workflow is not designed yet",
+                    "manual_publish_allowed": True,
+                    "status": "enabled",
                     "notes": [
-                        "Reserved for future human-approved publishable snapshots only.",
-                        "Do not use this remote for automatic iteration pushes.",
+                        "This remote is the open-source publication repository for Otctopus_OS_AgentConsole.",
+                        "Only use it when the human explicitly asks for a push.",
                     ],
                 },
             },
@@ -139,8 +149,10 @@ def push_contract_payload() -> PushContractPayload:
             "Remote write flows must run serially per repo; do not parallelize push, commit-and-push, repo-bootstrap publish, or remote baseline publication.",
             "Bootstrap flows may create or verify private GitHub repositories only for registered repos and should default to private visibility.",
             "Bootstrap flows should refresh local ignore hygiene for logs, temp files, virtual environments, caches, and .env-like files before the first or follow-up push.",
+            "Manual-only remotes require an explicit human request flag before write operations are allowed.",
             "For Otctopus_OS_AgentConsole, automatic iteration pushes must go to origin only.",
-            "For Otctopus_OS_AgentConsole, public-release is currently disabled because development has not reached publishable closure and no release workflow is designed yet.",
+            "For Octopus_OS, human-sync is reserved for human-explicit pushes only.",
+            "For Otctopus_OS_AgentConsole, public-release is allowed only when the human explicitly requests the push.",
         ],
         "runtime_governance": runtime_governance_payload(),
     }
@@ -199,8 +211,8 @@ def baseline_contract_payload() -> BaselineContractPayload:
     release_publication_state: ReleasePublicationState = {
         "Otctopus_OS_AgentConsole": {
             "public-release": {
-                "status": "disabled",
-                "disabled_reason": "development has not reached a publishable closure and the release workflow is not designed yet",
+                "status": "human_explicit_only",
+                "disabled_reason": "automatic publish is disabled; human explicit request is required",
             }
         }
     }
@@ -221,6 +233,6 @@ def baseline_contract_payload() -> BaselineContractPayload:
             "Clean repos should prefer tag-only baselines instead of empty traceability commits.",
             "Dirty repos may create a scoped baseline commit before tagging.",
             "Remote baseline publication must remain within the registered repos.",
-            "For Otctopus_OS_AgentConsole, do not publish baselines to public-release while the public release flow is disabled.",
+            "Manual-only remotes require an explicit human request flag before baseline publication is allowed.",
         ],
     }

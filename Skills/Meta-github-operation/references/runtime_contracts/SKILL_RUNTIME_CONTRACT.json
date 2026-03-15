@@ -7,6 +7,10 @@
     "human_markdown_role": "narrative_mirror",
     "markdown_is_not_primary_instruction_source": true
   },
+  "default_use_mode": {
+    "mode": "runtime_hook_traceability",
+    "summary": "Use this skill proactively for Git traceability in Octopus_OS and Otctopus_OS_AgentConsole; AI traceable record remotes are default, while human-controlled remotes require explicit user request."
+  },
   "tool_entry": {
     "script": "scripts/Cli_Toolbox.py",
     "commands": {
@@ -15,6 +19,8 @@
   },
   "must_use_sequence": [
     "Read the runtime contract through the CLI JSON entry before deep references.",
-    "Treat SKILL.md as a facade and route deeper only after the contract is known."
+    "Treat SKILL.md as a facade and route deeper only after the contract is known.",
+    "When Git traceability is needed in Octopus_OS or Otctopus_OS_AgentConsole, use this skill proactively instead of waiting for a manual Git instruction.",
+    "Keep AI traceable record remotes as the default write target and require explicit human request before using human-controlled remotes."
   ]
 }

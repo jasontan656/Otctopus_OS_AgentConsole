@@ -45,12 +45,24 @@ REPO_REGISTRY: dict[str, RepoSpec] = {
         remotes=(
             RemoteSpec(
                 name="origin",
-                role="private_primary_remote",
+                role="private_ai_daily_remote",
                 automation_write_allowed=True,
                 status="enabled",
                 notes=(
                     "Repository is expected to remain closed-source/private.",
-                    "Origin should use the same repository name as the local repo when bootstrapped on GitHub.",
+                    "Origin is reserved for AI daily iteration pushes and should point to the Octopus_OS_AI repository.",
+                ),
+            ),
+            RemoteSpec(
+                name="human-sync",
+                role="private_human_explicit_remote",
+                automation_write_allowed=False,
+                manual_publish_allowed=True,
+                status="enabled",
+                notes=(
+                    "Repository is expected to remain closed-source/private.",
+                    "This remote should point to the Octopus_OS_humen repository.",
+                    "Only use it when the human explicitly asks for a push.",
                 ),
             ),
         ),
@@ -61,24 +73,23 @@ REPO_REGISTRY: dict[str, RepoSpec] = {
         remotes=(
             RemoteSpec(
                 name="origin",
-                role="private_dev_remote",
+                role="private_ai_daily_remote",
                 automation_write_allowed=True,
                 status="enabled",
                 notes=(
-                    "Use for automatic iteration pushes and same-turn Git traceability.",
-                    "This remote is the default write target for development.",
+                    "Use for AI daily iteration pushes and same-turn Git traceability.",
+                    "This remote should point to the Otctopus_OS_AgentConsole_AI_dev repository.",
                 ),
             ),
             RemoteSpec(
                 name="public-release",
-                role="future_public_release_remote",
+                role="human_explicit_public_release_remote",
                 automation_write_allowed=False,
-                manual_publish_allowed=False,
-                status="disabled",
-                disabled_reason="development has not reached a publishable closure and the release workflow is not designed yet",
+                manual_publish_allowed=True,
+                status="enabled",
                 notes=(
-                    "Reserved for future publishable snapshots only.",
-                    "Currently blocked for both automatic and manual write flows.",
+                    "This remote is the open-source publication repository for Otctopus_OS_AgentConsole.",
+                    "Only use it when the human explicitly asks for a push.",
                 ),
             ),
         ),
@@ -156,7 +167,13 @@ def remote_policy_payload(repo_name: str) -> RemotePolicyPayload:
     }
 
 
-def ensure_remote_write_allowed(repo_name: str, remote_name: str, *, operation: str) -> None:
+def ensure_remote_write_allowed(
+    repo_name: str,
+    remote_name: str,
+    *,
+    operation: str,
+    human_explicit_request: bool = False,
+) -> None:
     spec = REPO_REGISTRY.get(repo_name)
     if spec is None:
         return
@@ -165,6 +182,14 @@ def ensure_remote_write_allowed(repo_name: str, remote_name: str, *, operation: 
             continue
         if remote.automation_write_allowed:
             return
+        if remote.manual_publish_allowed and human_explicit_request:
+            return
+        if remote.manual_publish_allowed:
+            raise ValueError(
+                "remote_write_blocked: "
+                f"repo={repo_name} remote={remote_name} operation={operation} "
+                "reason=remote requires explicit human request"
+            )
         reason = remote.disabled_reason or "remote write is disabled by current policy"
         raise ValueError(
             f"remote_write_blocked: repo={repo_name} remote={remote_name} operation={operation} reason={reason}"

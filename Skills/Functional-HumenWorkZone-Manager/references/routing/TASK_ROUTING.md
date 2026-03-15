@@ -39,6 +39,10 @@ anchors:
   relation: routes_to
   direction: downstream
   reason: External research report management is a seventh stable branch of this skill.
+- target: ../runtime/TEMPORARY_FILES_ZONE_POLICY.md
+  relation: routes_to
+  direction: downstream
+  reason: Temporary file governance is an eighth stable branch of this skill.
 ---
 
 # Task Routing
@@ -151,3 +155,11 @@ anchors:
 
 ## 分支三十：核对外部调研报告命名
 - 当任务需要决定调研报告目录名、主报告文件名或资料包文件名时，先读 `../runtime/EXTERNAL_RESEARCH_REPORT_NAMING_RULE.md`。
+
+## 分支三十一：管理临时文件集中区
+- 当任务涉及临时需要治理的 markdown 文件、临时证据文件、一次性整理稿或其他尚未决定长期归宿的文件时，先读 `../runtime/TEMPORARY_FILES_ZONE_POLICY.md`。
+- 该分支负责临时文件承载目录、按当前意图决定名字或子目录，以及根 README 的索引维护。
+
+## 分支三十二：执行临时文件收纳与创建
+- 当任务涉及把一个或一组临时文件迁入 `Human_Work_Zone`，或需要在受管区内创建新的临时治理文件时，先读 `../runtime/ORGANIZE_TEMPORARY_FILES_FLOW.md`。
+- 该分支负责决定是直接创建文件还是先创建主题子目录，并在完成后更新 `Temporary_Files/README.md`。

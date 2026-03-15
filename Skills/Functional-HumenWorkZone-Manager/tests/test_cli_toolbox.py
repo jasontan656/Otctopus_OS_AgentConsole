@@ -33,9 +33,11 @@ def test_directive_returns_task_routing_payload() -> None:
     assert payload["topic"] == "task-routing"
     assert payload["doc_kind"] == "guide"
     assert any("external reports" in item.lower() for item in payload["workflow"])
+    assert any("temporary files" in item.lower() for item in payload["workflow"])
 
 
 def test_paths_returns_managed_zones() -> None:
     payload = run_cli("paths")
     assert payload["managed_root"] == "/home/jasontan656/AI_Projects/Human_Work_Zone"
     assert payload["zones"]["external_research_reports"].endswith("/External_Research_Reports")
+    assert payload["zones"]["temporary_files"].endswith("/Temporary_Files")

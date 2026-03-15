@@ -13,7 +13,9 @@
     "$Meta-RootFile-Manager (AGENTS governance mapping flow)"
   ],
   "turn_start_actions": [],
-  "runtime_constraints": [],
+  "runtime_constraints": [
+    "Development related task must go through `$Workflow-CentralFlow2-OctppusOS`."
+  ],
   "execution_modes": {
     "READ_EXEC": {
       "goal": "inspect or answer without changing Octopus_OS files",
@@ -28,7 +30,9 @@
       ]
     }
   },
-  "repo_local_contract_handoff": [],
+  "repo_local_contract_handoff": [
+    "When the task becomes Development_Docs or mother_doc related, route execution into `/home/jasontan656/AI_Projects/Octopus_OS/Development_Docs/AGENTS.md` before writing."
+  ],
   "forbidden_primary_runtime_pattern": [],
   "turn_end_actions": [],
   "repo_name": "Octopus_OS"

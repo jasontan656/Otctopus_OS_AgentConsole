@@ -39,7 +39,7 @@
   "hard_constraints": [
     "Treat CLI JSON as the primary runtime source; SKILL.md remains a facade only.",
     "Keep all write actions scoped to Human_Work_Zone unless the user explicitly points to an external source folder for intake.",
-    "Route open-source projects, backups, project analysis, books, temporary projects, company documents, and external research reports into their dedicated managed zones.",
+    "Route open-source projects, backups, project analysis, books, temporary projects, temporary governance files, company documents, and external research reports into their dedicated managed zones.",
     "When intake changes names or locations, update the corresponding README inventory in the same turn."
   ]
 }

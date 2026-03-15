@@ -6,7 +6,7 @@
   "purpose": "Map a Human_Work_Zone request into the correct managed branch before opening legacy markdown docs or changing files.",
   "instruction": [
     "Classify the request by management intent before reading deep markdown documents.",
-    "Use the dedicated branch for open-source projects, backups, project analysis, books, temporary projects, company documents, or external research reports.",
+    "Use the dedicated branch for open-source projects, backups, project analysis, books, temporary projects, temporary governance files, company documents, or external research reports.",
     "If the request is a generic cleanup or intake action, keep the scope at Human_Work_Zone and only descend into the relevant branch after classification."
   ],
   "workflow": [
@@ -16,6 +16,7 @@
     "If the request is about answering questions from local open-source repos, route to OPEN_SOURCE_PROJECT_ANALYSIS_ZONE_POLICY.md and ANSWER_OPEN_SOURCE_PROJECT_QUESTION_FLOW.md.",
     "If the request is about books or reading materials, route to BOOKS_AND_READINGS_ZONE_POLICY.md and ORGANIZE_BOOKS_AND_READINGS_FLOW.md.",
     "If the request is about temporary one-off projects, route to TEMPORARY_PROJECTS_ZONE_POLICY.md and ORGANIZE_TEMPORARY_PROJECT_FLOW.md.",
+    "If the request is about temporarily governed markdown files or mixed temporary files, route to TEMPORARY_FILES_ZONE_POLICY.md and ORGANIZE_TEMPORARY_FILES_FLOW.md.",
     "If the request is about company folders or company media archives, route to COMPANY_DOCUMENTS_ZONE_POLICY.md and ORGANIZE_COMPANY_DOCUMENTS_FLOW.md.",
     "If the request is about external reports collected from outside sources, route to EXTERNAL_RESEARCH_REPORTS_ZONE_POLICY.md and ORGANIZE_EXTERNAL_RESEARCH_REPORTS_FLOW.md."
   ],

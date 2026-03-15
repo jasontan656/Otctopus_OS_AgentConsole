@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import argparse
 import json
 import os
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Annotated, NotRequired, TypedDict
+from typing import NotRequired, TypedDict
 
-import typer
+from production_form_runtime import compile_reading_chain
+from production_form_runtime import runtime_payload
+from production_form_runtime import working_contract_payload
 
 
 SKILL_ROOT = Path(__file__).resolve().parents[1]
@@ -15,11 +18,10 @@ REPO_ROOT = SKILL_ROOT.parents[1]
 PRODUCT_ROOT = REPO_ROOT.parent
 DEFAULT_SKILL_RUNTIME_ROOT = (PRODUCT_ROOT / "Codex_Skill_Runtime").resolve()
 DEFAULT_SKILL_RESULT_ROOT = (PRODUCT_ROOT / "Codex_Skills_Result").resolve()
-REPO_RUNTIME_ROOT = SKILL_ROOT / "references" / "runtime"
-WORKING_CONTRACT_PATH = REPO_RUNTIME_ROOT / "WORKING_STATE.json"
-INTENT_PATH = REPO_RUNTIME_ROOT / "CURRENT_PRODUCT_INTENT.md"
+INTENT_PATH = SKILL_ROOT / "path" / "current_intent" / "20_EXECUTION.md"
+DEFAULT_SEED_LOG_PATH = SKILL_ROOT / "path" / "latest_log" / "25_LOG_SEED.md"
 LEGACY_LOG_PATH = Path(
-    os.environ.get("SKILL_PRODUCTION_FORM_LEGACY_LOG_PATH", str(REPO_RUNTIME_ROOT / "ITERATION_LOG.md"))
+    os.environ.get("SKILL_PRODUCTION_FORM_LEGACY_LOG_PATH", str(DEFAULT_SEED_LOG_PATH))
 ).expanduser().resolve()
 SKILL_RUNTIME_ROOT = (
     Path(os.environ.get("CODEX_SKILL_RUNTIME_ROOT", str(DEFAULT_SKILL_RUNTIME_ROOT))).expanduser().resolve()
@@ -32,10 +34,20 @@ SKILL_RESULT_ROOT = (
 DEFAULT_LOG_PATH = SKILL_RUNTIME_ROOT / "ITERATION_LOG.md"
 
 
+class RuntimeContractCommandPayload(TypedDict):
+    status: str
+    skill_name: str
+    skill_mode: str
+    runtime_entry: str
+    root_shape: list[str]
+    governed_scope: list[str]
+    commands: list[str]
+    notes: list[str]
+
+
 class WorkingContractCommandPayload(TypedDict):
     status: str
     action: str
-    contract_path: str
     payload: object
     summary: str
     details: list[str]
@@ -77,23 +89,29 @@ class AppendIterationLogCommandPayload(TypedDict):
 
 
 CliPayload = (
-    WorkingContractCommandPayload
+    RuntimeContractCommandPayload
+    | WorkingContractCommandPayload
     | IntentSnapshotCommandPayload
     | LatestLogCommandPayload
     | AppendIterationLogCommandPayload
+    | dict[str, object]
 )
-
-app = typer.Typer(add_completion=False, pretty_exceptions_enable=False)
-
-
-def _read_json(path: Path) -> object:
-    return json.loads(path.read_text(encoding="utf-8"))
 
 
 def _resolve_path(raw: str | None, default: Path) -> Path:
     if raw:
         return Path(raw).expanduser().resolve()
     return default
+
+
+def _emit(payload: CliPayload, *, as_json: bool) -> int:
+    if as_json:
+        print(json.dumps(payload, ensure_ascii=False, indent=2))
+        return 0
+    print(payload.get("summary", payload.get("status", "ok")))
+    for line in payload.get("details", []):
+        print(line)
+    return 0
 
 
 def _seed_runtime_log_if_needed(path: Path) -> bool:
@@ -106,15 +124,6 @@ def _seed_runtime_log_if_needed(path: Path) -> bool:
     return True
 
 
-def _emit(payload: CliPayload, *, as_json: bool) -> None:
-    if as_json:
-        print(json.dumps(payload, ensure_ascii=False, indent=2))
-        return
-    print(payload["summary"])
-    for line in payload.get("details", []):
-        print(line)
-
-
 def _split_log_entries(text: str) -> list[str]:
     sections = text.split("\n## ")
     if not sections:
@@ -125,67 +134,6 @@ def _split_log_entries(text: str) -> list[str]:
             continue
         entries.append("## " + section.strip())
     return entries
-
-
-@app.command("working-contract")
-def working_contract_command(
-    json_output: Annotated[bool, typer.Option("--json")] = False,
-    contract_path: Annotated[str | None, typer.Option("--contract-path")] = None,
-) -> None:
-    resolved_contract_path = _resolve_path(contract_path, WORKING_CONTRACT_PATH)
-    payload: WorkingContractCommandPayload = {
-        "status": "ok",
-        "action": "working_contract",
-        "contract_path": str(resolved_contract_path),
-        "payload": _read_json(resolved_contract_path),
-        "summary": f"loaded working contract from {resolved_contract_path}",
-        "details": [],
-    }
-    _emit(payload, as_json=json_output)
-
-
-@app.command("intent-snapshot")
-def intent_snapshot_command(
-    json_output: Annotated[bool, typer.Option("--json")] = False,
-    intent_path: Annotated[str | None, typer.Option("--intent-path")] = None,
-) -> None:
-    resolved_intent_path = _resolve_path(intent_path, INTENT_PATH)
-    payload: IntentSnapshotCommandPayload = {
-        "status": "ok",
-        "action": "intent_snapshot",
-        "intent_path": str(resolved_intent_path),
-        "content": resolved_intent_path.read_text(encoding="utf-8"),
-        "summary": f"loaded current console product intent from {resolved_intent_path}",
-        "details": [],
-    }
-    _emit(payload, as_json=json_output)
-
-
-@app.command("latest-log")
-def latest_log_command(
-    json_output: Annotated[bool, typer.Option("--json")] = False,
-    log_path: Annotated[str | None, typer.Option("--log-path")] = None,
-    entry_count: Annotated[int, typer.Option("--entry-count")] = 1,
-) -> None:
-    resolved_log_path = _resolve_path(log_path, DEFAULT_LOG_PATH)
-    migrated = _seed_runtime_log_if_needed(resolved_log_path)
-    entries = _split_log_entries(resolved_log_path.read_text(encoding="utf-8"))
-    selected = entries[-entry_count:] if entries else []
-    payload: LatestLogCommandPayload = {
-        "status": "ok",
-        "action": "latest_log",
-        "log_path": str(resolved_log_path),
-        "runtime_root": str(SKILL_RUNTIME_ROOT),
-        "result_root": str(SKILL_RESULT_ROOT),
-        "entry_count": len(selected),
-        "entries": selected,
-        "summary": f"loaded {len(selected)} latest log entry(s) from {resolved_log_path}",
-        "details": [f"- runtime_root: {SKILL_RUNTIME_ROOT}", f"- result_root: {SKILL_RESULT_ROOT}", *[entry.splitlines()[0] for entry in selected]],
-    }
-    if migrated:
-        payload["migrated_legacy_log"] = True
-        payload["details"].append(f"- migrated legacy log seed from: {LEGACY_LOG_PATH}")
-    _emit(payload, as_json=json_output)
 
 
 def _append_markdown_section(
@@ -226,58 +174,150 @@ def _append_markdown_section(
     return timestamp, lines
 
 
-@app.command("append-iteration-log")
-def append_iteration_log_command(
-    title: Annotated[str, typer.Option("--title")] = ...,
-    summary: Annotated[str, typer.Option("--summary")] = ...,
-    json_output: Annotated[bool, typer.Option("--json")] = False,
-    log_path: Annotated[str | None, typer.Option("--log-path")] = None,
-    decisions: Annotated[list[str] | None, typer.Option("--decision")] = None,
-    affected_paths: Annotated[list[str] | None, typer.Option("--affected-path")] = None,
-    risks: Annotated[list[str] | None, typer.Option("--risk")] = None,
-    next_steps: Annotated[list[str] | None, typer.Option("--next-step")] = None,
-    author: Annotated[str, typer.Option("--author")] = "codex",
-) -> None:
-    resolved_log_path = _resolve_path(log_path, DEFAULT_LOG_PATH)
-    migrated = _seed_runtime_log_if_needed(resolved_log_path)
-    timestamp, lines = _append_markdown_section(
-        title=title,
-        summary=summary,
-        decisions=list(decisions or []),
-        affected_paths=list(affected_paths or []),
-        risks=list(risks or []),
-        next_steps=list(next_steps or []),
-        author=author,
-    )
-    resolved_log_path.parent.mkdir(parents=True, exist_ok=True)
-    with resolved_log_path.open("a", encoding="utf-8") as handle:
-        handle.write("\n".join(lines))
+def _build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(description="SkillsManager-Production-Form toolbox")
+    subparsers = parser.add_subparsers(dest="command", required=True)
 
-    payload: AppendIterationLogCommandPayload = {
-        "status": "ok",
-        "action": "append_iteration_log",
-        "log_path": str(resolved_log_path),
-        "runtime_root": str(SKILL_RUNTIME_ROOT),
-        "result_root": str(SKILL_RESULT_ROOT),
-        "title": title,
-        "timestamp": timestamp,
-        "summary": f"appended iteration log entry '{title}'",
-        "details": [
-            f"- runtime_root: {SKILL_RUNTIME_ROOT}",
-            f"- result_root: {SKILL_RESULT_ROOT}",
-            f"- log_path: {resolved_log_path}",
-        ],
-    }
-    if migrated:
-        payload["migrated_legacy_log"] = True
-        payload["details"].append(f"- migrated legacy log seed from: {LEGACY_LOG_PATH}")
-    _emit(payload, as_json=json_output)
+    for name in ("runtime-contract", "contract"):
+        sub = subparsers.add_parser(name, help="Read the local runtime payload")
+        sub.add_argument("--json", action="store_true")
+
+    sub = subparsers.add_parser("working-contract", help="Read the working contract payload")
+    sub.add_argument("--json", action="store_true")
+
+    for name in ("read-path-context", "read-contract-context"):
+        sub = subparsers.add_parser(name, help="Compile one local production-form chain into one context")
+        sub.add_argument("--entry", required=True)
+        sub.add_argument("--selection", default="")
+        sub.add_argument("--json", action="store_true")
+
+    sub = subparsers.add_parser("intent-snapshot", help="Read the current intent markdown")
+    sub.add_argument("--json", action="store_true")
+    sub.add_argument("--intent-path")
+
+    sub = subparsers.add_parser("latest-log", help="Read latest runtime log entries")
+    sub.add_argument("--json", action="store_true")
+    sub.add_argument("--log-path")
+    sub.add_argument("--entry-count", type=int, default=1)
+
+    sub = subparsers.add_parser("append-iteration-log", help="Append one iteration log entry")
+    sub.add_argument("--title", required=True)
+    sub.add_argument("--summary", required=True)
+    sub.add_argument("--json", action="store_true")
+    sub.add_argument("--log-path")
+    sub.add_argument("--decision", action="append", default=[])
+    sub.add_argument("--affected-path", action="append", default=[])
+    sub.add_argument("--risk", action="append", default=[])
+    sub.add_argument("--next-step", action="append", default=[])
+    sub.add_argument("--author", default="codex")
+
+    return parser
 
 
 def main() -> int:
-    app()
-    return 0
+    parser = _build_parser()
+    args = parser.parse_args()
+
+    if args.command in {"runtime-contract", "contract"}:
+        payload: RuntimeContractCommandPayload = runtime_payload()
+        return _emit(payload, as_json=args.json)
+
+    if args.command == "working-contract":
+        payload: WorkingContractCommandPayload = {
+            "status": "ok",
+            "action": "working_contract",
+            "payload": working_contract_payload(),
+            "summary": "loaded current production-form working contract",
+            "details": [
+                f"- runtime_root: {SKILL_RUNTIME_ROOT}",
+                f"- result_root: {SKILL_RESULT_ROOT}",
+            ],
+        }
+        return _emit(payload, as_json=args.json)
+
+    if args.command in {"read-path-context", "read-contract-context"}:
+        selection_keys = [item.strip() for item in args.selection.split(",") if item.strip()]
+        payload = compile_reading_chain(SKILL_ROOT, args.entry, selection_keys)
+        return _emit(payload, as_json=args.json)
+
+    if args.command == "intent-snapshot":
+        resolved_intent_path = _resolve_path(args.intent_path, INTENT_PATH)
+        payload: IntentSnapshotCommandPayload = {
+            "status": "ok",
+            "action": "intent_snapshot",
+            "intent_path": str(resolved_intent_path),
+            "content": resolved_intent_path.read_text(encoding="utf-8"),
+            "summary": f"loaded current console product intent from {resolved_intent_path}",
+            "details": [],
+        }
+        return _emit(payload, as_json=args.json)
+
+    if args.command == "latest-log":
+        resolved_log_path = _resolve_path(args.log_path, DEFAULT_LOG_PATH)
+        migrated = _seed_runtime_log_if_needed(resolved_log_path)
+        entries = _split_log_entries(resolved_log_path.read_text(encoding="utf-8"))
+        selected = entries[-args.entry_count :] if entries else []
+        payload: LatestLogCommandPayload = {
+            "status": "ok",
+            "action": "latest_log",
+            "log_path": str(resolved_log_path),
+            "runtime_root": str(SKILL_RUNTIME_ROOT),
+            "result_root": str(SKILL_RESULT_ROOT),
+            "entry_count": len(selected),
+            "entries": selected,
+            "summary": f"loaded {len(selected)} latest log entry(s) from {resolved_log_path}",
+            "details": [
+                f"- runtime_root: {SKILL_RUNTIME_ROOT}",
+                f"- result_root: {SKILL_RESULT_ROOT}",
+                *[entry.splitlines()[0] for entry in selected],
+            ],
+        }
+        if migrated:
+            payload["migrated_legacy_log"] = True
+            payload["details"].append(f"- migrated legacy log seed from: {LEGACY_LOG_PATH}")
+        return _emit(payload, as_json=args.json)
+
+    if args.command == "append-iteration-log":
+        resolved_log_path = _resolve_path(args.log_path, DEFAULT_LOG_PATH)
+        migrated = _seed_runtime_log_if_needed(resolved_log_path)
+        timestamp, lines = _append_markdown_section(
+            title=args.title,
+            summary=args.summary,
+            decisions=list(args.decision or []),
+            affected_paths=list(args.affected_path or []),
+            risks=list(args.risk or []),
+            next_steps=list(args.next_step or []),
+            author=args.author,
+        )
+        resolved_log_path.parent.mkdir(parents=True, exist_ok=True)
+        with resolved_log_path.open("a", encoding="utf-8") as handle:
+            handle.write("\n".join(lines))
+        payload: AppendIterationLogCommandPayload = {
+            "status": "ok",
+            "action": "append_iteration_log",
+            "log_path": str(resolved_log_path),
+            "runtime_root": str(SKILL_RUNTIME_ROOT),
+            "result_root": str(SKILL_RESULT_ROOT),
+            "title": args.title,
+            "timestamp": timestamp,
+            "summary": f"appended iteration log entry '{args.title}'",
+            "details": [
+                f"- runtime_root: {SKILL_RUNTIME_ROOT}",
+                f"- result_root: {SKILL_RESULT_ROOT}",
+                f"- log_path: {resolved_log_path}",
+            ],
+        }
+        if migrated:
+            payload["migrated_legacy_log"] = True
+            payload["details"].append(f"- migrated legacy log seed from: {LEGACY_LOG_PATH}")
+        return _emit(payload, as_json=args.json)
+
+    raise ValueError(f"unsupported command: {args.command}")
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    try:
+        raise SystemExit(main())
+    except Exception as exc:  # noqa: BLE001
+        print(json.dumps({"status": "error", "error": str(exc)}, ensure_ascii=False, indent=2))
+        raise SystemExit(1)

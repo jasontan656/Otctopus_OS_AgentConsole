@@ -7,9 +7,12 @@ import os
 import re
 import shutil
 import subprocess
+import sys
 from pathlib import Path
 from pathlib import PurePosixPath
-from typing import List
+
+from mirror_to_codex_runtime import compile_reading_chain
+from mirror_to_codex_runtime import runtime_payload
 from sync_payloads import build_install_route
 from sync_payloads import build_push_result
 from sync_payloads import build_rename_result
@@ -27,6 +30,7 @@ SKILLS_DIR_NAME = "Skills"
 CANONICAL_MIRROR_REPO_NAME = "Otctopus_OS_AgentConsole"
 LEGACY_MIRROR_REPO_NAME = "Codex_Skills_Mirror"
 FORBIDDEN_CODEX_ROOT_FILES = ("AGENTS.md",)
+SKILL_ROOT = Path(__file__).resolve().parents[1]
 
 
 def _detect_repo_root() -> Path | None:
@@ -49,6 +53,8 @@ def _resolve_codex_root(raw: str | None) -> Path:
     if env_home:
         return (Path(env_home).expanduser().resolve() / "skills").resolve()
     return (Path.home() / ".codex" / "skills").resolve()
+
+
 def _discover_visible_mirror() -> Path | None:
     env_root = os.environ.get("CODEX_SKILLS_MIRROR_ROOT")
     if env_root:
@@ -59,6 +65,8 @@ def _discover_visible_mirror() -> Path | None:
             if candidate.is_dir():
                 return candidate.resolve()
     return None
+
+
 def _migrate_hidden_mirror_if_present() -> Path | None:
     for repo_name in (CANONICAL_MIRROR_REPO_NAME, LEGACY_MIRROR_REPO_NAME):
         for hidden in sorted(Path.home().glob(f"*/{repo_name}")):
@@ -70,6 +78,8 @@ def _migrate_hidden_mirror_if_present() -> Path | None:
             os.replace(hidden, visible)
             return visible.resolve()
     return None
+
+
 def _resolve_mirror_root(raw: str | None) -> Path:
     if raw:
         return Path(raw).expanduser().resolve()
@@ -88,11 +98,15 @@ def _resolve_mirror_root(raw: str | None) -> Path:
     fallback = (Path.cwd() / CANONICAL_MIRROR_REPO_NAME).resolve()
     fallback.mkdir(parents=True, exist_ok=True)
     return fallback
+
+
 def _resolve_skill_container(mirror_root: Path) -> Path:
     skills_root = mirror_root / SKILLS_DIR_NAME
     if skills_root.is_dir():
         return skills_root.resolve()
     return mirror_root.resolve()
+
+
 def _normalize_skill_name(skill_name: str) -> str:
     normalized = str(skill_name or "").strip()
     if not normalized:
@@ -117,8 +131,12 @@ def _normalize_skill_name(skill_name: str) -> str:
             raise ValueError("skill_name contains illegal characters")
         normalized_parts.append(part)
     return "/".join(normalized_parts)
+
+
 def _posix_join(parts: list[str]) -> str:
     return "/".join(parts)
+
+
 def _resolve_existing_source_skill_name(mirror_root: Path, normalized_skill_name: str) -> str:
     current = mirror_root
     actual_parts: list[str] = []
@@ -141,14 +159,20 @@ def _resolve_existing_source_skill_name(mirror_root: Path, normalized_skill_name
         actual_parts.append(actual_part)
         current = current / actual_part
     return _posix_join(actual_parts)
+
+
 def _canonical_destination_skill_name(normalized_skill_name: str) -> str:
     parts = normalized_skill_name.split("/")
     if parts and parts[0] == SYSTEM_SKILL_NAMESPACE:
         return _posix_join([parts[0], *[part.lower() for part in parts[1:]]])
     return normalized_skill_name
+
+
 def _resolve_destination_skill_path(codex_root: Path, normalized_skill_name: str) -> tuple[str, Path]:
     destination_skill_name = _canonical_destination_skill_name(normalized_skill_name)
     return destination_skill_name, codex_root / destination_skill_name
+
+
 def _build_paths(
     codex_root: Path,
     mirror_root: Path,
@@ -165,6 +189,8 @@ def _build_paths(
         src = skill_container / source_skill_name
         return src, dst, normalized_skill_name, source_skill_name, destination_skill_name
     return skill_container, codex_root, None, None, None
+
+
 def _discover_syncable_roots(mirror_root: Path) -> list[tuple[str, Path, Path]]:
     syncable: list[tuple[str, Path, Path]] = []
     skill_container = _resolve_skill_container(mirror_root)
@@ -173,25 +199,24 @@ def _discover_syncable_roots(mirror_root: Path) -> list[tuple[str, Path, Path]]:
             continue
         if child.name == ".git":
             continue
-
         if child.name == SYSTEM_SKILL_NAMESPACE:
             if (child / SYSTEM_SKILL_MARKER).exists():
                 syncable.append((child.name, child, child.name))
             continue
-
         if child.name.startswith("."):
             continue
-
         if (child / "SKILL.md").is_file():
             syncable.append((child.name, child, child.name))
     if not syncable:
         raise FileNotFoundError(f"no syncable skill roots found under mirror root: {skill_container}")
     return syncable
+
+
 def _destination_exists(dst: Path, scope: str) -> bool:
-    if scope == "all":
-        return True
-    return dst.exists()
-def _rsync(src: Path, dst: Path, dry_run: bool) -> List[str]:
+    return True if scope == "all" else dst.exists()
+
+
+def _rsync(src: Path, dst: Path, dry_run: bool) -> list[str]:
     if not src.exists():
         raise FileNotFoundError(f"source does not exist: {src}")
 
@@ -207,6 +232,17 @@ def _rsync(src: Path, dst: Path, dry_run: bool) -> List[str]:
     if completed.returncode != 0:
         raise RuntimeError(completed.stderr.strip() or "rsync failed")
     return cmd
+
+
+def _remove_path(target: Path) -> None:
+    if not target.exists():
+        return
+    if target.is_dir():
+        shutil.rmtree(target)
+        return
+    target.unlink()
+
+
 def _rsync_syncable_roots(
     mirror_root: Path,
     codex_root: Path,
@@ -235,13 +271,8 @@ def _rsync_syncable_roots(
             continue
         _remove_path(target)
     return synced_entries, commands, removed_forbidden_entries
-def _remove_path(target: Path) -> None:
-    if not target.exists():
-        return
-    if target.is_dir():
-        shutil.rmtree(target)
-        return
-    target.unlink()
+
+
 def _rename_push(
     *,
     src: Path,
@@ -302,7 +333,45 @@ def _rename_push(
         renamed_path=renamed_path,
         command=command,
     )
-def main() -> int:
+
+
+def _print_payload(payload: dict[str, object], as_json: bool) -> int:
+    if as_json:
+        print(json.dumps(payload, ensure_ascii=False, indent=2))
+        return 0
+    print(payload.get("status", "ok"))
+    return 0
+
+
+def _build_runtime_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(description="SkillsManager-Mirror-To-Codex runtime toolbox")
+    subparsers = parser.add_subparsers(dest="command", required=True)
+
+    for name in ("runtime-contract", "contract"):
+        sub = subparsers.add_parser(name, help="Read the local runtime payload")
+        sub.add_argument("--json", action="store_true")
+
+    for name in ("read-path-context", "read-contract-context"):
+        sub = subparsers.add_parser(name, help="Compile one local mirror-to-codex chain into one context")
+        sub.add_argument("--entry", required=True, help="Top-level entry key declared under SKILL.md section 2")
+        sub.add_argument("--selection", default="", help="Comma-separated branch keys used when the chain hits a branch node")
+        sub.add_argument("--json", action="store_true")
+
+    return parser
+
+
+def _handle_runtime_command(argv: list[str]) -> int:
+    parser = _build_runtime_parser()
+    args = parser.parse_args(argv)
+    if args.command in {"runtime-contract", "contract"}:
+        return _print_payload(runtime_payload(), args.json)
+    if args.command in {"read-path-context", "read-contract-context"}:
+        selection = [item.strip() for item in args.selection.split(",") if item.strip()]
+        return _print_payload(compile_reading_chain(SKILL_ROOT, args.entry, selection), args.json)
+    raise ValueError(f"unsupported command: {args.command}")
+
+
+def _build_sync_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="SkillsManager-Mirror-To-Codex toolbox (one-way: mirror -> codex)"
     )
@@ -313,7 +382,12 @@ def main() -> int:
     parser.add_argument("--codex-root")
     parser.add_argument("--mirror-root")
     parser.add_argument("--dry-run", action="store_true")
-    args = parser.parse_args()
+    return parser
+
+
+def _handle_sync_command(argv: list[str]) -> int:
+    parser = _build_sync_parser()
+    args = parser.parse_args(argv)
 
     codex_root = _resolve_codex_root(args.codex_root)
     mirror_root = _resolve_mirror_root(args.mirror_root)
@@ -406,6 +480,16 @@ def main() -> int:
         payload["command"] = command
     print(json.dumps(payload, ensure_ascii=False, indent=2))
     return 0
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = list(sys.argv[1:] if argv is None else argv)
+    runtime_commands = {"runtime-contract", "contract", "read-path-context", "read-contract-context"}
+    if args and args[0] in runtime_commands:
+        return _handle_runtime_command(args)
+    return _handle_sync_command(args)
+
+
 if __name__ == "__main__":
     try:
         raise SystemExit(main())

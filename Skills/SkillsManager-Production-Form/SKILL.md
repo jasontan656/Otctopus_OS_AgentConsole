@@ -1,114 +1,67 @@
 ---
 name: SkillsManager-Production-Form
-description: 持续维护 console 目录的产品形态，并沉淀将 Skills 目录作为 console 产品化源面的本地设计历史。
+description: 持续维护 console 目录的产品形态，并沉淀将 Skills 目录作为 console 产品化源面的本地设计连续性的技能。
+skill_mode: guide_with_tool
 metadata:
   doc_structure:
     doc_id: skillsmanager_production_form.entry.facade
     doc_type: skill_facade
     topic: Entry facade for the SkillsManager-Production-Form skill
-    anchors:
-    - target: ./references/runtime_contracts/SKILL_RUNTIME_CONTRACT_human.md
-      relation: routes_to
-      direction: downstream
-      reason: The facade routes runtime execution to the CLI-first contract.
 ---
 
 # SkillsManager-Production-Form
 
-## Runtime Entry
-- Primary runtime entry: `./.venv_backend_skills/bin/python Skills/SkillsManager-Production-Form/scripts/Cli_Toolbox.py contract --json`
-- CLI JSON is the primary runtime source; `SKILL.md` only remains as a facade and routing narrative.
+## 1. 模型立刻需要知道的事情
+### 1. 总览
+- 本技能用于持续维护 `Otctopus_OS_AgentConsole/Skills` 的 console 产品形态，并保留本地设计连续性。
+- 本技能只治理 console 产品形态、产品意图与本地连续性日志，不替代具体 domain skill 实现、mirror 同步或 Git 推送。
+- 当前形态为 `guide_with_tool`；门面直接暴露功能入口，深层正文沿各入口继续下沉。
 
+### 2. 技能约束
+- 进入任一功能入口后，沿当前动作闭环继续阅读：
+  - `contract`
+  - `tools`
+  - `execution`
+  - `validation`
+- 文档是真源；`read-contract-context` 输出当前入口链路的编译结果，`read-path-context` 作为等价别名保留。
+- active 连续性日志只能写入受管 runtime root；repo 内 seed snapshot 只用于首轮迁移与审计。
+- 当 console 产品化判断触及 root file 受管文件时，正文维护必须切到 `$Meta-RootFile-Manager`，不得在当前技能里直改外部受管文件。
 
-## 1. 定位
-- 本文件只做门面入口，不承载规则正文。
-- 本技能的唯一主轴是：`console_product_form -> local_iteration_log -> next_console_productization_decision`。
-- 本技能专门服务 `Otctopus_OS_AgentConsole` 中 console 目录的持续产品化维护，把“console 目录现在处于什么产品形态、为什么这样组织、最近收敛了哪些边界、下一步还要塑什么”沉淀成稳定可读的技能上下文。
-- 本技能聚焦“把 `Skills/` 目录作为 console 产品化源面来治理”的相关技能管理，而不是替代具体 domain skill 的实现本体。
-- 当 console 产品化判断涉及 root file 受管文件时，本技能只负责声明边界与路由，真正的正文治理必须交给 `$Meta-RootFile-Manager`，不得直接编辑外部受管文件。
-- 本技能存在运行态规则；运行入口、日志路径与输出合同应以 `Cli_Toolbox.py` 的 machine-readable 输出为准。
-- 本技能的 active runtime 日志必须落盘到 `/home/jasontan656/AI_Projects/Codex_Skill_Runtime/SkillsManager-Production-Form`；默认结果根为 `/home/jasontan656/AI_Projects/Codex_Skills_Result/SkillsManager-Production-Form`。
-- `references/runtime/ITERATION_LOG.md` 仅保留为 legacy seed snapshot；新的迭代日志不得继续写回技能目录。
+### 3. 顶层常驻合同
+- 当前工程仓仍是 `Otctopus_OS_AgentConsole`，`Skills/` 目录是 console 产品化源面。
+- codex 安装目录是部署面，不是 console 产品化的直接编辑面。
+- 当前产品叙事仍以“高级个人助理的定制化思路 + 技能原子化治理 + AI 原生维护”为主轴。
 
-## 2. 必读顺序
-1. 先读取运行合同：
-   - `./.venv_backend_skills/bin/python Skills/SkillsManager-Production-Form/scripts/Cli_Toolbox.py working-contract --json`
-2. 再读取当前 console 产品意图快照：
-   - `./.venv_backend_skills/bin/python Skills/SkillsManager-Production-Form/scripts/Cli_Toolbox.py intent-snapshot --json`
-3. 若本回合要延续历史决策，先读取最近的本地设计变更：
-   - `./.venv_backend_skills/bin/python Skills/SkillsManager-Production-Form/scripts/Cli_Toolbox.py latest-log --json`
-4. 若本回合涉及 root file 受管文件，必须先路由到 `$Meta-RootFile-Manager` 的受管流程；不得在本技能上下文里直接编辑外部受管文件。
-5. 当本回合形成新的 console 产品判断、目录边界收敛或技能产品化规则变更后，必须追加本地日志：
-   - `./.venv_backend_skills/bin/python Skills/SkillsManager-Production-Form/scripts/Cli_Toolbox.py append-iteration-log ...`
-6. 若本回合只是在回答问题、不形成新的产品判断，可跳过日志写入，但不得跳过前 1 到 4 步的历史收敛。
+## 2. 功能入口
+- [工作合同]：`path/working_contract/00_WORKING_CONTRACT_ENTRY.md`
+  - 作用：读取当前 console 产品形态、运行根与硬边界的稳定合同。
+  - 快捷阅读：`python3 ./scripts/Cli_Toolbox.py read-contract-context --entry working_contract --json`
+- [产品意图]：`path/current_intent/00_CURRENT_INTENT_ENTRY.md`
+  - 作用：读取当前 console 产品身份、主叙事、方法论与阶段目标。
+  - 快捷阅读：`python3 ./scripts/Cli_Toolbox.py read-contract-context --entry current_intent --json`
+- [最近迭代]：`path/latest_log/00_LATEST_LOG_ENTRY.md`
+  - 作用：读取受管 runtime log 的最新记录与 seed snapshot 迁移规则。
+  - 快捷阅读：`python3 ./scripts/Cli_Toolbox.py read-contract-context --entry latest_log --json`
+- [追加迭代日志]：`path/append_iteration_log/00_APPEND_ITERATION_LOG_ENTRY.md`
+  - 作用：按固定模板把新的 console 产品化判断写入 active runtime log。
+  - 快捷阅读：`python3 ./scripts/Cli_Toolbox.py read-contract-context --entry append_iteration_log --json`
+- [RootFile 边界]：`path/rootfile_boundary/00_ROOTFILE_BOUNDARY_ENTRY.md`
+  - 作用：当产品形态判断触及外部 root file 时，明确切换到 `$Meta-RootFile-Manager`。
+  - 快捷阅读：`python3 ./scripts/Cli_Toolbox.py read-contract-context --entry rootfile_boundary --json`
 
-## 3. 分类入口
-- 运行合同层：
-  - `references/runtime/WORKING_STATE.json`
-  - `references/runtime/WORKING_STATE.md`
-- 当前目标层：
-  - `references/runtime/CURRENT_PRODUCT_INTENT.md`
-- 历史记录层：
-  - `references/runtime/ITERATION_LOG.md`
-  - `references/runtime/LOG_ENTRY_TEMPLATE.md`
-- 运行落盘层：
-  - `/home/jasontan656/AI_Projects/Codex_Skill_Runtime/SkillsManager-Production-Form/ITERATION_LOG.md`
-  - `/home/jasontan656/AI_Projects/Codex_Skills_Result/SkillsManager-Production-Form/`
-- 工具层：
-  - `scripts/Cli_Toolbox.py`
-- 测试层：
-  - `tests/test_cli_toolbox.py`
-- 运行边界层：
-  - `/home/jasontan656/AI_Projects/AGENTS.md`
-  - `/home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/AGENTS.md`
-
-## 4. 适用域
-- 适用于：`Otctopus_OS_AgentConsole` 的 console 目录产品形态收敛、`Skills/` 目录产品化治理、技能管理面命名/边界/运行面持续塑形。
-- 适用于：当 AI 需要先理解“console 目录现在应该以什么产品形态存在”再继续推进技能治理时。
-- 适用于：当 console 产品化决策触及 `AGENTS.md`、`README.md`、`LICENSE` 等 root file 受管文件时，为这些文件声明必须走 `$Meta-RootFile-Manager` 的治理链。
-- 不适用于：替代具体 domain skill 的实现细节、替代 `SkillsManager-Mirror-To-Codex` 的同步职责、替代 Git 提交本身。
-- 不适用于：绕过 `$Meta-RootFile-Manager` 直接维护 root file 受管文件正文。
-- 不适用于：长期公开 release 日志；本技能只承担 console 产品化阶段的本地连续性上下文。
-
-## 5. 执行入口
-- 统一入口：
-  - `./.venv_backend_skills/bin/python Skills/SkillsManager-Production-Form/scripts/Cli_Toolbox.py working-contract --json`
-- 当前目标快照：
-  - `./.venv_backend_skills/bin/python Skills/SkillsManager-Production-Form/scripts/Cli_Toolbox.py intent-snapshot --json`
-- 最近历史：
-  - `./.venv_backend_skills/bin/python Skills/SkillsManager-Production-Form/scripts/Cli_Toolbox.py latest-log --json`
-- 追加本地迭代日志：
-  - `./.venv_backend_skills/bin/python Skills/SkillsManager-Production-Form/scripts/Cli_Toolbox.py append-iteration-log --title "<title>" --summary "<summary>" --decision "<decision>" --affected-path "<path>" --next-step "<next>"`
-- 运行时落盘约束：
-  - 默认日志落点：`/home/jasontan656/AI_Projects/Codex_Skill_Runtime/SkillsManager-Production-Form/ITERATION_LOG.md`
-  - 默认结果根：`/home/jasontan656/AI_Projects/Codex_Skills_Result/SkillsManager-Production-Form/`
-  - 若未来新增定向产物型命令，必须支持显式产物路径；未指定时默认落入上述 result 根。
-
-## 6. 读取原则
-- 门面只做路由，规则正文下沉到 `references/runtime/` 与 `scripts/`。
-- 先收敛“当前 console 产品意图”和“最近迭代历史”，再继续推进新的 console 产品化变更；不要脱离历史上下文直接补丁式决策。
-- 若变更触及 root file 受管文件，先声明产品边界，再切换到 `$Meta-RootFile-Manager` 完成 collect / push / target-contract 等受管动作，不得在本技能上下文直接手改外部文件。
-- 本技能的本地设计变更日志是阶段性真源；新的关键 console 产品判断必须先落本地 markdown。
-- 历史日志迁移后，repo 内 `references/runtime/ITERATION_LOG.md` 只作为 bootstrap seed；active 写入必须留在 governed runtime root。
-- 日志应记录真正的 console 产品化判断，而不是流水账式操作输出。
-- 若本技能的工作流、日志字段或当前目标发生结构变化，同步更新门面、runtime contract、日志模板、脚本与测试。
-
-## 7. 结构索引
+## 3. 目录结构图
 ```text
 SkillsManager-Production-Form/
 ├── SKILL.md
 ├── agents/
-│   └── openai.yaml
-├── scripts/
-│   └── Cli_Toolbox.py
-├── references/
-│   ├── runtime/
-│   │   ├── WORKING_STATE.json
-│   │   ├── WORKING_STATE.md
-│   │   ├── CURRENT_PRODUCT_INTENT.md
-│   │   ├── ITERATION_LOG.md
-│   │   └── LOG_ENTRY_TEMPLATE.md
-│   └── tooling/
-└── tests/
-    └── test_cli_toolbox.py
+├── path/
+│   ├── working_contract/
+│   ├── current_intent/
+│   ├── latest_log/
+│   ├── append_iteration_log/
+│   └── rootfile_boundary/
+└── scripts/
 ```
+- `path/`：本技能唯一的文档承载面，console 产品形态、产品意图、迭代历史、日志追加与 rootfile 边界都沿入口链路下沉。
+- `scripts/`：工作合同 CLI、链路编译 CLI、本地日志工具与回归测试。
+- `agents/`：agent runtime config。

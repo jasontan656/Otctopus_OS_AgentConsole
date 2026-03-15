@@ -20,6 +20,7 @@ MANAGED_ZONES = {
     "open_source_project_analysis": MANAGED_ROOT / "Open_Source_Project_Analysis",
     "books_and_readings": MANAGED_ROOT / "Books_and_Readings",
     "temporary_projects": MANAGED_ROOT / "Temporary_Projects",
+    "temporary_files": MANAGED_ROOT / "Temporary_Files",
     "company_documents": MANAGED_ROOT / "Company_Documents",
     "external_research_reports": MANAGED_ROOT / "External_Research_Reports",
 }
