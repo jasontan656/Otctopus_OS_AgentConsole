@@ -67,13 +67,6 @@ def _linear_skill(root: Path) -> None:
 name: temp-linear
 description: linear path
 skill_mode: guide_with_tool
-metadata:
-  doc_structure:
-    reading_chain:
-    - key: primary_flow
-      target: path/primary_flow/00_PRIMARY_FLOW_ENTRY.md
-      hop: entry
-      reason: facade routes to function entry
 ---
 
 # Temp Linear
@@ -90,6 +83,7 @@ metadata:
 
 ## 2. 功能入口
 - [primary_flow]：`path/primary_flow/00_PRIMARY_FLOW_ENTRY.md`
+  - 快捷阅读：`python3 ./scripts/Cli_Toolbox.py read-contract-context --entry primary_flow --json`
 
 ## 3. 目录结构图
 ```text

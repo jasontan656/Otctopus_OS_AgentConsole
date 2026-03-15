@@ -9,14 +9,18 @@ from construction_plan_rendering import PREVIEW_PLAN_KIND
 from construction_plan_support import construction_plan_init_result, construction_plan_lint_summary
 from devflow_agents_support import scaffold_and_collect_devflow_agents
 from mother_doc_contract import (
-    MOTHER_DOC_FORBIDDEN_TERMS,
+    MOTHER_DOC_ANCHOR_FIELDS,
+    MOTHER_DOC_ALLOWED_DOC_ROLES,
+    MOTHER_DOC_DIRECTORY_NAME_PATTERN,
+    MOTHER_DOC_FILE_BASENAME_PATTERN,
     MOTHER_DOC_FRONTMATTER_REQUIRED_FIELDS,
     MOTHER_DOC_REQUIRED_ENTRY_ALTERNATIVES,
-    MOTHER_DOC_REQUIRED_FILES,
-    MOTHER_DOC_REQUIRED_SIGNALS,
+    MOTHER_DOC_REQUIRED_ROOT_INDEX_RULES,
+    MOTHER_DOC_ROOT_REQUIRED_FILES,
     MOTHER_DOC_WORK_STATES,
 )
 from mother_doc_lint_support import mother_doc_lint_summary
+from mother_doc_root_index_support import refresh_root_index_result
 from mother_doc_state_support import mark_docs_modified, sync_doc_states
 from runtime_context_support import graph_postflight_summary as build_graph_postflight_summary
 from runtime_context_support import graph_preflight_summary as build_graph_preflight_summary
@@ -50,7 +54,6 @@ ARCHIVE_DIR_PATTERN = re.compile(r"^(\d{2})_.+")
 
 
 def mother_doc_init_result(target: Path, force: bool) -> tuple[dict, int]:
-    template_root = Path(TEMPLATES["mother_doc_root"]).resolve()
     preexisting_items = [child for child in target.iterdir()] if target.exists() else []
     if preexisting_items and not force:
         return {
@@ -62,20 +65,16 @@ def mother_doc_init_result(target: Path, force: bool) -> tuple[dict, int]:
 
     created_files: list[str] = []
     target.mkdir(parents=True, exist_ok=True)
-    for source in sorted(template_root.rglob("*")):
-        relative_path = source.relative_to(template_root)
-        destination = target / relative_path
-        if source.is_dir():
-            destination.mkdir(parents=True, exist_ok=True)
-            continue
-        destination.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(source, destination)
-        created_files.append(str(destination))
+    refresh_document, refresh_status = refresh_root_index_result(target)
+    if refresh_status != 0:
+        return refresh_document, refresh_status
+    created_files.append(str(target / "00_index.md"))
 
     return {
         "status": "pass",
         "target": str(target),
         "created_files": created_files,
+        "root_index_refresh": refresh_document,
         "lint_command": f"./.venv_backend_skills/bin/python Skills/Workflow-CentralFlow2-OctppusOS/scripts/Cli_Toolbox.py mother-doc-lint --path {target} --json",
     }, 0
 
@@ -106,24 +105,6 @@ def target_scaffold_result(runtime: dict[str, object], force: bool) -> tuple[dic
             return {"status": "fail", "reason": "mother_doc_init_failed", "result": mother_doc_result}, 1
         operations.append({"kind": "mother_doc_init", "result": mother_doc_result})
         created_items.extend(mother_doc_result["created_files"])
-
-    construction_plan_root = Path(runtime["construction_plan_root"])
-    if not construction_plan_root.exists():
-        design_plan_path = mother_doc_root / "08_dev_execution_plan.md"
-        construction_result, construction_status = construction_plan_init_result(
-            construction_plan_root,
-            design_plan_path,
-            force=False,
-            plan_kind=PREVIEW_PLAN_KIND,
-        )
-        if construction_status != 0:
-            return {
-                "status": "fail",
-                "reason": "construction_plan_init_failed",
-                "result": construction_result,
-            }, 1
-        operations.append({"kind": "construction_plan_init", "result": construction_result})
-        created_items.extend(construction_result["created_packs"])
 
     return {
         "status": "pass",
@@ -207,8 +188,8 @@ def workflow_contract_document(
         project_agents=project_agents,
     )
     top_level_resident_docs = [
-        "rules/OCTOPUS_SKILL_HARD_RULES.md",
-        "references/tooling/SKILL_TOOLING_EXECUTION_PLAYBOOK.md",
+        "path/development_loop/10_CONTRACT.md",
+        "path/development_loop/15_TOOLS.md",
         str(ROOT_AGENTS_PATH),
     ]
     project_agents_path = runtime["project_agents_path"]
@@ -230,7 +211,9 @@ def workflow_contract_document(
             "stage-command-contract",
             "stage-graph-contract",
             "template-index",
+            "mother-doc-refresh-root-index",
             "mother-doc-mark-modified",
+            "mother-doc-sync-client-copy",
         ],
         "top_level_resident_docs": top_level_resident_docs,
         "stage_switch_protocol": PHASE_READ_POLICY["stage_switch_protocol"],
@@ -253,11 +236,14 @@ def workflow_contract_document(
             for name, data in STAGES.items()
         },
         "stage_graph_roles": {name: data["graph_role"] for name, data in STAGES.items()},
-        "mother_doc_required_files": MOTHER_DOC_REQUIRED_FILES,
+        "mother_doc_required_files": MOTHER_DOC_ROOT_REQUIRED_FILES,
         "mother_doc_required_entry_alternatives": MOTHER_DOC_REQUIRED_ENTRY_ALTERNATIVES,
-        "mother_doc_required_signals": MOTHER_DOC_REQUIRED_SIGNALS,
-        "mother_doc_forbidden_terms": MOTHER_DOC_FORBIDDEN_TERMS,
         "mother_doc_frontmatter_required_fields": MOTHER_DOC_FRONTMATTER_REQUIRED_FIELDS,
+        "mother_doc_anchor_fields": MOTHER_DOC_ANCHOR_FIELDS,
+        "mother_doc_allowed_doc_roles": MOTHER_DOC_ALLOWED_DOC_ROLES,
+        "mother_doc_required_root_index_rules": MOTHER_DOC_REQUIRED_ROOT_INDEX_RULES,
+        "mother_doc_file_basename_pattern": MOTHER_DOC_FILE_BASENAME_PATTERN,
+        "mother_doc_directory_name_pattern": MOTHER_DOC_DIRECTORY_NAME_PATTERN,
         "mother_doc_work_states": MOTHER_DOC_WORK_STATES,
         "requirement_atom_required_fields": REQUIREMENT_ATOM_FIELDS,
         "baseline_mode_policy": BASELINE_MODES,

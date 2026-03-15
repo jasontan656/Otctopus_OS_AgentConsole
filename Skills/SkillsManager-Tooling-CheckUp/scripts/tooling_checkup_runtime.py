@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import re
 from typing import Any
 
 import yaml
@@ -55,9 +56,7 @@ def _parse_frontmatter(markdown_path: Path) -> tuple[dict[str, Any], str]:
 def _reading_chain(markdown_path: Path) -> list[dict[str, str]]:
     frontmatter, _ = _parse_frontmatter(markdown_path)
     if markdown_path.name == "SKILL.md":
-        metadata = frontmatter.get("metadata")
-        doc_structure = metadata.get("doc_structure", {}) if isinstance(metadata, dict) else {}
-        raw_chain = doc_structure.get("reading_chain")
+        return _facade_entries(markdown_path)
     else:
         raw_chain = frontmatter.get("reading_chain")
     if not isinstance(raw_chain, list):
@@ -72,6 +71,37 @@ def _reading_chain(markdown_path: Path) -> list[dict[str, str]]:
         if isinstance(key, str) and isinstance(target, str) and isinstance(hop, str):
             chain.append({"key": key, "target": target, "hop": hop})
     return chain
+
+
+def _facade_entries(markdown_path: Path) -> list[dict[str, str]]:
+    _frontmatter, body = _parse_frontmatter(markdown_path)
+    items: list[dict[str, str]] = []
+    current: dict[str, str] | None = None
+    in_entries = False
+    for raw_line in body.splitlines():
+        stripped = raw_line.strip()
+        if stripped == "## 2. 功能入口":
+            in_entries = True
+            continue
+        if in_entries and stripped.startswith("## "):
+            break
+        if not in_entries:
+            continue
+        match = re.match(r"^- \[(?P<label>[^\]]+)\][：:]\s*`(?P<target>[^`]+)`", stripped)
+        if match:
+            current = {
+                "key": match.group("label").strip(),
+                "target": match.group("target").strip(),
+                "hop": "entry",
+            }
+            items.append(current)
+            continue
+        if current is None:
+            continue
+        command_match = re.search(r"--entry\s+([A-Za-z0-9_.-]+)", stripped)
+        if command_match:
+            current["key"] = command_match.group(1).strip()
+    return items
 
 
 def _extract_title(body: str) -> str:

@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import subprocess
 from pathlib import Path
 from typing import TypedDict
@@ -59,9 +60,7 @@ def _parse_frontmatter(markdown_path: Path) -> tuple[dict[str, object], str]:
 def _chain(markdown_path: Path) -> list[dict[str, str]]:
     frontmatter, _ = _parse_frontmatter(markdown_path)
     if markdown_path.name == "SKILL.md":
-        metadata = frontmatter.get("metadata")
-        doc_structure = metadata.get("doc_structure", {}) if isinstance(metadata, dict) else {}
-        raw = doc_structure.get("reading_chain")
+        return _facade_entries(markdown_path)
     else:
         raw = frontmatter.get("reading_chain")
     if not isinstance(raw, list):
@@ -82,6 +81,38 @@ def _chain(markdown_path: Path) -> list[dict[str, str]]:
                     "reason": str(item.get("reason", "")),
                 }
             )
+    return items
+
+
+def _facade_entries(markdown_path: Path) -> list[dict[str, str]]:
+    _frontmatter, body = _parse_frontmatter(markdown_path)
+    items: list[dict[str, str]] = []
+    current: dict[str, str] | None = None
+    in_entries = False
+    for raw_line in body.splitlines():
+        stripped = raw_line.strip()
+        if stripped == "## 2. 功能入口":
+            in_entries = True
+            continue
+        if in_entries and stripped.startswith("## "):
+            break
+        if not in_entries:
+            continue
+        match = re.match(r"^- \[(?P<label>[^\]]+)\][：:]\s*`(?P<target>[^`]+)`", stripped)
+        if match:
+            current = {
+                "key": match.group("label").strip(),
+                "target": match.group("target").strip(),
+                "hop": "entry",
+                "reason": "",
+            }
+            items.append(current)
+            continue
+        if current is None:
+            continue
+        command_match = re.search(r"--entry\s+([A-Za-z0-9_.-]+)", stripped)
+        if command_match:
+            current["key"] = command_match.group(1).strip()
     return items
 
 

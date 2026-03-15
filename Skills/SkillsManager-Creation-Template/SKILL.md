@@ -8,23 +8,6 @@ metadata:
     doc_id: skillsmanager_creation_template.entry.facade
     doc_type: skill_facade
     topic: Entry facade for the SkillsManager-Creation-Template skill
-    reading_chain:
-    - key: guide_only
-      target: ./path/template_creation/guide_only/00_GUIDE_ONLY_ENTRY.md
-      hop: entry
-      reason: guide_only creation is a top-level function entry.
-    - key: guide_with_tool
-      target: ./path/template_creation/guide_with_tool/00_GUIDE_WITH_TOOL_ENTRY.md
-      hop: entry
-      reason: guide_with_tool creation is a top-level function entry.
-    - key: executable_workflow
-      target: ./path/template_creation/executable_workflow_skill/00_EXECUTABLE_WORKFLOW_ENTRY.md
-      hop: entry
-      reason: executable_workflow_skill creation is a top-level function entry.
-    - key: maintenance
-      target: ./path/maintenance/00_MAINTENANCE_ENTRY.md
-      hop: entry
-      reason: template maintenance is a top-level function entry.
 ---
 
 # SkillsManager-Creation-Template

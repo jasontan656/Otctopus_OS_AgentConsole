@@ -79,7 +79,7 @@ class TestCreateSkillFromTemplateRegressionTest:
             assert payload["skill_mode"] == "guide_with_tool"
             assert payload["resources_created"] == ["path", "agents", "scripts"]
             assert "skill_mode: guide_with_tool" in skill_md
-            assert "reading_chain:" in skill_md
+            assert "reading_chain:" not in skill_md
             assert "## 1. 模型立刻需要知道的事情" in skill_md
             assert "## 2. 功能入口" in skill_md
             assert "## 3. 目录结构图" in skill_md
@@ -140,7 +140,7 @@ class TestCreateSkillFromTemplateRegressionTest:
             compiled_payload = json.loads(compiled_output.stdout)
 
             assert payload["skill_mode"] == "executable_workflow_skill"
-            assert "reading_chain:" in skill_md
+            assert "reading_chain:" not in skill_md
             assert "## 1. 模型立刻需要知道的事情" in skill_md
             assert "## 2. 功能入口" in skill_md
             assert "## 3. 目录结构图" in skill_md

@@ -1,4 +1,6 @@
-interface:
-  display_name: Workflow-CentralFlow2-OctppusOS
-  short_description: 开发闭环 workflow 技能；当前先保持原骨架，后续再逐步通用化。
-  default_prompt: Use $Workflow-CentralFlow2-OctppusOS. First run `./.venv_backend_skills/bin/python Skills/Workflow-CentralFlow2-OctppusOS/scripts/Cli_Toolbox.py workflow-contract --json`. Treat CLI JSON as the primary runtime source and use markdown mirrors only when the contract still leaves a real gap.
+version: 1
+agent:
+  name: Workflow Centralflow2 Octppusos
+  description: Workflow-CentralFlow2-OctppusOS skill agent for executable_workflow_skill
+  default_prompt: |
+    Use $Workflow-CentralFlow2-OctppusOS.

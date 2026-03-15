@@ -7,27 +7,6 @@ metadata:
     doc_id: skillsmanager_tooling_checkup.entry.facade
     doc_type: skill_facade
     topic: Entry facade for the SkillsManager-Tooling-CheckUp skill
-    reading_chain:
-    - key: techstack_baseline
-      target: ./path/techstack_baseline/00_TECHSTACK_BASELINE_ENTRY.md
-      hop: entry
-      reason: techstack baseline checking is a top-level function entry.
-    - key: output_governance
-      target: ./path/output_governance/00_OUTPUT_GOVERNANCE_ENTRY.md
-      hop: entry
-      reason: output governance checking is a top-level function entry.
-    - key: cli_surface
-      target: ./path/cli_surface/00_CLI_SURFACE_ENTRY.md
-      hop: entry
-      reason: CLI surface checking is a top-level function entry.
-    - key: tooling_boundary
-      target: ./path/tooling_boundary/00_TOOLING_BOUNDARY_ENTRY.md
-      hop: entry
-      reason: tooling boundary checking is a top-level function entry.
-    - key: remediation
-      target: ./path/remediation/00_REMEDIATION_ENTRY.md
-      hop: entry
-      reason: remediation is a top-level function entry.
 ---
 
 # SkillsManager-Tooling-CheckUp

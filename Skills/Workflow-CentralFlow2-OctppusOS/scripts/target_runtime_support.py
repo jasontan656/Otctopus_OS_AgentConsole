@@ -38,6 +38,7 @@ PROJECT_STRUCTURE_SKILL_PATH = (
     _resolve_codex_home() / "skills" / "Dev-ProjectStructure-Constitution" / "SKILL.md"
 )
 DEVELOPMENT_DOCS_DIRNAME = "Development_Docs"
+DEFAULT_PRODUCT_REPO_NAME = "Octopus_OS"
 
 ARCHIVE_DIR_PATTERN = re.compile(r"^(\d{2})_.+")
 PACK_DIR_PATTERN = re.compile(r"^\d{2}_.+")
@@ -52,6 +53,7 @@ class TargetRuntimeRecord(TypedDict):
     codebase_root: Path
     graph_runtime_root: Path
     mother_doc_root: Path
+    client_mother_doc_root: Path
     mother_doc_index: Path
     construction_plan_root: Path
     construction_plan_index: Path
@@ -92,6 +94,7 @@ class TargetRuntimeContractPayload(TypedDict):
     codebase_root: str
     graph_runtime_root: str
     mother_doc_root: str
+    client_mother_doc_root: str
     mother_doc_index: str
     mother_doc_exists: bool
     latest_archived_iteration: str | None
@@ -164,6 +167,13 @@ def _infer_module_dir(docs_root: Path, codebase_root: Path, explicit_module_dir:
     return docs_root.name
 
 
+def _default_target_root() -> Path:
+    preferred_repo_root = (WORKSPACE_ROOT / DEFAULT_PRODUCT_REPO_NAME).resolve()
+    if preferred_repo_root.exists():
+        return preferred_repo_root
+    return WORKSPACE_ROOT
+
+
 def resolve_target_runtime(
     *,
     target_root: str | Path | None = None,
@@ -174,7 +184,7 @@ def resolve_target_runtime(
     graph_runtime_root: str | Path | None = None,
     project_agents: str | Path | None = None,
 ) -> TargetRuntimeRecord:
-    resolved_target_root = Path(target_root or WORKSPACE_ROOT).resolve()
+    resolved_target_root = Path(target_root).resolve() if target_root is not None else _default_target_root()
     explicit_codebase_root = _resolve_optional(codebase_root)
     explicit_docs_root = _resolve_optional(docs_root)
     explicit_development_docs_root = _resolve_optional(development_docs_root)
@@ -207,6 +217,7 @@ def resolve_target_runtime(
         else (resolved_docs_root / "graph").resolve()
     )
     resolved_mother_doc_root = resolved_docs_root / "mother_doc"
+    resolved_client_mother_doc_root = resolved_docs_root.parent / "Client_Applications" / "mother_doc"
     resolved_construction_plan_root = (
         resolved_mother_doc_root / "execution_atom_plan_validation_packs"
     )
@@ -257,6 +268,7 @@ def resolve_target_runtime(
         "codebase_root": resolved_codebase_root,
         "graph_runtime_root": resolved_graph_runtime_root,
         "mother_doc_root": resolved_mother_doc_root,
+        "client_mother_doc_root": resolved_client_mother_doc_root,
         "mother_doc_index": resolved_mother_doc_root / "00_index.md",
         "construction_plan_root": resolved_construction_plan_root,
         "construction_plan_index": resolved_construction_plan_root / "00_index.md",
@@ -329,7 +341,8 @@ def target_runtime_contract_payload(
         "docs_root": str(runtime["docs_root"]),
         "docs_root_source": runtime["docs_root_source"],
         "docs_root_resolution_rule": (
-            "treat <target_root> as the repo/workspace boundary inside AI_Projects, "
+            "treat <target_root> as the current repo root boundary inside AI_Projects, "
+            "default the no-argument runtime to <workspace_root>/Octopus_OS when that repo exists, "
             "treat <docs_root> as the current code object's single governed Development_Docs root, "
             "resolve <development_docs_root> to the same filesystem root as <docs_root> rather than an extra parent container, "
             "treat <module_dir> only as an optional logical topic identifier and never as a required filesystem segment, "
@@ -343,6 +356,7 @@ def target_runtime_contract_payload(
         "codebase_root": str(runtime["codebase_root"]),
         "graph_runtime_root": str(runtime["graph_runtime_root"]),
         "mother_doc_root": str(runtime["mother_doc_root"]),
+        "client_mother_doc_root": str(runtime["client_mother_doc_root"]),
         "mother_doc_index": str(runtime["mother_doc_index"]),
         "mother_doc_exists": runtime["mother_doc_exists"],
         "latest_archived_iteration": str(latest_archive) if latest_archive is not None else None,
@@ -361,9 +375,10 @@ def target_runtime_contract_payload(
         "ready_for_service": runtime["ready_for_service"],
         "reuse_actions": reuse_actions,
         "first_actions": [
-            "treat <target_root> as the repo/workspace boundary under AI_Projects, not as the code repo itself",
+            "treat <target_root> as the current repo root under AI_Projects and derive the governed Development_Docs from that repo unless explicitly overridden",
             "validate that the resolved docs_root already exists and sits inside target_root; otherwise refuse service",
             "inspect existing mother_doc, archived iterations, execution packs, AGENTS governance state, and graph state before deciding whether to init or reuse",
+            "treat <docs_root>/mother_doc as the only write source of truth and refresh <target_root>/Client_Applications/mother_doc only through the dedicated mother-doc sync command",
             "reuse existing task packs and graph context when they are already present; do not fork a second disconnected documentation line",
         ],
     }

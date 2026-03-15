@@ -82,8 +82,8 @@ DISCOVERY_SCOPE_POLICY = {
 
 PHASE_READ_POLICY = {
     "top_level_resident_docs": [
-        "rules/OCTOPUS_SKILL_HARD_RULES.md",
-        "references/tooling/SKILL_TOOLING_EXECUTION_PLAYBOOK.md",
+        "path/development_loop/10_CONTRACT.md",
+        "path/development_loop/15_TOOLS.md",
         str(ROOT_AGENTS_PATH),
         "<docs_root>/AGENTS.md when present",
         "Dev-ProjectStructure-Constitution/SKILL.md when docs_root is not yet fixed",
@@ -185,7 +185,7 @@ EXECUTION_ATOM_PHASE_FIELDS = [
 ]
 
 EXECUTION_ATOM_PLAN_LIFECYCLE_RULES = {
-    "official_plan_prerequisite": "mother_doc must already exist, mother-doc-lint must pass, and 08_dev_execution_plan.md must expose concrete design steps",
+    "official_plan_prerequisite": "mother_doc must already exist, mother-doc-lint must pass, and at least one mother_doc atom must be marked modified so construction_plan can cluster the changed slice into packs",
     "preview_skeleton_usage": "preview_skeleton is display-only scaffolding and cannot be used for implementation, state sync, or active pack selection",
     "fresh_plan_rule": "official construction plans start at planned_unused and become in_execution only when implementation consumes them",
     "non_reuse_rule": "accepted or retired official plans cannot be recycled as the fresh input of a new construction round; generate a new official plan instead",

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
+import re
 from typing import Any
 
 import yaml
@@ -151,9 +152,7 @@ def lint_root_shape(target_root: Path) -> dict[str, Any]:
 def _reading_chain(markdown_path: Path) -> list[ChainEdge]:
     frontmatter, _ = _parse_frontmatter(markdown_path)
     if markdown_path.name == "SKILL.md":
-        metadata = frontmatter.get("metadata")
-        doc_structure = metadata.get("doc_structure", {}) if isinstance(metadata, dict) else {}
-        raw_chain = doc_structure.get("reading_chain")
+        return _facade_entries(markdown_path)
     else:
         raw_chain = frontmatter.get("reading_chain")
     if not isinstance(raw_chain, list):
@@ -179,6 +178,39 @@ def _reading_chain(markdown_path: Path) -> list[ChainEdge]:
                 source=markdown_path,
             )
         )
+    return edges
+
+
+def _facade_entries(markdown_path: Path) -> list[ChainEdge]:
+    _frontmatter, body = _parse_frontmatter(markdown_path)
+    edges: list[ChainEdge] = []
+    current: ChainEdge | None = None
+    in_entries = False
+    for raw_line in body.splitlines():
+        stripped = raw_line.strip()
+        if stripped == "## 2. 功能入口":
+            in_entries = True
+            continue
+        if in_entries and stripped.startswith("## "):
+            break
+        if not in_entries:
+            continue
+        match = re.match(r"^- \[(?P<label>[^\]]+)\][：:]\s*`(?P<target>[^`]+)`", stripped)
+        if match:
+            current = ChainEdge(
+                key=match.group("label").strip(),
+                target=match.group("target").strip(),
+                hop="entry",
+                reason="",
+                source=markdown_path,
+            )
+            edges.append(current)
+            continue
+        if current is None:
+            continue
+        command_match = re.search(r"--entry\s+([A-Za-z0-9_.-]+)", stripped)
+        if command_match:
+            current.key = command_match.group(1).strip()
     return edges
 
 
@@ -233,10 +265,14 @@ def _lint_facade(target_root: Path, shape_kind: str) -> list[str]:
     if shape_kind != "facade_only":
         chain = _reading_chain(skill_md)
         if not chain:
-            errors.append("SKILL.md does not expose any reading-chain entry")
+            errors.append("SKILL.md does not expose any function entry in section 2")
+        if isinstance(frontmatter.get("metadata"), dict):
+            doc_structure = frontmatter["metadata"].get("doc_structure", {})
+            if isinstance(doc_structure, dict) and "reading_chain" in doc_structure:
+                errors.append("SKILL.md must not declare reading_chain in frontmatter; facade entries belong in section 2")
         for edge in chain:
             if edge.hop != "entry":
-                errors.append(f"SKILL.md reading_chain hop must be 'entry': {edge.target}")
+                errors.append(f"SKILL.md facade entry hop must be 'entry': {edge.target}")
     else:
         if "reading_chain" in frontmatter:
             errors.append("facade_only skills must not declare reading_chain in SKILL.md")

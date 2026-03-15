@@ -117,7 +117,9 @@ def stage_command_contract_payload(
             ],
             "optional_commands": [
                 f"./.venv_backend_skills/bin/python Skills/Workflow-CentralFlow2-OctppusOS/scripts/Cli_Toolbox.py graph-preflight --repo {codebase_root} --graph-runtime-root {graph_runtime_root} --allow-missing-index --json",
+                f"./.venv_backend_skills/bin/python Skills/Workflow-CentralFlow2-OctppusOS/scripts/Cli_Toolbox.py mother-doc-refresh-root-index --path {mother_doc_root} --json",
                 f"./.venv_backend_skills/bin/python Skills/Workflow-CentralFlow2-OctppusOS/scripts/Cli_Toolbox.py mother-doc-mark-modified --path {mother_doc_root} --doc-ref <mother_doc_doc> --auto-from-git --json",
+                f"./.venv_backend_skills/bin/python Skills/Workflow-CentralFlow2-OctppusOS/scripts/Cli_Toolbox.py mother-doc-sync-client-copy --source {mother_doc_root} --mirror {runtime['client_mother_doc_root']} --json",
             ],
             "required_iteration_actions": [
                 (
@@ -128,6 +130,8 @@ def stage_command_contract_payload(
                 "extract inherited target state, stable architecture decisions, unresolved blockers, and delivery deltas from the latest archived iteration",
                 "inspect existing execution packs before deciding whether to init a new pack root or reuse the current task lineage",
                 "read graph context after archive review so the new mother_doc reflects current code reality rather than stale assumptions",
+                "after any mother_doc structural write, run mother-doc-refresh-root-index so 00_index.md is regenerated from the current folder tree",
+                "after refreshing the root index, run mother-doc-sync-client-copy so the viewer-side Client_Applications/mother_doc mirror is brutally overwritten from the Development_Docs source tree",
             ],
         },
         "construction_plan": {
@@ -147,7 +151,7 @@ def stage_command_contract_payload(
             "required_reuse_actions": [
                 "classify any existing execution_atom_plan_validation_packs root before touching it: preview_skeleton must be replaced, accepted/retired plans must not be reused as fresh construction input",
                 "do not create a second disconnected task-pack tree under a different docs container for the same target",
-                "only an official_plan with plan_state=planned_unused or in_execution and current design-step coverage may remain as the active plan root",
+                "only an official_plan with plan_state=planned_unused or in_execution and current pack coverage may remain as the active plan root",
                 "only move a mother_doc atom from modified to planned after an actual pack has absorbed it and the doc records that pack ref",
             ],
         },

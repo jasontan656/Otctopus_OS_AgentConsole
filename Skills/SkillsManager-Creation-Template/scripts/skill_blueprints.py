@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 from textwrap import dedent
 
 GUIDE_ONLY_MODE = "guide_only"
@@ -42,11 +43,6 @@ def render_skill_md(skill_name: str, description: str, skill_mode: str) -> str:
                 f"    doc_id: {skill_name}.entry.facade",
                 "    doc_type: skill_facade",
                 f"    topic: Entry facade for {skill_name}",
-                "    reading_chain:",
-                "    - key: primary_flow",
-                "      target: path/primary_flow/00_PRIMARY_FLOW_ENTRY.md",
-                "      hop: entry",
-                "      reason: The facade exposes the default function entry.",
             ]
         )
     frontmatter.extend(["---", ""])
@@ -82,7 +78,7 @@ def render_skill_md(skill_name: str, description: str, skill_mode: str) -> str:
     overview = [
         f"- 当前形态为 `{skill_mode}`。",
         "- `SKILL.md + path/*.md` 承载完整正文。",
-        "- 功能入口通过 `reading_chain` 继续下沉。",
+        "- `SKILL.md` 正文直接暴露功能入口；下游节点通过 `reading_chain` 继续下沉。",
         "- `scripts/` 提供 `read-contract-context` 与 `read-path-context`。",
     ]
     if skill_mode == GUIDE_WITH_TOOL_MODE:
@@ -161,7 +157,7 @@ def runtime_contract_payload(skill_name: str, skill_mode: str) -> dict[str, obje
     payload["entry_doc"] = "path/primary_flow/00_PRIMARY_FLOW_ENTRY.md"
     payload["commands"] = ["runtime-contract", "read-contract-context", "read-path-context"]
     payload["layout_rule"] = "Folder layout must mirror reading order."
-    payload["compiler_rule"] = "CLI compiles reading_chain into one context payload; docs remain the only source of truth."
+    payload["compiler_rule"] = "CLI compiles facade entries plus downstream reading_chain into one context payload; docs remain the only source of truth."
     if skill_mode == GUIDE_WITH_TOOL_MODE:
         payload["reading_protocol"] = [
             "SKILL.md",
@@ -197,6 +193,7 @@ def render_generated_toolbox_script(skill_name: str, skill_mode: str) -> str:
             "",
             "import argparse",
             "import json",
+            "import re",
             "from pathlib import Path",
             "",
             "import yaml",
@@ -220,8 +217,9 @@ def render_generated_toolbox_script(skill_name: str, skill_mode: str) -> str:
             "",
             "def _chain(markdown_path: Path) -> list[dict[str, str]]:",
             "    frontmatter, _ = _parse_frontmatter(markdown_path)",
-            "    doc_structure = frontmatter.get('metadata', {}).get('doc_structure', {}) if isinstance(frontmatter.get('metadata'), dict) else {}",
-            "    raw = doc_structure.get('reading_chain') if markdown_path.name == 'SKILL.md' else frontmatter.get('reading_chain')",
+            "    if markdown_path.name == 'SKILL.md':",
+            "        return _facade_entries(markdown_path)",
+            "    raw = frontmatter.get('reading_chain')",
             "    if not isinstance(raw, list):",
             "        return []",
             "    items: list[dict[str, str]] = []",
@@ -233,6 +231,33 @@ def render_generated_toolbox_script(skill_name: str, skill_mode: str) -> str:
             "        hop = item.get('hop')",
             "        if isinstance(key, str) and isinstance(target, str) and isinstance(hop, str):",
             "            items.append({'key': key, 'target': target, 'hop': hop, 'reason': str(item.get('reason', ''))})",
+            "    return items",
+            "",
+            "",
+            "def _facade_entries(markdown_path: Path) -> list[dict[str, str]]:",
+            "    _frontmatter, body = _parse_frontmatter(markdown_path)",
+            "    items: list[dict[str, str]] = []",
+            "    current: dict[str, str] | None = None",
+            "    in_entries = False",
+            "    for raw_line in body.splitlines():",
+            "        stripped = raw_line.strip()",
+            "        if stripped == '## 2. 功能入口':",
+            "            in_entries = True",
+            "            continue",
+            "        if in_entries and stripped.startswith('## '):",
+            "            break",
+            "        if not in_entries:",
+            "            continue",
+            "        match = re.match(r\"^- \\[(?P<label>[^\\]]+)\\][：:]\\s*`(?P<target>[^`]+)`\", stripped)",
+            "        if match:",
+            "            current = {'key': match.group('label').strip(), 'target': match.group('target').strip(), 'hop': 'entry', 'reason': ''}",
+            "            items.append(current)",
+            "            continue",
+            "        if current is None:",
+            "            continue",
+            "        command_match = re.search(r\"--entry\\s+([A-Za-z0-9_.-]+)\", stripped)",
+            "        if command_match:",
+            "            current['key'] = command_match.group(1).strip()",
             "    return items",
             "",
             "",

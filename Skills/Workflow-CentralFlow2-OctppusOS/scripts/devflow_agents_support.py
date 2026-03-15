@@ -11,8 +11,26 @@ REPO_ROOT = SKILL_ROOT.parents[1]
 META_DEFAULT_MD_MANAGER_CLI = (
     REPO_ROOT / "Skills" / "Meta-RootFile-Manager" / "scripts" / "Cli_Toolbox.py"
 ).resolve()
-EXTERNAL_AGENTS_TEMPLATE = SKILL_ROOT / "assets" / "templates" / "agents" / "EXTERNAL_AGENTS.md"
-MACHINE_AGENTS_TEMPLATE = SKILL_ROOT / "assets" / "templates" / "agents" / "AGENTS_MACHINE_TEMPLATE.json"
+EXTERNAL_AGENTS_TEMPLATE = (
+    SKILL_ROOT
+    / "path"
+    / "development_loop"
+    / "steps"
+    / "mother_doc"
+    / "templates"
+    / "agents"
+    / "EXTERNAL_AGENTS.md"
+)
+MACHINE_AGENTS_TEMPLATE = (
+    SKILL_ROOT
+    / "path"
+    / "development_loop"
+    / "steps"
+    / "mother_doc"
+    / "templates"
+    / "agents"
+    / "AGENTS_MACHINE_TEMPLATE.json"
+)
 
 
 class MachineAgentsPayload(TypedDict):

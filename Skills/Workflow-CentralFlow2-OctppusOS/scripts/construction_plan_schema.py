@@ -27,6 +27,10 @@ def _is_non_empty_string_list(value: object) -> bool:
     return isinstance(value, list) and bool(value) and all(_is_non_empty_string(item) for item in value)
 
 
+def _is_string_list(value: object) -> bool:
+    return isinstance(value, list) and all(_is_non_empty_string(item) for item in value)
+
+
 def _parse_yaml(path: Path) -> tuple[object | None, list[str]]:
     try:
         payload = yaml.safe_load(path.read_text(encoding="utf-8"))
@@ -67,8 +71,11 @@ def validate_pack_registry(root: Path) -> list[str]:
         if not _is_bool(payload.get(key)):
             violations.append(f"pack_registry.yaml: {key} must be a boolean")
 
-    if not _is_non_empty_string(payload.get("design_plan_path")):
-        violations.append("pack_registry.yaml: design_plan_path must be a non-empty string")
+    design_plan_path = payload.get("design_plan_path")
+    if design_plan_path is not None and not _is_non_empty_string(design_plan_path):
+        violations.append(
+            "pack_registry.yaml: design_plan_path must be null or a non-empty string"
+        )
 
     design_step_ids = payload.get("design_step_ids")
     if not _is_non_empty_string_list(design_step_ids):
@@ -180,7 +187,6 @@ def validate_pack_manifest(pack_dir: Path) -> list[str]:
         violations.append(f"{pack_dir.name}/pack_manifest.yaml: pack_goal must be a non-empty string")
     for key in (
         "design_plan_refs",
-        "source_mother_doc_refs",
         "target_requirement_atoms",
         "implementation_actions",
         "changed_files_boundary",
@@ -188,6 +194,16 @@ def validate_pack_manifest(pack_dir: Path) -> list[str]:
     ):
         if not _is_non_empty_string_list(manifest.get(key)):
             violations.append(f"{pack_dir.name}/pack_manifest.yaml: {key} must be a non-empty string list")
+    source_refs = manifest.get("source_mother_doc_refs")
+    if manifest.get("plan_kind") == "official_plan":
+        if not _is_non_empty_string_list(source_refs):
+            violations.append(
+                f"{pack_dir.name}/pack_manifest.yaml: official_plan requires source_mother_doc_refs as a non-empty string list"
+            )
+    elif not _is_string_list(source_refs):
+        violations.append(
+            f"{pack_dir.name}/pack_manifest.yaml: preview_skeleton source_mother_doc_refs must be a string list"
+        )
     machine_files = manifest.get("machine_files")
     if not isinstance(machine_files, dict):
         violations.append(f"{pack_dir.name}/pack_manifest.yaml: machine_files must be a mapping")

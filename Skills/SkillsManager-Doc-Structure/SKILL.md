@@ -7,23 +7,6 @@ metadata:
     doc_id: skillsmanager_doc_structure.entry.facade
     doc_type: skill_facade
     topic: Entry facade for the SkillsManager-Doc-Structure skill
-    reading_chain:
-    - key: target_shape
-      target: ./path/primary_flow/21_TARGET_SHAPE.md
-      hop: entry
-      reason: target-shape checking is a top-level function entry.
-    - key: path_chaining
-      target: ./path/primary_flow/22_PATH_CHAINING.md
-      hop: entry
-      reason: path-chaining checking is a top-level function entry.
-    - key: doc_writing
-      target: ./path/primary_flow/23_DOC_WRITING.md
-      hop: entry
-      reason: doc-role checking is a top-level function entry.
-    - key: reading_chain_lint
-      target: ./path/primary_flow/24_READING_CHAIN_LINT.md
-      hop: entry
-      reason: reading-chain checking is a top-level function entry.
 ---
 
 # SkillsManager-Doc-Structure

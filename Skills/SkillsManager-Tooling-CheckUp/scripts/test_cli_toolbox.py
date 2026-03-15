@@ -90,7 +90,7 @@ class CliToolboxTests(unittest.TestCase):
             (target_root / "scripts").mkdir(parents=True)
             (target_root / "path" / "primary_flow").mkdir(parents=True)
             (target_root / "SKILL.md").write_text(
-                "---\nname: Path Skill\ndescription: example\nskill_mode: guide_with_tool\nmetadata:\n  doc_structure:\n    reading_chain:\n    - key: primary_flow\n      target: path/primary_flow/00_PRIMARY_FLOW_ENTRY.md\n      hop: entry\n      reason: entry\n---\n\n# Path Skill\n",
+                "---\nname: Path Skill\ndescription: example\nskill_mode: guide_with_tool\n---\n\n# Path Skill\n\n## 1. 模型立刻需要知道的事情\n### 1. 总览\n- example\n\n### 2. 技能约束\n- example\n\n### 3. 顶层常驻合同\n- example\n\n## 2. 功能入口\n- [primary_flow]：`path/primary_flow/00_PRIMARY_FLOW_ENTRY.md`\n  - 快捷阅读：`python3 ./scripts/Cli_Toolbox.py read-contract-context --entry primary_flow --json`\n\n## 3. 目录结构图\n",
                 encoding="utf-8",
             )
             (target_root / "path" / "primary_flow" / "00_PRIMARY_FLOW_ENTRY.md").write_text(
@@ -113,7 +113,7 @@ class CliToolboxTests(unittest.TestCase):
             (target_root / "scripts").mkdir(parents=True)
             (target_root / "path" / "primary_flow").mkdir(parents=True)
             (target_root / "SKILL.md").write_text(
-                "---\nname: Path Skill\ndescription: example\nskill_mode: guide_with_tool\nmetadata:\n  doc_structure:\n    reading_chain:\n    - key: primary_flow\n      target: path/primary_flow/00_PRIMARY_FLOW_ENTRY.md\n      hop: entry\n      reason: entry\n---\n\n# Path Skill\n",
+                "---\nname: Path Skill\ndescription: example\nskill_mode: guide_with_tool\n---\n\n# Path Skill\n\n## 1. 模型立刻需要知道的事情\n### 1. 总览\n- example\n\n### 2. 技能约束\n- example\n\n### 3. 顶层常驻合同\n- example\n\n## 2. 功能入口\n- [primary_flow]：`path/primary_flow/00_PRIMARY_FLOW_ENTRY.md`\n  - 快捷阅读：`python3 ./scripts/Cli_Toolbox.py read-contract-context --entry primary_flow --json`\n\n## 3. 目录结构图\n",
                 encoding="utf-8",
             )
             (target_root / "path" / "primary_flow" / "00_PRIMARY_FLOW_ENTRY.md").write_text(

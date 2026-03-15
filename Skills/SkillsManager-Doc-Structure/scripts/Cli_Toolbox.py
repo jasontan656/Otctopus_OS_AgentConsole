@@ -49,7 +49,7 @@ def main() -> int:
 
     compile_parser = subparsers.add_parser("compile-reading-chain", help="Compile a full reading-chain context")
     _add_target_argument(compile_parser)
-    compile_parser.add_argument("--entry", required=True, help="Top-level entry key declared in SKILL.md reading_chain")
+    compile_parser.add_argument("--entry", required=True, help="Top-level entry key declared under SKILL.md section 2")
     compile_parser.add_argument(
         "--selection",
         default="",
@@ -59,7 +59,7 @@ def main() -> int:
 
     for name in ("read-path-context", "read-contract-context"):
         self_compile_parser = subparsers.add_parser(name, help="Compile this skill's own reading chain into one contract context")
-        self_compile_parser.add_argument("--entry", required=True, help="Top-level entry key declared in SKILL.md reading_chain")
+        self_compile_parser.add_argument("--entry", required=True, help="Top-level entry key declared under SKILL.md section 2")
         self_compile_parser.add_argument("--selection", default="", help="Comma-separated branch keys used when the chain hits a branch node")
         self_compile_parser.add_argument("--json", action="store_true")
 

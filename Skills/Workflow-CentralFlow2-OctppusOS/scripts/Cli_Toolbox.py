@@ -11,6 +11,9 @@ from cli_support import graph_postflight_summary, graph_preflight_summary
 from cli_support import mother_doc_archive_result, mother_doc_init_result, mother_doc_lint_summary
 from cli_support import mother_doc_mark_modified_result, mother_doc_state_sync_result
 from cli_support import target_scaffold_result, workflow_contract_document
+from workflow_centralflow2_runtime import compile_reading_chain, runtime_contract_payload
+from mother_doc_root_index_support import refresh_root_index_result
+from mother_doc_sync_support import mother_doc_sync_result
 from stage_contract_support import (
     stage_command_contract_payload,
     stage_doc_contract_payload,
@@ -24,6 +27,11 @@ def print_document(document: dict[str, object], as_json: bool) -> int:
         for key, value in document.items():
             print(f"{key}: {value}")
     return 0
+def cmd_runtime_contract(args: argparse.Namespace) -> int:
+    return print_document(runtime_contract_payload(), args.json)
+def cmd_read_context(args: argparse.Namespace) -> int:
+    selection = [item.strip() for item in args.selection.split(",") if item.strip()]
+    return print_document(compile_reading_chain(args.entry, selection), args.json)
 def cmd_workflow_contract(args: argparse.Namespace) -> int:
     return print_document(
         workflow_contract_document(
@@ -92,6 +100,7 @@ def cmd_stage_checklist(args: argparse.Namespace) -> int:
             "target_root": str(runtime["target_root"]),
             "docs_root": str(runtime["docs_root"]),
             "mother_doc_root": str(runtime["mother_doc_root"]),
+            "client_mother_doc_root": str(runtime["client_mother_doc_root"]),
             "construction_plan_root": str(runtime["construction_plan_root"]),
             "codebase_root": str(runtime["codebase_root"]),
             "graph_runtime_root": str(runtime["graph_runtime_root"]),
@@ -169,7 +178,7 @@ def cmd_construction_plan_init(args: argparse.Namespace) -> int:
     if not runtime["ready_for_service"] and args.target is None and args.design_plan is None:
         return _emit_runtime_not_ready(runtime, args.json)
     target = Path(args.target or runtime["construction_plan_root"]).resolve()
-    design_plan_path = Path(args.design_plan or Path(runtime["mother_doc_root"]) / "08_dev_execution_plan.md").resolve()
+    design_plan_path = Path(args.design_plan).resolve() if args.design_plan else None
     document, status_code = construction_plan_init_result(
         target,
         design_plan_path,
@@ -197,6 +206,14 @@ def cmd_mother_doc_lint(args: argparse.Namespace) -> int:
     document = mother_doc_lint_summary(Path(target).resolve())
     print_document(document, args.json)
     return 0 if document["status"] == "pass" else 1
+def cmd_mother_doc_refresh_root_index(args: argparse.Namespace) -> int:
+    runtime = _resolve_runtime(args)
+    if not runtime["ready_for_service"] and args.path is None:
+        return _emit_runtime_not_ready(runtime, args.json)
+    target = Path(args.path or runtime["mother_doc_root"]).resolve()
+    document, status_code = refresh_root_index_result(target)
+    print_document(document, args.json)
+    return status_code
 def cmd_mother_doc_state_sync(args: argparse.Namespace) -> int:
     runtime = _resolve_runtime(args)
     if not runtime["ready_for_service"] and args.path is None:
@@ -225,6 +242,15 @@ def cmd_mother_doc_mark_modified(args: argparse.Namespace) -> int:
     )
     print_document(document, args.json)
     return 0 if document["status"] == "pass" else 1
+def cmd_mother_doc_sync_client_copy(args: argparse.Namespace) -> int:
+    runtime = _resolve_runtime(args)
+    if not runtime["ready_for_service"] and args.source is None:
+        return _emit_runtime_not_ready(runtime, args.json)
+    source_root = Path(args.source or runtime["mother_doc_root"]).resolve()
+    mirror_root = Path(args.mirror or runtime["client_mother_doc_root"]).resolve()
+    document, status_code = mother_doc_sync_result(source_root, mirror_root)
+    print_document(document, args.json)
+    return status_code
 def cmd_acceptance_lint(args: argparse.Namespace) -> int:
     runtime = _resolve_runtime(args)
     if not runtime["ready_for_service"] and args.matrix_path is None and args.report_path is None:
@@ -248,6 +274,18 @@ def add_runtime_scope_args(parser: argparse.ArgumentParser) -> None:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest="command", required=True)
+
+    for name in ("runtime-contract", "contract"):
+        runtime_contract = subparsers.add_parser(name)
+        runtime_contract.add_argument("--json", action="store_true")
+        runtime_contract.set_defaults(func=cmd_runtime_contract)
+
+    for name in ("read-path-context", "read-contract-context"):
+        read_context = subparsers.add_parser(name)
+        read_context.add_argument("--entry", required=True)
+        read_context.add_argument("--selection", default="")
+        read_context.add_argument("--json", action="store_true")
+        read_context.set_defaults(func=cmd_read_context)
 
     target_runtime = subparsers.add_parser("target-runtime-contract")
     add_runtime_scope_args(target_runtime)
@@ -348,6 +386,12 @@ def build_parser() -> argparse.ArgumentParser:
     mother_doc_lint.add_argument("--json", action="store_true")
     mother_doc_lint.set_defaults(func=cmd_mother_doc_lint)
 
+    mother_doc_refresh_root_index = subparsers.add_parser("mother-doc-refresh-root-index")
+    add_runtime_scope_args(mother_doc_refresh_root_index)
+    mother_doc_refresh_root_index.add_argument("--path", default=None)
+    mother_doc_refresh_root_index.add_argument("--json", action="store_true")
+    mother_doc_refresh_root_index.set_defaults(func=cmd_mother_doc_refresh_root_index)
+
     mother_doc_state_sync = subparsers.add_parser("mother-doc-state-sync")
     add_runtime_scope_args(mother_doc_state_sync)
     mother_doc_state_sync.add_argument("--path", default=None)
@@ -366,6 +410,13 @@ def build_parser() -> argparse.ArgumentParser:
     mother_doc_mark_modified.add_argument("--auto-from-git", action="store_true")
     mother_doc_mark_modified.add_argument("--json", action="store_true")
     mother_doc_mark_modified.set_defaults(func=cmd_mother_doc_mark_modified)
+
+    mother_doc_sync = subparsers.add_parser("mother-doc-sync-client-copy")
+    add_runtime_scope_args(mother_doc_sync)
+    mother_doc_sync.add_argument("--source", default=None)
+    mother_doc_sync.add_argument("--mirror", default=None)
+    mother_doc_sync.add_argument("--json", action="store_true")
+    mother_doc_sync.set_defaults(func=cmd_mother_doc_sync_client_copy)
 
     acceptance_lint = subparsers.add_parser("acceptance-lint")
     add_runtime_scope_args(acceptance_lint)

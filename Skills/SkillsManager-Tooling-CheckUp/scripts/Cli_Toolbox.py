@@ -30,7 +30,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     for name in ("read-path-context", "read-contract-context"):
         read_path = subparsers.add_parser(name, help="Compile one local reading chain into one contract context")
-        read_path.add_argument("--entry", required=True, help="Top-level entry key declared in SKILL.md reading_chain")
+        read_path.add_argument("--entry", required=True, help="Top-level entry key declared under SKILL.md section 2")
         read_path.add_argument("--selection", default="", help="Comma-separated branch keys used when the chain hits a branch node")
         read_path.add_argument("--json", action="store_true")
 

@@ -1,10 +1,16 @@
 from __future__ import annotations
 
+import json
 import subprocess
 from pathlib import Path
 from typing import TypedDict
 
 from mother_doc_contract import (
+    MOTHER_DOC_ALLOWED_DOC_ROLES,
+    MOTHER_DOC_ANCHOR_FIELDS,
+    MOTHER_DOC_DIRECTORY_NAME_PATTERN,
+    MOTHER_DOC_FILE_BASENAME_PATTERN,
+    MOTHER_DOC_FORBIDDEN_FRONTMATTER_FIELDS,
     MOTHER_DOC_FRONTMATTER_REQUIRED_FIELDS,
     MOTHER_DOC_REQUIRED_ENTRY_ALTERNATIVES,
     MOTHER_DOC_STATE_TRANSITIONS,
@@ -26,8 +32,13 @@ EXCLUDED_MOTHER_DOC_ROOTS = {
 
 def _parse_scalar(value: str) -> object:
     stripped = value.strip()
-    if stripped == "[]":
-        return []
+    if not stripped:
+        return ""
+    if stripped in {"true", "false", "null"} or stripped.startswith(("[", "{")):
+        try:
+            return json.loads(stripped)
+        except json.JSONDecodeError:
+            return stripped
     return stripped
 
 
@@ -104,6 +115,11 @@ def parse_frontmatter(path: Path) -> tuple[dict[str, object], str, list[str]]:
 
 
 def render_frontmatter(metadata: dict[str, object]) -> str:
+    def render_scalar(value: object) -> str:
+        if isinstance(value, bool) or value is None:
+            return json.dumps(value)
+        return str(value)
+
     lines = ["---"]
     for key, value in metadata.items():
         if isinstance(value, list):
@@ -116,12 +132,12 @@ def render_frontmatter(metadata: dict[str, object]) -> str:
                     first = True
                     for item_key, item_value in item.items():
                         prefix = "- " if first else "  "
-                        lines.append(f"{prefix}{item_key}: {item_value}")
+                        lines.append(f"{prefix}{item_key}: {render_scalar(item_value)}")
                         first = False
                     continue
-                lines.append(f"  - {item}")
+                lines.append(f"  - {render_scalar(item)}")
             continue
-        lines.append(f"{key}: {value}")
+        lines.append(f"{key}: {render_scalar(value)}")
     lines.append("---")
     return "\n".join(lines)
 
@@ -155,6 +171,17 @@ def iter_atomic_markdown_files(root: Path) -> list[Path]:
             continue
         files.append(path)
     return files
+
+
+def find_docs_with_role(root: Path, role: str) -> list[Path]:
+    matches: list[Path] = []
+    for path in iter_atomic_markdown_files(root):
+        metadata, _body, parse_errors = parse_frontmatter(path)
+        if parse_errors:
+            continue
+        if metadata.get("doc_role") == role:
+            matches.append(path)
+    return matches
 
 
 def _build_doc_id_index(root: Path) -> dict[str, str]:
@@ -193,11 +220,18 @@ def resolve_doc_refs(root: Path, doc_refs: list[str]) -> tuple[list[str], list[S
 
 def validate_doc_metadata(metadata: dict[str, object]) -> list[str]:
     errors: list[str] = []
+    forbidden_fields = [
+        field for field in MOTHER_DOC_FORBIDDEN_FRONTMATTER_FIELDS if field in metadata
+    ]
+    if forbidden_fields:
+        errors.append(f"forbidden_frontmatter_fields_present={forbidden_fields}")
+
     missing_fields = [
         field for field in MOTHER_DOC_FRONTMATTER_REQUIRED_FIELDS if field not in metadata
     ]
     if missing_fields:
-        return [f"missing_required_frontmatter_fields={missing_fields}"]
+        errors.append(f"missing_required_frontmatter_fields={missing_fields}")
+        return errors
 
     state = metadata.get("doc_work_state")
     if state not in MOTHER_DOC_WORK_STATES:
@@ -210,6 +244,55 @@ def validate_doc_metadata(metadata: dict[str, object]) -> list[str]:
         errors.append("doc_pack_refs_must_be_a_list")
     elif state in {"planned", "developed", "ref"} and not pack_refs:
         errors.append("doc_pack_refs_required_for_non_modified_state")
+
+    thumb_title = metadata.get("thumb_title")
+    if not isinstance(thumb_title, str) or not thumb_title.strip():
+        errors.append("thumb_title_required_as_non_empty_string")
+
+    thumb_summary = metadata.get("thumb_summary")
+    if not isinstance(thumb_summary, str) or not thumb_summary.strip():
+        errors.append("thumb_summary_required_as_non_empty_string")
+
+    display_layer = metadata.get("display_layer")
+    if not isinstance(display_layer, str) or not display_layer.strip():
+        errors.append("display_layer_required_as_non_empty_string")
+
+    always_read = metadata.get("always_read")
+    if not isinstance(always_read, bool):
+        errors.append("always_read_must_be_boolean")
+
+    for anchor_field in MOTHER_DOC_ANCHOR_FIELDS:
+        anchor_value = metadata.get(anchor_field)
+        if not isinstance(anchor_value, list):
+            errors.append(f"{anchor_field}_must_be_a_list")
+            continue
+        if any(not isinstance(item, str) or not item.strip() for item in anchor_value):
+            errors.append(f"{anchor_field}_must_only_contain_non_empty_strings")
+
+    doc_role = metadata.get("doc_role")
+    if doc_role is not None and doc_role not in MOTHER_DOC_ALLOWED_DOC_ROLES:
+        errors.append(
+            f"invalid_doc_role={doc_role}; allowed={','.join(MOTHER_DOC_ALLOWED_DOC_ROLES)}"
+        )
+    return errors
+
+
+def validate_doc_naming(root: Path, file_path: Path) -> list[str]:
+    import re
+
+    relative_parts = file_path.relative_to(root).parts
+    basename = file_path.name
+    file_pattern = re.compile(MOTHER_DOC_FILE_BASENAME_PATTERN)
+    directory_pattern = re.compile(MOTHER_DOC_DIRECTORY_NAME_PATTERN)
+    errors: list[str] = []
+
+    if not file_pattern.match(basename):
+        errors.append(f"invalid_file_basename={basename}")
+
+    for directory_name in relative_parts[:-1]:
+        if not directory_pattern.match(directory_name):
+            errors.append(f"invalid_directory_name={directory_name}")
+
     return errors
 
 
