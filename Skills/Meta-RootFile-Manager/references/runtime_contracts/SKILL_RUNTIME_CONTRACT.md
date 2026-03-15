@@ -23,6 +23,12 @@ anchors:
 - External root files remain the files actually consumed by repos.
 - Skill-internal assets are mapping versions stored under `assets/managed_targets/AI_Projects/...`.
 - Non-`AGENTS.md` managed assets must use explicit governed-mapping filenames instead of the raw external filename.
+- Runtime-local or ephemeral sources must not write managed mirrors into repo-tracked skill assets; they must use `Codex_Skill_Runtime/<skill>/managed_targets/...`.
+
+## Runtime Output Rule
+- Latest stage result json must live under `Codex_Skill_Runtime/<skill>/artifacts/<stage>/latest.json`.
+- Timestamped stage run logs must live under `Codex_Skill_Runtime/<skill>/logs/<stage>/`.
+- Runtime outputs, logs, temp mirrors, and ephemeral managed targets must not default back into the skill directory.
 
 ## Runtime Source Rule
 - `rules/scan_rules.json` is the channel registry truth source.

@@ -233,11 +233,15 @@ class TestCliToolbox:
         assert "AGENTS_MD" in channels
         assert "README_MD" in channels
         assert "GITIGNORE" in channels
-        assert (self.runtime / "scan" / "latest.json").exists()
+        assert (self.runtime / "artifacts" / "scan" / "latest.json").exists()
+        assert list((self.runtime / "logs" / "scan").glob("*.json"))
 
     def test_collect_syncs_plain_mapping_and_installed_copy(self) -> None:
         result = self.run_cli("collect", "--json", "--source-path", str(self.repo_root / "README.md"))
         assert result["operation_count"] == 1
+        assert result["changed_operation_count"] == 1
+        assert result["skipped_operation_count"] == 0
+        assert result["operations"][0]["write_status"] == "updated"
         owner = result["operations"][0]["owner"]
         managed = (
             self.skill_root
@@ -260,6 +264,36 @@ class TestCliToolbox:
         assert installed.read_text(encoding="utf-8").startswith("---\nowner: ")
         assert installed.read_text(encoding="utf-8").endswith("# Console\n")
         assert owner in managed.read_text(encoding="utf-8")
+
+    def test_collect_skips_identical_plain_mapping_and_installed_copy(self) -> None:
+        self.run_cli("collect", "--json", "--source-path", str(self.repo_root / "README.md"))
+        managed = (
+            self.skill_root
+            / "assets"
+            / "managed_targets"
+            / "AI_Projects"
+            / "Otctopus_OS_AgentConsole"
+            / "README_MD__governed_external.md"
+        )
+        installed = (
+            self.installed
+            / "assets"
+            / "managed_targets"
+            / "AI_Projects"
+            / "Otctopus_OS_AgentConsole"
+            / "README_MD__governed_external.md"
+        )
+        before_managed_mtime = managed.stat().st_mtime_ns
+        before_installed_mtime = installed.stat().st_mtime_ns
+        result = self.run_cli("collect", "--json", "--source-path", str(self.repo_root / "README.md"))
+        assert result["operation_count"] == 1
+        assert result["changed_operation_count"] == 0
+        assert result["skipped_operation_count"] == 1
+        assert result["operations"][0]["write_status"] == "skipped"
+        assert result["operations"][0]["managed_change_count"] == 0
+        assert result["operations"][0]["installed_sync_count"] == 0
+        assert managed.stat().st_mtime_ns == before_managed_mtime
+        assert installed.stat().st_mtime_ns == before_installed_mtime
 
     def test_push_writes_plain_mapping_back_to_external(self) -> None:
         managed = (
@@ -769,6 +803,22 @@ class TestCliToolbox:
         assert runtime_payload["execution_modes"]["WRITE_EXEC"]["default_actions"] == [
             "Default to full-coverage edits, proactively explore to avoid omissions, and use the meta skill stack to strengthen the result."
         ]
+
+    def test_temporary_workspace_scaffold_uses_runtime_managed_assets_without_registry_writeback(self) -> None:
+        target_dir = self.workspace / "tmpabc1234" / "sample_repo" / "Development_Docs"
+        result = self.run_cli(
+            "scaffold",
+            "--json",
+            "--target-dir",
+            str(target_dir),
+            "--file-kind",
+            "AGENTS.md",
+        )
+        assert result["operation_count"] == 1
+        external_path = target_dir / "AGENTS.md"
+        target_contract = self.run_cli("target-contract", "--source-path", str(external_path), "--json")
+        assert target_contract["managed_dir"].startswith(str(self.runtime / "managed_targets"))
+        assert not target_contract["managed_dir"].startswith(str(self.skill_root / "assets" / "managed_targets"))
 
     def test_collect_runtime_local_agents_updates_runtime_managed_pair(self) -> None:
         target_dir = self.runtime / "sandbox" / "sample_repo" / "Development_Docs"

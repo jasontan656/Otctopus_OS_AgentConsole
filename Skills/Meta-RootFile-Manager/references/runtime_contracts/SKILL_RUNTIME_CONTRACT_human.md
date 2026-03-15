@@ -26,3 +26,6 @@ anchors:
 - `AGENTS_machine.json` payload changes must go through the dedicated `agents-payload-contract` workflow before writeback.
 - `new-writeback` is the stage that finalizes scaffolded `AGENTS.md + AGENTS_machine.json`; the target must not still contain `replace_me`.
 - `SKILL.md` remains a facade and narrative mirror.
+- Runtime-local or ephemeral sources must store managed mirrors under `Codex_Skill_Runtime/<skill>/managed_targets/...`, not under repo-tracked `assets/managed_targets/...`.
+- Latest stage result json must write to `Codex_Skill_Runtime/<skill>/artifacts/<stage>/latest.json`.
+- Timestamped run logs must write to `Codex_Skill_Runtime/<skill>/logs/<stage>/`.

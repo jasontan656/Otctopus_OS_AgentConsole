@@ -78,6 +78,7 @@ metadata:
   - 阅读入口：`references/runtime_contracts/SCAN_STAGE_CONTRACT.md`
 - `collect`
   - 说明：把外部真源回收覆盖到技能内部映射版本。
+  - 额外规则：在写入 managed mirror 或 installed copy 之前必须先比对内容；一致则跳过，避免制造无意义 git 脏改。
   - 阅读入口：`references/runtime_contracts/COLLECT_STAGE_CONTRACT.md`
 - `push`
   - 说明：把技能内部映射版本覆盖回外部目标。
@@ -110,3 +111,5 @@ metadata:
 - 上一级 `AGENTS.md` 与其 payload 已声明的语义，不得在下一级 `AGENTS` surface 中重复；`lint` 必须以强门禁拦截父子重复，技能条目是唯一例外。
 - `collect` 必须以外部源为真源覆盖技能内映射。
 - `push` 必须以技能内映射为真源覆盖外部目标。
+- runtime 日志、latest 结果、临时镜像与其他临时/缓存产物必须落在 `Codex_Skill_Runtime/<skill>/...`，不得回写到技能目录。
+- workspace 外部源路径或临时工作区源路径必须按 runtime-local 处理，不得在 repo-tracked `assets/managed_targets/...` 下生成临时目录。

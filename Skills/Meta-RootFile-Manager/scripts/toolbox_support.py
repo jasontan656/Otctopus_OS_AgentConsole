@@ -18,7 +18,11 @@ class StageReportPayload(TypedDict, total=False):
 def add_common_report_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--json", action="store_true", help="Print machine-readable JSON to stdout.")
-    parser.add_argument("--write-runtime-report", action="store_true", help="Write a JSON report into Codex_Skill_Runtime/<skill>/<stage>/latest.json.")
+    parser.add_argument(
+        "--write-runtime-report",
+        action="store_true",
+        help="Write latest result JSON into Codex_Skill_Runtime/<skill>/artifacts/<stage>/latest.json and append a timestamped runtime log under logs/<stage>/.",
+    )
     parser.add_argument("--only", action="append", default=[], help="Limit operation to source paths containing this substring. Repeatable.")
     parser.add_argument("--source-path", action="append", default=[], help="Limit operation to an exact external source path. Repeatable.")
     parser.add_argument("--report-path", help="Optional custom JSON report path. When set, also writes the report there.")

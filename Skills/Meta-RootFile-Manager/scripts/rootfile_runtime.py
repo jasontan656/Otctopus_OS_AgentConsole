@@ -31,6 +31,7 @@ RUNTIME_MANAGED_TARGETS_DIRNAME = "managed_targets"
 ROOTFILE_MANAGER_NAME = "$Meta-RootFile-Manager"
 SKILL_TOKEN_PATTERN = re.compile(r"\$[A-Za-z][A-Za-z0-9._-]*")
 TEXT_TOKEN_PATTERN = re.compile(r"[A-Za-z0-9._/-]+|[\u4e00-\u9fff]+")
+EPHEMERAL_WORKSPACE_SEGMENT_PATTERN = re.compile(r"tmp[a-z0-9]{6,}$")
 PARENT_DUPLICATE_MIN_TOKEN_WINDOW = 4
 PARENT_DUPLICATE_MIN_EXACT_CHARS = 18
 PARENT_DUPLICATE_EXCLUDED_PAYLOAD_KEYS = {"owner", "entry_role", "repo_name", "default_meta_skill_order"}
@@ -148,30 +149,42 @@ def read_json(path: Path) -> object:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def write_text(path: Path, content: str, dry_run: bool) -> None:
+def write_text(path: Path, content: str, dry_run: bool) -> bool:
+    current = path.read_text(encoding="utf-8") if path.exists() else None
+    if current == content:
+        return False
     ensure_parent(path, dry_run)
     if dry_run:
-        return
+        return True
     path.write_text(content, encoding="utf-8")
+    return True
 
 
-def write_json(path: Path, payload: object, dry_run: bool) -> None:
-    write_text(path, json.dumps(payload, indent=2, ensure_ascii=False) + "\n", dry_run)
+def write_json(path: Path, payload: object, dry_run: bool) -> bool:
+    return write_text(path, json.dumps(payload, indent=2, ensure_ascii=False) + "\n", dry_run)
 
 
-def sync_file_to_installed(paths: RuntimePaths, mirror_path: Path, dry_run: bool) -> None:
+def sync_file_to_installed(paths: RuntimePaths, mirror_path: Path, dry_run: bool) -> bool:
     try:
         relative = mirror_path.relative_to(paths.mirror_skill_root)
     except ValueError:
-        return
+        return False
     installed_path = paths.installed_skill_root / relative
-    ensure_parent(installed_path, dry_run)
-    if dry_run:
-        return
     if mirror_path.exists():
+        mirror_bytes = mirror_path.read_bytes()
+        if installed_path.exists() and installed_path.read_bytes() == mirror_bytes:
+            return False
+        ensure_parent(installed_path, dry_run)
+        if dry_run:
+            return True
         shutil.copy2(mirror_path, installed_path)
-    elif installed_path.exists():
+        return True
+    if installed_path.exists():
+        if dry_run:
+            return True
         installed_path.unlink()
+        return True
+    return False
 
 
 def prune_legacy_managed_target_dirs(paths: RuntimePaths, dry_run: bool) -> list[str]:
@@ -391,13 +404,51 @@ def _canonical_relative_path(paths: RuntimePaths, source_path: Path) -> Path:
     return _canonicalize_relative_path(relative)
 
 
+def _workspace_relative_path_or_none(paths: RuntimePaths, source_path: Path) -> Path | None:
+    try:
+        return source_path.resolve().relative_to(paths.workspace_root)
+    except ValueError:
+        return None
+
+
+def _runtime_local_relative_path(paths: RuntimePaths, source_path: Path) -> Path:
+    resolved = source_path.resolve()
+    try:
+        relative = resolved.relative_to(paths.runtime_root)
+        return relative
+    except ValueError:
+        pass
+
+    workspace_relative = _workspace_relative_path_or_none(paths, resolved)
+    if workspace_relative is not None:
+        return Path("ephemeral_workspace") / _canonicalize_relative_path(workspace_relative)
+
+    parts = [part for part in resolved.parts if part not in (resolved.anchor, os.sep)]
+    if not parts:
+        return Path("external_source")
+    return Path("external_source", *parts)
+
+
+def is_ephemeral_workspace_source(paths: RuntimePaths, source_path: Path) -> bool:
+    relative = _workspace_relative_path_or_none(paths, source_path)
+    if relative is None or not relative.parts:
+        return False
+    first = relative.parts[0]
+    return first in {"tmp", ".tmp", "temp", ".temp"} or EPHEMERAL_WORKSPACE_SEGMENT_PATTERN.fullmatch(first) is not None
+
+
 def is_runtime_local_source(paths: RuntimePaths, source_path: Path) -> bool:
     resolved = source_path.resolve()
     try:
         resolved.relative_to(paths.runtime_root)
+        return True
     except ValueError:
-        return False
-    return True
+        pass
+    if is_ephemeral_workspace_source(paths, resolved):
+        return True
+    if _workspace_relative_path_or_none(paths, resolved) is None:
+        return True
+    return False
 
 
 def runtime_managed_targets_root(paths: RuntimePaths) -> Path:
@@ -406,7 +457,7 @@ def runtime_managed_targets_root(paths: RuntimePaths) -> Path:
 
 def derive_managed_dir(paths: RuntimePaths, source_path: Path) -> Path:
     if is_runtime_local_source(paths, source_path):
-        relative = source_path.resolve().relative_to(paths.runtime_root).parent
+        relative = _runtime_local_relative_path(paths, source_path).parent
         if str(relative) == ".":
             return runtime_managed_targets_root(paths)
         return runtime_managed_targets_root(paths) / relative
@@ -418,10 +469,17 @@ def derive_managed_dir(paths: RuntimePaths, source_path: Path) -> Path:
 
 
 def _relative_source_key(paths: RuntimePaths, source_path: Path) -> str:
+    if is_runtime_local_source(paths, source_path):
+        return str(_runtime_local_relative_path(paths, source_path))
     return str(_canonical_relative_path(paths, source_path))
 
 
 def describe_governed_container(paths: RuntimePaths, source_path: Path) -> str:
+    if is_runtime_local_source(paths, source_path):
+        runtime_relative = _runtime_local_relative_path(paths, source_path).parent
+        if str(runtime_relative) == ".":
+            return f"`{paths.runtime_root}` runtime-local root container"
+        return f"`{runtime_relative.as_posix()}` runtime-local container"
     relative = _canonical_relative_path(paths, source_path)
     parent = relative.parent
     if str(parent) == ".":
@@ -1165,8 +1223,12 @@ def lint_managed_entry(
     return errors
 
 
-def report_path(paths: RuntimePaths, stage: str) -> Path:
-    return paths.runtime_root / stage / "latest.json"
+def report_artifact_path(paths: RuntimePaths, stage: str) -> Path:
+    return paths.runtime_root / "artifacts" / stage / "latest.json"
+
+
+def report_log_dir(paths: RuntimePaths, stage: str) -> Path:
+    return paths.runtime_root / "logs" / stage
 
 
 def write_stage_report(
@@ -1176,16 +1238,18 @@ def write_stage_report(
     dry_run: bool,
     custom_report_path: str | None = None,
 ) -> Path:
-    latest = report_path(paths, stage)
-    stamped = paths.runtime_root / stage / f"{datetime.now(UTC).strftime('%Y%m%dT%H%M%SZ')}.json"
+    latest = report_artifact_path(paths, stage)
+    stamped = report_log_dir(paths, stage) / f"{datetime.now(UTC).strftime('%Y%m%dT%H%M%SZ')}.json"
     custom_path = Path(custom_report_path).expanduser().resolve() if custom_report_path else None
     if not dry_run:
+        serialized = json.dumps(payload, indent=2, ensure_ascii=False) + "\n"
         latest.parent.mkdir(parents=True, exist_ok=True)
-        latest.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-        stamped.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        stamped.parent.mkdir(parents=True, exist_ok=True)
+        latest.write_text(serialized, encoding="utf-8")
+        stamped.write_text(serialized, encoding="utf-8")
         if custom_path is not None:
             custom_path.parent.mkdir(parents=True, exist_ok=True)
-            custom_path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+            custom_path.write_text(serialized, encoding="utf-8")
     return latest
 
 

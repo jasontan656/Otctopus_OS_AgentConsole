@@ -99,6 +99,8 @@ def cmd_collect(args: argparse.Namespace) -> int:
     entries = match_scan_rules(paths, args.only, args.source_path)
     operations = []
     failures = []
+    changed_operations = 0
+    skipped_operations = 0
     for entry in entries:
         source_path = Path(entry["source_path"])
         lint_errors = lint_external_entry(paths, entry)
@@ -121,29 +123,74 @@ def cmd_collect(args: argparse.Namespace) -> int:
             external_part_a = extract_external_agents_part_a(external_text)
             normalized_part_a = upsert_frontmatter_owner(external_part_a, str(entry["owner"]))
             new_human = render_internal_agents_human(normalized_part_a, machine_payload.as_dict())
-            write_text(managed_human, new_human, args.dry_run)
-            write_json(managed_machine, machine_payload.as_dict(), args.dry_run)
-            sync_file_to_installed(paths, managed_human, args.dry_run)
-            sync_file_to_installed(paths, managed_machine, args.dry_run)
-            operations.append(build_operation(entry, source_path=str(source_path)))
+            managed_human_changed = write_text(managed_human, new_human, args.dry_run)
+            managed_machine_changed = write_json(managed_machine, machine_payload.as_dict(), args.dry_run)
+            installed_human_changed = sync_file_to_installed(paths, managed_human, args.dry_run)
+            installed_machine_changed = sync_file_to_installed(paths, managed_machine, args.dry_run)
+            changed = any(
+                (
+                    managed_human_changed,
+                    managed_machine_changed,
+                    installed_human_changed,
+                    installed_machine_changed,
+                )
+            )
+            if changed:
+                changed_operations += 1
+            else:
+                skipped_operations += 1
+            operations.append(
+                build_operation(
+                    entry,
+                    source_path=str(source_path),
+                    write_status="updated" if changed else "skipped",
+                    managed_change_count=int(managed_human_changed) + int(managed_machine_changed),
+                    installed_sync_count=int(installed_human_changed) + int(installed_machine_changed),
+                )
+            )
             continue
 
         managed_path = Path(entry["managed_mapped_path"])
         external_text = source_path.read_text(encoding="utf-8")
-        write_text(managed_path, managed_plain_copy_with_owner(external_text, str(entry["owner"])), args.dry_run)
-        sync_file_to_installed(paths, managed_path, args.dry_run)
-        operations.append(build_operation(entry, source_path=str(source_path)))
+        managed_changed = write_text(
+            managed_path,
+            managed_plain_copy_with_owner(external_text, str(entry["owner"])),
+            args.dry_run,
+        )
+        installed_changed = sync_file_to_installed(paths, managed_path, args.dry_run)
+        changed = managed_changed or installed_changed
+        if changed:
+            changed_operations += 1
+        else:
+            skipped_operations += 1
+        operations.append(
+            build_operation(
+                entry,
+                source_path=str(source_path),
+                write_status="updated" if changed else "skipped",
+                managed_change_count=int(managed_changed),
+                installed_sync_count=int(installed_changed),
+            )
+        )
 
     payload = {
         "stage": "collect",
         "dry_run": args.dry_run,
         "operation_count": len(operations),
+        "changed_operation_count": changed_operations,
+        "skipped_operation_count": skipped_operations,
         "operations": operations,
         "removed_legacy_dirs": removed_legacy_dirs,
         "removed_legacy_owner_meta_files": removed_legacy_owner_meta_files,
         "failures": failures,
-        "summary": f"collect prepared {len(operations)} managed file(s)",
-        "details": [f"- {item['source_path']} [{item['channel_id']}]" for item in operations],
+        "summary": (
+            f"collect prepared {len(operations)} managed file(s); "
+            f"{changed_operations} updated, {skipped_operations} skipped"
+        ),
+        "details": [
+            f"- {item['source_path']} [{item['channel_id']}] -> {item['write_status']}"
+            for item in operations
+        ],
     }
     finalize_stage_report(paths, args, "collect", payload)
     return 1 if failures else 0
@@ -480,7 +527,7 @@ def build_parser() -> argparse.ArgumentParser:
     new_writeback.add_argument(
         "--write-runtime-report",
         action="store_true",
-        help="Write a JSON report into Codex_Skill_Runtime/<skill>/<stage>/latest.json.",
+        help="Write latest result JSON into Codex_Skill_Runtime/<skill>/artifacts/<stage>/latest.json and append a timestamped runtime log under logs/<stage>/.",
     )
     new_writeback.add_argument("--report-path", help="Optional custom JSON report path. When set, also writes the report there.")
     new_writeback.add_argument("--source-path", action="append", required=True, help="Exact external AGENTS path to finalize. Repeatable.")
