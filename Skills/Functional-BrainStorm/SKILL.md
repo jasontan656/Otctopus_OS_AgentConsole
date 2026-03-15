@@ -90,6 +90,28 @@ metadata:
   - 这里尤其适合替用户多想一些反常规方向：大胆一点、奇怪一点、风格化一点，再回头判断哪些能落到 Vue 生态里。
   - 输出：可借鉴风格、布局模式、动画语言、适配 Vue 生态的落地思路、需要规避的前端实现风险。
 
+- [Python 奇技淫巧发散]
+  - 作用：寻找那种几行就解决漂亮问题、思维跳跃感强、写法精巧的 Python 方案与表达方式。
+  - 可以先看这些地方：
+    - `https://wiki.python.org/moin/Powerful%20Python%20One-Liners`
+    - `https://codegolf.stackexchange.com/`
+    - `https://www.pythonmorsels.com/`
+    - `https://holypython.com/100-python-tips-tricks/`
+    - `https://treyhunner.com/`
+    - `https://realpython.com/`
+    - `https://www.reddit.com/r/Python/`
+    - `https://www.reddit.com/r/codegolf/`
+    - `https://stackoverflow.com/questions/tagged/python`
+  - 这里很适合主动从更多方向继续外扩，比如：
+    - one-liner
+    - comprehension 技巧
+    - itertools / functools / operator 的巧用
+    - 数据结构小技巧
+    - 递归 / 生成器 / 闭包的精巧写法
+    - 可读性与炫技之间的平衡
+  - 也欢迎你替用户多想一点：不仅找“牛逼写法”，也顺手判断哪些值得借鉴，哪些更适合作为灵感而不适合直接落地。
+  - 输出：值得借鉴的写法模式、适用场景、潜在坑点、可迁移到当前任务的表达方式。
+
 - [方案对比收敛]
   - 作用：对多个候选路线做取舍，收敛出当前阶段最合适的方案。
   - 可以优先结合这些输入来收敛：
