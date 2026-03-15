@@ -30,8 +30,9 @@ def runtime_contract_payload() -> dict[str, Any]:
             "root shape",
             "SKILL.md facade scope",
             "path chaining",
-            "doc role alignment",
+            "structural role alignment",
             "anchor target resolution",
+            "semantic review workflow",
         ],
         "target_shape_model": {
             "facade_only": SHAPE_KIND_OVERVIEW["facade_only"],
@@ -176,16 +177,6 @@ def _lint_markdown_section(markdown_path: Path, body: str) -> list[str]:
 
     if name.startswith("00_") and "## 下一跳列表" not in body:
         errors.append(f"{markdown_path} is missing '## 下一跳列表'")
-        return errors
-
-    if name.startswith("10_") and "## 当前动作" not in body:
-        errors.append(f"{markdown_path} is missing a current-action section")
-    if name.startswith("15_") and "## 当前动作" not in body:
-        errors.append(f"{markdown_path} is missing a current-action section")
-    if name.startswith("20_") and "## 当前动作" not in body:
-        errors.append(f"{markdown_path} is missing a current-action section")
-    if name.startswith("30_") and "## 校验" not in body and "## 完成条件" not in body:
-        errors.append(f"{markdown_path} is missing a validation section")
     return errors
 
 

@@ -16,6 +16,7 @@ anchors:
 - `lint-reading-chain` 结果为 `ok`。
 - `lint-anchor-graph` 结果为 `ok`。
 - `lint-docstructure` 汇总结果为 `ok`。
+- 模型完成一轮语义审查，确认各层正文没有越层、串层或重新集中成总则。
 
 ## 完成后意味着什么
 - 目标技能已经按照其目标形态组织根目录。

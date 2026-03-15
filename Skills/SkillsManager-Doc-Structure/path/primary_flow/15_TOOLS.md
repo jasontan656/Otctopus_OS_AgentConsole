@@ -29,6 +29,7 @@ anchors:
 - `lint-reading-chain`：检查 `SKILL.md -> path -> entry -> next hop` 是否逐级向下。
 - `build-anchor-graph`：抽取当前技能或目标技能的 anchors 图。
 - `lint-docstructure`：汇总根形态、链路和 anchors 的错误。
+- 语义检查：由模型沿当前技能自己的 path 规则阅读目标技能，再判断各层正文是否承担了正确职责。
 
 ## 下一跳列表
 - [执行]：`20_EXECUTION.md`

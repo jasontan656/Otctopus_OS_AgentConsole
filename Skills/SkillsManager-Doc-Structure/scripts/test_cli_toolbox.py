@@ -145,7 +145,7 @@ anchors:
         root / "path" / "primary_flow" / "10_CONTRACT.md",
         """# Contract
 
-## 当前动作
+## 本层说明
 - define the current action
 
 ## 下一跳列表
@@ -156,7 +156,7 @@ anchors:
         root / "path" / "primary_flow" / "15_TOOLS.md",
         """# Tools
 
-## 当前动作
+## 支撑信息
 - describe the tool or lint surface
 
 ## 下一跳列表
@@ -167,7 +167,7 @@ anchors:
         root / "path" / "primary_flow" / "20_EXECUTION.md",
         """# Execution
 
-## 当前动作
+## 实施说明
 - execute the linear flow
 
 ## 下一跳列表
@@ -178,7 +178,7 @@ anchors:
         root / "path" / "primary_flow" / "30_VALIDATION.md",
         """# Validation
 
-## 校验
+## 完成结果
 - validate the result
 """,
     )
@@ -279,3 +279,11 @@ def test_extra_root_directory_fails_shape_lint() -> None:
         payload = _run_cli("lint-root-shape", "--target", str(root))
         assert payload["status"] == "error"
         assert "unexpected root entries: references" in payload["errors"][0]
+
+
+def test_structure_lint_does_not_require_fixed_body_headings() -> None:
+    with tempfile.TemporaryDirectory() as temp_dir:
+        root = Path(temp_dir) / "temp-linear-free-body"
+        _linear_skill(root)
+        payload = _run_cli("lint-reading-chain", "--target", str(root))
+        assert payload["status"] == "ok"
