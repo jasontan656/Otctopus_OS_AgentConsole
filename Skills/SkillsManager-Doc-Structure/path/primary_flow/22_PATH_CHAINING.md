@@ -7,10 +7,10 @@ anchors:
   relation: implements
   direction: upstream
   reason: Path chaining follows shape resolution.
-- target: 23_DOC_WRITING.md
+- target: 22A_NEXT_HOP_RULES.md
   relation: routes_to
   direction: downstream
-  reason: Doc writing checks follow path chaining.
+  reason: Path chaining semantic rules are read before node-writing checks.
 ---
 
 # 路径衔接检查
@@ -26,4 +26,6 @@ anchors:
 - 任何入口内的下一跳都必须是当前步骤真正要看的内容。
 
 ## 下一跳列表
-- [文档职责检查]：`23_DOC_WRITING.md`
+- [下一跳规则]：`22A_NEXT_HOP_RULES.md`
+- [单线路径链路规则]：`22B_LINEAR_CHAIN_RULES.md`
+- [复合路径链路规则]：`22C_COMPOUND_CHAIN_RULES.md`

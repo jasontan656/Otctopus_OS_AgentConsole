@@ -7,10 +7,10 @@ anchors:
   relation: implements
   direction: upstream
   reason: Anchor lint follows doc-writing checks.
-- target: 30_VALIDATION.md
+- target: 24A_ANCHOR_SCOPE_RULES.md
   relation: routes_to
   direction: downstream
-  reason: Final validation closes the governance flow.
+  reason: Anchor semantic rules are read before final validation.
 ---
 
 # Anchor Lint
@@ -26,4 +26,5 @@ anchors:
 - anchor 的作用是补充必要关系，而不是代替物理目录结构。
 
 ## 下一跳列表
-- [最终校验]：`30_VALIDATION.md`
+- [anchor 作用域规则]：`24A_ANCHOR_SCOPE_RULES.md`
+- [anchor 允许关系规则]：`24B_ANCHOR_ALLOWED_RELATIONS.md`

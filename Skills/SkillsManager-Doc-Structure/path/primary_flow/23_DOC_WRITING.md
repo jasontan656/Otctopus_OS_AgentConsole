@@ -7,10 +7,10 @@ anchors:
   relation: implements
   direction: upstream
   reason: Doc writing checks follow path chaining.
-- target: 24_ANCHOR_LINT.md
+- target: 23A_SKILL_FACADE_RULES.md
   relation: routes_to
   direction: downstream
-  reason: Anchor lint follows after doc writing checks.
+  reason: Node-role semantic rules are read before anchor lint.
 ---
 
 # 文档职责检查
@@ -27,4 +27,11 @@ anchors:
 - CLI 不检查正文措辞是否一致；模型只检查语义是否越层、错层或重新总则化。
 
 ## 下一跳列表
-- [anchor lint]：`24_ANCHOR_LINT.md`
+- [门面规则]：`23A_SKILL_FACADE_RULES.md`
+- [入口节点规则]：`23B_ENTRY_NODE_RULES.md`
+- [合同节点规则]：`23C_CONTRACT_NODE_RULES.md`
+- [tool/lint 节点规则]：`23D_TOOLS_NODE_RULES.md`
+- [执行节点规则]：`23E_EXECUTION_NODE_RULES.md`
+- [校验节点规则]：`23F_VALIDATION_NODE_RULES.md`
+- [workflow index 规则]：`23G_WORKFLOW_INDEX_RULES.md`
+- [step 节点规则]：`23H_STEP_NODE_RULES.md`

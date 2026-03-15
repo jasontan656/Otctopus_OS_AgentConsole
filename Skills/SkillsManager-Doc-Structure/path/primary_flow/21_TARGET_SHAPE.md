@@ -7,10 +7,10 @@ anchors:
   relation: implements
   direction: upstream
   reason: Shape resolution is the first execution step.
-- target: 22_PATH_CHAINING.md
+- target: 21A_FACADE_ONLY_RULES.md
   relation: routes_to
   direction: downstream
-  reason: Path chaining is checked after shape resolution.
+  reason: Shape-specific semantic rules are read after shape resolution.
 ---
 
 # 目标技能形态判定
@@ -28,4 +28,6 @@ anchors:
 - `复合路径型`：根目录同样只允许 `SKILL.md / path / agents / scripts`，但入口内允许 workflow index 和步骤子闭环继续下沉。
 
 ## 下一跳列表
-- [路径衔接检查]：`22_PATH_CHAINING.md`
+- [最小门面型规则]：`21A_FACADE_ONLY_RULES.md`
+- [单线路径型规则]：`21B_LINEAR_PATH_RULES.md`
+- [复合路径型规则]：`21C_COMPOUND_PATH_RULES.md`
