@@ -6,17 +6,21 @@
   "purpose": "Define the governed contract for target skill CLI surfaces without imposing facade or root-shape requirements.",
   "instruction": [
     "A governed tooling surface must expose one explicit CLI entry when scripts/ exists and the skill intends runtime invocation through local tools.",
+    "When a target skill has both scripts/ and path/ and is not guide_only, the governed CLI surface must expose a working read-path-context command.",
+    "read-path-context must compile the target skill's reading_chain into stable JSON with resolved_chain, segments, and compiled_markdown fields.",
     "CLI commands should use stable verb-style or noun-action names, keep option names descriptive, and avoid ambiguous short aliases unless the target skill already standardizes them.",
     "Machine-readable mode must return structured JSON payloads for normal success and structured JSON errors for known failures instead of relying on prose-only stdout."
   ],
   "workflow": [
     "Confirm whether the target scripts surface is intended for direct runtime use or only internal helper execution.",
     "If the surface is user- or model-facing, inspect command names, required options, JSON mode, and known error returns.",
+    "For path skills, call read-path-context on at least one declared entry and verify that the returned chain order matches the docs truth.",
     "Record gaps in command clarity, output shape, exit semantics, or argument contract before proposing remediation."
   ],
   "rules": [
     "Do not require the target skill to adopt this skill's contract/directive command names.",
     "Do not treat internal helper scripts with no governed public entry as malformed just because they are not exposed as standalone CLIs.",
-    "Require explicit and stable JSON success/error shapes only for surfaces that claim governed runtime use."
+    "Require explicit and stable JSON success/error shapes only for surfaces that claim governed runtime use.",
+    "Do not accept a path skill CLI that only prints file paths; it must compile the selected reading chain into one consumable context payload."
   ]
 }

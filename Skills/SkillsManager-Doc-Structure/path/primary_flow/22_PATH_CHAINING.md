@@ -2,15 +2,19 @@
 doc_id: skillsmanager_doc_structure.path.primary_flow.path_chaining
 doc_type: topic_atom
 topic: Path chaining rules in the primary governance flow
-anchors:
-- target: 21_TARGET_SHAPE.md
-  relation: implements
-  direction: upstream
-  reason: Path chaining follows shape resolution.
-- target: 22A_NEXT_HOP_RULES.md
-  relation: routes_to
-  direction: downstream
-  reason: Path chaining semantic rules are read before node-writing checks.
+reading_chain:
+- key: next_hop
+  target: 22A_NEXT_HOP_RULES.md
+  hop: branch
+  reason: Next-hop rules explain the universal downstream contract.
+- key: linear_chain
+  target: 22B_LINEAR_CHAIN_RULES.md
+  hop: branch
+  reason: Linear-chain rules explain single-line path requirements.
+- key: compound_chain
+  target: 22C_COMPOUND_CHAIN_RULES.md
+  hop: branch
+  reason: Compound-chain rules explain workflow-index and step branching requirements.
 ---
 
 # 路径衔接检查

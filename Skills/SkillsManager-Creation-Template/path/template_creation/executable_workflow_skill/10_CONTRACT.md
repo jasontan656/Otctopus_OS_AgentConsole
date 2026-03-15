@@ -2,14 +2,10 @@
 doc_id: skill_creation_template.path.template_creation.executable.contract
 doc_type: topic_atom
 topic: Contract for executable_workflow_skill template creation
-anchors:
-- target: 00_EXECUTABLE_WORKFLOW_ENTRY.md
-  relation: implements
-  direction: upstream
-  reason: executable workflow entry starts the action loop here.
-- target: 12_TEMPLATE.md
-  relation: routes_to
-  direction: downstream
+reading_chain:
+- key: template
+  target: 12_TEMPLATE.md
+  hop: next
   reason: The target-state template follows the contract.
 ---
 

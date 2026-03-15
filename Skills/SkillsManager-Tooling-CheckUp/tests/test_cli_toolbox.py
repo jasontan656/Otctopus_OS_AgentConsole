@@ -94,7 +94,7 @@ class CliToolboxTests(unittest.TestCase):
             self.assertEqual(payload["audit"]["audit_mode"], "no_tooling_surface_detected")
             self.assertFalse(payload["audit"]["tooling_surface_detected"])
 
-    def test_govern_target_accepts_tooling_surface_with_explicit_cli_entry(self) -> None:
+    def test_govern_target_accepts_non_path_tooling_surface_with_explicit_cli_entry(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             target_root = Path(tmp_dir) / "Tooling-Skill"
             (target_root / "scripts").mkdir(parents=True)
@@ -110,6 +110,58 @@ class CliToolboxTests(unittest.TestCase):
             self.assertTrue(payload["compliant"])
             self.assertEqual(payload["audit"]["audit_mode"], "tooling_surface_audit")
             self.assertTrue(payload["audit"]["tooling_surface_detected"])
+            self.assertFalse(payload["audit"]["chain_reader_required"])
+
+    def test_govern_target_requires_read_path_context_for_path_skill(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            target_root = Path(tmp_dir) / "Path-Skill"
+            (target_root / "scripts").mkdir(parents=True)
+            (target_root / "path" / "primary_flow").mkdir(parents=True)
+            (target_root / "SKILL.md").write_text(
+                "---\nname: Path Skill\ndescription: example\nskill_mode: guide_with_tool\nmetadata:\n  doc_structure:\n    reading_chain:\n    - key: primary_flow\n      target: path/primary_flow/00_PRIMARY_FLOW_ENTRY.md\n      hop: entry\n      reason: entry\n---\n\n# Path Skill\n",
+                encoding="utf-8",
+            )
+            (target_root / "path" / "primary_flow" / "00_PRIMARY_FLOW_ENTRY.md").write_text(
+                "---\nreading_chain:\n- key: contract\n  target: 10_CONTRACT.md\n  hop: next\n  reason: contract\n---\n\n# Entry\n\n## 下一跳列表\n- [contract]：`10_CONTRACT.md`\n",
+                encoding="utf-8",
+            )
+            (target_root / "path" / "primary_flow" / "10_CONTRACT.md").write_text("# Contract\n", encoding="utf-8")
+            (target_root / "scripts" / "Cli_Toolbox.py").write_text("print('tooling')\n", encoding="utf-8")
+
+            completed = run_cli("govern-target", "--target-skill-root", str(target_root), "--json")
+            self.assertEqual(completed.returncode, 0, completed.stderr)
+            payload = json.loads(completed.stdout)
+            self.assertFalse(payload["compliant"])
+            self.assertTrue(payload["audit"]["chain_reader_required"])
+            self.assertFalse(payload["audit"]["chain_reader_present"])
+
+    def test_govern_target_accepts_working_read_path_context_for_path_skill(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            target_root = Path(tmp_dir) / "Path-Skill"
+            (target_root / "scripts").mkdir(parents=True)
+            (target_root / "path" / "primary_flow").mkdir(parents=True)
+            (target_root / "SKILL.md").write_text(
+                "---\nname: Path Skill\ndescription: example\nskill_mode: guide_with_tool\nmetadata:\n  doc_structure:\n    reading_chain:\n    - key: primary_flow\n      target: path/primary_flow/00_PRIMARY_FLOW_ENTRY.md\n      hop: entry\n      reason: entry\n---\n\n# Path Skill\n",
+                encoding="utf-8",
+            )
+            (target_root / "path" / "primary_flow" / "00_PRIMARY_FLOW_ENTRY.md").write_text(
+                "---\nreading_chain:\n- key: contract\n  target: 10_CONTRACT.md\n  hop: next\n  reason: contract\n---\n\n# Entry\n\n## 下一跳列表\n- [contract]：`10_CONTRACT.md`\n",
+                encoding="utf-8",
+            )
+            (target_root / "path" / "primary_flow" / "10_CONTRACT.md").write_text("# Contract\n", encoding="utf-8")
+            (target_root / "scripts" / "Cli_Toolbox.py").write_text(
+                "import json,sys\n"
+                "if __name__ == '__main__':\n"
+                "    print(json.dumps({'status':'ok','resolved_chain':['SKILL.md','path/primary_flow/00_PRIMARY_FLOW_ENTRY.md','path/primary_flow/10_CONTRACT.md'],'segments':[{'source':'SKILL.md','content':'# Path Skill'},{'source':'path/primary_flow/00_PRIMARY_FLOW_ENTRY.md','content':'# Entry'},{'source':'path/primary_flow/10_CONTRACT.md','content':'# Contract'}],'compiled_markdown':'# Path Skill\\n\\n# Entry\\n\\n# Contract'}))\n",
+                encoding="utf-8",
+            )
+
+            completed = run_cli("govern-target", "--target-skill-root", str(target_root), "--json")
+            self.assertEqual(completed.returncode, 0, completed.stderr)
+            payload = json.loads(completed.stdout)
+            self.assertTrue(payload["compliant"])
+            self.assertTrue(payload["audit"]["chain_reader_required"])
+            self.assertTrue(payload["audit"]["chain_reader_present"])
 
     def test_human_and_json_payloads_match(self) -> None:
         for json_path in sorted(RUNTIME_ROOT.glob("*.json")):

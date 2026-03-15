@@ -2,14 +2,10 @@
 doc_id: skill_creation_template.path.template_creation.guide_with_tool.tools
 doc_type: topic_atom
 topic: Tool or lint surface for guide_with_tool template creation
-anchors:
-- target: 12_TEMPLATE.md
-  relation: implements
-  direction: upstream
-  reason: This file follows the guide_with_tool template blueprint.
-- target: 20_EXECUTION.md
-  relation: routes_to
-  direction: downstream
+reading_chain:
+- key: execution
+  target: 20_EXECUTION.md
+  hop: next
   reason: Execution follows the tool context.
 ---
 

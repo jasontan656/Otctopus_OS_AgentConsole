@@ -2,14 +2,10 @@
 doc_id: skill_creation_template.path.template_creation.guide_only.execution
 doc_type: topic_atom
 topic: Execution for guide_only template creation
-anchors:
-- target: 12_TEMPLATE.md
-  relation: implements
-  direction: upstream
-  reason: Execution follows the target-state template.
-- target: 30_VALIDATION.md
-  relation: routes_to
-  direction: downstream
+reading_chain:
+- key: validation
+  target: 30_VALIDATION.md
+  hop: next
   reason: Validation closes the guide_only action loop.
 ---
 

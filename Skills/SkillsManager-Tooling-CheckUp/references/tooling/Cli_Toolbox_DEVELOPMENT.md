@@ -2,14 +2,10 @@
 doc_id: skills_tooling_checkup.tooling.toolbox_development
 doc_type: topic_atom
 topic: Development entry for the skill-local CLI-first runtime surface
-anchors:
-- target: Cli_Toolbox_USAGE.md
-  relation: pairs_with
-  direction: lateral
-  reason: Usage and development templates are paired.
-- target: development/00_ARCHITECTURE_OVERVIEW.md
-  relation: routes_to
-  direction: downstream
+reading_chain:
+- key: architecture_overview
+  target: development/00_ARCHITECTURE_OVERVIEW.md
+  hop: next
   reason: The development entry should route readers into the architecture template.
 ---
 

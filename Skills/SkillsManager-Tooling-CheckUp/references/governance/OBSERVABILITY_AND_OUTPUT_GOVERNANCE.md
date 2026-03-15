@@ -1,16 +1,8 @@
 ---
 doc_id: skills_tooling_checkup.governance.observability_and_output_governance
 doc_type: topic_atom
-topic: Semantic governance for runtime observability, artifact output roots, and migration duties in target skills
-anchors:
-- target: SKILL_EXECUTION_RULES.md
-  relation: implements
-  direction: upstream
-  reason: Execution rules should hand off observability and output-root governance to this dedicated atom.
-- target: TOOLING_REMEDIATION_PROTOCOL.md
-  relation: pairs_with
-  direction: lateral
-  reason: Remediation flow must stay aligned with the observability and output migration rules.
+topic: Semantic governance for runtime observability, artifact output roots, and migration
+  duties in target skills
 ---
 
 # Observability And Output Governance

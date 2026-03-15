@@ -2,22 +2,13 @@
 doc_id: skills_tooling_checkup.governance.mandatory_techstack_baseline
 doc_type: topic_atom
 topic: Mandatory repo-local tech stack baseline for skills tooling remediation
-anchors:
-- target: SKILL_EXECUTION_RULES.md
-  relation: implements
-  direction: upstream
-  reason: Execution rules delegate concrete dependency-baseline details to this document.
-- target: TOOLING_REMEDIATION_PROTOCOL.md
-  relation: pairs_with
-  direction: lateral
-  reason: Baseline and remediation protocol must stay aligned.
 ---
 
 # Mandatory Techstack Baseline
 
 ## 本地目的
 - 收敛当前 repo 已治理为必用内容的 skills tech stack。
-- 让“是否属于重复造轮子”有稳定判断锚点，而不是每次靠临场印象决定。
+- 让“是否属于重复造轮子”有稳定判断基线，而不是每次靠临场印象决定。
 
 ## 当前边界
 - 本文只记录已存在于 repo 治理合同中的必用依赖栈。

@@ -69,10 +69,10 @@ description: linear path
 skill_mode: guide_with_tool
 metadata:
   doc_structure:
-    anchors:
-    - target: path/primary_flow/00_PRIMARY_FLOW_ENTRY.md
-      relation: routes_to
-      direction: downstream
+    reading_chain:
+    - key: primary_flow
+      target: path/primary_flow/00_PRIMARY_FLOW_ENTRY.md
+      hop: entry
       reason: facade routes to function entry
 ---
 
@@ -106,10 +106,10 @@ temp-linear/
     _write(
         root / "path" / "primary_flow" / "00_PRIMARY_FLOW_ENTRY.md",
         """---
-anchors:
-- target: 10_CONTRACT.md
-  relation: routes_to
-  direction: downstream
+reading_chain:
+- key: contract
+  target: 10_CONTRACT.md
+  hop: next
   reason: entry routes to contract
 ---
 
@@ -124,7 +124,15 @@ anchors:
     )
     _write(
         root / "path" / "primary_flow" / "10_CONTRACT.md",
-        """# Contract
+        """---
+reading_chain:
+- key: tools
+  target: 15_TOOLS.md
+  hop: next
+  reason: contract routes to tools
+---
+
+# Contract
 
 ## 本层说明
 - define the current action
@@ -135,7 +143,15 @@ anchors:
     )
     _write(
         root / "path" / "primary_flow" / "15_TOOLS.md",
-        """# Tools
+        """---
+reading_chain:
+- key: execution
+  target: 20_EXECUTION.md
+  hop: next
+  reason: tools route to execution
+---
+
+# Tools
 
 ## 支撑信息
 - describe the tool or lint surface
@@ -146,7 +162,15 @@ anchors:
     )
     _write(
         root / "path" / "primary_flow" / "20_EXECUTION.md",
-        """# Execution
+        """---
+reading_chain:
+- key: validation
+  target: 30_VALIDATION.md
+  hop: next
+  reason: execution routes to validation
+---
+
+# Execution
 
 ## 实施说明
 - execute the linear flow
@@ -167,28 +191,56 @@ anchors:
 
 def _compound_skill(root: Path) -> None:
     _linear_skill(root)
-    skill_md = (root / "SKILL.md").read_text(encoding="utf-8").replace("guide_with_tool", "executable_workflow_skill")
-    (root / "SKILL.md").write_text(skill_md, encoding="utf-8")
-    primary_flow = root / "path" / "primary_flow"
-    (primary_flow / "20_EXECUTION.md").unlink()
+    (root / "SKILL.md").write_text(
+        (root / "SKILL.md").read_text(encoding="utf-8").replace("guide_with_tool", "executable_workflow_skill"),
+        encoding="utf-8",
+    )
+    (root / "path" / "primary_flow" / "20_EXECUTION.md").unlink()
     _write(
-        primary_flow / "20_WORKFLOW_INDEX.md",
-        """# Workflow Index
+        root / "path" / "primary_flow" / "15_TOOLS.md",
+        """---
+reading_chain:
+- key: workflow
+  target: 20_WORKFLOW_INDEX.md
+  hop: next
+  reason: tools route to workflow index
+---
 
-## 当前动作
-- expose the compound steps
+# Tools
+
+## 支撑信息
+- describe the tool or lint surface
 
 ## 下一跳列表
-- [step_01]：`steps/step_01_shape/00_STEP_ENTRY.md`
+- [workflow]：`20_WORKFLOW_INDEX.md`
 """,
     )
     _write(
-        primary_flow / "steps" / "step_01_shape" / "00_STEP_ENTRY.md",
+        root / "path" / "primary_flow" / "20_WORKFLOW_INDEX.md",
         """---
-anchors:
-- target: 10_CONTRACT.md
-  relation: routes_to
-  direction: downstream
+reading_chain:
+- key: step_01
+  target: steps/step_01/00_STEP_ENTRY.md
+  hop: branch
+  reason: workflow index branches into steps
+---
+
+# Workflow Index
+
+## 当前动作
+- expose compound steps
+
+## 下一跳列表
+- [step_01]：`steps/step_01/00_STEP_ENTRY.md`
+""",
+    )
+    _write(
+        root / "path" / "primary_flow" / "steps" / "step_01" / "00_STEP_ENTRY.md",
+        """---
+reading_chain:
+- key: contract
+  target: 10_CONTRACT.md
+  hop: next
   reason: step entry routes to contract
 ---
 
@@ -207,8 +259,16 @@ anchors:
         ("20_EXECUTION.md", "30_VALIDATION.md"),
     ]:
         _write(
-            primary_flow / "steps" / "step_01_shape" / name,
-            f"""# {name}
+            root / "path" / "primary_flow" / "steps" / "step_01" / name,
+            f"""---
+reading_chain:
+- key: next
+  target: {next_name}
+  hop: next
+  reason: follow the step chain
+---
+
+# {name}
 
 ## 当前动作
 - handle {name}
@@ -218,7 +278,7 @@ anchors:
 """,
         )
     _write(
-        primary_flow / "steps" / "step_01_shape" / "30_VALIDATION.md",
+        root / "path" / "primary_flow" / "steps" / "step_01" / "30_VALIDATION.md",
         """# Step Validation
 
 ## 校验
@@ -227,146 +287,11 @@ anchors:
     )
 
 
-def _branch_index_skill(root: Path) -> None:
-    _write(
-        root / "SKILL.md",
-        """---
-name: temp-branch
-description: branch index skill
-skill_mode: guide_with_tool
-metadata:
-  doc_structure:
-    anchors:
-    - target: path/template_creation/00_TEMPLATE_CREATION_ENTRY.md
-      relation: routes_to
-      direction: downstream
-      reason: facade routes to a function entry
-    - target: path/maintenance/00_MAINTENANCE_ENTRY.md
-      relation: routes_to
-      direction: downstream
-      reason: facade routes to another function entry
----
-
-# Temp Branch
-
-## 1. 模型立刻需要知道的事情
-### 1. 总览
-- branch index skill
-
-### 2. 技能约束
-- path first
-
-### 3. 顶层常驻合同
-- choose one function entry
-
-## 2. 功能入口
-- [template_creation]：`path/template_creation/00_TEMPLATE_CREATION_ENTRY.md`
-- [maintenance]：`path/maintenance/00_MAINTENANCE_ENTRY.md`
-
-## 3. 目录结构图
-```text
-temp-branch/
-├── SKILL.md
-├── agents/
-├── path/
-└── scripts/
-```
-""",
-    )
-    _write(root / "agents" / "openai.yaml", "interface:\n  display_name: temp-branch\n")
-    _write(root / "scripts" / "Cli_Toolbox.py", "print('branch')\n")
-    _write(
-        root / "path" / "template_creation" / "00_TEMPLATE_CREATION_ENTRY.md",
-        """---
-anchors:
-- target: guide_only/00_GUIDE_ONLY_ENTRY.md
-  relation: routes_to
-  direction: downstream
-  reason: branch routes to leaf loop
----
-
-# Template Creation Entry
-
-## 下一跳列表
-- [guide_only]：`guide_only/00_GUIDE_ONLY_ENTRY.md`
-""",
-    )
-    _write(
-        root / "path" / "template_creation" / "guide_only" / "00_GUIDE_ONLY_ENTRY.md",
-        """---
-anchors:
-- target: 10_CONTRACT.md
-  relation: routes_to
-  direction: downstream
-  reason: leaf loop starts from contract
----
-
-# Guide Only Entry
-
-## 下一跳列表
-- [contract]：`10_CONTRACT.md`
-""",
-    )
-    for name, next_name in [
-        ("10_CONTRACT.md", "12_TEMPLATE.md"),
-        ("12_TEMPLATE.md", "20_EXECUTION.md"),
-        ("20_EXECUTION.md", "30_VALIDATION.md"),
-    ]:
-        _write(
-            root / "path" / "template_creation" / "guide_only" / name,
-            f"""# {name}
-
-## 下一跳列表
-- [next]：`{next_name}`
-""",
-        )
-    _write(
-        root / "path" / "template_creation" / "guide_only" / "30_VALIDATION.md",
-        """# Validation
-
-## 完成结果
-- done
-""",
-    )
-    _write(
-        root / "path" / "maintenance" / "00_MAINTENANCE_ENTRY.md",
-        """---
-anchors:
-- target: template_registry/00_TEMPLATE_REGISTRY.md
-  relation: routes_to
-  direction: downstream
-  reason: maintenance routes to registry
----
-
-# Maintenance Entry
-
-## 下一跳列表
-- [registry]：`template_registry/00_TEMPLATE_REGISTRY.md`
-""",
-    )
-    _write(
-        root / "path" / "maintenance" / "template_registry" / "00_TEMPLATE_REGISTRY.md",
-        """---
-anchors:
-- target: ../../template_creation/guide_only/12_TEMPLATE.md
-  relation: routes_to
-  direction: downstream
-  reason: terminal index exposes a registered target
----
-
-# Template Registry
-
-## 已注册模板位置
-- `../../template_creation/guide_only/12_TEMPLATE.md`
-""",
-    )
-
-
-def test_runtime_contract_reports_python_surface() -> None:
+def test_runtime_contract_reports_reading_chain_surface() -> None:
     payload = _run_cli("runtime-contract")
     assert payload["status"] == "ok"
-    assert payload["runtime_entry"] == "./scripts/Cli_Toolbox.py"
-    assert "lint-docstructure" in payload["commands"]
+    assert "compile-reading-chain" in payload["commands"]
+    assert "read-path-context" in payload["commands"]
 
 
 def test_linear_skill_docstructure_passes() -> None:
@@ -387,6 +312,49 @@ def test_compound_skill_docstructure_passes() -> None:
         assert payload["shape_kind"] == "compound_path"
 
 
+def test_compile_linear_chain_returns_compiled_markdown() -> None:
+    with tempfile.TemporaryDirectory() as temp_dir:
+        root = Path(temp_dir) / "temp-linear"
+        _linear_skill(root)
+        payload = _run_cli("compile-reading-chain", "--target", str(root), "--entry", "primary_flow")
+        assert payload["status"] == "ok"
+        assert payload["resolved_chain"][0] == "SKILL.md"
+        assert "Primary Flow Entry" in payload["compiled_markdown"]
+
+
+def test_self_read_path_context_compiles_this_skill() -> None:
+    payload = _run_cli("read-path-context", "--entry", "target_shape", "--selection", "facade_only,next_hop,skill_facade")
+    assert payload["status"] == "ok"
+    assert payload["resolved_chain"][0] == "SKILL.md"
+    assert any(item.endswith("21_TARGET_SHAPE.md") for item in payload["resolved_chain"])
+
+
+def test_compile_compound_chain_requires_branch_selection() -> None:
+    with tempfile.TemporaryDirectory() as temp_dir:
+        root = Path(temp_dir) / "temp-compound"
+        _compound_skill(root)
+        payload = _run_cli("compile-reading-chain", "--target", str(root), "--entry", "primary_flow")
+        assert payload["status"] == "ok"
+        assert any(item.endswith("steps/step_01/00_STEP_ENTRY.md") for item in payload["resolved_chain"])
+
+
+def test_compile_compound_chain_with_selection_passes() -> None:
+    with tempfile.TemporaryDirectory() as temp_dir:
+        root = Path(temp_dir) / "temp-compound"
+        _compound_skill(root)
+        payload = _run_cli(
+            "compile-reading-chain",
+            "--target",
+            str(root),
+            "--entry",
+            "primary_flow",
+            "--selection",
+            "step_01",
+        )
+        assert payload["status"] == "ok"
+        assert any(item.endswith("steps/step_01/00_STEP_ENTRY.md") for item in payload["resolved_chain"])
+
+
 def test_extra_root_directory_fails_shape_lint() -> None:
     with tempfile.TemporaryDirectory() as temp_dir:
         root = Path(temp_dir) / "temp-facade"
@@ -397,17 +365,26 @@ def test_extra_root_directory_fails_shape_lint() -> None:
         assert "unexpected root entries: references" in payload["errors"][0]
 
 
-def test_structure_lint_does_not_require_fixed_body_headings() -> None:
+def test_missing_reading_chain_target_fails() -> None:
     with tempfile.TemporaryDirectory() as temp_dir:
-        root = Path(temp_dir) / "temp-linear-free-body"
+        root = Path(temp_dir) / "temp-linear"
         _linear_skill(root)
+        broken = root / "path" / "primary_flow" / "20_EXECUTION.md"
+        broken.write_text(
+            """---
+reading_chain:
+- key: validation
+  target: 99_MISSING.md
+  hop: next
+  reason: broken chain
+---
+
+# Execution
+
+## 下一跳列表
+- [validation]：`99_MISSING.md`
+""",
+            encoding="utf-8",
+        )
         payload = _run_cli("lint-reading-chain", "--target", str(root))
-        assert payload["status"] == "ok"
-
-
-def test_branch_index_skill_passes_docstructure() -> None:
-    with tempfile.TemporaryDirectory() as temp_dir:
-        root = Path(temp_dir) / "temp-branch"
-        _branch_index_skill(root)
-        payload = _run_cli("lint-docstructure", "--target", str(root))
-        assert payload["status"] == "ok"
+        assert payload["status"] == "error"

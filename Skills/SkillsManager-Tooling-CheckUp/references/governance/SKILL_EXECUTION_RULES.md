@@ -1,12 +1,8 @@
 ---
 doc_id: skills_tooling_checkup.governance.execution_rules
 doc_type: topic_atom
-topic: Execution rules for reviewing and remediating self-built tooling wheels in installed skills
-anchors:
-- target: ../routing/TASK_ROUTING.md
-  relation: implements
-  direction: upstream
-  reason: Task routing should send readers here for deep execution rules.
+topic: Execution rules for reviewing and remediating self-built tooling wheels in
+  installed skills
 ---
 
 # Skill Execution Rules

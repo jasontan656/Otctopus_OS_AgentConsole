@@ -2,11 +2,6 @@
 doc_id: skills_tooling_checkup.tooling.toolbox_usage
 doc_type: topic_atom
 topic: Tooling entry contract for the local CLI-first runtime surface
-anchors:
-- target: Cli_Toolbox_DEVELOPMENT.md
-  relation: pairs_with
-  direction: lateral
-  reason: Usage and development templates should be maintained together.
 ---
 
 # Cli_Toolbox 使用文档

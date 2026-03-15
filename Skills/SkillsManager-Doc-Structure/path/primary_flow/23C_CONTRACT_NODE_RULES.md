@@ -2,14 +2,10 @@
 doc_id: skillsmanager_doc_structure.path.primary_flow.contract_node_rules
 doc_type: topic_atom
 topic: Contract-node semantic rules in doc-structure governance
-anchors:
-- target: 23B_ENTRY_NODE_RULES.md
-  relation: implements
-  direction: upstream
-  reason: Contract-node review follows entry-node review.
-- target: 23D_TOOLS_NODE_RULES.md
-  relation: routes_to
-  direction: downstream
+reading_chain:
+- key: 23d_tools_node_rules
+  target: 23D_TOOLS_NODE_RULES.md
+  hop: next
   reason: Tool-node rules follow contract-node rules.
 ---
 

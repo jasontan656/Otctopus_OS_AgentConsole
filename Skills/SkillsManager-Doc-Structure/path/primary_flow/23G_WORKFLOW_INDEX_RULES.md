@@ -2,15 +2,11 @@
 doc_id: skillsmanager_doc_structure.path.primary_flow.workflow_index_rules
 doc_type: topic_atom
 topic: Workflow-index semantic rules in doc-structure governance
-anchors:
-- target: 23B_ENTRY_NODE_RULES.md
-  relation: implements
-  direction: upstream
-  reason: Workflow-index review is a branch of entry-node review.
-- target: 24_ANCHOR_LINT.md
-  relation: routes_to
-  direction: downstream
-  reason: Anchor lint follows after workflow-index review.
+reading_chain:
+- key: reading_chain_lint
+  target: 24_READING_CHAIN_LINT.md
+  hop: next
+  reason: Reading-chain lint follows after workflow-index review.
 ---
 
 # Workflow Index 规则
@@ -26,4 +22,4 @@ anchors:
 - workflow index 跳过 step entry 直接指向深层局部文档。
 
 ## 下一跳列表
-- [anchor lint]：`24_ANCHOR_LINT.md`
+- [reading-chain 检查]：`24_READING_CHAIN_LINT.md`

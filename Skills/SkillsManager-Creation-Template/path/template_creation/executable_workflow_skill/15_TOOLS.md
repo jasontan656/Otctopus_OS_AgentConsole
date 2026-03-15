@@ -2,14 +2,10 @@
 doc_id: skill_creation_template.path.template_creation.executable.tools
 doc_type: topic_atom
 topic: Tools for executable_workflow_skill template creation
-anchors:
-- target: 12_TEMPLATE.md
-  relation: implements
-  direction: upstream
-  reason: This file follows the executable workflow template blueprint.
-- target: 20_EXECUTION.md
-  relation: routes_to
-  direction: downstream
+reading_chain:
+- key: execution
+  target: 20_EXECUTION.md
+  hop: next
   reason: Execution follows the tool context.
 ---
 

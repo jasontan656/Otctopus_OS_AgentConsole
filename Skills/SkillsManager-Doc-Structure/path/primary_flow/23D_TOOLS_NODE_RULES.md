@@ -2,14 +2,10 @@
 doc_id: skillsmanager_doc_structure.path.primary_flow.tools_node_rules
 doc_type: topic_atom
 topic: Tool or lint-node semantic rules in doc-structure governance
-anchors:
-- target: 23C_CONTRACT_NODE_RULES.md
-  relation: implements
-  direction: upstream
-  reason: Tool-node review follows contract-node review.
-- target: 23E_EXECUTION_NODE_RULES.md
-  relation: routes_to
-  direction: downstream
+reading_chain:
+- key: 23e_execution_node_rules
+  target: 23E_EXECUTION_NODE_RULES.md
+  hop: next
   reason: Execution-node rules follow tool-node rules.
 ---
 

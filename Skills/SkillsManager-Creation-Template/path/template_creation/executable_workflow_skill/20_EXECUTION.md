@@ -2,14 +2,10 @@
 doc_id: skill_creation_template.path.template_creation.executable.execution
 doc_type: topic_atom
 topic: Execution for executable_workflow_skill template creation
-anchors:
-- target: 15_TOOLS.md
-  relation: implements
-  direction: upstream
-  reason: Execution follows the tool context.
-- target: 30_VALIDATION.md
-  relation: routes_to
-  direction: downstream
+reading_chain:
+- key: validation
+  target: 30_VALIDATION.md
+  hop: next
   reason: Validation closes the action loop.
 ---
 

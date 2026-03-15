@@ -5,13 +5,14 @@ import argparse
 import json
 from pathlib import Path
 
-from docstructure_runtime import build_anchor_graph
+from docstructure_runtime import compile_reading_chain
 from docstructure_runtime import inspect_target
-from docstructure_runtime import lint_anchor_graph
 from docstructure_runtime import lint_docstructure
 from docstructure_runtime import lint_reading_chain
 from docstructure_runtime import lint_root_shape
 from docstructure_runtime import runtime_contract_payload
+
+SKILL_ROOT = Path(__file__).resolve().parents[1]
 
 
 def _print_payload(payload: dict[str, object], as_json: bool) -> int:
@@ -30,11 +31,9 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="SkillsManager-Doc-Structure Python toolbox")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
-    contract_parser = subparsers.add_parser("contract", help="Read the runtime contract")
-    contract_parser.add_argument("--json", action="store_true")
-
-    runtime_contract_parser = subparsers.add_parser("runtime-contract", help="Read the runtime contract")
-    runtime_contract_parser.add_argument("--json", action="store_true")
+    for name in ("contract", "runtime-contract"):
+        sub = subparsers.add_parser(name, help="Read the runtime contract")
+        sub.add_argument("--json", action="store_true")
 
     inspect_parser = subparsers.add_parser("inspect-target", help="Inspect target skill shape")
     _add_target_argument(inspect_parser)
@@ -48,13 +47,20 @@ def main() -> int:
     _add_target_argument(chain_parser)
     chain_parser.add_argument("--json", action="store_true")
 
-    graph_parser = subparsers.add_parser("build-anchor-graph", help="Build target anchor graph")
-    _add_target_argument(graph_parser)
-    graph_parser.add_argument("--json", action="store_true")
+    compile_parser = subparsers.add_parser("compile-reading-chain", help="Compile a full reading-chain context")
+    _add_target_argument(compile_parser)
+    compile_parser.add_argument("--entry", required=True, help="Top-level entry key declared in SKILL.md reading_chain")
+    compile_parser.add_argument(
+        "--selection",
+        default="",
+        help="Comma-separated branch keys used when the chain hits a branch node",
+    )
+    compile_parser.add_argument("--json", action="store_true")
 
-    anchor_lint_parser = subparsers.add_parser("lint-anchor-graph", help="Lint target anchor graph")
-    _add_target_argument(anchor_lint_parser)
-    anchor_lint_parser.add_argument("--json", action="store_true")
+    self_compile_parser = subparsers.add_parser("read-path-context", help="Compile this skill's own reading chain")
+    self_compile_parser.add_argument("--entry", required=True, help="Top-level entry key declared in SKILL.md reading_chain")
+    self_compile_parser.add_argument("--selection", default="", help="Comma-separated branch keys used when the chain hits a branch node")
+    self_compile_parser.add_argument("--json", action="store_true")
 
     doc_lint_parser = subparsers.add_parser("lint-docstructure", help="Lint target skill docstructure")
     _add_target_argument(doc_lint_parser)
@@ -65,19 +71,24 @@ def main() -> int:
     if args.command in {"contract", "runtime-contract"}:
         return _print_payload(runtime_contract_payload(), args.json)
 
-    target_root = Path(args.target).expanduser().resolve()
-
     if args.command == "inspect-target":
+        target_root = Path(args.target).expanduser().resolve()
         return _print_payload(inspect_target(target_root), args.json)
     if args.command == "lint-root-shape":
+        target_root = Path(args.target).expanduser().resolve()
         return _print_payload(lint_root_shape(target_root), args.json)
     if args.command == "lint-reading-chain":
+        target_root = Path(args.target).expanduser().resolve()
         return _print_payload(lint_reading_chain(target_root), args.json)
-    if args.command == "build-anchor-graph":
-        return _print_payload(build_anchor_graph(target_root), args.json)
-    if args.command == "lint-anchor-graph":
-        return _print_payload(lint_anchor_graph(target_root), args.json)
+    if args.command == "compile-reading-chain":
+        target_root = Path(args.target).expanduser().resolve()
+        selection = [item.strip() for item in args.selection.split(",") if item.strip()]
+        return _print_payload(compile_reading_chain(target_root, args.entry, selection), args.json)
+    if args.command == "read-path-context":
+        selection = [item.strip() for item in args.selection.split(",") if item.strip()]
+        return _print_payload(compile_reading_chain(SKILL_ROOT, args.entry, selection), args.json)
     if args.command == "lint-docstructure":
+        target_root = Path(args.target).expanduser().resolve()
         return _print_payload(lint_docstructure(target_root), args.json)
 
     raise ValueError(f"unsupported command: {args.command}")

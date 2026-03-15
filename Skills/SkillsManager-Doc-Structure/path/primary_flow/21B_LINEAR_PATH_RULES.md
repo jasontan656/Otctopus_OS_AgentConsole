@@ -2,14 +2,10 @@
 doc_id: skillsmanager_doc_structure.path.primary_flow.linear_path_rules
 doc_type: topic_atom
 topic: Semantic rules for linear-path target skills
-anchors:
-- target: 21_TARGET_SHAPE.md
-  relation: implements
-  direction: upstream
-  reason: This file refines the linear-path shape branch.
-- target: 22_PATH_CHAINING.md
-  relation: routes_to
-  direction: downstream
+reading_chain:
+- key: path_chaining
+  target: 22_PATH_CHAINING.md
+  hop: next
   reason: Path chaining checks follow shape-specific semantic review.
 ---
 

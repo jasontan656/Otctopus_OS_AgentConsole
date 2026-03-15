@@ -2,14 +2,10 @@
 doc_id: skill_creation_template.path.template_creation.guide_only.template
 doc_type: topic_atom
 topic: Template blueprint for guide_only template creation
-anchors:
-- target: 10_CONTRACT.md
-  relation: implements
-  direction: upstream
-  reason: The target-state template follows the guide_only contract.
-- target: 20_EXECUTION.md
-  relation: routes_to
-  direction: downstream
+reading_chain:
+- key: execution
+  target: 20_EXECUTION.md
+  hop: next
   reason: Execution follows after the target-state template is confirmed.
 ---
 

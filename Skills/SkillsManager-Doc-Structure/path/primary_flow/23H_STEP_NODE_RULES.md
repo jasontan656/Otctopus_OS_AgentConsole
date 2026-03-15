@@ -2,15 +2,11 @@
 doc_id: skillsmanager_doc_structure.path.primary_flow.step_node_rules
 doc_type: topic_atom
 topic: Step-node semantic rules in doc-structure governance
-anchors:
-- target: 23B_ENTRY_NODE_RULES.md
-  relation: implements
-  direction: upstream
-  reason: Step-node review is a branch of entry-node review.
-- target: 24_ANCHOR_LINT.md
-  relation: routes_to
-  direction: downstream
-  reason: Anchor lint follows after step-node review.
+reading_chain:
+- key: reading_chain_lint
+  target: 24_READING_CHAIN_LINT.md
+  hop: next
+  reason: Reading-chain lint follows after step-node review.
 ---
 
 # Step 节点规则
@@ -26,4 +22,4 @@ anchors:
 - 用 step 文档重新集中整个 workflow 的总规则。
 
 ## 下一跳列表
-- [anchor lint]：`24_ANCHOR_LINT.md`
+- [reading-chain 检查]：`24_READING_CHAIN_LINT.md`

@@ -2,14 +2,10 @@
 doc_id: skill_creation_template.path.template_creation.guide_with_tool.template
 doc_type: topic_atom
 topic: Template blueprint for guide_with_tool template creation
-anchors:
-- target: 10_CONTRACT.md
-  relation: implements
-  direction: upstream
-  reason: The target-state template follows the guide_with_tool contract.
-- target: 15_TOOLS.md
-  relation: routes_to
-  direction: downstream
+reading_chain:
+- key: tools
+  target: 15_TOOLS.md
+  hop: next
   reason: Tool guidance follows after the target-state template is confirmed.
 ---
 

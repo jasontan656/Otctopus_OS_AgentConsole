@@ -2,14 +2,10 @@
 doc_id: skillsmanager_doc_structure.path.primary_flow.linear_chain_rules
 doc_type: topic_atom
 topic: Linear chain rules in doc-structure governance
-anchors:
-- target: 22A_NEXT_HOP_RULES.md
-  relation: implements
-  direction: upstream
-  reason: This file refines the linear chain branch.
-- target: 23_DOC_WRITING.md
-  relation: routes_to
-  direction: downstream
+reading_chain:
+- key: doc_writing
+  target: 23_DOC_WRITING.md
+  hop: next
   reason: Node-writing checks follow after linear chain review.
 ---
 

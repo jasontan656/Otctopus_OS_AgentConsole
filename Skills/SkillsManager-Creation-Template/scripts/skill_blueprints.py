@@ -17,35 +17,42 @@ def title_from_slug(slug: str) -> str:
     return " ".join(part.capitalize() for part in slug.replace("_", "-").split("-"))
 
 
-def render_numbered(lines: list[str]) -> str:
-    return "\n".join(f"{index}. {line}" for index, line in enumerate(lines, start=1))
+def _code_block(lines: list[str]) -> str:
+    return "\n".join(lines)
 
 
-def render_bullets(lines: list[str]) -> str:
-    return "\n".join(f"- {line}" for line in lines)
+def _skill_tree(skill_mode: str) -> list[str]:
+    if skill_mode == GUIDE_ONLY_MODE:
+        return ["<skill-name>/", "├── SKILL.md", "└── agents/"]
+    return ["<skill-name>/", "├── SKILL.md", "├── agents/", "├── path/", "└── scripts/"]
 
 
 def render_skill_md(skill_name: str, description: str, skill_mode: str) -> str:
+    frontmatter = [
+        "---",
+        f"name: {skill_name}",
+        f"description: {description}",
+        f"skill_mode: {skill_mode}",
+    ]
+    if skill_mode != GUIDE_ONLY_MODE:
+        frontmatter.extend(
+            [
+                "metadata:",
+                "  doc_structure:",
+                f"    doc_id: {skill_name}.entry.facade",
+                "    doc_type: skill_facade",
+                f"    topic: Entry facade for {skill_name}",
+                "    reading_chain:",
+                "    - key: primary_flow",
+                "      target: path/primary_flow/00_PRIMARY_FLOW_ENTRY.md",
+                "      hop: entry",
+                "      reason: The facade exposes the default function entry.",
+            ]
+        )
+    frontmatter.extend(["---", ""])
+
     if skill_mode == GUIDE_ONLY_MODE:
-        structure_tree = [
-            "<skill-name>/",
-            "├── SKILL.md",
-            "└── agents/",
-        ]
-        frontmatter = [
-            "---",
-            f"name: {skill_name}",
-            f"description: {description}",
-            f"skill_mode: {skill_mode}",
-            "metadata:",
-            "  doc_structure:",
-            f"    doc_id: {skill_name}.entry.facade",
-            "    doc_type: skill_facade",
-            f"    topic: Self-contained facade for {skill_name}",
-            "---",
-            "",
-        ]
-        lines = [
+        body = [
             f"# {skill_name}",
             "",
             "## 1. 模型立刻需要知道的事情",
@@ -57,7 +64,7 @@ def render_skill_md(skill_name: str, description: str, skill_mode: str) -> str:
             "### 2. 技能约束",
             "- 不生成 `path/`。",
             "- 不生成 `scripts/`。",
-            "- 不把当前技能继续拆成外跳链路；完整说明直接保留在 `SKILL.md`。",
+            "- 不提供链路编译型 CLI。",
             "",
             "### 3. 顶层常驻合同",
             "- `SKILL.md` 本身就是唯一入口与唯一正文。",
@@ -67,107 +74,68 @@ def render_skill_md(skill_name: str, description: str, skill_mode: str) -> str:
             "",
             "## 3. 目录结构图",
             "```text",
-            *structure_tree,
+            *_skill_tree(skill_mode),
             "```",
             "",
         ]
-        return "\n".join(frontmatter + lines)
+        return "\n".join(frontmatter + body)
 
+    overview = [
+        f"- 本技能采用 `{skill_mode}` 形态。",
+        "- `SKILL.md + path/*.md` 是结构化真源。",
+        "- frontmatter 中的 `reading_chain` 定义模型阅读顺序与 CLI 路径编译顺序。",
+        "- `scripts/` 必须提供 `read-path-context`，把选中链路编译成完整上下文 JSON。",
+    ]
     if skill_mode == GUIDE_WITH_TOOL_MODE:
-        mode_overview = [
-            f"- 本技能采用 `{skill_mode}` 形态。",
-            "- 本文件只做门面入口，不承载深层正文。",
-            "- 默认提供一个主入口；若扩展多个入口，每个入口内部必须单线到底。",
-            "- 本形态的 `scripts/` 承载当前技能自己的 tool/lint 能力面，不要求两者都存在。",
-            "- 根目录组织固定为 `SKILL.md / path / agents / scripts`。",
-        ]
-        mode_constraints = [
-            "- `SKILL.md` 只保留：`模型立刻需要知道的事情`、`功能入口`、`目录结构图`。",
-            "- `SKILL.md` 只能暴露功能入口层，不回填 workflow 正文。",
-            "- 每个入口进入后都必须沿 `contract -> tools -> execution -> validation` 单线闭环到底。",
-            "- 允许多个平行入口，但不允许某个入口内部再次分叉。",
-            "- 命令脚本本体统一放在 `scripts/`；tool/lint 说明写在对应入口的 `tools` 节点里。",
+        constraints = [
+            "- 允许多个平行功能入口，但每个入口进入后必须单线到底。",
+            "- 默认闭环为 `contract -> tools -> execution -> validation`。",
+            "- 入口内部不允许再次分叉。",
         ]
     else:
-        mode_overview = [
-            f"- 本技能采用 `{skill_mode}` 形态。",
-            "- 本文件只做门面入口，不承载深层正文。",
-            "- 入口层可以保持简洁，但某个入口进入后允许继续承载复合 workflow。",
-            "- 根目录组织固定为 `SKILL.md / path / agents / scripts`。",
+        constraints = [
+            "- 允许入口进入后继续下沉到复合 workflow。",
+            "- 默认主链为 `contract -> tools -> workflow_index -> steps -> validation`。",
+            "- workflow index 以下的步骤继续形成各自局部闭环。",
         ]
-        mode_constraints = [
-            "- `SKILL.md` 只保留：`模型立刻需要知道的事情`、`功能入口`、`目录结构图`。",
-            "- `SKILL.md` 只能暴露功能入口层，不回填复合 workflow 正文。",
-            "- 入口进入后允许先经过 `contract -> tools -> workflow_index`，再下沉到复合步骤。",
-            "- 复合步骤自身继续承载自己的 `contract -> tools -> execution -> validation`。",
-            "- 命令脚本本体统一放在 `scripts/`；命令说明写在入口或步骤自己的 `tools` 节点里。",
-        ]
-
-    structure_tree = [
-        "<skill-name>/",
-        "├── SKILL.md",
-        "├── agents/",
-        "├── path/",
-        "└── scripts/",
-    ]
-    frontmatter = [
-        "---",
-        f"name: {skill_name}",
-        f"description: {description}",
-        f"skill_mode: {skill_mode}",
-        "metadata:",
-        "  doc_structure:",
-        f"    doc_id: {skill_name}.entry.facade",
-        "    doc_type: skill_facade",
-        f"    topic: Entry facade for {skill_name}",
-        "    anchors:",
-        "    - target: path/primary_flow/00_PRIMARY_FLOW_ENTRY.md",
-        "      relation: routes_to",
-        "      direction: downstream",
-        "      reason: The facade exposes the default function entry.",
-        "---",
-        "",
-    ]
-    lines = [
+    body = [
         f"# {skill_name}",
         "",
         "## 1. 模型立刻需要知道的事情",
         "### 1. 总览",
-        *mode_overview,
+        *overview,
         "",
         "### 2. 技能约束",
-        *mode_constraints,
+        "- `SKILL.md` 只保留：`模型立刻需要知道的事情`、`功能入口`、`目录结构图`。",
+        "- `SKILL.md` 只暴露功能入口层，不回填深层正文。",
+        "- 有 `scripts/` 的技能形态必须提供链路编译型 CLI。",
+        *constraints,
         "",
         "### 3. 顶层常驻合同",
-        "- 全局合同直接写在本门面中，不额外外跳到 CLI 合同。",
+        "- 文档链本身是真源；CLI 只是文档链的编译输出。",
         "- 后续阅读只沿当前选中的功能入口继续下沉。",
         "",
         "## 2. 功能入口",
         "- [primary_flow]：`path/primary_flow/00_PRIMARY_FLOW_ENTRY.md`",
-        "  - 作用：默认功能入口；后续如扩展更多入口，应与它平行出现。",
+        "  - 作用：默认功能入口；如需新增入口，应与它平行出现。",
         "",
         "## 3. 目录结构图",
         "```text",
-        *structure_tree,
+        *_skill_tree(skill_mode),
         "```",
         "",
     ]
-    return "\n".join(frontmatter + lines)
+    return "\n".join(frontmatter + body)
 
 
 def render_openai_yaml(skill_name: str, skill_mode: str) -> str:
     display_name = title_from_slug(skill_name)
     if skill_mode == GUIDE_ONLY_MODE:
         default_prompt = f"请直接读取 {skill_name} 的 SKILL.md 完成任务，不要假设存在 path/ 或 scripts/。"
-    elif skill_mode == GUIDE_WITH_TOOL_MODE:
-        default_prompt = (
-            f"请围绕 {skill_name} 的真实业务目标执行任务；先读取 SKILL.md 并进入匹配的功能入口，"
-            "进入某个入口后沿单线 workflow 读到底，不要在入口内部再次分叉。"
-        )
     else:
         default_prompt = (
-            f"请围绕 {skill_name} 的真实业务目标执行任务；先读取 SKILL.md 并进入匹配的功能入口，"
-            "进入入口后按复合 workflow 逐层下沉到步骤级文档。"
+            f"请先读取 {skill_name} 的 SKILL.md 选择功能入口；若需要快速获得完整链路上下文，"
+            "优先调用本地 CLI 的 read-path-context。"
         )
     return dedent(
         f"""\
@@ -182,58 +150,44 @@ def render_openai_yaml(skill_name: str, skill_mode: str) -> str:
 
 
 def runtime_contract_payload(skill_name: str, skill_mode: str) -> dict[str, object]:
-    if skill_mode == GUIDE_ONLY_MODE:
-        return {
-            "skill_name": skill_name,
-            "skill_mode": skill_mode,
-            "root_shape": ["SKILL.md", "agents"],
-            "entry_doc": "SKILL.md",
-            "reading_protocol": ["SKILL.md"],
-            "layout_rule": "Self-contained skill. No path or scripts are generated.",
-        }
-
     payload: dict[str, object] = {
         "skill_name": skill_name,
         "skill_mode": skill_mode,
-        "root_shape": ["SKILL.md", "path", "agents", "scripts"],
-        "entry_doc": "path/primary_flow/00_PRIMARY_FLOW_ENTRY.md",
-        "layout_rule": "Folder layout must mirror reading order.",
     }
+    if skill_mode == GUIDE_ONLY_MODE:
+        payload["root_shape"] = ["SKILL.md", "agents"]
+        payload["reading_protocol"] = ["SKILL.md"]
+        payload["layout_rule"] = "Self-contained skill. No path or scripts are generated."
+        return payload
+
+    payload["root_shape"] = ["SKILL.md", "path", "agents", "scripts"]
+    payload["entry_doc"] = "path/primary_flow/00_PRIMARY_FLOW_ENTRY.md"
+    payload["commands"] = ["runtime-contract", "read-path-context"]
+    payload["layout_rule"] = "Folder layout must mirror reading order."
+    payload["compiler_rule"] = "CLI compiles reading_chain into one context payload; docs remain the only source of truth."
     if skill_mode == GUIDE_WITH_TOOL_MODE:
         payload["reading_protocol"] = [
             "SKILL.md",
-            "entry_doc",
+            "entry",
             "contract",
             "tools",
             "execution",
             "validation",
         ]
-        payload["workflow_shape"] = {
-            "entry_policy": "multiple top-level entries allowed",
-            "entry_internal_shape": "linear_only",
-            "default_entry_doc": "path/primary_flow/00_PRIMARY_FLOW_ENTRY.md",
-        }
-        return payload
-
-    payload["reading_protocol"] = [
-        "SKILL.md",
-        "entry_doc",
-        "contract",
-        "tools",
-        "workflow_index",
-        "step_entry",
-        "step_contract",
-        "step_tools",
-        "step_execution",
-        "step_validation",
-        "flow_validation",
-    ]
-    payload["compound_protocol"] = {
-        "entry_policy": "entry may contain nested workflow",
-        "default_entry_doc": "path/primary_flow/00_PRIMARY_FLOW_ENTRY.md",
-        "workflow_index_doc": "path/primary_flow/20_WORKFLOW_INDEX.md",
-        "step_order": ["step_01", "step_02", "step_03"],
-    }
+    else:
+        payload["reading_protocol"] = [
+            "SKILL.md",
+            "entry",
+            "contract",
+            "tools",
+            "workflow_index",
+            "step_entry",
+            "step_contract",
+            "step_tools",
+            "step_execution",
+            "step_validation",
+            "flow_validation",
+        ]
     return payload
 
 
@@ -246,29 +200,112 @@ def render_generated_toolbox_script(skill_name: str, skill_mode: str) -> str:
             "",
             "import argparse",
             "import json",
+            "from pathlib import Path",
             "",
+            "import yaml",
+            "",
+            "SKILL_ROOT = Path(__file__).resolve().parents[1]",
             f"RUNTIME_CONTRACT = {payload}",
+            "",
+            "",
+            "def _parse_frontmatter(markdown_path: Path) -> tuple[dict[str, object], str]:",
+            "    text = markdown_path.read_text(encoding='utf-8')",
+            "    if not text.startswith('---\\n'):",
+            "        return {}, text",
+            "    closing = text.find('\\n---\\n', 4)",
+            "    if closing == -1:",
+            "        return {}, text",
+            "    payload = yaml.safe_load(text[4:closing]) or {}",
+            "    if not isinstance(payload, dict):",
+            "        payload = {}",
+            "    return payload, text[closing + 5:]",
+            "",
+            "",
+            "def _chain(markdown_path: Path) -> list[dict[str, str]]:",
+            "    frontmatter, _ = _parse_frontmatter(markdown_path)",
+            "    doc_structure = frontmatter.get('metadata', {}).get('doc_structure', {}) if isinstance(frontmatter.get('metadata'), dict) else {}",
+            "    raw = doc_structure.get('reading_chain') if markdown_path.name == 'SKILL.md' else frontmatter.get('reading_chain')",
+            "    if not isinstance(raw, list):",
+            "        return []",
+            "    items: list[dict[str, str]] = []",
+            "    for item in raw:",
+            "        if not isinstance(item, dict):",
+            "            continue",
+            "        key = item.get('key')",
+            "        target = item.get('target')",
+            "        hop = item.get('hop')",
+            "        if isinstance(key, str) and isinstance(target, str) and isinstance(hop, str):",
+            "            items.append({'key': key, 'target': target, 'hop': hop, 'reason': str(item.get('reason', ''))})",
+            "    return items",
+            "",
+            "",
+            "def _title(body: str) -> str:",
+            "    for line in body.splitlines():",
+            "        if line.startswith('#'):",
+            "            return line.lstrip('#').strip()",
+            "    return ''",
+            "",
+            "",
+            "def _compile(entry: str, selection: list[str]) -> dict[str, object]:",
+            "    if SKILL_ROOT.name == '' or not (SKILL_ROOT / 'SKILL.md').exists():",
+            "        return {'status': 'error', 'error': 'missing_skill_root'}",
+            "    skill_md = SKILL_ROOT / 'SKILL.md'",
+            "    segments: list[dict[str, str]] = []",
+            "    resolved_chain: list[str] = ['SKILL.md']",
+            "    _, skill_body = _parse_frontmatter(skill_md)",
+            "    segments.append({'source': 'SKILL.md', 'title': _title(skill_body), 'content': skill_body.strip()})",
+            "    root_items = _chain(skill_md)",
+            "    chosen = next((item for item in root_items if item['key'] == entry), None)",
+            "    if chosen is None:",
+            "        return {'status': 'error', 'error': 'entry_not_found', 'entry': entry, 'available_entries': [item['key'] for item in root_items]}",
+            "    queue = list(selection)",
+            "    current = (skill_md.parent / chosen['target']).resolve()",
+            "    while True:",
+            "        frontmatter, body = _parse_frontmatter(current)",
+            "        rel = current.relative_to(SKILL_ROOT).as_posix()",
+            "        resolved_chain.append(rel)",
+            "        segments.append({'source': rel, 'title': _title(body), 'content': body.strip()})",
+            "        items = _chain(current)",
+            "        if not items:",
+            "            break",
+            "        if len(items) > 1:",
+            "            if not queue:",
+            "                return {'status': 'branch_selection_required', 'entry': entry, 'resolved_chain': resolved_chain, 'segments': segments, 'available_next': [item['key'] for item in items], 'current_source': rel}",
+            "            wanted = queue.pop(0)",
+            "            chosen = next((item for item in items if item['key'] == wanted), None)",
+            "            if chosen is None:",
+            "                return {'status': 'branch_selection_required', 'entry': entry, 'resolved_chain': resolved_chain, 'segments': segments, 'available_next': [item['key'] for item in items], 'current_source': rel}",
+            "        else:",
+            "            chosen = items[0]",
+            "        current = (current.parent / chosen['target']).resolve()",
+            "    return {'status': 'ok', 'entry': entry, 'resolved_chain': resolved_chain, 'segments': segments, 'compiled_markdown': '\\n\\n'.join(item['content'] for item in segments if item['content'])}",
             "",
             "",
             "def main() -> int:",
             f'    parser = argparse.ArgumentParser(description="{skill_name} toolbox")',
-            '    subparsers = parser.add_subparsers(dest="command", required=True)',
-            "",
-            '    runtime_contract = subparsers.add_parser("runtime-contract")',
-            '    runtime_contract.add_argument("--json", action="store_true")',
-            "",
+            "    subparsers = parser.add_subparsers(dest='command', required=True)",
+            "    runtime_contract = subparsers.add_parser('runtime-contract')",
+            "    runtime_contract.add_argument('--json', action='store_true')",
+            "    read_context = subparsers.add_parser('read-path-context')",
+            "    read_context.add_argument('--entry', required=True)",
+            "    read_context.add_argument('--selection', default='')",
+            "    read_context.add_argument('--json', action='store_true')",
             "    args = parser.parse_args()",
-            '    if args.command == "runtime-contract":',
-            "        if args.json:",
-            "            print(json.dumps(RUNTIME_CONTRACT, ensure_ascii=False, indent=2))",
-            "        else:",
-            "            for key, value in RUNTIME_CONTRACT.items():",
-            '                print(f"{key}: {value}")',
-            "        return 0",
-            "    return 1",
+            "    if args.command == 'runtime-contract':",
+            "        payload = RUNTIME_CONTRACT",
+            "    elif args.command == 'read-path-context':",
+            "        selection = [item.strip() for item in args.selection.split(',') if item.strip()]",
+            "        payload = _compile(args.entry, selection)",
+            "    else:",
+            "        return 1",
+            "    if args.json:",
+            "        print(json.dumps(payload, ensure_ascii=False, indent=2))",
+            "    else:",
+            "        print(payload.get('status', 'ok'))",
+            "    return 0",
             "",
             "",
-            'if __name__ == "__main__":',
+            "if __name__ == '__main__':",
             "    raise SystemExit(main())",
             "",
         ]
@@ -306,10 +343,25 @@ def render_generated_test_script(skill_name: str, skill_mode: str) -> str:
             "scripts/test_skill_layout.py",
         ]
     expected_json = json.dumps(expected_paths, ensure_ascii=False, indent=2)
+    compile_assert = "" if skill_mode == GUIDE_ONLY_MODE else dedent(
+        """\
+        def test_read_path_context() -> None:
+            completed = subprocess.run(
+                ["python3", str(SKILL_ROOT / "scripts" / "Cli_Toolbox.py"), "read-path-context", "--entry", "primary_flow", "--json"],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            payload = json.loads(completed.stdout)
+            assert payload["status"] in {"ok", "branch_selection_required"}
+        """
+    )
     return dedent(
         f"""\
         from __future__ import annotations
 
+        import json
+        import subprocess
         from pathlib import Path
 
 
@@ -320,55 +372,24 @@ def render_generated_test_script(skill_name: str, skill_mode: str) -> str:
         def test_layout() -> None:
             for relative_path in EXPECTED_PATHS:
                 assert (SKILL_ROOT / relative_path).exists(), relative_path
+
+
+        {compile_assert}
         """
     )
 
 
-def render_generated_skill_entry_doc(skill_name: str) -> str:
-    return dedent(
-        f"""\
-        ---
-        doc_id: {skill_name}.path.skill_entry
-        doc_type: path_doc
-        topic: Entry index for {skill_name}
-        anchors:
-        - target: ../SKILL.md
-          relation: implements
-          direction: upstream
-          reason: The facade points only to this file.
-        - target: primary_flow/00_PRIMARY_FLOW_ENTRY.md
-          relation: routes_to
-          direction: downstream
-          reason: The default scaffold starts from the primary entry.
-        ---
-
-        # Skill Main Entry
-
-        ## 这个入口是干什么的
-        - 这是 `{skill_name}` 的入口层索引。
-        - 默认骨架提供一个主入口；如需新增入口，只能在同一层平行扩展。
-
-        ## 下一跳列表
-        - [主入口]：`primary_flow/00_PRIMARY_FLOW_ENTRY.md`
-        """
-    )
-
-
-def render_linear_entry_doc(skill_name: str) -> str:
+def _linear_entry_doc(skill_name: str) -> str:
     return dedent(
         f"""\
         ---
         doc_id: {skill_name}.path.primary_flow.entry
         doc_type: path_doc
         topic: Primary linear entry for {skill_name}
-        anchors:
-        - target: ../../SKILL.md
-          relation: implements
-          direction: upstream
-          reason: The facade routes directly to this function entry.
-        - target: 10_CONTRACT.md
-          relation: routes_to
-          direction: downstream
+        reading_chain:
+        - key: contract
+          target: 10_CONTRACT.md
+          hop: next
           reason: The linear workflow starts from the contract doc.
         ---
 
@@ -384,21 +405,17 @@ def render_linear_entry_doc(skill_name: str) -> str:
     )
 
 
-def render_linear_contract_doc(skill_name: str) -> str:
+def _linear_contract_doc(skill_name: str) -> str:
     return dedent(
         f"""\
         ---
         doc_id: {skill_name}.path.primary_flow.contract
         doc_type: topic_atom
         topic: Contract for the primary linear flow of {skill_name}
-        anchors:
-        - target: 00_PRIMARY_FLOW_ENTRY.md
-          relation: implements
-          direction: upstream
-          reason: The linear entry starts here.
-        - target: 15_TOOLS.md
-          relation: routes_to
-          direction: downstream
+        reading_chain:
+        - key: tools
+          target: 15_TOOLS.md
+          hop: next
           reason: Tool guidance follows the contract.
         ---
 
@@ -408,42 +425,31 @@ def render_linear_contract_doc(skill_name: str) -> str:
         - 形成一个入口内单线到底的 workflow。
         - 当前默认骨架包含：`contract -> tools -> execution -> validation`。
 
-        ## 当前动作必须满足什么
-        - 允许存在多个平行入口。
-        - 任一入口进入后，不允许再次分叉。
-        - `tools` 节点承载该入口自己的 tool/lint 说明。
-        - 命令说明只写在该入口自己的 `tools` 节点中。
-
         ## 下一跳列表
         - [tools]：`15_TOOLS.md`
         """
     )
 
 
-def render_linear_tools_doc(skill_name: str, script_name: str) -> str:
+def _linear_tools_doc(skill_name: str) -> str:
     return dedent(
         f"""\
         ---
         doc_id: {skill_name}.path.primary_flow.tools
         doc_type: topic_atom
         topic: Tool or lint surface for the primary linear flow of {skill_name}
-        anchors:
-        - target: 10_CONTRACT.md
-          relation: implements
-          direction: upstream
-          reason: Tool guidance follows the contract.
-        - target: 20_EXECUTION.md
-          relation: routes_to
-          direction: downstream
+        reading_chain:
+        - key: execution
+          target: 20_EXECUTION.md
+          hop: next
           reason: Execution follows the tool guidance.
         ---
 
         # Primary Flow Tool/Lint Surface
 
         ## 当前动作要用什么命令
-        - [在这里列出当前入口真正需要的命令。]
-        - 当前节点承载该入口自己的 tool/lint 说明。
-        - [如需新增入口专属命令或 lint，只在当前入口自己的 tools 节点内补充。]
+        - `python3 ./scripts/Cli_Toolbox.py read-path-context --entry primary_flow --json`
+        - [在这里列出当前入口真正需要的其他命令。]
 
         ## 下一跳列表
         - [execution]：`20_EXECUTION.md`
@@ -451,33 +457,26 @@ def render_linear_tools_doc(skill_name: str, script_name: str) -> str:
     )
 
 
-def render_linear_execution_doc(skill_name: str) -> str:
-    steps = [
-        "明确当前入口的真实业务主轴与边界。",
-        "把命令脚本放入 `scripts/`，把命令说明写入当前入口的 `15_TOOLS.md`。",
-        "让当前入口沿单线闭环写到底，不在入口内部新增分叉。",
-    ]
+def _linear_execution_doc(skill_name: str) -> str:
     return dedent(
         f"""\
         ---
         doc_id: {skill_name}.path.primary_flow.execution
         doc_type: topic_atom
         topic: Execution for the primary linear flow of {skill_name}
-        anchors:
-        - target: 15_TOOLS.md
-          relation: implements
-          direction: upstream
-          reason: Execution follows the tool guidance.
-        - target: 30_VALIDATION.md
-          relation: routes_to
-          direction: downstream
+        reading_chain:
+        - key: validation
+          target: 30_VALIDATION.md
+          hop: next
           reason: Validation closes the linear flow.
         ---
 
         # Primary Flow Execution
 
         ## 当前动作怎么做
-        {render_numbered(steps)}
+        1. 明确当前入口的真实业务主轴与边界。
+        2. 命令脚本放在 `scripts/`，命令说明写在 `15_TOOLS.md`。
+        3. 让 `read-path-context` 可以把当前链路完整编译出来。
 
         ## 下一跳列表
         - [validation]：`30_VALIDATION.md`
@@ -485,49 +484,36 @@ def render_linear_execution_doc(skill_name: str) -> str:
     )
 
 
-def render_linear_validation_doc(skill_name: str) -> str:
-    checks = [
-        "结果目录包含 `SKILL.md / path / agents / scripts`。",
-        "功能入口位于 `path/primary_flow/00_PRIMARY_FLOW_ENTRY.md`。",
-        "默认主入口位于 `path/primary_flow/`，并形成单线闭环。",
-        "不存在 `references/`、`assets/`、`tests/`。",
-    ]
+def _linear_validation_doc(skill_name: str) -> str:
     return dedent(
         f"""\
         ---
         doc_id: {skill_name}.path.primary_flow.validation
         doc_type: topic_atom
         topic: Validation for the primary linear flow of {skill_name}
-        anchors:
-        - target: 20_EXECUTION.md
-          relation: implements
-          direction: upstream
-          reason: Validation closes the linear flow.
         ---
 
         # Primary Flow Validation
 
         ## 当前动作如何校验
-        {render_bullets(checks)}
+        - 结果目录包含 `SKILL.md / path / agents / scripts`。
+        - `read-path-context --entry primary_flow --json` 能输出完整链路上下文。
+        - 不存在 `references/`、`assets/`、`tests/`。
         """
     )
 
 
-def render_compound_entry_doc(skill_name: str) -> str:
+def _compound_entry_doc(skill_name: str) -> str:
     return dedent(
         f"""\
         ---
         doc_id: {skill_name}.path.primary_flow.entry
         doc_type: path_doc
         topic: Primary compound entry for {skill_name}
-        anchors:
-        - target: ../../SKILL.md
-          relation: implements
-          direction: upstream
-          reason: The facade routes directly to this function entry.
-        - target: 10_CONTRACT.md
-          relation: routes_to
-          direction: downstream
+        reading_chain:
+        - key: contract
+          target: 10_CONTRACT.md
+          hop: next
           reason: The compound workflow starts from the contract doc.
         ---
 
@@ -535,7 +521,7 @@ def render_compound_entry_doc(skill_name: str) -> str:
 
         ## 这个入口是干什么的
         - 本入口承载当前默认主入口动作。
-        - 进入本入口后，需要继续完成一个复合 workflow，而不是一条线直接写到底。
+        - 进入本入口后，需要继续完成一个复合 workflow。
 
         ## 下一跳列表
         - [contract]：`10_CONTRACT.md`
@@ -543,21 +529,17 @@ def render_compound_entry_doc(skill_name: str) -> str:
     )
 
 
-def render_compound_contract_doc(skill_name: str) -> str:
+def _compound_contract_doc(skill_name: str) -> str:
     return dedent(
         f"""\
         ---
         doc_id: {skill_name}.path.primary_flow.contract
         doc_type: topic_atom
         topic: Contract for the primary compound flow of {skill_name}
-        anchors:
-        - target: 00_PRIMARY_FLOW_ENTRY.md
-          relation: implements
-          direction: upstream
-          reason: The compound entry starts here.
-        - target: 15_TOOLS.md
-          relation: routes_to
-          direction: downstream
+        reading_chain:
+        - key: tools
+          target: 15_TOOLS.md
+          hop: next
           reason: Tool guidance follows the contract.
         ---
 
@@ -567,39 +549,30 @@ def render_compound_contract_doc(skill_name: str) -> str:
         - 形成一个入口内带复合 workflow 的技能骨架。
         - 当前默认骨架包含：`contract -> tools -> workflow_index -> steps -> validation`。
 
-        ## 当前动作必须满足什么
-        - 复合 workflow 的步骤必须继续物理下沉到子目录。
-        - 每个步骤都应拥有自己的 `contract -> tools -> execution -> validation`。
-        - 步骤规则不回填到入口门面。
-
         ## 下一跳列表
         - [tools]：`15_TOOLS.md`
         """
     )
 
 
-def render_compound_tools_doc(skill_name: str, script_name: str) -> str:
+def _compound_tools_doc(skill_name: str) -> str:
     return dedent(
         f"""\
         ---
         doc_id: {skill_name}.path.primary_flow.tools
         doc_type: topic_atom
         topic: Tools for the primary compound flow of {skill_name}
-        anchors:
-        - target: 10_CONTRACT.md
-          relation: implements
-          direction: upstream
-          reason: Tool guidance follows the contract.
-        - target: 20_WORKFLOW_INDEX.md
-          relation: routes_to
-          direction: downstream
+        reading_chain:
+        - key: workflow
+          target: 20_WORKFLOW_INDEX.md
+          hop: next
           reason: Workflow index follows the tool guidance.
         ---
 
         # Primary Flow Tools
 
         ## 当前动作要用什么命令
-        - [在这里列出当前入口真正需要的命令。]
+        - `python3 ./scripts/Cli_Toolbox.py read-path-context --entry primary_flow --selection step_01 --json`
         - [若某个步骤需要额外命令，应写入该步骤自己的 tools 节点。]
 
         ## 下一跳列表
@@ -608,22 +581,26 @@ def render_compound_tools_doc(skill_name: str, script_name: str) -> str:
     )
 
 
-def render_compound_workflow_index_doc(skill_name: str) -> str:
+def _compound_workflow_index_doc(skill_name: str) -> str:
     return dedent(
         f"""\
         ---
         doc_id: {skill_name}.path.primary_flow.workflow_index
         doc_type: index_doc
         topic: Workflow index for the primary compound flow of {skill_name}
-        anchors:
-        - target: 15_TOOLS.md
-          relation: implements
-          direction: upstream
-          reason: Workflow index follows the tool guidance.
-        - target: steps/step_01/00_STEP_ENTRY.md
-          relation: routes_to
-          direction: downstream
+        reading_chain:
+        - key: step_01
+          target: steps/step_01/00_STEP_ENTRY.md
+          hop: branch
           reason: Compound execution starts from step_01.
+        - key: step_02
+          target: steps/step_02/00_STEP_ENTRY.md
+          hop: branch
+          reason: Compound execution can continue from step_02.
+        - key: step_03
+          target: steps/step_03/00_STEP_ENTRY.md
+          hop: branch
+          reason: Compound execution can continue from step_03.
         ---
 
         # Primary Flow Workflow Index
@@ -636,21 +613,17 @@ def render_compound_workflow_index_doc(skill_name: str) -> str:
     )
 
 
-def render_compound_step_entry_doc(skill_name: str, step_name: str) -> str:
+def _step_entry_doc(skill_name: str, step_name: str) -> str:
     return dedent(
         f"""\
         ---
         doc_id: {skill_name}.path.primary_flow.steps.{step_name}.entry
         doc_type: path_doc
         topic: Entry doc for {step_name} of {skill_name}
-        anchors:
-        - target: ../../20_WORKFLOW_INDEX.md
-          relation: implements
-          direction: upstream
-          reason: The workflow index routes here.
-        - target: 10_CONTRACT.md
-          relation: routes_to
-          direction: downstream
+        reading_chain:
+        - key: contract
+          target: 10_CONTRACT.md
+          hop: next
           reason: Each step starts from its contract doc.
         ---
 
@@ -658,7 +631,6 @@ def render_compound_step_entry_doc(skill_name: str, step_name: str) -> str:
 
         ## 这个入口是干什么的
         - 本入口承载 `{step_name}` 的局部闭环。
-        - 当前步骤只处理自己的合同、命令、实施与校验。
 
         ## 下一跳列表
         - [contract]：`10_CONTRACT.md`
@@ -666,21 +638,17 @@ def render_compound_step_entry_doc(skill_name: str, step_name: str) -> str:
     )
 
 
-def render_compound_step_contract_doc(skill_name: str, step_name: str) -> str:
+def _step_contract_doc(skill_name: str, step_name: str) -> str:
     return dedent(
         f"""\
         ---
         doc_id: {skill_name}.path.primary_flow.steps.{step_name}.contract
         doc_type: topic_atom
         topic: Contract for {step_name} of {skill_name}
-        anchors:
-        - target: 00_STEP_ENTRY.md
-          relation: implements
-          direction: upstream
-          reason: The step entry starts here.
-        - target: 15_TOOLS.md
-          relation: routes_to
-          direction: downstream
+        reading_chain:
+        - key: tools
+          target: 15_TOOLS.md
+          hop: next
           reason: Tool guidance follows the step contract.
         ---
 
@@ -688,7 +656,6 @@ def render_compound_step_contract_doc(skill_name: str, step_name: str) -> str:
 
         ## 当前动作要完成什么
         - [写清 `{step_name}` 的目标、输入、输出与退出条件。]
-        - [只写当前步骤局部合同，不回填其他步骤正文。]
 
         ## 下一跳列表
         - [tools]：`15_TOOLS.md`
@@ -696,21 +663,17 @@ def render_compound_step_contract_doc(skill_name: str, step_name: str) -> str:
     )
 
 
-def render_compound_step_tools_doc(skill_name: str, step_name: str, script_name: str) -> str:
+def _step_tools_doc(skill_name: str, step_name: str) -> str:
     return dedent(
         f"""\
         ---
         doc_id: {skill_name}.path.primary_flow.steps.{step_name}.tools
         doc_type: topic_atom
         topic: Tools for {step_name} of {skill_name}
-        anchors:
-        - target: 10_CONTRACT.md
-          relation: implements
-          direction: upstream
-          reason: Tool guidance follows the step contract.
-        - target: 20_EXECUTION.md
-          relation: routes_to
-          direction: downstream
+        reading_chain:
+        - key: execution
+          target: 20_EXECUTION.md
+          hop: next
           reason: Execution follows the tool guidance.
         ---
 
@@ -718,7 +681,6 @@ def render_compound_step_tools_doc(skill_name: str, step_name: str, script_name:
 
         ## 当前动作要用什么命令
         - [在这里列出当前步骤真正需要的命令。]
-        - [若当前步骤需要更多命令，只在这里继续补充。]
 
         ## 下一跳列表
         - [execution]：`20_EXECUTION.md`
@@ -726,21 +688,17 @@ def render_compound_step_tools_doc(skill_name: str, step_name: str, script_name:
     )
 
 
-def render_compound_step_execution_doc(skill_name: str, step_name: str) -> str:
+def _step_execution_doc(skill_name: str, step_name: str) -> str:
     return dedent(
         f"""\
         ---
         doc_id: {skill_name}.path.primary_flow.steps.{step_name}.execution
         doc_type: topic_atom
         topic: Execution for {step_name} of {skill_name}
-        anchors:
-        - target: 15_TOOLS.md
-          relation: implements
-          direction: upstream
-          reason: Execution follows the tool guidance.
-        - target: 30_VALIDATION.md
-          relation: routes_to
-          direction: downstream
+        reading_chain:
+        - key: validation
+          target: 30_VALIDATION.md
+          hop: next
           reason: Validation follows execution.
         ---
 
@@ -756,60 +714,51 @@ def render_compound_step_execution_doc(skill_name: str, step_name: str) -> str:
     )
 
 
-def render_compound_step_validation_doc(skill_name: str, step_name: str, next_doc: str) -> str:
-    return dedent(
-        f"""\
-        ---
-        doc_id: {skill_name}.path.primary_flow.steps.{step_name}.validation
-        doc_type: topic_atom
-        topic: Validation for {step_name} of {skill_name}
-        anchors:
-        - target: 20_EXECUTION.md
-          relation: implements
-          direction: upstream
-          reason: Validation closes the current step loop.
-        - target: {next_doc}
-          relation: routes_to
-          direction: downstream
-          reason: The next step or flow validation follows current-step validation.
-        ---
-
-        # {step_name} Validation
-
-        ## 当前动作如何校验
-        - [写清 `{step_name}` 的通过条件、失败信号与回退点。]
-
-        ## 下一跳列表
-        - [next]：`{next_doc}`
-        """
-    )
-
-
-def render_compound_flow_validation_doc(skill_name: str) -> str:
-    checks = [
-        "结果目录包含 `SKILL.md / path / agents / scripts`。",
-        "`path/primary_flow/00_PRIMARY_FLOW_ENTRY.md` 是默认功能入口。",
-        "`path/primary_flow/20_WORKFLOW_INDEX.md` 已列出复合步骤。",
-        "每个步骤目录都包含自己的 `contract -> tools -> execution -> validation`。",
-        "不存在 `references/`、`assets/`、`tests/`。",
+def _step_validation_doc(skill_name: str, step_name: str, next_doc: str) -> str:
+    frontmatter = [
+        "---",
+        f"doc_id: {skill_name}.path.primary_flow.steps.{step_name}.validation",
+        "doc_type: topic_atom",
+        f"topic: Validation for {step_name} of {skill_name}",
     ]
+    if next_doc:
+        frontmatter.extend(
+            [
+                "reading_chain:",
+                "- key: next",
+                f"  target: {next_doc}",
+                "  hop: next",
+                "  reason: The next step or flow validation follows current-step validation.",
+            ]
+        )
+    frontmatter.extend(["---", ""])
+    body = [
+        f"# {step_name} Validation",
+        "",
+        "## 当前动作如何校验",
+        f"- [写清 `{step_name}` 的通过条件、失败信号与回退点。]",
+    ]
+    if next_doc:
+        body.extend(["", "## 下一跳列表", f"- [next]：`{next_doc}`"])
+    body.append("")
+    return "\n".join(frontmatter + body)
+
+
+def _compound_flow_validation_doc(skill_name: str) -> str:
     return dedent(
         f"""\
         ---
         doc_id: {skill_name}.path.primary_flow.validation
         doc_type: topic_atom
         topic: Validation for the primary compound flow of {skill_name}
-        anchors:
-        - target: steps/step_03/30_VALIDATION.md
-          relation: implements
-          direction: upstream
-          reason: Flow validation runs after the final compound step.
         ---
 
         # Primary Flow Validation
 
         ## 当前动作如何校验
-        {render_bullets(checks)}
+        - 结果目录包含 `SKILL.md / path / agents / scripts`。
+        - `path/primary_flow/20_WORKFLOW_INDEX.md` 已列出复合步骤。
+        - `read-path-context` 支持通过 `--selection` 编译具体步骤链路。
         """
     )
 
@@ -826,27 +775,27 @@ def build_generated_skill_files(skill_name: str, description: str, skill_mode: s
     files["scripts/test_skill_layout.py"] = render_generated_test_script(skill_name, skill_mode)
 
     if skill_mode == GUIDE_WITH_TOOL_MODE:
-        files["path/primary_flow/00_PRIMARY_FLOW_ENTRY.md"] = render_linear_entry_doc(skill_name)
-        files["path/primary_flow/10_CONTRACT.md"] = render_linear_contract_doc(skill_name)
-        files["path/primary_flow/15_TOOLS.md"] = render_linear_tools_doc(skill_name, "Cli_Toolbox.py")
-        files["path/primary_flow/20_EXECUTION.md"] = render_linear_execution_doc(skill_name)
-        files["path/primary_flow/30_VALIDATION.md"] = render_linear_validation_doc(skill_name)
+        files["path/primary_flow/00_PRIMARY_FLOW_ENTRY.md"] = _linear_entry_doc(skill_name)
+        files["path/primary_flow/10_CONTRACT.md"] = _linear_contract_doc(skill_name)
+        files["path/primary_flow/15_TOOLS.md"] = _linear_tools_doc(skill_name)
+        files["path/primary_flow/20_EXECUTION.md"] = _linear_execution_doc(skill_name)
+        files["path/primary_flow/30_VALIDATION.md"] = _linear_validation_doc(skill_name)
         return files
 
-    files["path/primary_flow/00_PRIMARY_FLOW_ENTRY.md"] = render_compound_entry_doc(skill_name)
-    files["path/primary_flow/10_CONTRACT.md"] = render_compound_contract_doc(skill_name)
-    files["path/primary_flow/15_TOOLS.md"] = render_compound_tools_doc(skill_name, "Cli_Toolbox.py")
-    files["path/primary_flow/20_WORKFLOW_INDEX.md"] = render_compound_workflow_index_doc(skill_name)
-    files["path/primary_flow/30_VALIDATION.md"] = render_compound_flow_validation_doc(skill_name)
+    files["path/primary_flow/00_PRIMARY_FLOW_ENTRY.md"] = _compound_entry_doc(skill_name)
+    files["path/primary_flow/10_CONTRACT.md"] = _compound_contract_doc(skill_name)
+    files["path/primary_flow/15_TOOLS.md"] = _compound_tools_doc(skill_name)
+    files["path/primary_flow/20_WORKFLOW_INDEX.md"] = _compound_workflow_index_doc(skill_name)
+    files["path/primary_flow/30_VALIDATION.md"] = _compound_flow_validation_doc(skill_name)
     step_sequence = ("step_01", "step_02", "step_03")
     for index, step_name in enumerate(step_sequence):
         next_doc = "../../30_VALIDATION.md" if index == len(step_sequence) - 1 else f"../{step_sequence[index + 1]}/00_STEP_ENTRY.md"
         base = f"path/primary_flow/steps/{step_name}"
-        files[f"{base}/00_STEP_ENTRY.md"] = render_compound_step_entry_doc(skill_name, step_name)
-        files[f"{base}/10_CONTRACT.md"] = render_compound_step_contract_doc(skill_name, step_name)
-        files[f"{base}/15_TOOLS.md"] = render_compound_step_tools_doc(skill_name, step_name, "Cli_Toolbox.py")
-        files[f"{base}/20_EXECUTION.md"] = render_compound_step_execution_doc(skill_name, step_name)
-        files[f"{base}/30_VALIDATION.md"] = render_compound_step_validation_doc(skill_name, step_name, next_doc)
+        files[f"{base}/00_STEP_ENTRY.md"] = _step_entry_doc(skill_name, step_name)
+        files[f"{base}/10_CONTRACT.md"] = _step_contract_doc(skill_name, step_name)
+        files[f"{base}/15_TOOLS.md"] = _step_tools_doc(skill_name, step_name)
+        files[f"{base}/20_EXECUTION.md"] = _step_execution_doc(skill_name, step_name)
+        files[f"{base}/30_VALIDATION.md"] = _step_validation_doc(skill_name, step_name, next_doc)
     return files
 
 

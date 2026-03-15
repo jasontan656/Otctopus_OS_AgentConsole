@@ -2,15 +2,6 @@
 doc_id: skills_tooling_checkup.tooling.changelog
 doc_type: topic_atom
 topic: Changelog for the skills tooling checkup control plane
-anchors:
-- target: ../Cli_Toolbox_DEVELOPMENT.md
-  relation: implements
-  direction: upstream
-  reason: The changelog belongs to the development doc set.
-- target: ../../governance/SKILL_EXECUTION_RULES.md
-  relation: tracks_changes_to
-  direction: downstream
-  reason: Tooling changes often reflect execution-rule changes.
 ---
 
 # Tooling Changelog

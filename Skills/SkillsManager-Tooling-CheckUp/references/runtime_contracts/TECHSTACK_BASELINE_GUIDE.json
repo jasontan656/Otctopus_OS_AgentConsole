@@ -5,7 +5,7 @@
   "topic": "techstack-baseline",
   "purpose": "Provide the repo-local mandatory baseline used to judge whether target tooling code is rebuilding existing stack capability.",
   "instruction": [
-    "Treat the repo-local skills_required_techstacks baseline as the only mandatory replacement anchor for this skill.",
+    "Treat the repo-local skills_required_techstacks baseline as the only mandatory replacement baseline for this skill.",
     "Python baseline includes pytest, ruff, PyYAML, jsonschema, pydantic, markdown-it-py, mdformat, python-frontmatter, typer, rich, httpx, and watchfiles.",
     "Vue3 and TypeScript baseline includes vue, typescript, @types/node, tsx, vitest, eslint, typescript-eslint, eslint-plugin-vue, vue-tsc, markdownlint-cli2, gray-matter, markdown-it, ajv, zod, and prettier."
   ],

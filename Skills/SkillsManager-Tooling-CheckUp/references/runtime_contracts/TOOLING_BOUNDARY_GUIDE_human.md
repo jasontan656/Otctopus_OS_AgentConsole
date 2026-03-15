@@ -2,11 +2,6 @@
 doc_id: skillsmanager_tooling_checkup.references_runtime_contracts_tooling_boundary_guide
 doc_type: topic_atom
 topic: TOOLING_BOUNDARY_GUIDE
-anchors:
-- target: ../../SKILL.md
-  relation: implements
-  direction: upstream
-  reason: This document belongs to the governed skill tree under the main facade.
 ---
 
 # TOOLING_BOUNDARY_GUIDE

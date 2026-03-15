@@ -2,15 +2,11 @@
 doc_id: skillsmanager_doc_structure.path.primary_flow.branch_index_rules
 doc_type: topic_atom
 topic: Branch-index semantic rules in doc-structure governance
-anchors:
-- target: 23B_ENTRY_NODE_RULES.md
-  relation: implements
-  direction: upstream
-  reason: Branch-index review is a specialization of entry-node review.
-- target: 24_ANCHOR_LINT.md
-  relation: routes_to
-  direction: downstream
-  reason: Anchor lint follows after branch-index review.
+reading_chain:
+- key: reading_chain_lint
+  target: 24_READING_CHAIN_LINT.md
+  hop: next
+  reason: Reading-chain lint follows after branch-index review.
 ---
 
 # 分支索引节点规则
@@ -26,4 +22,4 @@ anchors:
 - 分支索引用一个子目录同时承担多个独立闭环。
 
 ## 下一跳列表
-- [anchor lint]：`24_ANCHOR_LINT.md`
+- [reading-chain 检查]：`24_READING_CHAIN_LINT.md`

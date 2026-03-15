@@ -68,16 +68,27 @@ class TestCreateSkillFromTemplateRegressionTest:
                 check=True,
             )
             runtime_contract = json.loads(toolbox_output.stdout)
+            compiled_output = subprocess.run(
+                ["python3", str(skill_dir / "scripts" / "Cli_Toolbox.py"), "read-path-context", "--entry", "primary_flow", "--json"],
+                text=True,
+                capture_output=True,
+                check=True,
+            )
+            compiled_payload = json.loads(compiled_output.stdout)
 
             assert payload["skill_mode"] == "guide_with_tool"
             assert payload["resources_created"] == ["path", "agents", "scripts"]
             assert "skill_mode: guide_with_tool" in skill_md
+            assert "reading_chain:" in skill_md
             assert "## 1. 模型立刻需要知道的事情" in skill_md
             assert "## 2. 功能入口" in skill_md
             assert "## 3. 目录结构图" in skill_md
             assert "[primary_flow]" in skill_md
             assert runtime_contract["skill_mode"] == "guide_with_tool"
             assert runtime_contract["entry_doc"] == "path/primary_flow/00_PRIMARY_FLOW_ENTRY.md"
+            assert "read-path-context" in runtime_contract["commands"]
+            assert compiled_payload["status"] == "ok"
+            assert "Primary Flow Entry" in compiled_payload["compiled_markdown"]
             assert (skill_dir / "path" / "primary_flow" / "00_PRIMARY_FLOW_ENTRY.md").exists()
             assert (skill_dir / "path" / "primary_flow" / "10_CONTRACT.md").exists()
             assert (skill_dir / "path" / "primary_flow" / "15_TOOLS.md").exists()
@@ -110,14 +121,33 @@ class TestCreateSkillFromTemplateRegressionTest:
                 check=True,
             )
             runtime_contract = json.loads(toolbox_output.stdout)
+            compiled_output = subprocess.run(
+                [
+                    "python3",
+                    str(skill_dir / "scripts" / "Cli_Toolbox.py"),
+                    "read-path-context",
+                    "--entry",
+                    "primary_flow",
+                    "--selection",
+                    "step_01",
+                    "--json",
+                ],
+                text=True,
+                capture_output=True,
+                check=True,
+            )
+            compiled_payload = json.loads(compiled_output.stdout)
 
             assert payload["skill_mode"] == "executable_workflow_skill"
+            assert "reading_chain:" in skill_md
             assert "## 1. 模型立刻需要知道的事情" in skill_md
             assert "## 2. 功能入口" in skill_md
             assert "## 3. 目录结构图" in skill_md
             assert "[primary_flow]" in skill_md
             assert runtime_contract["skill_mode"] == "executable_workflow_skill"
-            assert runtime_contract["compound_protocol"]["workflow_index_doc"] == "path/primary_flow/20_WORKFLOW_INDEX.md"
+            assert "read-path-context" in runtime_contract["commands"]
+            assert compiled_payload["status"] == "ok"
+            assert any(item.endswith("steps/step_01/00_STEP_ENTRY.md") for item in compiled_payload["resolved_chain"])
             assert (skill_dir / "path" / "primary_flow" / "00_PRIMARY_FLOW_ENTRY.md").exists()
             assert (skill_dir / "path" / "primary_flow" / "15_TOOLS.md").exists()
             assert (skill_dir / "path" / "primary_flow" / "20_WORKFLOW_INDEX.md").exists()

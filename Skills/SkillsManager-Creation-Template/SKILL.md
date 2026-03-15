@@ -1,28 +1,29 @@
 ---
 name: SkillsManager-Creation-Template
-description: 提供受治理技能模板与统一 Cli_Toolbox，用于创建或改造 `guide_only`、`guide_with_tool`、`executable_workflow_skill` 三类技能。
+description: 提供受治理技能模板与统一 Cli_Toolbox，用于创建或改造 `guide_only`、`guide_with_tool`、`executable_workflow_skill`
+  三类技能。
 skill_mode: guide_with_tool
 metadata:
   doc_structure:
     doc_id: skillsmanager_creation_template.entry.facade
     doc_type: skill_facade
     topic: Entry facade for the SkillsManager-Creation-Template skill
-    anchors:
-    - target: ./path/template_creation/guide_only/00_GUIDE_ONLY_ENTRY.md
-      relation: routes_to
-      direction: downstream
+    reading_chain:
+    - key: guide_only
+      target: ./path/template_creation/guide_only/00_GUIDE_ONLY_ENTRY.md
+      hop: entry
       reason: guide_only creation is a top-level function entry.
-    - target: ./path/template_creation/guide_with_tool/00_GUIDE_WITH_TOOL_ENTRY.md
-      relation: routes_to
-      direction: downstream
+    - key: guide_with_tool
+      target: ./path/template_creation/guide_with_tool/00_GUIDE_WITH_TOOL_ENTRY.md
+      hop: entry
       reason: guide_with_tool creation is a top-level function entry.
-    - target: ./path/template_creation/executable_workflow_skill/00_EXECUTABLE_WORKFLOW_ENTRY.md
-      relation: routes_to
-      direction: downstream
+    - key: executable_workflow
+      target: ./path/template_creation/executable_workflow_skill/00_EXECUTABLE_WORKFLOW_ENTRY.md
+      hop: entry
       reason: executable_workflow_skill creation is a top-level function entry.
-    - target: ./path/maintenance/00_MAINTENANCE_ENTRY.md
-      relation: routes_to
-      direction: downstream
+    - key: maintenance
+      target: ./path/maintenance/00_MAINTENANCE_ENTRY.md
+      hop: entry
       reason: template maintenance is a top-level function entry.
 ---
 
@@ -34,7 +35,7 @@ metadata:
 - 当前模板分三类 `skill_mode`：`guide_only`、`guide_with_tool`、`executable_workflow_skill`。
 - 其中 `guide_with_tool` 的语义应理解为单线入口内的 `tool/lint` 能力面，而不是强制每个技能都必须提供业务工具。
 - 本技能自身已改为 `path-first / next-hop-only / action-closed-loop` 展示面。
-- 技能创建完成后的文档组织、锚点写法、`SKILL.md` 约束与链路维护，后续统一交给 `SkillsManager-Doc-Structure`。
+- 技能创建完成后的文档组织、`reading_chain` 写法、`SKILL.md` 约束与链路维护，后续统一交给 `SkillsManager-Doc-Structure`。
 - 不适用于：直接代替目标 skill 编写业务语义，或承担技能创建后的文档结构治理职责。
 
 ### 2. 技能约束

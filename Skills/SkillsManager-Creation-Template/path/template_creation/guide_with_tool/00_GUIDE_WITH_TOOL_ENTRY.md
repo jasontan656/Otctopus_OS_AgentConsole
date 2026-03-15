@@ -2,14 +2,10 @@
 doc_id: skill_creation_template.path.template_creation.guide_with_tool.entry
 doc_type: path_doc
 topic: Action-loop entry for guide_with_tool template creation
-anchors:
-- target: ../00_TEMPLATE_CREATION_ENTRY.md
-  relation: implements
-  direction: upstream
-  reason: Template creation entry routes guide_with_tool here.
-- target: 10_CONTRACT.md
-  relation: routes_to
-  direction: downstream
+reading_chain:
+- key: contract
+  target: 10_CONTRACT.md
+  hop: next
   reason: guide_with_tool creation starts from the contract doc.
 ---
 

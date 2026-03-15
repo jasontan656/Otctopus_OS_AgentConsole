@@ -2,15 +2,47 @@
 doc_id: skillsmanager_doc_structure.path.primary_flow.doc_writing
 doc_type: topic_atom
 topic: Doc writing responsibilities in the primary governance flow
-anchors:
-- target: 22_PATH_CHAINING.md
-  relation: implements
-  direction: upstream
-  reason: Doc writing checks follow path chaining.
-- target: 23A_SKILL_FACADE_RULES.md
-  relation: routes_to
-  direction: downstream
-  reason: Node-role semantic rules are read before anchor lint.
+reading_chain:
+- key: skill_facade
+  target: 23A_SKILL_FACADE_RULES.md
+  hop: branch
+  reason: Read the facade rule branch when reviewing SKILL.md responsibilities.
+- key: entry_node
+  target: 23B_ENTRY_NODE_RULES.md
+  hop: branch
+  reason: Read the entry-node rule branch when reviewing 00_*.md entry docs.
+- key: contract_node
+  target: 23C_CONTRACT_NODE_RULES.md
+  hop: branch
+  reason: Read the contract-node rule branch when reviewing contract docs.
+- key: tools_node
+  target: 23D_TOOLS_NODE_RULES.md
+  hop: branch
+  reason: Read the tools-node rule branch when reviewing tool or lint docs.
+- key: execution_node
+  target: 23E_EXECUTION_NODE_RULES.md
+  hop: branch
+  reason: Read the execution-node rule branch when reviewing execution docs.
+- key: validation_node
+  target: 23F_VALIDATION_NODE_RULES.md
+  hop: branch
+  reason: Read the validation-node rule branch when reviewing validation docs.
+- key: workflow_index
+  target: 23G_WORKFLOW_INDEX_RULES.md
+  hop: branch
+  reason: Read the workflow-index branch when reviewing compound workflow indexes.
+- key: step_node
+  target: 23H_STEP_NODE_RULES.md
+  hop: branch
+  reason: Read the step-node branch when reviewing step-local docs.
+- key: branch_index
+  target: 23I_BRANCH_INDEX_RULES.md
+  hop: branch
+  reason: Read the branch-index branch when reviewing function grouping nodes.
+- key: terminal_index
+  target: 23J_TERMINAL_INDEX_RULES.md
+  hop: branch
+  reason: Read the terminal-index branch when reviewing registry-only end nodes.
 ---
 
 # 文档职责检查

@@ -2,15 +2,11 @@
 doc_id: skillsmanager_doc_structure.path.primary_flow.validation_node_rules
 doc_type: topic_atom
 topic: Validation-node semantic rules in doc-structure governance
-anchors:
-- target: 23E_EXECUTION_NODE_RULES.md
-  relation: implements
-  direction: upstream
-  reason: Validation-node review follows execution-node review.
-- target: 24_ANCHOR_LINT.md
-  relation: routes_to
-  direction: downstream
-  reason: Anchor lint follows the node-role semantic review.
+reading_chain:
+- key: reading_chain_lint
+  target: 24_READING_CHAIN_LINT.md
+  hop: next
+  reason: Reading-chain lint follows the node-role semantic review.
 ---
 
 # 校验节点规则
@@ -26,4 +22,4 @@ anchors:
 - 校验页混入全局总则。
 
 ## 下一跳列表
-- [anchor lint]：`24_ANCHOR_LINT.md`
+- [reading-chain 检查]：`24_READING_CHAIN_LINT.md`

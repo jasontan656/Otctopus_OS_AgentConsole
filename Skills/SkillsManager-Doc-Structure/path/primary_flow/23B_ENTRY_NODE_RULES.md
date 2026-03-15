@@ -2,14 +2,10 @@
 doc_id: skillsmanager_doc_structure.path.primary_flow.entry_node_rules
 doc_type: topic_atom
 topic: Entry-node semantic rules in doc-structure governance
-anchors:
-- target: 23A_SKILL_FACADE_RULES.md
-  relation: implements
-  direction: upstream
-  reason: Entry-node review follows facade review.
-- target: 23C_CONTRACT_NODE_RULES.md
-  relation: routes_to
-  direction: downstream
+reading_chain:
+- key: 23c_contract_node_rules
+  target: 23C_CONTRACT_NODE_RULES.md
+  hop: next
   reason: Contract-node rules follow the entry-node rules.
 ---
 

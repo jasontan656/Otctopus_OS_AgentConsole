@@ -2,11 +2,6 @@
 doc_id: skillsmanager_tooling_checkup.references_runtime_contracts_skill_runtime_contract
 doc_type: topic_atom
 topic: SKILL_RUNTIME_CONTRACT
-anchors:
-- target: ../../SKILL.md
-  relation: implements
-  direction: upstream
-  reason: This document belongs to the governed skill tree under the main facade.
 ---
 
 # SKILL_RUNTIME_CONTRACT
@@ -17,6 +12,7 @@ anchors:
   - `./.venv_backend_skills/bin/python Skills/SkillsManager-Tooling-CheckUp/scripts/Cli_Toolbox.py contract --json`
   - `./.venv_backend_skills/bin/python Skills/SkillsManager-Tooling-CheckUp/scripts/Cli_Toolbox.py directive --topic <topic> --json`
 - `govern-target` 只负责目标 skill 的 tooling surface 审计，不承担目标技能形态治理。
+- 对带 `scripts/ + path/` 的技能，`govern-target` 还会检查 `read-path-context` 是否能正确编译文档链路。
 - 人类可以阅读本 markdown 的叙事部分，但模型应总是优先消费 Part B 的 JSON payload。
 </part_A>
 
@@ -25,7 +21,7 @@ anchors:
 ```json
 {
   "contract_name": "skills_tooling_checkup_runtime_contract",
-  "contract_version": "2.4.0",
+  "contract_version": "2.5.0",
   "skill_name": "SkillsManager-Tooling-CheckUp",
   "runtime_source_policy": {
     "primary_runtime_source": "CLI_JSON",
@@ -45,7 +41,8 @@ anchors:
     "Call contract before consuming runtime guidance for this skill.",
     "Choose the directive topic by actual task intent.",
     "Treat returned JSON payloads as the primary instruction source.",
-    "Open human markdown mirrors or legacy reference docs only when the direct JSON payload leaves a real gap."
+    "Open human markdown mirrors or legacy reference docs only when the direct JSON payload leaves a real gap.",
+    "When the target skill has both scripts/ and path/, verify that its local CLI can compile one governed reading chain into JSON context output."
   ],
   "directive_topics": [
     {
@@ -85,17 +82,17 @@ anchors:
     }
   ],
   "hard_constraints": [
-    "Do not treat markdown path chains as the main runtime instructions.",
-    "Do not output path metadata instead of direct action guidance.",
+    "Do not reinterpret target skill reading-chain design as this skill's own shape-governance concern.",
+    "Do not output path metadata instead of direct action guidance when a target CLI claims to compile full path context.",
     "Do not invent a parallel governance flow when the directive payload already answers the active question.",
-    "Do not use this skill to govern target skill root shape, SKILL.md facade shape, path chain shape, or anchor graph shape.",
+    "Do not use this skill to govern target skill root shape, SKILL.md facade shape, path chain shape, or reading-chain shape.",
     "Do not edit the codex installed copy directly; edit the mirror copy and sync downstream after validation."
   ],
   "target_skill_handoff": [
     "After this skill clarifies the review or remediation workflow, enter the target skill through its own governed workflow and local execution commands.",
     "Use the target skill's existing tests and lint commands for behavior verification.",
     "If Python files are edited, run Dev-PythonCode-Constitution lint on the concrete Python target scope before closing the turn.",
-    "Use govern-target only for tooling surface audits: scripts surface, explicit CLI entry, dependency-baseline drift, and output governance.",
+    "Use govern-target only for tooling surface audits: scripts surface, explicit CLI entry, dependency-baseline drift, output governance, and read-path-context health.",
     "Delegate Python or TypeScript language-style rules, fat-file policy, and language-specific lint baselines to the relevant language constitution instead of restating them here."
   ]
 }

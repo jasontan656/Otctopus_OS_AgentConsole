@@ -2,11 +2,6 @@
 doc_id: skill_creation_template.path.template_creation.guide_with_tool.validation
 doc_type: topic_atom
 topic: Validation for guide_with_tool template creation
-anchors:
-- target: 20_EXECUTION.md
-  relation: implements
-  direction: upstream
-  reason: Validation closes the guide_with_tool action loop.
 ---
 
 # Guide With Tool Validation

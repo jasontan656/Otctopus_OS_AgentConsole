@@ -2,11 +2,6 @@
 doc_id: skill_creation_template.path.template_creation.guide_only.validation
 doc_type: topic_atom
 topic: Validation for guide_only template creation
-anchors:
-- target: 20_EXECUTION.md
-  relation: implements
-  direction: upstream
-  reason: Validation closes the guide_only action loop.
 ---
 
 # Guide Only Validation

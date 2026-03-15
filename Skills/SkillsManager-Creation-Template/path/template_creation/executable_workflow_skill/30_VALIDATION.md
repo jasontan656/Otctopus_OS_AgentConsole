@@ -2,11 +2,6 @@
 doc_id: skill_creation_template.path.template_creation.executable.validation
 doc_type: topic_atom
 topic: Validation for executable_workflow_skill template creation
-anchors:
-- target: 20_EXECUTION.md
-  relation: implements
-  direction: upstream
-  reason: Validation closes the executable workflow action loop.
 ---
 
 # Executable Workflow Validation

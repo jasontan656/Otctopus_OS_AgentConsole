@@ -2,14 +2,10 @@
 doc_id: skills_tooling_checkup.routing.task_routing
 doc_type: routing_doc
 topic: Task routing for skills tooling dependency-baseline review and remediation
-anchors:
-- target: ../../SKILL.md
-  relation: implements
-  direction: upstream
-  reason: The facade still exposes a human-readable routing mirror.
-- target: ../governance/SKILL_EXECUTION_RULES.md
-  relation: routes_to
-  direction: downstream
+reading_chain:
+- key: skill_execution_rules
+  target: ../governance/SKILL_EXECUTION_RULES.md
+  hop: next
   reason: Task routing must still pass through execution rules.
 ---
 

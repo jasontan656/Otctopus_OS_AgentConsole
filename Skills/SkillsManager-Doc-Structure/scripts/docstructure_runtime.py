@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import re
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -17,7 +17,20 @@ SHAPE_KIND_OVERVIEW = {
     "compound_path": "复合路径型：入口进入后允许 workflow index 与步骤子闭环继续下沉。",
 }
 ROOT_IGNORE_NAMES = {"__pycache__"}
-BACKTICK_MD_PATH_RE = re.compile(r"`([^`\n]+\.md)`")
+ALLOWED_HOPS = {"entry", "next", "branch"}
+
+
+@dataclass
+class ChainEdge:
+    key: str
+    target: str
+    hop: str
+    reason: str
+    source: Path
+
+    @property
+    def resolved(self) -> Path:
+        return (self.source.parent / self.target).resolve()
 
 
 def runtime_contract_payload() -> dict[str, Any]:
@@ -29,9 +42,9 @@ def runtime_contract_payload() -> dict[str, Any]:
         "governed_scope": [
             "root shape",
             "SKILL.md facade scope",
-            "path chaining",
+            "reading-chain definition",
             "structural role alignment",
-            "anchor target resolution",
+            "reading-chain compilation",
             "semantic review workflow",
         ],
         "target_shape_model": {
@@ -45,8 +58,8 @@ def runtime_contract_payload() -> dict[str, Any]:
             "inspect-target",
             "lint-root-shape",
             "lint-reading-chain",
-            "build-anchor-graph",
-            "lint-anchor-graph",
+            "compile-reading-chain",
+            "read-path-context",
             "lint-docstructure",
         ],
     }
@@ -71,34 +84,6 @@ def _parse_frontmatter(markdown_path: Path) -> tuple[dict[str, Any], str]:
     return payload, body
 
 
-def _resolve_target_shape(target_root: Path) -> dict[str, Any]:
-    skill_md = target_root / "SKILL.md"
-    if not skill_md.is_file():
-        raise FileNotFoundError(f"target skill is missing SKILL.md: {skill_md}")
-
-    frontmatter, _body = _parse_frontmatter(skill_md)
-    skill_mode = frontmatter.get("skill_mode")
-    shape_kind = SKILL_MODE_TO_SHAPE_KIND.get(skill_mode)
-
-    if shape_kind is None:
-        if (target_root / "path").is_dir():
-            entry_dirs = _discover_entry_dirs(target_root / "path")
-            if any((entry / "20_WORKFLOW_INDEX.md").is_file() or (entry / "steps").is_dir() for entry in entry_dirs):
-                shape_kind = "compound_path"
-            else:
-                shape_kind = "linear_path"
-        else:
-            shape_kind = "facade_only"
-
-    return {
-        "target_root": str(target_root),
-        "skill_md": str(skill_md),
-        "detected_skill_mode": skill_mode,
-        "shape_kind": shape_kind,
-        "shape_overview": SHAPE_KIND_OVERVIEW[shape_kind],
-    }
-
-
 def _visible_root_entries(target_root: Path) -> list[str]:
     entries = []
     for child in target_root.iterdir():
@@ -106,6 +91,32 @@ def _visible_root_entries(target_root: Path) -> list[str]:
             continue
         entries.append(child.name)
     return sorted(entries)
+
+
+def _resolve_target_shape(target_root: Path) -> dict[str, Any]:
+    skill_md = target_root / "SKILL.md"
+    if not skill_md.is_file():
+        raise FileNotFoundError(f"target skill is missing SKILL.md: {skill_md}")
+
+    frontmatter, _ = _parse_frontmatter(skill_md)
+    skill_mode = frontmatter.get("skill_mode")
+    shape_kind = SKILL_MODE_TO_SHAPE_KIND.get(skill_mode)
+    if shape_kind is None:
+        if (target_root / "path").is_dir():
+            path_root = target_root / "path"
+            if any(path_root.rglob("20_WORKFLOW_INDEX.md")):
+                shape_kind = "compound_path"
+            else:
+                shape_kind = "linear_path"
+        else:
+            shape_kind = "facade_only"
+    return {
+        "target_root": str(target_root),
+        "skill_md": str(skill_md),
+        "detected_skill_mode": skill_mode,
+        "shape_kind": shape_kind,
+        "shape_overview": SHAPE_KIND_OVERVIEW[shape_kind],
+    }
 
 
 def inspect_target(target_root: Path) -> dict[str, Any]:
@@ -126,7 +137,6 @@ def lint_root_shape(target_root: Path) -> dict[str, Any]:
         errors.append(f"missing root entries: {', '.join(missing)}")
     if unexpected:
         errors.append(f"unexpected root entries: {', '.join(unexpected)}")
-
     return {
         "status": "ok" if not errors else "error",
         "target_root": str(target_root),
@@ -137,14 +147,52 @@ def lint_root_shape(target_root: Path) -> dict[str, Any]:
     }
 
 
+def _reading_chain(markdown_path: Path) -> list[ChainEdge]:
+    frontmatter, _ = _parse_frontmatter(markdown_path)
+    if markdown_path.name == "SKILL.md":
+        metadata = frontmatter.get("metadata")
+        doc_structure = metadata.get("doc_structure", {}) if isinstance(metadata, dict) else {}
+        raw_chain = doc_structure.get("reading_chain")
+    else:
+        raw_chain = frontmatter.get("reading_chain")
+    if not isinstance(raw_chain, list):
+        return []
+    edges: list[ChainEdge] = []
+    for index, item in enumerate(raw_chain, start=1):
+        if not isinstance(item, dict):
+            continue
+        target = item.get("target")
+        hop = item.get("hop")
+        if not isinstance(target, str) or not isinstance(hop, str):
+            continue
+        key = item.get("key")
+        if not isinstance(key, str) or not key.strip():
+            key = f"hop_{index}"
+        reason = item.get("reason")
+        edges.append(
+            ChainEdge(
+                key=key.strip(),
+                target=target,
+                hop=hop.strip(),
+                reason=reason if isinstance(reason, str) else "",
+                source=markdown_path,
+            )
+        )
+    return edges
+
+
+def _markdown_files(target_root: Path) -> list[Path]:
+    return sorted(path for path in target_root.rglob("*.md") if "__pycache__" not in path.parts)
+
+
 def _discover_entry_dirs(path_root: Path) -> list[Path]:
     if not path_root.is_dir():
         return []
-    entry_dirs = []
+    entry_dirs: list[Path] = []
     for child in sorted(path_root.iterdir()):
         if not child.is_dir() or child.name.startswith("."):
             continue
-        if any(file.name.startswith("00_") and file.name.endswith("_ENTRY.md") for file in child.glob("00_*_ENTRY.md")):
+        if any(file.name.startswith("00_") and file.name.endswith(".md") for file in child.glob("00_*.md")):
             entry_dirs.append(child)
     return entry_dirs
 
@@ -157,169 +205,149 @@ def _classify_node_dir(node_dir: Path) -> str:
     zero_docs = _discover_zero_docs(node_dir)
     if not zero_docs:
         return "not_a_node"
-
-    subdirs = sorted(child for child in node_dir.iterdir() if child.is_dir() and not child.name.startswith("."))
     markdown_names = {path.name for path in node_dir.glob("*.md")}
     linear_required = {"10_CONTRACT.md", "20_EXECUTION.md", "30_VALIDATION.md"}
     compound_required = {"10_CONTRACT.md", "15_TOOLS.md", "20_WORKFLOW_INDEX.md", "30_VALIDATION.md"}
-
     if compound_required.issubset(markdown_names) and (node_dir / "steps").is_dir():
         return "compound_loop"
-    if linear_required.issubset(markdown_names) and not subdirs:
+    if linear_required.issubset(markdown_names):
         return "linear_loop"
-    if subdirs:
+    if any(child.is_dir() and not child.name.startswith(".") for child in node_dir.iterdir()):
         return "branch_index"
     return "terminal_index"
 
 
-def _markdown_targets(markdown_path: Path, frontmatter: dict[str, Any], body: str) -> list[str]:
-    targets: list[str] = []
-    anchors = frontmatter.get("anchors")
-    if isinstance(anchors, list):
-        for item in anchors:
-            if isinstance(item, dict) and isinstance(item.get("target"), str):
-                targets.append(item["target"])
-    for match in BACKTICK_MD_PATH_RE.finditer(body):
-        targets.append(match.group(1))
-    deduped: list[str] = []
-    seen: set[str] = set()
-    for target in targets:
-        if target in seen:
-            continue
-        seen.add(target)
-        deduped.append(target)
-    return deduped
-
-
-def _lint_markdown_section(markdown_path: Path, body: str) -> list[str]:
-    errors: list[str] = []
-    name = markdown_path.name
-
-    if name == "SKILL.md":
-        return errors
-
-    if name.startswith("00_") and "## 下一跳列表" not in body:
-        errors.append(f"{markdown_path} is missing '## 下一跳列表'")
-    return errors
-
-
 def _lint_facade(target_root: Path, shape_kind: str) -> list[str]:
-    errors: list[str] = []
     skill_md = target_root / "SKILL.md"
-    frontmatter, text = _parse_frontmatter(skill_md)
-    if shape_kind == "facade_only":
-        required_sections = [
-            "## 1. 模型立刻需要知道的事情",
-            "## 2. 技能正文",
-            "## 3. 目录结构图",
-        ]
-    else:
-        required_sections = [
-            "## 1. 模型立刻需要知道的事情",
-            "## 2. 功能入口",
-            "## 3. 目录结构图",
-        ]
+    frontmatter, body = _parse_frontmatter(skill_md)
+    errors: list[str] = []
+    required_sections = [
+        "## 1. 模型立刻需要知道的事情",
+        "## 2. 技能正文" if shape_kind == "facade_only" else "## 2. 功能入口",
+        "## 3. 目录结构图",
+    ]
     for section in required_sections:
-        if section not in text:
+        if section not in body:
             errors.append(f"SKILL.md is missing section: {section}")
     if shape_kind != "facade_only":
-        targets = _markdown_targets(skill_md, frontmatter, text)
-        path_targets = [target for target in targets if target.startswith("path/") and target.endswith(".md")]
-        if not path_targets:
-            errors.append("SKILL.md does not expose any path-based function entry")
+        chain = _reading_chain(skill_md)
+        if not chain:
+            errors.append("SKILL.md does not expose any reading-chain entry")
+        for edge in chain:
+            if edge.hop != "entry":
+                errors.append(f"SKILL.md reading_chain hop must be 'entry': {edge.target}")
+    else:
+        if "reading_chain" in frontmatter:
+            errors.append("facade_only skills must not declare reading_chain in SKILL.md")
     return errors
 
 
-def _lint_linear_entry(entry_dir: Path) -> list[str]:
+def _lint_chain_field(markdown_path: Path, target_root: Path) -> list[str]:
     errors: list[str] = []
-    expected_names = {"10_CONTRACT.md", "20_EXECUTION.md", "30_VALIDATION.md"}
-    actual_names = {path.name for path in entry_dir.glob("*.md")}
-    missing = sorted(expected_names - actual_names)
-    if missing:
-        errors.append(f"{entry_dir} is missing required linear docs: {', '.join(missing)}")
-    subdirs = [child.name for child in entry_dir.iterdir() if child.is_dir()]
-    if subdirs:
-        errors.append(f"{entry_dir} must stay linear and cannot contain subdirectories: {', '.join(sorted(subdirs))}")
-    return errors
-
-
-def _lint_terminal_index(entry_dir: Path) -> list[str]:
-    errors: list[str] = []
-    zero_docs = _discover_zero_docs(entry_dir)
-    if len(zero_docs) != 1:
-        errors.append(f"{entry_dir} terminal index must contain exactly one 00_*.md file")
-    extra_markdown = [path.name for path in entry_dir.glob("*.md") if not path.name.startswith("00_")]
-    if extra_markdown:
-        errors.append(f"{entry_dir} terminal index must not carry extra markdown files: {', '.join(sorted(extra_markdown))}")
-    return errors
-
-
-def _lint_branch_index(entry_dir: Path, target_root: Path) -> list[str]:
-    errors: list[str] = []
-    zero_docs = _discover_zero_docs(entry_dir)
-    if len(zero_docs) != 1:
-        errors.append(f"{entry_dir} branch index must contain exactly one 00_*.md file")
-    child_dirs = sorted(child for child in entry_dir.iterdir() if child.is_dir() and not child.name.startswith("."))
-    if not child_dirs:
-        errors.append(f"{entry_dir} branch index must expose child node directories")
-        return errors
-
-    frontmatter, body = _parse_frontmatter(zero_docs[0])
-    if not _markdown_targets(zero_docs[0], frontmatter, body):
-        errors.append(f"{zero_docs[0].relative_to(target_root)} branch index entry does not expose any downstream targets")
-
-    for child_dir in child_dirs:
-        child_kind = _classify_node_dir(child_dir)
-        if child_kind == "not_a_node":
-            errors.append(f"{child_dir} is not a valid child node under branch index {entry_dir}")
+    for edge in _reading_chain(markdown_path):
+        if edge.hop not in ALLOWED_HOPS:
+            errors.append(f"{markdown_path.relative_to(target_root)} uses unsupported hop: {edge.hop}")
             continue
-        errors.extend(_lint_node_dir(child_dir, target_root))
+        if not edge.resolved.exists():
+            errors.append(
+                f"{markdown_path.relative_to(target_root)} points to missing reading-chain target: {edge.target}"
+            )
+        elif edge.resolved.suffix != ".md":
+            errors.append(
+                f"{markdown_path.relative_to(target_root)} points to non-markdown reading-chain target: {edge.target}"
+            )
     return errors
 
 
-def _lint_compound_entry(entry_dir: Path) -> list[str]:
+def _lint_markdown_section(markdown_path: Path, target_root: Path) -> list[str]:
+    _frontmatter, body = _parse_frontmatter(markdown_path)
     errors: list[str] = []
-    expected_names = {"10_CONTRACT.md", "15_TOOLS.md", "20_WORKFLOW_INDEX.md", "30_VALIDATION.md"}
-    actual_names = {path.name for path in entry_dir.glob("*.md")}
-    missing = sorted(expected_names - actual_names)
-    if missing:
-        errors.append(f"{entry_dir} is missing required compound docs: {', '.join(missing)}")
-    steps_dir = entry_dir / "steps"
-    if not steps_dir.is_dir():
-        errors.append(f"{entry_dir} is missing steps/")
-        return errors
-    step_dirs = sorted(child for child in steps_dir.iterdir() if child.is_dir())
-    if not step_dirs:
-        errors.append(f"{entry_dir} has steps/ but no step directories")
-        return errors
-    expected_step_names = {"10_CONTRACT.md", "15_TOOLS.md", "20_EXECUTION.md", "30_VALIDATION.md"}
-    for step_dir in step_dirs:
-        step_files = {path.name for path in step_dir.glob("*.md")}
-        missing_steps = sorted(expected_step_names - step_files)
-        if missing_steps:
-            errors.append(f"{step_dir} is missing required step docs: {', '.join(missing_steps)}")
-        if not any(path.name.startswith("00_") and path.name.endswith("_ENTRY.md") for path in step_dir.glob("00_*_ENTRY.md")):
-            errors.append(f"{step_dir} is missing its 00_*_ENTRY.md file")
+    if markdown_path.name.startswith("00_") and "## 下一跳列表" not in body:
+        errors.append(f"{markdown_path.relative_to(target_root)} is missing '## 下一跳列表'")
     return errors
 
 
-def _lint_node_dir(entry_dir: Path, target_root: Path) -> list[str]:
-    node_kind = _classify_node_dir(entry_dir)
-    if node_kind == "linear_loop":
-        return _lint_linear_entry(entry_dir)
-    if node_kind == "compound_loop":
-        return _lint_compound_entry(entry_dir)
-    if node_kind == "branch_index":
-        return _lint_branch_index(entry_dir, target_root)
-    if node_kind == "terminal_index":
-        return _lint_terminal_index(entry_dir)
-    return [f"{entry_dir} is not a valid node directory"]
+def _lint_node_dir(node_dir: Path, target_root: Path) -> list[str]:
+    kind = _classify_node_dir(node_dir)
+    errors: list[str] = []
+    zero_docs = _discover_zero_docs(node_dir)
+    if kind == "not_a_node":
+        return [f"{node_dir.relative_to(target_root)} is not a valid node directory"]
+    if len(zero_docs) != 1:
+        errors.append(f"{node_dir.relative_to(target_root)} must contain exactly one 00_*.md file")
+        return errors
+    entry_doc = zero_docs[0]
+    chain = _reading_chain(entry_doc)
+
+    if kind == "linear_loop":
+        expected_names = {"10_CONTRACT.md", "20_EXECUTION.md", "30_VALIDATION.md"}
+        if "15_TOOLS.md" in {path.name for path in node_dir.glob("*.md")}:
+            expected_names.add("15_TOOLS.md")
+        missing = sorted(expected_names - {path.name for path in node_dir.glob("*.md")})
+        if missing:
+            errors.append(f"{node_dir.relative_to(target_root)} is missing linear docs: {', '.join(missing)}")
+        if len(chain) != 1 or chain[0].hop != "next":
+            errors.append(f"{entry_doc.relative_to(target_root)} must expose exactly one next hop")
+    elif kind == "compound_loop":
+        expected_names = {"10_CONTRACT.md", "15_TOOLS.md", "20_WORKFLOW_INDEX.md", "30_VALIDATION.md"}
+        missing = sorted(expected_names - {path.name for path in node_dir.glob("*.md")})
+        if missing:
+            errors.append(f"{node_dir.relative_to(target_root)} is missing compound docs: {', '.join(missing)}")
+        if not (node_dir / "steps").is_dir():
+            errors.append(f"{node_dir.relative_to(target_root)} is missing steps/")
+        if len(chain) != 1 or chain[0].hop != "next":
+            errors.append(f"{entry_doc.relative_to(target_root)} must expose exactly one next hop")
+    elif kind == "branch_index":
+        if not chain:
+            errors.append(f"{entry_doc.relative_to(target_root)} must expose branch options")
+        elif len(chain) == 1 and chain[0].hop == "next":
+            # Allow a pass-through index that only forwards into one terminal or nested node.
+            pass
+        else:
+            for edge in chain:
+                if edge.hop != "branch":
+                    errors.append(f"{entry_doc.relative_to(target_root)} must use branch hops")
+    elif kind == "terminal_index":
+        if chain:
+            errors.append(f"{entry_doc.relative_to(target_root)} terminal index must not expose downstream hops")
+
+    return errors
+
+
+def build_reading_chain(target_root: Path) -> dict[str, Any]:
+    nodes: list[str] = []
+    edges: list[dict[str, Any]] = []
+    for markdown_path in _markdown_files(target_root):
+        relative_source = markdown_path.relative_to(target_root).as_posix()
+        nodes.append(relative_source)
+        for edge in _reading_chain(markdown_path):
+            resolved = edge.resolved
+            try:
+                resolved_target = resolved.relative_to(target_root.resolve()).as_posix()
+            except ValueError:
+                resolved_target = str(resolved)
+            edges.append(
+                {
+                    "source": relative_source,
+                    "key": edge.key,
+                    "target": edge.target,
+                    "resolved_target": resolved_target,
+                    "hop": edge.hop,
+                    "reason": edge.reason,
+                    "exists": resolved.exists(),
+                }
+            )
+    return {
+        "status": "ok",
+        "target_root": str(target_root),
+        "nodes": nodes,
+        "edges": edges,
+    }
 
 
 def lint_reading_chain(target_root: Path) -> dict[str, Any]:
     payload = _resolve_target_shape(target_root)
     errors = _lint_facade(target_root, payload["shape_kind"])
-
     if payload["shape_kind"] == "facade_only":
         return {
             "status": "ok" if not errors else "error",
@@ -331,20 +359,13 @@ def lint_reading_chain(target_root: Path) -> dict[str, Any]:
     path_root = target_root / "path"
     entry_dirs = _discover_entry_dirs(path_root)
     if not entry_dirs:
-        errors.append(f"{path_root} does not expose any entry directories")
+        errors.append(f"{path_root} does not expose any node directories")
 
-    for markdown_path in sorted(target_root.rglob("*.md")):
-        if markdown_path.parts[-2:-1] == ("agents",):
+    for markdown_path in _markdown_files(target_root):
+        if markdown_path.name == "SKILL.md" or "agents" in markdown_path.parts:
             continue
-        if markdown_path.name == "SKILL.md":
-            continue
-        parent_kind = _classify_node_dir(markdown_path.parent)
-        frontmatter, body = _parse_frontmatter(markdown_path)
-        if parent_kind in {"linear_loop", "compound_loop", "branch_index"} and markdown_path.name.startswith("00_"):
-            errors.extend(_lint_markdown_section(markdown_path.relative_to(target_root), body))
-            targets = _markdown_targets(markdown_path, frontmatter, body)
-            if not targets:
-                errors.append(f"{markdown_path.relative_to(target_root)} does not expose any next-hop markdown target")
+        errors.extend(_lint_chain_field(markdown_path, target_root))
+        errors.extend(_lint_markdown_section(markdown_path, target_root))
 
     for entry_dir in entry_dirs:
         errors.extend(_lint_node_dir(entry_dir, target_root))
@@ -355,71 +376,99 @@ def lint_reading_chain(target_root: Path) -> dict[str, Any]:
         "shape_kind": payload["shape_kind"],
         "entry_dirs": [str(path.relative_to(target_root)) for path in entry_dirs],
         "errors": errors,
+        "chain": build_reading_chain(target_root),
     }
 
 
-def build_anchor_graph(target_root: Path) -> dict[str, Any]:
-    nodes: list[str] = []
-    edges: list[dict[str, Any]] = []
-    for markdown_path in sorted(target_root.rglob("*.md")):
-        relative_source = markdown_path.relative_to(target_root).as_posix()
-        nodes.append(relative_source)
-        frontmatter, _body = _parse_frontmatter(markdown_path)
-        anchors = frontmatter.get("anchors")
-        if not isinstance(anchors, list):
-            continue
-        for item in anchors:
-            if not isinstance(item, dict):
-                continue
-            raw_target = item.get("target")
-            if not isinstance(raw_target, str):
-                continue
-            resolved_target = (markdown_path.parent / raw_target).resolve()
-            target_within_root = None
-            try:
-                target_within_root = resolved_target.relative_to(target_root.resolve()).as_posix()
-            except ValueError:
-                target_within_root = str(resolved_target)
-            edges.append(
-                {
-                    "source": relative_source,
-                    "target": raw_target,
-                    "resolved_target": target_within_root,
-                    "relation": item.get("relation"),
-                    "direction": item.get("direction"),
-                    "exists": resolved_target.exists(),
+def _extract_title(body: str) -> str:
+    for line in body.splitlines():
+        if line.startswith("#"):
+            return line.lstrip("#").strip()
+    return ""
+
+
+def _select_edge(edges: list[ChainEdge], key: str | None) -> tuple[ChainEdge | None, list[str]]:
+    if not edges:
+        return None, []
+    if key is None:
+        return (edges[0], []) if len(edges) == 1 else (None, [edge.key for edge in edges])
+    for edge in edges:
+        if edge.key == key:
+            return edge, []
+    return None, [edge.key for edge in edges]
+
+
+def compile_reading_chain(target_root: Path, entry_key: str, selection_keys: list[str]) -> dict[str, Any]:
+    shape = _resolve_target_shape(target_root)
+    if shape["shape_kind"] == "facade_only":
+        _frontmatter, body = _parse_frontmatter(target_root / "SKILL.md")
+        return {
+            "status": "ok",
+            "target_root": str(target_root),
+            "entry": "facade_only",
+            "resolved_chain": ["SKILL.md"],
+            "segments": [{"source": "SKILL.md", "title": _extract_title(body), "content": body.strip()}],
+            "compiled_markdown": body.strip(),
+        }
+
+    skill_md = target_root / "SKILL.md"
+    skill_edges = _reading_chain(skill_md)
+    first_edge, available = _select_edge(skill_edges, entry_key)
+    if first_edge is None:
+        return {
+            "status": "error",
+            "error": "entry_not_found",
+            "entry": entry_key,
+            "available_entries": available,
+        }
+
+    selection_queue = list(selection_keys)
+    current = first_edge.resolved
+    resolved_chain = ["SKILL.md"]
+    segments: list[dict[str, str]] = []
+    _skill_frontmatter, skill_body = _parse_frontmatter(skill_md)
+    segments.append({"source": "SKILL.md", "title": _extract_title(skill_body), "content": skill_body.strip()})
+
+    while True:
+        frontmatter, body = _parse_frontmatter(current)
+        relative = current.relative_to(target_root).as_posix()
+        resolved_chain.append(relative)
+        segments.append({"source": relative, "title": _extract_title(body), "content": body.strip()})
+        edges = _reading_chain(current)
+        if not edges:
+            break
+        if len(edges) > 1:
+            requested = selection_queue.pop(0) if selection_queue else None
+            next_edge, available = _select_edge(edges, requested)
+            if next_edge is None:
+                return {
+                    "status": "branch_selection_required",
+                    "target_root": str(target_root),
+                    "entry": entry_key,
+                    "resolved_chain": resolved_chain,
+                    "available_next": available,
+                    "current_source": relative,
+                    "segments": segments,
                 }
-            )
+            current = next_edge.resolved
+            continue
+        current = edges[0].resolved
+
+    compiled_markdown = "\n\n".join(segment["content"] for segment in segments if segment["content"])
     return {
         "status": "ok",
         "target_root": str(target_root),
-        "nodes": nodes,
-        "edges": edges,
-    }
-
-
-def lint_anchor_graph(target_root: Path) -> dict[str, Any]:
-    graph = build_anchor_graph(target_root)
-    errors = []
-    for edge in graph["edges"]:
-        if not edge["exists"]:
-            errors.append(
-                f"{edge['source']} points to missing anchor target: {edge['target']} -> {edge['resolved_target']}"
-            )
-    return {
-        "status": "ok" if not errors else "error",
-        "target_root": str(target_root),
-        "edge_count": len(graph["edges"]),
-        "errors": errors,
-        "graph": graph,
+        "entry": entry_key,
+        "resolved_chain": resolved_chain,
+        "segments": segments,
+        "compiled_markdown": compiled_markdown,
     }
 
 
 def lint_docstructure(target_root: Path) -> dict[str, Any]:
     shape_payload = lint_root_shape(target_root)
     chain_payload = lint_reading_chain(target_root)
-    anchor_payload = lint_anchor_graph(target_root)
-    errors = [*shape_payload["errors"], *chain_payload["errors"], *anchor_payload["errors"]]
+    errors = [*shape_payload["errors"], *chain_payload["errors"]]
     inspected = inspect_target(target_root)
     return {
         "status": "ok" if not errors else "error",
@@ -429,7 +478,6 @@ def lint_docstructure(target_root: Path) -> dict[str, Any]:
         "checks": {
             "root_shape": shape_payload,
             "reading_chain": chain_payload,
-            "anchor_graph": anchor_payload,
         },
         "errors": errors,
     }

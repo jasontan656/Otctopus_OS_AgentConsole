@@ -2,14 +2,10 @@
 doc_id: skillsmanager_doc_structure.path.primary_flow.contract
 doc_type: topic_atom
 topic: Contract for the primary doc-structure governance flow
-anchors:
-- target: 00_PRIMARY_FLOW_ENTRY.md
-  relation: implements
-  direction: upstream
-  reason: The flow contract is reached from the primary entry.
-- target: 15_TOOLS.md
-  relation: routes_to
-  direction: downstream
+reading_chain:
+- key: tools
+  target: 15_TOOLS.md
+  hop: next
   reason: Tooling follows after the contract is clear.
 ---
 
@@ -18,7 +14,7 @@ anchors:
 ## 当前动作要完成什么
 - 判断目标技能属于哪一种文档组织形态。
 - 用固定预期结构去读取目标技能，而不是从零自由解释。
-- 对不符合预期的根目录、门面职责、路径衔接和 anchors 给出 lint 结果。
+- 对不符合预期的根目录、门面职责、路径衔接和 reading-chain 给出 lint 结果。
 - 不把各层正文内容写死成模板字符串。
 
 ## 当前动作必须满足什么

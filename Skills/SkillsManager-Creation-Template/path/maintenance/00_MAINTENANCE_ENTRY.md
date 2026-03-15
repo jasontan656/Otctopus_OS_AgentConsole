@@ -2,14 +2,10 @@
 doc_id: skill_creation_template.path.maintenance.entry
 doc_type: path_doc
 topic: Maintenance entry for template registry only
-anchors:
-- target: ../../SKILL.md
-  relation: implements
-  direction: upstream
-  reason: The facade routes readers here for maintenance.
-- target: template_registry/00_TEMPLATE_REGISTRY.md
-  relation: routes_to
-  direction: downstream
+reading_chain:
+- key: template_registry
+  target: template_registry/00_TEMPLATE_REGISTRY.md
+  hop: next
   reason: Template maintenance is represented by the single registry file.
 ---
 

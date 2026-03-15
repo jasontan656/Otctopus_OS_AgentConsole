@@ -2,14 +2,10 @@
 doc_id: skill_creation_template.path.template_creation.guide_only.entry
 doc_type: path_doc
 topic: Action-loop entry for guide_only template creation
-anchors:
-- target: ../00_TEMPLATE_CREATION_ENTRY.md
-  relation: implements
-  direction: upstream
-  reason: Template creation entry routes guide_only here.
-- target: 10_CONTRACT.md
-  relation: routes_to
-  direction: downstream
+reading_chain:
+- key: contract
+  target: 10_CONTRACT.md
+  hop: next
   reason: guide_only creation starts from the contract doc.
 ---
 

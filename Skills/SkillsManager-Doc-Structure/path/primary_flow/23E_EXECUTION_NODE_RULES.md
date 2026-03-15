@@ -2,14 +2,10 @@
 doc_id: skillsmanager_doc_structure.path.primary_flow.execution_node_rules
 doc_type: topic_atom
 topic: Execution-node semantic rules in doc-structure governance
-anchors:
-- target: 23D_TOOLS_NODE_RULES.md
-  relation: implements
-  direction: upstream
-  reason: Execution-node review follows tool-node review.
-- target: 23F_VALIDATION_NODE_RULES.md
-  relation: routes_to
-  direction: downstream
+reading_chain:
+- key: 23f_validation_node_rules
+  target: 23F_VALIDATION_NODE_RULES.md
+  hop: next
   reason: Validation-node rules follow execution-node rules.
 ---
 

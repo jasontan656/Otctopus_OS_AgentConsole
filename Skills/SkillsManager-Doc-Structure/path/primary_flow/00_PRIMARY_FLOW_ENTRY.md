@@ -2,10 +2,10 @@
 doc_id: skillsmanager_doc_structure.path.primary_flow.entry
 doc_type: topic_atom
 topic: Entry for the primary doc-structure governance flow
-anchors:
-- target: 10_CONTRACT.md
-  relation: routes_to
-  direction: downstream
+reading_chain:
+- key: contract
+  target: 10_CONTRACT.md
+  hop: next
   reason: The primary flow always starts from its contract.
 ---
 
@@ -17,7 +17,7 @@ anchors:
   - 目标技能根形态是否正确
   - `SKILL.md` 是否只承担门面职责
   - `path/` 是否按阅读顺序逐级下沉
-  - anchors 是否只连接必要的下一级关系
+  - reading-chain 是否只连接必要的下一级关系
 
 ## 下一跳列表
 - [合同]：`10_CONTRACT.md`

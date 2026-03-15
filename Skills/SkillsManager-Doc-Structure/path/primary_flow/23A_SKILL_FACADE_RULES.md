@@ -2,14 +2,10 @@
 doc_id: skillsmanager_doc_structure.path.primary_flow.skill_facade_rules
 doc_type: topic_atom
 topic: Skill facade semantic rules in doc-structure governance
-anchors:
-- target: 23_DOC_WRITING.md
-  relation: implements
-  direction: upstream
-  reason: This file starts node-role semantic review.
-- target: 23B_ENTRY_NODE_RULES.md
-  relation: routes_to
-  direction: downstream
+reading_chain:
+- key: 23b_node_rules
+  target: 23B_ENTRY_NODE_RULES.md
+  hop: next
   reason: Entry-node rules follow the facade rules.
 ---
 

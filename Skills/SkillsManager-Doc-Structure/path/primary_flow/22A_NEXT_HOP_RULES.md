@@ -2,14 +2,10 @@
 doc_id: skillsmanager_doc_structure.path.primary_flow.next_hop_rules
 doc_type: topic_atom
 topic: Immediate next-hop rules in doc-structure governance
-anchors:
-- target: 22_PATH_CHAINING.md
-  relation: implements
-  direction: upstream
-  reason: This file refines generic next-hop rules.
-- target: 22B_LINEAR_CHAIN_RULES.md
-  relation: routes_to
-  direction: downstream
+reading_chain:
+- key: 22b_linear_chain_rules
+  target: 22B_LINEAR_CHAIN_RULES.md
+  hop: next
   reason: After generic next-hop rules, read the relevant chain shape rule.
 ---
 

@@ -2,14 +2,10 @@
 doc_id: skillsmanager_doc_structure.path.primary_flow.compound_chain_rules
 doc_type: topic_atom
 topic: Compound chain rules in doc-structure governance
-anchors:
-- target: 22A_NEXT_HOP_RULES.md
-  relation: implements
-  direction: upstream
-  reason: This file refines the compound chain branch.
-- target: 23_DOC_WRITING.md
-  relation: routes_to
-  direction: downstream
+reading_chain:
+- key: doc_writing
+  target: 23_DOC_WRITING.md
+  hop: next
   reason: Node-writing checks follow after compound chain review.
 ---
 
@@ -23,7 +19,7 @@ anchors:
 ## 不合格信号
 - `workflow index` 混入各 step 的完整规则。
 - step 目录跨读其他 step 的局部文档。
-- 用 anchors 直接跳过 `workflow index` 或 `step entry`。
+- 用 reading-chain 直接跳过 `workflow index` 或 `step entry`。
 
 ## 下一跳列表
 - [文档职责检查]：`23_DOC_WRITING.md`

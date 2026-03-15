@@ -2,15 +2,19 @@
 doc_id: skillsmanager_doc_structure.path.primary_flow.target_shape
 doc_type: topic_atom
 topic: Target skill shape resolution in the primary governance flow
-anchors:
-- target: 20_EXECUTION.md
-  relation: implements
-  direction: upstream
-  reason: Shape resolution is the first execution step.
-- target: 21A_FACADE_ONLY_RULES.md
-  relation: routes_to
-  direction: downstream
-  reason: Shape-specific semantic rules are read after shape resolution.
+reading_chain:
+- key: facade_only
+  target: 21A_FACADE_ONLY_RULES.md
+  hop: branch
+  reason: Read the facade-only rule branch when the target is a minimal facade skill.
+- key: linear_path
+  target: 21B_LINEAR_PATH_RULES.md
+  hop: branch
+  reason: Read the linear-path rule branch when the target is a single-line path skill.
+- key: compound_path
+  target: 21C_COMPOUND_PATH_RULES.md
+  hop: branch
+  reason: Read the compound-path rule branch when the target is a compound workflow skill.
 ---
 
 # 目标技能形态判定
