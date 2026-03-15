@@ -45,7 +45,7 @@ anchors:
 7. `mother_doc` 阶段必须先把需求固化成目录化项目说明与 `requirement_atom`；没有完整说明书，不得进入 `construction_plan`。
 7.0 `mother_doc` 必须采用协议驱动原子文档树；固定根入口只保留 `00_index.md`，其余文档允许按设计思路自由新增、插入、迁移与重排，但不得回退成 giant mother_doc 单文件。
 7.0.1 `00_index.md` 不得手工维护文件清单；必须通过 `mother-doc-refresh-root-index` 自动从当前 folder 结构生成，只展示目录级结构图，不展示文件。
-7.0.0 每个 mother_doc 原子文档都必须带 frontmatter：`doc_work_state`、`doc_pack_refs`、`thumb_title`、`thumb_summary`、`display_layer`、`always_read`、`anchors_down`、`anchors_support`；合法状态只有 `modified -> planned -> developed -> ref`。
+7.0.0 每个 mother_doc 原子文档都必须带 frontmatter：`doc_work_state`、`doc_pack_refs`、`doc_kind`、`content_family`、`thumb_title`、`thumb_summary`、`display_layer`、`always_read`、`anchors_down`、`anchors_support`；合法状态只有 `modified -> planned -> developed -> ref`。
 7.0.0.1 `display_layer` 只表示页面从上到下的显示分层；它不参与树遍历，只负责显示分层。
 7.0.0.2 `anchors_down` 是“主链子节点集合”；列表顺序就是主链兄弟顺序，viewer 必须按列表顺序递归向下爬。
 7.0.0.3 `anchors_support` 是“支撑子树入口集合”；列表顺序就是 support 兄弟顺序，viewer 必须把它们当成从当前节点长出的旁支树继续递归。
@@ -54,6 +54,17 @@ anchors:
 7.0.0.6 `anchors_down` 的目标必须落到更深的 `display_layer`；`anchors_support` 的目标必须落到同层或更深的 `display_layer`。
 7.0.0.7 兄弟节点默认不互连；layer 兄弟不互连，container 兄弟不互连，viewer 只能把它们显示成同父集合。
 7.0.0.8 `anchors_up/right/left` 不再属于合法 mother_doc 协议字段；viewer 与 workflow 均不得继续依赖这三个方向。
+7.0.0.9 `display_layer` 当前属于正式注册表；合法值固定为 `overview / entry / resolution / capability / support`。若需要新增纵向层，必须先回写 skill 注册表与 machine contract，再允许真实 mother_doc 使用。
+7.0.0.10 `doc_kind` 与 `branch_family` 属于 mother_doc 的产品级语义扩展位；一旦使用，必须服从 skill 注册表，禁止发明未注册的文档类型或横向分支家族。
+7.0.0.10.1 `content_family` 属于文档内容结构家族注册位；每篇文档都必须显式声明，并服从已注册结构骨架，禁止同类文档各写一套私有章节。
+7.0.0.11 任何新增纵向层或横向分支家族，都必须满足“可复用于同类语义”，禁止只为单个节点发明一次性承载层。
+7.0.0.11.1 任何新增的内容结构家族也必须满足“可复用于同类语义”；一旦被采用，后续同类文档必须统一复用，禁止 `john` 一套、`mike` 一套各自维护。
+7.0.0.12 mother_doc 的完整写作流程必须先经过：`scope_and_runtime -> impact_and_codegraph -> protocol_tree -> growth_architecture -> action_slicing -> state_and_sync -> lint_and_exit`；不得跳过影响面、图谱校准与最小切面决策直接开始写树。
+7.0.0.13 `mother_doc` 默认属于 `WRITE_INTENT`；在真实落盘前必须先用 `$Meta-Impact-Investigation` 建立需求影响面，再按需使用 `$Meta-code-graph-base` 检查或初始化 code graph runtime。
+7.0.0.14 若 repo 已有实质代码且 graph runtime 缺失，mother_doc 阶段应先初始化 code graph，再读 graph context 校准当前代码现实；但 graph 永远只能校准现实，不得替代需求源。
+7.0.0.15 鼓励模型向外扩散并主动新增文档承载语义；但每次扩散都必须先判断该语义属于哪类已注册层/分支，若现有注册表不足，必须先回写 skill 再继续写真实 mother_doc。
+7.0.0.15.1 overview 节点、主链节点和 layer 节点都允许继续长出自己的 B-tree；同层兄弟不互连，但各自都可以向外延伸自己的细分树。
+7.0.0.15.2 新增纵向层、横向分支家族或内容结构家族时，必须先回答“本层/本树/本结构专门承载什么、为什么现有框架不足、它能否被同类节点复用”；无法回答则不得新增。
 7.0.0.3 只要某一轮 mother_doc 实际新增了本技能尚未声明的协议规则，该轮就必须同步回写 `$Workflow-CentralFlow2-OctppusOS` 的 mother_doc 合同、lint 与模板。
 7.0 `mother_doc` 阶段文档只允许包含：`<docs_root>/mother_doc/*` 与 `path/development_loop/steps/mother_doc/templates/mother_doc/*`；不得提前读取 construction packs、implementation 证据或 acceptance artifacts。
 7.0.1 若当前模块文档根下已经存在编号归档的 `NN_slug` 目录，`mother_doc` 阶段必须先读取最新一轮归档，并抽取仍然有效的目标、架构决策、blocker 与交付增量；不得把新 mother_doc 当成与历史脱钩的空白起点。
@@ -62,6 +73,12 @@ anchors:
 7.3 若启动 cwd 恰好是 `/home/jasontan656/AI_Projects`，它只是容器根/钩子根，不得被视为 discoverable repo。
 7.4 禁止为了找上下文扫描整个 `/home/jasontan656/AI_Projects`，也不得读取 `Human_Work_Zone`、`GoogleDriveDump` 等 sibling 区域，除非 mother doc 显式引用。
 7.5 极简 prompt 启动时，第一批动作必须固定为：先运行 `target-runtime-contract`；必要时读取 `Dev-ProjectStructure-Constitution` 以确认模块文档容器；若模块容器可用但骨架未齐，先运行 `target-scaffold`；再读取当前 `mother_doc/00_index.md`；若已存在编号归档的 `NN_slug`，先读取最新一轮归档；若已存在任务包，先读取并复用当前任务包；当 folder 结构有变化时先运行 `mother-doc-refresh-root-index`；运行 `mother-doc-lint`；在 `mother_doc` 阶段若已有图谱必须读取它来校准现有代码现实；不得先用 `rg/find/ls` 在 workspace 根盲扫需求或仓库。
+7.5.1 当前 `mother_doc` 若准备开始真实写树，必须先：
+- 用 `$Meta-Impact-Investigation` 判断本轮影响面
+- 用 `$Meta-code-graph-base` 检查 graph runtime；缺图且 repo 有实质代码时先建图
+- 再按需要深度读取 mother_doc 链路文档
+- 再决定本轮是纵向扩层、横向长树、改现有、迁移还是删除
+- 再把本轮写作切面收成尽可能小的落盘范围
 6. `baseline_mode` 必须显式判定：
 - `empty_baseline`
 - `real_codebase`

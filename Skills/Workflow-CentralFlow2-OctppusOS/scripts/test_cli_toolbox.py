@@ -58,6 +58,9 @@ def write_protocol_doc(
     layer: str,
     doc_id: str | None = None,
     doc_role: str | None = None,
+    doc_kind: str | None = None,
+    content_family: str | None = None,
+    branch_family: str | None = None,
     state: str = "modified",
     pack_refs: list[str] | None = None,
     always_read: bool = False,
@@ -67,6 +70,31 @@ def write_protocol_doc(
 ) -> Path:
     path = root / relative_path
     path.parent.mkdir(parents=True, exist_ok=True)
+    inferred_doc_kind = doc_kind
+    inferred_content_family = content_family
+    inferred_branch_family = branch_family
+    if doc_role == "root_index":
+        inferred_doc_kind = inferred_doc_kind or "trunk_node"
+        inferred_content_family = inferred_content_family or "root_index_auto"
+    else:
+        if layer == "overview":
+            inferred_doc_kind = inferred_doc_kind or "trunk_node"
+            inferred_content_family = inferred_content_family or "overview_narrative"
+        elif layer == "entry":
+            inferred_doc_kind = inferred_doc_kind or "branch_root"
+            inferred_content_family = inferred_content_family or "branch_overview"
+            inferred_branch_family = inferred_branch_family or "domain_branch"
+        elif layer == "resolution":
+            inferred_doc_kind = inferred_doc_kind or "branch_root"
+            inferred_content_family = inferred_content_family or "layer_taxonomy_root"
+            inferred_branch_family = inferred_branch_family or "framework_branch"
+        elif layer == "capability":
+            inferred_doc_kind = inferred_doc_kind or "trunk_node"
+            inferred_content_family = inferred_content_family or "layer_item_doc"
+        else:
+            inferred_doc_kind = inferred_doc_kind or "trunk_node"
+            inferred_content_family = inferred_content_family or "container_item_doc"
+
     frontmatter_lines = [
         "---",
         f"doc_work_state: {state}",
@@ -76,6 +104,10 @@ def write_protocol_doc(
         frontmatter_lines.append(f"doc_id: {doc_id}")
     if doc_role is not None:
         frontmatter_lines.append(f"doc_role: {doc_role}")
+    frontmatter_lines.append(f"doc_kind: {inferred_doc_kind}")
+    frontmatter_lines.append(f"content_family: {inferred_content_family}")
+    if inferred_branch_family is not None:
+        frontmatter_lines.append(f"branch_family: {inferred_branch_family}")
     frontmatter_lines.extend(
         [
             f"thumb_title: {title}",
@@ -88,13 +120,54 @@ def write_protocol_doc(
             "",
         ]
     )
-    default_body = [
-        f"# {title}",
-        "",
-        "## 当前职责",
-        summary,
-        "",
-    ]
+    if inferred_content_family == "root_index_auto":
+        default_body = [
+            f"# {title}",
+            "",
+            "## 当前职责",
+            "- 作为测试 fixture 的根入口。",
+            "",
+            "## 自动目录结构图",
+            "```text",
+            "mother_doc/",
+            "```",
+            "",
+            "## 自动目录清单",
+            "- `fixture/`",
+            "",
+            "## 根入口约束",
+            "- `doc_role` 必须为 `root_index`。",
+            "",
+        ]
+    else:
+        default_body = [
+            f"# {title}",
+            "",
+            "## 来源",
+            "- `test_fixture`",
+            "",
+            "## 当前节点职责",
+            f"- {summary}",
+            "",
+            "## 当前内容",
+            f"- {summary}",
+            "",
+            "## 当前延伸规则",
+            "- 当前 fixture 允许继续按注册规则扩展。",
+            "",
+            "## 当前延伸边界",
+            "- 当前 fixture 不跨同层互连。",
+            "",
+            "## 当前承载边界",
+            "- 当前 fixture 只承载本节点语义。",
+            "",
+            "## 当前规则",
+            f"- {summary}",
+            "",
+            "## 当前配置",
+            "- `fixture: true`",
+            "",
+        ]
     path.write_text(
         "\n".join(frontmatter_lines + (body_lines or default_body)) + "\n",
         encoding="utf-8",
@@ -498,7 +571,22 @@ class TestCliToolboxRegression:
                 summary="定义当前目标态的章节根。",
                 layer="capability",
                 doc_id="sample.target_state.index",
-                body_lines=["# Target State", "", "## 当前职责", "定义目标态。"],
+                body_lines=[
+                    "# Target State",
+                    "",
+                    "## 来源",
+                    "- `test_fixture`",
+                    "",
+                    "## 当前节点职责",
+                    "- 定义目标态。",
+                    "",
+                    "## 当前内容",
+                    "- 这是目标态章节根。",
+                    "",
+                    "## 当前延伸边界",
+                    "- 当前 fixture 不跨同层互连。",
+                    "",
+                ],
             )
             run_cli("mother-doc-refresh-root-index", "--path", str(target))
             completed = run_cli_raw("mother-doc-lint", "--path", str(target))

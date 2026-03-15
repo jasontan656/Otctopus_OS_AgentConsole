@@ -6,8 +6,12 @@ from pathlib import Path
 from typing import TypedDict
 
 from mother_doc_contract import (
+    MOTHER_DOC_ALLOWED_BRANCH_FAMILIES,
+    MOTHER_DOC_ALLOWED_CONTENT_FAMILIES,
+    MOTHER_DOC_ALLOWED_DOC_KINDS,
     MOTHER_DOC_ALLOWED_DOC_ROLES,
     MOTHER_DOC_ANCHOR_FIELDS,
+    MOTHER_DOC_DISPLAY_LAYERS,
     MOTHER_DOC_DIRECTORY_NAME_PATTERN,
     MOTHER_DOC_FILE_BASENAME_PATTERN,
     MOTHER_DOC_FORBIDDEN_FRONTMATTER_FIELDS,
@@ -256,6 +260,10 @@ def validate_doc_metadata(metadata: dict[str, object]) -> list[str]:
     display_layer = metadata.get("display_layer")
     if not isinstance(display_layer, str) or not display_layer.strip():
         errors.append("display_layer_required_as_non_empty_string")
+    elif display_layer not in MOTHER_DOC_DISPLAY_LAYERS:
+        errors.append(
+            f"invalid_display_layer={display_layer}; allowed={','.join(MOTHER_DOC_DISPLAY_LAYERS)}"
+        )
 
     always_read = metadata.get("always_read")
     if not isinstance(always_read, bool):
@@ -274,6 +282,31 @@ def validate_doc_metadata(metadata: dict[str, object]) -> list[str]:
         errors.append(
             f"invalid_doc_role={doc_role}; allowed={','.join(MOTHER_DOC_ALLOWED_DOC_ROLES)}"
         )
+
+    doc_kind = metadata.get("doc_kind")
+    if not isinstance(doc_kind, str) or not doc_kind.strip():
+        errors.append("doc_kind_required_as_non_empty_string")
+    elif doc_kind not in MOTHER_DOC_ALLOWED_DOC_KINDS:
+        errors.append(
+            f"invalid_doc_kind={doc_kind}; allowed={','.join(MOTHER_DOC_ALLOWED_DOC_KINDS)}"
+        )
+
+    content_family = metadata.get("content_family")
+    if not isinstance(content_family, str) or not content_family.strip():
+        errors.append("content_family_required_as_non_empty_string")
+    elif content_family not in MOTHER_DOC_ALLOWED_CONTENT_FAMILIES:
+        errors.append(
+            "invalid_content_family="
+            f"{content_family}; allowed={','.join(MOTHER_DOC_ALLOWED_CONTENT_FAMILIES)}"
+        )
+
+    branch_family = metadata.get("branch_family")
+    if branch_family is not None and branch_family not in MOTHER_DOC_ALLOWED_BRANCH_FAMILIES:
+        errors.append(
+            f"invalid_branch_family={branch_family}; allowed={','.join(MOTHER_DOC_ALLOWED_BRANCH_FAMILIES)}"
+        )
+    if doc_kind == "branch_root" and branch_family is None:
+        errors.append("branch_root_requires_branch_family")
     return errors
 
 

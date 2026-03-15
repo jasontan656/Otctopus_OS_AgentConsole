@@ -117,11 +117,14 @@ def stage_command_contract_payload(
             ],
             "optional_commands": [
                 f"./.venv_backend_skills/bin/python Skills/Workflow-CentralFlow2-OctppusOS/scripts/Cli_Toolbox.py graph-preflight --repo {codebase_root} --graph-runtime-root {graph_runtime_root} --allow-missing-index --json",
+                f"./.venv_backend_skills/bin/python Skills/Meta-code-graph-base/scripts/meta_code_graph_base.py --runtime-root {graph_runtime_root} status",
+                f"./.venv_backend_skills/bin/python Skills/Meta-code-graph-base/scripts/meta_code_graph_base.py --runtime-root {graph_runtime_root} analyze {codebase_root}",
                 f"./.venv_backend_skills/bin/python Skills/Workflow-CentralFlow2-OctppusOS/scripts/Cli_Toolbox.py mother-doc-refresh-root-index --path {mother_doc_root} --json",
                 f"./.venv_backend_skills/bin/python Skills/Workflow-CentralFlow2-OctppusOS/scripts/Cli_Toolbox.py mother-doc-mark-modified --path {mother_doc_root} --doc-ref <mother_doc_doc> --auto-from-git --json",
                 f"./.venv_backend_skills/bin/python Skills/Workflow-CentralFlow2-OctppusOS/scripts/Cli_Toolbox.py mother-doc-sync-client-copy --source {mother_doc_root} --mirror {runtime['client_mother_doc_root']} --json",
             ],
             "required_iteration_actions": [
+                "run Meta-Impact-Investigation in WRITE_INTENT mode before deciding this round's mother_doc write scope",
                 (
                     f"read the latest archived mother_doc iteration at {latest_archive} before writing the new iteration"
                     if latest_archive is not None
@@ -129,7 +132,11 @@ def stage_command_contract_payload(
                 ),
                 "extract inherited target state, stable architecture decisions, unresolved blockers, and delivery deltas from the latest archived iteration",
                 "inspect existing execution packs before deciding whether to init a new pack root or reuse the current task lineage",
+                "if the repo already has substantive code, check Meta-code-graph-base runtime and initialize it when missing before finalizing tree growth decisions",
                 "read graph context after archive review so the new mother_doc reflects current code reality rather than stale assumptions",
+                "decide whether this round should extend vertically, branch horizontally, edit current nodes, migrate nodes, or delete nodes",
+                "before creating a new vertical layer or horizontal branch family, register it in the skill and confirm it is reusable for sibling semantics",
+                "reduce the current change into the smallest mother_doc write slice that can still close the intended semantic move",
                 "after any mother_doc structural write, run mother-doc-refresh-root-index so 00_index.md is regenerated from the current folder tree",
                 "after refreshing the root index, run mother-doc-sync-client-copy so the viewer-side Client_Applications/mother_doc mirror is brutally overwritten from the Development_Docs source tree",
             ],

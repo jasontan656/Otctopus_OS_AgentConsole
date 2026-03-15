@@ -26,7 +26,7 @@ GRAPH_STAGE_ROLES = {
 
 STAGES = {
     "mother_doc": {
-        "objective": "Create or refine the protocol-driven mother doc tree under <docs_root>/mother_doc as the only write source of truth, so the root index exists, every atomic doc follows the minimal frontmatter and anchor contract, optional planning docs can coexist without owning the whole tree shape, and the tree remains free to grow, insert, and reorganize without fixed chapter locks. The root index must be auto-regenerated from the current folder tree, then the tree is synced into <target_root>/Client_Applications/mother_doc as the viewer mirror copy.",
+        "objective": "Create or refine the protocol-driven mother doc tree under <docs_root>/mother_doc as the only write source of truth. The mother_doc flow must first lock runtime, then analyze impact, then reconcile code graph reality, then decide whether the tree should extend vertically, branch horizontally, reuse current nodes, migrate nodes, or delete nodes, and only then perform the smallest safe write slice. Any newly introduced vertical layer or horizontal branch family must be registered in the skill before it is used by real mother_doc docs, and every such addition must be reusable for sibling semantics rather than serving a single ad hoc node. The root index must be auto-regenerated from the current folder tree, then the tree is synced into <target_root>/Client_Applications/mother_doc as the viewer mirror copy.",
         "required_outputs": [
             "<docs_root>/mother_doc/ directory",
             "<target_root>/Client_Applications/mother_doc mirror refreshed from <docs_root>/mother_doc",
@@ -49,11 +49,16 @@ STAGES = {
             "run target-runtime-contract before reading or writing stage artifacts",
             "confirm docs_root through Dev-ProjectStructure-Constitution when the project has already fixed a custom development-doc container",
             "if <docs_root>/mother_doc is missing, run target-scaffold",
+            "run Meta-Impact-Investigation in WRITE_INTENT mode before deciding any mother_doc write scope",
+            "if the repo already has substantive code, check Meta-code-graph-base runtime first and initialize it when missing",
             "read <docs_root>/mother_doc/00_index.md",
             "if numbered archived docs directories exist, inspect the latest archived sibling before drafting the new iteration",
             "if execution packs already exist, treat them as the current task-pack lineage rather than creating a disconnected second pack tree",
             "extract reusable target state, architecture decisions, blockers, and unfinished delivery deltas from the latest archive when present",
             "if the repo already has graph context, read it after archive review and before finalizing target state and architecture chapters",
+            "decide how deep to read the current mother_doc tree based on impact, anchors, and graph context rather than blindly sweeping the full tree",
+            "before creating a new vertical layer or horizontal branch family, register it in the skill and confirm it is reusable for sibling semantics",
+            "before any real write, reduce the current change into the smallest mother_doc slice that can still close the intended semantic move",
             "after any mother_doc structural write, run mother-doc-refresh-root-index so 00_index.md is regenerated from folders only",
             "after the root index refresh, run mother-doc-sync-client-copy so the Client_Applications viewer mirror is force-overwritten from the Development_Docs source tree",
             "run mother-doc-lint before leaving the stage",
@@ -64,6 +69,7 @@ STAGES = {
             "00_index.md exists as the fixed root placeholder and is refreshed from the current folder structure",
             "no replace_me remains",
             "atomic docs expose the minimal frontmatter + anchor protocol",
+            "any newly introduced vertical layer or horizontal branch family has been registered in the skill and is reusable beyond a single node",
             "current mother_doc reflects inherited or superseded decisions from the latest archived iteration when such an archive exists",
         ],
         "drop_on_stage_switch": [

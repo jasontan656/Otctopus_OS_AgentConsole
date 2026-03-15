@@ -10,6 +10,9 @@ from construction_plan_support import construction_plan_init_result, constructio
 from devflow_agents_support import scaffold_and_collect_devflow_agents
 from mother_doc_contract import (
     MOTHER_DOC_ANCHOR_FIELDS,
+    MOTHER_DOC_ALLOWED_BRANCH_FAMILIES,
+    MOTHER_DOC_ALLOWED_CONTENT_FAMILIES,
+    MOTHER_DOC_ALLOWED_DOC_KINDS,
     MOTHER_DOC_ALLOWED_DOC_ROLES,
     MOTHER_DOC_DIRECTORY_NAME_PATTERN,
     MOTHER_DOC_FILE_BASENAME_PATTERN,
@@ -241,6 +244,9 @@ def workflow_contract_document(
         "mother_doc_frontmatter_required_fields": MOTHER_DOC_FRONTMATTER_REQUIRED_FIELDS,
         "mother_doc_anchor_fields": MOTHER_DOC_ANCHOR_FIELDS,
         "mother_doc_allowed_doc_roles": MOTHER_DOC_ALLOWED_DOC_ROLES,
+        "mother_doc_allowed_doc_kinds": MOTHER_DOC_ALLOWED_DOC_KINDS,
+        "mother_doc_allowed_branch_families": MOTHER_DOC_ALLOWED_BRANCH_FAMILIES,
+        "mother_doc_allowed_content_families": MOTHER_DOC_ALLOWED_CONTENT_FAMILIES,
         "mother_doc_required_root_index_rules": MOTHER_DOC_REQUIRED_ROOT_INDEX_RULES,
         "mother_doc_file_basename_pattern": MOTHER_DOC_FILE_BASENAME_PATTERN,
         "mother_doc_directory_name_pattern": MOTHER_DOC_DIRECTORY_NAME_PATTERN,

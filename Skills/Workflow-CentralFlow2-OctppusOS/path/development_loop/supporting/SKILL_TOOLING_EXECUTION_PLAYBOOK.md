@@ -64,6 +64,8 @@ anchors:
   - 先执行 `target-runtime-contract`
   - 若模块容器已具备使用条件但骨架未齐，先执行 `target-scaffold`
   - 必要时确认或覆盖 `docs_root`
+  - 先用 `Meta-Impact-Investigation` 建立当前需求的 write-intent 影响面
+  - 若 repo 已有实质代码，先检查 `Meta-code-graph-base` runtime；缺图时先建图
   - 直接读取当前 `<docs_root>/mother_doc/00_index.md`
   - 若已存在编号归档的 `docs/NN_slug`，先读取最新一轮归档内容再开始本轮回填
   - 若已存在 `execution_atom_plan_validation_packs/`，先判定它是 `official_plan` 还是 `preview_skeleton`，以及是否仍处于当前轮合法生命周期
@@ -108,14 +110,27 @@ anchors:
 - 输出目录化 mother doc。
 - mother_doc 采用协议驱动原子文档树；固定根入口只保留 `00_index.md`，其余文档允许按设计思路自由新增、插入与重排。
 - `00_index.md` 必须通过 `mother-doc-refresh-root-index` 自动从当前 folder 结构生成，只展示目录级结构图，不展示文件。
-- 每个 mother_doc 原子文档都必须带 frontmatter：`doc_work_state`、`doc_pack_refs`、`thumb_title`、`thumb_summary`、`display_layer`、`always_read`、`anchors_down`、`anchors_support`。
+- 每个 mother_doc 原子文档都必须带 frontmatter：`doc_work_state`、`doc_pack_refs`、`doc_kind`、`content_family`、`thumb_title`、`thumb_summary`、`display_layer`、`always_read`、`anchors_down`、`anchors_support`。
+- 原子文档还允许附加 `doc_role`、`branch_family` 等产品级语义字段；一旦使用，必须服从 skill 内已注册的角色、类型、分支家族与内容结构家族。
 - `display_layer` 只表示页面从上到下的显示分层，不再承载四向图语义。
 - `anchors_down` 表示主链向下生长；`anchors_support` 表示当前节点可以长出的支撑子树。
 - `anchors_down` 与 `anchors_support` 都是“子节点集合”，不是单条边；列表顺序本身就是兄弟排序语义。
 - viewer 必须递归消费这两个集合：先沿 `anchors_down` 继续主树，再沿 `anchors_support` 继续旁支树。
 - 同一目标文档只能出现在一个父节点的 traversal 集合里；若出现多父引用，必须先回写文档协议再继续。
 - layer 兄弟与 container 兄弟默认都只是同父集合，不应在文档中互相引用，也不应在 viewer 中被画成互连。
+- 鼓励模型主动新增文档、向下扩层或横向长出 B-tree；overview 节点、主链节点和 layer 节点都允许继续长树。
+- 任何新增纵向层、横向分支家族或内容结构家族都必须先在 skill 注册表中确立，再允许真实 mother_doc 使用。
+- 任何新增层、分支家族或内容结构家族，都必须能复用于同类语义，禁止只为单个节点发明一次性承载层或一次性写法。
+- 一旦某层、某分支家族或某内容结构家族被采用，它就属于固定框架的一部分；后续同类文档必须继续复用，不得平行再造另一套。
 - 只要 mother_doc 本轮新增了此前 skill 不存在的文档协议规则，同一轮必须把协议升级同步回写到 `$Workflow-CentralFlow2-OctppusOS`，不得让真实文档协议领先于 skill。
+- mother_doc 子 workflow 的完整顺序固定为：
+  - `scope_and_runtime`
+  - `impact_and_codegraph`
+  - `protocol_tree`
+  - `growth_architecture`
+  - `action_slicing`
+  - `state_and_sync`
+  - `lint_and_exit`
 - 明确生产级交付目标、成功定义、关键场景、外部系统、限制、失败语义、验收方式。
 - 产出 `requirement_atom` 清单、`baseline_mode` 判断、`blocked_state` 判断、ADR 候选，以及阶段目标/阶段断言/阶段测试/阶段验收。
 - 若本项目已有已归档的 `docs/NN_slug` 历史轮次，先抽取上一轮稳定设计、已知 blocker、交付增量和被保留/被替换的决策，再回填当前轮 mother doc。

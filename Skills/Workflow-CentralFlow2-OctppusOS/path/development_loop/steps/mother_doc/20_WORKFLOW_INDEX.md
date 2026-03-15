@@ -7,10 +7,22 @@ reading_chain:
   target: steps/scope_and_runtime/00_SCOPE_AND_RUNTIME_ENTRY.md
   hop: branch
   reason: 先锁定 docs_root 与当前轮文档容器。
+- key: impact_and_codegraph
+  target: steps/impact_and_codegraph/00_IMPACT_AND_CODEGRAPH_ENTRY.md
+  hop: branch
+  reason: 再先做需求影响面与代码图谱校准，避免盲写文档树。
 - key: protocol_tree
   target: steps/protocol_tree/00_PROTOCOL_TREE_ENTRY.md
   hop: branch
   reason: 再固化协议驱动文档树。
+- key: growth_architecture
+  target: steps/growth_architecture/00_GROWTH_ARCHITECTURE_ENTRY.md
+  hop: branch
+  reason: 再决定当前语义应该纵向扩层、横向长树还是维持原层承载。
+- key: action_slicing
+  target: steps/action_slicing/00_ACTION_SLICING_ENTRY.md
+  hop: branch
+  reason: 在真实落盘前，先把本轮写作动作收成最小切面。
 - key: state_and_sync
   target: steps/state_and_sync/00_STATE_AND_SYNC_ENTRY.md
   hop: branch
@@ -25,12 +37,18 @@ reading_chain:
 
 ## 当前阶段的复合步骤
 1. [scope_and_runtime]：`steps/scope_and_runtime/00_SCOPE_AND_RUNTIME_ENTRY.md`
-2. [protocol_tree]：`steps/protocol_tree/00_PROTOCOL_TREE_ENTRY.md`
-3. [state_and_sync]：`steps/state_and_sync/00_STATE_AND_SYNC_ENTRY.md`
-4. [lint_and_exit]：`steps/lint_and_exit/00_LINT_AND_EXIT_ENTRY.md`
+2. [impact_and_codegraph]：`steps/impact_and_codegraph/00_IMPACT_AND_CODEGRAPH_ENTRY.md`
+3. [protocol_tree]：`steps/protocol_tree/00_PROTOCOL_TREE_ENTRY.md`
+4. [growth_architecture]：`steps/growth_architecture/00_GROWTH_ARCHITECTURE_ENTRY.md`
+5. [action_slicing]：`steps/action_slicing/00_ACTION_SLICING_ENTRY.md`
+6. [state_and_sync]：`steps/state_and_sync/00_STATE_AND_SYNC_ENTRY.md`
+7. [lint_and_exit]：`steps/lint_and_exit/00_LINT_AND_EXIT_ENTRY.md`
 
 ## 下一跳列表
 - [scope_and_runtime]：`steps/scope_and_runtime/00_SCOPE_AND_RUNTIME_ENTRY.md`
+- [impact_and_codegraph]：`steps/impact_and_codegraph/00_IMPACT_AND_CODEGRAPH_ENTRY.md`
 - [protocol_tree]：`steps/protocol_tree/00_PROTOCOL_TREE_ENTRY.md`
+- [growth_architecture]：`steps/growth_architecture/00_GROWTH_ARCHITECTURE_ENTRY.md`
+- [action_slicing]：`steps/action_slicing/00_ACTION_SLICING_ENTRY.md`
 - [state_and_sync]：`steps/state_and_sync/00_STATE_AND_SYNC_ENTRY.md`
 - [lint_and_exit]：`steps/lint_and_exit/00_LINT_AND_EXIT_ENTRY.md`

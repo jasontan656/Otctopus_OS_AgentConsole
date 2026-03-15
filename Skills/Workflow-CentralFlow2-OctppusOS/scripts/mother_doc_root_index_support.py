@@ -81,6 +81,8 @@ def render_root_index_content(root: Path) -> str:
         "doc_work_state: modified",
         "doc_pack_refs: []",
         f"doc_role: {MOTHER_DOC_REQUIRED_ROOT_INDEX_RULES['doc_role']}",
+        "doc_kind: trunk_node",
+        "content_family: root_index_auto",
         "thumb_title: Root Index",
         "thumb_summary: 顶层常驻根入口，自动维护目录级结构图，不展示文件清单。",
         "display_layer: overview",

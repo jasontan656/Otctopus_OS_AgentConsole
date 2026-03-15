@@ -1,9 +1,10 @@
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 # contract_name: octopus_devflow_workflow_policy_contract
-# contract_version: 1.1.0
+# contract_version: 1.2.0
 # validation_mode: strict
 # required_fields:
 #   - DISCOVERY_SCOPE_POLICY
@@ -34,12 +35,53 @@ from pathlib import Path
 #   - deny_code
 #   - policy_version
 
+def _candidate_workspace_roots(script_path: Path) -> list[Path]:
+    candidates: list[Path] = []
+
+    def add(path: Path | None) -> None:
+        if path is None:
+            return
+        resolved = path.resolve()
+        if resolved not in candidates:
+            candidates.append(resolved)
+
+    for env_key in ("OCTOPUS_WORKSPACE_ROOT", "AI_PROJECTS_ROOT", "WORKSPACE_ROOT"):
+        raw = os.environ.get(env_key, "").strip()
+        if raw:
+            add(Path(raw))
+
+    mdm_workspace_root = os.environ.get("MDM_WORKSPACE_ROOT", "").strip()
+    if mdm_workspace_root:
+        mdm_root = Path(mdm_workspace_root).expanduser().resolve()
+        add(mdm_root / "AI_Projects")
+        add(mdm_root)
+
+    for parent in script_path.parents:
+        if parent.name == "AI_Projects":
+            add(parent)
+        if parent.name == ".codex":
+            add(parent.parent / "AI_Projects")
+            add(parent.parent)
+
+    add(Path.home() / "AI_Projects")
+    add(Path.cwd())
+    return candidates
+
+
 def _resolve_product_root() -> Path:
     script_path = Path(__file__).resolve()
     repo_root = next((parent for parent in script_path.parents if parent.name == "Otctopus_OS_AgentConsole"), None)
-    if repo_root is None:
-        raise RuntimeError("cannot resolve product root from Workflow-CentralFlow2-OctppusOS script path")
-    return repo_root.parent
+    if repo_root is not None:
+        return repo_root.parent
+
+    for workspace_root in _candidate_workspace_roots(script_path):
+        candidate_repo = workspace_root / "Otctopus_OS_AgentConsole"
+        if candidate_repo.exists():
+            return workspace_root
+
+    raise RuntimeError(
+        "cannot resolve product root from Workflow-CentralFlow2-OctppusOS script path or workspace hints"
+    )
 
 
 PRODUCT_ROOT = _resolve_product_root()
@@ -66,11 +108,14 @@ DISCOVERY_SCOPE_POLICY = {
     "required_startup_sequence": [
         "run_target_runtime_contract_for_current_target",
         "confirm_or_override_docs_root_before_any_write",
+        "run_meta_impact_investigation_in_write_intent_mode",
+        "check_or_initialize_code_graph_runtime_when_repo_is_substantive",
         "read_mother_doc_index_or_directory",
         "inspect_latest_archived_mother_doc_if_present",
         "inspect_existing_execution_packs_if_present",
         "run_mother_doc_lint",
         "read_graph_context_for_current_code_reality_when_available_and_reusable",
+        "decide_growth_path_and_smallest_write_slice_before_real_edit",
         "only_then_read_concrete_codebase_files_if_construction_plan_or_implementation_requires_them",
     ],
     "forbidden_roots": [
@@ -101,6 +146,15 @@ PHASE_READ_POLICY = {
 MOTHER_DOC_FRONTMATTER_FIELDS = [
     "doc_work_state",
     "doc_pack_refs",
+    "doc_kind",
+    "content_family",
+    "thumb_title",
+    "thumb_summary",
+    "display_layer",
+    "always_read",
+    "anchors_down",
+    "anchors_support",
+    "branch_family(optional)",
 ]
 
 MOTHER_DOC_WORK_STATES = [

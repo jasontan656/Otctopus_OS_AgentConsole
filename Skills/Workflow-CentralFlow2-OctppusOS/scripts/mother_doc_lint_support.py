@@ -3,6 +3,8 @@ from pathlib import Path
 
 from mother_doc_contract import (
     MOTHER_DOC_ANCHOR_FIELDS,
+    MOTHER_DOC_CONTENT_FAMILY_REQUIRED_HEADINGS,
+    MOTHER_DOC_DISPLAY_LAYER_ORDER,
     MOTHER_DOC_FRONTMATTER_REQUIRED_FIELDS,
     MOTHER_DOC_GUIDANCE_MARKERS,
     MOTHER_DOC_HEADING_MAX_DEPTH,
@@ -75,6 +77,24 @@ def _heading_violations(root: Path, files: list[Path]) -> dict[str, list[str]]:
     return violations
 
 
+def _content_family_violations(root: Path, files: list[Path]) -> dict[str, list[str]]:
+    violations: dict[str, list[str]] = {}
+    for file_path in files:
+        metadata, body, parse_errors = parse_frontmatter(file_path)
+        if parse_errors:
+            continue
+        content_family = metadata.get("content_family")
+        if not isinstance(content_family, str) or not content_family.strip():
+            continue
+        required_headings = MOTHER_DOC_CONTENT_FAMILY_REQUIRED_HEADINGS.get(content_family)
+        if not required_headings:
+            continue
+        errors = [f"missing_required_heading={heading}" for heading in required_headings if heading not in body]
+        if errors:
+            violations[str(file_path.relative_to(root))] = errors
+    return violations
+
+
 def _anchor_violations(root: Path, files: list[Path]) -> dict[str, list[str]]:
     violations: dict[str, list[str]] = {}
     for file_path in files:
@@ -98,15 +118,6 @@ def _anchor_violations(root: Path, files: list[Path]) -> dict[str, list[str]]:
     return violations
 
 
-_DISPLAY_LAYER_ORDER = {
-    "overview": 0,
-    "entry": 1,
-    "resolution": 2,
-    "capability": 3,
-    "support": 4,
-}
-
-
 def _traversal_violations(root: Path, files: list[Path]) -> dict[str, list[str]]:
     violations: dict[str, list[str]] = {}
     metadata_by_doc: dict[str, dict[str, object]] = {}
@@ -121,7 +132,7 @@ def _traversal_violations(root: Path, files: list[Path]) -> dict[str, list[str]]
     for relative_doc, metadata in metadata_by_doc.items():
         errors: list[str] = []
         display_layer = str(metadata.get("display_layer") or "")
-        display_layer_index = _DISPLAY_LAYER_ORDER.get(display_layer, 99)
+        display_layer_index = MOTHER_DOC_DISPLAY_LAYER_ORDER.get(display_layer, 99)
         local_targets: set[str] = set()
 
         for anchor_field in MOTHER_DOC_ANCHOR_FIELDS:
@@ -144,7 +155,7 @@ def _traversal_violations(root: Path, files: list[Path]) -> dict[str, list[str]]
                     continue
 
                 target_layer = str(target_metadata.get("display_layer") or "")
-                target_layer_index = _DISPLAY_LAYER_ORDER.get(target_layer, 99)
+                target_layer_index = MOTHER_DOC_DISPLAY_LAYER_ORDER.get(target_layer, 99)
                 if anchor_field == "anchors_down" and target_layer_index <= display_layer_index:
                     errors.append(f"anchors_down_target_not_deeper={target_ref}")
                 if anchor_field == "anchors_support" and target_layer_index < display_layer_index:
@@ -253,6 +264,9 @@ def mother_doc_lint_summary(path: Path) -> dict:
             naming_violations[str(file_path.relative_to(root))] = naming_errors
 
     heading_violations = _heading_violations(root, atomic_docs) if exists and not single_file_input_detected else {}
+    content_family_violations = (
+        _content_family_violations(root, atomic_docs) if exists and not single_file_input_detected else {}
+    )
     anchor_violations = _anchor_violations(root, atomic_docs) if exists and not single_file_input_detected else {}
     traversal_violations = _traversal_violations(root, atomic_docs) if exists and not single_file_input_detected else {}
     root_index_violations = _root_index_violations(root, resolved_entries) if exists and not single_file_input_detected else []
@@ -274,6 +288,7 @@ def mother_doc_lint_summary(path: Path) -> dict:
         or frontmatter_violations
         or naming_violations
         or heading_violations
+        or content_family_violations
         or anchor_violations
         or traversal_violations
         or root_index_violations
@@ -294,6 +309,7 @@ def mother_doc_lint_summary(path: Path) -> dict:
         "frontmatter_violations": frontmatter_violations,
         "naming_violations": naming_violations,
         "heading_violations": heading_violations,
+        "content_family_violations": content_family_violations,
         "anchor_violations": anchor_violations,
         "traversal_violations": traversal_violations,
         "root_index_violations": root_index_violations,
