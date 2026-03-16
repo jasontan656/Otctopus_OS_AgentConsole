@@ -1,67 +1,34 @@
 {
-  "contract_name": "meta_rootfile_manager_runtime_contract",
-  "contract_version": "4.1.0",
-  "skill_name": "Meta-RootFile-Manager",
-  "description": "Meta-RootFile-Manager exposes CLI-first governance for channelized root files and a unified AGENTS maintenance entry backed by a centered push mainline.",
-  "runtime_kind": "channelized_root_file_governance",
-  "runtime_source_policy": {
-    "primary_runtime_source": "CLI_JSON",
-    "human_markdown_role": "narrative_mirror_only",
-    "markdown_is_not_primary_instruction_source": true
-  },
+  "contract_name": "meta_rootfile_manager_skill_runtime_contract",
+  "version": "2.0.0",
   "tool_entry": {
-    "script": "scripts/Cli_Toolbox.py",
     "commands": {
       "contract": "./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py contract --json",
-      "target_contract": "./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py target-contract --source-path \"<governed external path>\" --json",
-      "agents_maintain": "./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py agents-maintain --intent \"<natural language request>\" --json",
-      "agents_payload_contract": "./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py agents-payload-contract --source-path \"<external AGENTS path>\" --json",
       "scan": "./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py scan --json",
       "lint": "./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py lint --json",
       "collect": "./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py collect --json",
       "push": "./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py push --json",
-      "scaffold": "./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py scaffold --json --target-dir \"<external dir>\"",
-      "new_writeback": "./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py new-writeback --json --source-path \"<external AGENTS path>\""
+      "scaffold": "./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py scaffold --json",
+      "new_writeback": "./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py new-writeback --json",
+      "target_contract": "./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py target-contract --source-path \"<external path>\" --json",
+      "agents_maintain": "./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py agents-maintain --intent \"<natural language request>\" --json",
+      "agents_domain_contract": "./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py agents-domain-contract --source-path \"<external AGENTS path>\" --domain \"<domain_id>\" --json",
+      "agents_payload_contract": "./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py agents-payload-contract --source-path \"<external AGENTS path>\" --json"
     }
   },
-  "must_use_sequence": [
-    "Call contract before consuming runtime guidance for this skill.",
-    "When handling a natural-language AGENTS maintenance request, call agents-maintain first so the system can rank governed targets, classify semantics, and choose Part A or embedded payload placement.",
-    "When editing a governed target with an already known external path, target-contract may still be used for explicit inspection.",
-    "agents-payload-contract remains available for narrow payload-only surgery, but it is no longer the primary daily AGENTS maintenance entry.",
-    "Treat returned JSON payloads as the primary runtime instruction source.",
-    "For daily AGENTS maintenance, update the internal AGENTS_human.md truth source first, then centered-push external Part A, then run lint.",
-    "Before declaring AGENTS governance clean, remove installed/runtime legacy sidecars, prune repo-tracked orphan AGENTS mappings, and keep installed managed targets synchronized with the repo-tracked mirror.",
-    "Use new-writeback to finalize scaffolded AGENTS targets after replace_me fields are concretely filled or set to N/A."
-  ],
-  "special_channels": [
-    "AGENTS_MD"
+  "rules": [
+    "Treat visible AGENTS.md as a full runtime hook contract, not as loose narrative plus hidden contract.",
+    "Treat reminder as a tail-only non-executable section.",
+    "Treat Part B as split domain blocks with one block per domain.",
+    "Use agents-maintain as the daily AGENTS maintenance mainline.",
+    "Use agents-domain-contract to read a single domain block.",
+    "Use agents-payload-contract only for narrow domain-block surgery."
   ],
   "artifact_policy": {
     "mode": "runtime_local_artifacts",
     "resolver": "runtime_contract_paths",
     "notes": [
-      "repo-tracked managed mirrors stay under assets/managed_targets/AI_Projects",
-      "runtime-local or ephemeral managed mirrors stay under Codex_Skill_Runtime/<skill>/managed_targets",
-      "latest stage reports stay under Codex_Skill_Runtime/<skill>/artifacts/<stage>/latest.json",
-      "timestamped stage logs stay under Codex_Skill_Runtime/<skill>/logs/<stage>/"
+      "Codex_Skill_Runtime/<skill>/artifacts/<stage>/latest.json remains the canonical runtime artifact path."
     ]
-  },
-  "plain_mapping_rule": "non_agents_channels_store_exact_external_content_in_non_identical_managed_filenames",
-  "owner_rule": "every governed target must expose a path-derived descriptive owner string; if managed content is json inject owner into that json, otherwise inject owner through frontmatter in the same managed file",
-  "agents_payload_rule": "skill name plus minimal description may appear only in default_meta_skill_order; daily AGENTS maintenance must prefer agents-maintain, while embedded payload-only surgery may still use agents-payload-contract",
-  "hard_constraints": [
-    "Do not treat markdown mirrors as the primary runtime instruction source.",
-    "Do not bypass agents-maintain for normal AGENTS maintenance; it is the only unified entry that may perform target ranking, placement gating, mutation, centered push, and lint as one chain.",
-    "Do not edit AGENTS_human.md embedded payloads ad hoc; use agents-maintain or the dedicated payload contract.",
-    "Do not add extra reminders, extra routing, or extra obligations beyond the user request when normalizing payload semantics.",
-    "Do not treat collect as part of the normal AGENTS maintenance loop; collect is retained only for exceptional reverse-sync or external recovery cases.",
-    "Do not bypass lint after AGENTS maintenance writeback.",
-    "Do not leave repo-tracked orphan AGENTS mappings, installed managed-target drift, or runtime legacy AGENTS_machine sidecars in place; lint must reject them.",
-    "Do not leave replace_me in an AGENTS target that is being finalized by new-writeback.",
-    "Do not repeat parent AGENTS part_a or parent payload semantics inside child AGENTS surfaces; lint must reject parent-child duplicates except skill entries."
-  ],
-  "registry_source": "rules/scan_rules.json (static channel registry only)",
-  "governed_target_discovery_source": "assets/managed_targets/AI_Projects + Codex_Skill_Runtime/<skill>/managed_targets",
-  "ephemeral_runtime_discovery_policy": "default scan/lint/collect/push exclude runtime managed targets under ephemeral_workspace unless the source path is explicitly requested"
+  }
 }

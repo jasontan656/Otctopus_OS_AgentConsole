@@ -6,50 +6,93 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `.codex/skills` container 的 runtim
 `HOOK_LOAD`: Apply this AGENTS contract.
 
 <part_A>
-1. 根入口命令
+<contract>
+1. 合同定位
+- 本文件是 `/home/jasontan656/AI_Projects/.codex/skills` 安装侧容器的运行时合同。
+- 安装侧适合读取与核对；长期写入真源仍位于 `/home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/Skills`。
+
+2. 一级读取入口
 - `MDM_WORKSPACE_ROOT=<codex_home_parent> <root>/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python3 <root>/Otctopus_OS_AgentConsole/Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py agents-maintain --intent "<natural language request>" --json`
 
-2. 技能类任务附加入口
-- N/A
+3. 二级分域读取
+- hook_identity:
+- `MDM_WORKSPACE_ROOT=/home/jasontan656/AI_Projects /home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python3 /home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py agents-domain-contract --source-path "/home/jasontan656/AI_Projects/.codex/skills/AGENTS.md" --domain "hook_identity" --json`
+- turn_start:
+- `MDM_WORKSPACE_ROOT=/home/jasontan656/AI_Projects /home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python3 /home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py agents-domain-contract --source-path "/home/jasontan656/AI_Projects/.codex/skills/AGENTS.md" --domain "turn_start" --json`
+- runtime_constraints:
+- `MDM_WORKSPACE_ROOT=/home/jasontan656/AI_Projects /home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python3 /home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py agents-domain-contract --source-path "/home/jasontan656/AI_Projects/.codex/skills/AGENTS.md" --domain "runtime_constraints" --json`
+- execution_modes:
+- `MDM_WORKSPACE_ROOT=/home/jasontan656/AI_Projects /home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python3 /home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py agents-domain-contract --source-path "/home/jasontan656/AI_Projects/.codex/skills/AGENTS.md" --domain "execution_modes" --json`
+- repo_handoff:
+- `MDM_WORKSPACE_ROOT=/home/jasontan656/AI_Projects /home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python3 /home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py agents-domain-contract --source-path "/home/jasontan656/AI_Projects/.codex/skills/AGENTS.md" --domain "repo_handoff" --json`
+- turn_end:
+- `MDM_WORKSPACE_ROOT=/home/jasontan656/AI_Projects /home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python3 /home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py agents-domain-contract --source-path "/home/jasontan656/AI_Projects/.codex/skills/AGENTS.md" --domain "turn_end" --json`
 
-3. 语言规范
-- N/A
+4. 执行约束
+- 若安装侧与产品仓真源同时可见，以产品仓结果为最终裁决。
+- 安装侧写入由 mirror/install 主链触发，不在安装侧直接扩写技能真源语义。
+</contract>
 
-4. 当前受管 repo 边界
-- 禁止直接在 `<codex_home>/skills` 安装目录修改技能。
+<reminder>
+1. 环境提醒
+- 语言边界沿用 workspace root 的约定。
+- 这里是 symbolic target，命令中的 `MDM_WORKSPACE_ROOT` 需要指向受管工作区根。
 
-5. Multi-AGENT 工作模式
-- N/A
-
-6. 治理链约束
-- N/A
+2. 协作提醒
+- 安装侧更适合作为读取与校验对象。
+- 技能长期真源与结构升级仍回到 `/home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/Skills` 完成。
+</reminder>
 </part_A>
 
 <part_B>
 
 ```json
 {
-  "owner": "由 `$Meta-RootFile-Manager` 作为 `.codex/skills` container 的 runtime entry owner 负责治理；当前通过 `AGENTS_MD` 通道受管并同步这个入口文件。",
-  "entry_role": "codex_skills_installation_runtime_entry",
-  "runtime_source_policy": {
-    "runtime_rule_source": "CLI_JSON",
-    "audit_fields_are_not_primary_runtime_instructions": true,
-    "path_metadata_is_not_action_guidance": true
-  },
-  "default_meta_skill_order": [
-    "N/A"
-  ],
-  "turn_start_actions": [
-    "run the agents-maintain CLI for AGENTS maintenance requests first"
-  ],
-  "runtime_constraints": [
-    "do not modify skills directly under <codex_home>/skills"
-  ],
-  "execution_modes": {
+  "domain_id": "hook_identity",
+  "read_command_preview": "MDM_WORKSPACE_ROOT=/home/jasontan656/AI_Projects /home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python3 /home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py agents-domain-contract --source-path \"/home/jasontan656/AI_Projects/.codex/skills/AGENTS.md\" --domain \"hook_identity\" --json",
+  "contract": {
+    "entry_role": "codex_skills_installation_contract",
+    "contract_scope": "installation_container",
+    "secondary_contract_source": "CLI_JSON"
+  }
+}
+```
+
+```json
+{
+  "domain_id": "turn_start",
+  "read_command_preview": "MDM_WORKSPACE_ROOT=/home/jasontan656/AI_Projects /home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python3 /home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py agents-domain-contract --source-path \"/home/jasontan656/AI_Projects/.codex/skills/AGENTS.md\" --domain \"turn_start\" --json",
+  "contract": {
+    "required_actions": [
+      "run_agents_maintain_entry_for_codex_skills_requests",
+      "classify_turn_mode:READ_EXEC|WRITE_EXEC"
+    ]
+  }
+}
+```
+
+```json
+{
+  "domain_id": "runtime_constraints",
+  "read_command_preview": "MDM_WORKSPACE_ROOT=/home/jasontan656/AI_Projects /home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python3 /home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py agents-domain-contract --source-path \"/home/jasontan656/AI_Projects/.codex/skills/AGENTS.md\" --domain \"runtime_constraints\" --json",
+  "contract": {
+    "rules": [
+      "skills_truth_source:/home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/Skills",
+      "codex_installation_is_mirror_only"
+    ]
+  }
+}
+```
+
+```json
+{
+  "domain_id": "execution_modes",
+  "read_command_preview": "MDM_WORKSPACE_ROOT=/home/jasontan656/AI_Projects /home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python3 /home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py agents-domain-contract --source-path \"/home/jasontan656/AI_Projects/.codex/skills/AGENTS.md\" --domain \"execution_modes\" --json",
+  "contract": {
     "READ_EXEC": {
-      "goal": "obtain the payload contract for the codex skills installation entry before inspection",
+      "goal": "inspect_codex_skills_installation_without_mutation",
       "default_actions": [
-        "N/A"
+        "read_installation_entry_before_local_checks"
       ]
     },
     "WRITE_EXEC": {
@@ -58,16 +101,30 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `.codex/skills` container 的 runtim
         "Default to full-coverage edits, proactively explore to avoid omissions, and use the meta skill stack to strengthen the result."
       ]
     }
-  },
-  "repo_local_contract_handoff": [
-    "use the agents-maintain placement result for this target before local processing"
-  ],
-  "forbidden_primary_runtime_pattern": [
-    "direct skill edits under <codex_home>/skills"
-  ],
-  "turn_end_actions": [
-    "N/A"
-  ]
+  }
+}
+```
+
+```json
+{
+  "domain_id": "repo_handoff",
+  "read_command_preview": "MDM_WORKSPACE_ROOT=/home/jasontan656/AI_Projects /home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python3 /home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py agents-domain-contract --source-path \"/home/jasontan656/AI_Projects/.codex/skills/AGENTS.md\" --domain \"repo_handoff\" --json",
+  "contract": {
+    "rules": [
+      "route_skill_writes_back_to_repo_truth_source",
+      "verify_installation_after_repo_push"
+    ]
+  }
+}
+```
+
+```json
+{
+  "domain_id": "turn_end",
+  "read_command_preview": "MDM_WORKSPACE_ROOT=/home/jasontan656/AI_Projects /home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python3 /home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py agents-domain-contract --source-path \"/home/jasontan656/AI_Projects/.codex/skills/AGENTS.md\" --domain \"turn_end\" --json",
+  "contract": {
+    "required_actions": []
+  }
 }
 ```
 </part_B>

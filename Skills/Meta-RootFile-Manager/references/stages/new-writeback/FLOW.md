@@ -13,7 +13,7 @@ anchors:
 
 1. Read the scaffolded external `AGENTS.md`.
 2. Fill the external `Part A` content according to the user request.
-3. Fill the embedded `Part B` payload inside `AGENTS_human.md` according to the user request.
+3. Fill the split `Part B` domain blocks inside `AGENTS_human.md` according to the user request.
 4. Check both surfaces for `replace_me`.
 5. Re-render `AGENTS_human.md`.
 6. Run lint and stop on any failure.

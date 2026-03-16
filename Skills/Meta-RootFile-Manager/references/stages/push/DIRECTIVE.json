@@ -4,14 +4,16 @@
   "tool_state": "active",
   "purpose": "Export the 治理映射模版 outward and overwrite the governed external targets.",
   "instruction": [
-    "push exports only Part A from the internal 治理映射模版 human surface",
+    "push exports only the rendered visible contract surface from the internal 治理映射模版 human source",
     "push must not export Part B to external AGENTS files",
+    "push must strip frontmatter metadata and <part_A> wrappers from external AGENTS files",
     "push leaves internal Part B unchanged"
   ],
   "workflow": [
     "open the internal AGENTS 治理映射模版 human surface",
-    "extract the <part_A>...</part_A> block",
-    "write only that block to the external AGENTS target"
+    "render the visible contract surface",
+    "strip internal frontmatter metadata and <part_A> shell",
+    "write only the rendered visible contract surface to the external AGENTS target"
   ],
   "rules": [
     "Part B is internal-only",

@@ -39,8 +39,8 @@ anchors:
 - `collect` treats external files as the source of truth, creates or refreshes the `治理映射模版`, and syncs mirror plus installed skill assets.
 - `push` treats the `治理映射模版` as the source of truth and overwrites external targets.
 - `target-contract`, `scan`, `collect`, `push`, and `scaffold` all surface a path-derived `owner`.
-- `agents-maintain` is the daily AGENTS maintenance entry; it accepts a natural-language request, ranks governed AGENTS targets, chooses `Part A` or embedded payload placement, updates the internal truth source, centered-pushes external `Part A`, and lints.
-- `agents-payload-contract` remains available only for payload-only surgery when the caller already knows the exact governed target and exact embedded payload scope.
+- `agents-maintain` is the daily AGENTS maintenance entry; it accepts a natural-language request, ranks governed AGENTS targets, chooses visible contract surface or domain-block placement, updates the internal truth source, centered-pushes the shell-free external visible contract surface, and lints.
+- `agents-payload-contract` remains available only for narrow domain-block surgery when the caller already knows the exact governed target and exact Part B scope.
 - For `AGENTS.md`, `collect` is no longer part of the normal daily maintenance loop; keep it for reverse-sync or recovery only.
 - If the managed content is json, `owner` is embedded into that json.
 - If the managed content is not json, `owner` is embedded through frontmatter in the same managed file.

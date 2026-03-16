@@ -1,65 +1,50 @@
----
-doc_id: meta_rootfile_manager.references_runtime_contracts_agents_content_structure
-doc_type: topic_atom
-topic: AGENTS Content Structure Contract
-anchors:
-- target: ../../SKILL.md
-  relation: implements
-  direction: upstream
-  reason: This document belongs to the governed skill tree under the main facade.
----
+# AGENTS Content Structure
 
-# AGENTS Content Structure Contract
+## 目标形态
+- 外部 `AGENTS.md` 的可见正文必须从头到尾就是一份完整成立的 runtime hook contract。
+- 合同正文结束后，才允许追加 reminder 区。
+- 更细的 machine contract 不再平铺在可见正文里，而是通过合同正文中的显式 CLI 读取命令按域二次读取。
 
-## Purpose
-- This file defines the governed content structure for `AGENTS.md`.
-- It is a structure template only. It does not carry target-specific content.
-- It is neither the `治理映射模版` nor the `骨架生成模版`; it only defines the allowed shape that both surfaces must satisfy where applicable.
-- Scan lint must use this file to validate whether a discovered `AGENTS.md` matches the required shape.
+## 外部结构
+- 外部 `AGENTS.md` 必须包含：
+  - hook header
+  - `<contract> ... </contract>`
+  - `<reminder> ... </reminder>`
+- `contract` 是第一眼可见的强约束正文。
+- `reminder` 只承载环境前提、核对提醒、协作提示等非执行性说明。
+- `reminder` 不得混入硬合同语气。
+- 外部文件不得出现任何 frontmatter 元数据块；`doc_id`、`doc_type`、`topic`、`anchors`、`owner` 等治理元信息只允许保留在内部真源。
+- 外部文件不得出现 `<part_A> ... </part_A>`；这是内部装配壳，不是最终 surface。
+- 外部文件不得出现 `<part_B>`。
 
-## External `AGENTS.md` Structure
+## 内部结构
+- 内部真源固定为 `AGENTS_human.md`。
+- `AGENTS_human.md` 必须包含完整的外部可见合同面，并以 `<part_A>` 壳承载它，再追加 `<part_B>`。
+- `<part_B>` 不再是单个大 payload，而是多个相互独立的 fenced `json` block。
+- 每个 block 必须携带：
+  - `domain_id`
+  - `read_command_preview`
+  - `contract`
 
-### Required Blocks
-1. `[AGENT RUNTIME HOOK - ABSOLUTE ENFORCEMENT]`
-2. `` `HOOK_LOAD`: ... ``
-3. `<part_A> ... </part_A>`
+## 分域约束
+- 当前标准域顺序固定为：
+  - `hook_identity`
+  - `turn_start`
+  - `runtime_constraints`
+  - `execution_modes`
+  - `repo_handoff`
+  - `turn_end`
+- 各域必须各占一个独立 `json` block。
+- block 顺序必须与标准域顺序一致。
+- block 不得缺域、重域或夹带非 `json` 内容。
 
-### Required Shape Rules
-- External `AGENTS.md` must contain `Part A only`.
-- External `AGENTS.md` must use the explicit `<part_A> ... </part_A>` wrapper in the target shape.
-- External `AGENTS.md` must not contain `<part_B> ... </part_B>`.
-- External `AGENTS.md` must carry an `owner` field in its readable metadata surface so the file can explain who owns the entry and that it is governed by `$Meta-RootFile-Manager`.
-- `Part A` must be human-readable and directly useful without reading raw json.
-- `Part A` may contain:
-  - entry commands
-  - language rules
-  - product-facing documentation language boundaries
-  - wizard language support notes
-  - managed boundary notes
-  - multi-agent handling notes
-  - other concise direct-read governance instructions
+## 语义边界
+- `contract` 正文允许承载运行时硬约束、强制入口、路由与执行条件。
+- `reminder` 只允许承载提醒，不得把“必须/不得/must/shall”这类硬约束放进去。
+- `Part B` 只允许最小、纯机械、不可遗漏的 machine contract。
+- `Part B` 不得承载技能排序、repo 摘要、技术栈清单、Markdown 叙事或其他软提示语义。
 
-### Forbidden Shape Rules
-- External `AGENTS.md` must not embed runtime payload json.
-- External `AGENTS.md` must not duplicate the machine-only `Part B`.
-- External `AGENTS.md` must not carry internal audit-only sections.
-
-## Internal Canonical `AGENTS_human.md` Structure
-
-### Required Blocks
-1. `[AGENT RUNTIME HOOK - ABSOLUTE ENFORCEMENT]`
-2. `` `HOOK_LOAD`: ... ``
-3. `<part_A> ... </part_A>`
-4. `<part_B> ... </part_B>`
-5. a fenced `json` block inside `Part B`
-
-### Required Shape Rules
-- Internal `AGENTS_human.md` is the single canonical managed source and must contain both `Part A` and `Part B`.
-- `Part A` mirrors the external entry content.
-- `Part B` is the only machine payload truth source and must stay inside the markdown file as a fenced `json` block.
-- Internal `AGENTS_human.md` must also carry the same path-derived `owner` field.
-
-## Lint Rule
-- If scan discovers `AGENTS.md`, lint must validate the external entry against this contract.
-- `lint` must also validate the internal canonical `AGENTS_human.md` against the current structure lock and payload schema.
-- If scan discovers a newly governed filename without a matching structure template, scan must fail immediately.
+## CLI 读取关系
+- `target-contract` 输出整体目标合同与分域读取入口。
+- `agents-domain-contract --domain "<domain_id>"` 输出单个分域 machine contract。
+- 可见合同正文中的二级读取命令，应与 `Part B` 中同域 `read_command_preview` 对应。

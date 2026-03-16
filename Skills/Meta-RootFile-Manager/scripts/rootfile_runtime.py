@@ -19,6 +19,10 @@ PART_A_OPEN = "<part_A>"
 PART_A_CLOSE = "</part_A>"
 PART_B_OPEN = "<part_B>"
 PART_B_CLOSE = "</part_B>"
+CONTRACT_OPEN = "<contract>"
+CONTRACT_CLOSE = "</contract>"
+REMINDER_OPEN = "<reminder>"
+REMINDER_CLOSE = "</reminder>"
 PAYLOAD_STRUCTURE_CONTRACT_RELATIVE_PATH = Path(
     "references/runtime_contracts/AGENTS_payload_structure.json"
 )
@@ -40,7 +44,7 @@ TEXT_TOKEN_PATTERN = re.compile(r"[A-Za-z0-9._/-]+|[\u4e00-\u9fff]+")
 EPHEMERAL_WORKSPACE_SEGMENT_PATTERN = re.compile(r"tmp[a-z0-9]{6,}$")
 PARENT_DUPLICATE_MIN_TOKEN_WINDOW = 4
 PARENT_DUPLICATE_MIN_EXACT_CHARS = 18
-PARENT_DUPLICATE_EXCLUDED_PAYLOAD_KEYS = {"owner", "entry_role", "repo_name", "default_meta_skill_order"}
+PARENT_DUPLICATE_EXCLUDED_PAYLOAD_KEYS = {"entry_role"}
 PARENT_DUPLICATE_EXCLUDED_PAYLOAD_PREFIXES = ("$.governed_container", "$.workflow_roots")
 STANDARD_WRITE_EXEC_GOAL = "default to full-coverage edits for the intended change"
 STANDARD_WRITE_EXEC_ACTION = (
@@ -49,6 +53,44 @@ STANDARD_WRITE_EXEC_ACTION = (
 )
 SCAFFOLD_REPLACE_ME = "replace_me"
 SCAFFOLD_NOT_APPLICABLE = "N/A"
+AGENTS_DOMAIN_ORDER = (
+    "hook_identity",
+    "turn_start",
+    "runtime_constraints",
+    "execution_modes",
+    "repo_handoff",
+    "turn_end",
+)
+PART_A_HARD_CONTRACT_MARKERS = (
+    "必须",
+    "不得",
+    "严禁",
+    "强制",
+    "must",
+    "must not",
+    "required",
+    "shall",
+    "prohibited",
+)
+PAYLOAD_SOFT_MARKERS = (
+    "优先",
+    "建议",
+    "可用",
+    "可以",
+    "例如",
+    "比如",
+    "摘要",
+    "summary",
+    "identity",
+    "身份",
+    "repo name",
+    "repo_name",
+    "product summary",
+    "same-level",
+    "techstack",
+    "技术栈",
+    "说明",
+)
 PARENT_DUPLICATE_ALLOWED_NORMALIZED_STRINGS = {
     " ".join(TEXT_TOKEN_PATTERN.findall(_text)).lower()
     for _text in (STANDARD_WRITE_EXEC_GOAL, STANDARD_WRITE_EXEC_ACTION)
@@ -98,17 +140,13 @@ class AgentsExecutionModesPayload(TypedDict, total=False):
 
 
 class ScaffoldAgentsMachinePayload(TypedDict, total=False):
-    owner: str
     entry_role: str
     runtime_source_policy: AgentsRuntimeSourcePolicyPayload
-    default_meta_skill_order: list[str]
     turn_start_actions: list[str]
     runtime_constraints: list[str]
     execution_modes: AgentsExecutionModesPayload
     repo_local_contract_handoff: list[str]
-    forbidden_primary_runtime_pattern: list[str]
     turn_end_actions: list[str]
-    repo_name: str
 
 
 def _env_path(name: str) -> Path | None:
@@ -403,24 +441,83 @@ def _extract_tag_block(text: str, open_tag: str, close_tag: str) -> str | None:
     return text.split(open_tag, 1)[1].split(close_tag, 1)[0].strip()
 
 
+def _strip_frontmatter_block(text: str) -> str:
+    _frontmatter, body = _split_frontmatter(text)
+    return body
+
+
+def _render_internal_frontmatter(frontmatter: str | None, body: str) -> str:
+    if frontmatter is None:
+        return body
+    return f"---\n{frontmatter}\n---\n{body}"
+
+
+def graft_frontmatter_from_template(text: str, template_text: str) -> str:
+    frontmatter, _body = _split_frontmatter(template_text)
+    if frontmatter is None:
+        return text
+    return _render_internal_frontmatter(frontmatter, _strip_frontmatter_block(text))
+
+
+def _default_agents_header() -> str:
+    return f"{HOOK_HEADER}\n\n`HOOK_LOAD`: Apply this AGENTS contract."
+
+
 def _extract_header_prefix(text: str) -> str:
-    if PART_A_OPEN in text:
-        prefix = text.split(PART_A_OPEN, 1)[0].rstrip()
-        return prefix + "\n"
-    return f"{HOOK_HEADER}\n\n`HOOK_LOAD`: Apply this AGENTS contract.\n"
+    body = _strip_frontmatter_block(text).strip()
+    for marker in (PART_A_OPEN, CONTRACT_OPEN):
+        if marker in body:
+            prefix = body.split(marker, 1)[0].rstrip()
+            if prefix:
+                return prefix + "\n"
+    return _default_agents_header() + "\n"
 
 
 def extract_external_agents_part_a_body(text: str) -> str:
-    tagged = _extract_tag_block(text, PART_A_OPEN, PART_A_CLOSE)
+    body = _strip_frontmatter_block(text).strip()
+    tagged = _extract_tag_block(body, PART_A_OPEN, PART_A_CLOSE)
     if tagged is not None:
         return tagged
-    return text.strip()
+    contract_start = body.find(CONTRACT_OPEN)
+    if contract_start != -1:
+        return body[contract_start:].strip()
+    return body
+
+
+def extract_contract_body_from_part_a(part_a_body: str) -> str:
+    tagged = _extract_tag_block(part_a_body, CONTRACT_OPEN, CONTRACT_CLOSE)
+    if tagged is not None:
+        return tagged
+    return part_a_body.strip()
+
+
+def extract_reminder_body_from_part_a(part_a_body: str) -> str:
+    tagged = _extract_tag_block(part_a_body, REMINDER_OPEN, REMINDER_CLOSE)
+    if tagged is not None:
+        return tagged
+    return ""
+
+
+def render_part_a_body(contract_body: str, reminder_body: str) -> str:
+    contract = contract_body.strip()
+    reminder = reminder_body.strip()
+    return (
+        f"{CONTRACT_OPEN}\n{contract}\n{CONTRACT_CLOSE}\n\n"
+        f"{REMINDER_OPEN}\n{reminder}\n{REMINDER_CLOSE}"
+    )
+
+
+def _normalize_part_a_body(part_a_body: str) -> str:
+    body = part_a_body.strip()
+    if CONTRACT_OPEN in body and CONTRACT_CLOSE in body and REMINDER_OPEN in body and REMINDER_CLOSE in body:
+        return body
+    return render_part_a_body(body, "")
 
 
 def render_external_agents(part_a_body: str, prefix_text: str | None = None) -> str:
     prefix = (prefix_text or _extract_header_prefix("")).rstrip()
-    body = part_a_body.strip()
-    return f"{prefix}\n\n{PART_A_OPEN}\n{body}\n{PART_A_CLOSE}\n"
+    body = _normalize_part_a_body(part_a_body)
+    return f"{prefix}\n\n{body}\n"
 
 
 def extract_external_agents_part_a(text: str) -> str:
@@ -429,16 +526,41 @@ def extract_external_agents_part_a(text: str) -> str:
     return render_external_agents(body, prefix)
 
 
+def _render_internal_part_a(text: str) -> str:
+    frontmatter, body = _split_frontmatter(text)
+    prefix = _extract_header_prefix(body).rstrip()
+    part_a_body = _normalize_part_a_body(extract_external_agents_part_a_body(body))
+    rendered_body = f"{prefix}\n\n{PART_A_OPEN}\n{part_a_body}\n{PART_A_CLOSE}\n"
+    return _render_internal_frontmatter(frontmatter, rendered_body)
+
+
 def render_internal_agents_human(part_a_text: str, machine_payload: object) -> str:
-    part_a = extract_external_agents_part_a(part_a_text).rstrip()
-    payload = json.dumps(machine_payload, indent=2, ensure_ascii=False)
-    return f"{part_a}\n\n{PART_B_OPEN}\n\n```json\n{payload}\n```\n{PART_B_CLOSE}\n"
+    part_a = _render_internal_part_a(part_a_text).rstrip()
+    rendered_blocks: list[str] = []
+    if isinstance(machine_payload, dict):
+        ordered_keys = [key for key in AGENTS_DOMAIN_ORDER if key in machine_payload]
+        ordered_keys.extend(key for key in machine_payload.keys() if key not in ordered_keys)
+        for key in ordered_keys:
+            block_payload = machine_payload.get(key)
+            if not isinstance(block_payload, dict):
+                continue
+            serialized_block = {"domain_id": key}
+            serialized_block.update(block_payload)
+            rendered_blocks.append(f"```json\n{json.dumps(serialized_block, indent=2, ensure_ascii=False)}\n```")
+    if not rendered_blocks:
+        rendered_blocks.append(f"```json\n{json.dumps({}, indent=2, ensure_ascii=False)}\n```")
+    part_b_body = "\n\n".join(rendered_blocks)
+    return f"{part_a}\n\n{PART_B_OPEN}\n\n{part_b_body}\n{PART_B_CLOSE}\n"
 
 
 def extract_internal_part_a(human_text: str) -> str:
     if PART_B_OPEN in human_text:
         return human_text.split(PART_B_OPEN, 1)[0].rstrip() + "\n"
     return human_text.rstrip() + "\n"
+
+
+def extract_external_surface_from_internal(human_text: str) -> str:
+    return extract_external_agents_part_a(extract_internal_part_a(human_text))
 
 
 def load_machine_payload(machine_path: Path) -> object:
@@ -448,10 +570,10 @@ def load_machine_payload(machine_path: Path) -> object:
         part_b_block = _extract_tag_block(machine_path.read_text(encoding="utf-8"), PART_B_OPEN, PART_B_CLOSE)
         if part_b_block is None:
             return {}
-        payload, payload_errors = _extract_fenced_json_payload(part_b_block)
+        payloads, payload_errors = _extract_fenced_json_payloads(part_b_block)
         if payload_errors:
             raise ValueError(";".join(payload_errors))
-        return payload if payload is not None else {}
+        return _aggregate_part_b_payload_blocks(payloads)
     legacy_machine_path = _legacy_agents_machine_path(machine_path)
     if legacy_machine_path.exists():
         return read_json(legacy_machine_path)
@@ -485,7 +607,8 @@ def validate_agents_writeback_completion(external_text: str, payload: object) ->
 def _extract_part_a_sections(text: str) -> dict[str, list[str]]:
     sections: dict[str, list[str]] = {}
     current_heading: str | None = None
-    for line in extract_external_agents_part_a_body(text).splitlines():
+    contract_body = extract_contract_body_from_part_a(extract_external_agents_part_a_body(text))
+    for line in contract_body.splitlines():
         stripped = line.strip()
         if not stripped:
             continue
@@ -557,6 +680,43 @@ def validate_source_specific_external_agents(
 
 def build_agents_payload_contract_command(paths: RuntimePaths, source_path: Path) -> str:
     return build_agents_maintain_command(paths, source_path)
+
+
+def build_agents_domain_contract_command(paths: RuntimePaths, source_path: Path, domain_id: str) -> str:
+    repo_root = _repo_root_for_runtime_paths(paths)
+    python_path = repo_root / ".venv_backend_skills" / "bin" / "python3"
+    script_path = paths.mirror_skill_root / "scripts" / "Cli_Toolbox.py"
+    command = (
+        f'{python_path} {script_path} agents-domain-contract --source-path "{source_path}" '
+        f'--domain "{domain_id}" --json'
+    )
+    if source_path.parts[-3:] == (".codex", "skills", "AGENTS.md"):
+        return f"MDM_WORKSPACE_ROOT={source_path.resolve().parents[2]} {command}"
+    try:
+        source_path.resolve().relative_to(paths.workspace_root)
+    except ValueError:
+        command = f"MDM_WORKSPACE_ROOT={source_path.resolve().parents[2]} {command}"
+    return command
+
+
+def build_secondary_contract_reads(paths: RuntimePaths, source_path: Path, payload: object) -> list[dict[str, str]]:
+    if not isinstance(payload, dict):
+        return []
+    items: list[dict[str, str]] = []
+    for domain_id in AGENTS_DOMAIN_ORDER:
+        block = payload.get(domain_id)
+        if not isinstance(block, dict):
+            continue
+        read_command = block.get("read_command_preview")
+        if not isinstance(read_command, str) or not read_command.strip():
+            read_command = build_agents_domain_contract_command(paths, source_path, domain_id)
+        items.append(
+            {
+                "domain_id": domain_id,
+                "read_command": read_command,
+            }
+        )
+    return items
 
 
 def _canonicalize_relative_path(relative_path: Path) -> Path:
@@ -1041,6 +1201,24 @@ def _validate_tag_wrapper(text: str, open_tag: str, close_tag: str, label: str) 
     return errors
 
 
+def _validate_part_a_layout(part_a_body: str) -> list[str]:
+    errors: list[str] = []
+    if any(
+        tag not in part_a_body
+        for tag in (CONTRACT_OPEN, CONTRACT_CLOSE, REMINDER_OPEN, REMINDER_CLOSE)
+    ):
+        return errors
+    if part_a_body.index(CONTRACT_OPEN) > part_a_body.index(REMINDER_OPEN):
+        errors.append("part_a_contract_before_reminder_required")
+    rendered = render_part_a_body(
+        extract_contract_body_from_part_a(part_a_body),
+        extract_reminder_body_from_part_a(part_a_body),
+    ).strip()
+    if part_a_body.strip() != rendered:
+        errors.append("part_a_layout_must_be_contract_then_reminder_only")
+    return errors
+
+
 def _extract_fenced_json_payload(block: str) -> tuple[object | None, list[str]]:
     stripped = block.strip()
     if not stripped.startswith("```json\n") or not stripped.endswith("\n```"):
@@ -1052,6 +1230,74 @@ def _extract_fenced_json_payload(block: str) -> tuple[object | None, list[str]]:
         return json.loads(payload_text), []
     except json.JSONDecodeError as exc:
         return None, [f"part_b_invalid_json:{exc.msg}"]
+
+
+def _extract_fenced_json_payloads(block: str) -> tuple[list[object], list[str]]:
+    stripped = block.strip()
+    matches = list(re.finditer(r"```json\n(.*?)\n```", stripped, flags=re.DOTALL))
+    if not matches:
+        return [], ["part_b_json_fence_invalid"]
+    remaining = re.sub(r"```json\n.*?\n```", "", stripped, flags=re.DOTALL).strip()
+    if remaining:
+        return [], ["part_b_non_json_content_forbidden"]
+
+    payloads: list[object] = []
+    errors: list[str] = []
+    for index, match in enumerate(matches):
+        payload_text = match.group(1)
+        try:
+            payloads.append(json.loads(payload_text))
+        except json.JSONDecodeError as exc:
+            errors.append(f"part_b_invalid_json:block={index}:{exc.msg}")
+    return payloads, errors
+
+
+def _aggregate_part_b_payload_blocks(payloads: list[object]) -> dict[str, object]:
+    aggregated: dict[str, object] = {}
+    for payload in payloads:
+        if not isinstance(payload, dict):
+            continue
+        domain_id = payload.get("domain_id")
+        if not isinstance(domain_id, str) or not domain_id:
+            continue
+        block_payload = {key: value for key, value in payload.items() if key != "domain_id"}
+        aggregated[domain_id] = block_payload
+    return aggregated
+
+
+def _validate_part_b_domain_blocks(
+    payloads: list[object],
+    payload_schema: dict[str, object] | None,
+) -> list[str]:
+    errors: list[str] = []
+    seen: set[str] = set()
+    expected = set(AGENTS_DOMAIN_ORDER)
+    if isinstance(payload_schema, dict):
+        key_order = payload_schema.get("key_order")
+        if isinstance(key_order, list) and all(isinstance(item, str) for item in key_order):
+            expected = set(key_order)
+    for index, payload in enumerate(payloads):
+        if not isinstance(payload, dict):
+            errors.append(f"part_b_block_type_invalid:block={index}")
+            continue
+        domain_id = payload.get("domain_id")
+        if not isinstance(domain_id, str) or not domain_id:
+            errors.append(f"part_b_block_domain_id_missing:block={index}")
+            continue
+        if domain_id in seen:
+            errors.append(f"part_b_block_duplicate_domain_id:{domain_id}")
+            continue
+        if domain_id not in expected:
+            errors.append(f"part_b_block_unknown_domain_id:{domain_id}")
+            continue
+        seen.add(domain_id)
+        block_keys = list(payload.keys())
+        if not block_keys or block_keys[0] != "domain_id":
+            errors.append(f"part_b_block_domain_id_must_be_first_key:{domain_id}")
+    for domain_id in sorted(expected):
+        if domain_id not in seen:
+            errors.append(f"part_b_block_missing_domain_id:{domain_id}")
+    return errors
 
 
 def _validate_payload_value(payload: object, schema: dict[str, object], path: str) -> list[str]:
@@ -1094,16 +1340,7 @@ def _validate_payload_value(payload: object, schema: dict[str, object], path: st
 
 
 def _default_meta_skill_tokens(payload: object) -> set[str]:
-    if not isinstance(payload, dict):
-        return set()
-    entries = payload.get("default_meta_skill_order")
-    if not isinstance(entries, list):
-        return set()
-    tokens: set[str] = set()
-    for item in entries:
-        if isinstance(item, str):
-            tokens.update(SKILL_TOKEN_PATTERN.findall(item))
-    return tokens
+    return set()
 
 
 def _iter_skill_tokens(payload: object, path: str) -> Iterable[tuple[str, str]]:
@@ -1121,28 +1358,19 @@ def _iter_skill_tokens(payload: object, path: str) -> Iterable[tuple[str, str]]:
 
 
 def _validate_default_meta_skill_uniqueness(payload: object) -> list[str]:
-    if not isinstance(payload, dict):
-        return []
-    default_tokens = _default_meta_skill_tokens(payload)
-    if not default_tokens:
-        return []
     errors: list[str] = []
-    for key, value in payload.items():
-        if key in {"owner", "default_meta_skill_order"}:
-            continue
-        for path, token in _iter_skill_tokens(value, f"$.{key}"):
-            if token in default_tokens:
-                errors.append(
-                    "payload_skill_repeated_outside_default_meta_skill_order:"
-                    f"{token}:{path}"
-                )
+    for path, token in _iter_skill_tokens(payload, "$"):
+        errors.append(f"payload_skill_token_forbidden:{token}:{path}")
     return errors
 
 
 def _validate_standard_write_exec(payload: object) -> list[str]:
     if not isinstance(payload, dict):
         return []
-    execution_modes = payload.get("execution_modes")
+    execution_modes_block = payload.get("execution_modes")
+    if not isinstance(execution_modes_block, dict):
+        return []
+    execution_modes = execution_modes_block.get("contract")
     if not isinstance(execution_modes, dict):
         return []
     write_exec = execution_modes.get("WRITE_EXEC")
@@ -1155,6 +1383,58 @@ def _validate_standard_write_exec(payload: object) -> list[str]:
     default_actions = write_exec.get("default_actions")
     if default_actions != [STANDARD_WRITE_EXEC_ACTION]:
         errors.append("write_exec_default_actions_must_match_standard")
+    return errors
+
+
+def _validate_part_a_semantic_boundary(text: str) -> list[str]:
+    errors: list[str] = []
+    part_a_body = extract_external_agents_part_a_body(text)
+    reminder_body = extract_reminder_body_from_part_a(part_a_body)
+    for line_number, line in enumerate(reminder_body.splitlines(), start=1):
+        stripped = line.strip()
+        if not stripped:
+            continue
+        candidate = re.sub(r"^\s*(?:[-*]|\d+\.)\s*", "", stripped)
+        lowered = candidate.lower()
+        for marker in PART_A_HARD_CONTRACT_MARKERS:
+            if marker in candidate or marker in lowered:
+                errors.append(f"reminder_hard_contract_marker:line={line_number}:{marker}")
+                break
+    return errors
+
+
+def _iter_payload_string_nodes(payload: object, path: str) -> Iterable[tuple[str, str]]:
+    if isinstance(payload, dict):
+        for key, value in payload.items():
+            yield from _iter_payload_string_nodes(value, f"{path}.{key}")
+        return
+    if isinstance(payload, list):
+        for index, item in enumerate(payload):
+            yield from _iter_payload_string_nodes(item, f"{path}[{index}]")
+        return
+    if isinstance(payload, str):
+        yield path, payload
+
+
+def _validate_payload_semantic_boundary(payload: object) -> list[str]:
+    errors: list[str] = []
+    for path, value in _iter_payload_string_nodes(payload, "$"):
+        stripped = value.strip()
+        lowered = stripped.lower()
+        if path.endswith(".read_command_preview"):
+            continue
+        if path == "$.execution_modes.contract.WRITE_EXEC.goal":
+            continue
+        if path == "$.execution_modes.contract.WRITE_EXEC.default_actions[0]":
+            continue
+        if stripped == SCAFFOLD_NOT_APPLICABLE:
+            errors.append(f"payload_placeholder_not_allowed:{path}:N/A")
+        if "`" in stripped:
+            errors.append(f"payload_markdown_marker_forbidden:{path}:backtick")
+        for marker in PAYLOAD_SOFT_MARKERS:
+            if marker in stripped or marker in lowered:
+                errors.append(f"payload_soft_marker_forbidden:{path}:{marker}")
+                break
     return errors
 
 
@@ -1178,6 +1458,8 @@ def _tokenize_duplicate_text(text: str) -> list[str]:
 def _is_duplicate_comparable_text(text: str) -> bool:
     stripped = text.strip()
     if not stripped:
+        return False
+    if stripped.rstrip(":") in AGENTS_DOMAIN_ORDER:
         return False
     if (
         "Cli_Toolbox.py" in stripped
@@ -1226,7 +1508,7 @@ def _duplicate_phrase(child_text: str, parent_text: str) -> str | None:
 
 
 def _is_allowed_standard_write_exec_surface(path: str, text: str) -> bool:
-    if not path.startswith("$.execution_modes.WRITE_EXEC."):
+    if not path.startswith("$.execution_modes.contract.WRITE_EXEC."):
         return False
     normalized = _normalize_duplicate_text(text)
     if normalized in PARENT_DUPLICATE_ALLOWED_NORMALIZED_STRINGS:
@@ -1237,7 +1519,7 @@ def _is_allowed_standard_write_exec_surface(path: str, text: str) -> bool:
 
 
 def _iter_part_a_strings(text: str) -> Iterable[tuple[str, str]]:
-    body = extract_external_agents_part_a_body(text)
+    body = extract_contract_body_from_part_a(extract_external_agents_part_a_body(text))
     for line_number, line in enumerate(body.splitlines(), start=1):
         stripped = line.strip()
         if not stripped:
@@ -1328,20 +1610,28 @@ def _validate_parent_agents_duplicates(
     return errors
 
 
-def validate_external_agents(text: str, expected_owner: str) -> list[str]:
+def validate_external_agents(text: str, _expected_owner: str) -> list[str]:
     errors: list[str] = []
     if HOOK_HEADER not in text:
         errors.append("missing_hook_header")
     if "`HOOK_LOAD`" not in text:
         errors.append("missing_hook_load")
-    errors.extend(_validate_tag_wrapper(text, PART_A_OPEN, PART_A_CLOSE, "part_a"))
+    frontmatter, body = _split_frontmatter(text)
+    if frontmatter is not None:
+        errors.append("external_agents_forbids_frontmatter")
+    if PART_A_OPEN in body or PART_A_CLOSE in body:
+        errors.append("external_agents_forbids_internal_part_a_wrapper")
     if "[PART A]" in text:
         errors.append("legacy_part_a_marker_forbidden")
     if "[PART B]" in text:
         errors.append("legacy_part_b_marker_forbidden")
     if PART_B_OPEN in text or PART_B_CLOSE in text:
         errors.append("external_agents_forbids_part_b")
-    errors.extend(validate_markdown_owner(text, expected_owner))
+    part_a_body = extract_external_agents_part_a_body(body)
+    errors.extend(_validate_tag_wrapper(part_a_body, CONTRACT_OPEN, CONTRACT_CLOSE, "contract"))
+    errors.extend(_validate_tag_wrapper(part_a_body, REMINDER_OPEN, REMINDER_CLOSE, "reminder"))
+    errors.extend(_validate_part_a_layout(part_a_body))
+    errors.extend(_validate_part_a_semantic_boundary(text))
     return errors
 
 
@@ -1349,6 +1639,9 @@ def validate_internal_human_agents(
     text: str,
     expected_owner: str,
     payload_schema: dict[str, object] | None = None,
+    *,
+    paths: RuntimePaths | None = None,
+    source_path: Path | None = None,
 ) -> list[str]:
     errors: list[str] = []
     if HOOK_HEADER not in text:
@@ -1361,17 +1654,36 @@ def validate_internal_human_agents(
         errors.append("legacy_part_a_marker_forbidden")
     if "[PART B]" in text:
         errors.append("legacy_part_b_marker_forbidden")
+    part_a_body = extract_external_agents_part_a_body(text)
+    errors.extend(_validate_tag_wrapper(part_a_body, CONTRACT_OPEN, CONTRACT_CLOSE, "contract"))
+    errors.extend(_validate_tag_wrapper(part_a_body, REMINDER_OPEN, REMINDER_CLOSE, "reminder"))
+    errors.extend(_validate_part_a_layout(part_a_body))
     part_b_block = _extract_tag_block(text, PART_B_OPEN, PART_B_CLOSE)
     if part_b_block is None:
         errors.append("missing_part_b")
         return errors
-    payload, payload_errors = _extract_fenced_json_payload(part_b_block)
+    payload_blocks, payload_errors = _extract_fenced_json_payloads(part_b_block)
     errors.extend(payload_errors)
+    errors.extend(_validate_part_b_domain_blocks(payload_blocks, payload_schema))
+    payload = _aggregate_part_b_payload_blocks(payload_blocks)
     if payload_schema is not None and payload is not None:
         errors.extend(_validate_payload_value(payload, payload_schema, "$"))
     if payload is not None:
         errors.extend(_validate_default_meta_skill_uniqueness(payload))
+        errors.extend(_validate_payload_semantic_boundary(payload))
         errors.extend(_validate_standard_write_exec(payload))
+        if paths is not None and source_path is not None:
+            for domain_id in AGENTS_DOMAIN_ORDER:
+                block = payload.get(domain_id)
+                if not isinstance(block, dict):
+                    continue
+                actual_command = block.get("read_command_preview")
+                if not isinstance(actual_command, str) or "agents-domain-contract" not in actual_command:
+                    errors.append(f"part_b_read_command_preview_missing_or_invalid:{domain_id}")
+                    continue
+                if f'--domain "{domain_id}"' not in actual_command:
+                    errors.append(f"part_b_read_command_preview_domain_mismatch:{domain_id}")
+    errors.extend(_validate_part_a_semantic_boundary(text))
     errors.extend(validate_markdown_owner(text, expected_owner))
     return errors
 
@@ -1380,10 +1692,13 @@ def validate_managed_agents_pair(
     paths: RuntimePaths,
     source_path: Path,
     human_path: Path,
+    *,
+    include_external: bool = True,
 ) -> list[str]:
     errors: list[str] = []
     payload_schema = _payload_schema_for_source(paths, source_path)
     expected_owner = derive_owner_text(paths, source_path, "AGENTS_MD", "AGENTS.md")
+    human_text: str | None = None
     if payload_schema is None and not is_runtime_local_source(paths, source_path):
         return [f"missing_payload_structure_schema:{_relative_source_key(paths, source_path)}"]
     managed_payload: object | None = None
@@ -1391,20 +1706,31 @@ def validate_managed_agents_pair(
         errors.append("missing_managed_human")
     else:
         human_text = human_path.read_text(encoding="utf-8")
-        errors.extend(validate_internal_human_agents(human_text, expected_owner, payload_schema))
+        errors.extend(
+            validate_internal_human_agents(
+                human_text,
+                expected_owner,
+                payload_schema,
+                paths=paths,
+                source_path=source_path,
+            )
+        )
         try:
             managed_payload = load_machine_payload(human_path)
         except (json.JSONDecodeError, ValueError) as exc:
             errors.append(f"invalid_internal_payload:{exc}")
-    external_text = source_path.read_text(encoding="utf-8") if source_path.exists() else None
-    if source_path.exists() and isinstance(managed_payload, dict):
+    external_text = source_path.read_text(encoding="utf-8") if include_external and source_path.exists() else None
+    duplicate_surface_text = external_text
+    if duplicate_surface_text is None and human_text is not None:
+        duplicate_surface_text = extract_external_surface_from_internal(human_text)
+    if duplicate_surface_text is not None and isinstance(managed_payload, dict):
         if external_text is not None:
             errors.extend(validate_agents_writeback_completion(external_text, managed_payload))
         errors.extend(
             _validate_parent_agents_duplicates(
                 paths,
                 source_path,
-                external_text or "",
+                duplicate_surface_text,
                 managed_payload,
             )
         )
@@ -1454,6 +1780,7 @@ def lint_managed_entry(
                 paths,
                 source_path,
                 Path(entry["managed_human_path"]),
+                include_external=include_external,
             )
         )
         return errors
@@ -1509,9 +1836,11 @@ def _render_part_a_template_from_root(paths: RuntimePaths) -> str | None:
         return None
     template_text = template_path.read_text(encoding="utf-8")
     body = extract_external_agents_part_a_body(template_text)
+    contract_body = extract_contract_body_from_part_a(body)
+    reminder_body = extract_reminder_body_from_part_a(body)
     section_titles = [
         line.strip()
-        for line in body.splitlines()
+        for line in contract_body.splitlines()
         if re.match(r"^\d+\.\s+", line.strip())
     ]
     if not section_titles:
@@ -1522,91 +1851,164 @@ def _render_part_a_template_from_root(paths: RuntimePaths) -> str | None:
             rendered_lines.append("")
         rendered_lines.append(title)
         rendered_lines.append("- replace_me")
-    rendered = "\n".join(rendered_lines).strip()
-    if rendered:
-        return rendered
-    for line in body.splitlines():
-        stripped = line.strip()
-        if not stripped:
-            rendered_lines.append("")
-            continue
-        if re.match(r"^\d+\.\s+", stripped):
-            rendered_lines.append(stripped)
-            continue
-        if stripped.startswith("- "):
-            rendered_lines.append("- replace_me")
-            continue
-        rendered_lines.append("replace_me")
-    return "\n".join(rendered_lines).strip()
+    rendered_contract = "\n".join(rendered_lines).strip()
+    if not rendered_contract:
+        for line in contract_body.splitlines():
+            stripped = line.strip()
+            if not stripped:
+                rendered_lines.append("")
+                continue
+            if re.match(r"^\d+\.\s+", stripped):
+                rendered_lines.append(stripped)
+                continue
+            if stripped.startswith("- "):
+                rendered_lines.append("- replace_me")
+                continue
+            rendered_lines.append("replace_me")
+        rendered_contract = "\n".join(rendered_lines).strip()
+
+    reminder_headings = [
+        line.strip()
+        for line in reminder_body.splitlines()
+        if re.match(r"^\d+\.\s+", line.strip())
+    ]
+    rendered_reminder_lines: list[str] = []
+    if reminder_headings:
+        for index, title in enumerate(reminder_headings):
+            if index > 0:
+                rendered_reminder_lines.append("")
+            rendered_reminder_lines.append(title)
+            rendered_reminder_lines.append("- replace_me")
+    else:
+        for line in reminder_body.splitlines():
+            stripped = line.strip()
+            if not stripped:
+                continue
+            if stripped.startswith("- "):
+                rendered_reminder_lines.append("- replace_me")
+        if not rendered_reminder_lines:
+            rendered_reminder_lines = ["1. Reminder", "- replace_me"]
+
+    rendered_reminder = "\n".join(rendered_reminder_lines).strip()
+    return render_part_a_body(rendered_contract, rendered_reminder)
 
 
-def _scaffold_agents_string_value(path: str) -> str:
-    if path == "$.entry_role":
+def _scaffold_domain_id_from_path(path: str) -> str | None:
+    parts = path.split(".")
+    if len(parts) < 3:
+        return None
+    return parts[1] if parts[0] == "$" else None
+
+
+def _scaffold_agents_string_value(
+    path: str,
+    *,
+    source_path: Path | None = None,
+    paths: RuntimePaths | None = None,
+) -> str:
+    if path == "$.hook_identity.contract.entry_role":
         return SCAFFOLD_REPLACE_ME
-    if path == "$.runtime_source_policy.runtime_rule_source":
+    if path == "$.hook_identity.contract.secondary_contract_source":
         return "CLI_JSON"
-    if path == "$.execution_modes.READ_EXEC.goal":
+    if path == "$.execution_modes.contract.READ_EXEC.goal":
         return SCAFFOLD_REPLACE_ME
-    if path == "$.execution_modes.WRITE_EXEC.goal":
+    if path == "$.execution_modes.contract.WRITE_EXEC.goal":
         return STANDARD_WRITE_EXEC_GOAL
-    if path.endswith(".repo_name"):
-        return SCAFFOLD_NOT_APPLICABLE
+    if path.endswith(".read_command_preview") and paths is not None and source_path is not None:
+        domain_id = _scaffold_domain_id_from_path(path)
+        if domain_id:
+            return build_agents_domain_contract_command(paths, source_path, domain_id)
     return SCAFFOLD_REPLACE_ME
 
 
-def _scaffold_agents_value_from_root_template(value: object, path: str, owner: str) -> object:
-    if path == "$.owner":
-        return owner
-    if path.startswith("$.runtime_source_policy"):
+def _scaffold_agents_value_from_root_template(
+    value: object,
+    path: str,
+    owner: str,
+    *,
+    paths: RuntimePaths,
+    source_path: Path,
+) -> object:
+    if path == "$.hook_identity.read_command_preview":
+        return build_agents_domain_contract_command(paths, source_path, "hook_identity")
+    if path == "$.turn_start.read_command_preview":
+        return build_agents_domain_contract_command(paths, source_path, "turn_start")
+    if path == "$.runtime_constraints.read_command_preview":
+        return build_agents_domain_contract_command(paths, source_path, "runtime_constraints")
+    if path == "$.execution_modes.read_command_preview":
+        return build_agents_domain_contract_command(paths, source_path, "execution_modes")
+    if path == "$.repo_handoff.read_command_preview":
+        return build_agents_domain_contract_command(paths, source_path, "repo_handoff")
+    if path == "$.turn_end.read_command_preview":
+        return build_agents_domain_contract_command(paths, source_path, "turn_end")
+    if path.startswith("$.hook_identity.contract.secondary_contract_source"):
         return value
-    if path.startswith("$.execution_modes.WRITE_EXEC"):
+    if path.startswith("$.execution_modes.contract.WRITE_EXEC"):
         return value
     if isinstance(value, dict):
         return {
-            key: _scaffold_agents_value_from_root_template(item, f"{path}.{key}", owner)
+            key: _scaffold_agents_value_from_root_template(
+                item,
+                f"{path}.{key}",
+                owner,
+                paths=paths,
+                source_path=source_path,
+            )
             for key, item in value.items()
         }
     if isinstance(value, list):
-        if path == "$.execution_modes.WRITE_EXEC.default_actions":
+        if path == "$.execution_modes.contract.WRITE_EXEC.default_actions":
             return value
         if not value:
             return []
         return [
-            _scaffold_agents_value_from_root_template(value[0], f"{path}[0]", owner)
+            _scaffold_agents_value_from_root_template(
+                value[0],
+                f"{path}[0]",
+                owner,
+                paths=paths,
+                source_path=source_path,
+            )
         ]
     if isinstance(value, str):
-        return _scaffold_agents_string_value(path)
+        return _scaffold_agents_string_value(path, source_path=source_path, paths=paths)
     if isinstance(value, bool):
         return value
     return SCAFFOLD_NOT_APPLICABLE
 
 
-def _scaffold_agents_value_from_schema(schema: dict[str, object], path: str, owner: str) -> object:
+def _scaffold_agents_value_from_schema(
+    schema: dict[str, object],
+    path: str,
+    owner: str,
+    *,
+    paths: RuntimePaths,
+    source_path: Path,
+) -> object:
     schema_type = schema.get("type")
     if schema_type == "object":
         properties = schema.get("properties", {})
         if not isinstance(properties, dict):
             return {}
         return {
-            key: _scaffold_agents_value_from_schema(properties[key], f"{path}.{key}", owner)
+            key: _scaffold_agents_value_from_schema(
+                properties[key],
+                f"{path}.{key}",
+                owner,
+                paths=paths,
+                source_path=source_path,
+            )
             for key in schema.get("key_order", [])
             if key in properties
         }
     if schema_type == "array":
-        if path == "$.execution_modes.WRITE_EXEC.default_actions":
+        if path == "$.execution_modes.contract.WRITE_EXEC.default_actions":
             return [STANDARD_WRITE_EXEC_ACTION]
-        return []
+        return [SCAFFOLD_REPLACE_ME]
     if schema_type == "string":
-        if path == "$.owner":
-            return owner
-        return _scaffold_agents_string_value(path)
+        return _scaffold_agents_string_value(path, source_path=source_path, paths=paths)
     if schema_type == "boolean":
-        if path in {
-            "$.runtime_source_policy.audit_fields_are_not_primary_runtime_instructions",
-            "$.runtime_source_policy.path_metadata_is_not_action_guidance",
-        }:
-            return True
-        return False
+        return True
     return SCAFFOLD_NOT_APPLICABLE
 
 
@@ -1619,24 +2021,35 @@ def scaffold_agents_machine_payload(
     if template_path.exists():
         template_payload = load_machine_payload(template_path)
         if isinstance(template_payload, dict):
-            payload = _scaffold_agents_value_from_root_template(template_payload, "$", owner)
+            payload = _scaffold_agents_value_from_root_template(
+                template_payload,
+                "$",
+                owner,
+                paths=paths,
+                source_path=source_path,
+            )
             if isinstance(payload, dict):
-                payload["owner"] = owner
                 return payload
     schema = _payload_schema_for_source(paths, source_path) or _default_agents_payload_schema(paths)
     if schema is None:
-        return {"owner": owner}
-    payload = _scaffold_agents_value_from_schema(schema, "$", owner)
+        return {}
+    payload = _scaffold_agents_value_from_schema(
+        schema,
+        "$",
+        owner,
+        paths=paths,
+        source_path=source_path,
+    )
     if not isinstance(payload, dict):
-        return {"owner": owner}
-    payload["owner"] = owner
+        return {}
     return payload
 
 
 def scaffold_external_agents(external_path: Path, owner: str) -> str:
-    return upsert_frontmatter_owner(
-        render_external_agents(_render_part_a_template_from_root(detect_paths(__file__)) or "1. 根入口命令\n- replace_me"),
-        owner,
+    del external_path, owner
+    return render_external_agents(
+        _render_part_a_template_from_root(detect_paths(__file__))
+        or render_part_a_body("1. 根入口命令\n- replace_me", "1. Reminder\n- replace_me")
     )
 
 
@@ -1647,7 +2060,10 @@ def scaffold_internal_agents_human(
     machine_payload: ScaffoldAgentsMachinePayload | None = None,
 ) -> str:
     payload = machine_payload if machine_payload is not None else scaffold_agents_machine_payload(paths, external_path, owner)
-    return render_internal_agents_human(scaffold_external_agents(external_path, owner), payload)
+    return render_internal_agents_human(
+        upsert_frontmatter_owner(scaffold_external_agents(external_path, owner), owner),
+        payload,
+    )
 
 
 def scaffold_plain_external(_file_kind: str) -> str:
@@ -1675,5 +2091,31 @@ def resolve_target_contract(paths: RuntimePaths, source_path: Path) -> dict[str,
         human_path = Path(entry["managed_human_path"])
         if not human_path.exists():
             raise FileNotFoundError("managed_human_agents_not_found")
-        result["payload"] = load_machine_payload(human_path)
+        payload = load_machine_payload(human_path)
+        result["contract_blocks"] = payload
+        result["secondary_contract_reads"] = build_secondary_contract_reads(paths, source_path, payload)
     return result
+
+
+def resolve_agents_domain_contract(paths: RuntimePaths, source_path: Path, domain_id: str) -> dict[str, object]:
+    result = resolve_target_contract(paths, source_path)
+    if result.get("channel_id") != "AGENTS_MD":
+        raise ValueError("agents_domain_contract_requires_agents_target")
+    payload = result.get("contract_blocks")
+    if not isinstance(payload, dict):
+        raise FileNotFoundError("agents_contract_blocks_not_found")
+    block = payload.get(domain_id)
+    if not isinstance(block, dict):
+        raise FileNotFoundError("agents_domain_contract_not_found")
+    read_command = block.get("read_command_preview")
+    if not isinstance(read_command, str) or not read_command.strip():
+        read_command = build_agents_domain_contract_command(paths, source_path, domain_id)
+    return {
+        "contract_name": "meta_rootfile_manager_agents_domain_contract",
+        "source_path": str(source_path),
+        "relative_path": result["relative_path"],
+        "domain_id": domain_id,
+        "read_command_preview": read_command,
+        "managed_file": result["managed_files"]["human"],
+        "contract": block.get("contract", {}),
+    }

@@ -11,7 +11,8 @@ anchors:
 
 # Push Rules
 
-- External AGENTS targets receive only `Part A`.
+- External AGENTS targets receive only the rendered visible contract surface.
 - `Part B` remains skill-internal.
+- Frontmatter governance metadata and `<part_A>` wrappers remain internal-only.
 - Push must overwrite the external governed target from the `治理映射模版`.
 - Push must treat the internal `治理映射模版` file as the truth source for exported content.

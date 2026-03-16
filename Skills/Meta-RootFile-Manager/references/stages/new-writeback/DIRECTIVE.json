@@ -5,12 +5,12 @@
   "purpose": "Finalize scaffolded AGENTS targets after the agent fills the skeleton according to the user request.",
   "instruction": [
     "new-writeback applies to scaffolded AGENTS.md targets only",
-    "new-writeback requires external AGENTS.md and the embedded payload inside AGENTS_human.md to contain no replace_me",
+    "new-writeback requires external AGENTS.md and the split domain blocks inside AGENTS_human.md to contain no replace_me",
     "new-writeback re-renders the paired AGENTS_human.md and then runs lint"
   ],
   "workflow": [
     "agent fills external AGENTS.md according to the user request",
-    "agent fills the embedded Part B payload inside AGENTS_human.md according to the user request",
+    "agent fills the Part B domain blocks inside AGENTS_human.md according to the user request",
     "new-writeback checks for replace_me leftovers",
     "new-writeback re-renders AGENTS_human.md",
     "new-writeback runs lint before closing"

@@ -19,7 +19,7 @@ anchors:
 - `collect` pulls external governed root files back into skill-internal managed assets.
 
 ## Runtime Rule
-- For `AGENTS.md`, `collect` must read external `Part A` and rebuild `AGENTS_human.md` while preserving the embedded `Part B` payload already stored in that canonical markdown file.
+- For `AGENTS.md`, `collect` must read the external visible contract surface as shell-free final content and rebuild `AGENTS_human.md` while preserving the existing internal frontmatter metadata and split Part B domain blocks.
 - For `AGENTS.md`, `collect` is an exceptional reverse-sync or external recovery path only; it must not be modeled as part of the normal daily maintenance mainline.
 - For every non-`AGENTS.md` channel, `collect` must overwrite the internal mapped copy with the exact external file content.
 - `collect` must sync changed managed assets into the installed codex copy when the mirror asset changed.

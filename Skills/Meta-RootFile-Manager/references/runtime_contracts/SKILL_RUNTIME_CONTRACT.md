@@ -1,46 +1,45 @@
----
-doc_id: meta_rootfile_manager.references_runtime_contracts_skill_runtime_contract
-doc_type: topic_atom
-topic: Skill Runtime Contract
-anchors:
-- target: ../../SKILL.md
-  relation: implements
-  direction: upstream
-  reason: This document belongs to the governed skill tree under the main facade.
----
-
 # Skill Runtime Contract
 
-- skill_name: `Meta-RootFile-Manager`
-- runtime_kind: `channelized_root_file_governance`
+## 核心入口
+- `contract`
+- `scan`
+- `lint`
+- `collect`
+- `push`
+- `scaffold`
+- `new-writeback`
+- `target-contract`
+- `agents-maintain`
+- `agents-domain-contract`
+- `agents-payload-contract`
 
-## Summary
-- This skill governs workspace root files through file-type channels.
-- `AGENTS.md` remains a special `A/B` channel.
-- Every other supported root file type uses a single internal mapped copy.
+## AGENTS 治理总则
+- 可见 `AGENTS.md` surface 本身必须是完整成立的 runtime hook contract。
+- 外部 `AGENTS.md` 只允许输出最终可见合同面，不得泄露 frontmatter 元数据或 `<part_A>` 内部壳。
+- 可见合同面固定拆为：
+  - `<contract>`
+  - `<reminder>`
+- `Part B` 固定拆为多个分域 `json` block，而不是单个扁平 payload。
 
-## Managed Asset Rule
-- External root files remain the files actually consumed by repos.
-- Skill-internal assets are mapping versions stored under `assets/managed_targets/AI_Projects/...`.
-- Non-`AGENTS.md` managed assets must use explicit governed-mapping filenames instead of the raw external filename.
-- Runtime-local or ephemeral sources must not write managed mirrors into repo-tracked skill assets; they must use `Codex_Skill_Runtime/<skill>/managed_targets/...`.
+## 日常主链
+- 日常 AGENTS 维护必须走 `agents-maintain`。
+- 主链固定为：
+  - ranking
+  - placement gate
+  - internal truth update
+  - centered push
+  - lint
 
-## Runtime Output Rule
-- Latest stage result json must live under `Codex_Skill_Runtime/<skill>/artifacts/<stage>/latest.json`.
-- Timestamped stage run logs must live under `Codex_Skill_Runtime/<skill>/logs/<stage>/`.
-- Runtime outputs, logs, temp mirrors, and ephemeral managed targets must not default back into the skill directory.
-- Default discovery for `scan` / `lint` / `collect` / `push` must skip runtime-managed targets under `ephemeral_workspace/...` unless the caller explicitly targets that source path.
-- `push` must also skip missing external targets during default discovery; only explicit `--source-path` can re-target a missing governed file.
+## 窄域入口
+- `agents-domain-contract` 负责读取单个分域二级合同。
+- `agents-payload-contract` 只保留为分域 block surgery 入口。
 
-## Runtime Source Rule
-- `rules/scan_rules.json` is the static channel registry truth source.
-- Dynamic governed target discovery must come from governed managed assets under `assets/managed_targets/AI_Projects/...` plus runtime-local managed assets under `Codex_Skill_Runtime/<skill>/managed_targets/...`.
-- `target-contract` must return the resolved channel and managed asset paths for the requested external path.
-- `contract` must expose the skill-level CLI runtime entry set.
-- `agents-maintain` must be the only stable daily maintenance entry for governed `AGENTS.md` work.
-- `agents-maintain` must expose governed target ranking, placement-gate results, selected `Part A` or embedded payload location, duplicate/inheritance gate status, mutation mode, and the centered-push write plan in one machine-readable payload.
-- `agents-payload-contract` remains available only for explicit payload-only surgery inside `AGENTS_human.md`.
-- `lint` must reject child `AGENTS` surfaces that repeat parent `AGENTS.md` or parent payload semantics; skill entries are the only exception.
-- `lint` must also reject repo-tracked orphan `AGENTS_human.md` mappings whose external target no longer exists, installed managed-target drift, and runtime legacy `AGENTS_machine.json` sidecars.
-- Daily `AGENTS.md` maintenance must update the internal `AGENTS_human.md` truth source first, then push external `Part A`, then lint.
-- `collect` must not appear in the normal `AGENTS.md` maintenance mainline; for `AGENTS.md` it is reserved for reverse-sync or external recovery only.
+## Lint 必须拦截
+- 外部 `AGENTS.md` 泄露 frontmatter 元数据或 `<part_A>` 内部壳
+- 可见合同面缺失 `<contract>` 或 `<reminder>`
+- 可见合同面不是“contract followed by reminder”纯结构
+- reminder 中混入硬合同语气
+- `Part B` 缺域、重域、无 `domain_id`、非 `json` 内容
+- 父子 AGENTS 语义重复
+- payload/contract block 中出现软提示语义
+- legacy sidecar 与 orphan managed AGENTS 残留

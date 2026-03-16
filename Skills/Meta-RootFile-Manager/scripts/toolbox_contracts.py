@@ -15,6 +15,7 @@ SKILL_RUNTIME_CONTRACT_PATH = RUNTIME_CONTRACTS_ROOT / "SKILL_RUNTIME_CONTRACT.j
 class AgentsPayloadMetaRootFileManagerCommands(TypedDict):
     target_contract: str
     agents_payload_contract: str
+    agents_domain_contract: str
     lint: str
 
 
@@ -45,6 +46,7 @@ class AgentsPayloadContractPayload(TypedDict):
     managed_files: dict[str, str]
     tool_entry: AgentsPayloadToolEntry
     workflow: list[str]
+    secondary_contract_reads: list[dict[str, str]]
     writeback_policy: AgentsPayloadWritebackPolicy
     rules: list[str]
 
@@ -79,6 +81,11 @@ def build_agents_payload_contract(paths: object, source_path: Path) -> AgentsPay
                     "Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py "
                     f"agents-payload-contract --source-path \"{source_path}\" --json"
                 ),
+                "agents_domain_contract": (
+                    "./.venv_backend_skills/bin/python "
+                    "Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py "
+                    f"agents-domain-contract --source-path \"{source_path}\" --domain \"<domain_id>\" --json"
+                ),
                 "lint": (
                     "./.venv_backend_skills/bin/python "
                     "Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py "
@@ -98,22 +105,24 @@ def build_agents_payload_contract(paths: object, source_path: Path) -> AgentsPay
             },
         },
         "workflow": [
-            "First resolve the governed AGENTS target and managed payload paths from this contract.",
+            "First resolve the governed AGENTS target and managed contract block paths from this contract.",
             "Before interpreting the user request, load Meta-Enhance-Prompt contract and its skill-directive entry.",
-            "Treat the user request as literal by default and rewrite it into the smallest precise payload semantics only.",
+            "Treat the user request as literal by default and rewrite it into the smallest precise domain-contract semantics only.",
             "Do not add process reminders, extra governance notes, extra routing, or extra obligations that the user did not request.",
-            "If the intended shape is still unclear after intent normalization, inspect sibling payload entries for style only; do not invent new semantics.",
-            "Edit only the governed AGENTS_human.md embedded Part B payload for the requested change scope.",
+            "If the intended shape is still unclear after intent normalization, inspect sibling domain blocks for style only; do not invent new semantics.",
+            "Edit only the governed AGENTS_human.md Part B domain block for the requested change scope.",
             "Run lint for the same external AGENTS.md before closing the turn.",
         ],
+        "secondary_contract_reads": result.get("secondary_contract_reads", []),
         "writeback_policy": {
             "canonical_truth_surface": result["managed_files"]["human"],
             "part_b_container": result["managed_files"]["human"],
             "external_part_a_surface": str(source_path),
         },
         "rules": [
-            "default_meta_skill_order is the only payload location allowed to carry skill name plus minimal description.",
-            "Do not repeat or paraphrase the same skill-scoped reminder in other payload fields after it is already recorded in default_meta_skill_order.",
+            "Part A contract body is the primary visible hook contract; reminder text may follow only after the contract body ends.",
+            "Part B must be split into domain-specific contract blocks instead of one flat payload blob.",
+            "Each Part B block must carry its own read_command_preview and machine contract body.",
             "Do not add anything beyond the user request by default.",
             "Do not treat oral wording as permission to expand scope or complete hidden intent.",
             "Use addition only when the user explicitly requested a new semantic.",

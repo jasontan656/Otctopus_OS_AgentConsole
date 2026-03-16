@@ -7,8 +7,8 @@ from pathlib import Path
 from rootfile_runtime import (
     detect_paths,
     extract_external_agents_part_a,
-    extract_internal_part_a,
-    inject_owner_into_machine_payload,
+    extract_external_surface_from_internal,
+    graft_frontmatter_from_template,
     lint_external_entry,
     lint_managed_entry,
     list_repo_orphan_managed_agents,
@@ -143,10 +143,7 @@ def cmd_collect(args: argparse.Namespace) -> int:
         if entry["mapping_mode"] == "agents_ab":
             managed_human = Path(entry["managed_human_path"])
             try:
-                machine_payload = inject_owner_into_machine_payload(
-                    load_machine_payload(managed_human),
-                    str(entry["owner"]),
-                )
+                machine_payload = load_machine_payload(managed_human)
             except (json.JSONDecodeError, ValueError) as exc:
                 failures.append(
                     {
@@ -158,10 +155,13 @@ def cmd_collect(args: argparse.Namespace) -> int:
                 continue
             external_text = source_path.read_text(encoding="utf-8")
             normalized_part_a = upsert_frontmatter_owner(
-                extract_external_agents_part_a(external_text),
+                graft_frontmatter_from_template(
+                    extract_external_agents_part_a(external_text),
+                    managed_human.read_text(encoding="utf-8"),
+                ),
                 str(entry["owner"]),
             )
-            new_human = render_internal_agents_human(normalized_part_a, machine_payload.as_dict())
+            new_human = render_internal_agents_human(normalized_part_a, machine_payload)
             managed_human_changed = write_text(managed_human, new_human, args.dry_run)
             installed_human_changed = sync_file_to_installed(paths, managed_human, args.dry_run)
             changed = any((managed_human_changed, installed_human_changed))
@@ -255,7 +255,7 @@ def cmd_push(args: argparse.Namespace) -> int:
                 continue
             write_text(
                 source_path,
-                extract_internal_part_a(human_path.read_text(encoding="utf-8")),
+                extract_external_surface_from_internal(human_path.read_text(encoding="utf-8")),
                 args.dry_run,
             )
             operations.append(build_operation(entry, source_path=str(source_path)))

@@ -2,7 +2,12 @@ from __future__ import annotations
 
 import argparse
 
-from mdm_cli_contract_commands import cmd_agents_payload_contract, cmd_contract, cmd_target_contract
+from mdm_cli_contract_commands import (
+    cmd_agents_domain_contract,
+    cmd_agents_payload_contract,
+    cmd_contract,
+    cmd_target_contract,
+)
 from mdm_cli_stage_commands import (
     cmd_collect,
     cmd_lint,
@@ -78,5 +83,11 @@ def build_parser() -> argparse.ArgumentParser:
     agents_payload_contract.add_argument("--source-path", required=True)
     agents_payload_contract.add_argument("--json", action="store_true", help="Compatibility flag; output is JSON.")
     agents_payload_contract.set_defaults(func=cmd_agents_payload_contract)
+
+    agents_domain_contract = subparsers.add_parser("agents-domain-contract")
+    agents_domain_contract.add_argument("--source-path", required=True)
+    agents_domain_contract.add_argument("--domain", required=True)
+    agents_domain_contract.add_argument("--json", action="store_true", help="Compatibility flag; output is JSON.")
+    agents_domain_contract.set_defaults(func=cmd_agents_domain_contract)
 
     return parser

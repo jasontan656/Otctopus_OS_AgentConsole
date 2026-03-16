@@ -12,7 +12,7 @@ from rootfile_runtime import (
     ensure_within_workspace,
     extract_external_agents_part_a,
     find_channel_by_file_kind,
-    inject_owner_into_machine_payload,
+    graft_frontmatter_from_template,
     lint_external_entry,
     lint_managed_entry,
     load_machine_payload,
@@ -197,14 +197,16 @@ def cmd_new_writeback(args: argparse.Namespace) -> int:
             )
             continue
 
-        owner_injected = inject_owner_into_machine_payload(machine_payload, str(entry["owner"]))
         normalized_part_a = upsert_frontmatter_owner(
-            extract_external_agents_part_a(external_text),
+            graft_frontmatter_from_template(
+                extract_external_agents_part_a(external_text),
+                managed_human.read_text(encoding="utf-8"),
+            ),
             str(entry["owner"]),
         )
         write_text(
             managed_human,
-            render_internal_agents_human(normalized_part_a, owner_injected.as_dict()),
+            render_internal_agents_human(normalized_part_a, machine_payload),
             args.dry_run,
         )
         sync_file_to_installed(paths, managed_human, args.dry_run)

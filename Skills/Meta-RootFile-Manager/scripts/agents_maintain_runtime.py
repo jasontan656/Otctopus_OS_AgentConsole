@@ -13,14 +13,18 @@ from rootfile_runtime import (
     _parent_agents_source_path,
     _relative_source_key,
     build_entry,
+    extract_contract_body_from_part_a,
     extract_external_agents_part_a_body,
-    extract_internal_part_a,
+    extract_external_surface_from_internal,
+    extract_reminder_body_from_part_a,
     find_channel_for_source_path,
+    graft_frontmatter_from_template,
     iter_governed_sources,
     lint_managed_entry,
     load_machine_payload,
     render_external_agents,
     render_internal_agents_human,
+    render_part_a_body,
     sync_managed_targets_tree_to_installed,
     upsert_frontmatter_owner,
     write_text,
@@ -34,6 +38,12 @@ MUTATION_KEYWORDS = {
 }
 
 PART_A_SECTION_ALIASES: dict[str, tuple[str, ...]] = {
+    "1. 合同定位": ("1. 合同定位", "合同定位", "hook contract identity", "contract identity"),
+    "2. 一级读取入口": ("2. 一级读取入口", "一级读取入口", "primary contract read", "primary read"),
+    "3. 二级分域读取": ("3. 二级分域读取", "二级分域读取", "secondary domain reads", "domain reads"),
+    "4. 执行约束": ("4. 执行约束", "执行约束", "enforcement", "execution gate"),
+    "1. 环境提醒": ("1. 环境提醒", "环境提醒", "environment reminder"),
+    "2. 协作提醒": ("2. 协作提醒", "协作提醒", "coordination reminder", "repo reminder"),
     "1. 根入口命令": ("1. 根入口命令", "根入口命令", "root entry", "entry command"),
     "2. 技能类任务附加入口": ("2. 技能类任务附加入口", "技能类任务附加入口", "skill task entry"),
     "3. 语言规范": ("3. 语言规范", "语言规范", "language policy"),
@@ -43,30 +53,18 @@ PART_A_SECTION_ALIASES: dict[str, tuple[str, ...]] = {
 }
 
 PAYLOAD_FIELD_ALIASES: dict[str, tuple[str, ...]] = {
-    "default_meta_skill_order": ("default_meta_skill_order", "默认 meta skill 顺序", "meta skill 顺序"),
-    "turn_start_actions": ("turn_start_actions", "turn start actions", "启动动作", "回合开始动作"),
-    "runtime_constraints": ("runtime_constraints", "运行时约束", "runtime constraints"),
-    "repo_local_contract_handoff": ("repo_local_contract_handoff", "repo local contract handoff", "repo 本地 contract 交接"),
-    "turn_end_actions": ("turn_end_actions", "turn end actions", "回合结束动作"),
-    "forbidden_primary_runtime_pattern": (
-        "forbidden_primary_runtime_pattern",
-        "forbidden primary runtime pattern",
-        "禁止主运行时模式",
-    ),
-    "skills_required_techstacks.python_backend": ("python_backend", "python backend", "python 技术栈"),
-    "skills_required_techstacks.vue3_typescript_frontend": (
-        "vue3_typescript_frontend",
-        "vue3 typescript frontend",
-        "vue3 技术栈",
-    ),
-    "execution_modes.READ_EXEC.goal": ("read_exec goal", "READ_EXEC goal", "READ_EXEC 目标"),
-    "execution_modes.READ_EXEC.default_actions": (
+    "turn_start.contract.required_actions": ("turn_start", "turn start actions", "启动动作", "回合开始动作"),
+    "runtime_constraints.contract.rules": ("runtime_constraints", "运行时约束", "runtime constraints"),
+    "repo_handoff.contract.rules": ("repo_handoff", "repo handoff", "repo 本地 contract 交接"),
+    "turn_end.contract.required_actions": ("turn_end", "turn end actions", "回合结束动作"),
+    "execution_modes.contract.READ_EXEC.goal": ("read_exec goal", "READ_EXEC goal", "READ_EXEC 目标"),
+    "execution_modes.contract.READ_EXEC.default_actions": (
         "read_exec default_actions",
         "READ_EXEC default_actions",
         "READ_EXEC 默认动作",
     ),
-    "execution_modes.WRITE_EXEC.goal": ("write_exec goal", "WRITE_EXEC goal", "WRITE_EXEC 目标"),
-    "execution_modes.WRITE_EXEC.default_actions": (
+    "execution_modes.contract.WRITE_EXEC.goal": ("write_exec goal", "WRITE_EXEC goal", "WRITE_EXEC 目标"),
+    "execution_modes.contract.WRITE_EXEC.default_actions": (
         "write_exec default_actions",
         "WRITE_EXEC default_actions",
         "WRITE_EXEC 默认动作",
@@ -175,12 +173,15 @@ def maintain_agents(paths: object, intent: str, *, dry_run: bool = False) -> dic
             return _blocked(response, "block", str(exc))
 
     prefix = _extract_header_prefix(human_text)
-    rendered_external = upsert_frontmatter_owner(
-        render_external_agents(updated_part_a_body, prefix),
-        str(entry["owner"]),
+    rendered_external = render_external_agents(updated_part_a_body, prefix)
+    rendered_human = render_internal_agents_human(
+        upsert_frontmatter_owner(
+            graft_frontmatter_from_template(rendered_external, human_text),
+            str(entry["owner"]),
+        ),
+        updated_payload,
     )
-    rendered_human = render_internal_agents_human(rendered_external, updated_payload)
-    rendered_part_a = extract_internal_part_a(rendered_human)
+    rendered_part_a = extract_external_surface_from_internal(rendered_human)
 
     original_external = source_path.read_text(encoding="utf-8") if source_path.exists() else ""
     original_human = human_text
@@ -439,6 +440,24 @@ def _section_items(part_a_body: str) -> dict[str, list[str]]:
     return sections
 
 
+def _split_part_a_sections(part_a_body: str) -> tuple[dict[str, list[str]], dict[str, list[str]]]:
+    return (
+        _section_items(extract_contract_body_from_part_a(part_a_body)),
+        _section_items(extract_reminder_body_from_part_a(part_a_body)),
+    )
+
+
+def _section_location(part_a_body: str, heading: str) -> str:
+    contract_sections, reminder_sections = _split_part_a_sections(part_a_body)
+    if heading in contract_sections:
+        return "contract"
+    if heading in reminder_sections:
+        return "reminder"
+    if "提醒" in heading:
+        return "reminder"
+    return "contract"
+
+
 def _render_part_a_sections(sections: dict[str, list[str]], original_body: str) -> str:
     ordered_headings = [line.strip() for line in original_body.splitlines() if re.match(r"^\d+\.\s+", line.strip())]
     rendered: list[str] = []
@@ -452,7 +471,17 @@ def _render_part_a_sections(sections: dict[str, list[str]], original_body: str) 
 
 
 def _apply_part_a_mutation(part_a_body: str, heading: str, mutation: dict[str, Any]) -> str:
-    sections = _section_items(part_a_body)
+    contract_body = extract_contract_body_from_part_a(part_a_body)
+    reminder_body = extract_reminder_body_from_part_a(part_a_body)
+    contract_sections = _section_items(contract_body)
+    reminder_sections = _section_items(reminder_body)
+    location = _section_location(part_a_body, heading)
+    if location == "reminder":
+        sections = reminder_sections
+        original_body = reminder_body
+    else:
+        sections = contract_sections
+        original_body = contract_body
     items = sections.setdefault(heading, [])
     operation = mutation["operation"]
     if operation == "replace":
@@ -464,7 +493,13 @@ def _apply_part_a_mutation(part_a_body: str, heading: str, mutation: dict[str, A
         sections[heading] = [item for item in items if item != mutation["text"]]
     elif operation == "add":
         items.append(mutation["text"])
-    return _render_part_a_sections(sections, part_a_body)
+    if location == "reminder":
+        rendered_reminder = _render_part_a_sections(sections, original_body)
+        rendered_contract = _render_part_a_sections(contract_sections, contract_body)
+    else:
+        rendered_contract = _render_part_a_sections(sections, original_body)
+        rendered_reminder = _render_part_a_sections(reminder_sections, reminder_body)
+    return render_part_a_body(rendered_contract, rendered_reminder)
 
 
 def _payload_values_for_field(payload: dict[str, Any], field_path: str) -> list[str]:

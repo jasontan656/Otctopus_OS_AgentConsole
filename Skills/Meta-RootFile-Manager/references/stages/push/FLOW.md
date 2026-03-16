@@ -12,6 +12,7 @@ anchors:
 # Push Workflow
 
 1. Open the internal AGENTS human template.
-2. Extract `<part_A> ... </part_A>`.
-3. Write only that block to the external AGENTS target.
-4. Leave the internal embedded `Part B` untouched.
+2. Render the final visible contract surface from the internal source.
+3. Strip internal frontmatter metadata and the `<part_A> ... </part_A>` shell.
+4. Write only the rendered visible contract surface to the external AGENTS target.
+5. Leave the internal split `Part B` domain blocks untouched.

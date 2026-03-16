@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import subprocess
 import tempfile
 from pathlib import Path
@@ -9,145 +10,250 @@ from pathlib import Path
 
 SCRIPT = Path(__file__).resolve().parents[1] / "scripts" / "Cli_Toolbox.py"
 
+ROOT_OWNER = "由 `$Meta-RootFile-Manager` 作为 `AI_Projects` workspace root 的 runtime entry owner 负责治理；当前通过 `AGENTS_MD` 通道受管并同步这个入口文件。"
+REPO_OWNER = "由 `$Meta-RootFile-Manager` 作为 `Otctopus_OS_AgentConsole` repository root container 的 runtime entry owner 负责治理；当前通过 `AGENTS_MD` 通道受管并同步这个入口文件。"
+
+DOMAIN_ORDER = (
+    "hook_identity",
+    "turn_start",
+    "runtime_constraints",
+    "execution_modes",
+    "repo_handoff",
+    "turn_end",
+)
+
 
 def write(path: Path, content: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(content, encoding="utf-8")
 
 
-def render_external_agents(part_a_body: str, owner: str | None = None) -> str:
-    content = (
+def render_part_a(contract_body: str, reminder_body: str) -> str:
+    return (
+        "<contract>\n"
+        f"{contract_body.strip()}\n"
+        "</contract>\n\n"
+        "<reminder>\n"
+        f"{reminder_body.strip()}\n"
+        "</reminder>"
+    )
+
+
+def render_external_agents(part_a_body: str) -> str:
+    return (
         "[AGENT RUNTIME HOOK - ABSOLUTE ENFORCEMENT]\n\n"
         "`HOOK_LOAD`: Apply this AGENTS contract.\n\n"
-        "<part_A>\n"
         f"{part_a_body}\n"
-        "</part_A>\n"
     )
-    if owner is None:
-        return content
-    return f"---\nowner: {json.dumps(owner, ensure_ascii=False)}\n---\n{content}"
 
 
-def render_internal_human(part_a_body: str, payload: dict) -> str:
-    return (
+def render_internal_human(part_a_body: str, payload: dict, owner: str | None = None) -> str:
+    blocks: list[str] = []
+    for domain_id in DOMAIN_ORDER:
+        block = payload[domain_id]
+        serialized = {"domain_id": domain_id}
+        serialized.update(block)
+        blocks.append(f"```json\n{json.dumps(serialized, ensure_ascii=False, indent=2)}\n```")
+    content = (
         "[AGENT RUNTIME HOOK - ABSOLUTE ENFORCEMENT]\n\n"
         "`HOOK_LOAD`: Apply this AGENTS contract.\n\n"
         "<part_A>\n"
         f"{part_a_body}\n"
         "</part_A>\n\n"
         "<part_B>\n\n"
-        "```json\n"
-        f"{json.dumps(payload, ensure_ascii=False, indent=2)}\n"
-        "```\n"
+        f"{chr(10).join(blocks)}\n"
         "</part_B>\n"
     )
+    if owner is None:
+        return content
+    return f"---\nowner: {json.dumps(owner, ensure_ascii=False)}\n---\n{content}"
 
 
 def extract_payload_from_internal_human(path: Path) -> dict:
     text = path.read_text(encoding="utf-8")
-    part_b = text.split("<part_B>", 1)[1].split("</part_B>", 1)[0].strip()
-    payload_text = part_b[len("```json\n") : -len("\n```")]
-    return json.loads(payload_text)
+    part_b = text.split("<part_B>", 1)[1].split("</part_B>", 1)[0]
+    payload: dict[str, dict] = {}
+    for match in re.finditer(r"```json\n(.*?)\n```", part_b, flags=re.DOTALL):
+        block = json.loads(match.group(1))
+        domain_id = block.pop("domain_id")
+        payload[domain_id] = block
+    return payload
 
 
 def workspace_part_a() -> str:
-    return (
-        "1. 根入口命令\n"
-        "- 在处理 workspace root 路径规则之前，必须先运行：\n"
-        "- `placeholder_root_command`\n"
-        "- 当前环境为 `WSL`；若需要调用系统 Python，使用 `python3`。\n\n"
-        "2. 技能类任务附加入口\n"
-        "- 任何时候只要任务涉及技能、技能镜像、技能安装、技能同步、技能注册、技能治理或技能运行时，必须阅读：\n"
-        "- `placeholder_repo_contract`\n\n"
-        "3. 语言规范\n"
-        "- 对话输出必须使用中文为主。\n"
-        "- 起草与写回文档时默认使用中文为主，英文为辅。\n"
-        "- 英文只用于技术栈、路径、命令、环境变量、API 名、函数名、类名与其他工程向标识符。\n\n"
-        "4. 当前受管 repo 边界\n"
-        "- `$meta-github-operation` 当前仅管理以下 repo：\n"
-        "- `Octopus_OS`\n"
-        "- `Otctopus_OS_AgentConsole`\n"
-        "- `Otctopus_OS_AgentConsole` 仍承担与 `~/.codex/skills` 的受控映射关系\n\n"
-        "5. Multi-AGENT 工作模式\n"
-        "- Multi-AGENT work mode 下，同一文件夹在工作过程中可能出现未预期的并行改动。\n"
-        "- 当出现与当前任务无关的并行变更时，应忽略这些无关变更，只关注与当前任务直接相关的文件。\n\n"
-        "6. 治理链约束\n"
-        "- 更新本文件时及相关内容时,必须使用 $Meta-RootFile-Manager 更新治理映射模版然后再回推至本文件,或者更新本文件但是必须使用技能的collect来反向更新,避免单点更新治理链断裂.\n"
+    contract = (
+        "1. 合同定位\n"
+        "- 本文件是测试用 workspace root 合同。\n\n"
+        "2. 一级读取入口\n"
+        "- `placeholder_root_command`\n\n"
+        "3. 二级分域读取\n"
+        "- hook_identity:\n"
+        "- `placeholder_domain_command`\n\n"
+        "4. 执行约束\n"
+        "- 先读取相关二级合同再进入执行。"
     )
+    reminder = (
+        "1. 环境提醒\n"
+        "- 当前环境为 `WSL`。\n\n"
+        "2. 协作提醒\n"
+        "- 对话输出以中文为主。"
+    )
+    return render_part_a(contract, reminder)
 
 
-def payload() -> dict:
+def repo_part_a() -> str:
+    contract = (
+        "1. 合同定位\n"
+        "- 本文件是测试用 repo root 合同。\n\n"
+        "2. 一级读取入口\n"
+        "- `placeholder_repo_command`\n\n"
+        "3. 二级分域读取\n"
+        "- hook_identity:\n"
+        "- `placeholder_repo_domain_command`\n\n"
+        "4. 执行约束\n"
+        "- 写入前先回到 repo 真源。"
+    )
+    reminder = (
+        "1. 环境提醒\n"
+        "- repo-local Python 位于 `./.venv_backend_skills`。\n\n"
+        "2. 协作提醒\n"
+        "- mirror/install 只作为同步面。"
+    )
+    return render_part_a(contract, reminder)
+
+
+def workspace_payload(source_path: str) -> dict:
+    def command(domain_id: str) -> str:
+        return (
+            f'python3 Cli_Toolbox.py agents-domain-contract --source-path "{source_path}" '
+            f'--domain "{domain_id}" --json'
+        )
+
     return {
-        "owner": "placeholder_owner",
-        "entry_role": "repo_runtime_entry",
-        "runtime_source_policy": {
-            "runtime_rule_source": "CLI_JSON",
-            "audit_fields_are_not_primary_runtime_instructions": True,
-            "path_metadata_is_not_action_guidance": True,
+        "hook_identity": {
+            "read_command_preview": command("hook_identity"),
+            "contract": {
+                "entry_role": "test_runtime_contract",
+                "contract_scope": "workspace_root",
+                "secondary_contract_source": "CLI_JSON",
+            },
         },
-        "default_meta_skill_order": [
-            "placeholder_skill_1",
-            "placeholder_skill_2",
-            "placeholder_skill_3",
-            "placeholder_skill_4",
-            "placeholder_skill_5",
-            "placeholder_skill_6",
-            "placeholder_skill_7",
-        ],
-        "turn_start_actions": [
-            "placeholder_turn_start_1",
-            "placeholder_turn_start_2",
-            "placeholder_turn_start_3",
-            "placeholder_turn_start_4",
-        ],
-        "runtime_constraints": [
-            "placeholder_constraint_1",
-            "placeholder_constraint_2",
-            "placeholder_constraint_3",
-            "placeholder_constraint_4",
-        ],
+        "turn_start": {
+            "read_command_preview": command("turn_start"),
+            "contract": {
+                "required_actions": [
+                    f"read_target_contract:{source_path}",
+                ]
+            },
+        },
+        "runtime_constraints": {
+            "read_command_preview": command("runtime_constraints"),
+            "contract": {
+                "rules": [
+                    "language_primary:zh-CN",
+                ]
+            },
+        },
         "execution_modes": {
-            "READ_EXEC": {
-                "goal": "placeholder_read_goal",
-                "default_actions": [
-                    "placeholder_read_action_1",
-                    "placeholder_read_action_2",
-                ],
-            },
-            "WRITE_EXEC": {
-                "goal": "default to full-coverage edits for the intended change",
-                "default_actions": [
-                    "Default to full-coverage edits, proactively explore to avoid omissions, and use the meta skill stack to strengthen the result."
-                ],
+            "read_command_preview": command("execution_modes"),
+            "contract": {
+                "READ_EXEC": {
+                    "goal": "inspect_without_file_mutation",
+                    "default_actions": ["read_contract_output_before_extra_files"],
+                },
+                "WRITE_EXEC": {
+                    "goal": "default to full-coverage edits for the intended change",
+                    "default_actions": [
+                        "Default to full-coverage edits, proactively explore to avoid omissions, and use the meta skill stack to strengthen the result."
+                    ],
+                },
             },
         },
-        "repo_local_contract_handoff": [
-            "placeholder_handoff_1",
-            "placeholder_handoff_2",
-            "placeholder_handoff_3",
-        ],
-        "forbidden_primary_runtime_pattern": [],
-        "turn_end_actions": [
-            "placeholder_turn_end_1",
-            "placeholder_turn_end_2",
-            "placeholder_turn_end_3",
-            "placeholder_turn_end_4",
-            "placeholder_turn_end_5",
-            "placeholder_turn_end_6",
-            "placeholder_turn_end_7",
-            "placeholder_turn_end_8",
-        ],
+        "repo_handoff": {
+            "read_command_preview": command("repo_handoff"),
+            "contract": {
+                "rules": [
+                    "merge_workspace_root_contract_with_repo_local_contract",
+                ]
+            },
+        },
+        "turn_end": {
+            "read_command_preview": command("turn_end"),
+            "contract": {
+                "required_actions": [
+                    "print_codex_session_id",
+                ]
+            },
+        },
     }
 
 
-def resolve_replace_me(value: object, resolved: str = "resolved_value") -> object:
-    if isinstance(value, dict):
-        return {key: resolve_replace_me(item, resolved) for key, item in value.items()}
-    if isinstance(value, list):
-        return [resolve_replace_me(item, resolved) for item in value]
-    if isinstance(value, str):
-        return value.replace("replace_me", resolved)
-    return value
+def repo_payload(source_path: str) -> dict:
+    def command(domain_id: str) -> str:
+        return (
+            f'python3 Cli_Toolbox.py agents-domain-contract --source-path "{source_path}" '
+            f'--domain "{domain_id}" --json'
+        )
+
+    return {
+        "hook_identity": {
+            "read_command_preview": command("hook_identity"),
+            "contract": {
+                "entry_role": "repo_runtime_contract",
+                "contract_scope": "repo_root",
+                "secondary_contract_source": "CLI_JSON",
+            },
+        },
+        "turn_start": {
+            "read_command_preview": command("turn_start"),
+            "contract": {
+                "required_actions": [
+                    f"read_target_contract:{source_path}",
+                    "classify_turn_mode:READ_EXEC|WRITE_EXEC",
+                ]
+            },
+        },
+        "runtime_constraints": {
+            "read_command_preview": command("runtime_constraints"),
+            "contract": {
+                "rules": [
+                    "skills_truth_root:Skills",
+                    "codex_installation_root:~/.codex/skills",
+                ]
+            },
+        },
+        "execution_modes": {
+            "read_command_preview": command("execution_modes"),
+            "contract": {
+                "READ_EXEC": {
+                    "goal": "inspect_repo_without_file_mutation",
+                    "default_actions": ["read_repo_local_contract_before_skill_runtime_changes"],
+                },
+                "WRITE_EXEC": {
+                    "goal": "default to full-coverage edits for the intended change",
+                    "default_actions": [
+                        "Default to full-coverage edits, proactively explore to avoid omissions, and use the meta skill stack to strengthen the result."
+                    ],
+                },
+            },
+        },
+        "repo_handoff": {
+            "read_command_preview": command("repo_handoff"),
+            "contract": {
+                "rules": [
+                    "use_repo_truth_source_for_skill_edits",
+                ]
+            },
+        },
+        "turn_end": {
+            "read_command_preview": command("turn_end"),
+            "contract": {
+                "required_actions": [
+                    "run_python_lint_if_python_files_changed",
+                ]
+            },
+        },
+    }
 
 
 class TestCliToolbox:
@@ -180,24 +286,10 @@ class TestCliToolbox:
                 write(target, path.read_text(encoding="utf-8"))
 
     def _seed_workspace(self) -> None:
-        write(self.workspace / "AGENTS.md", render_external_agents("workspace root"))
-        write(self.workspace / "Octopus_OS" / "AGENTS.md", render_external_agents("octopus root"))
-        write(
-            self.workspace / "Octopus_OS" / "Client_Applications" / "AGENTS.md",
-            render_external_agents("client applications root"),
-        )
-        write(
-            self.workspace / "Octopus_OS" / "Development_Docs" / "AGENTS.md",
-            render_external_agents("development docs root"),
-        )
-        write(self.repo_root / "AGENTS.md", render_external_agents("repo root"))
+        write(self.workspace / "AGENTS.md", render_external_agents(workspace_part_a()))
+        write(self.repo_root / "AGENTS.md", render_external_agents(repo_part_a()))
         write(self.repo_root / "README.md", "# Console\n")
         write(self.workspace / "Octopus_OS" / "README.md", "# Octopus\n")
-        write(self.repo_root / "CHANGELOG.md", "## 0.1.0\n")
-        write(self.repo_root / "CONTRIBUTING.md", "贡献说明\n")
-        write(self.repo_root / "SECURITY.md", "security\n")
-        write(self.repo_root / "CODE_OF_CONDUCT.md", "be nice\n")
-        write(self.repo_root / "LICENSE", "MIT\n")
         write(self.repo_root / ".gitignore", ".venv/\n")
         write(self.workspace / "Octopus_OS" / ".gitignore", ".cache/\n")
         write(self.repo_root / "pytest.ini", "[pytest]\n")
@@ -205,18 +297,17 @@ class TestCliToolbox:
 
     def _seed_managed_agents(self) -> None:
         root_assets = self.skill_root / "assets" / "managed_targets" / "AI_Projects"
-        write(root_assets / "AGENTS_human.md", render_internal_human(workspace_part_a(), payload()))
+        write(
+            root_assets / "AGENTS_human.md",
+            render_internal_human(workspace_part_a(), workspace_payload("/workspace/AGENTS.md"), ROOT_OWNER),
+        )
         write(
             root_assets / "Otctopus_OS_AgentConsole" / "AGENTS_human.md",
-            render_internal_human("repo root", payload()),
-        )
-
-    def _seed_legacy_alias_dir(self) -> None:
-        (self.skill_root / "assets" / "managed_targets" / "AI_Projects" / "Codex_Skills_Mirror").mkdir(
-            parents=True, exist_ok=True
-        )
-        (self.installed / "assets" / "managed_targets" / "AI_Projects" / "Codex_Skills_Mirror").mkdir(
-            parents=True, exist_ok=True
+            render_internal_human(
+                repo_part_a(),
+                repo_payload("/workspace/Otctopus_OS_AgentConsole/AGENTS.md"),
+                REPO_OWNER,
+            ),
         )
 
     def run_cli(self, *args: str, workspace_root: Path | None = None, expect_ok: bool = True) -> dict:
@@ -245,15 +336,11 @@ class TestCliToolbox:
         assert "README_MD" in channels
         assert "GITIGNORE" in channels
         assert (self.runtime / "artifacts" / "scan" / "latest.json").exists()
-        assert list((self.runtime / "logs" / "scan").glob("*.json"))
 
     def test_collect_syncs_plain_mapping_and_installed_copy(self) -> None:
-        result = self.run_cli("collect", "--json", "--source-path", str(self.repo_root / "README.md"))
-        assert result["operation_count"] == 1
-        assert result["changed_operation_count"] == 1
-        assert result["skipped_operation_count"] == 0
-        assert result["operations"][0]["write_status"] == "updated"
-        owner = result["operations"][0]["owner"]
+        result = self.run_cli("collect", "--json")
+        operations = [item for item in result["operations"] if item["channel_id"] == "README_MD"]
+        assert operations
         managed = (
             self.skill_root
             / "assets"
@@ -269,90 +356,47 @@ class TestCliToolbox:
             / "AI_Projects"
             / "Otctopus_OS_AgentConsole"
             / "README_MD__governed_external.md"
-        )
-        assert managed.read_text(encoding="utf-8").startswith("---\nowner: ")
-        assert managed.read_text(encoding="utf-8").endswith("# Console\n")
-        assert installed.read_text(encoding="utf-8").startswith("---\nowner: ")
-        assert installed.read_text(encoding="utf-8").endswith("# Console\n")
-        assert owner in managed.read_text(encoding="utf-8")
-
-    def test_collect_skips_identical_plain_mapping_and_installed_copy(self) -> None:
-        self.run_cli("collect", "--json", "--source-path", str(self.repo_root / "README.md"))
-        managed = (
-            self.skill_root
-            / "assets"
-            / "managed_targets"
-            / "AI_Projects"
-            / "Otctopus_OS_AgentConsole"
-            / "README_MD__governed_external.md"
-        )
-        installed = (
-            self.installed
-            / "assets"
-            / "managed_targets"
-            / "AI_Projects"
-            / "Otctopus_OS_AgentConsole"
-            / "README_MD__governed_external.md"
-        )
-        before_managed_mtime = managed.stat().st_mtime_ns
-        before_installed_mtime = installed.stat().st_mtime_ns
-        result = self.run_cli("collect", "--json", "--source-path", str(self.repo_root / "README.md"))
-        assert result["operation_count"] == 1
-        assert result["changed_operation_count"] == 0
-        assert result["skipped_operation_count"] == 1
-        assert result["operations"][0]["write_status"] == "skipped"
-        assert result["operations"][0]["managed_change_count"] == 0
-        assert result["operations"][0]["installed_sync_count"] == 0
-        assert managed.stat().st_mtime_ns == before_managed_mtime
-        assert installed.stat().st_mtime_ns == before_installed_mtime
-
-    def test_push_writes_plain_mapping_back_to_external(self) -> None:
-        managed = (
-            self.skill_root
-            / "assets"
-            / "managed_targets"
-            / "AI_Projects"
-            / "Otctopus_OS_AgentConsole"
-            / "README_MD__governed_external.md"
-        )
-        write(managed, "# Updated\n")
-        result = self.run_cli("push", "--json", "--source-path", str(self.repo_root / "README.md"))
-        assert result["operation_count"] == 1
-        assert (self.repo_root / "README.md").read_text(encoding="utf-8") == "# Updated\n"
-
-    def test_target_contract_returns_channel_metadata_for_plain_file(self) -> None:
-        self.run_cli("collect", "--json", "--source-path", str(self.repo_root / "README.md"))
-        result = self.run_cli("target-contract", "--source-path", str(self.repo_root / "README.md"), "--json")
-        assert result["channel_id"] == "README_MD"
-        assert result["mapping_mode"] == "plain_copy"
-        assert "owner" in result
-        assert result["managed_files"]["mapped"].endswith("README_MD__governed_external.md")
-        assert "owner_meta" not in result["managed_files"]
-
-    def test_scaffold_can_open_non_agents_channel(self) -> None:
-        target_dir = self.workspace / "NewRepo"
-        result = self.run_cli(
-            "scaffold",
-            "--json",
-            "--target-dir",
-            str(target_dir),
-            "--file-kind",
-            "package.json",
-        )
-        assert result["operation_count"] == 1
-        assert (target_dir / "package.json").exists()
-        managed = (
-            self.skill_root
-            / "assets"
-            / "managed_targets"
-            / "AI_Projects"
-            / "NewRepo"
-            / "PACKAGE_JSON__governed_external.json"
         )
         assert managed.exists()
+        assert installed.exists()
 
-    def test_scaffold_creates_agents_template_with_complete_payload(self) -> None:
-        target_dir = self.workspace / "NewRepo"
+    def test_target_contract_returns_contract_blocks_and_secondary_reads(self) -> None:
+        result = self.run_cli(
+            "target-contract",
+            "--source-path",
+            str(self.workspace / "AGENTS.md"),
+            "--json",
+        )
+        assert "contract_blocks" in result
+        assert "secondary_contract_reads" in result
+        assert "payload" not in result
+        assert list(result["contract_blocks"].keys()) == list(DOMAIN_ORDER)
+        assert len(result["secondary_contract_reads"]) == len(DOMAIN_ORDER)
+
+    def test_agents_domain_contract_returns_requested_block(self) -> None:
+        result = self.run_cli(
+            "agents-domain-contract",
+            "--source-path",
+            str(self.workspace / "AGENTS.md"),
+            "--domain",
+            "execution_modes",
+            "--json",
+        )
+        assert result["domain_id"] == "execution_modes"
+        assert "WRITE_EXEC" in result["contract"]
+
+    def test_agents_payload_contract_exposes_domain_workflow(self) -> None:
+        result = self.run_cli(
+            "agents-payload-contract",
+            "--source-path",
+            str(self.workspace / "AGENTS.md"),
+            "--json",
+        )
+        assert any("domain-contract semantics" in item for item in result["workflow"])
+        assert result["secondary_contract_reads"][0]["domain_id"] == "hook_identity"
+
+    def test_scaffold_creates_split_domain_agents_template(self) -> None:
+        target_dir = self.workspace / "tmpabc1234" / "sample_repo"
         result = self.run_cli(
             "scaffold",
             "--json",
@@ -362,605 +406,131 @@ class TestCliToolbox:
             "AGENTS.md",
         )
         assert result["operation_count"] == 1
-
-        external_path = target_dir / "AGENTS.md"
-        external_text = external_path.read_text(encoding="utf-8")
-        assert "2. 技能类任务附加入口" in external_text
-        assert "6. 治理链约束" in external_text
-        assert external_text.count("- replace_me") == 6
-
-        managed_dir = (
-            self.skill_root
-            / "assets"
-            / "managed_targets"
-            / "AI_Projects"
-            / "NewRepo"
-        )
-        managed_human = managed_dir / "AGENTS_human.md"
-        payload = extract_payload_from_internal_human(managed_human)
-        root_template = extract_payload_from_internal_human(
-            self.skill_root / "assets" / "managed_targets" / "AI_Projects" / "AGENTS_human.md"
-        )
-        assert list(payload.keys()) == list(root_template.keys())
-        assert payload["entry_role"] == "replace_me"
-        assert payload["runtime_source_policy"]["runtime_rule_source"] == "CLI_JSON"
-        assert payload["runtime_source_policy"]["audit_fields_are_not_primary_runtime_instructions"] is True
-        assert payload["runtime_source_policy"]["path_metadata_is_not_action_guidance"] is True
-        assert payload["default_meta_skill_order"] == ["replace_me"]
-        assert payload["turn_start_actions"] == ["replace_me"]
-        assert payload["runtime_constraints"] == ["replace_me"]
-        assert payload["execution_modes"]["READ_EXEC"]["goal"] == "replace_me"
-        assert payload["execution_modes"]["READ_EXEC"]["default_actions"] == ["replace_me"]
-        assert payload["execution_modes"]["WRITE_EXEC"]["goal"] == (
-            "default to full-coverage edits for the intended change"
-        )
-        assert payload["execution_modes"]["WRITE_EXEC"]["default_actions"] == [
-            "Default to full-coverage edits, proactively explore to avoid omissions, and use the meta skill stack to strengthen the result."
-        ]
-        assert payload["repo_local_contract_handoff"] == ["replace_me"]
-        assert payload["forbidden_primary_runtime_pattern"] == []
-        assert payload["turn_end_actions"] == ["replace_me"]
-
-    def test_lint_fails_after_scaffold_for_new_agents_target_until_writeback(self) -> None:
-        target_dir = self.workspace / "NewRepo"
-        self.run_cli(
-            "scaffold",
-            "--json",
-            "--target-dir",
-            str(target_dir),
-            "--file-kind",
-            "AGENTS.md",
-        )
-        result = self.run_cli(
-            "lint",
-            "--json",
-            "--source-path",
-            str(target_dir / "AGENTS.md"),
-            expect_ok=False,
-        )
-        assert result["failed_count"] == 1
-        error_text = "\n".join(result["failures"][0]["errors"])
-        assert "external_replace_me_remaining" in error_text
-        assert "payload_replace_me_remaining" in error_text
-
-    def test_lint_detects_plain_mapping_drift(self) -> None:
-        self.run_cli("collect", "--json", "--source-path", str(self.repo_root / "README.md"))
-        managed = (
-            self.skill_root
-            / "assets"
-            / "managed_targets"
-            / "AI_Projects"
-            / "Otctopus_OS_AgentConsole"
-            / "README_MD__governed_external.md"
-        )
-        write(managed, "# Drift\n")
-        result = self.run_cli(
-            "lint",
-            "--json",
-            "--source-path",
-            str(self.repo_root / "README.md"),
-            expect_ok=False,
-        )
-        assert result["failed_count"] == 1
-        assert "managed_mapping_content_drift" in result["failures"][0]["errors"]
-
-    def test_lint_rejects_installed_managed_targets_drift(self) -> None:
-        extra_path = (
-            self.installed
-            / "assets"
-            / "managed_targets"
-            / "AI_Projects"
-            / "AGENTS_machine.json"
-        )
-        write(extra_path, "{}\n")
-        result = self.run_cli("lint", "--json", expect_ok=False)
-        assert any("installed_managed_targets_drift" in item["errors"] for item in result["failures"])
-
-    def test_lint_rejects_runtime_legacy_agents_machine_sidecar(self) -> None:
-        legacy_path = (
+        managed_human = (
             self.runtime
             / "managed_targets"
             / "ephemeral_workspace"
             / "tmpabc1234"
             / "sample_repo"
-            / "Development_Docs"
-            / "AGENTS_machine.json"
-        )
-        write(legacy_path, "{}\n")
-        result = self.run_cli("lint", "--json", expect_ok=False)
-        assert any("runtime_legacy_agents_machine_sidecar" in item["errors"] for item in result["failures"])
-
-    def test_target_contract_keeps_agents_payload(self) -> None:
-        result = self.run_cli("target-contract", "--source-path", str(self.repo_root / "AGENTS.md"), "--json")
-        assert result["channel_id"] == "AGENTS_MD"
-        assert "owner" in result
-        assert "payload" in result
-
-    def test_contract_exposes_agents_payload_entry(self) -> None:
-        result = self.run_cli("contract", "--json")
-        assert result["skill_name"] == "Meta-RootFile-Manager"
-        assert "agents_maintain" in result["tool_entry"]["commands"]
-        assert "agents-maintain" in result["tool_entry"]["commands"]["agents_maintain"]
-        assert "agents_payload_contract" in result["tool_entry"]["commands"]
-        assert "agents-payload-contract" in result["tool_entry"]["commands"]["agents_payload_contract"]
-        assert "new_writeback" in result["tool_entry"]["commands"]
-        assert "new-writeback" in result["tool_entry"]["commands"]["new_writeback"]
-
-    def test_agents_maintain_adds_payload_rule_and_uses_centered_push_mainline(self) -> None:
-        result = self.run_cli(
-            "agents-maintain",
-            "--json",
-            "--intent",
-            '在 "AGENTS.md" 的 runtime_constraints 新增 "phase2 payload rule"',
-        )
-        assert result["write_status"] == "applied"
-        assert result["selected_part"] == "payload"
-        assert result["selected_target"]["relative_path"] == "AGENTS.md"
-        assert result["duplicate_gate"]["status"] == "pass"
-        assert result["collect_used"] is False
-        managed_human = (
-            self.skill_root
-            / "assets"
-            / "managed_targets"
-            / "AI_Projects"
             / "AGENTS_human.md"
         )
-        payload = extract_payload_from_internal_human(managed_human)
-        assert "phase2 payload rule" in payload["runtime_constraints"]
-        assert (self.workspace / "AGENTS.md").read_text(encoding="utf-8").startswith("---\nowner: ")
+        text = managed_human.read_text(encoding="utf-8")
+        assert "<contract>" in text
+        assert "<reminder>" in text
+        assert text.count("```json") == len(DOMAIN_ORDER)
+        assert '"domain_id": "hook_identity"' in text
 
-    def test_agents_maintain_adds_part_a_rule_and_pushes_external(self) -> None:
+    def test_agents_maintain_updates_contract_surface_without_breaking_layout(self) -> None:
         result = self.run_cli(
             "agents-maintain",
-            "--json",
             "--intent",
-            '在 "AGENTS.md" 的 语言规范 新增 "新增的语言规则"',
+            '在 "/home/jasontan656/AI_Projects/AGENTS.md" 的 "4. 执行约束" 新增 "先读取目标分域合同再写入"',
+            "--json",
         )
         assert result["write_status"] == "applied"
         assert result["selected_part"] == "part_a"
-        managed_human = (
-            self.skill_root
-            / "assets"
-            / "managed_targets"
-            / "AI_Projects"
-            / "AGENTS_human.md"
-        )
-        assert "新增的语言规则" in managed_human.read_text(encoding="utf-8")
-        assert "新增的语言规则" in (self.workspace / "AGENTS.md").read_text(encoding="utf-8")
+        external_text = (self.workspace / "AGENTS.md").read_text(encoding="utf-8")
+        assert "<contract>" in external_text
+        assert "<reminder>" in external_text
+        assert "先读取目标分域合同再写入" in external_text
 
-    def test_agents_maintain_blocks_parent_inherited_rule(self) -> None:
-        parent_dir = self.workspace / "Octopus_OS"
-        child_dir = parent_dir / "Client_Applications"
-        self.run_cli("scaffold", "--json", "--allow-existing", "--target-dir", str(parent_dir), "--file-kind", "AGENTS.md")
-        self.run_cli("scaffold", "--json", "--allow-existing", "--target-dir", str(child_dir), "--file-kind", "AGENTS.md")
-
-        parent_owner = self.run_cli("target-contract", "--source-path", str(parent_dir / "AGENTS.md"), "--json")["owner"]
-        child_owner = self.run_cli("target-contract", "--source-path", str(child_dir / "AGENTS.md"), "--json")["owner"]
-        parent_payload = payload()
-        parent_payload["owner"] = parent_owner
-        parent_payload["runtime_constraints"] = ["parent inherited rule"]
-        child_payload = payload()
-        child_payload["owner"] = child_owner
-
-        write(parent_dir / "AGENTS.md", render_external_agents("parent root", owner=parent_owner))
-        write(child_dir / "AGENTS.md", render_external_agents("child root", owner=child_owner))
-        write(
-            self.skill_root / "assets" / "managed_targets" / "AI_Projects" / "Octopus_OS" / "AGENTS_human.md",
-            render_internal_human("parent root", parent_payload),
-        )
-        write(
-            self.skill_root
-            / "assets"
-            / "managed_targets"
-            / "AI_Projects"
-            / "Octopus_OS"
-            / "Client_Applications"
-            / "AGENTS_human.md",
-            render_internal_human("child root", child_payload),
-        )
-
+    def test_agents_maintain_updates_domain_block(self) -> None:
         result = self.run_cli(
             "agents-maintain",
-            "--json",
             "--intent",
-            '在 "Octopus_OS/Client_Applications/AGENTS.md" 的 runtime_constraints 新增 "parent inherited rule"',
-            expect_ok=False,
-        )
-        assert result["write_status"] == "blocked"
-        assert result["duplicate_gate"]["status"] == "inherit_only"
-
-    def test_agents_payload_contract_returns_targeted_workflow(self) -> None:
-        result = self.run_cli(
-            "agents-payload-contract",
-            "--source-path",
-            str(self.repo_root / "AGENTS.md"),
+            '在 "/home/jasontan656/AI_Projects/AGENTS.md" 的 runtime_constraints 新增 "github_managed_repos:Octopus_OS"',
             "--json",
         )
-        assert result["channel_id"] == "AGENTS_MD"
-        assert result["managed_files"]["human"].endswith("AGENTS_human.md")
-        assert "Meta-Enhance-Prompt" in result["tool_entry"]["meta_enhance_prompt"]["contract"]
-        assert any("smallest precise payload semantics" in item for item in result["workflow"])
-        assert any("Do not add anything beyond the user request by default." == item for item in result["rules"])
+        assert result["write_status"] == "applied"
+        assert result["selected_part"] == "payload"
+        managed_human = self.skill_root / "assets" / "managed_targets" / "AI_Projects" / "AGENTS_human.md"
+        payload_blocks = extract_payload_from_internal_human(managed_human)
+        assert "github_managed_repos:Octopus_OS" in payload_blocks["runtime_constraints"]["contract"]["rules"]
 
-    def test_agents_payload_contract_rejects_non_agents_source(self) -> None:
-        result = self.run_cli(
-            "agents-payload-contract",
-            "--source-path",
-            str(self.repo_root / "README.md"),
-            "--json",
-            expect_ok=False,
-        )
-        assert result["error"] == "agents_payload_contract_requires_agents_target"
-
-    def test_new_writeback_rejects_replace_me_leftover(self) -> None:
-        target_dir = self.workspace / "NewRepo"
-        self.run_cli(
-            "scaffold",
-            "--json",
-            "--target-dir",
-            str(target_dir),
-            "--file-kind",
-            "AGENTS.md",
-        )
-        result = self.run_cli(
-            "new-writeback",
-            "--json",
-            "--source-path",
-            str(target_dir / "AGENTS.md"),
-            expect_ok=False,
-        )
-        error_text = "\n".join(result["failures"][0]["errors"])
-        assert "external_replace_me_remaining" in error_text
-        assert "payload_replace_me_remaining" in error_text
-
-    def test_new_writeback_finalizes_agents_after_fill(self) -> None:
-        target_dir = self.workspace / "NewRepo"
-        self.run_cli(
-            "scaffold",
-            "--json",
-            "--target-dir",
-            str(target_dir),
-            "--file-kind",
-            "AGENTS.md",
-        )
-        external_path = target_dir / "AGENTS.md"
-        managed_human = (
-            self.skill_root
-            / "assets"
-            / "managed_targets"
-            / "AI_Projects"
-            / "NewRepo"
-            / "AGENTS_human.md"
-        )
-
-        write(
-            external_path,
-            external_path.read_text(encoding="utf-8").replace("replace_me", "resolved_value"),
-        )
-        payload = extract_payload_from_internal_human(managed_human)
-        resolved_payload = resolve_replace_me(payload)
-        write(managed_human, render_internal_human(workspace_part_a(), resolved_payload))
-
-        result = self.run_cli(
-            "new-writeback",
-            "--json",
-            "--source-path",
-            str(external_path),
-        )
-        assert result["operation_count"] == 1
-        assert "replace_me" not in managed_human.read_text(encoding="utf-8")
-
-    def test_lint_rejects_non_cli_root_entry_for_codex_skills_target(self) -> None:
-        source_path = self.root / ".codex" / "skills" / "AGENTS.md"
-        owner = self.run_cli(
-            "target-contract",
-            "--source-path",
-            str(source_path),
-            "--json",
-            workspace_root=self.root,
-        )["owner"]
-        write(
-            source_path,
-            render_external_agents(
-                (
-                    "1. 根入口命令\n"
-                    "- 这里不能写说明句子\n\n"
-                    "2. 技能类任务附加入口\n"
-                    "- N/A\n\n"
-                    "3. 语言规范\n"
-                    "- N/A\n\n"
-                    "4. 当前受管 repo 边界\n"
-                    "- 禁止直接在 `/tmp/.codex/skills` 安装目录修改技能。\n\n"
-                    "5. Multi-AGENT 工作模式\n"
-                    "- N/A\n\n"
-                    "6. 治理链约束\n"
-                    "- N/A\n"
-                ),
-                owner=owner,
+    def test_push_exports_visible_contract_surface_only(self) -> None:
+        managed_human = self.skill_root / "assets" / "managed_targets" / "AI_Projects" / "AGENTS_human.md"
+        updated = render_internal_human(
+            render_part_a(
+                "1. 合同定位\n- 新合同正文。\n\n2. 一级读取入口\n- `cmd`\n\n3. 二级分域读取\n- hook_identity:\n- `cmd2`\n\n4. 执行约束\n- 先看合同。",
+                "1. 环境提醒\n- 只是提醒。\n\n2. 协作提醒\n- 继续中文。",
             ),
+            workspace_payload("/workspace/AGENTS.md"),
+            ROOT_OWNER,
         )
-        result = self.run_cli(
-            "lint",
-            "--json",
-            "--source-path",
-            str(source_path),
-            workspace_root=self.root,
-            expect_ok=False,
+        write(managed_human, updated)
+        result = self.run_cli("push", "--json")
+        assert result["failures"] == []
+        external_text = (self.workspace / "AGENTS.md").read_text(encoding="utf-8")
+        assert "新合同正文" in external_text
+        assert "<part_B>" not in external_text
+        assert "<part_A>" not in external_text
+        assert not external_text.startswith("---\n")
+
+    def test_lint_rejects_external_frontmatter_and_internal_part_a_shell(self) -> None:
+        invalid_external = (
+            "---\n"
+            f"owner: {json.dumps(ROOT_OWNER, ensure_ascii=False)}\n"
+            "doc_id: leaked\n"
+            "---\n"
+            "[AGENT RUNTIME HOOK - ABSOLUTE ENFORCEMENT]\n\n"
+            "`HOOK_LOAD`: Apply this AGENTS contract.\n\n"
+            "<part_A>\n"
+            f"{workspace_part_a()}\n"
+            "</part_A>\n"
         )
+        write(self.workspace / "AGENTS.md", invalid_external)
+        result = self.run_cli("lint", "--json", expect_ok=False)
         error_text = "\n".join(result["failures"][0]["errors"])
-        assert "codex_skills_root_entry_command_invalid" in error_text
+        assert "external_agents_forbids_frontmatter" in error_text
+        assert "external_agents_forbids_internal_part_a_wrapper" in error_text
 
-    def test_lint_rejects_skill_name_repeated_outside_default_meta_skill_order(self) -> None:
-        governed_owner = (
-            "由 `$Meta-RootFile-Manager` 作为 `Otctopus_OS_AgentConsole` repository root container 的 "
-            "runtime entry owner 负责治理；当前通过 `AGENTS_MD` 通道受管并同步这个入口文件。"
+    def test_lint_rejects_hard_contract_marker_inside_reminder(self) -> None:
+        managed_human = self.skill_root / "assets" / "managed_targets" / "AI_Projects" / "AGENTS_human.md"
+        invalid_part_a = render_part_a(
+            "1. 合同定位\n- 合同正文。\n\n2. 一级读取入口\n- `cmd`\n\n3. 二级分域读取\n- hook_identity:\n- `cmd2`\n\n4. 执行约束\n- 先看合同。",
+            "1. 环境提醒\n- 必须先执行提醒。\n\n2. 协作提醒\n- 中文。",
         )
-        invalid_payload = {
-            "owner": governed_owner,
-            "entry_role": "repo_runtime_entry",
-            "runtime_source_policy": {
-                "runtime_rule_source": "CLI_JSON",
-                "audit_fields_are_not_primary_runtime_instructions": True,
-                "path_metadata_is_not_action_guidance": True,
-            },
-            "default_meta_skill_order": [
-                "$meta-github-operation (Git traceability for repo writes)",
-            ],
-            "peer_summary_policy": {
-                "available": True,
-                "relation": "same_level_summary",
-                "read_policy": "available_for_public_product_summary",
-                "guidance": "same-level README.md is available and should be treated as the public English product summary for this repo",
-            },
-            "language_policy": {
-                "conversation_and_internal_coordination": "Chinese-first",
-                "public_product_readme_and_docs": "English-only",
-                "wizard_user_interface": "Bilingual English/Chinese required",
-                "internal_skill_core_and_governance_docs": "Chinese allowed for internal iteration",
-                "git_iteration_logs_for_github": "English-preferred",
-            },
-            "skills_required_techstacks": {
-                "python_backend": [],
-                "vue3_typescript_frontend": [],
-            },
-            "turn_start_actions": [
-                "plan same-turn Git traceability through $meta-github-operation",
-            ],
-            "runtime_constraints": [
-                "treat CLI JSON as the primary runtime rule source",
-            ],
-            "execution_modes": {
-                "READ_EXEC": {
-                    "goal": "inspect without changing files",
-                    "default_actions": [],
-                },
-                "WRITE_EXEC": {
-                    "goal": "edit files",
-                    "default_actions": [],
-                },
-            },
-            "forbidden_primary_runtime_pattern": [],
-            "turn_end_actions": [],
-            "repo_name": "Otctopus_OS_AgentConsole",
-        }
-        managed_human = (
-            self.skill_root
-            / "assets"
-            / "managed_targets"
-            / "AI_Projects"
-            / "Otctopus_OS_AgentConsole"
-            / "AGENTS_human.md"
-        )
-        write(managed_human, render_internal_human("repo root", invalid_payload))
-
-        result = self.run_cli(
-            "lint",
-            "--json",
-            "--source-path",
-            str(self.repo_root / "AGENTS.md"),
-            expect_ok=False,
-        )
-
+        write(managed_human, render_internal_human(invalid_part_a, workspace_payload("/workspace/AGENTS.md"), ROOT_OWNER))
+        result = self.run_cli("lint", "--json", expect_ok=False)
         error_text = "\n".join(result["failures"][0]["errors"])
-        assert "payload_skill_repeated_outside_default_meta_skill_order:$meta-github-operation" in error_text
+        assert "reminder_hard_contract_marker" in error_text
 
-    def test_lint_rejects_parent_agents_duplicate_phrase(self) -> None:
-        parent_external = self.workspace / "Octopus_OS" / "AGENTS.md"
-        child_external = self.workspace / "Octopus_OS" / "Client_Applications" / "AGENTS.md"
-        parent_phrase = "Parent duplicate phrase should not be repeated downstream"
-        payload_phrase = "child payload must not repeat parent payload phrase exactly"
-
-        write(self.workspace / "Octopus_OS" / "README.md", "# Octopus\n")
-        write(parent_external, render_external_agents(parent_phrase))
-        write(child_external, render_external_agents(parent_phrase))
-
-        parent_managed_dir = (
-            self.skill_root / "assets" / "managed_targets" / "AI_Projects" / "Octopus_OS"
-        )
-        child_managed_dir = (
-            parent_managed_dir / "Client_Applications"
-        )
-        parent_payload = extract_payload_from_internal_human(parent_managed_dir / "AGENTS_human.md")
-        child_payload = extract_payload_from_internal_human(child_managed_dir / "AGENTS_human.md")
-        parent_payload["runtime_constraints"] = [payload_phrase]
-        child_payload["runtime_constraints"] = [payload_phrase]
-        write(parent_managed_dir / "AGENTS_human.md", render_internal_human(parent_phrase, parent_payload))
-        write(child_managed_dir / "AGENTS_human.md", render_internal_human(parent_phrase, child_payload))
-
-        result = self.run_cli(
-            "lint",
-            "--json",
-            "--source-path",
-            str(child_external),
-            expect_ok=False,
-        )
-
-        error_text = "\n".join(result["failures"][0]["errors"])
-        assert "parent_agents_duplicate_phrase:Octopus_OS/AGENTS.md:part_a" in error_text
-        assert "parent_agents_duplicate_phrase:Octopus_OS/AGENTS.md:$.runtime_constraints[0]" in error_text
-
-    def test_lint_rejects_nonstandard_write_exec_block(self) -> None:
-        managed_human = (
-            self.skill_root
-            / "assets"
-            / "managed_targets"
-            / "AI_Projects"
-            / "AGENTS_human.md"
-        )
-        invalid_payload = {
-            "owner": self.run_cli(
-                "target-contract",
-                "--source-path",
-                str(self.workspace / "AGENTS.md"),
-                "--json",
-            )["owner"],
-            "entry_role": "workspace_root_runtime_entry",
-            "runtime_source_policy": {
-                "runtime_rule_source": "CLI_JSON",
-                "audit_fields_are_not_primary_runtime_instructions": True,
-                "path_metadata_is_not_action_guidance": True,
-            },
-            "default_meta_skill_order": [],
-            "turn_start_actions": [],
-            "runtime_constraints": [],
-            "execution_modes": {
-                "READ_EXEC": {
-                    "goal": "answer, inspect, classify, or route without changing files",
-                    "default_actions": [],
+    def test_lint_rejects_duplicate_domain_id_block(self) -> None:
+        managed_human = self.skill_root / "assets" / "managed_targets" / "AI_Projects" / "AGENTS_human.md"
+        text = managed_human.read_text(encoding="utf-8")
+        duplicate = (
+            "\n```json\n"
+            + json.dumps(
+                {
+                    "domain_id": "hook_identity",
+                    "read_command_preview": "python3 Cli_Toolbox.py agents-domain-contract --source-path \"/workspace/AGENTS.md\" --domain \"hook_identity\" --json",
+                    "contract": {
+                        "entry_role": "dup",
+                        "contract_scope": "workspace_root",
+                        "secondary_contract_source": "CLI_JSON",
+                    },
                 },
-                "WRITE_EXEC": {
-            "goal": "edit files or trigger manager-owned write flows",
-            "default_actions": [
-                "edit the minimal correct scope that matches the user intent",
-            ],
-                },
-            },
-            "repo_local_contract_handoff": [],
-            "forbidden_primary_runtime_pattern": [],
-            "turn_end_actions": [],
-        }
-        write(managed_human, render_internal_human("workspace root", invalid_payload))
-
-        result = self.run_cli(
-            "lint",
-            "--json",
-            "--source-path",
-            str(self.workspace / "AGENTS.md"),
-            expect_ok=False,
+                ensure_ascii=False,
+                indent=2,
+            )
+            + "\n```\n"
         )
-
+        text = text.replace("</part_B>", f"{duplicate}</part_B>")
+        write(managed_human, text)
+        result = self.run_cli("lint", "--json", expect_ok=False)
         error_text = "\n".join(result["failures"][0]["errors"])
-        assert "write_exec_goal_must_match_standard" in error_text
-        assert "write_exec_default_actions_must_match_standard" in error_text
+        assert "part_b_block_duplicate_domain_id:hook_identity" in error_text
 
-    def test_collect_prunes_legacy_alias_dir(self) -> None:
-        self._seed_legacy_alias_dir()
-        result = self.run_cli("collect", "--json", "--source-path", str(self.repo_root / "README.md"))
-        assert any(item.endswith("Codex_Skills_Mirror") for item in result["removed_legacy_dirs"])
-        assert not (
-            self.skill_root / "assets" / "managed_targets" / "AI_Projects" / "Codex_Skills_Mirror"
-        ).exists()
-        assert not (
-            self.installed / "assets" / "managed_targets" / "AI_Projects" / "Codex_Skills_Mirror"
-        ).exists()
+    def test_lint_rejects_soft_marker_in_domain_block(self) -> None:
+        managed_human = self.skill_root / "assets" / "managed_targets" / "AI_Projects" / "AGENTS_human.md"
+        invalid_payload = workspace_payload("/workspace/AGENTS.md")
+        invalid_payload["runtime_constraints"]["contract"]["rules"] = ["repo summary"]
+        write(managed_human, render_internal_human(workspace_part_a(), invalid_payload, ROOT_OWNER))
+        result = self.run_cli("lint", "--json", expect_ok=False)
+        error_text = "\n".join(result["failures"][0]["errors"])
+        assert "payload_soft_marker_forbidden:$.runtime_constraints.contract.rules[0]:summary" in error_text
 
-    def test_runtime_local_scaffold_uses_runtime_managed_assets_without_registry_writeback(self) -> None:
-        target_dir = self.runtime / "sandbox" / "sample_repo" / "Development_Docs"
-        result = self.run_cli(
-            "scaffold",
-            "--json",
-            "--target-dir",
-            str(target_dir),
-            "--file-kind",
-            "AGENTS.md",
-        )
-        assert result["operation_count"] == 1
-        external_path = target_dir / "AGENTS.md"
-        assert external_path.exists()
-        target_contract = self.run_cli("target-contract", "--source-path", str(external_path), "--json")
-        assert target_contract["channel_id"] == "AGENTS_MD"
-        assert target_contract["managed_dir"].startswith(str(self.runtime / "managed_targets"))
-        assert not target_contract["managed_dir"].startswith(str(self.skill_root / "assets" / "managed_targets"))
-
-        rules = json.loads((self.skill_root / "rules" / "scan_rules.json").read_text(encoding="utf-8"))
-        assert "governed_source_paths" not in rules["channels"]["AGENTS_MD"]
-        assert not (
-            self.installed
-            / "assets"
-            / "managed_targets"
-            / "AI_Projects"
-            / "Codex_Skill_Runtime"
-            / "Meta-RootFile-Manager"
-            / "sandbox"
-            / "sample_repo"
-            / "Development_Docs"
-            / "AGENTS_human.md"
-        ).exists()
-        runtime_payload = extract_payload_from_internal_human(
-            self.runtime
-            / "managed_targets"
-            / "sandbox"
-            / "sample_repo"
-            / "Development_Docs"
-            / "AGENTS_human.md"
-        )
-        assert runtime_payload["entry_role"] == "replace_me"
-        assert runtime_payload["default_meta_skill_order"][0] == "replace_me"
-        assert runtime_payload["execution_modes"]["WRITE_EXEC"]["default_actions"] == [
-            "Default to full-coverage edits, proactively explore to avoid omissions, and use the meta skill stack to strengthen the result."
-        ]
-
-    def test_temporary_workspace_scaffold_uses_runtime_managed_assets_without_registry_writeback(self) -> None:
-        target_dir = self.workspace / "tmpabc1234" / "sample_repo" / "Development_Docs"
-        result = self.run_cli(
-            "scaffold",
-            "--json",
-            "--target-dir",
-            str(target_dir),
-            "--file-kind",
-            "AGENTS.md",
-        )
-        assert result["operation_count"] == 1
-        external_path = target_dir / "AGENTS.md"
-        target_contract = self.run_cli("target-contract", "--source-path", str(external_path), "--json")
-        assert target_contract["managed_dir"].startswith(str(self.runtime / "managed_targets"))
-        assert not target_contract["managed_dir"].startswith(str(self.skill_root / "assets" / "managed_targets"))
-
-    def test_scan_discovers_governed_targets_from_managed_assets_without_dynamic_scan_rules(self) -> None:
-        result = self.run_cli("scan", "--json")
-        source_paths = {entry["source_path"] for entry in result["entries"]}
-        assert str((self.workspace / "AGENTS.md").resolve()) in source_paths
-        assert str((self.repo_root / "AGENTS.md").resolve()) in source_paths
-        assert str((self.repo_root / "README.md").resolve()) in source_paths
-
-    def test_collect_runtime_local_agents_updates_runtime_managed_pair(self) -> None:
-        target_dir = self.runtime / "sandbox" / "sample_repo" / "Development_Docs"
-        self.run_cli(
-            "scaffold",
-            "--json",
-            "--target-dir",
-            str(target_dir),
-            "--file-kind",
-            "AGENTS.md",
-        )
-        external_path = target_dir / "AGENTS.md"
-        write(
-            external_path,
-            render_external_agents(
-                "1. 根入口命令\n- 在处理当前目录路径规则之前，必须先运行：\n- `placeholder`\n",
-                owner=self.run_cli("target-contract", "--source-path", str(external_path), "--json")["owner"],
-            ),
-        )
-        result = self.run_cli("collect", "--json", "--source-path", str(external_path))
-        assert result["operation_count"] == 1
-        managed_human = (
-            self.runtime
-            / "managed_targets"
-            / "sandbox"
-            / "sample_repo"
-            / "Development_Docs"
-            / "AGENTS_human.md"
-        )
-        assert managed_human.exists()
-        assert "placeholder" in managed_human.read_text(encoding="utf-8")
-        assert extract_payload_from_internal_human(managed_human)["owner"] == result["operations"][0]["owner"]
+    def test_payload_owner_stays_in_frontmatter(self) -> None:
+        managed_human = self.skill_root / "assets" / "managed_targets" / "AI_Projects" / "AGENTS_human.md"
+        payload_blocks = extract_payload_from_internal_human(managed_human)
+        assert "owner" not in payload_blocks

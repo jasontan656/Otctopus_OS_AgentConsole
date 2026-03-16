@@ -1,6 +1,6 @@
 {
   ".codex/skills/AGENTS.md": {
-    "entry_heading": "1. 根入口命令",
+    "entry_heading": "2. 一级读取入口",
     "entry_command_template": "MDM_WORKSPACE_ROOT=<codex_home_parent> <root>/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python3 <root>/Otctopus_OS_AgentConsole/Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py agents-maintain --intent \"<natural language request>\" --json"
   }
 }

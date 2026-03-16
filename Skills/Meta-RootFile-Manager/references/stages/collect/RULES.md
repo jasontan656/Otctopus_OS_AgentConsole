@@ -11,7 +11,8 @@ anchors:
 
 # Collect Rules
 
-- External AGENTS files only supply `Part A`.
+- External AGENTS files only supply the rendered visible contract surface.
 - Internal `Part B` must never be overwritten by collect.
+- Internal frontmatter metadata must survive collect.
 - Collect must sync the mirror asset and the installed skill asset together.
 - Collect must treat the external file as the truth source for the governed content it recovers.
