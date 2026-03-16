@@ -12,7 +12,7 @@ reading_chain:
 # validation 阶段入口
 
 ## 当前目标
-- 对对象层、阶段沉淀文档层与写回状态做最终一致性收口。
+- 使用 backend terminal 做真实交互，验证设计预期行为、运行过程与副作用是否符合预期，并独立落盘验收说明。
 
 ## 下一跳列表
 - [contract]：`10_CONTRACT.md`

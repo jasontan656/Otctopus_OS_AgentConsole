@@ -1,4 +1,4 @@
 interface:
   display_name: "Functional-Analysis-Runtask"
-  short_description: "围绕明确目标意图或目标项目做分析、方案收敛、最小切片施工规划与实施验证证据沉淀的单技能多阶段 workflow。"
-  default_prompt: "当任务需要在同一技能内接收一个明确目标意图或目标项目，完成 research、design、plan 切片化、implementation 证据写回与 validation 收口时使用 `Functional-Analysis-Runtask`。默认按“research -> design -> plan -> implementation -> validation”执行；若只需单阶段，也在同一技能内进入对应阶段入口。design 阶段必须先消费 research 结论并结合 `Functional-BrainStorm` 在 chat 输出至少 3 种方案，再等待用户选型后写回。任何调研报告、计划文档、阶段沉淀文档与类似任务产物都必须先联动 `Functional-HumenWorkZone-Manager` 解析 `Human_Work_Zone` 受管路径，禁止直接落到技能目录内部。"
+  short_description: "围绕明确目标意图或目标项目执行九阶段显式闭环，并把每阶段正式产物落盘到受管区的单技能 workflow。"
+  default_prompt: "当任务需要在同一技能内围绕明确目标意图或目标项目完成完整闭环时使用 `Functional-Analysis-Runtask`。固定阶段链为“research -> architect -> preview -> design -> impact -> plan -> implementation -> validation -> final_delivery”。architect 必须强制使用 `Meta-Architect-MindModel`，preview 必须强制使用 `Meta-Reasoning-Chain`，design 必须强制使用 `Meta-keyword-first-edit`，impact 必须强制使用 `Meta-Impact-Investigation`。每个阶段都必须有独立正式产物，且只能消费前序阶段已产出的产物或被声明允许继承的输入。任何调研报告、架构评估、预期形态文档、设计文档、影响面文档、计划包、实施证据与验收文档都必须先联动 `Functional-HumenWorkZone-Manager` 解析 `Human_Work_Zone` 受管路径，禁止直接落到技能目录内部。"

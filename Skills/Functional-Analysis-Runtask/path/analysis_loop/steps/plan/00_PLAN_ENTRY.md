@@ -12,7 +12,7 @@ reading_chain:
 # plan 阶段入口
 
 ## 当前目标
-- 把目标形态拆成最小切片施工合同，而不是泛泛计划。
+- 把目标形态拆成可逐步修改、逐步验证的 milestone package，而不是泛泛计划。
 
 ## 下一跳列表
 - [contract]：`10_CONTRACT.md`

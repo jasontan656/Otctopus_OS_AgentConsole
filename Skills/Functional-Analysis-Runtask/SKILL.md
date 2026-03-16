@@ -1,6 +1,6 @@
 ---
 name: Functional-Analysis-Runtask
-description: 围绕明确目标意图或目标项目做分析、方案收敛、最小切片施工规划与实施验证证据沉淀的单技能多阶段 workflow。
+description: 围绕明确目标意图或目标项目执行 research、architect、preview、design、impact、plan、implementation、validation 与 final_delivery 完整闭环的单技能 workflow。
 skill_mode: executable_workflow_skill
 metadata:
   doc_structure:
@@ -14,14 +14,17 @@ metadata:
 ## 1. 模型立刻需要知道的事情
 ### 1. 总览
 - 本技能不再停留在“只分析目标项目并偏向单份正式输出”的单层门面，而是升级为面向明确目标意图或目标项目的单技能多阶段 workflow。
-- 固定主闭环为：`research -> design -> plan -> implementation -> validation`。
+- 固定主闭环为：`research -> architect -> preview -> design -> impact -> plan -> implementation -> validation -> final_delivery`。
 - 主入口统一保持为 `analysis_loop`；调用者既可连续执行，也可只进入某一个阶段单独收口。
 
 ### 2. 技能约束
 - 本技能的真相源优先级为：小型对象 > 阶段合同 > 阶段沉淀文档。
 - 旧资产必须继承，不得绕开当前已落盘的两份分析方法论文档另起平行方法论。
-- plan 阶段必须收敛为最小切片施工合同，不能退回泛泛计划。
+- architect、preview、impact 不得被 research 或 design 吸收成模糊叙事，必须是正式阶段。
+- plan 阶段必须收敛为 milestone package，而不是泛泛计划或单段局部施工叙事。
 - implementation 阶段一旦发生真实实现、验证、状态裁决或关键判断更新，必须同回合写回证据对象。
+- validation 必须使用 backend terminal 做真实交互并写出独立验收报告。
+- final_delivery 只向人类输出简要运行报告，因为完整过程已经在文件中落盘。
 - 任何调研报告、撰写计划、施工计划、阶段沉淀文档与类似任务产物，都必须先联动 `Functional-HumenWorkZone-Manager` 解析 `Human_Work_Zone` 受管路径，再允许落盘。
 - 技能目录只承载 skill 本体所需的 facade、workflow、scripts、references 与实现资产；不得继续承载任务执行产物。
 
@@ -30,6 +33,7 @@ metadata:
 - `read-contract-context` 与逐文档阅读等价；`read-path-context` 保持等价别名。
 - CLI 至少负责提供：运行时合同、文档链编译、阶段 checklist、workspace scaffold、task runtime scaffold、新任务门禁与 stage-specific lint。
 - `workspace-scaffold` 与 `stage-lint` 必须拒绝技能目录内落盘；task artifact root 必须位于 `Human_Work_Zone` 受管根下。
+- `workspace-scaffold` 必须一次性初始化九阶段对象与正式产物 skeleton；`task_runtime.yaml` 必须同步覆盖九阶段 checklist 与推进状态。
 
 ## 2. 功能入口
 - [analysis_loop]：`path/analysis_loop/00_ANALYSIS_LOOP_ENTRY.md`

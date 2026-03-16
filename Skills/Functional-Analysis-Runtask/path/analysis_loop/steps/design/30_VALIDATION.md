@@ -6,6 +6,6 @@ topic: Design validation
 
 # design 阶段校验
 
-- 决策对象必须引用有效 source asset 或 evidence id。
-- 决策必须说明当前基线差异、目标形态与阶段门禁。
-- 若阶段标记完成，`research` 不能仍是 `pending`。
+- 设计对象必须引用有效 architect/preview/impact 输入。
+- 设计方案必须说明抽象重整、增删改策略与 rewrite/replace/add 决策。
+- 若阶段标记完成，`architect`、`preview` 与 `impact` 不能仍是 `pending`。

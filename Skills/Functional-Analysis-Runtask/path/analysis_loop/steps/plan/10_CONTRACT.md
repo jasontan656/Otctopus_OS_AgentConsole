@@ -11,9 +11,9 @@ reading_chain:
 
 # plan 阶段合同
 
-- plan 必须从已收敛的 design decisions 正式生成。
-- 每个 slice 都要声明借鉴来源、当前基线差异、验证方法、证据要求、写回目标与退出信号。
-- `active` slice 在任一时刻只能有 1 个。
+- plan 必须从已收敛的 design decisions 与 impact 输出正式生成。
+- 每个 milestone package 都要声明前置输入、交付目标、阶段边界、验证方法、证据要求、写回目标与退出信号。
+- `active` milestone package 在任一时刻只能有 1 个。
 
 ## 下一跳列表
 - [tools]：`15_TOOLS.md`

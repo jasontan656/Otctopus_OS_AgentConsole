@@ -22,144 +22,244 @@ HUMENWORKZONE_COMMANDS = {
 }
 STAGE_ORDER = [
     "research",
+    "architect",
+    "preview",
     "design",
+    "impact",
     "plan",
     "implementation",
     "validation",
+    "final_delivery",
 ]
 STAGE_STATUS_VALUES = {"pending", "in_progress", "blocked", "completed"}
-SLICE_STATUS_VALUES = {"queued", "active", "blocked", "completed"}
-ACTION_TYPES = {"implementation", "validation", "phase_decision", "state_writeback"}
+PACKAGE_STATUS_VALUES = {"queued", "active", "blocked", "completed"}
 TASK_STATUS_VALUES = {"in_progress", "awaiting_user_selection", "blocked", "closed"}
+ACTION_TYPES = {"implementation", "validation", "phase_decision", "state_writeback"}
+DESIGN_DECISION_MODES = {"rewrite", "replace", "add"}
 REMOTE_PREFIXES = ("http://", "https://")
 
 WORKSPACE_LAYOUT = {
     "manifest": "workspace_manifest.yaml",
     "evidence_registry": "research/evidence_registry.yaml",
-    "architecture_decisions": "design/architecture_decisions.yaml",
-    "plan_slices": "plan/slices.yaml",
+    "architect_assessment": "architect/assessment.yaml",
+    "preview_projection": "preview/projection.yaml",
+    "design_decisions": "design/decisions.yaml",
+    "impact_map": "impact/impact_map.yaml",
+    "milestone_packages": "plan/milestone_packages.yaml",
     "implementation_ledger": "implementation/turn_ledger.yaml",
+}
+
+STAGE_ARTIFACTS = {
+    "research": "research/001_research_report.md",
+    "architect": "architect/001_architecture_assessment_report.md",
+    "preview": "preview/001_future_shape_preview.md",
+    "design": "design/001_design_strategy.md",
+    "impact": "impact/001_impact_investigation.md",
+    "plan": WORKSPACE_LAYOUT["milestone_packages"],
+    "implementation": WORKSPACE_LAYOUT["implementation_ledger"],
+    "validation": "validation/001_acceptance_report.md",
+    "final_delivery": "final_delivery/001_final_delivery_brief.md",
 }
 
 STAGES: dict[str, dict[str, Any]] = {
     "research": {
-        "purpose": "锁定目标意图或目标项目、本地落地目标、来源资产与高信噪比证据入口。",
+        "purpose": "调研目标项目或目标意图，并落盘调研报告。",
         "entry_requirements": [
-            "明确本轮目标意图、目标项目或目标实现对象。",
-            "识别当前应继承的旧资产与本地基线。",
-            "新任务启动前已经通过 task gate，且 task_runtime.yaml 已初始化。",
+            "明确目标意图、目标项目与本地落地对象。",
+            "通过 Functional-HumenWorkZone-Manager 解析受管落点。",
+            "新任务已经通过 task gate，并已生成 task_runtime.yaml。",
         ],
         "required_objects": [
             WORKSPACE_LAYOUT["manifest"],
             WORKSPACE_LAYOUT["evidence_registry"],
         ],
+        "required_artifacts": [
+            STAGE_ARTIFACTS["research"],
+        ],
         "writeback_targets": [
             WORKSPACE_LAYOUT["manifest"],
             WORKSPACE_LAYOUT["evidence_registry"],
-        ],
-        "exit_signals": [
-            "manifest 已写入目标范围、执行模式、来源资产与阶段状态。",
-            "evidence registry 已记录可追溯证据入口。",
+            STAGE_ARTIFACTS["research"],
         ],
         "lint_focus": [
-            "manifest 必填字段",
-            "source asset 路径存在性",
-            "evidence location 可追溯性",
+            "manifest/source_assets/evidence_registry",
+            "research report existence",
+        ],
+    },
+    "architect": {
+        "purpose": "强制使用 Meta-Architect-MindModel，对当前结构与目标结构给出应/应否评估并落盘。",
+        "entry_requirements": [
+            "research 已完成且 research report 可被引用。",
+            "architect 只消费 research 产物。",
+        ],
+        "required_objects": [
+            WORKSPACE_LAYOUT["manifest"],
+            WORKSPACE_LAYOUT["evidence_registry"],
+            WORKSPACE_LAYOUT["architect_assessment"],
+        ],
+        "required_artifacts": [
+            STAGE_ARTIFACTS["research"],
+            STAGE_ARTIFACTS["architect"],
+        ],
+        "writeback_targets": [
+            WORKSPACE_LAYOUT["architect_assessment"],
+            STAGE_ARTIFACTS["architect"],
+        ],
+        "lint_focus": [
+            "architect assessment should/should_not",
+            "architect report existence",
+        ],
+    },
+    "preview": {
+        "purpose": "强制使用 Meta-Reasoning-Chain，输出未来形态、行为变化、失败模式与回滚阈值。",
+        "entry_requirements": [
+            "architect 已完成。",
+            "preview 只消费 research 与 architect 产物。",
+        ],
+        "required_objects": [
+            WORKSPACE_LAYOUT["manifest"],
+            WORKSPACE_LAYOUT["preview_projection"],
+        ],
+        "required_artifacts": [
+            STAGE_ARTIFACTS["architect"],
+            STAGE_ARTIFACTS["preview"],
+        ],
+        "writeback_targets": [
+            WORKSPACE_LAYOUT["preview_projection"],
+            STAGE_ARTIFACTS["preview"],
+        ],
+        "lint_focus": [
+            "future_shape/behavior_delta/failure_modes/rollback_triggers",
+            "preview report existence",
         ],
     },
     "design": {
-        "purpose": "消费 research 结论，先在 chat 发散方案，再把用户选定的设计收敛成目标形态。",
+        "purpose": "强制使用 Meta-keyword-first-edit，独立落盘优雅实现目标形态的设计方案。",
         "entry_requirements": [
-            "research 已形成可用 manifest 与 evidence registry。",
-            "research 报告已经可引用，且已在 chat 呈现至少 3 种候选方案。",
-            "用户已完成选型或给出自定义方案。",
+            "architect 与 preview 已完成。",
+            "design 只消费 research/architect/preview 前序产物。",
         ],
         "required_objects": [
             WORKSPACE_LAYOUT["manifest"],
-            WORKSPACE_LAYOUT["evidence_registry"],
-            WORKSPACE_LAYOUT["architecture_decisions"],
+            WORKSPACE_LAYOUT["design_decisions"],
+        ],
+        "required_artifacts": [
+            STAGE_ARTIFACTS["design"],
         ],
         "writeback_targets": [
-            WORKSPACE_LAYOUT["architecture_decisions"],
-        ],
-        "exit_signals": [
-            "architecture decisions 已引用旧资产与证据。",
-            "目标形态与阶段门禁已经显式建模。",
+            WORKSPACE_LAYOUT["design_decisions"],
+            STAGE_ARTIFACTS["design"],
         ],
         "lint_focus": [
-            "decision 引用有效性",
-            "target_shape 与 phase_gate 完整性",
-            "前置 research 状态一致性",
+            "design decision mode/seamless state",
+            "design report existence",
+        ],
+    },
+    "impact": {
+        "purpose": "强制使用 Meta-Impact-Investigation，补齐 direct/indirect/latent/regression 影响面。",
+        "entry_requirements": [
+            "design 已完成。",
+            "impact 只消费 research/architect/preview/design 前序产物。",
+        ],
+        "required_objects": [
+            WORKSPACE_LAYOUT["manifest"],
+            WORKSPACE_LAYOUT["impact_map"],
+        ],
+        "required_artifacts": [
+            STAGE_ARTIFACTS["impact"],
+        ],
+        "writeback_targets": [
+            WORKSPACE_LAYOUT["impact_map"],
+            STAGE_ARTIFACTS["impact"],
+        ],
+        "lint_focus": [
+            "impact map scopes",
+            "impact report existence",
         ],
     },
     "plan": {
-        "purpose": "把目标形态拆成最小切片施工合同。",
+        "purpose": "把目标拆成可逐步修改、逐步验证的 milestone package。",
         "entry_requirements": [
-            "design 已形成有效 decision。",
-            "当前目标形态可映射成离散施工切片。",
+            "impact 已完成。",
+            "plan 只消费 design 与 impact 已落盘产物。",
         ],
         "required_objects": [
             WORKSPACE_LAYOUT["manifest"],
-            WORKSPACE_LAYOUT["architecture_decisions"],
-            WORKSPACE_LAYOUT["plan_slices"],
+            WORKSPACE_LAYOUT["milestone_packages"],
+        ],
+        "required_artifacts": [
+            STAGE_ARTIFACTS["plan"],
         ],
         "writeback_targets": [
-            WORKSPACE_LAYOUT["plan_slices"],
-        ],
-        "exit_signals": [
-            "至少存在 1 个可施工切片。",
-            "active slice 唯一。",
-            "每个 active slice 都定义了验证方法、写回目标与退出信号。",
+            WORKSPACE_LAYOUT["milestone_packages"],
         ],
         "lint_focus": [
-            "slice 字段完整性",
-            "borrowed_design_refs 有效性",
-            "active slice 唯一性",
+            "milestone package fields",
+            "active package uniqueness",
         ],
     },
     "implementation": {
-        "purpose": "围绕 active slice 做真实施工、验证与逐回合证据写回。",
+        "purpose": "按 milestone package 逐个实现，并持续回写证据、checklist 与状态裁决。",
         "entry_requirements": [
-            "plan 已存在 active slice。",
-            "active slice 已写明验证方法、证据要求与写回目标。",
+            "plan 已存在 active milestone package。",
+            "implementation 只消费 active package 与已声明输入。",
         ],
         "required_objects": [
             WORKSPACE_LAYOUT["manifest"],
-            WORKSPACE_LAYOUT["plan_slices"],
+            WORKSPACE_LAYOUT["milestone_packages"],
             WORKSPACE_LAYOUT["implementation_ledger"],
+        ],
+        "required_artifacts": [
+            STAGE_ARTIFACTS["implementation"],
         ],
         "writeback_targets": [
             WORKSPACE_LAYOUT["implementation_ledger"],
             WORKSPACE_LAYOUT["manifest"],
         ],
-        "exit_signals": [
-            "当回合实现、验证、状态裁决与残余问题已写入 ledger。",
-            "完成切片时可从 ledger 回溯到验证与证据。",
-        ],
         "lint_focus": [
-            "ledger -> slice 引用关系",
-            "validation_runs 与 evidence_refs 完整性",
-            "状态更新与切片完成信号一致性",
+            "ledger/package/evidence linkage",
+            "implementation evidence completeness",
         ],
     },
     "validation": {
-        "purpose": "对对象层、阶段沉淀文档层与写回状态做最终一致性收口。",
+        "purpose": "使用 backend terminal 做真实交互验收，并独立落盘说明如何判定通过。",
         "entry_requirements": [
-            "对象层已经具备最小闭环。",
-            "需要验证阶段沉淀文档、方案文档与状态位是否一致。",
+            "implementation 已产生真实 ledger 记录。",
+            "validation 只消费前序阶段已落盘产物。",
         ],
         "required_objects": list(WORKSPACE_LAYOUT.values()),
+        "required_artifacts": [
+            STAGE_ARTIFACTS["validation"],
+        ],
         "writeback_targets": [
             WORKSPACE_LAYOUT["manifest"],
-        ],
-        "exit_signals": [
-            "阶段状态、阶段文档与写回状态一致。",
-            "不存在无证据结论、无写回实现与虚假完成阶段。",
+            STAGE_ARTIFACTS["validation"],
         ],
         "lint_focus": [
-            "跨阶段状态一致性",
-            "阶段沉淀文档写回状态",
-            "引用路径存在性",
+            "acceptance report existence",
+            "object/document consistency",
+        ],
+    },
+    "final_delivery": {
+        "purpose": "最终只向人类输出简要运行报告，因为完整过程已经在文件中落盘。",
+        "entry_requirements": [
+            "validation 已完成且 acceptance report 已写回。",
+            "final_delivery 不得新增新的实现或分析。",
+        ],
+        "required_objects": [
+            WORKSPACE_LAYOUT["manifest"],
+        ],
+        "required_artifacts": [
+            STAGE_ARTIFACTS["validation"],
+            STAGE_ARTIFACTS["final_delivery"],
+        ],
+        "writeback_targets": [
+            WORKSPACE_LAYOUT["manifest"],
+            STAGE_ARTIFACTS["final_delivery"],
+        ],
+        "lint_focus": [
+            "final delivery brief existence",
+            "all stages completed before final delivery closes",
         ],
     },
 }
@@ -186,7 +286,8 @@ def runtime_contract_payload() -> dict[str, Any]:
         ],
         "stage_order": STAGE_ORDER,
         "workspace_layout": WORKSPACE_LAYOUT,
-        "layout_rule": "文档链与阶段顺序保持一致；小型对象是真相源，阶段沉淀文档是汇总层。",
+        "stage_artifacts": STAGE_ARTIFACTS,
+        "layout_rule": "小型对象是真相源；阶段正式产物是对外显式交付；每个阶段都只能消费前序已落盘产物或声明允许继承的输入。",
         "compiler_rule": "SKILL.md 只暴露 analysis_loop 入口；下游 markdown 通过 reading_chain 编译完整上下文。",
         "artifact_managed_root": str(managed_root),
         "task_runtime_root": str(task_runtime_root),
@@ -332,7 +433,12 @@ def compile_reading_chain(entry: str, selection: list[str]) -> dict[str, Any]:
 
 
 def stage_checklist_payload(stage: str) -> dict[str, Any]:
-    return {"stage": stage, **STAGES[stage], "workspace_layout": WORKSPACE_LAYOUT}
+    return {
+        "stage": stage,
+        **STAGES[stage],
+        "workspace_layout": WORKSPACE_LAYOUT,
+        "stage_artifacts": STAGE_ARTIFACTS,
+    }
 
 
 def scaffold_workspace(workspace_root: Path, force: bool = False) -> dict[str, Any]:
@@ -359,30 +465,50 @@ def scaffold_workspace(workspace_root: Path, force: bool = False) -> dict[str, A
         "current_stage": "research",
         "source_assets": [],
         "target_scope": {"external_target": "", "local_target": ""},
-        "stage_status": {
-            "research": "in_progress",
-            "design": "pending",
-            "plan": "pending",
-            "implementation": "pending",
-            "validation": "pending",
-        },
+        "stage_status": {stage: ("in_progress" if stage == "research" else "pending") for stage in STAGE_ORDER},
+        "stage_outputs": dict(STAGE_ARTIFACTS),
         "writeback_status": {
-            "analysis_summary": "",
-            "convergence_plan": "",
+            "current_sync_report": STAGE_ARTIFACTS["validation"],
+            "final_delivery_brief": STAGE_ARTIFACTS["final_delivery"],
             "last_synced_at": "",
             "notes": "",
         },
     }
-    files = {
+    objects = {
         WORKSPACE_LAYOUT["manifest"]: manifest,
         WORKSPACE_LAYOUT["evidence_registry"]: {"evidence_items": []},
-        WORKSPACE_LAYOUT["architecture_decisions"]: {"decisions": []},
-        WORKSPACE_LAYOUT["plan_slices"]: {"slices": []},
+        WORKSPACE_LAYOUT["architect_assessment"]: {
+            "should_change": [],
+            "should_not_change": [],
+            "architecture_judgement": "",
+        },
+        WORKSPACE_LAYOUT["preview_projection"]: {
+            "future_shape": [],
+            "behavior_delta": [],
+            "failure_modes": [],
+            "rollback_triggers": [],
+        },
+        WORKSPACE_LAYOUT["design_decisions"]: {
+            "decision_mode": "rewrite",
+            "seamless_state": "",
+            "decision_items": [],
+        },
+        WORKSPACE_LAYOUT["impact_map"]: {
+            "task_mode": "WRITE_INTENT",
+            "direct_scope": [],
+            "indirect_scope": [],
+            "latent_related": [],
+            "validation_or_evidence": [],
+            "must_update": [],
+            "must_check_before_edit": [],
+            "regression_surface": [],
+        },
+        WORKSPACE_LAYOUT["milestone_packages"]: {"milestone_packages": []},
         WORKSPACE_LAYOUT["implementation_ledger"]: {"entries": []},
     }
     created: list[str] = []
     skipped: list[str] = []
-    for relative, payload in files.items():
+    for relative, payload in objects.items():
         target = workspace_root / relative
         target.parent.mkdir(parents=True, exist_ok=True)
         if target.exists() and not force:
@@ -390,12 +516,23 @@ def scaffold_workspace(workspace_root: Path, force: bool = False) -> dict[str, A
             continue
         target.write_text(yaml.safe_dump(payload, sort_keys=False, allow_unicode=True), encoding="utf-8")
         created.append(relative)
+    for stage, relative in STAGE_ARTIFACTS.items():
+        target = workspace_root / relative
+        if target.suffix != ".md":
+            continue
+        target.parent.mkdir(parents=True, exist_ok=True)
+        if target.exists() and not force:
+            skipped.append(relative)
+            continue
+        target.write_text(_stage_artifact_template(stage), encoding="utf-8")
+        created.append(relative)
     return {
         "status": "ok",
         "workspace_root": str(workspace_root),
         "created_files": created,
         "skipped_files": skipped,
         "workspace_layout": WORKSPACE_LAYOUT,
+        "stage_artifacts": STAGE_ARTIFACTS,
     }
 
 
@@ -405,7 +542,7 @@ def stage_lint_payload(workspace_root: Path, stage: str) -> dict[str, Any]:
     if boundary_error is not None:
         boundary_error["stage"] = stage
         boundary_error["workspace_root"] = str(workspace_root)
-        boundary_error["checked_files"] = {key: str((workspace_root / value).resolve()) for key, value in WORKSPACE_LAYOUT.items()}
+        boundary_error["checked_files"] = _checked_files_payload(workspace_root)
         return boundary_error
     errors: list[dict[str, str]] = []
     warnings: list[dict[str, str]] = []
@@ -417,51 +554,46 @@ def stage_lint_payload(workspace_root: Path, stage: str) -> dict[str, Any]:
             "workspace_root": str(workspace_root),
             "errors": errors,
             "warnings": warnings,
-            "checked_files": {key: str((workspace_root / value).resolve()) for key, value in WORKSPACE_LAYOUT.items()},
+            "checked_files": _checked_files_payload(workspace_root),
         }
 
     manifest = loaded["manifest"]
     source_asset_ids = _validate_manifest(workspace_root, manifest, errors, warnings)
     evidence_ids = _validate_evidence_registry(workspace_root, loaded["evidence_registry"], errors, warnings)
 
-    if stage in {"design", "plan", "implementation", "validation", "all"}:
-        decision_ids = _validate_architecture_decisions(
-            loaded["architecture_decisions"],
-            source_asset_ids,
-            evidence_ids,
+    if stage in {"architect", "preview", "design", "impact", "plan", "implementation", "validation", "final_delivery", "all"}:
+        _validate_architect_assessment(loaded["architect_assessment"], errors)
+        _validate_preview_projection(loaded["preview_projection"], errors)
+        _validate_design_decisions(loaded["design_decisions"], errors)
+        _validate_impact_map(loaded["impact_map"], errors)
+
+    package_ids, active_package_ids, completed_package_ids = set(), [], []
+    if stage in {"plan", "implementation", "validation", "final_delivery", "all"}:
+        package_ids, active_package_ids, completed_package_ids = _validate_milestone_packages(
+            loaded["milestone_packages"],
             errors,
         )
-    else:
-        decision_ids = set()
 
-    if stage in {"plan", "implementation", "validation", "all"}:
-        slice_ids, active_slice_ids, completed_slice_ids = _validate_plan_slices(
-            loaded["plan_slices"],
-            decision_ids,
-            errors,
-        )
-    else:
-        slice_ids, active_slice_ids, completed_slice_ids = set(), [], []
-
-    if stage in {"implementation", "validation", "all"}:
+    if stage in {"implementation", "validation", "final_delivery", "all"}:
         _validate_implementation_ledger(
             workspace_root,
             loaded["implementation_ledger"],
-            slice_ids,
+            package_ids,
             evidence_ids,
             errors,
         )
-        _validate_completed_slices_have_witness(
+        _validate_completed_packages_have_witness(
             loaded["implementation_ledger"],
-            completed_slice_ids,
+            completed_package_ids,
             errors,
         )
 
+    _validate_stage_artifacts(workspace_root, manifest, stage, errors)
     _validate_stage_consistency(
         workspace_root,
         manifest,
         stage,
-        active_slice_ids,
+        active_package_ids,
         loaded["implementation_ledger"],
         errors,
         warnings,
@@ -473,8 +605,15 @@ def stage_lint_payload(workspace_root: Path, stage: str) -> dict[str, Any]:
         "workspace_root": str(workspace_root),
         "errors": errors,
         "warnings": warnings,
-        "checked_files": {key: str((workspace_root / value).resolve()) for key, value in WORKSPACE_LAYOUT.items()},
+        "checked_files": _checked_files_payload(workspace_root),
     }
+
+
+def _checked_files_payload(workspace_root: Path) -> dict[str, str]:
+    payload = {key: str((workspace_root / value).resolve()) for key, value in WORKSPACE_LAYOUT.items()}
+    for stage, relative in STAGE_ARTIFACTS.items():
+        payload[f"artifact_{stage}"] = str((workspace_root / relative).resolve())
+    return payload
 
 
 def _load_workspace(workspace_root: Path, errors: list[dict[str, str]]) -> dict[str, Any]:
@@ -651,18 +790,17 @@ def _validate_manifest(
         "source_assets",
         "target_scope",
         "stage_status",
+        "stage_outputs",
         "writeback_status",
     ]
     for key in required_keys:
         if key not in manifest:
             _error(errors, "missing_field", source, f"manifest 缺少字段：{key}")
-    execution_mode = manifest.get("execution_mode")
-    if execution_mode not in {"continuous", "single_stage"}:
+    if manifest.get("execution_mode") not in {"continuous", "single_stage"}:
         _error(errors, "invalid_execution_mode", source, "execution_mode 只能是 continuous 或 single_stage。")
-    current_stage = manifest.get("current_stage")
-    if current_stage not in STAGE_ORDER:
+    if manifest.get("current_stage") not in STAGE_ORDER:
         _error(errors, "invalid_current_stage", source, "current_stage 不在固定阶段列表内。")
-    if execution_mode == "single_stage":
+    if manifest.get("execution_mode") == "single_stage":
         focus = manifest.get("single_stage_focus")
         if focus not in STAGE_ORDER:
             _error(errors, "invalid_single_stage_focus", source, "single_stage 模式必须声明有效的 single_stage_focus。")
@@ -674,32 +812,44 @@ def _validate_manifest(
         value = stage_status.get(stage)
         if value not in STAGE_STATUS_VALUES:
             _error(errors, "invalid_stage_value", source, f"{stage} 的状态必须属于 {sorted(STAGE_STATUS_VALUES)}。")
+    stage_outputs = manifest.get("stage_outputs")
+    if not isinstance(stage_outputs, dict):
+        _error(errors, "invalid_stage_outputs", source, "stage_outputs 必须是映射。")
+        stage_outputs = {}
+    for stage in STAGE_ORDER:
+        output_path = stage_outputs.get(stage)
+        if not isinstance(output_path, str) or not output_path:
+            _error(errors, "missing_stage_output", source, f"缺少阶段产物路径：{stage}")
+            continue
+        resolved = _resolve_local_path(output_path, workspace_root)
+        if resolved is not None and not resolved.exists():
+            _error(errors, "missing_stage_output_target", source, f"{stage} 产物路径不存在：{resolved}")
     source_assets = manifest.get("source_assets")
     if not isinstance(source_assets, list):
         _error(errors, "invalid_source_assets", source, "source_assets 必须是列表。")
         source_assets = []
     for index, asset in enumerate(source_assets):
-        asset_source = f"{source}:source_assets[{index}]"
+        item_source = f"{source}:source_assets[{index}]"
         if not isinstance(asset, dict):
-            _error(errors, "invalid_asset_item", asset_source, "source asset 必须是映射。")
+            _error(errors, "invalid_asset_item", item_source, "source asset 必须是映射。")
             continue
         asset_id = asset.get("asset_id")
         asset_path = asset.get("path")
         role = asset.get("role")
         if not isinstance(asset_id, str) or not asset_id:
-            _error(errors, "missing_asset_id", asset_source, "source asset 缺少 asset_id。")
+            _error(errors, "missing_asset_id", item_source, "source asset 缺少 asset_id。")
         elif asset_id in source_asset_ids:
-            _error(errors, "duplicate_asset_id", asset_source, f"重复的 asset_id：{asset_id}")
+            _error(errors, "duplicate_asset_id", item_source, f"重复的 asset_id：{asset_id}")
         else:
             source_asset_ids.add(asset_id)
         if not isinstance(role, str) or not role:
-            _error(errors, "missing_asset_role", asset_source, "source asset 缺少 role。")
+            _error(errors, "missing_asset_role", item_source, "source asset 缺少 role。")
         if not isinstance(asset_path, str) or not asset_path:
-            _error(errors, "missing_asset_path", asset_source, "source asset 缺少 path。")
+            _error(errors, "missing_asset_path", item_source, "source asset 缺少 path。")
         else:
             resolved = _resolve_local_path(asset_path, workspace_root)
             if resolved is not None and not resolved.exists():
-                _error(errors, "missing_asset_path_target", asset_source, f"source asset 路径不存在：{resolved}")
+                _error(errors, "missing_asset_path_target", item_source, f"source asset 路径不存在：{resolved}")
     if not source_assets:
         _warning(warnings, "empty_source_assets", source, "source_assets 为空；research 未完成。")
     return source_asset_ids
@@ -745,115 +895,108 @@ def _validate_evidence_registry(
     return evidence_ids
 
 
-def _validate_architecture_decisions(
-    decisions_payload: dict[str, Any],
-    source_asset_ids: set[str],
-    evidence_ids: set[str],
-    errors: list[dict[str, str]],
-) -> set[str]:
-    source = WORKSPACE_LAYOUT["architecture_decisions"]
-    decisions = decisions_payload.get("decisions")
-    decision_ids: set[str] = set()
-    if not isinstance(decisions, list):
-        _error(errors, "invalid_decisions", source, "decisions 必须是列表。")
-        return decision_ids
-    for index, decision in enumerate(decisions):
-        item_source = f"{source}:decisions[{index}]"
-        if not isinstance(decision, dict):
-            _error(errors, "invalid_decision_item", item_source, "decision 必须是映射。")
+def _validate_architect_assessment(payload: dict[str, Any], errors: list[dict[str, str]]) -> None:
+    source = WORKSPACE_LAYOUT["architect_assessment"]
+    if not isinstance(payload.get("should_change"), list):
+        _error(errors, "invalid_should_change", source, "should_change 必须是列表。")
+    if not isinstance(payload.get("should_not_change"), list):
+        _error(errors, "invalid_should_not_change", source, "should_not_change 必须是列表。")
+    if not isinstance(payload.get("architecture_judgement"), str):
+        _error(errors, "invalid_architecture_judgement", source, "architecture_judgement 必须是字符串。")
+
+
+def _validate_preview_projection(payload: dict[str, Any], errors: list[dict[str, str]]) -> None:
+    source = WORKSPACE_LAYOUT["preview_projection"]
+    for field in ("future_shape", "behavior_delta", "failure_modes", "rollback_triggers"):
+        if not isinstance(payload.get(field), list):
+            _error(errors, "invalid_preview_field", source, f"{field} 必须是列表。")
+
+
+def _validate_design_decisions(payload: dict[str, Any], errors: list[dict[str, str]]) -> None:
+    source = WORKSPACE_LAYOUT["design_decisions"]
+    if payload.get("decision_mode") not in DESIGN_DECISION_MODES:
+        _error(errors, "invalid_decision_mode", source, f"decision_mode 必须属于 {sorted(DESIGN_DECISION_MODES)}。")
+    if not isinstance(payload.get("seamless_state"), str):
+        _error(errors, "invalid_seamless_state", source, "seamless_state 必须是字符串。")
+    decision_items = payload.get("decision_items")
+    if not isinstance(decision_items, list):
+        _error(errors, "invalid_decision_items", source, "decision_items 必须是列表。")
+        return
+    for index, item in enumerate(decision_items):
+        item_source = f"{source}:decision_items[{index}]"
+        if not isinstance(item, dict):
+            _error(errors, "invalid_design_item", item_source, "decision item 必须是映射。")
             continue
-        decision_id = decision.get("decision_id")
-        if not isinstance(decision_id, str) or not decision_id:
-            _error(errors, "missing_decision_id", item_source, "decision 缺少 decision_id。")
-        elif decision_id in decision_ids:
-            _error(errors, "duplicate_decision_id", item_source, f"重复的 decision_id：{decision_id}")
-        else:
-            decision_ids.add(decision_id)
-        for field in ("inherited_asset_refs", "evidence_refs", "current_baseline_delta", "target_shape", "phase_gate", "status"):
-            if field not in decision:
-                _error(errors, "missing_decision_field", item_source, f"decision 缺少字段：{field}")
-        for ref in decision.get("inherited_asset_refs", []):
-            if ref not in source_asset_ids:
-                _error(errors, "invalid_inherited_asset_ref", item_source, f"未找到 source asset ref：{ref}")
-        for ref in decision.get("evidence_refs", []):
-            if ref not in evidence_ids:
-                _error(errors, "invalid_decision_evidence_ref", item_source, f"未找到 evidence ref：{ref}")
-        phase_gate = decision.get("phase_gate")
-        if not isinstance(phase_gate, dict):
-            _error(errors, "invalid_phase_gate", item_source, "phase_gate 必须是映射。")
-        else:
-            entry_requirements = phase_gate.get("entry_requirements")
-            exit_signal = phase_gate.get("exit_signal")
-            if not isinstance(entry_requirements, list):
-                _error(errors, "invalid_phase_gate_entry", item_source, "phase_gate.entry_requirements 必须是列表。")
-            if not isinstance(exit_signal, str) or not exit_signal:
-                _error(errors, "missing_phase_gate_exit", item_source, "phase_gate.exit_signal 不能为空。")
-        if decision.get("status") not in STAGE_STATUS_VALUES:
-            _error(errors, "invalid_decision_status", item_source, "decision.status 必须使用阶段状态值。")
-    return decision_ids
+        for field in ("title", "rationale"):
+            if not isinstance(item.get(field), str) or not item.get(field):
+                _error(errors, "missing_design_item_field", item_source, f"缺少字段：{field}")
 
 
-def _validate_plan_slices(
-    slices_payload: dict[str, Any],
-    decision_ids: set[str],
+def _validate_impact_map(payload: dict[str, Any], errors: list[dict[str, str]]) -> None:
+    source = WORKSPACE_LAYOUT["impact_map"]
+    if payload.get("task_mode") not in {"READ_ONLY", "WRITE_INTENT"}:
+        _error(errors, "invalid_task_mode", source, "task_mode 必须是 READ_ONLY 或 WRITE_INTENT。")
+    for field in (
+        "direct_scope",
+        "indirect_scope",
+        "latent_related",
+        "validation_or_evidence",
+        "must_update",
+        "must_check_before_edit",
+        "regression_surface",
+    ):
+        if not isinstance(payload.get(field), list):
+            _error(errors, "invalid_impact_field", source, f"{field} 必须是列表。")
+
+
+def _validate_milestone_packages(
+    payload: dict[str, Any],
     errors: list[dict[str, str]],
 ) -> tuple[set[str], list[str], list[str]]:
-    source = WORKSPACE_LAYOUT["plan_slices"]
-    slices = slices_payload.get("slices")
-    slice_ids: set[str] = set()
-    active_slice_ids: list[str] = []
-    completed_slice_ids: list[str] = []
-    if not isinstance(slices, list):
-        _error(errors, "invalid_slices", source, "slices 必须是列表。")
-        return slice_ids, active_slice_ids, completed_slice_ids
-    for index, slice_item in enumerate(slices):
-        item_source = f"{source}:slices[{index}]"
-        if not isinstance(slice_item, dict):
-            _error(errors, "invalid_slice_item", item_source, "slice 必须是映射。")
+    source = WORKSPACE_LAYOUT["milestone_packages"]
+    packages = payload.get("milestone_packages")
+    package_ids: set[str] = set()
+    active_ids: list[str] = []
+    completed_ids: list[str] = []
+    if not isinstance(packages, list):
+        _error(errors, "invalid_milestone_packages", source, "milestone_packages 必须是列表。")
+        return package_ids, active_ids, completed_ids
+    for index, item in enumerate(packages):
+        item_source = f"{source}:milestone_packages[{index}]"
+        if not isinstance(item, dict):
+            _error(errors, "invalid_package_item", item_source, "milestone package 必须是映射。")
             continue
-        slice_id = slice_item.get("slice_id")
-        if not isinstance(slice_id, str) or not slice_id:
-            _error(errors, "missing_slice_id", item_source, "slice 缺少 slice_id。")
-        elif slice_id in slice_ids:
-            _error(errors, "duplicate_slice_id", item_source, f"重复的 slice_id：{slice_id}")
+        package_id = item.get("package_id")
+        if not isinstance(package_id, str) or not package_id:
+            _error(errors, "missing_package_id", item_source, "package 缺少 package_id。")
+        elif package_id in package_ids:
+            _error(errors, "duplicate_package_id", item_source, f"重复的 package_id：{package_id}")
         else:
-            slice_ids.add(slice_id)
-        for field in (
-            "borrowed_design_refs",
-            "current_baseline_delta",
-            "expected_effect",
-            "validation_method",
-            "required_evidence",
-            "writeback_targets",
-            "exit_signal",
-            "status",
-        ):
-            if field not in slice_item:
-                _error(errors, "missing_slice_field", item_source, f"slice 缺少字段：{field}")
-        for ref in slice_item.get("borrowed_design_refs", []):
-            if ref not in decision_ids:
-                _error(errors, "invalid_borrowed_design_ref", item_source, f"未找到 borrowed_design_ref：{ref}")
-        status = slice_item.get("status")
-        if status not in SLICE_STATUS_VALUES:
-            _error(errors, "invalid_slice_status", item_source, f"slice.status 必须属于 {sorted(SLICE_STATUS_VALUES)}。")
-        elif status == "active" and isinstance(slice_id, str) and slice_id:
-            active_slice_ids.append(slice_id)
-        elif status == "completed" and isinstance(slice_id, str) and slice_id:
-            completed_slice_ids.append(slice_id)
-    if len(active_slice_ids) > 1:
-        _error(errors, "multiple_active_slices", source, "同一时刻只能存在 1 个 active slice。")
-    return slice_ids, active_slice_ids, completed_slice_ids
+            package_ids.add(package_id)
+        for field in ("goal", "consumes", "delivers", "validation", "status"):
+            if field not in item:
+                _error(errors, "missing_package_field", item_source, f"package 缺少字段：{field}")
+        status = item.get("status")
+        if status not in PACKAGE_STATUS_VALUES:
+            _error(errors, "invalid_package_status", item_source, f"package.status 必须属于 {sorted(PACKAGE_STATUS_VALUES)}。")
+        elif status == "active" and isinstance(package_id, str) and package_id:
+            active_ids.append(package_id)
+        elif status == "completed" and isinstance(package_id, str) and package_id:
+            completed_ids.append(package_id)
+    if len(active_ids) > 1:
+        _error(errors, "multiple_active_packages", source, "同一时刻只能存在 1 个 active milestone package。")
+    return package_ids, active_ids, completed_ids
 
 
 def _validate_implementation_ledger(
     workspace_root: Path,
-    ledger_payload: dict[str, Any],
-    slice_ids: set[str],
+    payload: dict[str, Any],
+    package_ids: set[str],
     evidence_ids: set[str],
     errors: list[dict[str, str]],
 ) -> None:
     source = WORKSPACE_LAYOUT["implementation_ledger"]
-    entries = ledger_payload.get("entries")
+    entries = payload.get("entries")
     if not isinstance(entries, list):
         _error(errors, "invalid_entries", source, "entries 必须是列表。")
         return
@@ -870,9 +1013,9 @@ def _validate_implementation_ledger(
             _error(errors, "duplicate_entry_id", item_source, f"重复的 entry_id：{entry_id}")
         else:
             seen_entry_ids.add(entry_id)
-        slice_id = entry.get("slice_id")
-        if not isinstance(slice_id, str) or slice_id not in slice_ids:
-            _error(errors, "invalid_entry_slice_id", item_source, f"ledger entry 必须引用有效 slice_id：{slice_id}")
+        package_id = entry.get("package_id")
+        if not isinstance(package_id, str) or package_id not in package_ids:
+            _error(errors, "invalid_entry_package_id", item_source, f"ledger entry 必须引用有效 package_id：{package_id}")
         for field in ("action_types", "summary", "changed_paths", "validation_runs", "evidence_refs", "status_updates", "residual_issues"):
             if field not in entry:
                 _error(errors, "missing_entry_field", item_source, f"ledger entry 缺少字段：{field}")
@@ -918,20 +1061,20 @@ def _validate_implementation_ledger(
             _error(errors, "missing_entry_evidence", item_source, "发生真实实现、验证或状态写回时，evidence_refs 不得为空。")
 
 
-def _validate_completed_slices_have_witness(
-    ledger_payload: dict[str, Any],
-    completed_slice_ids: list[str],
+def _validate_completed_packages_have_witness(
+    payload: dict[str, Any],
+    completed_package_ids: list[str],
     errors: list[dict[str, str]],
 ) -> None:
-    if not completed_slice_ids:
+    if not completed_package_ids:
         return
-    entries = ledger_payload.get("entries", [])
-    for slice_id in completed_slice_ids:
+    entries = payload.get("entries", [])
+    for package_id in completed_package_ids:
         has_witness = False
         for entry in entries:
             if not isinstance(entry, dict):
                 continue
-            if entry.get("slice_id") != slice_id:
+            if entry.get("package_id") != package_id:
                 continue
             if entry.get("validation_runs") and entry.get("evidence_refs"):
                 has_witness = True
@@ -939,55 +1082,77 @@ def _validate_completed_slices_have_witness(
         if not has_witness:
             _error(
                 errors,
-                "completed_slice_without_witness",
+                "completed_package_without_witness",
                 WORKSPACE_LAYOUT["implementation_ledger"],
-                f"已完成切片 {slice_id} 没有对应验证与证据记录。",
+                f"已完成 package {package_id} 没有对应验证与证据记录。",
             )
+
+
+def _validate_stage_artifacts(
+    workspace_root: Path,
+    manifest: dict[str, Any],
+    requested_stage: str,
+    errors: list[dict[str, str]],
+) -> None:
+    stage_outputs = manifest.get("stage_outputs", {})
+    stages_to_check = STAGE_ORDER if requested_stage == "all" else [requested_stage]
+    for stage in stages_to_check:
+        output_path = stage_outputs.get(stage, STAGE_ARTIFACTS[stage])
+        if not isinstance(output_path, str) or not output_path:
+            _error(errors, "missing_stage_output", WORKSPACE_LAYOUT["manifest"], f"缺少阶段产物声明：{stage}")
+            continue
+        resolved = _resolve_local_path(output_path, workspace_root)
+        if resolved is not None and not resolved.exists():
+            _error(errors, "missing_stage_output_target", WORKSPACE_LAYOUT["manifest"], f"{stage} 产物不存在：{resolved}")
 
 
 def _validate_stage_consistency(
     workspace_root: Path,
     manifest: dict[str, Any],
     requested_stage: str,
-    active_slice_ids: list[str],
+    active_package_ids: list[str],
     ledger_payload: dict[str, Any],
     errors: list[dict[str, str]],
     warnings: list[dict[str, str]],
 ) -> None:
     source = WORKSPACE_LAYOUT["manifest"]
     stage_status = manifest.get("stage_status", {})
-    execution_mode = manifest.get("execution_mode")
     current_stage = manifest.get("current_stage")
+    execution_mode = manifest.get("execution_mode")
     if execution_mode == "continuous" and current_stage in STAGE_ORDER:
         current_index = STAGE_ORDER.index(current_stage)
         for index, stage in enumerate(STAGE_ORDER):
-            value = stage_status.get(stage)
-            if index < current_index and value != "completed":
+            if index < current_index and stage_status.get(stage) != "completed":
                 _error(errors, "incomplete_previous_stage", source, f"连续执行模式下，前置阶段 {stage} 必须是 completed。")
-    if requested_stage in {"plan", "implementation", "validation", "all"}:
-        if stage_status.get("plan") in {"in_progress", "completed"} and len(active_slice_ids) > 1:
-            _error(errors, "invalid_active_slice_count", source, "plan/implementation 阶段不允许多个 active slice。")
-    if requested_stage in {"implementation", "validation", "all"}:
+    if requested_stage in {"plan", "implementation", "validation", "final_delivery", "all"}:
+        if stage_status.get("plan") in {"in_progress", "completed"} and len(active_package_ids) > 1:
+            _error(errors, "invalid_active_package_count", source, "plan/implementation 阶段不允许多个 active package。")
+    if requested_stage in {"implementation", "validation", "final_delivery", "all"}:
         implementation_status = stage_status.get("implementation")
         entries = ledger_payload.get("entries", [])
         if implementation_status in {"in_progress", "completed"} and not entries:
             _error(errors, "implementation_without_ledger", source, "implementation 已启动，但 ledger 为空。")
-        if implementation_status == "in_progress" and not active_slice_ids:
-            _error(errors, "implementation_without_active_slice", source, "implementation 进行中时必须存在 active slice。")
-    if requested_stage in {"validation", "all"}:
-        writeback = manifest.get("writeback_status", {})
-        for field in ("analysis_summary", "convergence_plan"):
-            target = writeback.get(field)
-            if not isinstance(target, str) or not target:
-                _error(errors, "missing_writeback_target", source, f"validation 阶段要求声明 {field} 写回路径。")
-                continue
-            resolved = _resolve_local_path(target, workspace_root)
+        if implementation_status == "in_progress" and not active_package_ids:
+            _error(errors, "implementation_without_active_package", source, "implementation 进行中时必须存在 active milestone package。")
+    if requested_stage in {"validation", "final_delivery", "all"}:
+        current_sync_report = manifest.get("writeback_status", {}).get("current_sync_report")
+        if not isinstance(current_sync_report, str) or not current_sync_report:
+            _error(errors, "missing_current_sync_report", source, "validation/final_delivery 要求声明 current_sync_report。")
+        else:
+            resolved = _resolve_local_path(current_sync_report, workspace_root)
             if resolved is not None and not resolved.exists():
-                _error(errors, "missing_writeback_path", source, f"{field} 路径不存在：{resolved}")
-        if stage_status.get("validation") == "completed":
-            for stage in STAGE_ORDER:
-                if stage_status.get(stage) != "completed":
-                    _error(errors, "validation_completed_but_stage_open", source, f"validation 已完成，但 {stage} 不是 completed。")
+                _error(errors, "missing_current_sync_report_path", source, f"current_sync_report 路径不存在：{resolved}")
+    if requested_stage in {"final_delivery", "all"} and stage_status.get("final_delivery") == "completed":
+        final_delivery_brief = manifest.get("writeback_status", {}).get("final_delivery_brief")
+        if not isinstance(final_delivery_brief, str) or not final_delivery_brief:
+            _error(errors, "missing_final_delivery_brief", source, "final_delivery 完成时必须声明 final_delivery_brief。")
+        else:
+            resolved = _resolve_local_path(final_delivery_brief, workspace_root)
+            if resolved is not None and not resolved.exists():
+                _error(errors, "missing_final_delivery_brief_path", source, f"final_delivery_brief 路径不存在：{resolved}")
+        for stage in STAGE_ORDER:
+            if stage_status.get(stage) != "completed":
+                _error(errors, "final_delivery_completed_but_stage_open", source, f"final_delivery 已完成，但 {stage} 不是 completed。")
     if stage_status.get("validation") == "pending" and requested_stage == "validation":
         _warning(warnings, "validation_not_started", source, "当前在 validation 阶段执行 lint，但 manifest 仍标记为 pending。")
 
@@ -1004,7 +1169,7 @@ def _resolve_local_path(raw_path: str, workspace_root: Path) -> Path | None:
 def _task_runtime_is_closed(payload: dict[str, Any]) -> bool:
     if payload.get("task_status") != "closed":
         return False
-    if payload.get("ended_stage") != "validation":
+    if payload.get("ended_stage") != "final_delivery":
         return False
     stages = payload.get("stages")
     if not isinstance(stages, dict):
@@ -1065,6 +1230,19 @@ def _next_numbered_prefix(runtime_root: Path) -> str:
             if match:
                 highest = max(highest, int(match.group("prefix")))
     return f"{highest + 1:03d}"
+
+
+def _stage_artifact_template(stage: str) -> str:
+    title_map = {
+        "research": "Research Report",
+        "architect": "Architecture Assessment Report",
+        "preview": "Future Shape Preview",
+        "design": "Design Strategy",
+        "impact": "Impact Investigation",
+        "validation": "Acceptance Report",
+        "final_delivery": "Final Delivery Brief",
+    }
+    return f"# {title_map[stage]}\n\n待当前任务在 `{stage}` 阶段补齐。\n"
 
 
 def _error(errors: list[dict[str, str]], code: str, source: str, message: str) -> None:

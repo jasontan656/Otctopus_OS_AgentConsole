@@ -12,7 +12,7 @@ reading_chain:
 # design 阶段入口
 
 ## 当前目标
-- 消费 research 结论，结合 `Functional-BrainStorm` 在 chat 给出至少 3 种候选方案，并把用户选中的设计正式写回。
+- 消费 architect、preview 与 impact 的前序产物，用 `Meta-keyword-first-edit` 收敛优雅实现目标形态的设计方案。
 
 ## 下一跳列表
 - [contract]：`10_CONTRACT.md`

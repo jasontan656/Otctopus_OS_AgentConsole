@@ -12,7 +12,7 @@ reading_chain:
 # implementation 阶段入口
 
 ## 当前目标
-- 严格消费 active slice，把实现、验证、状态裁决与残余问题逐回合写回 ledger。
+- 严格消费 active milestone package，把实现、验证、状态裁决与残余问题逐回合写回 ledger。
 
 ## 下一跳列表
 - [contract]：`10_CONTRACT.md`

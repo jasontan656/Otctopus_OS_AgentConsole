@@ -30,49 +30,54 @@ def run_cli_with_env(*args: str, env: dict[str, str] | None = None) -> subproces
 
 
 class CliToolboxRegressionTest(unittest.TestCase):
-    def test_runtime_contract_exposes_workflow_mode(self) -> None:
+    def test_runtime_contract_exposes_nine_stage_workflow(self) -> None:
         result = run_cli("runtime-contract", "--json")
         self.assertEqual(result.returncode, 0, result.stderr)
         payload = json.loads(result.stdout)
         self.assertEqual(payload["skill_mode"], "executable_workflow_skill")
-        self.assertIn("stage-lint", payload["commands"])
         self.assertIn("task-runtime-scaffold", payload["commands"])
-        self.assertEqual(payload["stage_order"], ["research", "design", "plan", "implementation", "validation"])
+        self.assertEqual(
+            payload["stage_order"],
+            ["research", "architect", "preview", "design", "impact", "plan", "implementation", "validation", "final_delivery"],
+        )
+        self.assertIn("architect_assessment", payload["workspace_layout"])
+        self.assertIn("final_delivery", payload["stage_artifacts"])
 
-    def test_read_contract_context_can_descend_to_plan(self) -> None:
-        result = run_cli("read-contract-context", "--entry", "analysis_loop", "--selection", "plan", "--json")
+    def test_read_contract_context_can_descend_to_impact(self) -> None:
+        result = run_cli("read-contract-context", "--entry", "analysis_loop", "--selection", "impact", "--json")
         self.assertEqual(result.returncode, 0, result.stderr)
         payload = json.loads(result.stdout)
         self.assertEqual(payload["status"], "ok")
-        self.assertIn("path/analysis_loop/steps/plan/00_PLAN_ENTRY.md", payload["resolved_chain"])
+        self.assertIn("path/analysis_loop/steps/impact/00_IMPACT_ENTRY.md", payload["resolved_chain"])
 
     def test_workspace_scaffold_and_stage_lint(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             managed_root = Path(tmp_dir) / "Human_Work_Zone"
+            runtime_root = Path(tmp_dir) / "Codex_Skill_Runtime" / "Functional-Analysis-Runtask"
             workspace_root = managed_root / "Temporary_Files" / "sample_runtask"
-            env = {"FUNCTIONAL_ANALYSIS_RUNTASK_MANAGED_ROOT": str(managed_root)}
+            env = {
+                "FUNCTIONAL_ANALYSIS_RUNTASK_MANAGED_ROOT": str(managed_root),
+                "FUNCTIONAL_ANALYSIS_RUNTASK_TASK_RUNTIME_ROOT": str(runtime_root),
+            }
             scaffold = run_cli_with_env("workspace-scaffold", "--workspace-root", str(workspace_root), "--json", env=env)
             self.assertEqual(scaffold.returncode, 0, scaffold.stderr)
 
             (workspace_root / "sources").mkdir()
             (workspace_root / "outputs").mkdir()
-            (workspace_root / "reports").mkdir()
-            (workspace_root / "sources" / "legacy_report.md").write_text("legacy", encoding="utf-8")
+            (workspace_root / "sources" / "legacy_skill.md").write_text("legacy", encoding="utf-8")
             (workspace_root / "sources" / "evidence_note.md").write_text("evidence", encoding="utf-8")
             (workspace_root / "outputs" / "changed_file.md").write_text("changed", encoding="utf-8")
-            (workspace_root / "reports" / "methodology.md").write_text("report", encoding="utf-8")
-            (workspace_root / "reports" / "convergence.md").write_text("plan", encoding="utf-8")
 
             manifest_path = workspace_root / "workspace_manifest.yaml"
             manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
-            manifest["analysis_id"] = "far-001"
-            manifest["intent_summary"] = "升级为单技能多阶段 workflow"
-            manifest["current_stage"] = "validation"
+            manifest["analysis_id"] = "far-002"
+            manifest["intent_summary"] = "九阶段显式闭环升级"
+            manifest["current_stage"] = "final_delivery"
             manifest["source_assets"] = [
                 {
-                    "asset_id": "legacy_report",
-                    "path": "sources/legacy_report.md",
-                    "role": "existing_methodology",
+                    "asset_id": "legacy_skill",
+                    "path": "sources/legacy_skill.md",
+                    "role": "legacy_skill_snapshot",
                 }
             ]
             manifest["target_scope"] = {
@@ -81,8 +86,8 @@ class CliToolboxRegressionTest(unittest.TestCase):
             }
             manifest["stage_status"] = {stage: "completed" for stage in manifest["stage_status"]}
             manifest["writeback_status"] = {
-                "analysis_summary": "reports/methodology.md",
-                "convergence_plan": "reports/convergence.md",
+                "current_sync_report": "validation/001_acceptance_report.md",
+                "final_delivery_brief": "final_delivery/001_final_delivery_brief.md",
                 "last_synced_at": "2026-03-16T00:00:00Z",
                 "notes": "synced",
             }
@@ -95,58 +100,79 @@ class CliToolboxRegressionTest(unittest.TestCase):
                         "evidence_id": "ev_001",
                         "kind": "document",
                         "location": "sources/evidence_note.md",
-                        "relevance": "支撑新 workflow 设计",
-                        "supports": ["decision_workflow_shape"],
+                        "relevance": "支撑九阶段升级",
+                        "supports": ["research_report"],
                     }
                 ]
             }
             evidence_path.write_text(yaml.safe_dump(evidence, sort_keys=False, allow_unicode=True), encoding="utf-8")
 
-            decisions_path = workspace_root / "design" / "architecture_decisions.yaml"
-            decisions = {
-                "decisions": [
-                    {
-                        "decision_id": "decision_workflow_shape",
-                        "inherited_asset_refs": ["legacy_report"],
-                        "evidence_refs": ["ev_001"],
-                        "current_baseline_delta": "从 guide_only 升级到 executable workflow",
-                        "target_shape": "单技能多阶段",
-                        "phase_gate": {
-                            "entry_requirements": ["旧资产已锁定"],
-                            "exit_signal": "阶段入口与 lint 面已定义",
-                        },
-                        "status": "completed",
-                    }
-                ]
+            architect_path = workspace_root / "architect" / "assessment.yaml"
+            architect = {
+                "should_change": ["新增 architect/preview/impact/final_delivery"],
+                "should_not_change": ["保留 Human_Work_Zone 与 task runtime gate"],
+                "architecture_judgement": "采用单一九阶段主闭环。",
             }
-            decisions_path.write_text(yaml.safe_dump(decisions, sort_keys=False, allow_unicode=True), encoding="utf-8")
+            architect_path.write_text(yaml.safe_dump(architect, sort_keys=False, allow_unicode=True), encoding="utf-8")
 
-            slices_path = workspace_root / "plan" / "slices.yaml"
-            slices = {
-                "slices": [
+            preview_path = workspace_root / "preview" / "projection.yaml"
+            preview = {
+                "future_shape": ["九阶段显式链"],
+                "behavior_delta": ["新增四个正式阶段"],
+                "failure_modes": ["stage_order 未切换"],
+                "rollback_triggers": ["runtime-contract stage_order 非九阶段"],
+            }
+            preview_path.write_text(yaml.safe_dump(preview, sort_keys=False, allow_unicode=True), encoding="utf-8")
+
+            design_path = workspace_root / "design" / "decisions.yaml"
+            design = {
+                "decision_mode": "rewrite",
+                "seamless_state": "单一九阶段模型，无双轨别名。",
+                "decision_items": [
                     {
-                        "slice_id": "slice_001",
-                        "borrowed_design_refs": ["decision_workflow_shape"],
-                        "current_baseline_delta": "新增 path 与 scripts",
-                        "expected_effect": "技能具备阶段入口与 lint",
-                        "validation_method": "执行 CLI 与测试",
-                        "required_evidence": ["ev_001"],
-                        "writeback_targets": ["implementation/turn_ledger.yaml"],
-                        "exit_signal": "CLI 与测试通过",
+                        "title": "rewrite runtime stage model",
+                        "rationale": "旧五阶段结构不足以承载九阶段显式链。",
+                    }
+                ],
+            }
+            design_path.write_text(yaml.safe_dump(design, sort_keys=False, allow_unicode=True), encoding="utf-8")
+
+            impact_path = workspace_root / "impact" / "impact_map.yaml"
+            impact = {
+                "task_mode": "WRITE_INTENT",
+                "direct_scope": ["SKILL.md", "runtime", "tests"],
+                "indirect_scope": ["workflow docs"],
+                "latent_related": ["stage artifacts"],
+                "validation_or_evidence": ["pytest", "stage-lint"],
+                "must_update": ["runtime", "docs", "tests"],
+                "must_check_before_edit": ["old stage keywords"],
+                "regression_surface": ["runtime-contract", "read-contract-context"],
+            }
+            impact_path.write_text(yaml.safe_dump(impact, sort_keys=False, allow_unicode=True), encoding="utf-8")
+
+            packages_path = workspace_root / "plan" / "milestone_packages.yaml"
+            packages = {
+                "milestone_packages": [
+                    {
+                        "package_id": "package_001",
+                        "goal": "落地九阶段链",
+                        "consumes": ["research/001_research_report.md", "architect/001_architecture_assessment_report.md"],
+                        "delivers": ["outputs/changed_file.md"],
+                        "validation": ["pytest", "stage-lint"],
                         "status": "completed",
                     }
                 ]
             }
-            slices_path.write_text(yaml.safe_dump(slices, sort_keys=False, allow_unicode=True), encoding="utf-8")
+            packages_path.write_text(yaml.safe_dump(packages, sort_keys=False, allow_unicode=True), encoding="utf-8")
 
             ledger_path = workspace_root / "implementation" / "turn_ledger.yaml"
             ledger = {
                 "entries": [
                     {
                         "entry_id": "entry_001",
-                        "slice_id": "slice_001",
+                        "package_id": "package_001",
                         "action_types": ["implementation", "validation", "state_writeback"],
-                        "summary": "写入 workflow skill 文件并执行验证",
+                        "summary": "重写 runtime 并完成验证",
                         "changed_paths": ["outputs/changed_file.md"],
                         "validation_runs": [
                             {
@@ -155,7 +181,7 @@ class CliToolboxRegressionTest(unittest.TestCase):
                             }
                         ],
                         "evidence_refs": ["ev_001"],
-                        "status_updates": ["slice_001 completed", "validation completed"],
+                        "status_updates": ["package_001 completed", "validation completed"],
                         "residual_issues": [],
                     }
                 ]
@@ -170,13 +196,17 @@ class CliToolboxRegressionTest(unittest.TestCase):
     def test_workspace_scaffold_rejects_skill_local_path(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             managed_root = Path(tmp_dir) / "Human_Work_Zone"
+            runtime_root = Path(tmp_dir) / "Codex_Skill_Runtime" / "Functional-Analysis-Runtask"
             forbidden_root = SKILL_ROOT / "tmp_artifacts"
             result = run_cli_with_env(
                 "workspace-scaffold",
                 "--workspace-root",
                 str(forbidden_root),
                 "--json",
-                env={"FUNCTIONAL_ANALYSIS_RUNTASK_MANAGED_ROOT": str(managed_root)},
+                env={
+                    "FUNCTIONAL_ANALYSIS_RUNTASK_MANAGED_ROOT": str(managed_root),
+                    "FUNCTIONAL_ANALYSIS_RUNTASK_TASK_RUNTIME_ROOT": str(runtime_root),
+                },
             )
             self.assertNotEqual(result.returncode, 0)
             payload = json.loads(result.stdout)
@@ -214,9 +244,9 @@ class CliToolboxRegressionTest(unittest.TestCase):
 
             payload = yaml.safe_load(runtime_file.read_text(encoding="utf-8"))
             payload["task_status"] = "closed"
-            payload["current_stage"] = "validation"
-            payload["ended_stage"] = "validation"
-            payload["ended_step"] = "final_validation"
+            payload["current_stage"] = "final_delivery"
+            payload["ended_stage"] = "final_delivery"
+            payload["ended_step"] = "final_delivery_brief"
             payload["ended_reason"] = "completed"
             for stage in payload["stages"].values():
                 stage["status"] = "completed"

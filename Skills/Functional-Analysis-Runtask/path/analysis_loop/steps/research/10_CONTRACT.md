@@ -14,7 +14,7 @@ reading_chain:
 - 必须显式继承旧分析方法论文档与旧技能收敛方案，不能把它们当成无关背景。
 - 必须先通过 `Functional-HumenWorkZone-Manager` 解析当前 task artifacts 的受管落点，再初始化 workspace 对象骨架。
 - 新任务启动前必须先执行 `task-gate-check`，确认不存在未闭合历史任务，再生成 `task_runtime.yaml` 骨架。
-- 必须形成 `workspace_manifest.yaml` 与 `research/evidence_registry.yaml` 的初始真相源。
+- 必须形成 `workspace_manifest.yaml`、`research/evidence_registry.yaml` 与 `research/001_research_report.md` 的初始真相源。
 - 证据、推断与本地改写建议必须分层记录。
 
 ## 下一跳列表
