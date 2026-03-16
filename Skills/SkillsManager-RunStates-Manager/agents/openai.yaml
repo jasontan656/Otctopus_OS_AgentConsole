@@ -1,0 +1,4 @@
+interface:
+  display_name: SkillsManager-RunStates-Manager
+  short_description: 治理技能的 workflow/stage/skill-flow 运行态文件方法、三层 checklist、中间态 scaffold 与 runstate 审计。
+  default_prompt: Use $SkillsManager-RunStates-Manager.

@@ -1,0 +1,21 @@
+{
+  "directive_name": "skillsmanager_runstates_manager_governed_types",
+  "directive_version": "1.0.0",
+  "doc_kind": "guide",
+  "topic": "governed-types",
+  "purpose": "Define the governed types and their required runstate layers.",
+  "instruction": [
+    "Return not_applicable when the target is not workflow-bearing.",
+    "Require workflow and stage checklists for workflow_runtime targets.",
+    "Require all three checklist layers for skill_flow_orchestrator targets."
+  ],
+  "workflow": [
+    "Inspect target topology and explicit runstate contract if present.",
+    "Infer governed_type only when no explicit runstate contract exists.",
+    "Emit scaffold and success criteria for the chosen governed_type."
+  ],
+  "rules": [
+    "Do not fabricate workflow or stage requirements for not_applicable targets.",
+    "Skill-flow orchestration implies Skills_runtime_checklist in addition to workflow and stage checklists."
+  ]
+}

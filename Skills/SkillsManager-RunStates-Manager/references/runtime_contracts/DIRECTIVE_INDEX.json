@@ -1,0 +1,19 @@
+{
+  "topics": {
+    "chain-position": {
+      "doc_kind": "guide",
+      "json_path": "CHAIN_POSITION_DIRECTIVE.json",
+      "human_path": "CHAIN_POSITION_DIRECTIVE_human.md"
+    },
+    "governed-types": {
+      "doc_kind": "guide",
+      "json_path": "GOVERNED_TYPES_DIRECTIVE.json",
+      "human_path": "GOVERNED_TYPES_DIRECTIVE_human.md"
+    },
+    "audit-boundary": {
+      "doc_kind": "guide",
+      "json_path": "AUDIT_BOUNDARY_DIRECTIVE.json",
+      "human_path": "AUDIT_BOUNDARY_DIRECTIVE_human.md"
+    }
+  }
+}

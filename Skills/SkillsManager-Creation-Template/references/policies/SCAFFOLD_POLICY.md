@@ -34,3 +34,4 @@ anchors:
 ## 下放边界
 - repo-local 运行结果目录不属于模板强约束。
 - 具体业务文案、业务 schema 与业务 action 不属于本技能模板正文。
+- scaffold 完成后，若 target skill 需要 workflow/stage/skill-flow 运行态方法，后续治理顺序应继续进入 `SkillsManager-Doc-Structure -> SkillsManager-RunStates-Manager -> SkillsManager-Tooling-CheckUp`。

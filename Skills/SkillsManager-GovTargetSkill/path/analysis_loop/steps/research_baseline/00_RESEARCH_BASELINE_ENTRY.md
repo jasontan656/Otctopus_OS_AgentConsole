@@ -24,3 +24,4 @@ reading_chain:
 - 当前问题与成因清单
 - 候选目标 profile 与骨架判断
 - 需要保持的行为与不应丢失的用途
+- 回填 `stage_runtime_checklist`，并把 `research_baseline` 产物作为 `architecture_convergence` 的唯一前置输入

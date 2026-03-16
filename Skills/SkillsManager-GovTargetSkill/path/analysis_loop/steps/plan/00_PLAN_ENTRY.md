@@ -19,6 +19,7 @@ reading_chain:
 - `Meta-keyword-first-edit`：把计划中的改造动作收敛成删除、替换、重写优先，而不是新增包裹层。
 
 ## 若目标技能包含 CLI / Python
+- 必须先经过 `SkillsManager-RunStates-Manager`，确认 runstate scaffold、成功判定与模板要求已经成立，再进入 tooling 审计与整改顺序。
 - 必须把 `SkillsManager-Tooling-CheckUp` 纳入审计与整改顺序。
 - 必须把 `Dev-PythonCode-Constitution` 纳入 lint、pytest、runtime safety 与文档同步计划。
 
@@ -27,3 +28,4 @@ reading_chain:
 - 影响面与依赖链
 - 验证清单
 - 风险边界与回滚判断
+- 回填 `stage_runtime_checklist`，并把 plan 产物作为 `implementation` 唯一允许消费的施工输入

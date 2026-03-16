@@ -1,0 +1,22 @@
+{
+  "directive_name": "skillsmanager_runstates_manager_chain_position",
+  "directive_version": "1.0.0",
+  "doc_kind": "guide",
+  "topic": "chain-position",
+  "purpose": "Keep SkillsManager-RunStates-Manager in the correct place inside the skill-governance chain.",
+  "instruction": [
+    "Insert runstates after SkillsManager-Doc-Structure and before SkillsManager-Tooling-CheckUp.",
+    "Do not replace the host skill workflow orchestrator with this skill.",
+    "Treat runstates as one governance step inside skill creation and skill refit."
+  ],
+  "workflow": [
+    "Select or scaffold the target skill shape first.",
+    "Lint the topology.",
+    "Scaffold or audit runstate methods.",
+    "Only then continue into tooling audit."
+  ],
+  "rules": [
+    "Runstates governs runtime method readiness, not the host skill business workflow itself.",
+    "Skills_runtime_checklist must stay in runstate schema, not in metadata.skill_profile."
+  ]
+}

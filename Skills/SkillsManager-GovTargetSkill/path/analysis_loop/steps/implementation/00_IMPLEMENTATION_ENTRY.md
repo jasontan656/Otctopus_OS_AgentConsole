@@ -37,3 +37,4 @@ reading_chain:
 - 已落盘修改
 - 同步更新的文档 / contract / tooling / tests
 - 与目标态一致的最终承载结构
+- 回填 `stage_runtime_checklist`，并把 implementation 写回结果作为 `validation` 的唯一前置输入

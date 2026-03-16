@@ -24,3 +24,4 @@ reading_chain:
 - 最终目标态描述
 - 保留/删除/重写/替换/下放清单
 - 重构方式裁决与无痕边界
+- 回填 `stage_runtime_checklist`，并把架构收敛结果写成 `plan` 的唯一前置输入

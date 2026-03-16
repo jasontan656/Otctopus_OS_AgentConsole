@@ -1,0 +1,68 @@
+{
+  "contract_name": "skillsmanager_runstates_manager_runtime_contract",
+  "contract_version": "1.0.0",
+  "skill_name": "SkillsManager-RunStates-Manager",
+  "skill_role": "runstate_governor",
+  "runtime_source_policy": {
+    "runtime_rule_source": "CLI_JSON",
+    "documents_are_source_of_truth": true,
+    "command_names_are_repo_local_convention": true
+  },
+  "profile_support": {
+    "doc_topology": [
+      "referenced",
+      "workflow_path"
+    ],
+    "tooling_surface": [
+      "none",
+      "contract_cli",
+      "automation_cli"
+    ]
+  },
+  "creation_chain_position": {
+    "recommended_order": [
+      "SkillsManager-Creation-Template",
+      "SkillsManager-Doc-Structure",
+      "SkillsManager-RunStates-Manager",
+      "SkillsManager-Tooling-CheckUp"
+    ],
+    "insert_before": "SkillsManager-Tooling-CheckUp",
+    "insert_after": "SkillsManager-Doc-Structure"
+  },
+  "tool_entry": {
+    "script": "scripts/Cli_Toolbox.py",
+    "commands": {
+      "contract": "read the runtime contract",
+      "directive": "read a fixed directive",
+      "inspect": "inspect the target skill and determine governed_type",
+      "scaffold": "write runstate contract and checklist templates into the target skill",
+      "audit": "audit whether the target skill truly satisfies runstate governance"
+    }
+  },
+  "runstate_contract_schema": {
+    "governed_type_values": [
+      "not_applicable",
+      "workflow_runtime",
+      "skill_flow_orchestrator"
+    ],
+    "checklist_fields": [
+      "Skills_runtime_checklist",
+      "workflow_runtime_checklist",
+      "stage_runtime_checklist"
+    ],
+    "behavior_flags": [
+      "must_consume_previous_output",
+      "must_writeback_after_each_atomic_step",
+      "must_drive_next_step_from_writeback",
+      "prohibit_step_skip_or_parallel_completion"
+    ]
+  },
+  "artifact_policy": {
+    "mode": "explicit_target_write_or_stdout",
+    "resolver": "target_skill_root_argument",
+    "notes": [
+      "The skill writes governed templates only when scaffold is called with an explicit target skill root.",
+      "Audit and inspect return machine-readable stdout only."
+    ]
+  }
+}

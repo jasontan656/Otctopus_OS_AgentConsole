@@ -154,6 +154,13 @@ families:
         role_tag: "tooling-checkup"
         status: "active"
         trigger_summary: "当需要检查 skills 内部 tooling code、输出落点与链路编译 CLI 是否符合治理预期时使用。"
+      - canonical_id: "SkillsManager-RunStates-Manager"
+        display_name: "SkillsManager-RunStates-Manager"
+        prefix: "SkillsManager"
+        family: "[SKILL-GOV]"
+        role_tag: "runstates"
+        status: "active"
+        trigger_summary: "当需要治理目标技能的 workflow/stage/skill-flow 三层运行态文件方法、三层 checklist、runstate scaffold 或 runstate audit 时使用。"
   - family: "[Skill_prod]"
     description: "围绕 console 产品化、Skills 目录产品形态与 continuity 沉淀的技能族。"
     members:

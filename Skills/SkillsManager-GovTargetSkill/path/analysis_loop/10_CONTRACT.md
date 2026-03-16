@@ -20,6 +20,8 @@ reading_chain:
 ## 角色分工
 - `SkillsManager-GovTargetSkill`：
   - 负责路由、阶段边界、阶段产物与下游治理链显式挂接
+- `SkillsManager-RunStates-Manager`：
+  - 负责约束当前治理闭环在宿主侧正确具备并正确应用 `Skills_runtime_checklist`、`workflow_runtime_checklist` 与 `stage_runtime_checklist`
 - `Functional-Analysis-Runtask`：
   - 负责主执行闭环、调查证据组织、方案收敛、实施推进与验证闭合
 - 其余治理技能：
@@ -30,6 +32,9 @@ reading_chain:
   - 用于决定目标技能应收敛成什么 `profile` 与骨架形态
 - `Dev-ProjectStructure-Constitution`
   - 用于判断目标技能在 repo 内的结构定位、上下游边界与目录落点
+- `SkillsManager-RunStates-Manager`
+  - 用于判断目标技能是否需要 `not_applicable / workflow_runtime / skill_flow_orchestrator` 哪种 runstate 方法
+  - 用于治理 `Skills_runtime_checklist / workflow_runtime_checklist / stage_runtime_checklist` 的 schema、模板与成功判定
 - `SkillsManager-Tooling-CheckUp`
   - 用于审计目标技能的 CLI、runtime contract、artifact policy 与 remediation gate
 - `Dev-PythonCode-Constitution`
@@ -43,6 +48,16 @@ reading_chain:
 - `plan`：实施顺序、影响面、验证路径与风险边界
 - `implementation`：实际落盘修改与同步更新的文档/代码/tooling 工件
 - `validation`：结构、tooling、Python 与行为保持验证记录
+
+## runstate 合同
+- 当前闭环固定消费：
+  - `references/runstates/RUNSTATE_METHOD_CONTRACT.json`
+  - `references/runstates/templates/Skills_runtime_checklist.yaml`
+  - `references/runstates/templates/workflow_runtime_checklist.yaml`
+  - `references/runstates/templates/stage_runtime_checklist.yaml`
+- 任何阶段推进前，下一步必须消费上一步产物。
+- 每个原子步骤结束后必须立即回填相应 checklist。
+- checklist 回填结果继续驱动下一步，而不是允许模型跳步、并步或一次性跨阶段结束。
 
 ## 行为保持边界
 - 当前闭环默认以行为保持为前提，不凭空新增目标技能原本没有的业务语义。

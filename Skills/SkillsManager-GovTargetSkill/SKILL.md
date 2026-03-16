@@ -1,6 +1,6 @@
 ---
 name: SkillsManager-GovTargetSkill
-description: 接收一个目标技能并依托 Functional-Analysis-Runtask 完成轻量 analysis_loop 治理闭环，用于把目标技能收敛到稳定 profile、结构、tooling 与验证状态。
+description: 接收一个目标技能并依托 Functional-Analysis-Runtask 完成轻量 analysis_loop 治理闭环，用于把目标技能收敛到稳定 profile、结构、runstate、tooling 与验证状态。
 metadata:
   skill_profile:
     doc_topology: workflow_path
@@ -59,6 +59,7 @@ metadata:
 - `Functional-Analysis-Runtask`：主执行闭环与阶段节奏真源。
 - `SkillsManager-Creation-Template`：判断目标技能应收敛成什么 profile 与骨架形态。
 - `Dev-ProjectStructure-Constitution`：约束项目级结构、目录定位、上下游归属与对象落点。
+- `SkillsManager-RunStates-Manager`：在 `doc_structure` 与 `tooling` 之间治理目标技能的 `Skills_runtime_checklist / workflow_runtime_checklist / stage_runtime_checklist` 与中间态文件方法。
 - `SkillsManager-Tooling-CheckUp`：当目标技能含 CLI、runtime contract 或 tooling surface 时，执行 contract-first 审计与整改门禁。
 - `Dev-PythonCode-Constitution`：当目标技能涉及 Python 脚本或 CLI 时，约束代码拆分、lint、pytest、runtime safety 与 tooling 文档同步。
 - `Meta-keyword-first-edit`：约束真实治理动作遵循 `删掉重写 > keyword first 替换 > 新增`，避免留下 patch 痕迹。
@@ -68,6 +69,7 @@ metadata:
 2. 再进入 `path/analysis_loop/00_ANALYSIS_LOOP_ENTRY.md`。
 3. 进入闭环后，固定按 `contract -> workflow_index -> stages -> global_validation` 下沉。
 4. 真正执行阶段动作时，把 `Functional-Analysis-Runtask` 作为主闭环，并按当前阶段显式启用相关治理技能。
+5. 若目标技能属于 workflow-bearing 或 skill-orchestration 场景，必须在 `SkillsManager-Tooling-CheckUp` 前先经过 `SkillsManager-RunStates-Manager`。
 
 ## 3. 分类入口
 - 路由层：
@@ -93,6 +95,7 @@ SkillsManager-GovTargetSkill/
 │   └── openai.yaml
 ├── references/
 │   ├── governance/
+│   ├── runstates/
 │   └── routing/
 └── path/
     └── analysis_loop/

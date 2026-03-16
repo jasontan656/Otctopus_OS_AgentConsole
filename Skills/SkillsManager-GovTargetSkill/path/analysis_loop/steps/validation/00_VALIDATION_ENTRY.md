@@ -21,6 +21,7 @@ reading_chain:
 
 ## 最低验证要求
 - 结构验证：门面、references、workflow_path 是否与目标 profile 一致
+- runstate 验证：`Skills_runtime_checklist / workflow_runtime_checklist / stage_runtime_checklist` 是否存在、已消费且已回填
 - tooling 验证：contract、CLI、artifact policy 是否一致
 - Python 验证：lint、pytest、runtime safety 是否满足当前改造范围
 - 行为保持验证：原有有效用途未退化，且至少获得一个显式工程质量增益

@@ -25,6 +25,13 @@ anchors:
 - 当前治理约束源：
   - `SkillsManager-Creation-Template`
   - `Dev-ProjectStructure-Constitution`
+  - `SkillsManager-RunStates-Manager`
   - `SkillsManager-Tooling-CheckUp`
   - `Dev-PythonCode-Constitution`
   - `Meta-keyword-first-edit`
+
+## 固定治理顺序
+- `SkillsManager-Creation-Template`
+- `SkillsManager-Doc-Structure`
+- `SkillsManager-RunStates-Manager`
+- `SkillsManager-Tooling-CheckUp`

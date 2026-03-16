@@ -1,0 +1,16 @@
+checklist_name: workflow_runtime_checklist
+level: workflow
+status: pending
+current_step: ''
+previous_output_ref: ''
+writeback_ref: ''
+must_consume_previous_output: true
+must_writeback_after_each_atomic_step: true
+must_drive_next_step_from_writeback: true
+items:
+- step_id: fill_me
+  status: pending
+  expected_input_ref: ''
+  produced_output_ref: ''
+  writeback_ref: ''
+  notes: ''

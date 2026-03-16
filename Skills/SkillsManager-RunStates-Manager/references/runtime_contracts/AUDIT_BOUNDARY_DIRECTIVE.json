@@ -1,0 +1,22 @@
+{
+  "directive_name": "skillsmanager_runstates_manager_audit_boundary",
+  "directive_version": "1.0.0",
+  "doc_kind": "guide",
+  "topic": "audit-boundary",
+  "purpose": "Keep runstate audit focused on runtime method readiness and real consumption evidence.",
+  "instruction": [
+    "Audit contract/schema presence first.",
+    "Audit checklist template presence next.",
+    "Audit target markdown evidence for consume/writeback/next-step gating last."
+  ],
+  "workflow": [
+    "Detect governed_type.",
+    "Validate runstate contract schema.",
+    "Validate required templates.",
+    "Search host skill markdown for checklist and previous-output markers."
+  ],
+  "rules": [
+    "Do not treat template presence alone as success.",
+    "Do not auto-edit the target skill inside audit."
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "skill_name": "SkillsManager-GovTargetSkill",
+  "governed_type": "skill_flow_orchestrator",
+  "applicability": "applicable",
+  "naming_policy": {
+    "runtime_dir_pattern": "Codex_Skill_Runtime/<skill_name>/NNN_slug",
+    "checklist_file_pattern": "NNN_slug/<checklist_name>.yaml",
+    "notes": [
+      "Use NNN_SLUG naming for new intermediate state files.",
+      "Do not create parallel or unnamed runtime artifacts."
+    ]
+  },
+  "checklist_schema": {
+    "Skills_runtime_checklist": {
+      "required": true,
+      "level": "skill_flow",
+      "purpose": "govern skill-orchestration flow steps"
+    },
+    "workflow_runtime_checklist": {
+      "required": true,
+      "level": "workflow",
+      "purpose": "govern workflow-level state handoff and writeback"
+    },
+    "stage_runtime_checklist": {
+      "required": true,
+      "level": "stage",
+      "purpose": "govern stage-local atomic steps and writeback"
+    }
+  },
+  "behavior_contract": {
+    "must_consume_previous_output": true,
+    "must_writeback_after_each_atomic_step": true,
+    "must_drive_next_step_from_writeback": true,
+    "prohibit_step_skip_or_parallel_completion": true
+  },
+  "success_criteria": [
+    "Skill-flow, workflow, and stage runstate templates all exist.",
+    "Host skill markdown references Skills_runtime_checklist, workflow_runtime_checklist, and stage_runtime_checklist as active governance artifacts.",
+    "Host skill markdown states that downstream skill outputs and prior-stage outputs must be consumed before continuing.",
+    "Host skill markdown states that writeback drives the next step and forbids step skipping or parallel completion."
+  ]
+}
