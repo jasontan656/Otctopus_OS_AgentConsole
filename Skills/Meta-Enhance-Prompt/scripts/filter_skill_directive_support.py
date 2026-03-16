@@ -4,6 +4,8 @@ from __future__ import annotations
 import pathlib
 import re
 
+from filter_prompt_shape_helper import collect_context_session_refs
+
 EXIT_SUCCESS = 0
 EXIT_INVALID_OUTPUT = 11
 EXIT_EMPTY_AFTER_FILTER = 12
@@ -69,9 +71,10 @@ def build_skill_directive(raw_text: str) -> tuple[int, str, dict[str, object]]:
         return EXIT_EMPTY_AFTER_FILTER, "empty_after_filter", {}
 
     skill_names = extract_explicit_skill_names(raw_text) or [DEFAULT_SKILL_NAME]
-    session_context_detected = bool(re.search(r"(?i)\b(?:codex|session|resume)\s*id\s*[:：]", raw_text))
+    session_context_refs = collect_context_session_refs(raw_text)
+    session_context_detected = bool(session_context_refs)
     directives: list[str] = []
-    resolved_skills: list[dict[str, str]] = []
+    resolved_skills: list[dict[str, object]] = []
     missing: list[str] = []
     for skill_name in skill_names:
         skill_file = resolve_skill_file(skill_name)
@@ -86,19 +89,34 @@ def build_skill_directive(raw_text: str) -> tuple[int, str, dict[str, object]]:
         contract_command = toolbox_command(skill_name, "contract")
         intent_clarify_command = toolbox_command(skill_name, "directive --topic intent-clarify")
         active_invoke_command = toolbox_command(skill_name, "directive --topic active-invoke")
+        session_context_directive_command = toolbox_command(skill_name, "directive --topic session-context-read")
         output_governance_command = toolbox_command(skill_name, "directive --topic output-governance")
+        session_context_commands = [
+            toolbox_command(
+                skill_name,
+                f"read-session-context --lookup-key {ref['kind']}_id --lookup-id {ref['id']}",
+            )
+            for ref in session_context_refs
+        ]
         directives.append(
             "\n".join(
                 [
                     f"call `{contract_command}` for {purpose}.",
                     "then continue with the runtime payload instead of reading SKILL.md as the primary source:",
+                    *(
+                        [
+                            f"- pre-read workflow: `{session_context_directive_command}`",
+                            *[f"- pre-read chat context now: `{command}`" for command in session_context_commands],
+                            "- use the returned `focused_chat.user_prompt` + `focused_chat.assistant_reply` as context before continuing",
+                        ]
+                        if session_context_detected and skill_name == DEFAULT_SKILL_NAME
+                        else []
+                    ),
                     f"- canonical workflow: `{intent_clarify_command}`",
                     f"- runtime/result governance: `{output_governance_command}`",
                     f"- legacy alias only: `{active_invoke_command}`",
                     *(
-                        [
-                            "- if the caller also provides `codex/session/resume id`, treat that id as pre-read context for the last assistant reply and not as part of the prompt that should be strengthened",
-                        ]
+                        ["- if the caller also provides `codex/session/resume id`, treat that id as pre-read context and not as part of the prompt that should be strengthened"]
                         if session_context_detected and skill_name == DEFAULT_SKILL_NAME
                         else []
                     ),
@@ -111,11 +129,13 @@ def build_skill_directive(raw_text: str) -> tuple[int, str, dict[str, object]]:
                 "skill_file": str(skill_file),
                 "purpose": purpose,
                 "contract_command": contract_command,
+                "session_context_directive_command": session_context_directive_command,
                 "intent_clarify_command": intent_clarify_command,
                 "active_invoke_command": active_invoke_command,
                 "output_governance_command": output_governance_command,
+                "session_context_commands": session_context_commands,
                 "session_context_policy": (
-                    "treat codex/session/resume id as pre-read context for the last assistant reply; do not strengthen the id-reading instruction itself"
+                    "when codex/session/resume id is present, call read-session-context first and treat the returned chat as pre-read context; do not strengthen the id-reading instruction itself"
                     if skill_name == DEFAULT_SKILL_NAME
                     else ""
                 ),
@@ -132,6 +152,7 @@ def build_skill_directive(raw_text: str) -> tuple[int, str, dict[str, object]]:
     return EXIT_SUCCESS, "success_skill_directive", {
         "intent_summary": intent_summary,
         "session_context_detected": session_context_detected,
+        "session_context_refs": session_context_refs,
         "resolved_skills": resolved_skills,
         "final_skill_read_directive": "\n\n".join(directives).strip() + "\n",
     }

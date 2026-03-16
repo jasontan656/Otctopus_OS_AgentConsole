@@ -1,11 +1,12 @@
 {
   "directive_name": "meta_enhance_prompt_skill_directive_instruction",
-  "directive_version": "3.1.0",
+  "directive_version": "3.2.0",
   "doc_kind": "instruction",
   "topic": "skill-directive",
   "purpose": "Return the CLI-first runtime entry for Meta-Enhance-Prompt instead of routing callers back to SKILL.md.",
   "instruction": [
     "Start from scripts/Cli_Toolbox.py contract --json.",
+    "If the caller provides codex id/session id/resume id and asks to read chat history first, use scripts/Cli_Toolbox.py directive --topic session-context-read --json and then call scripts/Cli_Toolbox.py read-session-context before any further reasoning.",
     "Use scripts/Cli_Toolbox.py directive --topic intent-clarify --json when the caller needs the canonical intent clarification workflow.",
     "Treat scripts/Cli_Toolbox.py directive --topic active-invoke --json as a legacy alias only.",
     "If the caller provides codex id/session id/resume id, treat it as pre-read conversation context rather than as the prompt body to strengthen.",
@@ -13,11 +14,13 @@
   ],
   "workflow": [
     "Resolve the Meta-Enhance-Prompt toolbox path.",
+    "When session ids are present, return the session-context-read directive plus a ready-to-run read-session-context command before the intent workflow.",
     "Return CLI commands and direct runtime payload references instead of markdown file paths.",
     "Keep the answer focused on runtime entry and next command."
   ],
   "rules": [
     "Do not tell the model to read SKILL.md as the primary runtime instruction.",
+    "Do not skip the dedicated chat-history CLI and fall back to hand-search when the user explicitly asked to read session history first.",
     "Do not emit only file path metadata when the runtime needs executable CLI entry points."
   ]
 }

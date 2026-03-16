@@ -32,6 +32,71 @@ class TestMetaEnhancePromptRuntime:
             text=True,
         )
 
+    def write_sample_session(self, codex_home: Path, *, session_id: str = "019c-example") -> Path:
+        session_file = codex_home / "sessions" / "2026" / "03" / "16" / f"rollout-2026-03-16T08-00-00-{session_id}.jsonl"
+        session_file.parent.mkdir(parents=True, exist_ok=True)
+        rows = [
+            {
+                "timestamp": "2026-03-16T08:00:00.000Z",
+                "type": "session_meta",
+                "payload": {
+                    "id": session_id,
+                    "timestamp": "2026-03-16T08:00:00.000Z",
+                    "cwd": "/tmp/demo",
+                    "originator": "codex_cli_rs",
+                    "cli_version": "0.106.0",
+                    "source": "cli",
+                    "model_provider": "openai",
+                },
+            },
+            {
+                "timestamp": "2026-03-16T08:00:01.000Z",
+                "type": "response_item",
+                "payload": {
+                    "type": "message",
+                    "role": "user",
+                    "content": [{"type": "input_text", "text": "请先帮我看第一段上下文。"}],
+                },
+            },
+            {
+                "timestamp": "2026-03-16T08:00:02.000Z",
+                "type": "response_item",
+                "payload": {
+                    "type": "message",
+                    "role": "assistant",
+                    "content": [{"type": "output_text", "text": "这是第一轮 assistant reply。"}],
+                },
+            },
+            {
+                "timestamp": "2026-03-16T08:00:03.000Z",
+                "type": "response_item",
+                "payload": {
+                    "type": "message",
+                    "role": "user",
+                    "content": [{"type": "input_text", "text": "请读取 tool context 后继续总结。"}],
+                },
+            },
+            {
+                "timestamp": "2026-03-16T08:00:04.000Z",
+                "type": "response_item",
+                "payload": {
+                    "type": "custom_tool_call_output",
+                    "output": "tool context: lint warnings=3",
+                },
+            },
+            {
+                "timestamp": "2026-03-16T08:00:05.000Z",
+                "type": "response_item",
+                "payload": {
+                    "type": "message",
+                    "role": "assistant",
+                    "content": [{"type": "output_text", "text": "这是最后一轮 assistant reply。"}],
+                },
+            },
+        ]
+        session_file.write_text("\n".join(json.dumps(row, ensure_ascii=False) for row in rows) + "\n", encoding="utf-8")
+        return session_file
+
     def test_intent_clarify_requires_usable_intent(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             completed = self.run_filter(
@@ -168,6 +233,7 @@ class TestMetaEnhancePromptRuntime:
             payload = json.loads(completed.stdout)
             assert payload["session_context_detected"] is True
             assert "pre-read context" in payload["final_skill_read_directive"]
+            assert "read-session-context --lookup-key codex_id --lookup-id 019c-example --json" in payload["final_skill_read_directive"]
 
     def test_json_stdout_and_output_file_are_split(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -211,11 +277,77 @@ class TestMetaEnhancePromptRuntime:
         contract = self.run_toolbox("contract", "--json")
         directive = self.run_toolbox("directive", "--topic", "intent-clarify", "--json")
         legacy_alias = self.run_toolbox("directive", "--topic", "active-invoke", "--json")
+        session_context = self.run_toolbox("directive", "--topic", "session-context-read", "--json")
 
         contract_payload = json.loads(contract.stdout)
         directive_payload = json.loads(directive.stdout)
         legacy_alias_payload = json.loads(legacy_alias.stdout)
+        session_context_payload = json.loads(session_context.stdout)
 
         assert contract_payload["contract_name"] == "meta_enhance_prompt_runtime_contract"
         assert directive_payload["topic"] == "intent-clarify"
         assert legacy_alias_payload["topic"] == "intent-clarify"
+        assert session_context_payload["topic"] == "session-context-read"
+
+    def test_toolbox_read_session_context_defaults_to_last_assistant_plus_user_prompt(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            codex_home = Path(tmp) / ".codex"
+            self.write_sample_session(codex_home)
+
+            completed = self.run_toolbox(
+                "read-session-context",
+                "--lookup-key",
+                "codex_id",
+                "--lookup-id",
+                "019c-example",
+                "--codex-home",
+                str(codex_home),
+                "--json",
+            )
+
+            payload = json.loads(completed.stdout)
+            assert payload["status"] == "ok"
+            assert payload["matched_session"]["session_id"] == "019c-example"
+            assert payload["focused_chat"]["user_prompt"]["text"] == "请读取 tool context 后继续总结。"
+            assert payload["focused_chat"]["assistant_reply"]["text"] == "这是最后一轮 assistant reply。"
+            assert [item["role"] for item in payload["context_items"]] == ["user", "assistant"]
+
+    def test_toolbox_read_session_context_can_fetch_other_context_from_same_session(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            codex_home = Path(tmp) / ".codex"
+            self.write_sample_session(codex_home)
+
+            completed = self.run_toolbox(
+                "read-session-context",
+                "--session-id",
+                "019c-example",
+                "--codex-home",
+                str(codex_home),
+                "--message-role",
+                "tool_output",
+                "--message-key",
+                "text",
+                "--message-query",
+                "lint warnings",
+                "--message-match-mode",
+                "contains",
+                "--context-mode",
+                "window",
+                "--window-before",
+                "1",
+                "--window-after",
+                "1",
+                "--include-role",
+                "user",
+                "--include-role",
+                "assistant",
+                "--include-role",
+                "tool_output",
+                "--json",
+            )
+
+            payload = json.loads(completed.stdout)
+            assert payload["status"] == "ok"
+            assert payload["focused_chat"]["anchor_message"]["role"] == "tool_output"
+            assert "lint warnings=3" in payload["focused_chat"]["anchor_message"]["text"]
+            assert [item["role"] for item in payload["context_items"]] == ["user", "tool_output", "assistant"]

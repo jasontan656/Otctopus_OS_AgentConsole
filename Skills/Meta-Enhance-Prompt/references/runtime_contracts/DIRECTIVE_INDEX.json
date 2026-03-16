@@ -10,6 +10,11 @@
       "json_path": "INTENT_CLARIFY_DIRECTIVE.json",
       "human_path": "INTENT_CLARIFY_DIRECTIVE_human.md"
     },
+    "session-context-read": {
+      "doc_kind": "workflow",
+      "json_path": "SESSION_CONTEXT_READ_DIRECTIVE.json",
+      "human_path": "SESSION_CONTEXT_READ_DIRECTIVE_human.md"
+    },
     "skill-directive": {
       "doc_kind": "instruction",
       "json_path": "SKILL_DIRECTIVE_DIRECTIVE.json",

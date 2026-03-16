@@ -16,6 +16,8 @@ anchors:
 - 模型必须先调用：
   - `./.venv_backend_skills/bin/python Skills/Meta-Enhance-Prompt/scripts/Cli_Toolbox.py contract --json`
   - `./.venv_backend_skills/bin/python Skills/Meta-Enhance-Prompt/scripts/Cli_Toolbox.py directive --topic <topic> --json`
+- 若请求先要求读取 `codex/session/resume id` 对应聊天记录，应优先调用：
+  - `./.venv_backend_skills/bin/python Skills/Meta-Enhance-Prompt/scripts/Cli_Toolbox.py read-session-context --lookup-key <rollout_key> --lookup-id <id> --json`
 - `filter_active_invoke_output.py` 负责把意图草稿限形成最终 `INTENT:` 输出并治理受管产物；它不替代真实任务所需的 repo 调研。
 </part_A>
 
@@ -24,7 +26,7 @@ anchors:
 ```json
 {
   "contract_name": "meta_enhance_prompt_runtime_contract",
-  "contract_version": "3.1.0",
+  "contract_version": "3.2.0",
   "skill_name": "Meta-Enhance-Prompt",
   "runtime_source_policy": {
     "primary_runtime_source": "CLI_JSON",
@@ -37,6 +39,7 @@ anchors:
     "commands": {
       "contract": "./.venv_backend_skills/bin/python Skills/Meta-Enhance-Prompt/scripts/Cli_Toolbox.py contract --json",
       "directive": "./.venv_backend_skills/bin/python Skills/Meta-Enhance-Prompt/scripts/Cli_Toolbox.py directive --topic <topic> --json",
+      "session_context_read": "./.venv_backend_skills/bin/python Skills/Meta-Enhance-Prompt/scripts/Cli_Toolbox.py read-session-context --lookup-key <rollout_key> --lookup-id <id> --json",
       "intent_clarify": "python3 Skills/Meta-Enhance-Prompt/scripts/filter_active_invoke_output.py --mode intent_clarify --input-text \"<RAW_INTENT_DRAFT_OR_USER_PROMPT>\" --json",
       "active_invoke": "python3 Skills/Meta-Enhance-Prompt/scripts/filter_active_invoke_output.py --mode active_invoke --input-text \"<RAW_INTENT_DRAFT_OR_USER_PROMPT>\" --json",
       "skill_directive": "python3 Skills/Meta-Enhance-Prompt/scripts/filter_active_invoke_output.py --mode skill_directive --input-text \"<USER_INTENT_TEXT>\" --json"
@@ -47,7 +50,8 @@ anchors:
     "Choose the directive topic by actual task intent.",
     "Treat returned JSON payloads as the primary instruction source.",
     "If the caller provides codex id/session id/resume id, treat that id as a pre-read context parameter for the referenced conversation rather than as the prompt body to strengthen.",
-    "When the request says to read the last assistant reply from another codex session first, finish that context read before drafting the strengthened intent.",
+    "When the request says to read chat history or the last assistant reply from another codex session first, call session_context_read before drafting the strengthened intent.",
+    "Use focused_chat.user_prompt plus focused_chat.assistant_reply from session_context_read as the default pre-read scope unless the downstream task needs more context.",
     "Clarify the user request into one INTENT draft or pure intent paragraph before invoking intent_clarify.",
     "Publish only the filtered final intent output, not the raw draft."
   ],
@@ -56,6 +60,11 @@ anchors:
       "topic": "intent-clarify",
       "doc_kind": "workflow",
       "use_when": "The task needs the final clarified intent output."
+    },
+    {
+      "topic": "session-context-read",
+      "doc_kind": "workflow",
+      "use_when": "The task needs quick chat-history lookup by codex/session/resume id or another rollout key before continuing."
     },
     {
       "topic": "active-invoke",
@@ -81,6 +90,7 @@ anchors:
     "Do not emit only path pointers when the runtime needs direct CLI guidance.",
     "Do not restate the same intent again outside the final INTENT block when publishing in chat.",
     "Do not treat codex/session/resume id lookup instructions or the sentence that asks for cross-session reading as part of the final strengthened prompt.",
+    "Do not hand-search raw session jsonl files when session_context_read can locate the rollout directly.",
     "Keep JSON stdout semantics separate from text publication artifacts."
   ],
   "runtime_output_policy": {
