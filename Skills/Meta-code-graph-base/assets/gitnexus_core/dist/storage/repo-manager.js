@@ -13,7 +13,7 @@ function resolveRuntimeRoot() {
     if (explicit && explicit.trim()) {
         return path.resolve(explicit);
     }
-    throw new Error('Meta-code-graph-base: runtime root is required. Set META_CODE_GRAPH_RUNTIME_ROOT or use the Python wrapper with --runtime-root.');
+    throw new Error('Meta-code-graph-base: runtime root is required. Set META_CODE_GRAPH_RUNTIME_ROOT before invoking the native CLI.');
 }
 const RUNTIME_ROOT = resolveRuntimeRoot();
 const INDEXES_DIR = 'indexes';

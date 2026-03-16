@@ -7,8 +7,11 @@ import shutil
 from collections.abc import Iterable
 from dataclasses import dataclass
 from datetime import UTC, datetime
+from functools import lru_cache
 from pathlib import Path
+from typing import TypedDict
 
+# LINT_ALLOW_HARDCODED_ASSET=inline markdown delimiters and owner text use backticks intentionally; large templates are loaded from assets/runtime.
 
 SKILL_NAME = "Meta-RootFile-Manager"
 HOOK_HEADER = "[AGENT RUNTIME HOOK - ABSOLUTE ENFORCEMENT]"
@@ -19,6 +22,8 @@ PART_B_CLOSE = "</part_B>"
 PAYLOAD_STRUCTURE_CONTRACT_RELATIVE_PATH = Path(
     "references/runtime_contracts/AGENTS_payload_structure.json"
 )
+CHANNEL_SURFACE_MAP_RELATIVE_PATH = Path("assets/runtime/rootfile_channel_surfaces.json")
+SOURCE_SPECIFIC_AGENTS_RULES_RELATIVE_PATH = Path("assets/runtime/source_specific_agents_rules.json")
 REPO_ROOT_CANONICAL_NAME = "Otctopus_OS_AgentConsole"
 SKILLS_DIR_NAME = "Skills"
 REPO_ROOT_COMPAT_ALIASES = {
@@ -73,6 +78,36 @@ class OwnerInjectedMachinePayload:
         normalized = {"owner": self.owner}
         normalized.update(self.payload)
         return normalized
+
+
+class AgentsRuntimeSourcePolicyPayload(TypedDict, total=False):
+    runtime_rule_source: str
+    audit_fields_are_not_primary_runtime_instructions: bool
+    path_metadata_is_not_action_guidance: bool
+
+
+class AgentsExecutionModePayload(TypedDict, total=False):
+    goal: str
+    default_actions: list[str]
+
+
+class AgentsExecutionModesPayload(TypedDict, total=False):
+    READ_EXEC: AgentsExecutionModePayload
+    WRITE_EXEC: AgentsExecutionModePayload
+
+
+class ScaffoldAgentsMachinePayload(TypedDict, total=False):
+    owner: str
+    entry_role: str
+    runtime_source_policy: AgentsRuntimeSourcePolicyPayload
+    default_meta_skill_order: list[str]
+    turn_start_actions: list[str]
+    runtime_constraints: list[str]
+    execution_modes: AgentsExecutionModesPayload
+    repo_local_contract_handoff: list[str]
+    forbidden_primary_runtime_pattern: list[str]
+    turn_end_actions: list[str]
+    repo_name: str
 
 
 def _env_path(name: str) -> Path | None:
@@ -147,6 +182,25 @@ def ensure_parent(path: Path, dry_run: bool) -> None:
 
 def read_json(path: Path) -> object:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+@lru_cache(maxsize=None)
+def _load_cached_json(path: str) -> object:
+    return read_json(Path(path))
+
+
+def load_runtime_asset_json(paths: RuntimePaths, relative_path: Path) -> object:
+    return _load_cached_json(str((paths.mirror_skill_root / relative_path).resolve()))
+
+
+def load_channel_surface_map(paths: RuntimePaths) -> dict[str, str]:
+    payload = load_runtime_asset_json(paths, CHANNEL_SURFACE_MAP_RELATIVE_PATH)
+    return payload if isinstance(payload, dict) else {}
+
+
+def load_source_specific_agents_rules(paths: RuntimePaths) -> dict[str, object]:
+    payload = load_runtime_asset_json(paths, SOURCE_SPECIFIC_AGENTS_RULES_RELATIVE_PATH)
+    return payload if isinstance(payload, dict) else {}
 
 
 def write_text(path: Path, content: str, dry_run: bool) -> bool:
@@ -356,8 +410,14 @@ def _repo_root_for_runtime_paths(paths: RuntimePaths) -> Path:
 
 
 def build_agents_payload_contract_command(paths: RuntimePaths, source_path: Path) -> str:
+    source_rule = load_source_specific_agents_rules(paths).get(_relative_source_key(paths, source_path))
+    if isinstance(source_rule, dict):
+        command_template = source_rule.get("entry_command_template")
+        if isinstance(command_template, str):
+            return command_template
+
     repo_root = _repo_root_for_runtime_paths(paths)
-    python_path = repo_root / ".venv_backend_skills" / "bin" / "python"
+    python_path = repo_root / ".venv_backend_skills" / "bin" / "python3"
     script_path = paths.mirror_skill_root / "scripts" / "Cli_Toolbox.py"
     command = (
         f'{python_path} {script_path} agents-payload-contract --source-path "{source_path.resolve()}" --json'
@@ -376,10 +436,12 @@ def validate_source_specific_external_agents(
     source_path: Path,
     text: str,
 ) -> list[str]:
-    if source_path.parts[-3:] != (".codex", "skills", "AGENTS.md"):
+    source_rule = load_source_specific_agents_rules(paths).get(_relative_source_key(paths, source_path))
+    if not isinstance(source_rule, dict):
         return []
     sections = _extract_part_a_sections(text)
-    root_entry_items = sections.get("1. 根入口命令", [])
+    entry_heading = str(source_rule.get("entry_heading", "1. 根入口命令"))
+    root_entry_items = sections.get(entry_heading, [])
     if len(root_entry_items) != 1:
         return ["codex_skills_root_entry_command_count_invalid"]
     actual_command = _strip_inline_command_wrapper(root_entry_items[0])
@@ -455,6 +517,17 @@ def runtime_managed_targets_root(paths: RuntimePaths) -> Path:
     return paths.runtime_root / RUNTIME_MANAGED_TARGETS_DIRNAME
 
 
+def _is_ephemeral_runtime_managed_dir(
+    paths: RuntimePaths,
+    managed_root: Path,
+    managed_dir: Path,
+) -> bool:
+    if managed_root != runtime_managed_targets_root(paths):
+        return False
+    relative = managed_dir.relative_to(managed_root)
+    return bool(relative.parts) and relative.parts[0] == "ephemeral_workspace"
+
+
 def derive_managed_dir(paths: RuntimePaths, source_path: Path) -> Path:
     if is_runtime_local_source(paths, source_path):
         relative = _runtime_local_relative_path(paths, source_path).parent
@@ -496,30 +569,12 @@ def derive_owner_text(
     file_kind: str,
 ) -> str:
     container = describe_governed_container(paths, source_path)
-    surface_map = {
-        "README.md": "公共说明面",
-        "CHANGELOG.md": "版本与迭代记录面",
-        "CONTRIBUTING.md": "协作入口说明面",
-        "SECURITY.md": "安全披露与响应面",
-        "CODE_OF_CONDUCT.md": "协作行为边界面",
-        "LICENSE": "授权与法律边界面",
-        ".gitignore": "本地噪音过滤边界面",
-        "pytest.ini": "Python 测试运行配置面",
-        "Dockerfile": "容器构建入口面",
-        ".dockerignore": "容器构建忽略边界面",
-        ".env.example": "环境变量样例面",
-        "requirements.txt": "Python 依赖声明面",
-        "requirements-backend_skills.lock.txt": "skills Python 依赖锁定面",
-        "pyproject.toml": "Python 项目集成配置面",
-        "package.json": "Node package runtime 声明面",
-        "package-lock.json": "Node package lock 面",
-    }
     if file_kind == "AGENTS.md":
         return (
             f"由 `{ROOTFILE_MANAGER_NAME}` 作为 {container} 的 runtime entry owner 负责治理；"
             f"当前通过 `{channel_id}` 通道受管并同步这个入口文件。"
         )
-    surface = surface_map.get(file_kind, f"`{file_kind}` 默认治理面")
+    surface = load_channel_surface_map(paths).get(file_kind, f"`{file_kind}` 默认治理面")
     return (
         f"由 {container} 所代表的 {surface} 负责；"
         f"当前通过 `{ROOTFILE_MANAGER_NAME}` 的 `{channel_id}` 通道受管并同步。"
@@ -668,14 +723,79 @@ def find_channel_by_file_kind(paths: RuntimePaths, file_kind: str) -> tuple[str,
     return None
 
 
+def _channel_managed_file_names(channel: dict[str, object]) -> list[str]:
+    managed_files = channel.get("managed_files", {})
+    if not isinstance(managed_files, dict):
+        return []
+    return [str(value) for value in managed_files.values() if isinstance(value, str)]
+
+
+def _has_expected_managed_files(managed_dir: Path, channel: dict[str, object]) -> bool:
+    managed_file_names = _channel_managed_file_names(channel)
+    if not managed_file_names:
+        return False
+    return all((managed_dir / filename).exists() for filename in managed_file_names)
+
+
+def _source_path_from_managed_dir(
+    paths: RuntimePaths,
+    managed_root: Path,
+    managed_dir: Path,
+    file_kind: str,
+) -> Path:
+    relative = managed_dir.relative_to(managed_root)
+    base_root = paths.runtime_root if managed_root == runtime_managed_targets_root(paths) else paths.workspace_root
+    if str(relative) == ".":
+        return (base_root / file_kind).resolve()
+    return (base_root / relative / file_kind).resolve()
+
+
+def iter_governed_sources(
+    paths: RuntimePaths,
+    *,
+    include_ephemeral_runtime: bool = False,
+) -> list[tuple[Path, str, dict[str, object]]]:
+    discovered: list[tuple[Path, str, dict[str, object]]] = []
+    seen: set[tuple[str, str]] = set()
+    for channel_id, channel in list_channels(paths).items():
+        managed_file_names = _channel_managed_file_names(channel)
+        if not managed_file_names:
+            continue
+        sentinel = managed_file_names[0]
+        for managed_root in (paths.managed_targets_root, runtime_managed_targets_root(paths)):
+            if not managed_root.exists():
+                continue
+            for sentinel_path in managed_root.rglob(sentinel):
+                managed_dir = sentinel_path.parent
+                if not include_ephemeral_runtime and _is_ephemeral_runtime_managed_dir(
+                    paths,
+                    managed_root,
+                    managed_dir,
+                ):
+                    continue
+                if not _has_expected_managed_files(managed_dir, channel):
+                    continue
+                source_path = _source_path_from_managed_dir(paths, managed_root, managed_dir, str(channel["file_kind"]))
+                key = (str(source_path), channel_id)
+                if key in seen:
+                    continue
+                seen.add(key)
+                discovered.append((source_path, channel_id, channel))
+    return discovered
+
+
 def find_channel_for_source_path(paths: RuntimePaths, source_path: Path) -> tuple[str, dict[str, object]] | None:
     if is_runtime_local_source(paths, source_path):
         return find_channel_by_file_kind(paths, source_path.name)
-    relative = _relative_source_key(paths, source_path)
-    for channel_id, channel in list_channels(paths).items():
-        governed = channel.get("governed_source_paths", [])
-        if relative in governed:
-            return channel_id, channel
+    found = find_channel_by_file_kind(paths, source_path.name)
+    if found is None:
+        return None
+    channel_id, channel = found
+    if _has_expected_managed_files(derive_managed_dir(paths, source_path), channel):
+        return channel_id, channel
+    for candidate_source, candidate_channel_id, candidate_channel in iter_governed_sources(paths):
+        if candidate_source == source_path.resolve():
+            return candidate_channel_id, candidate_channel
     return None
 
 
@@ -726,19 +846,20 @@ def match_scan_rules(
         str(Path(item).expanduser().resolve()) for item in (source_paths or [])
     }
     results: list[dict[str, object]] = []
-    for channel_id, channel in list_channels(paths).items():
-        for relative in channel.get("governed_source_paths", []):
-            source_path = (paths.workspace_root / relative).resolve()
-            source_text = str(source_path)
-            if any(keyword in source_text for keyword in disallowed):
-                continue
-            if only_filters and not any(token in source_text for token in only_filters):
-                continue
-            if normalized_source_paths and source_text not in normalized_source_paths:
-                continue
-            if not include_missing and not source_path.exists():
-                continue
-            results.append(build_entry(paths, source_path, channel_id, channel))
+    for source_path, channel_id, channel in iter_governed_sources(
+        paths,
+        include_ephemeral_runtime=False,
+    ):
+        source_text = str(source_path)
+        if any(keyword in source_text for keyword in disallowed):
+            continue
+        if only_filters and not any(token in source_text for token in only_filters):
+            continue
+        if normalized_source_paths and source_text not in normalized_source_paths:
+            continue
+        if not include_missing and not source_path.exists():
+            continue
+        results.append(build_entry(paths, source_path, channel_id, channel))
     if normalized_source_paths:
         existing_sources = {item["source_path"] for item in results}
         for source_text in sorted(normalized_source_paths):
@@ -997,17 +1118,15 @@ def _iter_payload_strings(payload: object, path: str) -> Iterable[tuple[str, str
 def _parent_agents_source_path(paths: RuntimePaths, source_path: Path) -> Path | None:
     if is_runtime_local_source(paths, source_path):
         return None
-    rules = load_scan_rules(paths)
-    governed = {
-        _canonicalize_relative_path(Path(item))
-        for item in rules.get("channels", {}).get("AGENTS_MD", {}).get("governed_source_paths", [])
-    }
     relative = _canonical_relative_path(paths, source_path)
     current = relative.parent
     while True:
         candidate = Path("AGENTS.md") if str(current) == "." else current / "AGENTS.md"
-        if candidate != relative and candidate in governed:
-            return paths.workspace_root / candidate
+        if candidate != relative:
+            candidate_source = (paths.workspace_root / candidate).resolve()
+            found = find_channel_for_source_path(paths, candidate_source)
+            if found is not None and found[0] == "AGENTS_MD":
+                return candidate_source
         if str(current) == ".":
             return None
         current = current.parent
@@ -1259,21 +1378,10 @@ def add_governed_source_path(
     file_kind: str,
     dry_run: bool,
 ) -> None:
-    if is_runtime_local_source(paths, source_path):
-        return
     found = find_channel_by_file_kind(paths, file_kind)
     if found is None:
         raise ValueError(f"unsupported_file_kind:{file_kind}")
-    channel_id, channel = found
-    relative = _relative_source_key(paths, source_path)
-    rules = load_scan_rules(paths)
-    governed = list(rules["channels"][channel_id].get("governed_source_paths", []))
-    if relative not in governed:
-        governed.append(relative)
-        governed.sort()
-        rules["channels"][channel_id]["governed_source_paths"] = governed
-        write_json(paths.scan_rules_path, rules, dry_run)
-        sync_file_to_installed(paths, paths.scan_rules_path, dry_run)
+    return
 
 
 def _render_part_a_template_from_root(paths: RuntimePaths) -> str | None:
@@ -1383,7 +1491,11 @@ def _scaffold_agents_value_from_schema(schema: dict[str, object], path: str, own
     return SCAFFOLD_NOT_APPLICABLE
 
 
-def scaffold_agents_machine_payload(paths: RuntimePaths, source_path: Path, owner: str) -> dict[str, object]:
+def scaffold_agents_machine_payload(
+    paths: RuntimePaths,
+    source_path: Path,
+    owner: str,
+) -> ScaffoldAgentsMachinePayload:
     template_path = _root_agents_template_machine_path(paths)
     if template_path.exists():
         template_payload = read_json(template_path)
@@ -1413,7 +1525,7 @@ def scaffold_internal_agents_human(
     paths: RuntimePaths,
     external_path: Path,
     owner: str,
-    machine_payload: dict[str, object] | None = None,
+    machine_payload: ScaffoldAgentsMachinePayload | None = None,
 ) -> str:
     payload = machine_payload if machine_payload is not None else scaffold_agents_machine_payload(paths, external_path, owner)
     return render_internal_agents_human(scaffold_external_agents(external_path, owner), payload)

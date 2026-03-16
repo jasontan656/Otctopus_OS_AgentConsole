@@ -1,0 +1,54 @@
+evidence_items:
+  - evidence_id: baseline_contract_gap
+    stage: research_baseline
+    kind: contract
+    path: /home/jasontan656/.codex/skills/Meta-Runtime-Memory/SKILL.md
+    summary: 旧 contract 只定义 turn hook 义务，没有 session/turn 自动审计落地产物要求。
+  - evidence_id: session_log_structure
+    stage: research_baseline
+    kind: runtime_sample
+    path: /tmp/meta_runtime_memory_validation_live5.9qXxI1/codex_home/sessions/2026/03/16/rollout-2026-03-16T17-15-27-019cf5ed-ca6b-7ac3-8351-649edc4a28d0.jsonl
+    summary: 真实 Codex session JSONL 含 session_meta.id/cwd、task_started.turn_id、user_message、task_complete，可作为自动 hook 的 canonical feed。
+  - evidence_id: watcher_machine_log
+    stage: validation
+    kind: runtime_log
+    path: /tmp/meta_runtime_memory_validation_live5.9qXxI1/runtime/Meta-Runtime-Memory/logs/machine.jsonl
+    summary: 记录 turn_start_loaded 与 turn_end_checked 两类机器审计事件，且 applied/skipped 均可见。
+  - evidence_id: skipped_turn_audit
+    stage: validation
+    kind: audit_artifact
+    path: /tmp/meta_runtime_memory_validation_live5.9qXxI1/result/Meta-Runtime-Memory/sessions/019cf5ed-8416-7d10-8970-bc890b5f0dc1/turns/019cf5ed-8445-7123-bd05-bb845f83e360.json
+    summary: 真实只读 turn 的 audit，turn_start_status=applied 且 writeback_decision=skipped，并保留 next_actions。
+  - evidence_id: applied_turn_audit
+    stage: validation
+    kind: audit_artifact
+    path: /tmp/meta_runtime_memory_validation_live5.9qXxI1/result/Meta-Runtime-Memory/sessions/019cf5ed-ca6b-7ac3-8351-649edc4a28d0/turns/019cf5ed-ca74-72c2-bb39-4b3a595a839c.json
+    summary: 真实修改 turn 的 audit，记录 turn-start 编译时间、变更文件路径与 applied writeback 决策。
+  - evidence_id: applied_task_memory
+    stage: validation
+    kind: durable_memory
+    path: /tmp/meta_runtime_memory_validation_live5.9qXxI1/result/Meta-Runtime-Memory/tasks/note-txt-runtime-hook-validation-applied-turn-019cf5ed/TASK_MEMORY.json
+    summary: durable task memory 自动写入 snapshot/current_state/artifacts/handoff_notes。
+  - evidence_id: applied_turn_delta
+    stage: validation
+    kind: durable_memory
+    path: /tmp/meta_runtime_memory_validation_live5.9qXxI1/result/Meta-Runtime-Memory/tasks/note-txt-runtime-hook-validation-applied-turn-019cf5ed/TURN_DELTA.json
+    summary: applied turn 自动追加 turn delta，writeback_decision=applied。
+  - evidence_id: validate_store_command
+    stage: validation
+    kind: cli_result
+    path: /tmp/meta_runtime_memory_validation_live5.9qXxI1/runtime/Meta-Runtime-Memory/watcher/OBSERVER_STATE.json
+    command: >-
+      /home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python3
+      /home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/Skills/Meta-Runtime-Memory/scripts/Cli_Toolbox.py
+      validate-store --json
+    summary: 返回 session_ids=2、turn_audit_count=2、compiled_available=true，证明 store 结构完整且包含本轮真实落地。
+  - evidence_id: recall_search_commands
+    stage: validation
+    kind: cli_result
+    path: /tmp/meta_runtime_memory_validation_live5.9qXxI1/result/Meta-Runtime-Memory
+    command: >-
+      recall-memory --task-id note-txt-runtime-hook-validation-applied-turn-019cf5ed --json ;
+      recall-memory --session-id 019cf5ed-8416-7d10-8970-bc890b5f0dc1 --json ;
+      search-memory --query "runtime hook validation" --json
+    summary: recall 能按 task/session 读回，search 能命中 applied turn 与 durable task memory。

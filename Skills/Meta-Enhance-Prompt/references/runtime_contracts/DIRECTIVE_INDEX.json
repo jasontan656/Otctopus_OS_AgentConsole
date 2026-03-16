@@ -1,9 +1,14 @@
 {
   "topics": {
+    "intent-clarify": {
+      "doc_kind": "workflow",
+      "json_path": "INTENT_CLARIFY_DIRECTIVE.json",
+      "human_path": "INTENT_CLARIFY_DIRECTIVE_human.md"
+    },
     "active-invoke": {
       "doc_kind": "workflow",
-      "json_path": "ACTIVE_INVOKE_DIRECTIVE.json",
-      "human_path": "ACTIVE_INVOKE_DIRECTIVE_human.md"
+      "json_path": "INTENT_CLARIFY_DIRECTIVE.json",
+      "human_path": "INTENT_CLARIFY_DIRECTIVE_human.md"
     },
     "skill-directive": {
       "doc_kind": "instruction",

@@ -16,7 +16,7 @@ anchors:
 - 模型必须先调用：
   - `./.venv_backend_skills/bin/python Skills/Meta-Enhance-Prompt/scripts/Cli_Toolbox.py contract --json`
   - `./.venv_backend_skills/bin/python Skills/Meta-Enhance-Prompt/scripts/Cli_Toolbox.py directive --topic <topic> --json`
-- `filter_active_invoke_output.py` 负责最终限形与受管输出治理；它不替代 repo 调研。
+- `filter_active_invoke_output.py` 负责把意图草稿限形成最终 `INTENT:` 输出并治理受管产物；它不替代真实任务所需的 repo 调研。
 </part_A>
 
 <part_B>
@@ -24,7 +24,7 @@ anchors:
 ```json
 {
   "contract_name": "meta_enhance_prompt_runtime_contract",
-  "contract_version": "2.0.0",
+  "contract_version": "3.1.0",
   "skill_name": "Meta-Enhance-Prompt",
   "runtime_source_policy": {
     "primary_runtime_source": "CLI_JSON",
@@ -37,7 +37,8 @@ anchors:
     "commands": {
       "contract": "./.venv_backend_skills/bin/python Skills/Meta-Enhance-Prompt/scripts/Cli_Toolbox.py contract --json",
       "directive": "./.venv_backend_skills/bin/python Skills/Meta-Enhance-Prompt/scripts/Cli_Toolbox.py directive --topic <topic> --json",
-      "active_invoke": "python3 Skills/Meta-Enhance-Prompt/scripts/filter_active_invoke_output.py --mode active_invoke --input-text \"<RAW_PROMPT_OUTPUT>\" --json",
+      "intent_clarify": "python3 Skills/Meta-Enhance-Prompt/scripts/filter_active_invoke_output.py --mode intent_clarify --input-text \"<RAW_INTENT_DRAFT_OR_USER_PROMPT>\" --json",
+      "active_invoke": "python3 Skills/Meta-Enhance-Prompt/scripts/filter_active_invoke_output.py --mode active_invoke --input-text \"<RAW_INTENT_DRAFT_OR_USER_PROMPT>\" --json",
       "skill_directive": "python3 Skills/Meta-Enhance-Prompt/scripts/filter_active_invoke_output.py --mode skill_directive --input-text \"<USER_INTENT_TEXT>\" --json"
     }
   },
@@ -45,14 +46,21 @@ anchors:
     "Call contract before consuming runtime guidance for this skill.",
     "Choose the directive topic by actual task intent.",
     "Treat returned JSON payloads as the primary instruction source.",
-    "Do the repo survey before invoking active_invoke.",
-    "Publish only the filtered final output, not the raw prompt draft."
+    "If the caller provides codex id/session id/resume id, treat that id as a pre-read context parameter for the referenced conversation rather than as the prompt body to strengthen.",
+    "When the request says to read the last assistant reply from another codex session first, finish that context read before drafting the strengthened intent.",
+    "Clarify the user request into one INTENT draft or pure intent paragraph before invoking intent_clarify.",
+    "Publish only the filtered final intent output, not the raw draft."
   ],
   "directive_topics": [
     {
+      "topic": "intent-clarify",
+      "doc_kind": "workflow",
+      "use_when": "The task needs the final clarified intent output."
+    },
+    {
       "topic": "active-invoke",
       "doc_kind": "workflow",
-      "use_when": "The task needs the fixed six-section prompt output."
+      "use_when": "Legacy alias for intent-clarify."
     },
     {
       "topic": "skill-directive",
@@ -67,10 +75,12 @@ anchors:
   ],
   "hard_constraints": [
     "Do not treat SKILL.md or legacy markdown docs as the primary runtime instruction source.",
-    "Do not auto-fill missing contract sections with placeholder defaults.",
-    "Do not publish a final prompt when required sections are missing.",
+    "Do not claim repo survey is mandatory unless the actual downstream task needs it.",
+    "Do not re-expand the deliverable into GOAL/INPUTS/OUTPUTS/BOUNDARIES/VALIDATION as the primary publication shape.",
+    "Do not publish a final intent output when no usable intent text remains after filtering.",
     "Do not emit only path pointers when the runtime needs direct CLI guidance.",
-    "Do not restate GOAL or REPO_CONTEXT_AND_IMPACT outside the final contract body when publishing in chat.",
+    "Do not restate the same intent again outside the final INTENT block when publishing in chat.",
+    "Do not treat codex/session/resume id lookup instructions or the sentence that asks for cross-session reading as part of the final strengthened prompt.",
     "Keep JSON stdout semantics separate from text publication artifacts."
   ],
   "runtime_output_policy": {

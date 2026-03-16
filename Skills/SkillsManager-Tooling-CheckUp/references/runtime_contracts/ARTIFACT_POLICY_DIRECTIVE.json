@@ -1,0 +1,20 @@
+{
+  "directive_name": "skillsmanager_tooling_checkup_artifact_policy",
+  "directive_version": "1.0.0",
+  "doc_kind": "guide",
+  "topic": "artifact-policy",
+  "purpose": "Keep runtime/result path policy abstract and resolver-based.",
+  "instruction": [
+    "Look for artifact_policy in the target contract.",
+    "Treat absolute filesystem paths as an error.",
+    "Treat missing artifact_policy as a warning unless the target explicitly owns persisted artifacts."
+  ],
+  "workflow": [
+    "Load contract.",
+    "Inspect artifact_policy.",
+    "Return issues and remediation hints."
+  ],
+  "rules": [
+    "Do not hardcode /home or repo-local output roots in the skill contract."
+  ]
+}

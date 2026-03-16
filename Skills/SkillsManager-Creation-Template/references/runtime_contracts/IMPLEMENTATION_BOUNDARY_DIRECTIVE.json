@@ -1,0 +1,21 @@
+{
+  "directive_name": "skillsmanager_creation_template_implementation_boundary",
+  "directive_version": "1.0.0",
+  "doc_kind": "guide",
+  "topic": "implementation-boundary",
+  "purpose": "Keep stable engineering rules in the scaffold contract and push implementation-specific details down.",
+  "instruction": [
+    "Keep profile semantics and runtime contract fields stable.",
+    "Move repo-local output paths and business-specific scripts to the generated skill implementation.",
+    "Generate tests and tooling docs whenever scripts are generated."
+  ],
+  "workflow": [
+    "Build file content from the selected profile.",
+    "Write files atomically.",
+    "Run lint and pytest on the generated skill."
+  ],
+  "rules": [
+    "No legacy aliases or mapping layers inside the scaffold output.",
+    "No hardcoded result root policy inside the creation template contract."
+  ]
+}

@@ -7,8 +7,10 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `Otctopus_OS_AgentConsole` repositor
 
 <part_A>
 1. 根入口命令
+- 当前可用的 repo-local skills backend Python 虚拟环境为：`./.venv_backend_skills`。
+- 运行 repo-local skills CLI 时，优先使用：`./.venv_backend_skills/bin/python3`。
 - 在处理 `Otctopus_OS_AgentConsole` 路径规则之前，必须先运行：
-- `./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py target-contract --source-path "/home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/AGENTS.md" --json`
+- `./.venv_backend_skills/bin/python3 Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py target-contract --source-path "/home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/AGENTS.md" --json`
 
 2. 当前受管 repo 身份
 - Current concrete repo: `Otctopus_OS_AgentConsole`
@@ -18,6 +20,7 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `Otctopus_OS_AgentConsole` repositor
 
 3. Repo-local skills 依赖环境
 - 与 skills 执行相关的 Python 依赖环境固定为 `./.venv_backend_skills`；对应锁文件为 `./requirements-backend_skills.lock.txt`。
+- 若需要运行 `pytest` 验证 skills 或 backend Python 相关改动，优先使用：`./.venv_backend_skills/bin/python3 -m pytest`。
 - 与 skills 执行相关的前端依赖环境固定为 `./frontend_skills/`；对应真源为 `package.json` 与 `package-lock.json`。
 - 若需要新增 repo-local 依赖，安装位置只能是本 repo 的 `*_skills` 环境或其受管 manifest/lock 所在目录，不得把全局环境当长期依赖承载层。
 

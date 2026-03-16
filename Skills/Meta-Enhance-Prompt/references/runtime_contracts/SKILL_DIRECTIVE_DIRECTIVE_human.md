@@ -21,13 +21,15 @@ anchors:
 ```json
 {
   "directive_name": "meta_enhance_prompt_skill_directive_instruction",
-  "directive_version": "2.0.0",
+  "directive_version": "3.1.0",
   "doc_kind": "instruction",
   "topic": "skill-directive",
   "purpose": "Return the CLI-first runtime entry for Meta-Enhance-Prompt instead of routing callers back to SKILL.md.",
   "instruction": [
     "Start from scripts/Cli_Toolbox.py contract --json.",
-    "Use scripts/Cli_Toolbox.py directive --topic active-invoke --json when the caller needs the six-section filter workflow.",
+    "Use scripts/Cli_Toolbox.py directive --topic intent-clarify --json when the caller needs the canonical intent clarification workflow.",
+    "Treat scripts/Cli_Toolbox.py directive --topic active-invoke --json as a legacy alias only.",
+    "If the caller provides codex id/session id/resume id, treat it as pre-read conversation context rather than as the prompt body to strengthen.",
     "Use scripts/Cli_Toolbox.py directive --topic output-governance --json when the caller needs runtime/result path policy."
   ],
   "workflow": [

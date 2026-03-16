@@ -5,14 +5,15 @@ import argparse
 import json
 from pathlib import Path
 
-from tooling_checkup_runtime import compile_reading_chain
-from tooling_checkup_runtime import govern_target
-from tooling_checkup_runtime import runtime_payload
-
-SKILL_ROOT = Path(__file__).resolve().parents[1]
+from audit_orchestrator import audit_target
+from audit_models import AuditPayload, DirectivePayload, RuntimeContractPayload
+from tooling_contracts import directive_payload, runtime_contract_payload
 
 
-def _print_payload(payload: dict[str, object], as_json: bool) -> int:
+Payload = RuntimeContractPayload | DirectivePayload | AuditPayload
+
+
+def emit(payload: Payload, as_json: bool) -> int:
     if as_json:
         print(json.dumps(payload, ensure_ascii=False, indent=2))
         return 0
@@ -20,23 +21,35 @@ def _print_payload(payload: dict[str, object], as_json: bool) -> int:
     return 0
 
 
+def cmd_contract(args: argparse.Namespace) -> int:
+    return emit(runtime_contract_payload(), args.json)
+
+
+def cmd_directive(args: argparse.Namespace) -> int:
+    return emit(directive_payload(args.topic), args.json)
+
+
+def cmd_audit(args: argparse.Namespace) -> int:
+    return emit(audit_target(Path(args.target_skill_root)), args.json)
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="SkillsManager-Tooling-CheckUp toolbox")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
-    for name in ("runtime-contract", "contract"):
-        sub = subparsers.add_parser(name, help="Read the local runtime payload")
-        sub.add_argument("--json", action="store_true")
+    contract = subparsers.add_parser("contract")
+    contract.add_argument("--json", action="store_true")
+    contract.set_defaults(func=cmd_contract)
 
-    for name in ("read-path-context", "read-contract-context"):
-        read_path = subparsers.add_parser(name, help="Compile one local reading chain into one contract context")
-        read_path.add_argument("--entry", required=True, help="Top-level entry key declared under SKILL.md section 2")
-        read_path.add_argument("--selection", default="", help="Comma-separated branch keys used when the chain hits a branch node")
-        read_path.add_argument("--json", action="store_true")
+    directive = subparsers.add_parser("directive")
+    directive.add_argument("--topic", required=True)
+    directive.add_argument("--json", action="store_true")
+    directive.set_defaults(func=cmd_directive)
 
-    govern = subparsers.add_parser("govern-target", help="Audit target skill tooling surface")
-    govern.add_argument("--target-skill-root", required=True, help="Absolute or relative target skill root")
-    govern.add_argument("--json", action="store_true")
+    audit = subparsers.add_parser("audit")
+    audit.add_argument("--target-skill-root", required=True)
+    audit.add_argument("--json", action="store_true")
+    audit.set_defaults(func=cmd_audit)
 
     return parser
 
@@ -44,24 +57,8 @@ def build_parser() -> argparse.ArgumentParser:
 def main() -> int:
     parser = build_parser()
     args = parser.parse_args()
-
-    if args.command in {"runtime-contract", "contract"}:
-        return _print_payload(runtime_payload(), args.json)
-
-    if args.command in {"read-path-context", "read-contract-context"}:
-        selection = [item.strip() for item in args.selection.split(",") if item.strip()]
-        return _print_payload(compile_reading_chain(SKILL_ROOT, args.entry, selection), args.json)
-
-    if args.command == "govern-target":
-        target_root = Path(args.target_skill_root).expanduser().resolve()
-        return _print_payload(govern_target(target_root), args.json)
-
-    raise ValueError(f"unsupported command: {args.command}")
+    return args.func(args)
 
 
 if __name__ == "__main__":
-    try:
-        raise SystemExit(main())
-    except Exception as exc:  # noqa: BLE001
-        print(json.dumps({"status": "error", "error": str(exc)}, ensure_ascii=False, indent=2))
-        raise SystemExit(1)
+    raise SystemExit(main())

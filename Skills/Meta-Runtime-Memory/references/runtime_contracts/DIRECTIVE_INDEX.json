@@ -1,0 +1,29 @@
+{
+  "topics": {
+    "turn-start-load": {
+      "doc_kind": "contract",
+      "json_path": "TURN_START_LOAD_CONTRACT.json",
+      "human_path": "TURN_START_LOAD_CONTRACT_human.md"
+    },
+    "turn-end-writeback": {
+      "doc_kind": "contract",
+      "json_path": "TURN_END_WRITEBACK_CONTRACT.json",
+      "human_path": "TURN_END_WRITEBACK_CONTRACT_human.md"
+    },
+    "task-binding": {
+      "doc_kind": "contract",
+      "json_path": "TASK_BINDING_CONTRACT.json",
+      "human_path": "TASK_BINDING_CONTRACT_human.md"
+    },
+    "payload-governance": {
+      "doc_kind": "contract",
+      "json_path": "PAYLOAD_GOVERNANCE_CONTRACT.json",
+      "human_path": "PAYLOAD_GOVERNANCE_CONTRACT_human.md"
+    },
+    "final-reply-guard": {
+      "doc_kind": "contract",
+      "json_path": "FINAL_REPLY_GUARD_CONTRACT.json",
+      "human_path": "FINAL_REPLY_GUARD_CONTRACT_human.md"
+    }
+  }
+}

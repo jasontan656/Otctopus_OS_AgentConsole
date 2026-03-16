@@ -17,7 +17,7 @@ Human mirror for `SCAN_RULESET_CONTRACT.json`.
 {
   "version": 1,
   "contract_name": "meta_default_md_manager_scan_ruleset_contract",
-  "contract_version": "1.0.0",
+  "contract_version": "2.0.0",
   "validation_mode": "archival",
   "tool_state": "active",
   "required_fields": [
@@ -29,13 +29,9 @@ Human mirror for `SCAN_RULESET_CONTRACT.json`.
     "notes"
   ],
   "scan_rule_assets": {
-    "governed_source_paths": {
+    "channel_registry": {
       "required": true,
-      "description": "The exact governed external targets for the current active scope.",
-      "default_values": [
-        "AGENTS.md",
-        "Otctopus_OS_AgentConsole/AGENTS.md"
-      ]
+      "description": "Static channel registry only; dynamic governed targets must not be embedded here."
     },
     "disallowed_list": {
       "required": true,
@@ -62,10 +58,7 @@ Human mirror for `SCAN_RULESET_CONTRACT.json`.
     "current_governed_filename_set": [
       "AGENTS.md"
     ],
-    "current_governed_source_paths": [
-      "AGENTS.md",
-      "Otctopus_OS_AgentConsole/AGENTS.md"
-    ],
+    "dynamic_target_discovery_rule": "derive governed targets from managed asset trees under assets/managed_targets and Codex_Skill_Runtime/<skill>/managed_targets",
     "default_disallowed_roots": [
       "Octopus_OS"
     ]
@@ -75,7 +68,7 @@ Human mirror for `SCAN_RULESET_CONTRACT.json`.
       "stdout",
       "json"
     ],
-    "json_output_must_write_under": "Codex_Skill_Runtime/<skill_name>/scan/"
+    "json_output_must_write_under": "Codex_Skill_Runtime/<skill_name>/artifacts/scan/"
   },
   "lint_policy": {
     "run_after_scan": true,

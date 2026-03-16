@@ -1,4 +1,4 @@
 interface:
   display_name: SkillsManager-Creation-Template
-  short_description: 提供受治理技能模板与统一 Cli_Toolbox，用于创建或改造三类 `skill_mode` 技能。
+  short_description: 提供技能脚手架 profile、生成策略与受治理 CLI，用于创建符合工程化技能标准的新技能骨架。
   default_prompt: Use $SkillsManager-Creation-Template.

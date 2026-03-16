@@ -69,6 +69,7 @@ def build_skill_directive(raw_text: str) -> tuple[int, str, dict[str, object]]:
         return EXIT_EMPTY_AFTER_FILTER, "empty_after_filter", {}
 
     skill_names = extract_explicit_skill_names(raw_text) or [DEFAULT_SKILL_NAME]
+    session_context_detected = bool(re.search(r"(?i)\b(?:codex|session|resume)\s*id\s*[:：]", raw_text))
     directives: list[str] = []
     resolved_skills: list[dict[str, str]] = []
     missing: list[str] = []
@@ -80,9 +81,10 @@ def build_skill_directive(raw_text: str) -> tuple[int, str, dict[str, object]]:
         purpose = (
             f"explicitly requested handling for `{intent_summary}`"
             if skill_name != DEFAULT_SKILL_NAME
-            else f"prompt/instruction/workflow routing for `{intent_summary}`"
+            else f"intent clarification for `{intent_summary}`"
         )
         contract_command = toolbox_command(skill_name, "contract")
+        intent_clarify_command = toolbox_command(skill_name, "directive --topic intent-clarify")
         active_invoke_command = toolbox_command(skill_name, "directive --topic active-invoke")
         output_governance_command = toolbox_command(skill_name, "directive --topic output-governance")
         directives.append(
@@ -90,8 +92,16 @@ def build_skill_directive(raw_text: str) -> tuple[int, str, dict[str, object]]:
                 [
                     f"call `{contract_command}` for {purpose}.",
                     "then continue with the runtime payload instead of reading SKILL.md as the primary source:",
-                    f"- `{active_invoke_command}`",
-                    f"- `{output_governance_command}`",
+                    f"- canonical workflow: `{intent_clarify_command}`",
+                    f"- runtime/result governance: `{output_governance_command}`",
+                    f"- legacy alias only: `{active_invoke_command}`",
+                    *(
+                        [
+                            "- if the caller also provides `codex/session/resume id`, treat that id as pre-read context for the last assistant reply and not as part of the prompt that should be strengthened",
+                        ]
+                        if session_context_detected and skill_name == DEFAULT_SKILL_NAME
+                        else []
+                    ),
                 ]
             )
         )
@@ -101,8 +111,14 @@ def build_skill_directive(raw_text: str) -> tuple[int, str, dict[str, object]]:
                 "skill_file": str(skill_file),
                 "purpose": purpose,
                 "contract_command": contract_command,
+                "intent_clarify_command": intent_clarify_command,
                 "active_invoke_command": active_invoke_command,
                 "output_governance_command": output_governance_command,
+                "session_context_policy": (
+                    "treat codex/session/resume id as pre-read context for the last assistant reply; do not strengthen the id-reading instruction itself"
+                    if skill_name == DEFAULT_SKILL_NAME
+                    else ""
+                ),
             }
         )
 
@@ -115,6 +131,7 @@ def build_skill_directive(raw_text: str) -> tuple[int, str, dict[str, object]]:
         return EXIT_INVALID_OUTPUT, "invalid_output: no_skill_directive_generated", {}
     return EXIT_SUCCESS, "success_skill_directive", {
         "intent_summary": intent_summary,
+        "session_context_detected": session_context_detected,
         "resolved_skills": resolved_skills,
         "final_skill_read_directive": "\n\n".join(directives).strip() + "\n",
     }

@@ -1,0 +1,41 @@
+entries:
+  - timestamp: '2026-03-16T08:00:00Z'
+    stage: research_baseline
+    action: 阅读 Meta-Runtime-Memory 技能门面、runtime contract、directive 与现有 CLI/存储实现。
+    outcome: 确认三类缺陷都属于设计缺陷，不是单纯证据不足。
+  - timestamp: '2026-03-16T08:20:00Z'
+    stage: architecture_convergence
+    action: 调研 ~/.codex/sessions 真实 JSONL 结构。
+    outcome: 选定 session_meta.id/cwd、task_started.turn_id、user_message、task_complete 作为自动 hook 归因源。
+  - timestamp: '2026-03-16T08:40:00Z'
+    stage: implementation
+    action: 实现 watcher/runtime/audit/store/CLI/recall/search 主链路。
+    outcome: 新增 ACTIVE_RUNTIME、SESSION_MEMORY、turn audit、watcher state、machine/human log 与 watch-codex-sessions 等命令。
+  - timestamp: '2026-03-16T08:50:00Z'
+    stage: validation
+    action: 首轮 live 验证。
+    outcome: 发现 applied turn 因 apply_patch 相对路径未解析被误判为 skipped。
+  - timestamp: '2026-03-16T09:00:00Z'
+    stage: implementation
+    action: 修复 apply_patch 相对路径解析并把路径解析绑定到 session cwd。
+    outcome: applied turn 可从真实 session log 生成绝对 changed_paths。
+  - timestamp: '2026-03-16T09:05:00Z'
+    stage: validation
+    action: 第二轮隔离验证。
+    outcome: 发现 --codex-home 指向不存在目录时静默回退 ~/.codex，导致会话污染；同时隔离目录缺 auth.json 导致 codex exec 401。
+  - timestamp: '2026-03-16T09:08:00Z'
+    stage: implementation
+    action: 修复 explicit codex_home override 强制生效，并在隔离验证目录复制最小 auth/config。
+    outcome: watcher 只消费隔离目录 session，真实 codex exec 可完整完成。
+  - timestamp: '2026-03-16T09:12:00Z'
+    stage: validation
+    action: 第三轮 live 验证。
+    outcome: 发现 exec stdout 中的绝对路径会被误记为 changed_paths，存在 applied 假阳性风险。
+  - timestamp: '2026-03-16T09:14:00Z'
+    stage: implementation
+    action: 停止从普通 exec stdout 猜测 changed_paths，仅保留 validation_runs；显式写操作仍由 apply_patch 审计。
+    outcome: skipped/applied 判定不再受 pwd 等只读输出污染。
+  - timestamp: '2026-03-16T09:15:47Z'
+    stage: validation
+    action: live5 隔离 watcher + 两个真实 codex exec 回合 + show-turn-audit/validate-store/recall/search。
+    outcome: 自动 hook、自动绑定、skipped/applied 审计、durable writeback、recall/search 全链路成立。

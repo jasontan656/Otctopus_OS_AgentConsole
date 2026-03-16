@@ -20,8 +20,8 @@ It is a governed migration of the upstream engine with local wrapping and produc
 The current integration keeps the upstream parsing and graph engine as the base, while Octopus OS adds or changes:
 
 - local runtime routing into a caller-provided graph runtime root
-- a Python wrapper entrypoint in `scripts/meta_code_graph_base.py`
-- local resource URIs, map output, and wiki bundle output
+- a governed native TypeScript CLI invocation surface driven by `META_CODE_GRAPH_RUNTIME_ROOT`
+- local resource URIs and workflow-facing graph query surfaces
 - removal of the upstream web, plugin, eval, setup, serve, and MCP transport shell from the skill surface
 
 ## License And Notice Boundary

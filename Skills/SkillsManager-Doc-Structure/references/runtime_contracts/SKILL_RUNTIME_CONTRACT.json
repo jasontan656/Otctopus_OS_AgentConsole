@@ -1,0 +1,42 @@
+{
+  "contract_name": "skillsmanager_doc_structure_runtime_contract",
+  "contract_version": "2.0.0",
+  "skill_name": "SkillsManager-Doc-Structure",
+  "skill_role": "doc_governor",
+  "runtime_source_policy": {
+    "runtime_rule_source": "CLI_JSON",
+    "documents_are_source_of_truth": true,
+    "command_names_are_repo_local_convention": true
+  },
+  "profile_support": {
+    "doc_topology": [
+      "inline",
+      "referenced",
+      "workflow_path"
+    ],
+    "tooling_surface": [
+      "none",
+      "contract_cli",
+      "automation_cli"
+    ]
+  },
+  "tool_entry": {
+    "script": "scripts/Cli_Toolbox.py",
+    "commands": {
+      "contract": "read the machine contract",
+      "directive": "read a fixed governance directive",
+      "inspect": "detect the target topology",
+      "lint": "validate the target against topology-aware rules",
+      "compile-context": "compile the minimal context for the selected profile"
+    }
+  },
+  "artifact_policy": {
+    "mode": "ephemeral_stdout_only",
+    "resolver": "repo_local_integration_contract"
+  },
+  "hard_constraints": [
+    "profile detection is topology-first, not legacy skill_mode-first",
+    "workflow_path and referenced are both formal shapes",
+    "compile-context is profile-dependent"
+  ]
+}

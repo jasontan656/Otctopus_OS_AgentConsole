@@ -1,0 +1,50 @@
+{
+  "contract_name": "skillsmanager_creation_template_runtime_contract",
+  "contract_version": "2.0.0",
+  "skill_name": "SkillsManager-Creation-Template",
+  "skill_role": "creation_scaffold_governor",
+  "runtime_source_policy": {
+    "runtime_rule_source": "CLI_JSON",
+    "documents_are_source_of_truth": true,
+    "command_names_are_repo_local_convention": true
+  },
+  "profile_support": {
+    "doc_topology": [
+      "inline",
+      "referenced",
+      "workflow_path"
+    ],
+    "tooling_surface": [
+      "none",
+      "contract_cli",
+      "automation_cli"
+    ],
+    "workflow_control": [
+      "advisory",
+      "guardrailed",
+      "compiled"
+    ]
+  },
+  "tool_entry": {
+    "script": "scripts/Cli_Toolbox.py",
+    "commands": {
+      "contract": "read the machine contract",
+      "directive": "read a fixed governance directive",
+      "profile": "read the supported scaffold catalog",
+      "scaffold": "generate a skill scaffold for a selected profile"
+    }
+  },
+  "artifact_policy": {
+    "mode": "ephemeral_stdout_only",
+    "resolver": "repo_local_integration_contract",
+    "notes": [
+      "the scaffold generator does not own a runtime result directory",
+      "generated skills must declare their own artifact policy when needed"
+    ]
+  },
+  "hard_constraints": [
+    "profile fields are orthogonal and replace legacy skill_mode semantics",
+    "references and tests are allowed whenever the selected profile requires them",
+    "workflow_path is a formal profile, not the default shape"
+  ]
+}

@@ -1,0 +1,140 @@
+{
+  "contract_name": "meta_runtime_memory_runtime_contract",
+  "contract_version": "1.1.0",
+  "skill_name": "__SKILL_NAME__",
+  "runtime_source_policy": {
+    "primary_runtime_source": "CLI_JSON",
+    "human_markdown_role": "human_mirror_only",
+    "payload_role": "structured_contract_for_models",
+    "markdown_is_not_primary_instruction_source": true
+  },
+  "trigger_policy": {
+    "default_trigger": "turn_hook",
+    "manual_invoke_still_allowed": true,
+    "turn_start_mandatory_load": true,
+    "turn_end_mandatory_check": true,
+    "conditional_writeback": true,
+    "allow_implicit_invocation": true,
+    "session_stream_auto_hook": true
+  },
+  "tool_entry": {
+    "script": "scripts/Cli_Toolbox.py",
+    "commands": {
+      "runtime-contract": "./.venv_backend_skills/bin/python Skills/Meta-Runtime-Memory/scripts/Cli_Toolbox.py runtime-contract --json",
+      "directive": "./.venv_backend_skills/bin/python Skills/Meta-Runtime-Memory/scripts/Cli_Toolbox.py directive --topic <topic> --json",
+      "paths": "./.venv_backend_skills/bin/python Skills/Meta-Runtime-Memory/scripts/Cli_Toolbox.py paths --json",
+      "init-store": "./.venv_backend_skills/bin/python Skills/Meta-Runtime-Memory/scripts/Cli_Toolbox.py init-store --json",
+      "bind-task": "./.venv_backend_skills/bin/python Skills/Meta-Runtime-Memory/scripts/Cli_Toolbox.py bind-task --task-id <task_id> --title \"<title>\" --goal \"<goal>\" --json",
+      "compile-active-memory": "./.venv_backend_skills/bin/python Skills/Meta-Runtime-Memory/scripts/Cli_Toolbox.py compile-active-memory --json",
+      "upsert-user-memory": "./.venv_backend_skills/bin/python Skills/Meta-Runtime-Memory/scripts/Cli_Toolbox.py upsert-user-memory --patch-json '<json>' --json",
+      "upsert-task-memory": "./.venv_backend_skills/bin/python Skills/Meta-Runtime-Memory/scripts/Cli_Toolbox.py upsert-task-memory --task-id <task_id> --patch-json '<json>' --json",
+      "append-turn-delta": "./.venv_backend_skills/bin/python Skills/Meta-Runtime-Memory/scripts/Cli_Toolbox.py append-turn-delta --summary \"<summary>\" --task-memory-update \"<delta>\" --next-action \"<next>\" --writeback-decision applied --json",
+      "validate-store": "./.venv_backend_skills/bin/python Skills/Meta-Runtime-Memory/scripts/Cli_Toolbox.py validate-store --json",
+      "watch-codex-sessions": "./.venv_backend_skills/bin/python Skills/Meta-Runtime-Memory/scripts/Cli_Toolbox.py watch-codex-sessions --json",
+      "show-turn-audit": "./.venv_backend_skills/bin/python Skills/Meta-Runtime-Memory/scripts/Cli_Toolbox.py show-turn-audit --session-id <session_id> --turn-id <turn_id> --json",
+      "recall-memory": "./.venv_backend_skills/bin/python Skills/Meta-Runtime-Memory/scripts/Cli_Toolbox.py recall-memory --task-id <task_id>|--session-id <session_id> --json",
+      "search-memory": "./.venv_backend_skills/bin/python Skills/Meta-Runtime-Memory/scripts/Cli_Toolbox.py search-memory --query \"<text>\" --json"
+    }
+  },
+  "memory_definition": {
+    "keep_only": [
+      "long_term_goal",
+      "current_state",
+      "stable_behavior_constraints"
+    ],
+    "discard_by_default": [
+      "full_chat_history",
+      "raw_tool_output",
+      "obsolete_branching_detail",
+      "low_signal_noise"
+    ],
+    "layers": {
+      "user_top_layer": [
+        "long_term_objectives",
+        "communication_style",
+        "work_style",
+        "collaboration_style",
+        "global_preferences",
+        "habit_patterns",
+        "stable_constraints"
+      ],
+      "task_layer": [
+        "task_goal",
+        "current_state",
+        "working_style",
+        "constraints",
+        "mindset",
+        "next_steps",
+        "open_questions",
+        "artifacts",
+        "handoff_notes"
+      ]
+    }
+  },
+  "must_use_sequence": [
+    "At turn start, call runtime-contract before consuming runtime guidance for this skill.",
+    "Use the Codex session-stream watcher as the default runtime hook carrier instead of manufacturing proof with manual bind-task or append-turn-delta commands.",
+    "Read the turn-start-load directive and let the watcher bind the task plus compile active memory before substantial task execution.",
+    "If no active task is bound or the task changed, the watcher must persist ACTIVE_RUNTIME.json, SESSION_MEMORY.json, TURN_AUDIT.json, ACTIVE_TASK.json, and compiled ACTIVE_MEMORY.json as one traceable chain.",
+    "Only write back durable memory when new stable signal appears; transient noise stays out.",
+    "At turn end, read the turn-end-writeback directive and let the watcher decide whether to update user memory, task memory, and turn delta; skipped checks still require a persisted turn audit.",
+    "Open human mirrors only when direct JSON still leaves a real gap."
+  ],
+  "directive_topics": [
+    {
+      "topic": "turn-start-load",
+      "doc_kind": "contract",
+      "use_when": "At turn start, or immediately after explicit manual invocation."
+    },
+    {
+      "topic": "turn-end-writeback",
+      "doc_kind": "contract",
+      "use_when": "Before the final reply and whenever stable memory updates are about to be written."
+    },
+    {
+      "topic": "task-binding",
+      "doc_kind": "contract",
+      "use_when": "The current task is new, switched, resumed, or still missing an active binding."
+    },
+    {
+      "topic": "payload-governance",
+      "doc_kind": "contract",
+      "use_when": "The task needs data model, write boundary, source-of-truth, or path governance."
+    },
+    {
+      "topic": "final-reply-guard",
+      "doc_kind": "contract",
+      "use_when": "The final reply must reflect whether memory was updated, skipped, or left with residual gaps."
+    }
+  ],
+  "path_policy": {
+    "runtime_root_rule": "__RUNTIME_ROOT__",
+    "result_root_rule": "__RESULT_ROOT__",
+    "compiled_active_memory_rule": "__RUNTIME_ROOT__/compiled/ACTIVE_MEMORY.json",
+    "watcher_state_rule": "__RUNTIME_ROOT__/watcher/OBSERVER_STATE.json",
+    "machine_log_rule": "__RUNTIME_ROOT__/logs/machine.jsonl",
+    "human_log_rule": "__RUNTIME_ROOT__/logs/human.log",
+    "active_task_pointer_rule": "__RESULT_ROOT__/ACTIVE_TASK.json",
+    "active_runtime_rule": "__RESULT_ROOT__/ACTIVE_RUNTIME.json",
+    "user_memory_rule": "__RESULT_ROOT__/user/USER_MEMORY.json",
+    "task_memory_rule": "__RESULT_ROOT__/tasks/<task_id>/TASK_MEMORY.json",
+    "turn_delta_rule": "__RESULT_ROOT__/tasks/<task_id>/TURN_DELTA.json",
+    "session_memory_rule": "__RESULT_ROOT__/sessions/<session_id>/SESSION_MEMORY.json",
+    "turn_audit_rule": "__RESULT_ROOT__/sessions/<session_id>/turns/<turn_id>.json",
+    "resolved_paths_command": "./.venv_backend_skills/bin/python Skills/Meta-Runtime-Memory/scripts/Cli_Toolbox.py paths --json"
+  },
+  "environment_overrides": {
+    "CODEX_SKILL_RUNTIME_ROOT": "Optional base container override for __RUNTIME_ROOT__.",
+    "CODEX_SKILL_RESULT_ROOT": "Optional base container override for __RESULT_ROOT__.",
+    "CODEX_HOME": "Optional Codex session root override for watcher-based auto hook execution."
+  },
+  "hard_constraints": [
+    "Treat memory as a required runtime contract, not as optional note taking.",
+    "Do not persist full transcripts or raw tool outputs as durable memory.",
+    "Do not store mutable runtime memory under the skill code directory.",
+    "Do not let Markdown become the sole source of truth.",
+    "Validate every write before persisting it.",
+    "Do not claim hook success based only on compiled ACTIVE_MEMORY.json existence without session_id + turn_id audit evidence.",
+    "Update snapshots first, then append turn delta, then compile active memory."
+  ]
+}

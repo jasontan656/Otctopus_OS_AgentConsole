@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0.0",
+  "memory_kind": "user",
+  "updated_at": "",
+  "top_layer": {
+    "long_term_objectives": [],
+    "communication_style": [],
+    "work_style": [],
+    "collaboration_style": [],
+    "global_preferences": [],
+    "habit_patterns": [],
+    "stable_constraints": []
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "topics": {
+    "lint-boundary": {
+      "doc_kind": "guide",
+      "json_path": "LINT_BOUNDARY_DIRECTIVE.json",
+      "human_path": "LINT_BOUNDARY_DIRECTIVE_human.md"
+    },
+    "compile-context": {
+      "doc_kind": "guide",
+      "json_path": "COMPILE_CONTEXT_DIRECTIVE.json",
+      "human_path": "COMPILE_CONTEXT_DIRECTIVE_human.md"
+    }
+  }
+}

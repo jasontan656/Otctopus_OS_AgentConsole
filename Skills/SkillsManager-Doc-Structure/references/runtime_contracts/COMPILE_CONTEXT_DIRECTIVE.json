@@ -1,0 +1,20 @@
+{
+  "directive_name": "skillsmanager_doc_structure_compile_context",
+  "directive_version": "1.0.0",
+  "doc_kind": "guide",
+  "topic": "compile-context",
+  "purpose": "Compile the minimal context for the active topology without inventing extra truth sources.",
+  "instruction": [
+    "For inline targets, return only the facade.",
+    "For referenced targets, compile the selected reference slice.",
+    "For workflow_path targets, follow reading_chain edges and stop at branch_selection_required when needed."
+  ],
+  "workflow": [
+    "Inspect the target.",
+    "Choose the applicable context entry.",
+    "Compile only the required document slice."
+  ],
+  "rules": [
+    "Compile-context must never silently guess a branch when the workflow requires explicit selection."
+  ]
+}

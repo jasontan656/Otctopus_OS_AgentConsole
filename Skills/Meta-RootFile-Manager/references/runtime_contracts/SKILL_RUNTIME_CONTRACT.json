@@ -1,6 +1,6 @@
 {
   "contract_name": "meta_rootfile_manager_runtime_contract",
-  "contract_version": "4.0.0",
+  "contract_version": "4.1.0",
   "skill_name": "Meta-RootFile-Manager",
   "description": "Meta-RootFile-Manager exposes CLI-first governance for channelized root files and a dedicated AGENTS payload governance entry.",
   "runtime_kind": "channelized_root_file_governance",
@@ -34,6 +34,16 @@
   "special_channels": [
     "AGENTS_MD"
   ],
+  "artifact_policy": {
+    "mode": "runtime_local_artifacts",
+    "resolver": "runtime_contract_paths",
+    "notes": [
+      "repo-tracked managed mirrors stay under assets/managed_targets/AI_Projects",
+      "runtime-local or ephemeral managed mirrors stay under Codex_Skill_Runtime/<skill>/managed_targets",
+      "latest stage reports stay under Codex_Skill_Runtime/<skill>/artifacts/<stage>/latest.json",
+      "timestamped stage logs stay under Codex_Skill_Runtime/<skill>/logs/<stage>/"
+    ]
+  },
   "plain_mapping_rule": "non_agents_channels_store_exact_external_content_in_non_identical_managed_filenames",
   "owner_rule": "every governed target must expose a path-derived descriptive owner string; if managed content is json inject owner into that json, otherwise inject owner through frontmatter in the same managed file",
   "agents_payload_rule": "skill name plus minimal description may appear only in default_meta_skill_order; AGENTS payload changes must pass through the agents-payload-contract workflow",
@@ -45,5 +55,7 @@
     "Do not leave replace_me in an AGENTS target that is being finalized by new-writeback.",
     "Do not repeat parent AGENTS part_a or parent payload semantics inside child AGENTS surfaces; lint must reject parent-child duplicates except skill entries."
   ],
-  "registry_source": "rules/scan_rules.json"
+  "registry_source": "rules/scan_rules.json (static channel registry only)",
+  "governed_target_discovery_source": "assets/managed_targets/AI_Projects + Codex_Skill_Runtime/<skill>/managed_targets",
+  "ephemeral_runtime_discovery_policy": "default scan/lint/collect/push exclude runtime managed targets under ephemeral_workspace unless the source path is explicitly requested"
 }

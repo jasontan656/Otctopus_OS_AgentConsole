@@ -7,7 +7,7 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `.codex/skills` container 的 runtim
 
 <part_A>
 1. 根入口命令
-- `MDM_WORKSPACE_ROOT=/home/jasontan656 /home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python /home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py agents-payload-contract --source-path "/home/jasontan656/.codex/skills/AGENTS.md" --json`
+- `MDM_WORKSPACE_ROOT=<codex_home_parent> <root>/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python3 <root>/Otctopus_OS_AgentConsole/Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py agents-payload-contract --source-path "<codex_home>/skills/AGENTS.md" --json`
 
 2. 技能类任务附加入口
 - N/A
@@ -16,7 +16,7 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `.codex/skills` container 的 runtim
 - N/A
 
 4. 当前受管 repo 边界
-- 禁止直接在 `/home/jasontan656/.codex/skills` 安装目录修改技能。
+- 禁止直接在 `<codex_home>/skills` 安装目录修改技能。
 
 5. Multi-AGENT 工作模式
 - N/A
@@ -40,10 +40,10 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `.codex/skills` container 的 runtim
     "N/A"
   ],
   "turn_start_actions": [
-    "run the agents-payload-contract CLI for /home/jasontan656/.codex/skills/AGENTS.md first"
+    "run the agents-payload-contract CLI for <codex_home>/skills/AGENTS.md first"
   ],
   "runtime_constraints": [
-    "do not modify skills directly under /home/jasontan656/.codex/skills"
+    "do not modify skills directly under <codex_home>/skills"
   ],
   "execution_modes": {
     "READ_EXEC": {
@@ -63,7 +63,7 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `.codex/skills` container 的 runtim
     "use the returned payload contract for this target before local processing"
   ],
   "forbidden_primary_runtime_pattern": [
-    "direct skill edits under /home/jasontan656/.codex/skills"
+    "direct skill edits under <codex_home>/skills"
   ],
   "turn_end_actions": [
     "N/A"

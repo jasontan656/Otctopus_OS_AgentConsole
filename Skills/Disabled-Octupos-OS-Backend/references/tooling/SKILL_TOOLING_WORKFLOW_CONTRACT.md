@@ -179,8 +179,7 @@
 - graph postflight 的具体调用由 `stage-graph-contract --stage acceptance` 给出。
 - 若 repo 已索引，应建议执行：
   - `detect-changes`
-  - `map`
-  - `wiki`
+- 仅在需要补充结构上下文时再读取 `resource/context`
 - 目标是增强后续 debug、扩展和阅读，不是完成态门禁。
 
 ## 9. Required Templates

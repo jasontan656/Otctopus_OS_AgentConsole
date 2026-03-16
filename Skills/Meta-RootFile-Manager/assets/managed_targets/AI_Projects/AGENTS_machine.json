@@ -56,6 +56,7 @@
     "if the run stays smooth, continue directly to the normal final reply without extra hook text",
     "if issues are present, repair the minimal verifiable scope first, then merge repaired items and residual risk into the same final reply",
     "when a bounded fix is safe within the active repo boundary, repair first; do not downgrade directly into advice while a local repair still exists",
-    "defer repo-specific lint or Git duties to the concrete repo-local contract when applicable"
+    "defer repo-specific lint or Git duties to the concrete repo-local contract when applicable",
+    "explicitly print the current codex session id at the end of every turn; identify and record it during first-turn initialization, then default to reusing the recorded id from the current conversation context on later turns, and reinitialize or re-probe only when the context does not contain or cannot confirm the id"
   ]
 }

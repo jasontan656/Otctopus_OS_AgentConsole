@@ -1,4 +1,4 @@
 interface:
   display_name: Meta-Enhance-Prompt
-  short_description: Survey the current repo, supplement missing context, and emit a fixed-shape structured execution contract prompt.
-  default_prompt: Use $Meta-Enhance-Prompt. First run `./.venv_backend_skills/bin/python Skills/Meta-Enhance-Prompt/scripts/Cli_Toolbox.py contract --json`. Treat CLI JSON as the primary runtime source and use markdown mirrors only when the contract still leaves a real gap.
+  short_description: Clarify the user's real need into one reusable INTENT block and publish only that filtered intent output.
+  default_prompt: Use $Meta-Enhance-Prompt. First run `./.venv_backend_skills/bin/python Skills/Meta-Enhance-Prompt/scripts/Cli_Toolbox.py contract --json`. Treat CLI JSON as the primary runtime source and use markdown mirrors only when the contract still leaves a real gap. If the user provides `codex id/session id/resume id`, treat it as a context-read parameter for the referenced conversation, not as part of the prompt to strengthen. For requests like `先阅读 codex id : xxxx 的最后一轮助理回复，理解上下文后，帮我强化如下prompt:("xxx")`, only strengthen `xxx` and publish only the final `INTENT:` content after understanding that context.

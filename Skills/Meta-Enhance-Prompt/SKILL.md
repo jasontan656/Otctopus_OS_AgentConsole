@@ -1,6 +1,6 @@
 ---
 name: Meta-Enhance-Prompt
-description: '将用户提示词强化为固定模板的结构化执行合同。先完整调研当前 repo 与用户目标的关系、影响面与覆盖面，再补足目标、输入、输出、边界与验证，最后仅通过固定 CLI tool 输出最终 prompt。Manual invoke: $Meta-Enhance-Prompt.'
+description: '将用户原始 prompt / instruction / workflow 请求澄清为可直接复用的 `INTENT:` 输出。核心职责是压缩噪音、补齐逻辑闭环，并发布最终意图结果而不是六段合同。Manual invoke: $Meta-Enhance-Prompt.'
 metadata:
   doc_structure:
     doc_id: meta_enhance_prompt.entry.facade
@@ -16,37 +16,37 @@ metadata:
 # Meta Enhance Prompt
 
 ## 1. 定位
-- 本技能用于把用户原始 prompt 强化成固定六段的结构化执行合同。
-- 本技能只治理 prompt / instruction / workflow 的强化输出，不承担 repo 调研的替代执行，也不输出方法论报告。
+- 本技能用于把用户原始表达澄清成单段可复用的 `INTENT:` 输出。
+- 本技能只治理 prompt / instruction / workflow 的意图强化，不承担 repo 调研的替代执行，也不输出方法论报告。
+- 当用户提供 `codex id / session id / resume id` 并要求先读取隔壁会话最后一轮 assistant 回复时，该 id 属于前置上下文参数，不属于被强化 prompt 正文。
 - 本技能的模型运行时入口已经切换为 CLI-first；`SKILL.md` 只保留人类门面与路由叙事。
 
 ## 2. 工具入口
 - 统一 runtime 入口：
   - `./.venv_backend_skills/bin/python Skills/Meta-Enhance-Prompt/scripts/Cli_Toolbox.py contract --json`
   - `./.venv_backend_skills/bin/python Skills/Meta-Enhance-Prompt/scripts/Cli_Toolbox.py directive --topic <topic> --json`
-- 结构化合同过滤入口：
-  - `python3 scripts/filter_active_invoke_output.py --mode active_invoke --input-text "<RAW_PROMPT_OUTPUT>" --json`
+- 意图澄清过滤入口：
+  - `python3 scripts/filter_active_invoke_output.py --mode intent_clarify --input-text "<RAW_INTENT_DRAFT_OR_USER_PROMPT>" --json`
+  - `python3 scripts/filter_active_invoke_output.py --mode active_invoke --input-text "<RAW_INTENT_DRAFT_OR_USER_PROMPT>" --json`（兼容别名）
   - `python3 scripts/filter_active_invoke_output.py --mode skill_directive --input-text "<USER_INTENT_TEXT>" --json`
 - 模型读取合同、workflow、instruction、guide 时必须优先消费 CLI JSON；human markdown 只作为叙事镜像。
 
 ## 3. 必读顺序
 1. 先执行 `scripts/Cli_Toolbox.py contract --json`。
 2. 再按任务意图读取 directive：
-   - 强化结构化合同：`--topic active-invoke`
+   - 澄清用户意图：`--topic intent-clarify`（`active-invoke` 为兼容别名）
    - 运行时入口提示：`--topic skill-directive`
    - 日志与结果治理：`--topic output-governance`
-3. 真正执行 `filter_active_invoke_output.py` 前，必须先完成 repo 调研并产出包含六段信息的 `raw_prompt_output`。
+3. 真正执行 `filter_active_invoke_output.py` 前，必须先把用户原话澄清成一段可发布的意图草稿；草稿可以是单段文字，也可以显式带 `INTENT:` 头。
+   - 若原话形如 `先阅读 codex id : xxxx 的最后一轮助理回复，理解上下文后，帮我强化如下prompt:("xxx")`，只把 `xxx` 作为被强化目标；`codex id` 与“先阅读”属于前置上下文读取要求。
 4. 只有当 CLI JSON 仍留有真实语义缺口时，才打开 human mirror 或模板文件。
 
 ## 4. 运行时约束
-- 最终合同固定为 6 段：
-  - `GOAL:`
-  - `REPO_CONTEXT_AND_IMPACT:`
-  - `INPUTS:`
-  - `OUTPUTS:`
-  - `BOUNDARIES:`
-  - `VALIDATION:`
-- `active_invoke` 不允许用默认占位文案伪造缺失段落；缺段必须失败。
+- 最终发布结果固定为单段：
+  - `INTENT:`
+- `intent-clarify` 是 canonical topic；`active-invoke` 仅作为兼容入口保留。
+- `intent_clarify` / `active_invoke` 不允许用默认占位文案伪造空意图；无有效意图时必须失败。
+- 输入里若出现 `codex id / session id / resume id` 与“先阅读最后一轮 assistant 回复”的描述，运行时必须先当作上下文读取参数处理，而不是把这段话直接写进最终 `INTENT:`。
 - `skill_directive` 不再把模型路由回 `SKILL.md`，而是返回 CLI-first 入口指引。
 - 运行时日志默认治理到受管 runtime root；结果文件默认治理到受管 result root，并支持显式 `--output-path`。
 
@@ -54,7 +54,7 @@ metadata:
 - Runtime 合同：`references/runtime_contracts/SKILL_RUNTIME_CONTRACT.json`
 - Directive 索引：`references/runtime_contracts/DIRECTIVE_INDEX.json`
 - Human mirrors：`references/runtime_contracts/*_human.md`
-- 模板：`references/templates/active_invoke_prompt_template_v1.txt`
+- 模板：`references/templates/intent_clarify_template_v1.txt`
 
 ## 6. 结构索引
 ```text

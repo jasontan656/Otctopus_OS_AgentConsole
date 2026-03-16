@@ -52,7 +52,7 @@ description: "暂时不启用，避免被误触发；仅保留为可修改的历
   - `scripts/Cli_Toolbox.py`
 - 外部辅助层：
   - `<root>/Otctopus_OS_AgentConsole/Skills/Meta-code-graph-base/SKILL.md`
-  - `<root>/Otctopus_OS_AgentConsole/Skills/Meta-code-graph-base/scripts/meta_code_graph_base.py`
+  - `<root>/Otctopus_OS_AgentConsole/Skills/Meta-code-graph-base/assets/gitnexus_core/dist/cli/index.js`
 - 运行边界层：
   - `<root>/AGENTS.md`
   - `<root>/Octopus_OS/AGENTS.md`

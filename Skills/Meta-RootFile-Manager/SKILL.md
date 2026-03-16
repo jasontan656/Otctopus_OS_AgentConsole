@@ -2,6 +2,10 @@
 name: Meta-RootFile-Manager
 description: 集中管理 workspace 内的根级默认受管文件。当前提供 scan / lint / collect / push / scaffold / target-contract CLI，并按文件类型通道治理多个外部路径。
 metadata:
+  skill_profile:
+    doc_topology: referenced
+    tooling_surface: automation_cli
+    workflow_control: guardrailed
   doc_structure:
     doc_id: meta_rootfile_manager.entry.facade
     doc_type: skill_facade
@@ -39,7 +43,7 @@ metadata:
 - 本技能治理的是 workspace 内各 repo root 或 workspace root 的默认受管文件。
 - 每一种文件类型都必须有独立 `channel`。
 - 每个 `channel` 可以治理多个外部路径。
-- 当前 channel 注册表以 [rules/scan_rules.json](rules/scan_rules.json) 为真源。
+- 当前 channel 注册表以 [rules/scan_rules.json](rules/scan_rules.json) 为真源，但它只承载静态 channel 规则，不承载动态实例注册。
 
 ## 3. 通道语义
 - `channel` 只表达文件类型级治理差异。
@@ -105,6 +109,7 @@ metadata:
 - 项目技能只声明哪些 root file 必须存在，不负责这些默认文件的长期正文维护。
 - 默认文件正文的回收与推出必须通过本技能完成，避免单点直接编辑导致治理链断裂。
 - `scan` 规则必须外置在 `rules/scan_rules.json`，不得把 channel 注册表重新硬编码进 CLI。
+- 动态 governed target 发现必须来自受管 mirror 资产树与 runtime-local managed assets，不得继续回写到 `rules/scan_rules.json`。
 - 非 `AGENTS.md` 文件的技能内映射文件不得与外部真实文件同名。
 - `target-contract`、`scan`、`collect`、`push`、`scaffold` 的输出都必须暴露 `owner`。
 - `AGENTS_machine.json` payload 变更不得绕过 `agents-payload-contract` 入口合同。

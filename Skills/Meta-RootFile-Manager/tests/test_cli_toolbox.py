@@ -774,8 +774,7 @@ class TestCliToolbox:
         assert not target_contract["managed_dir"].startswith(str(self.skill_root / "assets" / "managed_targets"))
 
         rules = json.loads((self.skill_root / "rules" / "scan_rules.json").read_text(encoding="utf-8"))
-        governed = rules["channels"]["AGENTS_MD"]["governed_source_paths"]
-        assert "Codex_Skill_Runtime/Meta-RootFile-Manager/sandbox/sample_repo/Development_Docs/AGENTS.md" not in governed
+        assert "governed_source_paths" not in rules["channels"]["AGENTS_MD"]
         assert not (
             self.installed
             / "assets"
@@ -819,6 +818,13 @@ class TestCliToolbox:
         target_contract = self.run_cli("target-contract", "--source-path", str(external_path), "--json")
         assert target_contract["managed_dir"].startswith(str(self.runtime / "managed_targets"))
         assert not target_contract["managed_dir"].startswith(str(self.skill_root / "assets" / "managed_targets"))
+
+    def test_scan_discovers_governed_targets_from_managed_assets_without_dynamic_scan_rules(self) -> None:
+        result = self.run_cli("scan", "--json")
+        source_paths = {entry["source_path"] for entry in result["entries"]}
+        assert str((self.workspace / "AGENTS.md").resolve()) in source_paths
+        assert str((self.repo_root / "AGENTS.md").resolve()) in source_paths
+        assert str((self.repo_root / "README.md").resolve()) in source_paths
 
     def test_collect_runtime_local_agents_updates_runtime_managed_pair(self) -> None:
         target_dir = self.runtime / "sandbox" / "sample_repo" / "Development_Docs"

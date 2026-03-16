@@ -1,0 +1,35 @@
+{
+  "contract_name": "skillsmanager_tooling_checkup_runtime_contract",
+  "contract_version": "2.0.0",
+  "skill_name": "SkillsManager-Tooling-CheckUp",
+  "skill_role": "tooling_governor",
+  "runtime_source_policy": {
+    "runtime_rule_source": "CLI_JSON",
+    "documents_are_source_of_truth": true,
+    "command_names_are_repo_local_convention": true
+  },
+  "profile_support": {
+    "tooling_surface": [
+      "none",
+      "contract_cli",
+      "automation_cli"
+    ]
+  },
+  "tool_entry": {
+    "script": "scripts/Cli_Toolbox.py",
+    "commands": {
+      "contract": "read the machine contract",
+      "directive": "read a fixed governance directive",
+      "audit": "audit the target skill runtime/tooling surface"
+    }
+  },
+  "artifact_policy": {
+    "mode": "ephemeral_stdout_only",
+    "resolver": "repo_local_integration_contract"
+  },
+  "hard_constraints": [
+    "contract fields are more important than command names",
+    "artifact policy must not hardcode repo-local absolute paths",
+    "remediation output does not mutate the target skill"
+  ]
+}

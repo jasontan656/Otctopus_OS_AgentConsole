@@ -1,0 +1,4 @@
+interface:
+  display_name: SkillsManager-GovTargetSkill
+  short_description: 接收一个目标技能并依托 Functional-Analysis-Runtask 完成轻量 analysis_loop 治理闭环。
+  default_prompt: Use $SkillsManager-GovTargetSkill to govern the target skill.

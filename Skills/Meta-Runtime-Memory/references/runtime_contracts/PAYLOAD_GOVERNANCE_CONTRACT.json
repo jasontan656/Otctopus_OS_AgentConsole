@@ -1,0 +1,26 @@
+{
+  "directive_name": "payload_governance_contract",
+  "topic": "payload-governance",
+  "purpose": "Govern source-of-truth files, schemas, write boundaries, and persistent path rules for Meta-Runtime-Memory.",
+  "instruction": [
+    "JSON snapshots are the durable source of truth.",
+    "Markdown files are derived mirrors and must be regenerated from JSON.",
+    "User memory and task memory use separate schemas and separate files.",
+    "Session memory, active runtime, turn audit, and watcher state use separate governed JSON files.",
+    "Every persisted write must pass validation before the file is updated."
+  ],
+  "workflow": [
+    "Load the current JSON payload.",
+    "Merge only the minimal necessary patch.",
+    "Validate the merged payload.",
+    "Write JSON snapshot with updated_at.",
+    "Render the matching Markdown mirror when the target owns one."
+  ],
+  "rules": [
+    "Do not write mutable memory into the skill root.",
+    "Do not accept unknown top-level keys silently.",
+    "Lists represent curated stable signal, not raw accumulation.",
+    "Turn-start and turn-end claims are invalid without session_id + turn_id audit files.",
+    "Prefer replacing stale snapshot truth over appending contradictory notes."
+  ]
+}

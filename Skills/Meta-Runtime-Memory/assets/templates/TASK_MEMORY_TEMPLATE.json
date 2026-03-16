@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0.0",
+  "memory_kind": "task",
+  "task_id": "__TASK_ID__",
+  "title": "__TASK_TITLE__",
+  "status": "active",
+  "updated_at": "",
+  "task_layer": {
+    "task_goal": "",
+    "current_state": [],
+    "working_style": [],
+    "constraints": [],
+    "mindset": [],
+    "next_steps": [],
+    "open_questions": [],
+    "artifacts": [],
+    "handoff_notes": []
+  }
+}

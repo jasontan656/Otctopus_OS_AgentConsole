@@ -1,0 +1,18 @@
+{
+  "README.md": "公共说明面",
+  "CHANGELOG.md": "版本与迭代记录面",
+  "CONTRIBUTING.md": "协作入口说明面",
+  "SECURITY.md": "安全披露与响应面",
+  "CODE_OF_CONDUCT.md": "协作行为边界面",
+  "LICENSE": "授权与法律边界面",
+  ".gitignore": "本地噪音过滤边界面",
+  "pytest.ini": "Python 测试运行配置面",
+  "Dockerfile": "容器构建入口面",
+  ".dockerignore": "容器构建忽略边界面",
+  ".env.example": "环境变量样例面",
+  "requirements.txt": "Python 依赖声明面",
+  "requirements-backend_skills.lock.txt": "skills Python 依赖锁定面",
+  "pyproject.toml": "Python 项目集成配置面",
+  "package.json": "Node package runtime 声明面",
+  "package-lock.json": "Node package lock 面"
+}

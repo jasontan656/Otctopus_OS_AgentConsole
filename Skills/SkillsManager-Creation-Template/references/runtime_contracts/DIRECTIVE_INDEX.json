@@ -1,0 +1,14 @@
+{
+  "topics": {
+    "profile-selection": {
+      "doc_kind": "guide",
+      "json_path": "PROFILE_SELECTION_DIRECTIVE.json",
+      "human_path": "PROFILE_SELECTION_DIRECTIVE_human.md"
+    },
+    "implementation-boundary": {
+      "doc_kind": "guide",
+      "json_path": "IMPLEMENTATION_BOUNDARY_DIRECTIVE.json",
+      "human_path": "IMPLEMENTATION_BOUNDARY_DIRECTIVE_human.md"
+    }
+  }
+}

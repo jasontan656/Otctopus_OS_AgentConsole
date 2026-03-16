@@ -1,0 +1,23 @@
+{
+  "directive_name": "final_reply_guard_contract",
+  "topic": "final-reply-guard",
+  "purpose": "Govern how final replies reflect memory load, writeback, skipped updates, and residual gaps for Meta-Runtime-Memory.",
+  "instruction": [
+    "If memory was updated, the final reply should reflect the outcome at a high level.",
+    "If writeback was skipped, the final reply may mention that no durable signal was produced when relevant.",
+    "If a gap remains because the signal is still uncertain, call out the uncertainty instead of persisting it.",
+    "Do not dump raw memory payloads into the user-facing answer unless explicitly requested."
+  ],
+  "workflow": [
+    "Check whether the turn loaded compiled memory successfully.",
+    "Check whether user memory or task memory changed.",
+    "Check whether turn delta was appended.",
+    "Summarize the outcome only to the extent that it matters for the current user task."
+  ],
+  "rules": [
+    "Final reply is not a full memory report by default.",
+    "Memory persistence status may be summarized briefly.",
+    "Residual ambiguity should remain explicit rather than silently written back.",
+    "User-facing brevity remains preferred."
+  ]
+}

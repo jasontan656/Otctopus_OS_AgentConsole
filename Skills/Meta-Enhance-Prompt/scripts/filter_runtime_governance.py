@@ -23,7 +23,9 @@ class RuntimePayloadRecord(TypedDict, total=False):
     filter_exit_code: int
     filter_exit_message: str
     publish_blocked: bool
+    final_intent_output: str
     final_prompt_copy_paste: str
+    extracted_intent: str
     final_skill_read_directive: str
     intent_summary: str
     chat_publish_policy: str
@@ -73,7 +75,7 @@ def governed_result_root() -> Path:
 
 def new_run_id(mode: str) -> str:
     stamp = dt.datetime.now(dt.timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-    normalized_mode = str(mode or "active_invoke").strip().lower() or "active_invoke"
+    normalized_mode = str(mode or "intent_clarify").strip().lower() or "intent_clarify"
     return f"meta-enhance-prompt-{normalized_mode}-{stamp}"
 
 

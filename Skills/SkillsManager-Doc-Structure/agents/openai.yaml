@@ -1,4 +1,4 @@
 interface:
   display_name: SkillsManager-Doc-Structure
-  short_description: 治理技能内部文档组织方式、链路衔接方式与 reading-chain lint。
+  short_description: 治理技能的门面、references 与 workflow_path 文档拓扑，并执行 profile-aware 结构 lint 与上下文编译。
   default_prompt: Use $SkillsManager-Doc-Structure.

@@ -1,55 +1,97 @@
 ---
 name: SkillsManager-Doc-Structure
-description: 治理技能内部文档组织方式、链路衔接方式与 reading-chain lint 的技能。
-skill_mode: guide_with_tool
+description: 治理技能的门面、references 与 workflow_path 文档拓扑，并以 profile-aware 方式执行结构 lint 与上下文编译。
 metadata:
+  skill_profile:
+    doc_topology: referenced
+    tooling_surface: automation_cli
+    workflow_control: guardrailed
   doc_structure:
     doc_id: skillsmanager_doc_structure.entry.facade
     doc_type: skill_facade
     topic: Entry facade for the SkillsManager-Doc-Structure skill
+    anchors:
+    - target: ./references/runtime_contracts/SKILL_RUNTIME_CONTRACT_human.md
+      relation: routes_to
+      direction: downstream
+      reason: The facade routes runtime execution to the CLI-first contract.
+    - target: ./references/routing/TASK_ROUTING.md
+      relation: routes_to
+      direction: downstream
+      reason: The routing guide explains how topology-aware linting works.
 ---
 
 # SkillsManager-Doc-Structure
 
-## 1. 模型立刻需要知道的事情
-### 1. 总览
-- 本技能用于检查目标技能的文档组织是否成立。
-- 检查范围包括：根目录形态、功能入口到下游节点的衔接、frontmatter 中 `reading_chain` 的下一跳语义，以及链路是否可编译。
-- 这一步只审文档结构和阅读顺序，不替目标技能编写业务正文。
+## Runtime Entry
+- Primary runtime entry: `./.venv_backend_skills/bin/python Skills/SkillsManager-Doc-Structure/scripts/Cli_Toolbox.py contract --json`
+- Lint entry: `./.venv_backend_skills/bin/python Skills/SkillsManager-Doc-Structure/scripts/Cli_Toolbox.py lint --target <skill_root> --json`
+- Compile entry: `./.venv_backend_skills/bin/python Skills/SkillsManager-Doc-Structure/scripts/Cli_Toolbox.py compile-context --target <skill_root> --entry <entry> --json`
+- CLI JSON is the primary runtime source; `SKILL.md` only remains as a facade and routing narrative.
 
-### 2. 技能约束
-- 先判定目标技能属于哪种形态，再进入对应检查链路。
-- `reading_chain` 必须表达模型下一步该读什么，以及 CLI 下一步该编译什么。
-- CLI 只做硬结构 lint：根结构、线性/复合线性、下一跳存在性、reading-chain 可解析性与链路编译结果。
-- `read-contract-context` 是当前技能自身的快捷合同编译入口；`read-path-context` 可作为等价别名保留。
-- “每一层具体写得对不对”属于模型语义审查，不由 CLI 把正文模板硬编码死。
+## 1. 技能定位
+- 本技能只负责文档拓扑治理，不再把家族模板目录形态当作长期标准。
+- 当前稳定职责只有三类：
+  - 判定 target skill 的 `doc_topology`
+  - 校验门面、references 与 workflow_path 的结构边界
+  - 按 profile 编译最小必要上下文
+- 本技能不治理 target skill 的业务语义、repo-local 输出路径或 Python 语言风格细节。
 
-### 3. 顶层常驻合同
-- 全局合同直接写在本门面中，不额外外跳到 CLI 合同。
-- 后续阅读只沿当前选中的治理功能入口继续下沉。
+## 2. 必读顺序
+1. 先执行 `./.venv_backend_skills/bin/python Skills/SkillsManager-Doc-Structure/scripts/Cli_Toolbox.py contract --json`。
+2. 再根据任务进入：
+   - `references/routing/TASK_ROUTING.md`
+   - `references/profiles/DOC_TOPOLOGY_PROFILES.md`
+3. 若要理解 lint 规则，再读取：
+   - `references/policies/FACADE_POLICY.md`
+   - `references/policies/REFERENCE_GRAPH_POLICY.md`
+   - `references/policies/WORKFLOW_PATH_POLICY.md`
+4. 若要运行或维护 CLI，再进入 `references/tooling/`。
 
-## 2. 功能入口
-- [目标形态检查]：`path/primary_flow/21_TARGET_SHAPE.md`
-  - 作用：判断目标技能属于哪种形态，以及该形态的根组织是否成立。
-  - 快捷阅读：`python3 ./scripts/Cli_Toolbox.py read-contract-context --entry target_shape --selection <branch_keys> --json`
-- [链路衔接检查]：`path/primary_flow/22_PATH_CHAINING.md`
-  - 作用：检查门面到各层节点的下一跳是否按阅读顺序逐级下沉。
-  - 快捷阅读：`python3 ./scripts/Cli_Toolbox.py read-contract-context --entry path_chaining --selection <branch_keys> --json`
-- [文档职责检查]：`path/primary_flow/23_DOC_WRITING.md`
-  - 作用：检查不同节点是否承担了正确职责，没有越层或回流。
-  - 快捷阅读：`python3 ./scripts/Cli_Toolbox.py read-contract-context --entry doc_writing --selection <branch_keys> --json`
-- [reading-chain 检查]：`path/primary_flow/24_READING_CHAIN_LINT.md`
-  - 作用：检查 reading-chain 是否只表达阅读顺序、是否能正确编译整条上下文链路。
-  - 快捷阅读：`python3 ./scripts/Cli_Toolbox.py read-contract-context --entry reading_chain_lint --json`
+## 3. 分类入口
+- 路由层：
+  - `references/routing/TASK_ROUTING.md`
+- profile 层：
+  - `references/profiles/DOC_TOPOLOGY_PROFILES.md`
+- 规则层：
+  - `references/policies/FACADE_POLICY.md`
+  - `references/policies/REFERENCE_GRAPH_POLICY.md`
+  - `references/policies/WORKFLOW_PATH_POLICY.md`
+- runtime 合同：
+  - `references/runtime_contracts/SKILL_RUNTIME_CONTRACT_human.md`
+- tooling 层：
+  - `references/tooling/Cli_Toolbox_USAGE.md`
+  - `references/tooling/Cli_Toolbox_DEVELOPMENT.md`
 
-## 3. 目录结构图
+## 4. 适用域
+- 适用于：技能门面重构、references 结构治理、workflow_path 编排治理、reading-chain 编译检查。
+- 适用于：需要同时支持 `inline`、`referenced`、`workflow_path` 三类技能的结构 lint。
+- 不适用于：替代具体技能的方法论正文，也不替代 `SkillsManager-Tooling-CheckUp` 的 CLI/tooling 审计。
+
+## 5. 执行入口
+- `contract`：读取 machine-readable runtime contract。
+- `directive --topic <topic>`：读取结构治理固定指令。
+- `inspect`：判定目标技能的 profile 与可用上下文入口。
+- `lint`：执行结构治理检查。
+- `compile-context`：按当前 profile 编译最小上下文。
+
+## 6. 读取原则
+- 稳定的是 profile-aware 结构规则，不是旧的 `skill_mode -> shape` 映射。
+- `references/` 与 `workflow_path` 都是正式形态。
+- 若技能本身不需要 `path/`，不要被旧家族习惯强行拉回 `path-first`。
+
+## 7. 结构索引
 ```text
 SkillsManager-Doc-Structure/
 ├── SKILL.md
 ├── agents/
-├── path/
-└── scripts/
+│   └── openai.yaml
+├── references/
+│   ├── policies/
+│   ├── profiles/
+│   ├── routing/
+│   ├── runtime_contracts/
+│   └── tooling/
+├── scripts/
+└── tests/
 ```
-- `path/`：本技能唯一的方法论承载面，所有合同、工作步骤和校验都沿链路下沉。
-- `scripts/`：Python CLI、lint 运行时与回归测试。
-- `agents/`：agent runtime config。

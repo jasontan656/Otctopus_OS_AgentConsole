@@ -1,0 +1,27 @@
+{
+  "directive_name": "turn_end_writeback_contract",
+  "topic": "turn-end-writeback",
+  "purpose": "Govern mandatory turn-end writeback checks, conditional persistence, and recompilation for Meta-Runtime-Memory.",
+  "instruction": [
+    "At turn end, check whether this turn produced durable signal for user memory, task memory, or both.",
+    "Write back only stable signal that affects long-term goal, current state, or stable behavior constraints.",
+    "If no durable signal exists, skip snapshot writeback but still persist a turn audit record with writeback_decision=skipped.",
+    "When writeback occurs, append a concise turn delta and recompile active memory."
+  ],
+  "workflow": [
+    "Classify new information as durable, transient, or uncertain.",
+    "Update USER_MEMORY.json only for stable user-layer signals.",
+    "Update TASK_MEMORY.json only for durable task-layer signals.",
+    "Append a turn delta entry that records what changed and why; skipped turns still require a persisted audit trace.",
+    "Write TURN_AUDIT.json with session_id, turn_id, changed_paths, validation_runs, and writeback_decision.",
+    "Re-render Markdown mirrors from JSON source of truth.",
+    "Recompile ACTIVE_MEMORY.json for the next turn."
+  ],
+  "rules": [
+    "Turn-end check is mandatory even when no writeback occurs.",
+    "Skipped turn-end checks still need durable audit evidence.",
+    "Do not write back raw transcript or tool output.",
+    "Do not let turn delta replace the current snapshot.",
+    "Uncertain signal stays out until clarified."
+  ]
+}

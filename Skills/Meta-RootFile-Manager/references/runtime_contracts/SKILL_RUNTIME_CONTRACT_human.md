@@ -20,6 +20,8 @@ anchors:
 - Scaffold AGENTS finalization entry:
   `./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py new-writeback --json --source-path "<external AGENTS path>"`
 - CLI JSON is the primary runtime source.
+- Artifact policy:
+  `runtime_local_artifacts` via runtime-contract path resolution; repo-tracked mirrors stay under `assets/managed_targets/AI_Projects/...`, while runtime-local mirrors, latest reports, and stage logs stay under `Codex_Skill_Runtime/<skill>/...`.
 - Every governed target must expose a path-derived descriptive `owner`.
 - If the managed content is json, `owner` must be embedded into that json.
 - If the managed content is not json, `owner` must be embedded through frontmatter in the same managed file.
@@ -27,5 +29,6 @@ anchors:
 - `new-writeback` is the stage that finalizes scaffolded `AGENTS.md + AGENTS_machine.json`; the target must not still contain `replace_me`.
 - `SKILL.md` remains a facade and narrative mirror.
 - Runtime-local or ephemeral sources must store managed mirrors under `Codex_Skill_Runtime/<skill>/managed_targets/...`, not under repo-tracked `assets/managed_targets/...`.
+- Default discovery for `scan` / `lint` / `collect` / `push` must exclude runtime-managed targets under `ephemeral_workspace/...` unless the caller explicitly passes that `--source-path`.
 - Latest stage result json must write to `Codex_Skill_Runtime/<skill>/artifacts/<stage>/latest.json`.
 - Timestamped run logs must write to `Codex_Skill_Runtime/<skill>/logs/<stage>/`.

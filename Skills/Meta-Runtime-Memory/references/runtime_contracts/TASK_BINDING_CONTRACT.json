@@ -1,0 +1,28 @@
+{
+  "directive_name": "task_binding_contract",
+  "topic": "task-binding",
+  "purpose": "Govern how Meta-Runtime-Memory binds, switches, and persists the active task context.",
+  "instruction": [
+    "Each durable task must have a stable task_id and its own task directory.",
+    "ACTIVE_TASK.json is the single pointer to the current task.",
+    "Automatic binding must also persist session_id + turn_id attribution through ACTIVE_RUNTIME.json and TURN_AUDIT.json.",
+    "Binding a task creates the task directory when absent and updates the pointer immediately.",
+    "When the user switches tasks, update the pointer before continuing any task-specific work."
+  ],
+  "workflow": [
+    "Derive or match the durable task identifier from the current session turn.",
+    "Create tasks/<task_id>/TASK_MEMORY.json and TURN_DELTA.json when absent.",
+    "Write ACTIVE_TASK.json with the bound task_id.",
+    "Write ACTIVE_RUNTIME.json with session_id, turn_id, and active_task_id.",
+    "Optionally seed task_goal when the user provided a stable goal.",
+    "Write SESSION_MEMORY.json for the session and TURN_AUDIT.json for the current turn.",
+    "Compile active memory after binding."
+  ],
+  "rules": [
+    "One active task pointer at a time.",
+    "Task directories are append-preserving; do not delete history when a task is paused or done.",
+    "Task slug normalization must be deterministic.",
+    "Manual bind-task is a repair/migration tool; the default runtime path is automatic session-stream binding.",
+    "If the user intent is ambiguous, do not silently overwrite another task."
+  ]
+}

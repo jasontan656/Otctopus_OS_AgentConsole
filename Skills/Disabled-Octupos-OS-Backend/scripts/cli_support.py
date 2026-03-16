@@ -151,7 +151,7 @@ def workflow_contract_document() -> dict:
         "implementation_source_policy": IMPLEMENTATION_SOURCE_POLICY,
         "blocked_state_policy": BLOCKED_STATES,
         "graph_preflight_policy": "indexed=use_context, missing+substantial=run_analyze, missing+empty=skip_non_blocking",
-        "graph_postflight_policy": "after implementation, prefer detect-changes/map/wiki when indexed",
+        "graph_postflight_policy": "after implementation, prefer detect-changes when indexed and read resource/context only when needed",
         "required_templates": {name: str(path) for name, path in TEMPLATES.items()},
         "construction_plan_root": str(CONSTRUCTION_PLAN_ROOT),
         "construction_plan_index": str(CONSTRUCTION_PLAN_INDEX_PATH),

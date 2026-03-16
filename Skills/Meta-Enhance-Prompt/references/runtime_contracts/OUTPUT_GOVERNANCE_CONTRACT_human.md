@@ -21,10 +21,10 @@ anchors:
 ```json
 {
   "directive_name": "meta_enhance_prompt_output_governance_contract",
-  "directive_version": "2.0.0",
+  "directive_version": "3.0.0",
   "doc_kind": "contract",
   "topic": "output-governance",
-  "purpose": "Govern runtime logs, default result outputs, explicit output paths, and migration notes for Meta-Enhance-Prompt.",
+  "purpose": "Govern runtime logs, default result outputs, explicit output paths, and migration notes for Meta-Enhance-Prompt intent outputs.",
   "instruction": [
     "Runtime logs must default under the governed runtime root derived from the active workspace or codex home fallback.",
     "Final outputs must support an explicit --output-path and otherwise default under the governed result root.",
@@ -43,7 +43,7 @@ anchors:
     "Preserve stdout delivery while making governed file artifacts discoverable.",
     "Do not mirror the same JSON payload into both stdout and the publication output file."
   ],
-  "migration_note": "Legacy behavior previously emitted stdout/stderr only, and later JSON mode also wrote JSON payloads into output artifacts. The governed implementation now keeps machine payloads on stdout while materializing only plain publication text and runtime logs under the resolved governed roots."
+  "migration_note": "Legacy behavior centered on six-section prompt contracts. The governed implementation now keeps machine payloads on stdout while materializing only plain intent-first publication text and runtime logs under the resolved governed roots."
 }
 ```
 </part_B>

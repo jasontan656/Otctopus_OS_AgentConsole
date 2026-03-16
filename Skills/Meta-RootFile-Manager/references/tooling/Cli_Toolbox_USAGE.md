@@ -33,6 +33,7 @@ anchors:
 - `contract` returns the skill-level CLI runtime entry set.
 - `scaffold` consumes the `骨架生成模版`, creates governed directory skeletons, and writes the first matching `治理映射模版`.
 - `scan` reads external rule assets and discovers governed files.
+- `scan` skips runtime-managed `ephemeral_workspace/...` targets unless they are explicitly requested through `--source-path`.
 - `lint` validates discovered files against the governed structure contracts.
 - `collect` treats external files as the source of truth, creates or refreshes the `治理映射模版`, and syncs mirror plus installed skill assets.
 - `push` treats the `治理映射模版` as the source of truth and overwrites external targets.

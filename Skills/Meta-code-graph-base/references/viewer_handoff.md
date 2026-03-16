@@ -13,8 +13,6 @@ The governed frontend host is:
 - `Meta-code-graph-base` provides:
   - indexed repository registry
   - `codegraph://` resource handles
-  - repo maps
-  - local wiki bundles
   - impact / query / context / detect-changes output
 - `Dev-VUE3-WebUI-Frontend` provides:
   - app shell

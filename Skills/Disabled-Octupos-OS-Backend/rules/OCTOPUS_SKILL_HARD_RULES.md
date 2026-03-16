@@ -82,7 +82,7 @@
 - 无图谱且 repo 为空或近空时必须允许继续，不得卡死首次落盘
 26. acceptance/evidence 收口后必须回看并更新 code graph：
 - 至少判断是否需要 `detect-changes`
-- 需要时生成 `map/wiki`
+- 需要时补读 `resource/context`
 - 目标是为下次 debug 和扩展提供可读导航，不是当前轮 acceptance 证据
 27. 文档与模板默认中文叙事；代码、CLI 输出字段、注释使用 English。
 28. mother doc 与 execution packs 模板中的填写规范必须随骨架一起创建，并用 Python 注释语义表达；进入下一阶段前，这些规范与所有 `replace_me` 都必须被真实内容替换掉。

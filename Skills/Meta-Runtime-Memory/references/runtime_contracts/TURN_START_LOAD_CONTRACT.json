@@ -1,0 +1,29 @@
+{
+  "directive_name": "turn_start_load_contract",
+  "topic": "turn-start-load",
+  "purpose": "Govern mandatory turn-start loading, task resolution, and active-memory compilation for Meta-Runtime-Memory.",
+  "instruction": [
+    "At turn start, ensure the durable store exists before any memory read.",
+    "Consume Codex session stream events and attribute the hook to the current session_id + turn_id before substantial execution.",
+    "Read ACTIVE_TASK.json, ACTIVE_RUNTIME.json, USER_MEMORY.json, and the active task TASK_MEMORY.json if one exists.",
+    "Persist SESSION_MEMORY.json plus TURN_AUDIT.json for the current session/turn and compile active memory into the runtime root.",
+    "If the active task is missing or stale relative to the current session turn, auto-bind the correct durable task before continuing."
+  ],
+  "workflow": [
+    "Run init-store when the store has not been initialized yet.",
+    "Watch for task_started and user_message events in the Codex session log.",
+    "Resolve or auto-bind the active task pointer.",
+    "Load user top-layer memory.",
+    "Load task-layer memory for the active task when available.",
+    "Write ACTIVE_RUNTIME.json and the turn-start TURN_AUDIT.json.",
+    "Compile ACTIVE_MEMORY.json and ACTIVE_MEMORY.md into __RUNTIME_ROOT__/compiled.",
+    "Continue the real task only after the compiled memory is available."
+  ],
+  "rules": [
+    "Turn-start load is mandatory.",
+    "Turn-start proof must include session_id + turn_id attribution.",
+    "Compiled active memory is a runtime artifact, not the durable source of truth.",
+    "If no task is active yet, user-layer memory still loads and task-layer memory remains null.",
+    "Do not substitute chat history for compiled memory."
+  ]
+}

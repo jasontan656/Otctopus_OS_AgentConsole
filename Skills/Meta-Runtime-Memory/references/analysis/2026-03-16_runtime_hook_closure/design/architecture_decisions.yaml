@@ -1,0 +1,31 @@
+decisions:
+  - decision_id: adr_001_session_stream_as_hook_feed
+    status: accepted
+    summary: 使用 Codex session JSONL 作为 turn hook 自动审计的唯一运行时输入面。
+    rationale: >-
+      这是当前环境里唯一天然携带 session_id、turn_id、cwd、用户消息、agent 完成事件的真实运行时流，
+      能把 turn-start/turn-end 归因到当前 session/turn，而不是靠手工命令伪造。
+  - decision_id: adr_002_audit_under_governed_store
+    status: accepted
+    summary: 在 result/runtime 受管目录下新增 ACTIVE_RUNTIME、SESSION_MEMORY、turn audit、machine/human log、watcher state。
+    rationale: >-
+      turn hook 是否发生必须有可回放证据；单看 ACTIVE_MEMORY 不足以证明自动触发，因此需要 session/turn 级审计面。
+  - decision_id: adr_003_auto_bind_on_first_user_message
+    status: accepted
+    summary: 在真实 user_message 到达后自动派生 task_id 并绑定 durable task memory。
+    rationale: >-
+      任务层 memory 必须从运行时自然形成，不能依赖手工 bind-task；session 与 task 的映射要在 turn-start 阶段自动固化。
+  - decision_id: adr_004_turn_end_always_audit
+    status: accepted
+    summary: turn-end 无论 applied 还是 skipped 都必须写 turn audit，并追加 machine/human log。
+    rationale: skipped 是明确决策，不是“什么都没发生”；没有 skipped 审计就无法证明 writeback check 确实触发过。
+  - decision_id: adr_005_explicit_codex_home_override
+    status: accepted
+    summary: 显式传入 --codex-home 时必须强制使用该目录，不允许静默回退到 ~/.codex。
+    rationale: >-
+      否则验证和生产都可能把不相关 session 混入受管 store，破坏 session 归因边界。
+  - decision_id: adr_006_changed_paths_from_explicit_write_ops
+    status: accepted
+    summary: changed_paths 只从 apply_patch 等明确写操作事件提取，不再从普通 exec stdout 猜测。
+    rationale: >-
+      只读命令输出绝对路径会造成 applied 假阳性；变更路径应基于可证明的写操作事件，并用 session cwd 解析相对路径。

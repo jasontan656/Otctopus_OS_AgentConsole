@@ -1,0 +1,21 @@
+{
+  "directive_name": "skillsmanager_creation_template_profile_selection",
+  "directive_version": "1.0.0",
+  "doc_kind": "guide",
+  "topic": "profile-selection",
+  "purpose": "Select the smallest stable profile that still matches the target skill.",
+  "instruction": [
+    "Decide doc_topology before tooling_surface.",
+    "Upgrade to workflow_path only when the skill truly needs compiled path execution.",
+    "Prefer contract_cli over automation_cli unless an actual action command is required."
+  ],
+  "workflow": [
+    "Classify the target skill intent.",
+    "Pick the profile from TEMPLATE_CATALOG.",
+    "Run scaffold once with the final profile instead of layering post-generation edits."
+  ],
+  "rules": [
+    "Do not use legacy skill_mode names as the decision source.",
+    "Do not add references, tests, or path only because an older template did."
+  ]
+}

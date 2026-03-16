@@ -1,0 +1,14 @@
+{
+  "topics": {
+    "artifact-policy": {
+      "doc_kind": "guide",
+      "json_path": "ARTIFACT_POLICY_DIRECTIVE.json",
+      "human_path": "ARTIFACT_POLICY_DIRECTIVE_human.md"
+    },
+    "remediation-gate": {
+      "doc_kind": "guide",
+      "json_path": "REMEDIATION_GATE_DIRECTIVE.json",
+      "human_path": "REMEDIATION_GATE_DIRECTIVE_human.md"
+    }
+  }
+}

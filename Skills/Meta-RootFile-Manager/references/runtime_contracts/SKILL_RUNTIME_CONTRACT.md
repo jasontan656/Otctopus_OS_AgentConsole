@@ -29,9 +29,12 @@ anchors:
 - Latest stage result json must live under `Codex_Skill_Runtime/<skill>/artifacts/<stage>/latest.json`.
 - Timestamped stage run logs must live under `Codex_Skill_Runtime/<skill>/logs/<stage>/`.
 - Runtime outputs, logs, temp mirrors, and ephemeral managed targets must not default back into the skill directory.
+- Default discovery for `scan` / `lint` / `collect` / `push` must skip runtime-managed targets under `ephemeral_workspace/...` unless the caller explicitly targets that source path.
+- `push` must also skip missing external targets during default discovery; only explicit `--source-path` can re-target a missing governed file.
 
 ## Runtime Source Rule
-- `rules/scan_rules.json` is the channel registry truth source.
+- `rules/scan_rules.json` is the static channel registry truth source.
+- Dynamic governed target discovery must come from governed managed assets under `assets/managed_targets/AI_Projects/...` plus runtime-local managed assets under `Codex_Skill_Runtime/<skill>/managed_targets/...`.
 - `target-contract` must return the resolved channel and managed asset paths for the requested external path.
 - `contract` must expose the skill-level CLI runtime entry set.
 - `agents-payload-contract` must expose the mandatory workflow for `AGENTS_machine.json` payload governance.

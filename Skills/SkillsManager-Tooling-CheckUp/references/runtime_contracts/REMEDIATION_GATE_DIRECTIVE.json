@@ -1,0 +1,19 @@
+{
+  "directive_name": "skillsmanager_tooling_checkup_remediation_gate",
+  "directive_version": "1.0.0",
+  "doc_kind": "guide",
+  "topic": "remediation-gate",
+  "purpose": "Keep remediation outputs focused on the next governed fix rather than patch stacking.",
+  "instruction": [
+    "Group issues by missing contract, missing tooling docs/tests, and artifact policy drift.",
+    "Recommend the next governing skill when the gap belongs elsewhere."
+  ],
+  "workflow": [
+    "Collect audit issues.",
+    "Collapse them into a small remediation plan.",
+    "Return it without mutating the target."
+  ],
+  "rules": [
+    "No compatibility shell or alias recommendation as the default remediation."
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "directive_name": "skillsmanager_doc_structure_lint_boundary",
+  "directive_version": "1.0.0",
+  "doc_kind": "guide",
+  "topic": "lint-boundary",
+  "purpose": "Keep the doc linter focused on topology and structure, not domain semantics.",
+  "instruction": [
+    "Check facade sections, reference layout, workflow edges, and contract/tooling doc presence.",
+    "Do not score the business quality of the document body."
+  ],
+  "workflow": [
+    "Detect the target profile.",
+    "Run the applicable topology checks.",
+    "Return issues grouped by scope."
+  ],
+  "rules": [
+    "Do not reintroduce legacy skill_mode-based root shape requirements."
+  ]
+}

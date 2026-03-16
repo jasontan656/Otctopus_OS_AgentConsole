@@ -1,68 +1,97 @@
 ---
 name: SkillsManager-Tooling-CheckUp
-description: 治理目标技能内部 CLI 与 tooling surface 的规则规范，重点覆盖依赖基线、输出落点、职责边界、链路编译 CLI 与整改闭环。
-skill_mode: guide_with_tool
+description: 治理技能的 machine contract、runtime/tooling surface、artifact policy 与 remediation gate，并以 contract-first 方式执行审计。
 metadata:
+  skill_profile:
+    doc_topology: referenced
+    tooling_surface: automation_cli
+    workflow_control: guardrailed
   doc_structure:
     doc_id: skillsmanager_tooling_checkup.entry.facade
     doc_type: skill_facade
     topic: Entry facade for the SkillsManager-Tooling-CheckUp skill
+    anchors:
+    - target: ./references/runtime_contracts/SKILL_RUNTIME_CONTRACT_human.md
+      relation: routes_to
+      direction: downstream
+      reason: The facade routes runtime execution to the CLI-first contract.
+    - target: ./references/routing/TASK_ROUTING.md
+      relation: routes_to
+      direction: downstream
+      reason: The routing guide explains how contract-first tooling audits work.
 ---
 
 # SkillsManager-Tooling-CheckUp
 
-## 1. 模型立刻需要知道的事情
-### 1. 总览
-- 本技能用于治理目标技能内部的 CLI 与 tooling surface。
-- 治理面包括：依赖基线重叠、自造轮子判断、输出落点、CLI 契约、tooling 模块职责边界，以及整改闭环。
-- 本技能不治理目标技能的根目录形态、门面形态或 `reading_chain` 设计本身；这些交给文档结构治理链。
+## Runtime Entry
+- Primary runtime entry: `./.venv_backend_skills/bin/python Skills/SkillsManager-Tooling-CheckUp/scripts/Cli_Toolbox.py contract --json`
+- Audit entry: `./.venv_backend_skills/bin/python Skills/SkillsManager-Tooling-CheckUp/scripts/Cli_Toolbox.py audit --target-skill-root <path> --json`
+- CLI JSON is the primary runtime source; `SKILL.md` only remains as a facade and routing narrative.
 
-### 2. 技能约束
-- 本技能治理的是目标技能，不是本技能自身的运行日志或结果沉淀。
-- 进入任一功能入口后，沿当前动作闭环继续阅读：
-  - `contract`
-  - `tools`
-  - `execution`
-  - `validation`
-- 带 `scripts/ + path/` 且不是 `guide_only` 的目标技能，需要提供可工作的 `read-contract-context`；`read-path-context` 可作为等价别名保留。
-- `read-contract-context` 输出的是文档真源的编译结果，不是另一套独立真源。
-- Python 胖文件、typing 风格、异常风格等语言规范继续交给对应 constitution。
+## 1. 技能定位
+- 本技能只治理 target skill 的 runtime/tooling 合同，不再把旧路径偏好、旧命令名或绝对输出目录写成长期标准。
+- 当前稳定职责只有四类：
+  - machine contract 审计
+  - runtime/tooling surface 探测
+  - artifact policy 检查
+  - remediation gate 生成
+- 本技能不治理 target skill 的根目录拓扑；那属于 `SkillsManager-Doc-Structure`。
 
-### 3. 顶层常驻合同
-- 全局合同直接写在本门面中，不额外外跳到 CLI 合同。
-- 后续阅读只沿当前选中的功能入口继续下沉。
-- 本技能自身默认只通过 CLI stdout/stderr/JSON 返回审计结果，不在 skill 目录或受管根路径下持久化自有运行日志或结果文件。
+## 2. 必读顺序
+1. 先执行 `./.venv_backend_skills/bin/python Skills/SkillsManager-Tooling-CheckUp/scripts/Cli_Toolbox.py contract --json`。
+2. 再按任务进入：
+   - `references/routing/TASK_ROUTING.md`
+   - `references/profiles/TOOLING_SURFACE_PROFILES.md`
+3. 若要理解审计边界，再读取：
+   - `references/policies/CONTRACT_AUDIT_POLICY.md`
+   - `references/policies/ARTIFACT_POLICY.md`
+   - `references/policies/PYTHON_TOOLING_BOUNDARY.md`
+   - `references/policies/REMEDIATION_GATE.md`
+4. 若要运行或维护 CLI，再进入 `references/tooling/`。
 
-## 2. 功能入口
-- [依赖基线检查]：`path/techstack_baseline/00_TECHSTACK_BASELINE_ENTRY.md`
-  - 作用：判断目标技能的自实现是否与 repo 既定依赖栈能力重叠。
-  - 快捷阅读：`python3 ./scripts/Cli_Toolbox.py read-contract-context --entry techstack_baseline --json`
-- [输出落点检查]：`path/output_governance/00_OUTPUT_GOVERNANCE_ENTRY.md`
-  - 作用：检查目标技能的 runtime 日志、默认产物、定向产物与迁移责任是否闭合。
-  - 快捷阅读：`python3 ./scripts/Cli_Toolbox.py read-contract-context --entry output_governance --json`
-- [CLI Surface 检查]：`path/cli_surface/00_CLI_SURFACE_ENTRY.md`
-  - 作用：检查目标技能的 CLI 入口、参数契约、JSON 输出、错误返回与链路编译能力。
-  - 快捷阅读：`python3 ./scripts/Cli_Toolbox.py read-contract-context --entry cli_surface --json`
-- [Tooling 职责边界检查]：`path/tooling_boundary/00_TOOLING_BOUNDARY_ENTRY.md`
-  - 作用：检查 parser / schema / helper / lint / test / glue 是否越权承载了域内规则。
-  - 快捷阅读：`python3 ./scripts/Cli_Toolbox.py read-contract-context --entry tooling_boundary --json`
-- [整改入口]：`path/remediation/00_REMEDIATION_ENTRY.md`
-  - 作用：在证据充分后，进入行为保持型 tooling 整改闭环。
-  - 快捷阅读：`python3 ./scripts/Cli_Toolbox.py read-contract-context --entry remediation --json`
+## 3. 分类入口
+- 路由层：
+  - `references/routing/TASK_ROUTING.md`
+- profile 层：
+  - `references/profiles/TOOLING_SURFACE_PROFILES.md`
+- 规则层：
+  - `references/policies/CONTRACT_AUDIT_POLICY.md`
+  - `references/policies/ARTIFACT_POLICY.md`
+  - `references/policies/PYTHON_TOOLING_BOUNDARY.md`
+  - `references/policies/REMEDIATION_GATE.md`
+- runtime 合同：
+  - `references/runtime_contracts/SKILL_RUNTIME_CONTRACT_human.md`
+- tooling 层：
+  - `references/tooling/Cli_Toolbox_USAGE.md`
+  - `references/tooling/Cli_Toolbox_DEVELOPMENT.md`
 
-## 3. 目录结构图
+## 4. 适用域
+- 适用于：技能 contract 校验、CLI surface 审计、artifact policy 审计、tooling 文档/测试闭环检查。
+- 适用于：需要判断 target skill 是否符合 `none / contract_cli / automation_cli` 三类能力面的场景。
+- 不适用于：替代 Python 语言 lint、替代结构拓扑 lint、替代业务语义评审。
+
+## 5. 执行入口
+- `contract`：读取 machine-readable runtime contract。
+- `directive --topic <topic>`：读取固定治理指令。
+- `audit`：对 target skill 执行 contract-first 审计。
+
+## 6. 读取原则
+- 优先看 contract schema 与 artifact policy，而不是旧 `Cli_Toolbox.py + read-contract-context` 组合。
+- repo-local 路径规则应由 resolver/integration contract 提供，不应写死到技能门面里。
+- remediation gate 只产出整改方向，不直接改 target skill。
+
+## 7. 结构索引
 ```text
 SkillsManager-Tooling-CheckUp/
 ├── SKILL.md
 ├── agents/
-├── path/
-│   ├── techstack_baseline/
-│   ├── output_governance/
-│   ├── cli_surface/
-│   ├── tooling_boundary/
-│   └── remediation/
-└── scripts/
+│   └── openai.yaml
+├── references/
+│   ├── policies/
+│   ├── profiles/
+│   ├── routing/
+│   ├── runtime_contracts/
+│   └── tooling/
+├── scripts/
+└── tests/
 ```
-- `path/`：本技能唯一的文档承载面，所有规则、步骤与校验都随功能入口下沉。
-- `scripts/`：CLI 工具、运行时帮助模块与回归测试所在目录。
-- `agents/`：agent runtime config。

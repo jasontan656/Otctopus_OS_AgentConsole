@@ -1,4 +1,4 @@
 interface:
   display_name: SkillsManager-Tooling-CheckUp
-  short_description: 治理目标技能内部 CLI 与 tooling surface，重点检查依赖基线、输出落点、CLI 契约、职责边界与整改闭环。
+  short_description: 治理技能的 machine contract、runtime/tooling surface、artifact policy 与 remediation gate，并执行 contract-first 审计。
   default_prompt: Use $SkillsManager-Tooling-CheckUp.

@@ -16,13 +16,16 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `AI_Projects` workspace root 的 run
 
 <part_A>
 1. 根入口命令
+- 当前可用的 skills backend Python 虚拟环境为：`<root>/Otctopus_OS_AgentConsole/.venv_backend_skills`。
+- 运行 skills CLI 时，优先使用：`<root>/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python3`。
+- 若需要运行 `pytest` 验证 skills 或 backend Python 相关改动，也优先使用同一虚拟环境，例如：`<root>/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python3 -m pytest`。
 - 在处理 workspace root 路径规则之前，必须先运行：
-- `<root>/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python <root>/Otctopus_OS_AgentConsole/Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py target-contract --source-path "/home/jasontan656/AI_Projects/AGENTS.md" --json`
+- `<root>/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python3 <root>/Otctopus_OS_AgentConsole/Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py target-contract --source-path "/home/jasontan656/AI_Projects/AGENTS.md" --json`
 - 当前环境为 `WSL`；若需要调用系统 Python，使用 `python3`。
 
 2. 技能类任务附加入口
 - 任何时候只要任务涉及技能、技能镜像、技能安装、技能同步、技能注册、技能治理或技能运行时，必须阅读：
-- `<root>/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python <root>/Otctopus_OS_AgentConsole/Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py target-contract --source-path "/home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/AGENTS.md" --json`
+- `<root>/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python3 <root>/Otctopus_OS_AgentConsole/Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py target-contract --source-path "/home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/AGENTS.md" --json`
 
 3. 语言规范
 - 对话输出必须使用中文为主。
@@ -41,6 +44,9 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `AI_Projects` workspace root 的 run
 
 6. 治理链约束
 - 更新本文件时及相关内容时,必须使用 $Meta-RootFile-Manager 更新治理映射模版然后再回推至本文件,或者更新本文件但是必须使用技能的collect来反向更新,避免单点更新治理链断裂.
+
+7. 路径显示规范
+- 仅当涉及 `AGENTS.md` 时，禁止使用 file ref，改为直接展示完整绝对路径；此规则仅用于确保路径能完整显示，其他场景不生效。
 </part_A>
 
 <part_B>
@@ -104,7 +110,8 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `AI_Projects` workspace root 的 run
     "if the run stays smooth, continue directly to the normal final reply without extra hook text",
     "if issues are present, repair the minimal verifiable scope first, then merge repaired items and residual risk into the same final reply",
     "when a bounded fix is safe within the active repo boundary, repair first; do not downgrade directly into advice while a local repair still exists",
-    "defer repo-specific lint or Git duties to the concrete repo-local contract when applicable"
+    "defer repo-specific lint or Git duties to the concrete repo-local contract when applicable",
+    "explicitly print the current codex session id at the end of every turn; identify and record it during first-turn initialization, then default to reusing the recorded id from the current conversation context on later turns, and reinitialize or re-probe only when the context does not contain or cannot confirm the id"
   ]
 }
 ```

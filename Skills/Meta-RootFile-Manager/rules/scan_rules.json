@@ -5,39 +5,6 @@
     "AGENTS_MD": {
       "file_kind": "AGENTS.md",
       "mapping_mode": "agents_ab",
-      "governed_source_paths": [
-        ".codex/skills/AGENTS.md",
-        "AGENTS.md",
-        "Octopus_OS/AGENTS.md",
-        "Octopus_OS/Client_Applications/AGENTS.md",
-        "Octopus_OS/Client_Applications/Unified_Portal/Development_Docs/AGENTS.md",
-        "Octopus_OS/Client_Applications/Unified_Portal/Development_Docs/Unified_Portal/AGENTS.md",
-        "Octopus_OS/Development_Docs/AGENTS.md",
-        "Otctopus_OS_AgentConsole/AGENTS.md",
-        "tmp0mjtjmtj/sample_repo/Development_Docs/AGENTS.md",
-        "tmp121e2v43/sample_repo/Development_Docs/AGENTS.md",
-        "tmp56x_ih9l/sample_repo/Development_Docs/AGENTS.md",
-        "tmp59r05m3v/sample_repo/Development_Docs/AGENTS.md",
-        "tmp8v9qvmpb/sample_repo/Development_Docs/AGENTS.md",
-        "tmp_q1nez8a/sample_repo/Development_Docs/AGENTS.md",
-        "tmpabsgpoqk/sample_repo/Development_Docs/AGENTS.md",
-        "tmpbdosk9p_/sample_repo/Development_Docs/AGENTS.md",
-        "tmpcid3c8ne/sample_repo/Development_Docs/AGENTS.md",
-        "tmpdr0xyl07/sample_repo/Development_Docs/AGENTS.md",
-        "tmpg15_ewff/sample_repo/Development_Docs/AGENTS.md",
-        "tmph5k3rd36/sample_repo/Development_Docs/AGENTS.md",
-        "tmpigwdq0no/sample_repo/Development_Docs/AGENTS.md",
-        "tmpk9w071p_/sample_repo/Development_Docs/AGENTS.md",
-        "tmpo0oy5upk/sample_repo/Development_Docs/AGENTS.md",
-        "tmpow37201l/sample_repo/Development_Docs/AGENTS.md",
-        "tmpozqycx4t/sample_repo/Development_Docs/AGENTS.md",
-        "tmppl9r20lj/sample_repo/Development_Docs/AGENTS.md",
-        "tmpq0k5o8li/sample_repo/Development_Docs/AGENTS.md",
-        "tmpru59wp9w/sample_repo/Development_Docs/AGENTS.md",
-        "tmptq56qhdb/sample_repo/Development_Docs/AGENTS.md",
-        "tmpvtv6hzfl/sample_repo/Development_Docs/AGENTS.md",
-        "tmpwy6kys9q/sample_repo/Development_Docs/AGENTS.md"
-      ],
       "managed_files": {
         "human": "AGENTS_human.md",
         "machine": "AGENTS_machine.json"
@@ -47,10 +14,6 @@
     "README_MD": {
       "file_kind": "README.md",
       "mapping_mode": "plain_copy",
-      "governed_source_paths": [
-        "Octopus_OS/README.md",
-        "Otctopus_OS_AgentConsole/README.md"
-      ],
       "managed_files": {
         "mapped": "README_MD__governed_external.md"
       },
@@ -59,9 +22,6 @@
     "CHANGELOG_MD": {
       "file_kind": "CHANGELOG.md",
       "mapping_mode": "plain_copy",
-      "governed_source_paths": [
-        "Otctopus_OS_AgentConsole/CHANGELOG.md"
-      ],
       "managed_files": {
         "mapped": "CHANGELOG_MD__governed_external.md"
       },
@@ -70,9 +30,6 @@
     "CONTRIBUTING_MD": {
       "file_kind": "CONTRIBUTING.md",
       "mapping_mode": "plain_copy",
-      "governed_source_paths": [
-        "Otctopus_OS_AgentConsole/CONTRIBUTING.md"
-      ],
       "managed_files": {
         "mapped": "CONTRIBUTING_MD__governed_external.md"
       },
@@ -81,9 +38,6 @@
     "SECURITY_MD": {
       "file_kind": "SECURITY.md",
       "mapping_mode": "plain_copy",
-      "governed_source_paths": [
-        "Otctopus_OS_AgentConsole/SECURITY.md"
-      ],
       "managed_files": {
         "mapped": "SECURITY_MD__governed_external.md"
       },
@@ -92,9 +46,6 @@
     "CODE_OF_CONDUCT_MD": {
       "file_kind": "CODE_OF_CONDUCT.md",
       "mapping_mode": "plain_copy",
-      "governed_source_paths": [
-        "Otctopus_OS_AgentConsole/CODE_OF_CONDUCT.md"
-      ],
       "managed_files": {
         "mapped": "CODE_OF_CONDUCT_MD__governed_external.md"
       },
@@ -103,9 +54,6 @@
     "LICENSE": {
       "file_kind": "LICENSE",
       "mapping_mode": "plain_copy",
-      "governed_source_paths": [
-        "Otctopus_OS_AgentConsole/LICENSE"
-      ],
       "managed_files": {
         "mapped": "LICENSE__governed_external.txt"
       },
@@ -114,10 +62,6 @@
     "GITIGNORE": {
       "file_kind": ".gitignore",
       "mapping_mode": "plain_copy",
-      "governed_source_paths": [
-        "Octopus_OS/.gitignore",
-        "Otctopus_OS_AgentConsole/.gitignore"
-      ],
       "managed_files": {
         "mapped": "GITIGNORE__governed_external.txt"
       },
@@ -126,9 +70,6 @@
     "PYTEST_INI": {
       "file_kind": "pytest.ini",
       "mapping_mode": "plain_copy",
-      "governed_source_paths": [
-        "Otctopus_OS_AgentConsole/pytest.ini"
-      ],
       "managed_files": {
         "mapped": "PYTEST_INI__governed_external.ini"
       },
@@ -137,7 +78,6 @@
     "DOCKERFILE": {
       "file_kind": "Dockerfile",
       "mapping_mode": "plain_copy",
-      "governed_source_paths": [],
       "managed_files": {
         "mapped": "DOCKERFILE__governed_external.dockerfile"
       },
@@ -146,7 +86,6 @@
     "DOCKERIGNORE": {
       "file_kind": ".dockerignore",
       "mapping_mode": "plain_copy",
-      "governed_source_paths": [],
       "managed_files": {
         "mapped": "DOCKERIGNORE__governed_external.txt"
       },
@@ -155,7 +94,6 @@
     "ENV_EXAMPLE": {
       "file_kind": ".env.example",
       "mapping_mode": "plain_copy",
-      "governed_source_paths": [],
       "managed_files": {
         "mapped": "ENV_EXAMPLE__governed_external.txt"
       },
@@ -164,7 +102,6 @@
     "REQUIREMENTS_TXT": {
       "file_kind": "requirements.txt",
       "mapping_mode": "plain_copy",
-      "governed_source_paths": [],
       "managed_files": {
         "mapped": "REQUIREMENTS_TXT__governed_external.txt"
       },
@@ -173,9 +110,6 @@
     "REQUIREMENTS_BACKEND_SKILLS_LOCK_TXT": {
       "file_kind": "requirements-backend_skills.lock.txt",
       "mapping_mode": "plain_copy",
-      "governed_source_paths": [
-        "Otctopus_OS_AgentConsole/requirements-backend_skills.lock.txt"
-      ],
       "managed_files": {
         "mapped": "REQUIREMENTS_BACKEND_SKILLS_LOCK_TXT__governed_external.txt"
       },
@@ -184,7 +118,6 @@
     "PYPROJECT_TOML": {
       "file_kind": "pyproject.toml",
       "mapping_mode": "plain_copy",
-      "governed_source_paths": [],
       "managed_files": {
         "mapped": "PYPROJECT_TOML__governed_external.toml"
       },
@@ -193,7 +126,6 @@
     "PACKAGE_JSON": {
       "file_kind": "package.json",
       "mapping_mode": "plain_copy",
-      "governed_source_paths": [],
       "managed_files": {
         "mapped": "PACKAGE_JSON__governed_external.json"
       },
@@ -202,7 +134,6 @@
     "PACKAGE_LOCK_JSON": {
       "file_kind": "package-lock.json",
       "mapping_mode": "plain_copy",
-      "governed_source_paths": [],
       "managed_files": {
         "mapped": "PACKAGE_LOCK_JSON__governed_external.json"
       },
