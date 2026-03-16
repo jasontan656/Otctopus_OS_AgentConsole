@@ -9,7 +9,6 @@ anchors:
   reason: This document belongs to the governed skill tree under the main facade.
 owner: "由 `$Meta-RootFile-Manager` 作为 `AI_Projects` workspace root 的 runtime entry owner 负责治理；当前通过 `AGENTS_MD` 通道受管并同步这个入口文件。"
 ---
-
 [AGENT RUNTIME HOOK - ABSOLUTE ENFORCEMENT]
 
 `HOOK_LOAD`: Apply this AGENTS contract.
@@ -24,6 +23,8 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `AI_Projects` workspace root 的 run
 - `/home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python3 /home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py target-contract --source-path "/home/jasontan656/AI_Projects/AGENTS.md" --json`
 - 每回合的 memory hook 另读取：
 - `/home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python3 /home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/Skills/Meta-Runtime-Memory/scripts/Cli_Toolbox.py runtime-contract --json`
+- 每回合的 selfcheck hook 另读取：
+- `/home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python3 /home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py runtime-contract --json`
 - 若任务进入技能、技能镜像、技能安装、技能同步、技能注册、技能治理或技能运行时，再读取：
 - `/home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python3 /home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py target-contract --source-path "/home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/AGENTS.md" --json`
 
@@ -43,8 +44,10 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `AI_Projects` workspace root 的 run
 
 4. 执行约束
 - 在进入具体执行前，先套用 workspace root 默认 meta runtime mainline：
-- `Meta-Runtime-Memory` -> `Meta-Semantic-Collection` -> `Meta-Impact-Investigation` -> `Meta-Architect-MindModel` -> `Meta-Reasoning-Chain` -> `Meta-keyword-first-edit`
+- `Meta-Runtime-Memory` -> `Meta-Runtime-Selfcheck` -> `Meta-Semantic-Collection` -> `Meta-Impact-Investigation` -> `Meta-Architect-MindModel` -> `Meta-Reasoning-Chain` -> `Meta-keyword-first-edit`
 - `$Meta-Runtime-Memory` 是每回合强制 hook：turn start 先执行 memory load，turn end 强制检查 writeback。
+- `$Meta-Runtime-Selfcheck` 是每回合常驻 runtime hook：turn start 先完成 hook arm；当本回合出现运行痛点、卡壳、命令失败、路径误用、重复试错、明显犹豫、流程迷路或局部运行不顺时，必须立即触发 selfcheck diagnose / self-repair / bounded strengthening 流程，而不是只在 final reply 前被动想起。
+- `$Meta-Runtime-Selfcheck` 一旦被触发，必须先在当前边界内做最小可验证修复或局部强化，再继续主任务；若存在残余风险，必须在 final reply 前完成 selfcheck closeout 并合并进最终汇报。
 - 若任务先需要把原始需求压缩成可执行意图，再先插入 `Meta-Enhance-Prompt`。
 - 若任务涉及外部页面、浏览器自动化或前端 bring-up，再按任务需要追加 `Meta-Agent-Browser`。
 - `READ_EXEC` / `WRITE_EXEC` 的具体行为约束继续读取 `execution_modes` 域。
@@ -87,9 +90,12 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `AI_Projects` workspace root 的 run
     "required_actions": [
       "read_target_contract:/home/jasontan656/AI_Projects/AGENTS.md",
       "load_runtime_memory_turn_start_before_concrete_execution",
+      "load_runtime_selfcheck_turn_start_contract_before_concrete_execution",
+      "arm_meta_runtime_selfcheck_as_live_turn_hook_before_concrete_execution",
       "classify_turn_mode:READ_EXEC|WRITE_EXEC",
       "apply_workspace_meta_sequence_before_concrete_execution",
-      "read_repo_target_contract_if_skill_task:/home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/AGENTS.md"
+      "read_repo_target_contract_if_skill_task:/home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/AGENTS.md",
+      "extract_current_codex_chat_session_id_on_initialization_and_cache_for_reuse"
     ]
   }
 }
@@ -102,6 +108,11 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `AI_Projects` workspace root 的 run
   "contract": {
     "rules": [
       "meta_runtime_memory_is_mandatory_turn_hook",
+      "meta_runtime_selfcheck_is_mandatory_runtime_hook",
+      "runtime_pain_or_unsmooth_execution_must_trigger_meta_runtime_selfcheck",
+      "runtime_pain_examples:stall,tool_failure,path_misuse,retry_loop,hesitation,workflow_drift,local_unsmoothness",
+      "meta_runtime_selfcheck_must_attempt_bounded_local_repair_or_strengthening_before_deferring",
+      "meta_runtime_selfcheck_must_stay_active_until_final_closure",
       "cli_json_is_primary_runtime_rule_source",
       "audit_markdown_is_not_primary_execution_guide",
       "language_primary:zh-CN",
@@ -157,9 +168,11 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `AI_Projects` workspace root 的 run
   "contract": {
     "required_actions": [
       "run_runtime_memory_turn_end_writeback_check",
-      "keep_selfcheck_active_until_final_reply",
+      "if_turn_has_runtime_pain_or_unsmooth_execution_trigger_meta_runtime_selfcheck_before_final_reply",
+      "run_meta_runtime_selfcheck_final_closure_before_final_reply",
+      "merge_meta_runtime_selfcheck_repairs_verification_and_residual_risk_into_final_reply",
       "complete_repo_local_closeout_before_final_reply",
-      "print_codex_session_id"
+      "reuse_current_codex_chat_session_id_and_print_it_in_every_final_reply_message"
     ]
   }
 }
