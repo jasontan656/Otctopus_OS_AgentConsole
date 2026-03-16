@@ -95,17 +95,15 @@ metadata:
   - `/home/jasontan656/AI_Projects/Codex_Skill_Runtime/meta-github-operation`
 - thread-owned claims 目录：
   - `/home/jasontan656/AI_Projects/Codex_Skill_Runtime/meta-github-operation/claims`
-- 兼容回退读取：
-  - `/home/jasontan656/AI_Projects/Codex_Skill_Runtime`
 - 技能 result 根目录：
   - `/home/jasontan656/AI_Projects/Codex_Skills_Result/meta-github-operation`
 - 当前默认行为：
   - CLI 以 stdout JSON 为主，不持久化滚动日志文件。
-  - 若使用 `--use-latest-claims`，应优先读取 namespaced claims 目录；legacy root 仅保留兼容读取，不再作为首选落点。
+  - 若使用 `--use-latest-claims`，只读取 namespaced claims 目录。
   - 若未来新增文件型结果或审计导出，必须要求显式目标路径，或默认落入受管 result 根目录。
   - remote write 相关命令会在 namespaced push lock 目录下获取 repo 级串行锁。
 - 历史迁移责任：
-  - 旧的 `Meta-github-operation_thread_owned_paths*.json*` 若仍散落在 `Codex_Skill_Runtime` 根目录，应整理迁移到 namespaced claims 目录。
+  - 旧的 `Meta-github-operation_thread_owned_paths*.json*` 若仍散落在 `Codex_Skill_Runtime` 根目录，应直接移除或手动迁入 namespaced claims 目录；当前运行面不再兼容读取旧根目录。
 
 ## Remote Policy
 

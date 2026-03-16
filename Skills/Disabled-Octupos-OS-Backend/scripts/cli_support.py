@@ -19,19 +19,19 @@ from workflow_contract_data import IMPLEMENTATION_SOURCE_POLICY
 from workflow_contract_data import REQUIREMENT_ATOM_FIELDS, STAGES, TEMPLATES
 
 
-def _resolve_product_root() -> Path:
+def _resolve_ai_projects_root() -> Path:
     script_path = Path(__file__).resolve()
     repo_root = next((parent for parent in script_path.parents if parent.name == "Otctopus_OS_AgentConsole"), None)
     if repo_root is None:
-        raise RuntimeError("cannot resolve product root from Disabled-Octupos-OS-Backend script path")
+        raise RuntimeError("cannot resolve AI_Projects root from Disabled-Octupos-OS-Backend script path")
     return repo_root.parent
 
 
-PRODUCT_ROOT = _resolve_product_root()
+AI_PROJECTS_ROOT = _resolve_ai_projects_root()
 SKILL_NAME = "Disabled-Octupos-OS-Backend"
-RUNTIME_ROOT = (PRODUCT_ROOT / "Codex_Skill_Runtime" / SKILL_NAME).resolve()
-CODEBASE_ROOT = (PRODUCT_ROOT / "Octopus_OS").resolve()
-GRAPH_RUNTIME_ROOT = (PRODUCT_ROOT / "Codex_Skill_Runtime" / "Meta-code-graph-base" / "code_graph_runtime").resolve()
+RUNTIME_ROOT = (AI_PROJECTS_ROOT / "Codex_Skill_Runtime" / SKILL_NAME).resolve()
+CODEBASE_ROOT = (AI_PROJECTS_ROOT / "Octopus_OS").resolve()
+GRAPH_RUNTIME_ROOT = (AI_PROJECTS_ROOT / "Codex_Skill_Runtime" / "Meta-code-graph-base" / "code_graph_runtime").resolve()
 MOTHER_DOC_ROOT = RUNTIME_ROOT / "docs" / "mother_doc"
 MOTHER_DOC_PATH = MOTHER_DOC_ROOT / "00_index.md"
 CONSTRUCTION_PLAN_ROOT = MOTHER_DOC_ROOT / "execution_atom_plan_validation_packs"

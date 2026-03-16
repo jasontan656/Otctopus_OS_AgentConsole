@@ -151,20 +151,20 @@ class CliToolboxTests(unittest.TestCase):
             codex_root = Path(tmp) / "codex"
             skills_root = mirror_root / "Skills"
             skill_root = skills_root / "Meta-Impact-Investigation"
-            product_docs = mirror_root / "docs"
-            product_tools = mirror_root / "product_tools"
+            support_docs = mirror_root / "docs"
+            scratch_root = mirror_root / "tmp_workspace"
             system_root = skills_root / ".system"
 
             skill_root.mkdir(parents=True)
-            product_docs.mkdir(parents=True)
-            product_tools.mkdir(parents=True)
+            support_docs.mkdir(parents=True)
+            scratch_root.mkdir(parents=True)
             system_root.mkdir(parents=True)
             codex_root.mkdir(parents=True)
             (codex_root / "AGENTS.md").write_text("stale\n", encoding="utf-8")
 
             (skill_root / "SKILL.md").write_text("skill\n", encoding="utf-8")
-            (product_docs / "README.md").write_text("docs\n", encoding="utf-8")
-            (product_tools / "installer.py").write_text("print('installer')\n", encoding="utf-8")
+            (support_docs / "README.md").write_text("docs\n", encoding="utf-8")
+            (scratch_root / "notes.txt").write_text("scratch\n", encoding="utf-8")
             (system_root / ".codex-system-skills.marker").write_text("marker\n", encoding="utf-8")
             (system_root / "Skill-creator").mkdir()
             (system_root / "Skill-creator" / "SKILL.md").write_text("creator\n", encoding="utf-8")
@@ -189,7 +189,7 @@ class CliToolboxTests(unittest.TestCase):
                 [".system", "Meta-Impact-Investigation"],
             )
             self.assertTrue(all("docs" not in " ".join(command) for command in payload["commands"]))
-            self.assertTrue(all("product_tools" not in " ".join(command) for command in payload["commands"]))
+            self.assertTrue(all("tmp_workspace" not in " ".join(command) for command in payload["commands"]))
             self.assertEqual(payload["removed_forbidden_entries"], [str(codex_root / "AGENTS.md")])
 
     def test_all_scope_push_removes_stale_codex_root_agents(self) -> None:

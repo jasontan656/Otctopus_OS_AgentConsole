@@ -14,7 +14,6 @@ from registry_repo import ensure_remote_write_allowed, remote_policy_payload
 
 
 SCRIPT = Path(__file__).resolve().parents[1] / "scripts" / "Cli_Toolbox.py"
-PRODUCT_ROOT = SCRIPT.parents[4]
 
 
 class TestMetaGithubOperationCliTests:
@@ -72,7 +71,7 @@ class TestMetaGithubOperationCliTests:
 
         rollback_payload = json.loads(self.run_cli("rollback-contract", "--json").stdout)
         assert rollback_payload["entry"] == "rollback"
-        assert rollback_payload["runtime_governance"]["legacy_runtime_fallbacks"] == [str(PRODUCT_ROOT / "Codex_Skill_Runtime")]
+        assert rollback_payload["runtime_governance"]["legacy_runtime_fallbacks"] == []
         assert any(command["name"] == "rollback-sync" for command in rollback_payload["commands"])
         assert not (any(command["name"] == "baseline-create" for command in rollback_payload["commands"]))
 

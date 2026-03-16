@@ -29,20 +29,20 @@ from pathlib import Path
 #   - deny_code
 #   - policy_version
 
-def _resolve_product_root() -> Path:
+def _resolve_ai_projects_root() -> Path:
     script_path = Path(__file__).resolve()
     repo_root = next((parent for parent in script_path.parents if parent.name == "Otctopus_OS_AgentConsole"), None)
     if repo_root is None:
-        raise RuntimeError("cannot resolve product root from Disabled-Octupos-OS-Backend script path")
+        raise RuntimeError("cannot resolve AI_Projects root from Disabled-Octupos-OS-Backend script path")
     return repo_root.parent
 
 
-PRODUCT_ROOT = _resolve_product_root()
-CODEBASE_ROOT = (PRODUCT_ROOT / "Octopus_OS").resolve()
-RUNTIME_ROOT = (PRODUCT_ROOT / "Codex_Skill_Runtime" / "Disabled-Octupos-OS-Backend").resolve()
+AI_PROJECTS_ROOT = _resolve_ai_projects_root()
+CODEBASE_ROOT = (AI_PROJECTS_ROOT / "Octopus_OS").resolve()
+RUNTIME_ROOT = (AI_PROJECTS_ROOT / "Codex_Skill_Runtime" / "Disabled-Octupos-OS-Backend").resolve()
 RUNTIME_DOCS_ROOT = (RUNTIME_ROOT / "docs").resolve()
 MOTHER_DOC_ROOT = (RUNTIME_DOCS_ROOT / "mother_doc").resolve()
-ROOT_AGENTS_PATH = (PRODUCT_ROOT / "AGENTS.md").resolve()
+ROOT_AGENTS_PATH = (AI_PROJECTS_ROOT / "AGENTS.md").resolve()
 CODEBASE_AGENTS_PATH = (CODEBASE_ROOT / "AGENTS.md").resolve()
 
 
@@ -55,7 +55,7 @@ DISCOVERY_SCOPE_POLICY = {
         "current_skill_files",
         "required_graph_skill_files",
     ],
-    "workspace_container_root": str(PRODUCT_ROOT),
+    "workspace_container_root": str(AI_PROJECTS_ROOT),
     "workspace_container_root_is_discovery_target": False,
     "fixed_startup_paths": [
         str(MOTHER_DOC_ROOT / "00_index.md"),
@@ -71,8 +71,8 @@ DISCOVERY_SCOPE_POLICY = {
         "only_then_read_concrete_codebase_files_if_construction_plan_or_implementation_requires_them",
     ],
     "forbidden_roots": [
-        str((PRODUCT_ROOT / "Human_Work_Zone").resolve()),
-        str((PRODUCT_ROOT / "GoogleDriveDump").resolve()),
+        str((AI_PROJECTS_ROOT / "Human_Work_Zone").resolve()),
+        str((AI_PROJECTS_ROOT / "GoogleDriveDump").resolve()),
     ],
     "repo_wide_container_scan_allowed": False,
 }

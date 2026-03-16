@@ -10,10 +10,11 @@ import yaml
 
 SKILL_ROOT = Path(__file__).resolve().parents[1]
 REPO_ROOT = SKILL_ROOT.parents[1]
+AI_PROJECTS_ROOT = REPO_ROOT.parent
 MANAGED_ROOT_ENV = "FUNCTIONAL_ANALYSIS_RUNTASK_MANAGED_ROOT"
 TASK_RUNTIME_ROOT_ENV = "FUNCTIONAL_ANALYSIS_RUNTASK_TASK_RUNTIME_ROOT"
-DEFAULT_MANAGED_ROOT = Path("/home/jasontan656/AI_Projects/Human_Work_Zone")
-DEFAULT_TASK_RUNTIME_ROOT = REPO_ROOT / "Codex_Skill_Runtime" / "Functional-Analysis-Runtask"
+DEFAULT_MANAGED_ROOT = AI_PROJECTS_ROOT / "Human_Work_Zone"
+DEFAULT_TASK_RUNTIME_ROOT = AI_PROJECTS_ROOT / "Codex_Skill_Runtime" / "Functional-Analysis-Runtask"
 HUMENWORKZONE_COMMANDS = {
     "contract": "./.venv_backend_skills/bin/python Skills/Functional-HumenWorkZone-Manager/scripts/Cli_Toolbox.py contract --json",
     "task_routing": "./.venv_backend_skills/bin/python Skills/Functional-HumenWorkZone-Manager/scripts/Cli_Toolbox.py directive --topic task-routing --json",

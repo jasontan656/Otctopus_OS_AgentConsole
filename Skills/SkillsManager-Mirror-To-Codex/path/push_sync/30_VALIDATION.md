@@ -10,4 +10,4 @@ topic: Push sync validation
 - `resolved_mode=push`。
 - `scope=skill` 时，JSON 包含单一 `command`。
 - `scope=all` 时，JSON 包含 `synced_entries`、`commands` 与 `removed_forbidden_entries`。
-- `docs`、`product_tools` 这类非技能根不会进入同步列表。
+- `docs`、临时工作目录这类非技能根不会进入同步列表。

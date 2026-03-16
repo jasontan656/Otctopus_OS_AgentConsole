@@ -10,4 +10,4 @@ topic: Mirror boundary validation
 - 仅真正可同步的技能根进入结果。
 - `.system` 只有在存在标记时才进入同步列表。
 - codex 根禁留项会在 push 后清理。
-- 产品级 `docs/`、`product_tools/` 等目录不会被镜像到 codex。
+- 非技能根如 `docs/`、临时工作目录等都不会被镜像到 codex。

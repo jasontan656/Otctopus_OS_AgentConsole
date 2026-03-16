@@ -26,8 +26,6 @@ reading_chain:
 ## 特定 family code
 - `[SKILL-GOV]`
   - 代表专门治理技能命名、注册、模板、镜像同步与同类治理动作的技能族。
-- `[Skill_prod]`
-  - 代表围绕 console 产品化与 `Skills/` 目录产品形态维护的技能族。
 
 ## 歧义处理
 - 若自然语言短语同时可能指向 `display_name` 和 `family`，优先按 registry 显式字段解析。

@@ -12,20 +12,19 @@ from runtime_contract_support import (
 )
 
 
-def _resolve_product_root() -> Path:
+def _resolve_ai_projects_root() -> Path:
     script_path = Path(__file__).resolve()
     repo_root = next((parent for parent in script_path.parents if parent.name == "Otctopus_OS_AgentConsole"), None)
     if repo_root is None:
-        raise RuntimeError("cannot resolve product root from Meta-github-operation script path")
+        raise RuntimeError("cannot resolve AI_Projects root from Meta-github-operation script path")
     return repo_root.parent
 
 
-PRODUCT_ROOT = _resolve_product_root()
-SKILL_RUNTIME_ROOT = str((PRODUCT_ROOT / "Codex_Skill_Runtime" / "meta-github-operation").resolve())
-CLAIMS_DIR = str((PRODUCT_ROOT / "Codex_Skill_Runtime" / "meta-github-operation" / "claims").resolve())
-SKILL_RESULT_ROOT = str((PRODUCT_ROOT / "Codex_Skills_Result" / "meta-github-operation").resolve())
-PUSH_LOCK_DIR = str((PRODUCT_ROOT / "Codex_Skill_Runtime" / "meta-github-operation" / "push_locks").resolve())
-LEGACY_RUNTIME_FALLBACKS = [str((PRODUCT_ROOT / "Codex_Skill_Runtime").resolve())]
+AI_PROJECTS_ROOT = _resolve_ai_projects_root()
+SKILL_RUNTIME_ROOT = str((AI_PROJECTS_ROOT / "Codex_Skill_Runtime" / "meta-github-operation").resolve())
+CLAIMS_DIR = str((AI_PROJECTS_ROOT / "Codex_Skill_Runtime" / "meta-github-operation" / "claims").resolve())
+SKILL_RESULT_ROOT = str((AI_PROJECTS_ROOT / "Codex_Skills_Result" / "meta-github-operation").resolve())
+PUSH_LOCK_DIR = str((AI_PROJECTS_ROOT / "Codex_Skill_Runtime" / "meta-github-operation" / "push_locks").resolve())
 
 
 def runtime_governance_payload() -> RuntimeGovernancePayload:
@@ -42,11 +41,8 @@ def runtime_governance_payload() -> RuntimeGovernancePayload:
             "This skill does not emit file artifacts by default; future file outputs must accept an explicit target "
             "path or default under the governed result root."
         ),
-        "legacy_runtime_fallbacks": LEGACY_RUNTIME_FALLBACKS,
-        "migration_note": (
-            "Legacy thread-owned claims files previously written directly under Codex_Skill_Runtime should be moved "
-            "into the namespaced claims directory; active lookup falls back to the legacy root only for compatibility."
-        ),
+        "legacy_runtime_fallbacks": [],
+        "migration_note": "Thread-owned claims files must live only under the namespaced claims directory.",
     }
 
 

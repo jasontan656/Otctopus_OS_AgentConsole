@@ -5,21 +5,20 @@ import os
 from pathlib import Path
 
 
-def _resolve_product_root() -> Path:
+def _resolve_ai_projects_root() -> Path:
     script_path = Path(__file__).resolve()
     repo_root = next((parent for parent in script_path.parents if parent.name == "Otctopus_OS_AgentConsole"), None)
     if repo_root is None:
-        raise RuntimeError("cannot resolve product root from Meta-github-operation script path")
+        raise RuntimeError("cannot resolve AI_Projects root from Meta-github-operation script path")
     return repo_root.parent
 
 
-DEFAULT_RUNTIME_ROOT = (_resolve_product_root() / "Codex_Skill_Runtime").resolve()
+DEFAULT_RUNTIME_ROOT = (_resolve_ai_projects_root() / "Codex_Skill_Runtime").resolve()
 SKILL_RUNTIME_ROOT = (
     Path(os.environ.get("CODEX_SKILL_RUNTIME_ROOT", str(DEFAULT_RUNTIME_ROOT))).expanduser().resolve()
     / "meta-github-operation"
 )
 CLAIMS_DIR = SKILL_RUNTIME_ROOT / "claims"
-LEGACY_RUNTIME_ROOT = DEFAULT_RUNTIME_ROOT
 CLAIM_PATTERN = "Meta-github-operation_thread_owned_paths*.json"
 
 
@@ -27,9 +26,6 @@ def latest_claims_file() -> Path | None:
     candidates = sorted(CLAIMS_DIR.glob(CLAIM_PATTERN), key=lambda item: item.stat().st_mtime, reverse=True)
     if candidates:
         return candidates[0]
-    legacy_candidates = sorted(LEGACY_RUNTIME_ROOT.glob(CLAIM_PATTERN), key=lambda item: item.stat().st_mtime, reverse=True)
-    if legacy_candidates:
-        return legacy_candidates[0]
     return None
 
 

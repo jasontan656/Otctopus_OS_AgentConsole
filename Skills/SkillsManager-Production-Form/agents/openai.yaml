@@ -1,6 +1,0 @@
-version: 1
-agent:
-  name: Skillsmanager Production Form
-  description: SkillsManager-Production-Form skill agent for guide_with_tool
-  default_prompt: |
-    Use $SkillsManager-Production-Form.

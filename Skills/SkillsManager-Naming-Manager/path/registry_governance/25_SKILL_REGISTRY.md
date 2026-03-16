@@ -161,16 +161,6 @@ families:
         role_tag: "runstates"
         status: "active"
         trigger_summary: "当需要治理目标技能的 workflow/stage/skill-flow 三层运行态文件方法、三层 checklist、runstate scaffold 或 runstate audit 时使用。"
-  - family: "[Skill_prod]"
-    description: "围绕 console 产品化、Skills 目录产品形态与 continuity 沉淀的技能族。"
-    members:
-      - canonical_id: "SkillsManager-Production-Form"
-        display_name: "SkillsManager-Production-Form"
-        prefix: "SkillsManager"
-        family: "[Skill_prod]"
-        role_tag: "console-product-form"
-        status: "active"
-        trigger_summary: "当需要持续维护 console 目录的产品形态与相关设计历史时使用。"
   - family: "[DEV]"
     description: "开发与工程约束相关的技能集合。"
     members:
