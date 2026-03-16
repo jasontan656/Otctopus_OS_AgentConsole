@@ -11,6 +11,17 @@ reading_chain:
 
 # acceptance 阶段合同
 
+## Contract Header
+- `contract_name`: `workflow_centralflow2_acceptance_contract`
+- `contract_version`: `1.0.0`
+- `validation_mode`: `strict`
+- `required_fields`:
+  - `bringup_requirement`
+  - `acceptance_output_location`
+  - `lint_gate`
+- `optional_fields`:
+  - `notes`
+
 - `acceptance` 不只是写报告；必须完成本地可控 bring-up、health、真实 witness 与 evidence closeout。
 - `acceptance_matrix` 与 `acceptance_report` 固定落到当前 `mother_doc/acceptance/`。
 - `acceptance-lint` 不通过时，不得宣称闭环完成。

@@ -1,30 +1,55 @@
 from __future__ import annotations
 
 from workflow_policy_contract import PHASE_READ_POLICY
+from workflow_stage_roles import GRAPH_STAGE_ROLES
 
 
 TOP_LEVEL_RESIDENT_DOCS = PHASE_READ_POLICY["top_level_resident_docs"]
 
-GRAPH_STAGE_ROLES = {
-    "mother_doc": {
-        "read_policy": "read graph context in this stage to reconcile existing code reality with the mother doc",
-        "update_policy": "do_not_update_graph_in_this_stage",
-    },
-    "construction_plan": {
-        "read_policy": "read graph context in this stage to decompose execution atom packs against real module boundaries and dependencies",
-        "update_policy": "do_not_update_graph_in_this_stage",
-    },
-    "implementation": {
-        "read_policy": "do_not_read_graph_as_a_stage_artifact; implementation must read concrete code directly",
-        "update_policy": "do_not_update_graph_in_this_stage",
-    },
-    "acceptance": {
-        "read_policy": "do_not_read_graph_as_acceptance_evidence",
-        "update_policy": "after acceptance evidence is complete, run graph-postflight to refresh downstream maintenance context",
-    },
-}
-
 STAGES = {
+    "mother_doc_audit": {
+        "objective": "Audit the current mother_doc tree before any deeper mother_doc evidence reading. This stage verifies protocol cleanliness, detects overloaded nodes, missing branch growth, and other growth debt, emits registry-backed shadow split proposals, and blocks further semantic reading until blocking debt has been split, registered, and written back cleanly.",
+        "required_outputs": [
+            "<docs_root>/mother_doc/ directory confirmed as the only audit target",
+            "mother-doc-lint pass/fail result",
+            "mother-doc-audit structured debt report",
+            "registry-backed shadow split proposals for actionable growth debt",
+            "blocking growth debt either removed or made explicit before mother_doc writeback begins",
+        ],
+        "resident_docs": TOP_LEVEL_RESIDENT_DOCS,
+        "stage_docs": [
+            "<docs_root>/mother_doc/00_index.md",
+            "<docs_root>/mother_doc/*",
+            "<docs_root>/<latest_NN_slug>/* when present",
+            "path/development_loop/steps/mother_doc_audit/*",
+            "path/development_loop/steps/mother_doc_audit/supporting/*",
+            "path/development_loop/steps/mother_doc/templates/mother_doc/*",
+            "Meta-code-graph-base context/resource when available",
+        ],
+        "graph_role": GRAPH_STAGE_ROLES["mother_doc_audit"],
+        "stage_entry_actions": [
+            "run target-runtime-contract before auditing any tree artifact",
+            "confirm docs_root through Dev-ProjectStructure-Constitution when the project has already fixed a custom development-doc container",
+            "if <docs_root>/mother_doc is missing, run target-scaffold",
+            "read <docs_root>/mother_doc/00_index.md before expanding the audit scope",
+            "if numbered archived docs directories exist, inspect the latest archived sibling so the audit can distinguish fresh debt from inherited structure",
+            "run mother-doc-lint first; protocol dirt must be repaired before semantic structure is trusted",
+            "run mother-doc-audit on the current tree and classify blocking versus non-blocking growth debt",
+            "read the matched shadow split proposals and prefer registry-backed split recipes over ad hoc subtree invention when the recipe fits",
+            "when blocking debt exists, split or migrate the overloaded semantics first, register any newly required layer/branch/content family, refresh the root index, then rerun lint and audit",
+            "do not enter mother_doc semantic drafting or impact evidence collection while a blocking audit debt still allows polluted deep reading",
+        ],
+        "stage_exit_gate": [
+            "mother-doc-lint passes",
+            "mother-doc-audit passes with audit_gate_allowed=true",
+            "actionable growth debt had a concrete shadow split proposal before any structural writeback decision",
+            "blocking growth debt has been removed or rewritten into registered clean structure",
+            "00_index.md remains synchronized with the current folder tree after any audit-driven split writeback",
+        ],
+        "drop_on_stage_switch": [
+            "audit-only debt triage notes once mother_doc writeback begins",
+        ],
+    },
     "mother_doc": {
         "objective": "Create or refine the protocol-driven mother doc tree under <docs_root>/mother_doc as the only write source of truth. The mother_doc flow must first lock runtime, then analyze impact, then reconcile code graph reality, then decide whether the tree should extend vertically, branch horizontally, reuse current nodes, migrate nodes, or delete nodes, and only then perform the smallest safe write slice. Any newly introduced vertical layer or horizontal branch family must be registered in the skill before it is used by real mother_doc docs, and every such addition must be reusable for sibling semantics rather than serving a single ad hoc node. The root index must be auto-regenerated from the current folder tree, then the tree is synced into <target_root>/Client_Applications/mother_doc as the viewer mirror copy.",
         "required_outputs": [
@@ -49,6 +74,7 @@ STAGES = {
             "run target-runtime-contract before reading or writing stage artifacts",
             "confirm docs_root through Dev-ProjectStructure-Constitution when the project has already fixed a custom development-doc container",
             "if <docs_root>/mother_doc is missing, run target-scaffold",
+            "require a clean mother_doc_audit result before deep-reading the tree as a reliable requirement source",
             "run Meta-Impact-Investigation in WRITE_INTENT mode before deciding any mother_doc write scope",
             "if the repo already has substantive code, check Meta-code-graph-base runtime first and initialize it when missing",
             "read <docs_root>/mother_doc/00_index.md",
@@ -62,9 +88,11 @@ STAGES = {
             "after any mother_doc structural write, run mother-doc-refresh-root-index so 00_index.md is regenerated from folders only",
             "after the root index refresh, run mother-doc-sync-client-copy so the Client_Applications viewer mirror is force-overwritten from the Development_Docs source tree",
             "run mother-doc-lint before leaving the stage",
+            "run mother-doc-audit again when this round changed structure so the next stage never inherits a newly overloaded tree",
         ],
         "stage_exit_gate": [
             "mother-doc-lint passes",
+            "mother-doc-audit passes after structural writeback",
             "<docs_root>/mother_doc remains the only write source of truth and the client mirror has been refreshed after this turn's mother_doc edits",
             "00_index.md exists as the fixed root placeholder and is refreshed from the current folder structure",
             "no replace_me remains",

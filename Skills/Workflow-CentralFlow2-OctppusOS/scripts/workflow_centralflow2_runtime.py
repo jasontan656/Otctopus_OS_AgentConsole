@@ -1,50 +1,21 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 import re
 from typing import Any
+from typing import cast
 
 import yaml
 
+from workflow_runtime_models import ReadingChainPayload, ReadingSegment, RuntimeContractPayload
 
 SKILL_ROOT = Path(__file__).resolve().parents[1]
+RUNTIME_CONTRACT_PATH = SKILL_ROOT / "references" / "runtime_contracts" / "SKILL_RUNTIME_CONTRACT.json"
 
 
-def runtime_contract_payload() -> dict[str, Any]:
-    return {
-        "status": "ok",
-        "skill_name": "Workflow-CentralFlow2-OctppusOS",
-        "skill_mode": "executable_workflow_skill",
-        "root_shape": ["SKILL.md", "path", "agents", "scripts"],
-        "entry_doc": "path/development_loop/00_DEVELOPMENT_LOOP_ENTRY.md",
-        "commands": [
-            "runtime-contract",
-            "read-contract-context",
-            "read-path-context",
-            "workflow-contract",
-            "target-runtime-contract",
-            "stage-checklist",
-            "stage-doc-contract",
-            "stage-command-contract",
-            "stage-graph-contract",
-            "graph-preflight",
-            "graph-postflight",
-            "target-scaffold",
-            "template-index",
-            "mother-doc-init",
-            "mother-doc-archive",
-            "construction-plan-init",
-            "construction-plan-lint",
-            "mother-doc-lint",
-            "mother-doc-refresh-root-index",
-            "mother-doc-state-sync",
-            "mother-doc-mark-modified",
-            "mother-doc-sync-client-copy",
-            "acceptance-lint",
-        ],
-        "layout_rule": "Folder layout mirrors reading order. Static docs live under path, runtime helpers stay in scripts.",
-        "compiler_rule": "SKILL.md section 2 exposes function entries; downstream markdown uses reading_chain to compile one contract context.",
-    }
+def runtime_contract_payload() -> RuntimeContractPayload:
+    return cast(RuntimeContractPayload, json.loads(RUNTIME_CONTRACT_PATH.read_text(encoding="utf-8")))
 
 
 def _read_text(path: Path) -> str:
@@ -123,11 +94,11 @@ def _reading_chain(markdown_path: Path) -> list[dict[str, str]]:
     return items
 
 
-def compile_reading_chain(entry: str, selection: list[str]) -> dict[str, Any]:
+def compile_reading_chain(entry: str, selection: list[str]) -> ReadingChainPayload:
     skill_md = SKILL_ROOT / "SKILL.md"
     resolved_chain = ["SKILL.md"]
     _frontmatter, skill_body = _parse_frontmatter(skill_md)
-    segments: list[dict[str, str]] = [
+    segments: list[ReadingSegment] = [
         {"source": "SKILL.md", "title": _extract_title(skill_body), "content": skill_body.strip()}
     ]
     root_items = _reading_chain(skill_md)

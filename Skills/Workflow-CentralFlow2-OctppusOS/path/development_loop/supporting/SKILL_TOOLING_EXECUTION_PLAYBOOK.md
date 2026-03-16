@@ -70,6 +70,7 @@ anchors:
   - 若已存在编号归档的 `docs/NN_slug`，先读取最新一轮归档内容再开始本轮回填
   - 若已存在 `execution_atom_plan_validation_packs/`，先判定它是 `official_plan` 还是 `preview_skeleton`，以及是否仍处于当前轮合法生命周期
   - 执行 `mother-doc-lint`
+  - 执行 `mother-doc-audit`，在任何更深的 mother_doc 语义阅读前先判定是否存在 blocking growth debt
   - 若存在图谱，读取 graph context 以校准当前代码现实
   - 若本轮会修改 mother_doc，先由模型列出应改动的原子文档，再执行 `mother-doc-mark-modified --auto-from-git`
   - 仅在当前阶段确实需要代码上下文时，执行当前目标上的 `graph-preflight`
@@ -119,10 +120,13 @@ anchors:
 - 同一目标文档只能出现在一个父节点的 traversal 集合里；若出现多父引用，必须先回写文档协议再继续。
 - layer 兄弟与 container 兄弟默认都只是同父集合，不应在文档中互相引用，也不应在 viewer 中被画成互连。
 - 鼓励模型主动新增文档、向下扩层或横向长出 B-tree；overview 节点、主链节点和 layer 节点都允许继续长树。
+- 鼓励模型主动替用户做文档落位、拆分、扩层与分叉裁决；当语义已经足够明确时，不要因为保守而停止生长。
+- 靠近根入口的文档应偏人类叙事；越向外的文档越应主动原子化、参数化、机器友好，让模型沿链读下去几乎不需要额外推理。
 - 任何新增纵向层、横向分支家族或内容结构家族都必须先在 skill 注册表中确立，再允许真实 mother_doc 使用。
 - 任何新增层、分支家族或内容结构家族，都必须能复用于同类语义，禁止只为单个节点发明一次性承载层或一次性写法。
 - 一旦某层、某分支家族或某内容结构家族被采用，它就属于固定框架的一部分；后续同类文档必须继续复用，不得平行再造另一套。
 - 只要 mother_doc 本轮新增了此前 skill 不存在的文档协议规则，同一轮必须把协议升级同步回写到 `$Workflow-CentralFlow2-OctppusOS`，不得让真实文档协议领先于 skill。
+- 在进入 `mother_doc` 写回前，固定先经过 `mother_doc_audit` 阶段清理当前树的 blocking growth debt。
 - mother_doc 子 workflow 的完整顺序固定为：
   - `scope_and_runtime`
   - `impact_and_codegraph`
@@ -137,6 +141,7 @@ anchors:
 - mother doc 的回填不是盲开空骨架；它必须结合最近归档迭代历史与当前 code graph/context 一起完成。
 - 若当前目标已经存在 pack 树或 graph，mother doc 阶段也必须先复用它们来校准当前任务脉络，不得视作与历史脱钩的新任务。
 - 若模块容器中缺少 `AGENTS.md`、mother doc、pack root 或 graph root，必须先通过 `target-scaffold` 补齐；不得只补其中一部分。
+- 若 `mother-doc-audit` 判定存在 blocking growth debt，必须先拆分/迁移并在必要时回写 skill 注册表，再进入 `mother_doc` 深读与写回。
 - 本阶段的读物边界、命令和 graph 角色以 stage-specific CLI contracts 为准。
 
 ### `construction_plan`
@@ -235,6 +240,7 @@ anchors:
 
 ## 7. Graph Preflight Policy
 - graph preflight 的具体调用由 `stage-graph-contract --stage mother_doc|construction_plan` 给出。
+- 图谱消费顺序、repo 选择规则与 direct CLI IO fallback 以 `graph-preflight` 输出中的合同字段为准，不再靠调用方各自猜。
 - 决策规则仍固定：
   - 已有图谱：读取 `Meta-code-graph-base context/resource`
   - 无图谱但 repo 有实质代码：先运行 `Meta-code-graph-base analyze`
@@ -244,8 +250,7 @@ anchors:
 - graph postflight 的具体调用由 `stage-graph-contract --stage acceptance` 给出。
 - 若 repo 已索引，应建议执行：
   - `detect-changes`
-  - `map`
-  - `wiki`
+- 仅在需要补充结构上下文时再读取 `resource/context`
 - 目标是增强后续 debug、扩展和阅读，不是完成态门禁。
 
 ## 9. Required Templates

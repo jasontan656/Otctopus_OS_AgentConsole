@@ -1,0 +1,204 @@
+{
+  "registry_name": "MOTHER_DOC_AUDIT_SPLIT_DECISION_REGISTRY",
+  "registry_version": "v1",
+  "default_host_strategy": "nested_source_stem_directory",
+  "recipes": [
+    {
+      "recipe_id": "overview_semantic_pressure_branch_expansion",
+      "match": {
+        "content_families": [
+          "overview_narrative",
+          "overview_mapping"
+        ],
+        "debt_kinds": [
+          "semantic_pressure"
+        ],
+        "severities": [
+          "blocking",
+          "major"
+        ]
+      },
+      "source_rewrite": {
+        "action": "rewrite_source_as_branch_root",
+        "doc_kind": "branch_root",
+        "content_family": "branch_overview",
+        "branch_family": "decision_branch",
+        "rewrite_goal": "保留总览节点为薄入口，只留单一主问题与分支导航。"
+      },
+      "shadow_tree": {
+        "child_nodes": [
+          {
+            "slug": "10_domain_scope",
+            "thumb_title_suffix": "Domain Scope",
+            "doc_kind": "branch_root",
+            "branch_family": "domain_branch",
+            "content_family": "branch_overview",
+            "focus": "拆出领域对象、用户对象与边界。"
+          },
+          {
+            "slug": "20_contract_surface",
+            "thumb_title_suffix": "Contract Surface",
+            "doc_kind": "contract_doc",
+            "branch_family": "contract_branch",
+            "content_family": "contract_spec_doc",
+            "focus": "拆出规则、配置与稳定约束。"
+          },
+          {
+            "slug": "30_execution_binding",
+            "thumb_title_suffix": "Execution Binding",
+            "doc_kind": "execution_binding_doc",
+            "branch_family": "execution_binding_branch",
+            "content_family": "contract_spec_doc",
+            "focus": "拆出运行落点、实现映射与后续 pack 绑定。"
+          }
+        ]
+      }
+    },
+    {
+      "recipe_id": "family_drift_contract_extract",
+      "match": {
+        "content_families": [
+          "overview_narrative",
+          "overview_mapping",
+          "branch_overview"
+        ],
+        "debt_kinds": [
+          "family_drift"
+        ],
+        "severities": [
+          "major",
+          "blocking"
+        ]
+      },
+      "source_rewrite": {
+        "action": "rewrite_source_as_thin_overview",
+        "doc_kind": "branch_root",
+        "content_family": "branch_overview",
+        "branch_family": "decision_branch",
+        "rewrite_goal": "把实现/配置信号抽走，源文档只保留导航性叙事。"
+      },
+      "shadow_tree": {
+        "child_nodes": [
+          {
+            "slug": "10_contract_surface",
+            "thumb_title_suffix": "Contract Surface",
+            "doc_kind": "contract_doc",
+            "branch_family": "contract_branch",
+            "content_family": "contract_spec_doc",
+            "focus": "承接规则块、配置块与稳定接口。"
+          },
+          {
+            "slug": "20_execution_binding",
+            "thumb_title_suffix": "Execution Binding",
+            "doc_kind": "execution_binding_doc",
+            "branch_family": "execution_binding_branch",
+            "content_family": "contract_spec_doc",
+            "focus": "承接路径、代码落点与消费关系。"
+          }
+        ]
+      }
+    },
+    {
+      "recipe_id": "taxonomy_cluster_branch_expansion",
+      "match": {
+        "content_families": [
+          "branch_overview",
+          "layer_taxonomy_root",
+          "layer_item_doc"
+        ],
+        "debt_kinds": [
+          "unexpanded_semantic_cluster"
+        ],
+        "severities": [
+          "major",
+          "blocking"
+        ]
+      },
+      "source_rewrite": {
+        "action": "rewrite_source_as_taxonomy_root",
+        "doc_kind": "branch_root",
+        "content_family": "branch_overview",
+        "branch_family": "framework_branch",
+        "rewrite_goal": "保留宿主节点为树根，语义簇下沉成独立分支。"
+      },
+      "shadow_tree": {
+        "child_nodes": [
+          {
+            "slug": "10_domain_scope",
+            "thumb_title_suffix": "Domain Scope",
+            "doc_kind": "branch_root",
+            "branch_family": "domain_branch",
+            "content_family": "branch_overview",
+            "focus": "承接平级对象集合与术语语义。"
+          },
+          {
+            "slug": "20_contract_surface",
+            "thumb_title_suffix": "Contract Surface",
+            "doc_kind": "contract_doc",
+            "branch_family": "contract_branch",
+            "content_family": "contract_spec_doc",
+            "focus": "承接规则、边界与约束。"
+          },
+          {
+            "slug": "30_execution_binding",
+            "thumb_title_suffix": "Execution Binding",
+            "doc_kind": "execution_binding_doc",
+            "branch_family": "execution_binding_branch",
+            "content_family": "contract_spec_doc",
+            "focus": "承接代码路径、运行绑定与消费入口。"
+          }
+        ]
+      }
+    },
+    {
+      "recipe_id": "container_cluster_support_split",
+      "match": {
+        "content_families": [
+          "container_item_doc"
+        ],
+        "debt_kinds": [
+          "unexpanded_semantic_cluster"
+        ],
+        "severities": [
+          "blocking",
+          "major"
+        ]
+      },
+      "source_rewrite": {
+        "action": "rewrite_source_as_container_root",
+        "doc_kind": "branch_root",
+        "content_family": "branch_overview",
+        "branch_family": "framework_branch",
+        "rewrite_goal": "容器节点只保留角色、组合意图与子分支入口。"
+      },
+      "shadow_tree": {
+        "child_nodes": [
+          {
+            "slug": "10_runtime_binding",
+            "thumb_title_suffix": "Runtime Binding",
+            "doc_kind": "execution_binding_doc",
+            "branch_family": "execution_binding_branch",
+            "content_family": "contract_spec_doc",
+            "focus": "承接运行时 hook、store、event、route 与代码路径。"
+          },
+          {
+            "slug": "20_contract_surface",
+            "thumb_title_suffix": "Contract Surface",
+            "doc_kind": "contract_doc",
+            "branch_family": "contract_branch",
+            "content_family": "contract_spec_doc",
+            "focus": "承接输入输出合同、稳定规则与配置。"
+          },
+          {
+            "slug": "30_composition_boundary",
+            "thumb_title_suffix": "Composition Boundary",
+            "doc_kind": "decision_doc",
+            "branch_family": "decision_branch",
+            "content_family": "branch_overview",
+            "focus": "承接容器组合边界、兄弟协作与非目标。"
+          }
+        ]
+      }
+    }
+  ]
+}

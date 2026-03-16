@@ -11,6 +11,18 @@ reading_chain:
 
 # mother_doc 阶段合同
 
+## Contract Header
+- `contract_name`: `workflow_centralflow2_mother_doc_contract`
+- `contract_version`: `1.0.0`
+- `validation_mode`: `strict`
+- `required_fields`:
+  - `single_requirement_source_rule`
+  - `atomic_doc_protocol`
+  - `substep_order`
+  - `stage_exit_gate`
+- `optional_fields`:
+  - `extension_policy`
+
 - `mother_doc` 是唯一需求源；graph 只能补充现状，不得替代需求源。
 - `00_index.md` 是固定根入口，必须由 `mother-doc-refresh-root-index` 自动生成。
 - 原子文档协议至少包含：

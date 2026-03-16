@@ -3,6 +3,10 @@ name: Workflow-CentralFlow2-OctppusOS
 description: 开发闭环 workflow 技能；以 mother_doc、construction_plan、implementation、acceptance 组成复合阶段闭环。
 skill_mode: executable_workflow_skill
 metadata:
+  skill_profile:
+    doc_topology: workflow_path
+    tooling_surface: automation_cli
+    workflow_control: compiled
   doc_structure:
     doc_id: workflow_centralflow2_octppusos.entry.facade
     doc_type: skill_facade
@@ -10,6 +14,11 @@ metadata:
 ---
 
 # Workflow-CentralFlow2-OctppusOS
+
+## Runtime Entry
+- Primary runtime entry: `./.venv_backend_skills/bin/python Skills/Workflow-CentralFlow2-OctppusOS/scripts/Cli_Toolbox.py contract --json`
+- Context compiler entry: `./.venv_backend_skills/bin/python Skills/Workflow-CentralFlow2-OctppusOS/scripts/Cli_Toolbox.py read-contract-context --entry development_loop --json`
+- Automation surface stays in `scripts/Cli_Toolbox.py`; `references/runtime_contracts/` and `references/tooling/` are the governed machine/human mirrors.
 
 ## 1. 模型立刻需要知道的事情
 ### 1. 总览
@@ -21,6 +30,7 @@ metadata:
 - `SKILL.md` 只暴露功能入口，不平铺阶段正文、模板树或旧式运行时合同。
 - `target_root / docs_root / codebase_root / graph_runtime_root` 属于动态运行态；它们由 CLI 解析，不提前回流到门面。
 - `mother_doc` 是当前闭环里最复杂的子 workflow；不能把它压扁成单步说明页。
+- `contract --json` 是当前技能的 machine truth source；`runtime-contract` 只保留为兼容别名。
 - 现有 CLI 子命令在治理过程中保持兼容；重构重点是承载方式，不是先删命令。
 
 ### 3. 顶层常驻合同
@@ -37,6 +47,8 @@ metadata:
 Workflow-CentralFlow2-OctppusOS/
 ├── SKILL.md
 ├── agents/
+├── references/
 ├── path/
-└── scripts/
+├── scripts/
+└── tests/
 ```

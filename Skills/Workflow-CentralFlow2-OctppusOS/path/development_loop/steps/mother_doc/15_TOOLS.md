@@ -18,8 +18,8 @@ reading_chain:
 - `python3 ./scripts/Cli_Toolbox.py mother-doc-lint --json`
 - `python3 ./scripts/Cli_Toolbox.py mother-doc-mark-modified --auto-from-git --json`
 - `python3 ./scripts/Cli_Toolbox.py mother-doc-sync-client-copy --json`
-- `./.venv_backend_skills/bin/python Skills/Meta-code-graph-base/scripts/meta_code_graph_base.py --runtime-root <graph_runtime_root> status`
-- `./.venv_backend_skills/bin/python Skills/Meta-code-graph-base/scripts/meta_code_graph_base.py --runtime-root <graph_runtime_root> analyze <codebase_root>`
+- `cd <codebase_root> && META_CODE_GRAPH_RUNTIME_ROOT=<graph_runtime_root> node Skills/Meta-code-graph-base/assets/gitnexus_core/dist/cli/index.js status`
+- `META_CODE_GRAPH_RUNTIME_ROOT=<graph_runtime_root> node Skills/Meta-code-graph-base/assets/gitnexus_core/dist/cli/index.js analyze <codebase_root>`
 
 ## 模板与支撑面
 - `templates/mother_doc/`

@@ -11,6 +11,17 @@ reading_chain:
 
 # implementation 阶段合同
 
+## Contract Header
+- `contract_name`: `workflow_centralflow2_implementation_contract`
+- `contract_version`: `1.0.0`
+- `validation_mode`: `strict`
+- `required_fields`:
+  - `active_pack_read_rule`
+  - `intent_source_boundary`
+  - `phase_ledger_writeback_rule`
+- `optional_fields`:
+  - `notes`
+
 - implementation 只允许读取 active pack 及其声明的 `source_mother_doc_refs`。
 - 不得绕过 packs 直接让代码和测试定义真实意图。
 - 当前 pack 的 phase ledger 与 evidence 必须同步回填。

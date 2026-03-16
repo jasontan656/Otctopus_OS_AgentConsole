@@ -11,6 +11,17 @@ reading_chain:
 
 # impact_and_codegraph 合同
 
+## Contract Header
+- `contract_name`: `workflow_centralflow2_mother_doc_impact_and_codegraph_contract`
+- `contract_version`: `1.0.0`
+- `validation_mode`: `strict`
+- `required_fields`:
+  - `write_intent_scope`
+  - `graph_runtime_rule`
+  - `graph_gap_disclosure_rule`
+- `optional_fields`:
+  - `notes`
+
 - mother_doc 默认属于 `WRITE_INTENT`；进入文档树写回前，必须先用 `Meta-Impact-Investigation` 建立：
   - `direct_scope`
   - `indirect_scope`

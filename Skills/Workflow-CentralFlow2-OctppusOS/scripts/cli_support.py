@@ -8,6 +8,7 @@ from acceptance_contract_support import acceptance_lint_result
 from construction_plan_rendering import PREVIEW_PLAN_KIND
 from construction_plan_support import construction_plan_init_result, construction_plan_lint_summary
 from devflow_agents_support import scaffold_and_collect_devflow_agents
+from mother_doc_audit_support import mother_doc_audit_summary
 from mother_doc_contract import (
     MOTHER_DOC_ANCHOR_FIELDS,
     MOTHER_DOC_ALLOWED_BRANCH_FAMILIES,
@@ -214,6 +215,7 @@ def workflow_contract_document(
             "stage-command-contract",
             "stage-graph-contract",
             "template-index",
+            "mother-doc-audit",
             "mother-doc-refresh-root-index",
             "mother-doc-mark-modified",
             "mother-doc-sync-client-copy",
@@ -256,7 +258,7 @@ def workflow_contract_document(
         "implementation_source_policy": IMPLEMENTATION_SOURCE_POLICY,
         "blocked_state_policy": BLOCKED_STATES,
         "graph_preflight_policy": "indexed=use_context, missing+substantial=run_analyze, missing+empty=skip_non_blocking",
-        "graph_postflight_policy": "after implementation, prefer detect-changes/map/wiki when indexed",
+        "graph_postflight_policy": "after implementation, prefer detect-changes when indexed and read resource/context only when needed",
         "required_templates": {name: str(path) for name, path in TEMPLATES.items()},
         "construction_plan_root": str(runtime["construction_plan_root"]),
         "construction_plan_index": str(runtime["construction_plan_index"]),

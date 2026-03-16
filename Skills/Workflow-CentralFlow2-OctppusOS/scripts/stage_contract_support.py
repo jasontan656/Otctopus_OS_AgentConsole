@@ -3,6 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import TypedDict
 
+from runtime_context_support import graph_core_command
 from target_runtime_support import TargetRuntimeRecord, latest_archived_iteration, resolve_target_runtime
 from workflow_stage_contract import STAGES
 
@@ -53,7 +54,7 @@ def stage_doc_contract_payload(
         payload["docs_root"] = str(target_runtime["docs_root"])
         payload["mother_doc_root"] = str(target_runtime["mother_doc_root"])
         payload["construction_plan_root"] = str(target_runtime["construction_plan_root"])
-    if stage == "mother_doc" and mother_doc_root is not None:
+    if stage in {"mother_doc_audit", "mother_doc"} and mother_doc_root is not None:
         latest_archive = latest_archived_iteration(mother_doc_root)
         payload["iteration_context_root"] = str(latest_archive) if latest_archive else None
         if latest_archive is not None:
@@ -106,6 +107,36 @@ def stage_command_contract_payload(
     scaffold_cmd = f"{runtime_args} target-scaffold --json"
 
     commands = {
+        "mother_doc_audit": {
+            "entry_commands": [
+                target_runtime_cmd,
+                checklist_cmd,
+                scaffold_cmd,
+            ],
+            "gate_commands": [
+                f"./.venv_backend_skills/bin/python Skills/Workflow-CentralFlow2-OctppusOS/scripts/Cli_Toolbox.py mother-doc-lint --path {mother_doc_root} --json",
+                f"./.venv_backend_skills/bin/python Skills/Workflow-CentralFlow2-OctppusOS/scripts/Cli_Toolbox.py mother-doc-audit --path {mother_doc_root} --json",
+            ],
+            "optional_commands": [
+                f"./.venv_backend_skills/bin/python Skills/Workflow-CentralFlow2-OctppusOS/scripts/Cli_Toolbox.py graph-preflight --repo {codebase_root} --graph-runtime-root {graph_runtime_root} --allow-missing-index --json",
+                graph_core_command(graph_runtime_root, "status", repo_cwd=codebase_root),
+                f"./.venv_backend_skills/bin/python Skills/Workflow-CentralFlow2-OctppusOS/scripts/Cli_Toolbox.py mother-doc-refresh-root-index --path {mother_doc_root} --json",
+                f"./.venv_backend_skills/bin/python Skills/Workflow-CentralFlow2-OctppusOS/scripts/Cli_Toolbox.py mother-doc-sync-client-copy --source {mother_doc_root} --mirror {runtime['client_mother_doc_root']} --json",
+            ],
+            "required_iteration_actions": [
+                (
+                    f"read the latest archived mother_doc iteration at {latest_archive} before deciding whether current growth debt is inherited or newly introduced"
+                    if latest_archive is not None
+                    else "if a numbered archived mother_doc iteration exists, read the latest archived sibling before classifying current growth debt"
+                ),
+                "run mother-doc-lint first so semantic audit never trusts a protocol-dirty tree",
+                "run mother-doc-audit and classify blocking versus non-blocking growth debt before deeper mother_doc evidence reading",
+                "prefer the registry-backed shadow split proposals from mother-doc-audit before inventing a custom split tree by hand",
+                "when blocking debt exists, split or migrate the overloaded node first instead of pushing the polluted structure into mother_doc drafting",
+                "before any audit-driven split uses a new vertical layer, branch family, or content family, register it in the skill and confirm it is reusable",
+                "after audit-driven split writeback, rerun mother-doc-refresh-root-index, mother-doc-lint, and mother-doc-audit until the gate is clean",
+            ],
+        },
         "mother_doc": {
             "entry_commands": [
                 target_runtime_cmd,
@@ -114,11 +145,12 @@ def stage_command_contract_payload(
             ],
             "gate_commands": [
                 f"./.venv_backend_skills/bin/python Skills/Workflow-CentralFlow2-OctppusOS/scripts/Cli_Toolbox.py mother-doc-lint --path {mother_doc_root} --json",
+                f"./.venv_backend_skills/bin/python Skills/Workflow-CentralFlow2-OctppusOS/scripts/Cli_Toolbox.py mother-doc-audit --path {mother_doc_root} --json",
             ],
             "optional_commands": [
                 f"./.venv_backend_skills/bin/python Skills/Workflow-CentralFlow2-OctppusOS/scripts/Cli_Toolbox.py graph-preflight --repo {codebase_root} --graph-runtime-root {graph_runtime_root} --allow-missing-index --json",
-                f"./.venv_backend_skills/bin/python Skills/Meta-code-graph-base/scripts/meta_code_graph_base.py --runtime-root {graph_runtime_root} status",
-                f"./.venv_backend_skills/bin/python Skills/Meta-code-graph-base/scripts/meta_code_graph_base.py --runtime-root {graph_runtime_root} analyze {codebase_root}",
+                graph_core_command(graph_runtime_root, "status", repo_cwd=codebase_root),
+                graph_core_command(graph_runtime_root, "analyze", str(codebase_root)),
                 f"./.venv_backend_skills/bin/python Skills/Workflow-CentralFlow2-OctppusOS/scripts/Cli_Toolbox.py mother-doc-refresh-root-index --path {mother_doc_root} --json",
                 f"./.venv_backend_skills/bin/python Skills/Workflow-CentralFlow2-OctppusOS/scripts/Cli_Toolbox.py mother-doc-mark-modified --path {mother_doc_root} --doc-ref <mother_doc_doc> --auto-from-git --json",
                 f"./.venv_backend_skills/bin/python Skills/Workflow-CentralFlow2-OctppusOS/scripts/Cli_Toolbox.py mother-doc-sync-client-copy --source {mother_doc_root} --mirror {runtime['client_mother_doc_root']} --json",
@@ -134,11 +166,13 @@ def stage_command_contract_payload(
                 "inspect existing execution packs before deciding whether to init a new pack root or reuse the current task lineage",
                 "if the repo already has substantive code, check Meta-code-graph-base runtime and initialize it when missing before finalizing tree growth decisions",
                 "read graph context after archive review so the new mother_doc reflects current code reality rather than stale assumptions",
+                "do not treat the current tree as a clean requirement source unless mother-doc-audit has already cleared blocking growth debt",
                 "decide whether this round should extend vertically, branch horizontally, edit current nodes, migrate nodes, or delete nodes",
                 "before creating a new vertical layer or horizontal branch family, register it in the skill and confirm it is reusable for sibling semantics",
                 "reduce the current change into the smallest mother_doc write slice that can still close the intended semantic move",
                 "after any mother_doc structural write, run mother-doc-refresh-root-index so 00_index.md is regenerated from the current folder tree",
                 "after refreshing the root index, run mother-doc-sync-client-copy so the viewer-side Client_Applications/mother_doc mirror is brutally overwritten from the Development_Docs source tree",
+                "after structural writeback, rerun mother-doc-audit so the next stage never inherits fresh growth debt",
             ],
         },
         "construction_plan": {
@@ -217,6 +251,9 @@ def stage_graph_contract_payload(
         "graph_runtime_root"
     ]
     recommended_commands = {
+        "mother_doc_audit": [
+            f"./.venv_backend_skills/bin/python Skills/Workflow-CentralFlow2-OctppusOS/scripts/Cli_Toolbox.py graph-preflight --repo {codebase_root} --graph-runtime-root {graph_root} --allow-missing-index --json",
+        ],
         "mother_doc": [
             f"./.venv_backend_skills/bin/python Skills/Workflow-CentralFlow2-OctppusOS/scripts/Cli_Toolbox.py graph-preflight --repo {codebase_root} --graph-runtime-root {graph_root} --allow-missing-index --json",
         ],

@@ -23,9 +23,9 @@ reading_chain:
 
 使用规则：
 - `display_layer` 负责显示层级；`doc_kind` 负责语义角色。
-- 同一文档若同时承担多个 `doc_kind`，通常意味着它应继续拆分。
+- 同一文档若同时承担多个 `doc_kind`，默认意味着它应继续拆分；模型不应因为保守而把多种语义长期困在一个节点里。
 - `branch_root` 若出现，应同时声明自己属于哪个 `branch_family`。
-- overview 节点、主链节点和 layer 节点都可以是 `branch_root`；只要它开始承担一个完整可复用的细分语义树，就应该显式升格为分支根。
+- overview 节点、主链节点和 layer 节点都可以是 `branch_root`；只要它开始承担一个完整可复用的细分语义树，就应主动显式升格为分支根。
 
 ## 下一跳列表
 - [content_structure_family_registry]：`14_CONTENT_STRUCTURE_FAMILY_REGISTRY.md`

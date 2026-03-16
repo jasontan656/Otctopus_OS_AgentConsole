@@ -11,6 +11,16 @@ reading_chain:
 
 # lint_and_exit 合同
 
+## Contract Header
+- `contract_name`: `workflow_centralflow2_mother_doc_lint_and_exit_contract`
+- `contract_version`: `1.0.0`
+- `validation_mode`: `strict`
+- `required_fields`:
+  - `lint_gate`
+  - `placeholder_cleanup_rule`
+- `optional_fields`:
+  - `notes`
+
 - 未通过 `mother-doc-lint` 不得进入 `construction_plan`。
 - 不得保留 `replace_me` 与未完成的阶段断言。
 

@@ -18,11 +18,11 @@ reading_chain:
 - key: growth_architecture
   target: steps/growth_architecture/00_GROWTH_ARCHITECTURE_ENTRY.md
   hop: branch
-  reason: 再决定当前语义应该纵向扩层、横向长树还是维持原层承载。
+  reason: 再主动替用户决定当前语义应该纵向扩层、横向长树，还是维持原层承载。
 - key: action_slicing
   target: steps/action_slicing/00_ACTION_SLICING_ENTRY.md
   hop: branch
-  reason: 在真实落盘前，先把本轮写作动作收成最小切面。
+  reason: 在主动扩树后，把本轮动作收成最小闭环切面，避免扩得过散。
 - key: state_and_sync
   target: steps/state_and_sync/00_STATE_AND_SYNC_ENTRY.md
   hop: branch

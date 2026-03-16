@@ -1,0 +1,97 @@
+{
+  "contract_name": "workflow_centralflow2_octppusos_runtime_contract",
+  "contract_version": "2.0.0",
+  "skill_name": "Workflow-CentralFlow2-OctppusOS",
+  "skill_profile": {
+    "doc_topology": "workflow_path",
+    "tooling_surface": "automation_cli",
+    "workflow_control": "compiled"
+  },
+  "runtime_source_policy": {
+    "primary_runtime_source": "CLI_JSON",
+    "human_markdown_role": "narrative_mirror",
+    "markdown_is_not_primary_instruction_source": true
+  },
+  "tool_entry": {
+    "script": "scripts/Cli_Toolbox.py",
+    "commands": {
+      "contract": "./.venv_backend_skills/bin/python Skills/Workflow-CentralFlow2-OctppusOS/scripts/Cli_Toolbox.py contract --json",
+      "read-contract-context": "./.venv_backend_skills/bin/python Skills/Workflow-CentralFlow2-OctppusOS/scripts/Cli_Toolbox.py read-contract-context --entry development_loop --json",
+      "workflow-contract": "./.venv_backend_skills/bin/python Skills/Workflow-CentralFlow2-OctppusOS/scripts/Cli_Toolbox.py workflow-contract --json",
+      "target-runtime-contract": "./.venv_backend_skills/bin/python Skills/Workflow-CentralFlow2-OctppusOS/scripts/Cli_Toolbox.py target-runtime-contract --json",
+      "stage-checklist": "./.venv_backend_skills/bin/python Skills/Workflow-CentralFlow2-OctppusOS/scripts/Cli_Toolbox.py stage-checklist --stage <stage> --json",
+      "stage-doc-contract": "./.venv_backend_skills/bin/python Skills/Workflow-CentralFlow2-OctppusOS/scripts/Cli_Toolbox.py stage-doc-contract --stage <stage> --json",
+      "stage-command-contract": "./.venv_backend_skills/bin/python Skills/Workflow-CentralFlow2-OctppusOS/scripts/Cli_Toolbox.py stage-command-contract --stage <stage> --json",
+      "stage-graph-contract": "./.venv_backend_skills/bin/python Skills/Workflow-CentralFlow2-OctppusOS/scripts/Cli_Toolbox.py stage-graph-contract --stage <stage> --json",
+      "target-scaffold": "./.venv_backend_skills/bin/python Skills/Workflow-CentralFlow2-OctppusOS/scripts/Cli_Toolbox.py target-scaffold --json",
+      "mother-doc-audit": "./.venv_backend_skills/bin/python Skills/Workflow-CentralFlow2-OctppusOS/scripts/Cli_Toolbox.py mother-doc-audit --json",
+      "mother-doc-init": "./.venv_backend_skills/bin/python Skills/Workflow-CentralFlow2-OctppusOS/scripts/Cli_Toolbox.py mother-doc-init --json",
+      "mother-doc-lint": "./.venv_backend_skills/bin/python Skills/Workflow-CentralFlow2-OctppusOS/scripts/Cli_Toolbox.py mother-doc-lint --json",
+      "construction-plan-init": "./.venv_backend_skills/bin/python Skills/Workflow-CentralFlow2-OctppusOS/scripts/Cli_Toolbox.py construction-plan-init --json",
+      "construction-plan-lint": "./.venv_backend_skills/bin/python Skills/Workflow-CentralFlow2-OctppusOS/scripts/Cli_Toolbox.py construction-plan-lint --json",
+      "mother-doc-refresh-root-index": "./.venv_backend_skills/bin/python Skills/Workflow-CentralFlow2-OctppusOS/scripts/Cli_Toolbox.py mother-doc-refresh-root-index --json",
+      "mother-doc-state-sync": "./.venv_backend_skills/bin/python Skills/Workflow-CentralFlow2-OctppusOS/scripts/Cli_Toolbox.py mother-doc-state-sync --json",
+      "mother-doc-mark-modified": "./.venv_backend_skills/bin/python Skills/Workflow-CentralFlow2-OctppusOS/scripts/Cli_Toolbox.py mother-doc-mark-modified --json",
+      "mother-doc-sync-client-copy": "./.venv_backend_skills/bin/python Skills/Workflow-CentralFlow2-OctppusOS/scripts/Cli_Toolbox.py mother-doc-sync-client-copy --json",
+      "graph-preflight": "./.venv_backend_skills/bin/python Skills/Workflow-CentralFlow2-OctppusOS/scripts/Cli_Toolbox.py graph-preflight --json",
+      "graph-postflight": "./.venv_backend_skills/bin/python Skills/Workflow-CentralFlow2-OctppusOS/scripts/Cli_Toolbox.py graph-postflight --json",
+      "acceptance-lint": "./.venv_backend_skills/bin/python Skills/Workflow-CentralFlow2-OctppusOS/scripts/Cli_Toolbox.py acceptance-lint --json"
+    }
+  },
+  "artifact_policy": {
+    "mode": "runtime_mutation_under_target_root",
+    "resolver": "target-runtime-contract",
+    "notes": [
+      "The skill itself keeps no private runtime result directory.",
+      "State-changing commands may write only under the caller-selected target_root/docs_root scope.",
+      "Human-facing usage and development notes live under references/tooling."
+    ]
+  },
+  "entry_doc": "path/development_loop/00_DEVELOPMENT_LOOP_ENTRY.md",
+  "root_shape": [
+    "SKILL.md",
+    "agents",
+    "references",
+    "path",
+    "scripts",
+    "tests"
+  ],
+  "commands": [
+    "contract",
+    "runtime-contract",
+    "read-contract-context",
+    "read-path-context",
+    "workflow-contract",
+    "target-runtime-contract",
+    "stage-checklist",
+    "stage-doc-contract",
+    "stage-command-contract",
+    "stage-graph-contract",
+    "graph-preflight",
+    "graph-postflight",
+    "target-scaffold",
+    "template-index",
+    "mother-doc-audit",
+    "mother-doc-init",
+    "mother-doc-archive",
+    "construction-plan-init",
+    "construction-plan-lint",
+    "mother-doc-lint",
+    "mother-doc-refresh-root-index",
+    "mother-doc-state-sync",
+    "mother-doc-mark-modified",
+    "mother-doc-sync-client-copy",
+    "acceptance-lint"
+  ],
+  "must_use_sequence": [
+    "Call contract --json before consuming runtime guidance for this skill.",
+    "Use read-contract-context to compile the development_loop branch before manually traversing deep markdown nodes.",
+    "Resolve target-root/docs-root state through target-runtime-contract before invoking stage-specific automation commands.",
+    "Treat runtime-contract as a compatibility alias; the contract payload remains the primary machine-readable source."
+  ],
+  "hard_constraints": [
+    "Keep the workflow order fixed as mother_doc_audit -> mother_doc -> construction_plan -> implementation -> acceptance.",
+    "Keep dynamic runtime paths out of SKILL.md and route them through CLI resolution only.",
+    "Do not let implementation bypass official execution packs or let acceptance bypass real local witness collection."
+  ]
+}

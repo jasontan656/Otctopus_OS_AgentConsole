@@ -12,11 +12,13 @@ reading_chain:
 # 开发闭环工具面
 
 ## 运行时与编译命令
+- `python3 ./scripts/Cli_Toolbox.py contract --json`
 - `python3 ./scripts/Cli_Toolbox.py runtime-contract --json`
 - `python3 ./scripts/Cli_Toolbox.py read-contract-context --entry development_loop --selection mother_doc,scope_and_runtime --json`
 - `python3 ./scripts/Cli_Toolbox.py read-path-context --entry development_loop --selection construction_plan --json`
 
 ## 现有兼容命令
+- `runtime-contract`
 - `workflow-contract`
 - `target-runtime-contract`
 - `stage-checklist`
@@ -27,6 +29,7 @@ reading_chain:
 - `graph-postflight`
 - `target-scaffold`
 - `template-index`
+- `mother-doc-audit`
 - `mother-doc-init`
 - `mother-doc-archive`
 - `mother-doc-lint`
@@ -42,6 +45,8 @@ reading_chain:
 - `mother_doc` 模板：`steps/mother_doc/templates/`
 - `construction_plan` 模板：`steps/construction_plan/templates/`
 - `acceptance` 模板：`steps/acceptance/templates/`
+- 受治理 tooling 文档：`../../references/tooling/`
+- 受治理 runtime contract：`../../references/runtime_contracts/`
 
 ## 下一跳列表
 - [workflow_index]：`20_WORKFLOW_INDEX.md`

@@ -11,6 +11,17 @@ reading_chain:
 
 # scope_and_runtime 合同
 
+## Contract Header
+- `contract_name`: `workflow_centralflow2_mother_doc_scope_and_runtime_contract`
+- `contract_version`: `1.0.0`
+- `validation_mode`: `strict`
+- `required_fields`:
+  - `runtime_preflight`
+  - `docs_root_rule`
+  - `archive_read_rule`
+- `optional_fields`:
+  - `notes`
+
 - 先运行 `target-runtime-contract`。
 - 当前 `docs_root` 必须真实存在；不存在时拒绝服务或先 `target-scaffold`。
 - 若存在编号归档，先读取最新归档再开始本轮回填。

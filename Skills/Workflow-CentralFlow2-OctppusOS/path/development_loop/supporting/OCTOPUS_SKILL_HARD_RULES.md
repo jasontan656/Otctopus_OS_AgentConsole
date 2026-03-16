@@ -42,7 +42,8 @@ anchors:
 5.4 若目标模块文件夹中已经存在 `execution_atom_plan_validation_packs/`、`pack_registry.yaml`、编号归档 `NN_slug` 或既有 graph，必须先判定它们的生命周期与合法性；不得把 `preview_skeleton` 或 `accepted/retired` 的旧 official plan 当成当前轮 construction input 复用，也不得为同一目标另外创建脱节的母文档、pack 树或图谱脉络。
 5.5 目标模块的 `AGENTS.md` 必须使用本技能模版创建，并在创建后立即通过 `$Meta-RootFile-Manager collect` 收治；不得在未受管状态下长期存在。
 6. 阶段切换时只允许保留顶层常驻文档；上一阶段的 checklist、阶段文档、临时 focus、模板填写上下文必须显式丢弃，除非当前阶段合同明确要求重新读取。
-7. `mother_doc` 阶段必须先把需求固化成目录化项目说明与 `requirement_atom`；没有完整说明书，不得进入 `construction_plan`。
+7. `mother_doc_audit` 是进入 `mother_doc` 之前的固定前置治理阶段；必须先清理 blocking growth debt，才能把当前树继续当需求源深读。
+7.1 `mother_doc` 阶段必须先把需求固化成目录化项目说明与 `requirement_atom`；没有完整说明书，不得进入 `construction_plan`。
 7.0 `mother_doc` 必须采用协议驱动原子文档树；固定根入口只保留 `00_index.md`，其余文档允许按设计思路自由新增、插入、迁移与重排，但不得回退成 giant mother_doc 单文件。
 7.0.1 `00_index.md` 不得手工维护文件清单；必须通过 `mother-doc-refresh-root-index` 自动从当前 folder 结构生成，只展示目录级结构图，不展示文件。
 7.0.0 每个 mother_doc 原子文档都必须带 frontmatter：`doc_work_state`、`doc_pack_refs`、`doc_kind`、`content_family`、`thumb_title`、`thumb_summary`、`display_layer`、`always_read`、`anchors_down`、`anchors_support`；合法状态只有 `modified -> planned -> developed -> ref`。
@@ -62,17 +63,21 @@ anchors:
 7.0.0.12 mother_doc 的完整写作流程必须先经过：`scope_and_runtime -> impact_and_codegraph -> protocol_tree -> growth_architecture -> action_slicing -> state_and_sync -> lint_and_exit`；不得跳过影响面、图谱校准与最小切面决策直接开始写树。
 7.0.0.13 `mother_doc` 默认属于 `WRITE_INTENT`；在真实落盘前必须先用 `$Meta-Impact-Investigation` 建立需求影响面，再按需使用 `$Meta-code-graph-base` 检查或初始化 code graph runtime。
 7.0.0.14 若 repo 已有实质代码且 graph runtime 缺失，mother_doc 阶段应先初始化 code graph，再读 graph context 校准当前代码现实；但 graph 永远只能校准现实，不得替代需求源。
-7.0.0.15 鼓励模型向外扩散并主动新增文档承载语义；但每次扩散都必须先判断该语义属于哪类已注册层/分支，若现有注册表不足，必须先回写 skill 再继续写真实 mother_doc。
-7.0.0.15.1 overview 节点、主链节点和 layer 节点都允许继续长出自己的 B-tree；同层兄弟不互连，但各自都可以向外延伸自己的细分树。
-7.0.0.15.2 新增纵向层、横向分支家族或内容结构家族时，必须先回答“本层/本树/本结构专门承载什么、为什么现有框架不足、它能否被同类节点复用”；无法回答则不得新增。
+7.0.0.15 模型应主动向外扩散并主动新增文档承载语义；只要当前节点已经同时承载多个独立语义，就应优先考虑替用户做拆分与分叉裁决，而不是把内容继续塞回现有文档。
+7.0.0.15.1 overview 节点、主链节点和 layer 节点都默认允许继续长出自己的 B-tree；同层兄弟不互连，但各自都可以向外延伸自己的细分树。
+7.0.0.15.2 靠近根入口的文档应优先贴近人类阅读风格；中部往后应鼓励模型主动采用更细、更原子、更机器友好的结构，把规则、参数、边界与决策尽量钉死在文档里。
+7.0.0.15.3 当用户意图已经足够明确但尚未显式指定承载位置时，模型应主动代替用户完成文档落位、层级延伸、横向分支选择与内容结构裁决，并对自己的裁决保持信心。
+7.0.0.15.4 新增纵向层、横向分支家族或内容结构家族时，必须先回答“本层/本树/本结构专门承载什么、为什么现有框架不足、它能否被同类节点复用”；无法回答则不得新增。
+7.0.0.15.5 一旦某一层、某一横向分支家族或某一内容结构家族被采用，就必须把它视为固定框架的一部分；后续同类内容必须继续沿同一层、同一家族、同一结构生长，不得各自发明私有承载方式。
 7.0.0.3 只要某一轮 mother_doc 实际新增了本技能尚未声明的协议规则，该轮就必须同步回写 `$Workflow-CentralFlow2-OctppusOS` 的 mother_doc 合同、lint 与模板。
 7.0 `mother_doc` 阶段文档只允许包含：`<docs_root>/mother_doc/*` 与 `path/development_loop/steps/mother_doc/templates/mother_doc/*`；不得提前读取 construction packs、implementation 证据或 acceptance artifacts。
 7.0.1 若当前模块文档根下已经存在编号归档的 `NN_slug` 目录，`mother_doc` 阶段必须先读取最新一轮归档，并抽取仍然有效的目标、架构决策、blocker 与交付增量；不得把新 mother_doc 当成与历史脱钩的空白起点。
+7.1.0 `mother_doc_audit` 必须先通过 `mother-doc-lint` 与 `mother-doc-audit`；若当前树仍存在 blocking growth debt，不得进入 `mother_doc`。
 7.1 `mother_doc` 在进入 `construction_plan` 前必须通过 `mother-doc-lint`；若结构缺失、仍有 `replace_me`、缺少阶段断言/阶段测试/阶段验收，或出现 `最小闭环`、`最小实现`、`mvp`、`test profile` 等降级语义，必须先修正文档。
 7.2 发现范围固定限制为：当前 `target_root` 边界、已判定的 `docs_root`、`mother_doc/`、当前 `codebase_root`、必要 skill 文件与必要 graph 文件。
 7.3 若启动 cwd 恰好是 `/home/jasontan656/AI_Projects`，它只是容器根/钩子根，不得被视为 discoverable repo。
 7.4 禁止为了找上下文扫描整个 `/home/jasontan656/AI_Projects`，也不得读取 `Human_Work_Zone`、`GoogleDriveDump` 等 sibling 区域，除非 mother doc 显式引用。
-7.5 极简 prompt 启动时，第一批动作必须固定为：先运行 `target-runtime-contract`；必要时读取 `Dev-ProjectStructure-Constitution` 以确认模块文档容器；若模块容器可用但骨架未齐，先运行 `target-scaffold`；再读取当前 `mother_doc/00_index.md`；若已存在编号归档的 `NN_slug`，先读取最新一轮归档；若已存在任务包，先读取并复用当前任务包；当 folder 结构有变化时先运行 `mother-doc-refresh-root-index`；运行 `mother-doc-lint`；在 `mother_doc` 阶段若已有图谱必须读取它来校准现有代码现实；不得先用 `rg/find/ls` 在 workspace 根盲扫需求或仓库。
+7.5 极简 prompt 启动时，第一批动作必须固定为：先运行 `target-runtime-contract`；必要时读取 `Dev-ProjectStructure-Constitution` 以确认模块文档容器；若模块容器可用但骨架未齐，先运行 `target-scaffold`；再读取当前 `mother_doc/00_index.md`；若已存在编号归档的 `NN_slug`，先读取最新一轮归档；若已存在任务包，先读取并复用当前任务包；当 folder 结构有变化时先运行 `mother-doc-refresh-root-index`；运行 `mother-doc-lint`；运行 `mother-doc-audit`；在 `mother_doc` 阶段若已有图谱必须读取它来校准现有代码现实；不得先用 `rg/find/ls` 在 workspace 根盲扫需求或仓库。
 7.5.1 当前 `mother_doc` 若准备开始真实写树，必须先：
 - 用 `$Meta-Impact-Investigation` 判断本轮影响面
 - 用 `$Meta-code-graph-base` 检查 graph runtime；缺图且 repo 有实质代码时先建图
@@ -143,7 +148,7 @@ anchors:
 - 无图谱且 repo 为空或近空时必须允许继续，不得卡死首次落盘
 26. acceptance/evidence 收口后必须回看并更新 code graph：
 - 至少判断是否需要 `detect-changes`
-- 需要时生成 `map/wiki`
+- 需要时补读 `resource/context`
 - 目标是为下次 debug 和扩展提供可读导航，不是当前轮 acceptance 证据
 27. 文档与模板默认中文叙事；代码、CLI 输出字段、注释使用 English。
 28. mother doc 与 execution packs 模板中的填写规范必须随骨架一起创建，并用 Python 注释语义表达；进入下一阶段前，这些规范与所有 `replace_me` 都必须被真实内容替换掉。

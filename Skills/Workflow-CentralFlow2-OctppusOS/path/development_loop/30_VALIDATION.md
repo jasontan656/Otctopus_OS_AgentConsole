@@ -6,6 +6,7 @@ topic: Development loop validation
 
 # 开发闭环校验
 
-- 阶段顺序固定为 `mother_doc -> construction_plan -> implementation -> acceptance`。
+- 阶段顺序固定为 `mother_doc_audit -> mother_doc -> construction_plan -> implementation -> acceptance`。
+- `mother_doc_audit` 必须先通过 `mother-doc-lint` 与 `mother-doc-audit`，才能进入 `mother_doc`。
 - `mother_doc` 与 `construction_plan` 都必须完成各自 lint，才能进入下一阶段。
 - `acceptance` 只在真实证据与 graph postflight 收口后结束闭环。
