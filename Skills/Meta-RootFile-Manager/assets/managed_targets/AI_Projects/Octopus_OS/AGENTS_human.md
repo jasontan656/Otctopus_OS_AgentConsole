@@ -7,12 +7,15 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `Octopus_OS` repository root contain
 
 <part_A>
 1. 根入口命令
+- 当前可用的 skills backend Python 虚拟环境为：`<root>/Otctopus_OS_AgentConsole/.venv_backend_skills`。
+- 运行 skills CLI 时，优先使用：`<root>/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python3`。
+- 若需要运行 `pytest` 验证 skills 或 backend Python 相关改动，也优先使用同一虚拟环境，例如：`<root>/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python3 -m pytest`。
 - 在读取 `Octopus_OS` repo 级 runtime contract 前，必须先运行：
-- `<root>/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python <root>/Otctopus_OS_AgentConsole/Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py target-contract --source-path "/home/jasontan656/AI_Projects/Octopus_OS/AGENTS.md" --json`
+- `<root>/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python3 <root>/Otctopus_OS_AgentConsole/Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py target-contract --source-path "/home/jasontan656/AI_Projects/Octopus_OS/AGENTS.md" --json`
 
 2. 当前治理占位
 - 当前受管容器：`Octopus_OS`。
-- Development related task must go through `$Workflow-CentralFlow2-OctppusOS`。
+- Development related task must select one of `$Workflow-MotherDoc-OctopusOS`、`$Workflow-ConstructionPlan-OctopusOS`、`$Workflow-Implementation-OctopusOS`、`$Workflow-Acceptance-OctopusOS` according to the current stage。
 - 当任务进入 `Development_Docs` 或 `mother_doc` 写入时，先跳转到 `/home/jasontan656/AI_Projects/Octopus_OS/Development_Docs/AGENTS.md` 再执行。
 </part_A>
 
@@ -35,7 +38,7 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `Octopus_OS` repository root contain
   ],
   "turn_start_actions": [],
   "runtime_constraints": [
-    "Development related task must go through `$Workflow-CentralFlow2-OctppusOS`."
+    "Development related task must select one of `$Workflow-MotherDoc-OctopusOS`, `$Workflow-ConstructionPlan-OctopusOS`, `$Workflow-Implementation-OctopusOS`, or `$Workflow-Acceptance-OctopusOS` according to the current stage."
   ],
   "execution_modes": {
     "READ_EXEC": {

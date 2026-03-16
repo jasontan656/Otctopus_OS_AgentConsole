@@ -8,8 +8,11 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `Octopus_OS/Development_Docs` contai
 
 <part_A>
 1. 根入口命令
+- 当前可用的 skills backend Python 虚拟环境为：`<root>/Otctopus_OS_AgentConsole/.venv_backend_skills`。
+- 运行 skills CLI 时，优先使用：`<root>/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python3`。
+- 若需要运行 `pytest` 验证 skills 或 backend Python 相关改动，也优先使用同一虚拟环境，例如：`<root>/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python3 -m pytest`。
 - 在处理当前开发文档容器规则之前，必须先运行：
-- `<root>/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python <root>/Otctopus_OS_AgentConsole/Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py target-contract --source-path "/home/jasontan656/AI_Projects/Octopus_OS/Development_Docs/AGENTS.md" --json`
+- `<root>/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python3 <root>/Otctopus_OS_AgentConsole/Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py target-contract --source-path "/home/jasontan656/AI_Projects/Octopus_OS/Development_Docs/AGENTS.md" --json`
 
 2. 当前受管容器
 - 当前受管容器：`Octopus_OS/Development_Docs`。
@@ -34,7 +37,10 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `Octopus_OS/Development_Docs` contai
     "path_metadata_is_not_action_guidance": true
   },
   "default_meta_skill_order": [
-    "$Workflow-CentralFlow2-OctppusOS (development workflow and mother_doc sync)",
+    "$Workflow-MotherDoc-OctopusOS (mother_doc writeback and client mirror sync)",
+    "$Workflow-ConstructionPlan-OctopusOS (execution pack planning)",
+    "$Workflow-Implementation-OctopusOS (active pack implementation)",
+    "$Workflow-Acceptance-OctopusOS (delivery closeout and witness)",
     "$Meta-RootFile-Manager (AGENTS governance mapping flow)"
   ],
   "turn_start_actions": [],

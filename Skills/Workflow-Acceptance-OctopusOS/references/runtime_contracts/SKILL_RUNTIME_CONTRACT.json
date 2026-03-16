@@ -1,0 +1,42 @@
+{
+  "contract_name": "workflow_acceptance_octopusos_runtime_contract",
+  "contract_version": "1.0.0",
+  "skill_name": "Workflow-Acceptance-OctopusOS",
+  "skill_role": "single_stage_workflow_skill",
+  "active_stage": "acceptance",
+  "skill_profile": {
+    "doc_topology": "workflow_path",
+    "tooling_surface": "automation_cli",
+    "workflow_control": "compiled"
+  },
+  "entry_doc": "path/stage_flow/00_STAGE_FLOW_ENTRY.md",
+  "root_shape": [
+    "SKILL.md",
+    "agents",
+    "assets",
+    "path",
+    "references",
+    "scripts",
+    "tests"
+  ],
+  "tool_entry": {
+    "script": "scripts/Cli_Toolbox.py",
+    "commands": {
+      "contract": "./.venv_backend_skills/bin/python Skills/Workflow-Acceptance-OctopusOS/scripts/Cli_Toolbox.py contract --json",
+      "read-contract-context": "./.venv_backend_skills/bin/python Skills/Workflow-Acceptance-OctopusOS/scripts/Cli_Toolbox.py read-contract-context --entry stage_flow --json",
+      "workflow-contract": "./.venv_backend_skills/bin/python Skills/Workflow-Acceptance-OctopusOS/scripts/Cli_Toolbox.py workflow-contract --json",
+      "target-runtime-contract": "./.venv_backend_skills/bin/python Skills/Workflow-Acceptance-OctopusOS/scripts/Cli_Toolbox.py target-runtime-contract --json",
+      "stage-checklist": "./.venv_backend_skills/bin/python Skills/Workflow-Acceptance-OctopusOS/scripts/Cli_Toolbox.py stage-checklist --stage acceptance --json",
+      "stage-doc-contract": "./.venv_backend_skills/bin/python Skills/Workflow-Acceptance-OctopusOS/scripts/Cli_Toolbox.py stage-doc-contract --stage acceptance --json",
+      "stage-command-contract": "./.venv_backend_skills/bin/python Skills/Workflow-Acceptance-OctopusOS/scripts/Cli_Toolbox.py stage-command-contract --stage acceptance --json",
+      "acceptance-lint": "./.venv_backend_skills/bin/python Skills/Workflow-Acceptance-OctopusOS/scripts/Cli_Toolbox.py acceptance-lint --json",
+      "graph-postflight": "./.venv_backend_skills/bin/python Skills/Workflow-Acceptance-OctopusOS/scripts/Cli_Toolbox.py graph-postflight --json",
+      "mother-doc-state-sync": "./.venv_backend_skills/bin/python Skills/Workflow-Acceptance-OctopusOS/scripts/Cli_Toolbox.py mother-doc-state-sync --json"
+    }
+  },
+  "hard_constraints": [
+    "必须先完成本地可控环境 bring-up 再谈 needs_real_env",
+    "交付判断必须基于真实 witness",
+    "closeout 后才允许推进 mother_doc 到 ref"
+  ]
+}

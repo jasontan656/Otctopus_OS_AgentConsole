@@ -1,0 +1,4 @@
+interface:
+  display_name: "Workflow-ConstructionPlan-OctopusOS"
+  short_description: "Octopus_OS 的 construction_plan 阶段技能；负责把已确认的文档切片拆成正式 execution packs。"
+  default_prompt: "当任务只需要进入 Octopus_OS 的 construction_plan 阶段时使用 `Workflow-ConstructionPlan-OctopusOS`。先确认 mother_doc 已经通过 lint，再用共享 CLI 读取 construction_plan 的 stage checklist/contract，并生成正式 execution packs。"

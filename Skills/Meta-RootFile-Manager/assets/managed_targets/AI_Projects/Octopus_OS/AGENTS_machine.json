@@ -14,7 +14,7 @@
   ],
   "turn_start_actions": [],
   "runtime_constraints": [
-    "Development related task must go through `$Workflow-CentralFlow2-OctppusOS`."
+    "Development related task must select one of `$Workflow-MotherDoc-OctopusOS`, `$Workflow-ConstructionPlan-OctopusOS`, `$Workflow-Implementation-OctopusOS`, or `$Workflow-Acceptance-OctopusOS` according to the current stage."
   ],
   "execution_modes": {
     "READ_EXEC": {

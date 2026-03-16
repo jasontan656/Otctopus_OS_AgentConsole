@@ -1,0 +1,43 @@
+{
+  "contract_name": "workflow_motherdoc_octopusos_runtime_contract",
+  "contract_version": "1.0.0",
+  "skill_name": "Workflow-MotherDoc-OctopusOS",
+  "skill_role": "single_stage_workflow_skill",
+  "active_stage": "mother_doc",
+  "skill_profile": {
+    "doc_topology": "workflow_path",
+    "tooling_surface": "automation_cli",
+    "workflow_control": "compiled"
+  },
+  "entry_doc": "path/stage_flow/00_STAGE_FLOW_ENTRY.md",
+  "root_shape": [
+    "SKILL.md",
+    "agents",
+    "assets",
+    "path",
+    "references",
+    "scripts",
+    "tests"
+  ],
+  "tool_entry": {
+    "script": "scripts/Cli_Toolbox.py",
+    "commands": {
+      "contract": "./.venv_backend_skills/bin/python Skills/Workflow-MotherDoc-OctopusOS/scripts/Cli_Toolbox.py contract --json",
+      "read-contract-context": "./.venv_backend_skills/bin/python Skills/Workflow-MotherDoc-OctopusOS/scripts/Cli_Toolbox.py read-contract-context --entry stage_flow --json",
+      "workflow-contract": "./.venv_backend_skills/bin/python Skills/Workflow-MotherDoc-OctopusOS/scripts/Cli_Toolbox.py workflow-contract --json",
+      "target-runtime-contract": "./.venv_backend_skills/bin/python Skills/Workflow-MotherDoc-OctopusOS/scripts/Cli_Toolbox.py target-runtime-contract --json",
+      "stage-checklist": "./.venv_backend_skills/bin/python Skills/Workflow-MotherDoc-OctopusOS/scripts/Cli_Toolbox.py stage-checklist --stage mother_doc --json",
+      "stage-doc-contract": "./.venv_backend_skills/bin/python Skills/Workflow-MotherDoc-OctopusOS/scripts/Cli_Toolbox.py stage-doc-contract --stage mother_doc --json",
+      "stage-command-contract": "./.venv_backend_skills/bin/python Skills/Workflow-MotherDoc-OctopusOS/scripts/Cli_Toolbox.py stage-command-contract --stage mother_doc --json",
+      "mother-doc-lint": "./.venv_backend_skills/bin/python Skills/Workflow-MotherDoc-OctopusOS/scripts/Cli_Toolbox.py mother-doc-lint --json",
+      "mother-doc-refresh-root-index": "./.venv_backend_skills/bin/python Skills/Workflow-MotherDoc-OctopusOS/scripts/Cli_Toolbox.py mother-doc-refresh-root-index --json",
+      "mother-doc-sync-client-copy": "./.venv_backend_skills/bin/python Skills/Workflow-MotherDoc-OctopusOS/scripts/Cli_Toolbox.py mother-doc-sync-client-copy --json",
+      "mother-doc-audit": "./.venv_backend_skills/bin/python Skills/Workflow-MotherDoc-OctopusOS/scripts/Cli_Toolbox.py mother-doc-audit --json"
+    }
+  },
+  "hard_constraints": [
+    "mother_doc 只负责把需求逐层写入既有文档体系，不得回退为巨型混写知识树",
+    "更深锚点主题必须由用户显式指定",
+    "后续阶段必须由用户显式切换到对应技能"
+  ]
+}

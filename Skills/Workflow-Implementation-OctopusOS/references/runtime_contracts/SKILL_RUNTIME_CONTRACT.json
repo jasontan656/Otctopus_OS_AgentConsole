@@ -1,0 +1,40 @@
+{
+  "contract_name": "workflow_implementation_octopusos_runtime_contract",
+  "contract_version": "1.0.0",
+  "skill_name": "Workflow-Implementation-OctopusOS",
+  "skill_role": "single_stage_workflow_skill",
+  "active_stage": "implementation",
+  "skill_profile": {
+    "doc_topology": "workflow_path",
+    "tooling_surface": "automation_cli",
+    "workflow_control": "compiled"
+  },
+  "entry_doc": "path/stage_flow/00_STAGE_FLOW_ENTRY.md",
+  "root_shape": [
+    "SKILL.md",
+    "agents",
+    "path",
+    "references",
+    "scripts",
+    "tests"
+  ],
+  "tool_entry": {
+    "script": "scripts/Cli_Toolbox.py",
+    "commands": {
+      "contract": "./.venv_backend_skills/bin/python Skills/Workflow-Implementation-OctopusOS/scripts/Cli_Toolbox.py contract --json",
+      "read-contract-context": "./.venv_backend_skills/bin/python Skills/Workflow-Implementation-OctopusOS/scripts/Cli_Toolbox.py read-contract-context --entry stage_flow --json",
+      "workflow-contract": "./.venv_backend_skills/bin/python Skills/Workflow-Implementation-OctopusOS/scripts/Cli_Toolbox.py workflow-contract --json",
+      "target-runtime-contract": "./.venv_backend_skills/bin/python Skills/Workflow-Implementation-OctopusOS/scripts/Cli_Toolbox.py target-runtime-contract --json",
+      "stage-checklist": "./.venv_backend_skills/bin/python Skills/Workflow-Implementation-OctopusOS/scripts/Cli_Toolbox.py stage-checklist --stage implementation --json",
+      "stage-doc-contract": "./.venv_backend_skills/bin/python Skills/Workflow-Implementation-OctopusOS/scripts/Cli_Toolbox.py stage-doc-contract --stage implementation --json",
+      "stage-command-contract": "./.venv_backend_skills/bin/python Skills/Workflow-Implementation-OctopusOS/scripts/Cli_Toolbox.py stage-command-contract --stage implementation --json",
+      "construction-plan-lint": "./.venv_backend_skills/bin/python Skills/Workflow-Implementation-OctopusOS/scripts/Cli_Toolbox.py construction-plan-lint --json",
+      "mother-doc-state-sync": "./.venv_backend_skills/bin/python Skills/Workflow-Implementation-OctopusOS/scripts/Cli_Toolbox.py mother-doc-state-sync --json"
+    }
+  },
+  "hard_constraints": [
+    "实现阶段只消费 active pack 与其 source_mother_doc_refs",
+    "本地验证先于 state sync",
+    "不得把 construction_plan 语义带回本阶段重新切包"
+  ]
+}

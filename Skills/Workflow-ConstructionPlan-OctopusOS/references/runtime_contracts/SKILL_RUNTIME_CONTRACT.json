@@ -1,0 +1,42 @@
+{
+  "contract_name": "workflow_constructionplan_octopusos_runtime_contract",
+  "contract_version": "1.0.0",
+  "skill_name": "Workflow-ConstructionPlan-OctopusOS",
+  "skill_role": "single_stage_workflow_skill",
+  "active_stage": "construction_plan",
+  "skill_profile": {
+    "doc_topology": "workflow_path",
+    "tooling_surface": "automation_cli",
+    "workflow_control": "compiled"
+  },
+  "entry_doc": "path/stage_flow/00_STAGE_FLOW_ENTRY.md",
+  "root_shape": [
+    "SKILL.md",
+    "agents",
+    "assets",
+    "path",
+    "references",
+    "scripts",
+    "tests"
+  ],
+  "tool_entry": {
+    "script": "scripts/Cli_Toolbox.py",
+    "commands": {
+      "contract": "./.venv_backend_skills/bin/python Skills/Workflow-ConstructionPlan-OctopusOS/scripts/Cli_Toolbox.py contract --json",
+      "read-contract-context": "./.venv_backend_skills/bin/python Skills/Workflow-ConstructionPlan-OctopusOS/scripts/Cli_Toolbox.py read-contract-context --entry stage_flow --json",
+      "workflow-contract": "./.venv_backend_skills/bin/python Skills/Workflow-ConstructionPlan-OctopusOS/scripts/Cli_Toolbox.py workflow-contract --json",
+      "target-runtime-contract": "./.venv_backend_skills/bin/python Skills/Workflow-ConstructionPlan-OctopusOS/scripts/Cli_Toolbox.py target-runtime-contract --json",
+      "stage-checklist": "./.venv_backend_skills/bin/python Skills/Workflow-ConstructionPlan-OctopusOS/scripts/Cli_Toolbox.py stage-checklist --stage construction_plan --json",
+      "stage-doc-contract": "./.venv_backend_skills/bin/python Skills/Workflow-ConstructionPlan-OctopusOS/scripts/Cli_Toolbox.py stage-doc-contract --stage construction_plan --json",
+      "stage-command-contract": "./.venv_backend_skills/bin/python Skills/Workflow-ConstructionPlan-OctopusOS/scripts/Cli_Toolbox.py stage-command-contract --stage construction_plan --json",
+      "construction-plan-init": "./.venv_backend_skills/bin/python Skills/Workflow-ConstructionPlan-OctopusOS/scripts/Cli_Toolbox.py construction-plan-init --json",
+      "construction-plan-lint": "./.venv_backend_skills/bin/python Skills/Workflow-ConstructionPlan-OctopusOS/scripts/Cli_Toolbox.py construction-plan-lint --json",
+      "mother-doc-state-sync": "./.venv_backend_skills/bin/python Skills/Workflow-ConstructionPlan-OctopusOS/scripts/Cli_Toolbox.py mother-doc-state-sync --json"
+    }
+  },
+  "hard_constraints": [
+    "pack 必须来自当前 mother_doc 修改切片",
+    "official_plan 与 preview_skeleton 必须显式区分",
+    "implementation 必须通过用户显式切换到下游技能"
+  ]
+}

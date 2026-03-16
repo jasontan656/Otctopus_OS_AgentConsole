@@ -1,6 +1,0 @@
-version: 1
-agent:
-  name: Workflow Centralflow2 Octppusos
-  description: Workflow-CentralFlow2-OctppusOS skill agent for executable_workflow_skill
-  default_prompt: |
-    Use $Workflow-CentralFlow2-OctppusOS.

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Workflow-Implementation-OctopusOS"
+  short_description: "Octopus_OS 的 implementation 阶段技能；负责严格消费 active pack 并把实现与证据落盘。"
+  default_prompt: "当任务只需要进入 Octopus_OS 的 implementation 阶段时使用 `Workflow-Implementation-OctopusOS`。先锁定 active pack，再用共享 CLI 读取 implementation 的 stage checklist/contract，并把代码、测试和 pack 证据一起写回。"

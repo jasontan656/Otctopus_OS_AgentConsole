@@ -1,0 +1,4 @@
+interface:
+  display_name: "Workflow-Acceptance-OctopusOS"
+  short_description: "Octopus_OS 的 acceptance 阶段技能；负责真实 bring-up、witness 与交付收口。"
+  default_prompt: "当任务只需要进入 Octopus_OS 的 acceptance 阶段时使用 `Workflow-Acceptance-OctopusOS`。先用共享 CLI 读取 acceptance 的 stage checklist/contract，再完成 bring-up、真实 witness、acceptance lint 与 graph/postflight 收口。"
