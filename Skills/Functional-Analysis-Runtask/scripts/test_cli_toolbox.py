@@ -29,6 +29,43 @@ def run_cli_with_env(*args: str, env: dict[str, str] | None = None) -> subproces
     )
 
 
+def write_closed_task_runtime(task_dir: Path, task_id: str, workspace_root: Path) -> None:
+    payload = {
+        "task_id": task_id,
+        "task_name": task_id,
+        "task_slug": task_id.split("_", 1)[1],
+        "task_status": "closed",
+        "workspace_root": str(workspace_root),
+        "created_at": "2026-03-17T00:00:00+00:00",
+        "updated_at": "2026-03-17T00:00:00+00:00",
+        "current_stage": "final_delivery",
+        "current_step": "delivery_brief_archived",
+        "ended_stage": "final_delivery",
+        "ended_step": "delivery_brief_archived",
+        "ended_reason": "completed",
+        "resume_hint": "closed",
+        "stages": {
+            stage: {
+                "status": "completed",
+                "checklist": [],
+            }
+            for stage in (
+                "research",
+                "architect",
+                "preview",
+                "design",
+                "impact",
+                "plan",
+                "implementation",
+                "validation",
+                "final_delivery",
+            )
+        },
+    }
+    task_dir.mkdir(parents=True, exist_ok=True)
+    (task_dir / "task_runtime.yaml").write_text(yaml.safe_dump(payload, sort_keys=False, allow_unicode=True), encoding="utf-8")
+
+
 class CliToolboxRegressionTest(unittest.TestCase):
     def test_runtime_contract_exposes_nine_stage_workflow(self) -> None:
         result = run_cli("runtime-contract", "--json")
@@ -54,13 +91,23 @@ class CliToolboxRegressionTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp_dir:
             managed_root = Path(tmp_dir) / "Human_Work_Zone"
             runtime_root = Path(tmp_dir) / "Codex_Skill_Runtime" / "Functional-Analysis-Runtask"
-            workspace_root = managed_root / "Temporary_Files" / "sample_runtask"
+            requested_workspace_root = managed_root / "Temporary_Files" / "sample_runtask"
             env = {
                 "FUNCTIONAL_ANALYSIS_RUNTASK_MANAGED_ROOT": str(managed_root),
                 "FUNCTIONAL_ANALYSIS_RUNTASK_TASK_RUNTIME_ROOT": str(runtime_root),
             }
-            scaffold = run_cli_with_env("workspace-scaffold", "--workspace-root", str(workspace_root), "--json", env=env)
+            scaffold = run_cli_with_env(
+                "workspace-scaffold",
+                "--workspace-root",
+                str(requested_workspace_root),
+                "--json",
+                env=env,
+            )
             self.assertEqual(scaffold.returncode, 0, scaffold.stderr)
+            scaffold_payload = json.loads(scaffold.stdout)
+            workspace_root = Path(scaffold_payload["workspace_root"])
+            self.assertEqual(workspace_root.name, "001_sample_runtask")
+            self.assertEqual(scaffold_payload["requested_workspace_root"], str(requested_workspace_root))
 
             (workspace_root / "sources").mkdir()
             (workspace_root / "outputs").mkdir()
@@ -220,14 +267,14 @@ class CliToolboxRegressionTest(unittest.TestCase):
                 "FUNCTIONAL_ANALYSIS_RUNTASK_MANAGED_ROOT": str(managed_root),
                 "FUNCTIONAL_ANALYSIS_RUNTASK_TASK_RUNTIME_ROOT": str(runtime_root),
             }
-            workspace_root = managed_root / "Temporary_Files" / "sample_task"
+            requested_workspace_root = managed_root / "Temporary_Files" / "sample_task"
 
             first = run_cli_with_env(
                 "task-runtime-scaffold",
                 "--task-name",
                 "sample task",
                 "--workspace-root",
-                str(workspace_root),
+                str(requested_workspace_root),
                 "--json",
                 env=env,
             )
@@ -235,6 +282,7 @@ class CliToolboxRegressionTest(unittest.TestCase):
             first_payload = json.loads(first.stdout)
             runtime_file = Path(first_payload["task_runtime_file"])
             self.assertTrue(runtime_file.exists())
+            self.assertEqual(Path(first_payload["workspace_root"]).name, "001_sample_task")
 
             gate = run_cli_with_env("task-gate-check", "--json", env=env)
             self.assertNotEqual(gate.returncode, 0)
@@ -262,6 +310,112 @@ class CliToolboxRegressionTest(unittest.TestCase):
                 env=env,
             )
             self.assertEqual(second.returncode, 0, second.stderr)
+            second_payload = json.loads(second.stdout)
+            self.assertEqual(Path(second_payload["task_root"]).name, "002_follow_up_task")
+            self.assertEqual(Path(second_payload["workspace_root"]).name, "002_follow_up_task")
+
+    def test_workspace_scaffold_reuses_existing_numbered_slot_for_same_slug(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            managed_root = Path(tmp_dir) / "Human_Work_Zone"
+            runtime_root = Path(tmp_dir) / "Codex_Skill_Runtime" / "Functional-Analysis-Runtask"
+            workspace_container = managed_root / "Temporary_Files"
+            reused_root = workspace_container / "002_stable_task"
+            (workspace_container / "010_other_task").mkdir(parents=True)
+            reused_root.mkdir(parents=True)
+            env = {
+                "FUNCTIONAL_ANALYSIS_RUNTASK_MANAGED_ROOT": str(managed_root),
+                "FUNCTIONAL_ANALYSIS_RUNTASK_TASK_RUNTIME_ROOT": str(runtime_root),
+            }
+
+            first = run_cli_with_env(
+                "workspace-scaffold",
+                "--workspace-root",
+                str(workspace_container / "stable task"),
+                "--json",
+                env=env,
+            )
+            self.assertEqual(first.returncode, 0, first.stderr)
+            first_payload = json.loads(first.stdout)
+            self.assertEqual(first_payload["workspace_root"], str(reused_root))
+
+            second = run_cli_with_env(
+                "workspace-scaffold",
+                "--workspace-root",
+                str(workspace_container / "stable task"),
+                "--json",
+                env=env,
+            )
+            self.assertEqual(second.returncode, 0, second.stderr)
+            second_payload = json.loads(second.stdout)
+            self.assertEqual(second_payload["workspace_root"], str(reused_root))
+
+    def test_task_runtime_scaffold_reuses_existing_numbered_slot_by_numeric_order(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            managed_root = Path(tmp_dir) / "Human_Work_Zone"
+            runtime_root = Path(tmp_dir) / "Codex_Skill_Runtime" / "Functional-Analysis-Runtask"
+            workspace_container = managed_root / "Temporary_Files"
+            existing_workspace_root = workspace_container / "002_stable_task"
+            existing_workspace_root.mkdir(parents=True)
+            write_closed_task_runtime(runtime_root / "010_other_task", "010_other_task", workspace_container / "010_other_task")
+            env = {
+                "FUNCTIONAL_ANALYSIS_RUNTASK_MANAGED_ROOT": str(managed_root),
+                "FUNCTIONAL_ANALYSIS_RUNTASK_TASK_RUNTIME_ROOT": str(runtime_root),
+            }
+
+            first = run_cli_with_env(
+                "task-runtime-scaffold",
+                "--task-name",
+                "stable task",
+                "--workspace-root",
+                str(workspace_container / "stable_task"),
+                "--json",
+                env=env,
+            )
+            self.assertEqual(first.returncode, 0, first.stderr)
+            first_payload = json.loads(first.stdout)
+            self.assertEqual(Path(first_payload["task_root"]).name, "002_stable_task")
+            self.assertEqual(Path(first_payload["workspace_root"]).name, "002_stable_task")
+            self.assertFalse(first_payload["reused_existing"])
+
+            second = run_cli_with_env(
+                "task-runtime-scaffold",
+                "--task-name",
+                "stable task",
+                "--workspace-root",
+                str(workspace_container / "stable_task"),
+                "--json",
+                env=env,
+            )
+            self.assertEqual(second.returncode, 0, second.stderr)
+            second_payload = json.loads(second.stdout)
+            self.assertEqual(Path(second_payload["task_root"]).name, "002_stable_task")
+            self.assertTrue(second_payload["reused_existing"])
+
+    def test_task_runtime_scaffold_allocates_next_slot_from_numeric_history(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            managed_root = Path(tmp_dir) / "Human_Work_Zone"
+            runtime_root = Path(tmp_dir) / "Codex_Skill_Runtime" / "Functional-Analysis-Runtask"
+            workspace_container = managed_root / "Temporary_Files"
+            write_closed_task_runtime(runtime_root / "010_old_task", "010_old_task", workspace_container / "010_old_task")
+            (workspace_container / "002_other_task").mkdir(parents=True)
+            env = {
+                "FUNCTIONAL_ANALYSIS_RUNTASK_MANAGED_ROOT": str(managed_root),
+                "FUNCTIONAL_ANALYSIS_RUNTASK_TASK_RUNTIME_ROOT": str(runtime_root),
+            }
+
+            result = run_cli_with_env(
+                "task-runtime-scaffold",
+                "--task-name",
+                "new task",
+                "--workspace-root",
+                str(workspace_container / "new task"),
+                "--json",
+                env=env,
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            payload = json.loads(result.stdout)
+            self.assertEqual(Path(payload["task_root"]).name, "011_new_task")
+            self.assertEqual(Path(payload["workspace_root"]).name, "011_new_task")
 
 
 if __name__ == "__main__":

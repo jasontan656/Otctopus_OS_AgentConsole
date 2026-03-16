@@ -38,6 +38,7 @@ TASK_STATUS_VALUES = {"in_progress", "awaiting_user_selection", "blocked", "clos
 ACTION_TYPES = {"implementation", "validation", "phase_decision", "state_writeback"}
 DESIGN_DECISION_MODES = {"rewrite", "replace", "add"}
 REMOTE_PREFIXES = ("http://", "https://")
+NUMBERED_SLOT_RE = re.compile(r"^(?P<prefix>\d{3})_(?P<slug>[a-z0-9][a-z0-9_]*)$")
 
 WORKSPACE_LAYOUT = {
     "manifest": "workspace_manifest.yaml",
@@ -443,10 +444,11 @@ def stage_checklist_payload(stage: str) -> dict[str, Any]:
 
 
 def scaffold_workspace(workspace_root: Path, force: bool = False) -> dict[str, Any]:
-    workspace_root = workspace_root.resolve()
-    boundary_error = _workspace_root_boundary_error(workspace_root)
+    requested_workspace_root = workspace_root.resolve()
+    boundary_error = _workspace_root_boundary_error(requested_workspace_root)
     if boundary_error is not None:
         return boundary_error
+    workspace_root = _normalize_numbered_workspace_root(requested_workspace_root)
     if not workspace_root.exists():
         gate_payload = task_gate_check_payload()
         if gate_payload["status"] != "ok":
@@ -454,6 +456,7 @@ def scaffold_workspace(workspace_root: Path, force: bool = False) -> dict[str, A
                 "status": "fail",
                 "reason": "unfinished_task_exists",
                 "workspace_root": str(workspace_root),
+                "requested_workspace_root": str(requested_workspace_root),
                 "task_runtime_root": gate_payload["task_runtime_root"],
                 "open_tasks": gate_payload["open_tasks"],
                 "message": "存在未闭合历史任务，禁止创建新 workspace；请先 resume 或 closed 对应 task_runtime.yaml。",
@@ -530,6 +533,7 @@ def scaffold_workspace(workspace_root: Path, force: bool = False) -> dict[str, A
     return {
         "status": "ok",
         "workspace_root": str(workspace_root),
+        "requested_workspace_root": str(requested_workspace_root),
         "created_files": created,
         "skipped_files": skipped,
         "workspace_layout": WORKSPACE_LAYOUT,
@@ -680,7 +684,7 @@ def task_gate_check_payload(task_runtime_root: Path | None = None) -> dict[str, 
     open_tasks: list[dict[str, Any]] = []
     warnings: list[dict[str, Any]] = []
     if runtime_root.exists():
-        for task_dir in sorted(path for path in runtime_root.iterdir() if path.is_dir()):
+        for _prefix, _slug, task_dir in _numbered_slot_entries(runtime_root):
             runtime_file = task_dir / "task_runtime.yaml"
             if not runtime_file.exists():
                 open_tasks.append(
@@ -739,31 +743,35 @@ def task_gate_check_payload(task_runtime_root: Path | None = None) -> dict[str, 
 
 def task_runtime_scaffold(task_name: str, workspace_root: Path | None = None, force: bool = False) -> dict[str, Any]:
     runtime_root = _task_runtime_root()
-    if workspace_root is not None:
-        workspace_root = workspace_root.resolve()
-        boundary_error = _workspace_root_boundary_error(workspace_root)
-        if boundary_error is not None:
-            return boundary_error
-    gate_payload = task_gate_check_payload(runtime_root)
-    if gate_payload["status"] != "ok":
-        return gate_payload
+    resolved_workspace_root = _resolve_task_workspace_root(task_name, workspace_root, runtime_root)
+    boundary_error = _workspace_root_boundary_error(resolved_workspace_root)
+    if boundary_error is not None:
+        return boundary_error
     slug = _slugify(task_name)
-    prefix = _next_numbered_prefix(runtime_root)
+    prefix = _resolve_shared_numbered_prefix(runtime_root, resolved_workspace_root.parent, slug)
     task_dir = runtime_root / f"{prefix}_{slug}"
     runtime_file = task_dir / "task_runtime.yaml"
     if runtime_file.exists() and not force:
+        payload = yaml.safe_load(runtime_file.read_text(encoding="utf-8")) or {}
         return {
-            "status": "fail",
-            "reason": "task_runtime_exists",
+            "status": "ok",
             "task_root": str(task_dir),
-            "message": "task_runtime.yaml 已存在；如需覆盖请显式使用 force。",
+            "task_runtime_file": str(runtime_file),
+            "task_id": payload.get("task_id", f"{prefix}_{slug}"),
+            "task_runtime_root": str(runtime_root),
+            "workspace_root": payload.get("workspace_root", str(resolved_workspace_root)),
+            "reused_existing": True,
         }
+    gate_payload = task_gate_check_payload(runtime_root)
+    if gate_payload["status"] != "ok":
+        return gate_payload
     task_dir.mkdir(parents=True, exist_ok=True)
+    resolved_workspace_root.mkdir(parents=True, exist_ok=True)
     payload = _task_runtime_template(
         task_id=f"{prefix}_{slug}",
         task_name=task_name,
         task_slug=slug,
-        workspace_root=workspace_root,
+        workspace_root=resolved_workspace_root,
     )
     runtime_file.write_text(yaml.safe_dump(payload, sort_keys=False, allow_unicode=True), encoding="utf-8")
     return {
@@ -772,6 +780,8 @@ def task_runtime_scaffold(task_name: str, workspace_root: Path | None = None, fo
         "task_runtime_file": str(runtime_file),
         "task_id": payload["task_id"],
         "task_runtime_root": str(runtime_root),
+        "workspace_root": str(resolved_workspace_root),
+        "reused_existing": False,
     }
 
 
@@ -1221,16 +1231,76 @@ def _slugify(raw: str) -> str:
     return cleaned or "task"
 
 
-def _next_numbered_prefix(runtime_root: Path) -> str:
+def _numbered_slot_entries(root: Path) -> list[tuple[int, str, Path]]:
+    if not root.exists():
+        return []
+    entries: list[tuple[int, str, Path]] = []
+    for item in root.iterdir():
+        if not item.is_dir():
+            continue
+        parsed = _parse_numbered_slot_name(item.name)
+        if parsed is None:
+            continue
+        prefix, slug = parsed
+        entries.append((prefix, slug, item))
+    return sorted(entries, key=lambda entry: (entry[0], entry[1], entry[2].name))
+
+
+def _parse_numbered_slot_name(name: str) -> tuple[int, str] | None:
+    match = NUMBERED_SLOT_RE.match(name)
+    if match is None:
+        return None
+    return int(match.group("prefix")), match.group("slug")
+
+
+def _highest_numbered_prefix(root: Path) -> int:
     highest = 0
-    if runtime_root.exists():
-        for item in runtime_root.iterdir():
-            if not item.is_dir():
-                continue
-            match = re.match(r"^(?P<prefix>\d{3})_", item.name)
-            if match:
-                highest = max(highest, int(match.group("prefix")))
-    return f"{highest + 1:03d}"
+    for prefix, _slug, _path in _numbered_slot_entries(root):
+        highest = max(highest, prefix)
+    return highest
+
+
+def _matching_numbered_prefixes(root: Path, slug: str) -> list[int]:
+    return [prefix for prefix, entry_slug, _path in _numbered_slot_entries(root) if entry_slug == slug]
+
+
+def _resolve_shared_numbered_prefix(runtime_root: Path, workspace_container: Path, slug: str) -> str:
+    matches = _matching_numbered_prefixes(runtime_root, slug) + _matching_numbered_prefixes(workspace_container, slug)
+    if matches:
+        return f"{min(matches):03d}"
+    next_prefix = max(_highest_numbered_prefix(runtime_root), _highest_numbered_prefix(workspace_container)) + 1
+    return f"{next_prefix:03d}"
+
+
+def _normalize_numbered_workspace_root(workspace_root: Path) -> Path:
+    workspace_root = workspace_root.resolve()
+    boundary_error = _workspace_root_boundary_error(workspace_root)
+    if boundary_error is not None:
+        return workspace_root
+    parsed = _parse_numbered_slot_name(workspace_root.name)
+    if parsed is not None:
+        return workspace_root
+    slug = _slugify(workspace_root.name)
+    container = workspace_root.parent
+    matches = [path for _prefix, entry_slug, path in _numbered_slot_entries(container) if entry_slug == slug]
+    if matches:
+        return matches[0]
+    next_prefix = _highest_numbered_prefix(container) + 1
+    return container / f"{next_prefix:03d}_{slug}"
+
+
+def _resolve_task_workspace_root(task_name: str, workspace_root: Path | None, runtime_root: Path) -> Path:
+    task_slug = _slugify(task_name)
+    if workspace_root is None:
+        container = (_managed_root() / "Temporary_Files").resolve()
+    else:
+        requested_workspace_root = workspace_root.resolve()
+        boundary_error = _workspace_root_boundary_error(requested_workspace_root)
+        if boundary_error is not None:
+            return requested_workspace_root
+        container = requested_workspace_root.parent
+    prefix = _resolve_shared_numbered_prefix(runtime_root, container, task_slug)
+    return container / f"{prefix}_{task_slug}"
 
 
 def _stage_artifact_template(stage: str) -> str:
