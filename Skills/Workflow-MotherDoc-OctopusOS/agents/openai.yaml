@@ -1,4 +1,4 @@
 interface:
   display_name: "Workflow-MotherDoc-OctopusOS"
-  short_description: "Octopus_OS 的 mother_doc 阶段技能；负责把需求按既有文档体系逐层写回，并同步整体架构。"
-  default_prompt: "当任务只需要进入 Octopus_OS 的 mother_doc 阶段时使用 `Workflow-MotherDoc-OctopusOS`。先锁定当前主题，再用共享 CLI 读取 mother_doc 的 stage checklist/contract；若需要更深锚点文档，必须先让用户明确指定该主题。"
+  short_description: "Octopus_OS 的 mother_doc 阶段技能；既负责真实需求写回，也提供本技能自身持续重构与维护的独立入口。"
+  default_prompt: "当任务只需要进入 Octopus_OS 的 `mother_doc` 阶段时，优先读取 `stage_flow`；先锁定当前主题，再用共享 CLI 读取 mother_doc 的 stage checklist/contract；若需要更深锚点文档，必须先让用户明确指定该主题。当任务是在重构、补强、迁移或持续维护 `Workflow-MotherDoc-OctopusOS` 自身时，改读 `skill_maintenance`，并把用户输入同时视为功能开发需求与技能自我演化信号。"

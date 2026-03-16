@@ -21,6 +21,12 @@ def test_contract_and_read_context_are_stage_local() -> None:
     assert "path/stage_flow/00_STAGE_FLOW_ENTRY.md" in compiled["resolved_chain"]
 
 
+def test_skill_maintenance_entry_compiles() -> None:
+    compiled = run_cli(SKILL_ROOT, "read-contract-context", "--entry", "skill_maintenance")
+    assert compiled["status"] == "ok"
+    assert "path/skill_maintenance/00_SKILL_MAINTENANCE_ENTRY.md" in compiled["resolved_chain"]
+
+
 def test_mother_doc_lint_and_audit_follow_current_skill_cli() -> None:
     with tempfile.TemporaryDirectory() as temp_dir:
         target = Path(temp_dir) / "docs" / "mother_doc"
