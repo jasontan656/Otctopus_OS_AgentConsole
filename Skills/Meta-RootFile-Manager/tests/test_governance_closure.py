@@ -49,8 +49,6 @@ class TestGovernanceClosure:
     def test_codex_skills_managed_assets_use_symbolic_paths(self) -> None:
         managed_root = self.skill_root / "assets" / "managed_targets" / "AI_Projects" / ".codex" / "skills"
         human_text = (managed_root / "AGENTS_human.md").read_text(encoding="utf-8")
-        machine_text = (managed_root / "AGENTS_machine.json").read_text(encoding="utf-8")
         assert "/home/" not in human_text
-        assert "/home/" not in machine_text
-        assert "<codex_home>/skills/AGENTS.md" in human_text
-        assert "<codex_home>/skills" in machine_text
+        assert "agents-maintain" in human_text
+        assert "<codex_home>/skills" in human_text

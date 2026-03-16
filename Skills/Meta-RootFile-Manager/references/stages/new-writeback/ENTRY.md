@@ -13,6 +13,6 @@ anchors:
 
 > Active stage semantics. This stage finalizes scaffolded `AGENTS.md` targets after the agent fills them according to user intent.
 
-- Fill both external `AGENTS.md` and internal `AGENTS_machine.json`.
+- Fill external `AGENTS.md` and the internal embedded payload inside `AGENTS_human.md`.
 - Do not leave `replace_me`; use a concrete value or `N/A`.
 - Run `new-writeback` to re-render `AGENTS_human.md` and verify the finalized result.

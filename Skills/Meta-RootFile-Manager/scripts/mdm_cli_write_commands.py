@@ -4,6 +4,7 @@ import argparse
 import json
 from pathlib import Path
 
+from agents_maintain_runtime import maintain_agents
 from rootfile_runtime import (
     add_governed_source_path,
     build_entry,
@@ -17,26 +18,37 @@ from rootfile_runtime import (
     load_machine_payload,
     managed_plain_copy_with_owner,
     match_scan_rules,
+    prune_legacy_agents_machine_files,
     prune_legacy_owner_meta_files,
     prune_legacy_managed_target_dirs,
+    prune_runtime_ephemeral_managed_targets,
     render_internal_agents_human,
     scaffold_agents_machine_payload,
     scaffold_external_agents,
     scaffold_internal_agents_human,
     scaffold_plain_external,
+    sync_managed_targets_tree_to_installed,
     sync_file_to_installed,
     upsert_frontmatter_owner,
     validate_agents_writeback_completion,
-    write_json,
     write_text,
 )
 from toolbox_support import build_operation, finalize_stage_report
+
+
+def cmd_agents_maintain(args: argparse.Namespace) -> int:
+    paths = detect_paths(__file__)
+    payload = maintain_agents(paths, args.intent, dry_run=args.dry_run)
+    finalize_stage_report(paths, args, "agents_maintain", payload)
+    return 1 if payload.get("write_status") == "blocked" else 0
 
 
 def cmd_scaffold(args: argparse.Namespace) -> int:
     paths = detect_paths(__file__)
     removed_legacy_dirs = prune_legacy_managed_target_dirs(paths, args.dry_run)
     removed_legacy_owner_meta_files = prune_legacy_owner_meta_files(paths, args.dry_run)
+    removed_legacy_agents_machine_files = prune_legacy_agents_machine_files(paths, args.dry_run)
+    removed_runtime_ephemeral_managed_targets = prune_runtime_ephemeral_managed_targets(paths, args.dry_run)
     target_dirs = [ensure_within_workspace(paths, Path(item)) for item in args.target_dir]
     selected_kinds = sorted(set(args.file_kind))
     if args.all_governed:
@@ -87,7 +99,6 @@ def cmd_scaffold(args: argparse.Namespace) -> int:
 
             if channel["mapping_mode"] == "agents_ab":
                 human_path = managed_files["human"]
-                machine_path = managed_files["machine"]
                 machine_payload = scaffold_agents_machine_payload(paths, external_path, owner)
                 write_text(external_path, scaffold_external_agents(external_path, owner), args.dry_run)
                 write_text(
@@ -95,9 +106,7 @@ def cmd_scaffold(args: argparse.Namespace) -> int:
                     scaffold_internal_agents_human(paths, external_path, owner, machine_payload),
                     args.dry_run,
                 )
-                write_json(machine_path, machine_payload, args.dry_run)
                 sync_file_to_installed(paths, human_path, args.dry_run)
-                sync_file_to_installed(paths, machine_path, args.dry_run)
             else:
                 mapped_path = managed_files["mapped"]
                 content = scaffold_plain_external(file_kind)
@@ -123,10 +132,13 @@ def cmd_scaffold(args: argparse.Namespace) -> int:
         "operations": operations,
         "removed_legacy_dirs": removed_legacy_dirs,
         "removed_legacy_owner_meta_files": removed_legacy_owner_meta_files,
+        "removed_legacy_agents_machine_files": removed_legacy_agents_machine_files,
+        "removed_runtime_ephemeral_managed_targets": removed_runtime_ephemeral_managed_targets,
         "failures": failures,
         "summary": f"scaffold prepared {len(operations)} governed file(s)",
         "details": [f"- {item['external_path']} [{item['channel_id']}]" for item in operations],
     }
+    payload["installed_managed_targets_sync"] = sync_managed_targets_tree_to_installed(paths, args.dry_run)
     finalize_stage_report(paths, args, "scaffold", payload)
     return 1 if failures else 0
 
@@ -135,6 +147,8 @@ def cmd_new_writeback(args: argparse.Namespace) -> int:
     paths = detect_paths(__file__)
     removed_legacy_dirs = prune_legacy_managed_target_dirs(paths, args.dry_run)
     removed_legacy_owner_meta_files = prune_legacy_owner_meta_files(paths, args.dry_run)
+    removed_legacy_agents_machine_files = prune_legacy_agents_machine_files(paths, args.dry_run)
+    removed_runtime_ephemeral_managed_targets = prune_runtime_ephemeral_managed_targets(paths, args.dry_run)
     entries = match_scan_rules(paths, source_paths=args.source_path)
     operations = []
     failures = []
@@ -150,7 +164,6 @@ def cmd_new_writeback(args: argparse.Namespace) -> int:
             )
             continue
         managed_human = Path(entry["managed_human_path"])
-        managed_machine = Path(entry["managed_machine_path"])
         if not source_path.exists():
             failures.append(
                 {
@@ -161,13 +174,13 @@ def cmd_new_writeback(args: argparse.Namespace) -> int:
             )
             continue
         try:
-            machine_payload = load_machine_payload(managed_machine)
-        except json.JSONDecodeError as exc:
+            machine_payload = load_machine_payload(managed_human)
+        except (json.JSONDecodeError, ValueError) as exc:
             failures.append(
                 {
                     "source_path": str(source_path),
                     "channel_id": entry["channel_id"],
-                    "errors": [f"invalid_machine_json:{exc.msg}"],
+                    "errors": [f"invalid_internal_payload:{exc}"],
                 }
             )
             continue
@@ -194,9 +207,7 @@ def cmd_new_writeback(args: argparse.Namespace) -> int:
             render_internal_agents_human(normalized_part_a, owner_injected.as_dict()),
             args.dry_run,
         )
-        write_json(managed_machine, owner_injected.as_dict(), args.dry_run)
         sync_file_to_installed(paths, managed_human, args.dry_run)
-        sync_file_to_installed(paths, managed_machine, args.dry_run)
 
         post_errors = lint_managed_entry(paths, entry)
         if post_errors:
@@ -217,9 +228,12 @@ def cmd_new_writeback(args: argparse.Namespace) -> int:
         "operations": operations,
         "removed_legacy_dirs": removed_legacy_dirs,
         "removed_legacy_owner_meta_files": removed_legacy_owner_meta_files,
+        "removed_legacy_agents_machine_files": removed_legacy_agents_machine_files,
+        "removed_runtime_ephemeral_managed_targets": removed_runtime_ephemeral_managed_targets,
         "failures": failures,
         "summary": f"new_writeback finalized {len(operations)} governed file(s)",
         "details": [f"- {item['source_path']} [{item['channel_id']}]" for item in operations],
     }
+    payload["installed_managed_targets_sync"] = sync_managed_targets_tree_to_installed(paths, args.dry_run)
     finalize_stage_report(paths, args, "new_writeback", payload)
     return 1 if failures else 0

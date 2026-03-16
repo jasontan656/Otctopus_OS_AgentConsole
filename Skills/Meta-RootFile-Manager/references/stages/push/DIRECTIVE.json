@@ -15,7 +15,7 @@
   ],
   "rules": [
     "Part B is internal-only",
-    "machine json is not pushed externally",
+    "no separate machine sidecar is pushed externally",
     "push must use the 治理映射模版 human surface as the source of truth",
     "push must overwrite the governed external target directly"
   ]

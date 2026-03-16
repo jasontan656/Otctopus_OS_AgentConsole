@@ -11,16 +11,20 @@ from rootfile_runtime import (
     inject_owner_into_machine_payload,
     lint_external_entry,
     lint_managed_entry,
+    list_repo_orphan_managed_agents,
     load_machine_payload,
     managed_plain_copy_with_owner,
     match_scan_rules,
+    prune_legacy_agents_machine_files,
     prune_legacy_owner_meta_files,
     prune_legacy_managed_target_dirs,
+    prune_runtime_ephemeral_managed_targets,
     render_internal_agents_human,
+    runtime_managed_targets_root,
     strip_owner_from_managed_plain_copy,
+    sync_managed_targets_tree_to_installed,
     sync_file_to_installed,
     upsert_frontmatter_owner,
-    write_json,
     write_text,
 )
 from toolbox_support import build_operation, finalize_stage_report
@@ -36,12 +40,16 @@ def cmd_scan(args: argparse.Namespace) -> int:
         }
         for entry in entries
     ]
+    orphan_managed_agents = list_repo_orphan_managed_agents(paths)
+    installed_extra_files = sync_managed_targets_tree_to_installed(paths, dry_run=True)["removed_extra_files"]
     payload = {
         "stage": "scan",
         "dry_run": args.dry_run,
         "entry_count": len(entries),
         "entries": entries,
         "lint_results": lint_results,
+        "orphan_managed_agents": orphan_managed_agents,
+        "installed_extra_managed_files": installed_extra_files,
         "summary": f"scan matched {len(entries)} governed file(s)",
         "details": [f"- {item['relative_path']} [{item['channel_id']}]" for item in entries],
     }
@@ -63,6 +71,35 @@ def cmd_lint(args: argparse.Namespace) -> int:
                     "errors": errors,
                 }
             )
+    for orphan_path in list_repo_orphan_managed_agents(paths):
+        failed.append(
+            {
+                "source_path": orphan_path,
+                "channel_id": "AGENTS_MD",
+                "errors": ["orphan_managed_agents_mapping"],
+            }
+        )
+    installed_extra_files = sync_managed_targets_tree_to_installed(paths, dry_run=True)["removed_extra_files"]
+    for extra_path in installed_extra_files:
+        failed.append(
+            {
+                "source_path": extra_path,
+                "channel_id": "AGENTS_MD",
+                "errors": ["installed_managed_targets_drift"],
+            }
+        )
+    runtime_legacy_machine_files = [
+        str(path)
+        for path in sorted((runtime_managed_targets_root(paths)).rglob("AGENTS_machine.json"))
+    ]
+    for legacy_path in runtime_legacy_machine_files:
+        failed.append(
+            {
+                "source_path": legacy_path,
+                "channel_id": "AGENTS_MD",
+                "errors": ["runtime_legacy_agents_machine_sidecar"],
+            }
+        )
     payload = {
         "stage": "lint",
         "dry_run": args.dry_run,
@@ -83,6 +120,8 @@ def cmd_collect(args: argparse.Namespace) -> int:
     paths = detect_paths(__file__)
     removed_legacy_dirs = prune_legacy_managed_target_dirs(paths, args.dry_run)
     removed_legacy_owner_meta_files = prune_legacy_owner_meta_files(paths, args.dry_run)
+    removed_legacy_agents_machine_files = prune_legacy_agents_machine_files(paths, args.dry_run)
+    removed_runtime_ephemeral_managed_targets = prune_runtime_ephemeral_managed_targets(paths, args.dry_run)
     entries = match_scan_rules(paths, args.only, args.source_path)
     operations = []
     failures = []
@@ -103,11 +142,20 @@ def cmd_collect(args: argparse.Namespace) -> int:
 
         if entry["mapping_mode"] == "agents_ab":
             managed_human = Path(entry["managed_human_path"])
-            managed_machine = Path(entry["managed_machine_path"])
-            machine_payload = inject_owner_into_machine_payload(
-                load_machine_payload(managed_machine),
-                str(entry["owner"]),
-            )
+            try:
+                machine_payload = inject_owner_into_machine_payload(
+                    load_machine_payload(managed_human),
+                    str(entry["owner"]),
+                )
+            except (json.JSONDecodeError, ValueError) as exc:
+                failures.append(
+                    {
+                        "source_path": str(source_path),
+                        "channel_id": entry["channel_id"],
+                        "errors": [f"invalid_internal_payload:{exc}"],
+                    }
+                )
+                continue
             external_text = source_path.read_text(encoding="utf-8")
             normalized_part_a = upsert_frontmatter_owner(
                 extract_external_agents_part_a(external_text),
@@ -115,24 +163,15 @@ def cmd_collect(args: argparse.Namespace) -> int:
             )
             new_human = render_internal_agents_human(normalized_part_a, machine_payload.as_dict())
             managed_human_changed = write_text(managed_human, new_human, args.dry_run)
-            managed_machine_changed = write_json(managed_machine, machine_payload.as_dict(), args.dry_run)
             installed_human_changed = sync_file_to_installed(paths, managed_human, args.dry_run)
-            installed_machine_changed = sync_file_to_installed(paths, managed_machine, args.dry_run)
-            changed = any(
-                (
-                    managed_human_changed,
-                    managed_machine_changed,
-                    installed_human_changed,
-                    installed_machine_changed,
-                )
-            )
+            changed = any((managed_human_changed, installed_human_changed))
             operations.append(
                 build_operation(
                     entry,
                     source_path=str(source_path),
                     write_status="updated" if changed else "skipped",
-                    managed_change_count=int(managed_human_changed) + int(managed_machine_changed),
-                    installed_sync_count=int(installed_human_changed) + int(installed_machine_changed),
+                    managed_change_count=int(managed_human_changed),
+                    installed_sync_count=int(installed_human_changed),
                 )
             )
         else:
@@ -169,6 +208,8 @@ def cmd_collect(args: argparse.Namespace) -> int:
         "operations": operations,
         "removed_legacy_dirs": removed_legacy_dirs,
         "removed_legacy_owner_meta_files": removed_legacy_owner_meta_files,
+        "removed_legacy_agents_machine_files": removed_legacy_agents_machine_files,
+        "removed_runtime_ephemeral_managed_targets": removed_runtime_ephemeral_managed_targets,
         "failures": failures,
         "summary": (
             f"collect prepared {len(operations)} managed file(s); "
@@ -179,6 +220,7 @@ def cmd_collect(args: argparse.Namespace) -> int:
             for item in operations
         ],
     }
+    payload["installed_managed_targets_sync"] = sync_managed_targets_tree_to_installed(paths, args.dry_run)
     finalize_stage_report(paths, args, "collect", payload)
     return 1 if failures else 0
 
@@ -187,6 +229,8 @@ def cmd_push(args: argparse.Namespace) -> int:
     paths = detect_paths(__file__)
     removed_legacy_dirs = prune_legacy_managed_target_dirs(paths, args.dry_run)
     removed_legacy_owner_meta_files = prune_legacy_owner_meta_files(paths, args.dry_run)
+    removed_legacy_agents_machine_files = prune_legacy_agents_machine_files(paths, args.dry_run)
+    removed_runtime_ephemeral_managed_targets = prune_runtime_ephemeral_managed_targets(paths, args.dry_run)
     entries = match_scan_rules(
         paths,
         args.only,
@@ -237,9 +281,13 @@ def cmd_push(args: argparse.Namespace) -> int:
         "operations": operations,
         "removed_legacy_dirs": removed_legacy_dirs,
         "removed_legacy_owner_meta_files": removed_legacy_owner_meta_files,
+        "removed_legacy_agents_machine_files": removed_legacy_agents_machine_files,
+        "removed_runtime_ephemeral_managed_targets": removed_runtime_ephemeral_managed_targets,
         "failures": failures,
         "summary": f"push prepared {len(operations)} external file(s)",
         "details": [f"- {item['source_path']} [{item['channel_id']}]" for item in operations],
     }
+    installed_sync = sync_managed_targets_tree_to_installed(paths, args.dry_run)
+    payload["installed_managed_targets_sync"] = installed_sync
     finalize_stage_report(paths, args, "push", payload)
     return 1 if failures else 0

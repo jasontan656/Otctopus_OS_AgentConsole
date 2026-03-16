@@ -19,7 +19,8 @@ anchors:
 - `collect` pulls external governed root files back into skill-internal managed assets.
 
 ## Runtime Rule
-- For `AGENTS.md`, `collect` must read external `Part A` and rebuild `AGENTS_human.md`.
+- For `AGENTS.md`, `collect` must read external `Part A` and rebuild `AGENTS_human.md` while preserving the embedded `Part B` payload already stored in that canonical markdown file.
+- For `AGENTS.md`, `collect` is an exceptional reverse-sync or external recovery path only; it must not be modeled as part of the normal daily maintenance mainline.
 - For every non-`AGENTS.md` channel, `collect` must overwrite the internal mapped copy with the exact external file content.
 - `collect` must sync changed managed assets into the installed codex copy when the mirror asset changed.
 - Before any managed write or installed-skill sync, `collect` must compare the rendered target bytes with the existing file bytes.
@@ -28,5 +29,6 @@ anchors:
 
 ## Boundary
 - `collect` treats the external file as the truth source for that turn.
+- When the task is normal AGENTS maintenance, the truth-source direction is the opposite: update internal `AGENTS_human.md` first and then push outwards instead of routing through `collect`.
 - External sources that resolve outside the governed workspace, or inside ephemeral workspace temp containers, must be treated as runtime-local and must store their managed mirrors under `Codex_Skill_Runtime/<skill>/managed_targets/...` instead of repo-tracked `assets/managed_targets/...`.
 - Runtime reports must publish `latest.json` under `Codex_Skill_Runtime/<skill>/artifacts/<stage>/` and timestamped run logs under `Codex_Skill_Runtime/<skill>/logs/<stage>/`.

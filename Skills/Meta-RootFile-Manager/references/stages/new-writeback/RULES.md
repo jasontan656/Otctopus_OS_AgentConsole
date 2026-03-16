@@ -13,8 +13,8 @@ anchors:
 
 - `new-writeback` only applies to `AGENTS.md`.
 - External `AGENTS.md` must not contain `replace_me`.
-- Managed `AGENTS_machine.json` must not contain `replace_me`.
+- Managed `AGENTS_human.md` embedded payload must not contain `replace_me`.
 - `N/A` is allowed when a field is intentionally not applicable to the target.
 - If a target has source-specific `Part A` rules, `new-writeback` must respect them before closing.
-- `.codex/skills/AGENTS.md` requires `1. 根入口命令` to contain only the single `agents-payload-contract` CLI entry for that exact target.
+- `.codex/skills/AGENTS.md` requires `1. 根入口命令` to contain only the single `agents-maintain` CLI entry for that exact target.
 - `new-writeback` must run lint before the turn closes.

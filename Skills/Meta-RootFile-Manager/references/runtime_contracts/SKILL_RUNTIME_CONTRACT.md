@@ -37,5 +37,10 @@ anchors:
 - Dynamic governed target discovery must come from governed managed assets under `assets/managed_targets/AI_Projects/...` plus runtime-local managed assets under `Codex_Skill_Runtime/<skill>/managed_targets/...`.
 - `target-contract` must return the resolved channel and managed asset paths for the requested external path.
 - `contract` must expose the skill-level CLI runtime entry set.
-- `agents-payload-contract` must expose the mandatory workflow for `AGENTS_machine.json` payload governance.
+- `agents-maintain` must be the only stable daily maintenance entry for governed `AGENTS.md` work.
+- `agents-maintain` must expose governed target ranking, placement-gate results, selected `Part A` or embedded payload location, duplicate/inheritance gate status, mutation mode, and the centered-push write plan in one machine-readable payload.
+- `agents-payload-contract` remains available only for explicit payload-only surgery inside `AGENTS_human.md`.
 - `lint` must reject child `AGENTS` surfaces that repeat parent `AGENTS.md` or parent payload semantics; skill entries are the only exception.
+- `lint` must also reject repo-tracked orphan `AGENTS_human.md` mappings whose external target no longer exists, installed managed-target drift, and runtime legacy `AGENTS_machine.json` sidecars.
+- Daily `AGENTS.md` maintenance must update the internal `AGENTS_human.md` truth source first, then push external `Part A`, then lint.
+- `collect` must not appear in the normal `AGENTS.md` maintenance mainline; for `AGENTS.md` it is reserved for reverse-sync or external recovery only.

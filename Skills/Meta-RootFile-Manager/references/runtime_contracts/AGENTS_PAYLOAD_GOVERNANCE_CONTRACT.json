@@ -8,8 +8,7 @@
     "Resolve the governed AGENTS target with agents-payload-contract.",
     "Load Meta-Enhance-Prompt contract and skill-directive entry before interpreting the user request.",
     "Compress the user request into the smallest precise payload semantics only.",
-    "Edit only the governed AGENTS_machine.json payload scope.",
-    "Run collect for the same external AGENTS.md to re-render AGENTS_human.md.",
+    "Edit only the governed embedded Part B payload scope inside AGENTS_human.md.",
     "Run lint for the same external AGENTS.md before closing."
   ],
   "hard_constraints": [

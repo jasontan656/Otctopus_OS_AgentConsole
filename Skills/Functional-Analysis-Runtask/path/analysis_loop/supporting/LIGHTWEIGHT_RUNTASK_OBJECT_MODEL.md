@@ -11,6 +11,8 @@
   - 保存最小切片合同。
 - `implementation/turn_ledger.yaml`
   - 保存逐回合实现、验证、状态裁决与残余问题。
+- `Codex_Skill_Runtime/Functional-Analysis-Runtask/NNN_task_slug/task_runtime.yaml`
+  - 保存 AGENT 独立维护的运行态骨架、阶段 checklist、当前步骤、结束位置与任务闭合状态。
 
 ## 小型对象优先规则
 - 证据、判断、计划、实现日志与状态必须拆开。
@@ -19,5 +21,6 @@
 
 ## 状态约束
 - `workspace_manifest.yaml` 是当前阶段状态真相源。
+- `task_runtime.yaml` 是并发门禁、阶段推进位置与任务闭合判定真相源。
 - `plan/slices.yaml` 只能存在 0 或 1 个 `active` 切片。
 - `implementation/turn_ledger.yaml` 中发生真实实现或验证时，必须携带 `evidence_refs`。

@@ -7,7 +7,7 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `.codex/skills` container 的 runtim
 
 <part_A>
 1. 根入口命令
-- `MDM_WORKSPACE_ROOT=<codex_home_parent> <root>/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python3 <root>/Otctopus_OS_AgentConsole/Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py agents-payload-contract --source-path "<codex_home>/skills/AGENTS.md" --json`
+- `MDM_WORKSPACE_ROOT=<codex_home_parent> <root>/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python3 <root>/Otctopus_OS_AgentConsole/Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py agents-maintain --intent "<natural language request>" --json`
 
 2. 技能类任务附加入口
 - N/A
@@ -40,7 +40,7 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `.codex/skills` container 的 runtim
     "N/A"
   ],
   "turn_start_actions": [
-    "run the agents-payload-contract CLI for <codex_home>/skills/AGENTS.md first"
+    "run the agents-maintain CLI for AGENTS maintenance requests first"
   ],
   "runtime_constraints": [
     "do not modify skills directly under <codex_home>/skills"
@@ -60,7 +60,7 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `.codex/skills` container 的 runtim
     }
   },
   "repo_local_contract_handoff": [
-    "use the returned payload contract for this target before local processing"
+    "use the agents-maintain placement result for this target before local processing"
   ],
   "forbidden_primary_runtime_pattern": [
     "direct skill edits under <codex_home>/skills"

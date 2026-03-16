@@ -6,8 +6,7 @@
       "file_kind": "AGENTS.md",
       "mapping_mode": "agents_ab",
       "managed_files": {
-        "human": "AGENTS_human.md",
-        "machine": "AGENTS_machine.json"
+        "human": "AGENTS_human.md"
       },
       "structure_template": "references/runtime_contracts/AGENTS_content_structure.md"
     },

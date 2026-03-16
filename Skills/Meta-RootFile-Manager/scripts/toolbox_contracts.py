@@ -15,7 +15,6 @@ SKILL_RUNTIME_CONTRACT_PATH = RUNTIME_CONTRACTS_ROOT / "SKILL_RUNTIME_CONTRACT.j
 class AgentsPayloadMetaRootFileManagerCommands(TypedDict):
     target_contract: str
     agents_payload_contract: str
-    collect: str
     lint: str
 
 
@@ -30,10 +29,9 @@ class AgentsPayloadToolEntry(TypedDict):
 
 
 class AgentsPayloadWritebackPolicy(TypedDict):
-    payload_truth_surface: str
-    paired_human_surface: str
+    canonical_truth_surface: str
+    part_b_container: str
     external_part_a_surface: str
-    collect_uses_external_part_a: bool
 
 
 class AgentsPayloadContractPayload(TypedDict):
@@ -60,7 +58,6 @@ def build_agents_payload_contract(paths: object, source_path: Path) -> AgentsPay
     if result.get("channel_id") != "AGENTS_MD" or result.get("mapping_mode") != "agents_ab":
         raise ValueError("agents_payload_contract_requires_agents_target")
 
-    source_text = source_path.read_text(encoding="utf-8")
     return {
         "contract_name": "meta_rootfile_manager_agents_payload_governance_contract",
         "contract_version": "1.0.0",
@@ -81,11 +78,6 @@ def build_agents_payload_contract(paths: object, source_path: Path) -> AgentsPay
                     "./.venv_backend_skills/bin/python "
                     "Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py "
                     f"agents-payload-contract --source-path \"{source_path}\" --json"
-                ),
-                "collect": (
-                    "./.venv_backend_skills/bin/python "
-                    "Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py "
-                    f"collect --source-path \"{source_path}\" --json"
                 ),
                 "lint": (
                     "./.venv_backend_skills/bin/python "
@@ -111,15 +103,13 @@ def build_agents_payload_contract(paths: object, source_path: Path) -> AgentsPay
             "Treat the user request as literal by default and rewrite it into the smallest precise payload semantics only.",
             "Do not add process reminders, extra governance notes, extra routing, or extra obligations that the user did not request.",
             "If the intended shape is still unclear after intent normalization, inspect sibling payload entries for style only; do not invent new semantics.",
-            "Edit only the governed AGENTS_machine.json payload for the requested change scope.",
-            "Run collect for the same external AGENTS.md so the paired AGENTS_human.md is re-rendered from Part A plus the updated machine payload.",
+            "Edit only the governed AGENTS_human.md embedded Part B payload for the requested change scope.",
             "Run lint for the same external AGENTS.md before closing the turn.",
         ],
         "writeback_policy": {
-            "payload_truth_surface": result["managed_files"]["machine"],
-            "paired_human_surface": result["managed_files"]["human"],
+            "canonical_truth_surface": result["managed_files"]["human"],
+            "part_b_container": result["managed_files"]["human"],
             "external_part_a_surface": str(source_path),
-            "collect_uses_external_part_a": "<part_A>" in source_text,
         },
         "rules": [
             "default_meta_skill_order is the only payload location allowed to carry skill name plus minimal description.",

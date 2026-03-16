@@ -44,7 +44,7 @@ anchors:
 - External `AGENTS.md` must not duplicate the machine-only `Part B`.
 - External `AGENTS.md` must not carry internal audit-only sections.
 
-## Internal `AGENTS_human.md` Structure
+## Internal Canonical `AGENTS_human.md` Structure
 
 ### Required Blocks
 1. `[AGENT RUNTIME HOOK - ABSOLUTE ENFORCEMENT]`
@@ -54,19 +54,12 @@ anchors:
 5. a fenced `json` block inside `Part B`
 
 ### Required Shape Rules
-- Internal `AGENTS_human.md` must contain both `Part A` and `Part B`.
+- Internal `AGENTS_human.md` is the single canonical managed source and must contain both `Part A` and `Part B`.
 - `Part A` mirrors the external entry content.
-- `Part B` mirrors the machine payload in readable markdown form.
+- `Part B` is the only machine payload truth source and must stay inside the markdown file as a fenced `json` block.
 - Internal `AGENTS_human.md` must also carry the same path-derived `owner` field.
-
-## Internal `AGENTS_machine.json` Structure
-- `AGENTS_machine.json` must contain `Part B only`.
-- It must not duplicate `Part A`.
-- It must remain valid json.
-- It must carry an `owner` field.
-- It must satisfy the source-path-specific payload structure contract in `AGENTS_payload_structure.json`.
 
 ## Lint Rule
 - If scan discovers `AGENTS.md`, lint must validate the external entry against this contract.
-- `lint` must also validate the paired internal `AGENTS_human.md` and `AGENTS_machine.json` against the current structure lock.
+- `lint` must also validate the internal canonical `AGENTS_human.md` against the current structure lock and payload schema.
 - If scan discovers a newly governed filename without a matching structure template, scan must fail immediately.

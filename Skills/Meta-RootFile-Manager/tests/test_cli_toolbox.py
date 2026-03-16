@@ -43,6 +43,13 @@ def render_internal_human(part_a_body: str, payload: dict) -> str:
     )
 
 
+def extract_payload_from_internal_human(path: Path) -> dict:
+    text = path.read_text(encoding="utf-8")
+    part_b = text.split("<part_B>", 1)[1].split("</part_B>", 1)[0].strip()
+    payload_text = part_b[len("```json\n") : -len("\n```")]
+    return json.loads(payload_text)
+
+
 def workspace_part_a() -> str:
     return (
         "1. 根入口命令\n"
@@ -174,6 +181,15 @@ class TestCliToolbox:
 
     def _seed_workspace(self) -> None:
         write(self.workspace / "AGENTS.md", render_external_agents("workspace root"))
+        write(self.workspace / "Octopus_OS" / "AGENTS.md", render_external_agents("octopus root"))
+        write(
+            self.workspace / "Octopus_OS" / "Client_Applications" / "AGENTS.md",
+            render_external_agents("client applications root"),
+        )
+        write(
+            self.workspace / "Octopus_OS" / "Development_Docs" / "AGENTS.md",
+            render_external_agents("development docs root"),
+        )
         write(self.repo_root / "AGENTS.md", render_external_agents("repo root"))
         write(self.repo_root / "README.md", "# Console\n")
         write(self.workspace / "Octopus_OS" / "README.md", "# Octopus\n")
@@ -190,14 +206,9 @@ class TestCliToolbox:
     def _seed_managed_agents(self) -> None:
         root_assets = self.skill_root / "assets" / "managed_targets" / "AI_Projects"
         write(root_assets / "AGENTS_human.md", render_internal_human(workspace_part_a(), payload()))
-        write(root_assets / "AGENTS_machine.json", json.dumps(payload(), ensure_ascii=False, indent=2) + "\n")
         write(
             root_assets / "Otctopus_OS_AgentConsole" / "AGENTS_human.md",
             render_internal_human("repo root", payload()),
-        )
-        write(
-            root_assets / "Otctopus_OS_AgentConsole" / "AGENTS_machine.json",
-            json.dumps(payload(), ensure_ascii=False, indent=2) + "\n",
         )
 
     def _seed_legacy_alias_dir(self) -> None:
@@ -365,16 +376,10 @@ class TestCliToolbox:
             / "AI_Projects"
             / "NewRepo"
         )
-        managed_machine = managed_dir / "AGENTS_machine.json"
-        payload = json.loads(managed_machine.read_text(encoding="utf-8"))
-        root_template = json.loads(
-            (
-                self.skill_root
-                / "assets"
-                / "managed_targets"
-                / "AI_Projects"
-                / "AGENTS_machine.json"
-            ).read_text(encoding="utf-8")
+        managed_human = managed_dir / "AGENTS_human.md"
+        payload = extract_payload_from_internal_human(managed_human)
+        root_template = extract_payload_from_internal_human(
+            self.skill_root / "assets" / "managed_targets" / "AI_Projects" / "AGENTS_human.md"
         )
         assert list(payload.keys()) == list(root_template.keys())
         assert payload["entry_role"] == "replace_me"
@@ -439,6 +444,32 @@ class TestCliToolbox:
         assert result["failed_count"] == 1
         assert "managed_mapping_content_drift" in result["failures"][0]["errors"]
 
+    def test_lint_rejects_installed_managed_targets_drift(self) -> None:
+        extra_path = (
+            self.installed
+            / "assets"
+            / "managed_targets"
+            / "AI_Projects"
+            / "AGENTS_machine.json"
+        )
+        write(extra_path, "{}\n")
+        result = self.run_cli("lint", "--json", expect_ok=False)
+        assert any("installed_managed_targets_drift" in item["errors"] for item in result["failures"])
+
+    def test_lint_rejects_runtime_legacy_agents_machine_sidecar(self) -> None:
+        legacy_path = (
+            self.runtime
+            / "managed_targets"
+            / "ephemeral_workspace"
+            / "tmpabc1234"
+            / "sample_repo"
+            / "Development_Docs"
+            / "AGENTS_machine.json"
+        )
+        write(legacy_path, "{}\n")
+        result = self.run_cli("lint", "--json", expect_ok=False)
+        assert any("runtime_legacy_agents_machine_sidecar" in item["errors"] for item in result["failures"])
+
     def test_target_contract_keeps_agents_payload(self) -> None:
         result = self.run_cli("target-contract", "--source-path", str(self.repo_root / "AGENTS.md"), "--json")
         assert result["channel_id"] == "AGENTS_MD"
@@ -448,10 +479,95 @@ class TestCliToolbox:
     def test_contract_exposes_agents_payload_entry(self) -> None:
         result = self.run_cli("contract", "--json")
         assert result["skill_name"] == "Meta-RootFile-Manager"
+        assert "agents_maintain" in result["tool_entry"]["commands"]
+        assert "agents-maintain" in result["tool_entry"]["commands"]["agents_maintain"]
         assert "agents_payload_contract" in result["tool_entry"]["commands"]
         assert "agents-payload-contract" in result["tool_entry"]["commands"]["agents_payload_contract"]
         assert "new_writeback" in result["tool_entry"]["commands"]
         assert "new-writeback" in result["tool_entry"]["commands"]["new_writeback"]
+
+    def test_agents_maintain_adds_payload_rule_and_uses_centered_push_mainline(self) -> None:
+        result = self.run_cli(
+            "agents-maintain",
+            "--json",
+            "--intent",
+            '在 "AGENTS.md" 的 runtime_constraints 新增 "phase2 payload rule"',
+        )
+        assert result["write_status"] == "applied"
+        assert result["selected_part"] == "payload"
+        assert result["selected_target"]["relative_path"] == "AGENTS.md"
+        assert result["duplicate_gate"]["status"] == "pass"
+        assert result["collect_used"] is False
+        managed_human = (
+            self.skill_root
+            / "assets"
+            / "managed_targets"
+            / "AI_Projects"
+            / "AGENTS_human.md"
+        )
+        payload = extract_payload_from_internal_human(managed_human)
+        assert "phase2 payload rule" in payload["runtime_constraints"]
+        assert (self.workspace / "AGENTS.md").read_text(encoding="utf-8").startswith("---\nowner: ")
+
+    def test_agents_maintain_adds_part_a_rule_and_pushes_external(self) -> None:
+        result = self.run_cli(
+            "agents-maintain",
+            "--json",
+            "--intent",
+            '在 "AGENTS.md" 的 语言规范 新增 "新增的语言规则"',
+        )
+        assert result["write_status"] == "applied"
+        assert result["selected_part"] == "part_a"
+        managed_human = (
+            self.skill_root
+            / "assets"
+            / "managed_targets"
+            / "AI_Projects"
+            / "AGENTS_human.md"
+        )
+        assert "新增的语言规则" in managed_human.read_text(encoding="utf-8")
+        assert "新增的语言规则" in (self.workspace / "AGENTS.md").read_text(encoding="utf-8")
+
+    def test_agents_maintain_blocks_parent_inherited_rule(self) -> None:
+        parent_dir = self.workspace / "Octopus_OS"
+        child_dir = parent_dir / "Client_Applications"
+        self.run_cli("scaffold", "--json", "--allow-existing", "--target-dir", str(parent_dir), "--file-kind", "AGENTS.md")
+        self.run_cli("scaffold", "--json", "--allow-existing", "--target-dir", str(child_dir), "--file-kind", "AGENTS.md")
+
+        parent_owner = self.run_cli("target-contract", "--source-path", str(parent_dir / "AGENTS.md"), "--json")["owner"]
+        child_owner = self.run_cli("target-contract", "--source-path", str(child_dir / "AGENTS.md"), "--json")["owner"]
+        parent_payload = payload()
+        parent_payload["owner"] = parent_owner
+        parent_payload["runtime_constraints"] = ["parent inherited rule"]
+        child_payload = payload()
+        child_payload["owner"] = child_owner
+
+        write(parent_dir / "AGENTS.md", render_external_agents("parent root", owner=parent_owner))
+        write(child_dir / "AGENTS.md", render_external_agents("child root", owner=child_owner))
+        write(
+            self.skill_root / "assets" / "managed_targets" / "AI_Projects" / "Octopus_OS" / "AGENTS_human.md",
+            render_internal_human("parent root", parent_payload),
+        )
+        write(
+            self.skill_root
+            / "assets"
+            / "managed_targets"
+            / "AI_Projects"
+            / "Octopus_OS"
+            / "Client_Applications"
+            / "AGENTS_human.md",
+            render_internal_human("child root", child_payload),
+        )
+
+        result = self.run_cli(
+            "agents-maintain",
+            "--json",
+            "--intent",
+            '在 "Octopus_OS/Client_Applications/AGENTS.md" 的 runtime_constraints 新增 "parent inherited rule"',
+            expect_ok=False,
+        )
+        assert result["write_status"] == "blocked"
+        assert result["duplicate_gate"]["status"] == "inherit_only"
 
     def test_agents_payload_contract_returns_targeted_workflow(self) -> None:
         result = self.run_cli(
@@ -461,7 +577,7 @@ class TestCliToolbox:
             "--json",
         )
         assert result["channel_id"] == "AGENTS_MD"
-        assert result["managed_files"]["machine"].endswith("AGENTS_machine.json")
+        assert result["managed_files"]["human"].endswith("AGENTS_human.md")
         assert "Meta-Enhance-Prompt" in result["tool_entry"]["meta_enhance_prompt"]["contract"]
         assert any("smallest precise payload semantics" in item for item in result["workflow"])
         assert any("Do not add anything beyond the user request by default." == item for item in result["rules"])
@@ -508,23 +624,22 @@ class TestCliToolbox:
             "AGENTS.md",
         )
         external_path = target_dir / "AGENTS.md"
-        managed_machine = (
+        managed_human = (
             self.skill_root
             / "assets"
             / "managed_targets"
             / "AI_Projects"
             / "NewRepo"
-            / "AGENTS_machine.json"
+            / "AGENTS_human.md"
         )
-        managed_human = managed_machine.with_name("AGENTS_human.md")
 
         write(
             external_path,
             external_path.read_text(encoding="utf-8").replace("replace_me", "resolved_value"),
         )
-        payload = json.loads(managed_machine.read_text(encoding="utf-8"))
+        payload = extract_payload_from_internal_human(managed_human)
         resolved_payload = resolve_replace_me(payload)
-        write(managed_machine, json.dumps(resolved_payload, ensure_ascii=False, indent=2) + "\n")
+        write(managed_human, render_internal_human(workspace_part_a(), resolved_payload))
 
         result = self.run_cli(
             "new-writeback",
@@ -636,9 +751,7 @@ class TestCliToolbox:
             / "Otctopus_OS_AgentConsole"
             / "AGENTS_human.md"
         )
-        managed_machine = managed_human.with_name("AGENTS_machine.json")
         write(managed_human, render_internal_human("repo root", invalid_payload))
-        write(managed_machine, json.dumps(invalid_payload, ensure_ascii=False, indent=2) + "\n")
 
         result = self.run_cli(
             "lint",
@@ -667,14 +780,12 @@ class TestCliToolbox:
         child_managed_dir = (
             parent_managed_dir / "Client_Applications"
         )
-        parent_payload = json.loads((parent_managed_dir / "AGENTS_machine.json").read_text(encoding="utf-8"))
-        child_payload = json.loads((child_managed_dir / "AGENTS_machine.json").read_text(encoding="utf-8"))
+        parent_payload = extract_payload_from_internal_human(parent_managed_dir / "AGENTS_human.md")
+        child_payload = extract_payload_from_internal_human(child_managed_dir / "AGENTS_human.md")
         parent_payload["runtime_constraints"] = [payload_phrase]
         child_payload["runtime_constraints"] = [payload_phrase]
         write(parent_managed_dir / "AGENTS_human.md", render_internal_human(parent_phrase, parent_payload))
-        write(parent_managed_dir / "AGENTS_machine.json", json.dumps(parent_payload, ensure_ascii=False, indent=2) + "\n")
         write(child_managed_dir / "AGENTS_human.md", render_internal_human(parent_phrase, child_payload))
-        write(child_managed_dir / "AGENTS_machine.json", json.dumps(child_payload, ensure_ascii=False, indent=2) + "\n")
 
         result = self.run_cli(
             "lint",
@@ -689,14 +800,13 @@ class TestCliToolbox:
         assert "parent_agents_duplicate_phrase:Octopus_OS/AGENTS.md:$.runtime_constraints[0]" in error_text
 
     def test_lint_rejects_nonstandard_write_exec_block(self) -> None:
-        managed_machine = (
+        managed_human = (
             self.skill_root
             / "assets"
             / "managed_targets"
             / "AI_Projects"
-            / "AGENTS_machine.json"
+            / "AGENTS_human.md"
         )
-        managed_human = managed_machine.with_name("AGENTS_human.md")
         invalid_payload = {
             "owner": self.run_cli(
                 "target-contract",
@@ -729,7 +839,6 @@ class TestCliToolbox:
             "forbidden_primary_runtime_pattern": [],
             "turn_end_actions": [],
         }
-        write(managed_machine, json.dumps(invalid_payload, ensure_ascii=False, indent=2) + "\n")
         write(managed_human, render_internal_human("workspace root", invalid_payload))
 
         result = self.run_cli(
@@ -787,15 +896,13 @@ class TestCliToolbox:
             / "Development_Docs"
             / "AGENTS_human.md"
         ).exists()
-        runtime_payload = json.loads(
-            (
-                self.runtime
-                / "managed_targets"
-                / "sandbox"
-                / "sample_repo"
-                / "Development_Docs"
-                / "AGENTS_machine.json"
-            ).read_text(encoding="utf-8")
+        runtime_payload = extract_payload_from_internal_human(
+            self.runtime
+            / "managed_targets"
+            / "sandbox"
+            / "sample_repo"
+            / "Development_Docs"
+            / "AGENTS_human.md"
         )
         assert runtime_payload["entry_role"] == "replace_me"
         assert runtime_payload["default_meta_skill_order"][0] == "replace_me"
@@ -854,14 +961,6 @@ class TestCliToolbox:
             / "Development_Docs"
             / "AGENTS_human.md"
         )
-        machine_payload = (
-            self.runtime
-            / "managed_targets"
-            / "sandbox"
-            / "sample_repo"
-            / "Development_Docs"
-            / "AGENTS_machine.json"
-        )
         assert managed_human.exists()
         assert "placeholder" in managed_human.read_text(encoding="utf-8")
-        assert json.loads(machine_payload.read_text(encoding="utf-8"))["owner"] == result["operations"][0]["owner"]
+        assert extract_payload_from_internal_human(managed_human)["owner"] == result["operations"][0]["owner"]

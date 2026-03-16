@@ -43,7 +43,7 @@ owner: "由 `$Meta-RootFile-Manager` 作为 `AI_Projects` workspace root 的 run
 - 当出现与当前任务无关的并行变更时，应忽略这些无关变更，只关注与当前任务直接相关的文件。
 
 6. 治理链约束
-- 更新本文件时及相关内容时,必须使用 $Meta-RootFile-Manager 更新治理映射模版然后再回推至本文件,或者更新本文件但是必须使用技能的collect来反向更新,避免单点更新治理链断裂.
+- 更新本文件时及相关内容时,必须优先使用 $Meta-RootFile-Manager 的 agents-maintain 主入口更新技能内治理映射模版并经 centered push 回推至本文件；collect 仅保留为异常 reverse-sync / recovery 路径，避免单点更新治理链断裂.
 
 7. 路径显示规范
 - 仅当涉及 `AGENTS.md` 时，禁止使用 file ref，改为直接展示完整绝对路径；此规则仅用于确保路径能完整显示，其他场景不生效。

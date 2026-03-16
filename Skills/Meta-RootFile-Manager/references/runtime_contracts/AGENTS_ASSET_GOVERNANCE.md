@@ -20,7 +20,7 @@ anchors:
 ### 0. Template Semantic Boundary
 - In this skill, `治理映射模版` means the long-lived skill-internal mapping for a concrete governed target.
 - In this skill, `骨架生成模版` means the initialization-only template surface used by `scaffold`.
-- `AGENTS_human.md` plus `AGENTS_machine.json` belong to the `治理映射模版` side.
+- `AGENTS_human.md` belongs to the `治理映射模版` side as the single canonical mapping file.
 - The scaffold defaults that create first-time AGENTS files belong to the `骨架生成模版` side.
 - Structure contracts such as `AGENTS_content_structure.md` are not either template type; they only constrain shape.
 
@@ -30,7 +30,7 @@ anchors:
 - External files must not carry the machine payload from `Part B`.
 
 ### 2. Internal `AGENTS_human.md`
-- Internal managed `AGENTS_human.md` is the canonical human audit surface inside the `治理映射模版`.
+- Internal managed `AGENTS_human.md` is the single canonical source inside the `治理映射模版`.
 - It must contain both explicit blocks:
 
 ~~~html
@@ -49,14 +49,7 @@ anchors:
 ~~~
 
 - `Part A` mirrors the external-facing entry content.
-- `Part B` mirrors the machine payload in readable markdown form.
-
-### 3. Internal `AGENTS_machine.json`
-- Internal managed `AGENTS_machine.json` must contain `Part B only`.
-- It is the machine-readable payload source for CLI output.
-- It must not duplicate `Part A`.
-- It belongs to the same `治理映射模版` instance as the paired `AGENTS_human.md`.
-- Any change to this payload must go through the dedicated `agents-payload-contract` entry.
+- `Part B` is the machine-readable payload source for CLI output and stays embedded in the same markdown file.
 
 ## Part Boundary Contract
 
@@ -96,10 +89,12 @@ anchors:
 ## Maintenance Rule
 - Any AGENTS governance change must be reviewed against both `Part A` and `Part B`.
 - Do not update only one side unless the user explicitly scopes the change and the other side is proven unaffected.
-- If payload shape or field structure changes, update `AGENTS_human.md`, `AGENTS_machine.json`, and CLI behavior together.
+- If payload shape or field structure changes, update `AGENTS_human.md` and CLI behavior together.
 - Do not confuse changes to the long-lived `治理映射模版` with changes to the `骨架生成模版`; the former changes concrete governed content, while the latter changes only initialization defaults.
-- If the task changes `Part B`, start from `agents-payload-contract --source-path "<external AGENTS path>" --json` and follow its returned workflow before writeback.
+- Normal AGENTS maintenance must start from `agents-maintain --intent "<natural language request>" --json`, let the placement gate choose the governed target and destination part, then update the internal `AGENTS_human.md` truth source before centered push.
+- Use `agents-payload-contract --source-path "<external AGENTS path>" --json` only when the task is explicitly scoped to payload-only surgery for a known governed target.
+- `collect` is not part of the daily AGENTS maintenance loop; it remains a reverse-sync or recovery path only.
 
 ## Scope Note
 - External root `AGENTS.md` and its corresponding internal root managed assets were excluded from the earlier cleanup round.
-- That exclusion does not change this contract: the canonical governance model remains `external = Part A only`, `internal human = Part A + Part B`, `internal machine = Part B only`.
+- That exclusion does not change this contract: the canonical governance model remains `external = Part A only`, `internal AGENTS_human.md = Part A + embedded Part B`.

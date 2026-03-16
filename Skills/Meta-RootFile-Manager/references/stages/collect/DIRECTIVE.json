@@ -16,7 +16,7 @@
     "leave Part B unchanged"
   ],
   "rules": [
-    "machine json is not collected from external files",
+    "no separate machine sidecar is collected from external files",
     "Part B stays skill-internal during collect",
     "collect must sync the same 治理映射模版 result into mirror and installed skill directories"
   ]

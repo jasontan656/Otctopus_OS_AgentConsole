@@ -9,7 +9,7 @@ from mdm_cli_stage_commands import (
     cmd_push,
     cmd_scan,
 )
-from mdm_cli_write_commands import cmd_new_writeback, cmd_scaffold
+from mdm_cli_write_commands import cmd_agents_maintain, cmd_new_writeback, cmd_scaffold
 from toolbox_support import add_common_report_args
 
 
@@ -51,6 +51,11 @@ def build_parser() -> argparse.ArgumentParser:
     scaffold.add_argument("--all-governed", action="store_true", help="Scaffold all currently governed file kinds.")
     scaffold.add_argument("--allow-existing", action="store_true", help="Allow overwriting existing scaffold targets.")
     scaffold.set_defaults(func=cmd_scaffold)
+
+    agents_maintain = subparsers.add_parser("agents-maintain")
+    add_common_report_args(agents_maintain)
+    agents_maintain.add_argument("--intent", required=True, help="Natural-language AGENTS maintenance request.")
+    agents_maintain.set_defaults(func=cmd_agents_maintain)
 
     new_writeback = subparsers.add_parser("new-writeback")
     new_writeback.add_argument("--dry-run", action="store_true")

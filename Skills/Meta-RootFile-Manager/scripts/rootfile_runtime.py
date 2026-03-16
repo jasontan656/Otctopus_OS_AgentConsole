@@ -32,6 +32,7 @@ REPO_ROOT_COMPAT_ALIASES = {
 }
 LEGACY_MANAGED_TARGET_DIRS = ("Codex_Skills_Mirror",)
 LEGACY_OWNER_META_GLOB = "*__owner_meta.json"
+LEGACY_AGENTS_MACHINE_FILENAME = "AGENTS_machine.json"
 RUNTIME_MANAGED_TARGETS_DIRNAME = "managed_targets"
 ROOTFILE_MANAGER_NAME = "$Meta-RootFile-Manager"
 SKILL_TOKEN_PATTERN = re.compile(r"\$[A-Za-z][A-Za-z0-9._-]*")
@@ -241,6 +242,50 @@ def sync_file_to_installed(paths: RuntimePaths, mirror_path: Path, dry_run: bool
     return False
 
 
+def installed_managed_targets_root(paths: RuntimePaths) -> Path:
+    return (paths.installed_skill_root / "assets" / "managed_targets" / "AI_Projects").resolve()
+
+
+def _prune_empty_parent_dirs(path: Path, stop_root: Path, dry_run: bool) -> None:
+    current = path.parent
+    while current != stop_root and current.exists():
+        try:
+            next(current.iterdir())
+            break
+        except StopIteration:
+            if dry_run:
+                current = current.parent
+                continue
+            current.rmdir()
+            current = current.parent
+
+
+def _remove_path(path: Path, dry_run: bool) -> None:
+    if dry_run:
+        return
+    if path.is_dir():
+        shutil.rmtree(path)
+        return
+    path.unlink()
+
+
+def prune_legacy_agents_machine_files(paths: RuntimePaths, dry_run: bool) -> list[str]:
+    removed: list[str] = []
+    candidate_roots = [
+        paths.managed_targets_root,
+        installed_managed_targets_root(paths),
+        runtime_managed_targets_root(paths),
+    ]
+    for root in candidate_roots:
+        if not root.exists():
+            continue
+        for path in sorted(root.rglob(LEGACY_AGENTS_MACHINE_FILENAME)):
+            removed.append(str(path))
+            _remove_path(path, dry_run)
+            _prune_empty_parent_dirs(path, root, dry_run)
+    return removed
+
+
 def prune_legacy_managed_target_dirs(paths: RuntimePaths, dry_run: bool) -> list[str]:
     removed: list[str] = []
     for legacy_dir_name in LEGACY_MANAGED_TARGET_DIRS:
@@ -260,7 +305,7 @@ def prune_legacy_owner_meta_files(paths: RuntimePaths, dry_run: bool) -> list[st
     removed: list[str] = []
     candidate_roots = [
         paths.managed_targets_root,
-        paths.installed_skill_root / "assets" / "managed_targets" / "AI_Projects",
+        installed_managed_targets_root(paths),
         runtime_managed_targets_root(paths),
     ]
     for root in candidate_roots:
@@ -271,6 +316,56 @@ def prune_legacy_owner_meta_files(paths: RuntimePaths, dry_run: bool) -> list[st
             if not dry_run:
                 path.unlink()
     return removed
+
+
+def prune_runtime_ephemeral_managed_targets(paths: RuntimePaths, dry_run: bool) -> list[str]:
+    removed: list[str] = []
+    ephemeral_root = runtime_managed_targets_root(paths) / "ephemeral_workspace"
+    if not ephemeral_root.exists():
+        return removed
+    for child in sorted(ephemeral_root.iterdir()):
+        removed.append(str(child))
+        _remove_path(child, dry_run)
+    if removed:
+        _prune_empty_parent_dirs(ephemeral_root, runtime_managed_targets_root(paths), dry_run)
+    return removed
+
+
+def _iter_managed_files(root: Path) -> dict[Path, Path]:
+    if not root.exists():
+        return {}
+    return {path.relative_to(root): path for path in root.rglob("*") if path.is_file()}
+
+
+def sync_managed_targets_tree_to_installed(paths: RuntimePaths, dry_run: bool) -> dict[str, list[str]]:
+    mirror_root = paths.managed_targets_root
+    installed_root = installed_managed_targets_root(paths)
+    copied: list[str] = []
+    removed: list[str] = []
+    mirror_files = _iter_managed_files(mirror_root)
+    installed_files = _iter_managed_files(installed_root)
+
+    for relative, mirror_path in sorted(mirror_files.items()):
+        installed_path = installed_root / relative
+        mirror_bytes = mirror_path.read_bytes()
+        if installed_path.exists() and installed_path.read_bytes() == mirror_bytes:
+            continue
+        copied.append(str(installed_path))
+        ensure_parent(installed_path, dry_run)
+        if not dry_run:
+            shutil.copy2(mirror_path, installed_path)
+
+    for relative, installed_path in sorted(installed_files.items()):
+        if relative in mirror_files:
+            continue
+        removed.append(str(installed_path))
+        _remove_path(installed_path, dry_run)
+        _prune_empty_parent_dirs(installed_path, installed_root, dry_run)
+
+    return {
+        "copied_files": copied,
+        "removed_extra_files": removed,
+    }
 
 
 def load_scan_rules(paths: RuntimePaths) -> dict[str, object]:
@@ -292,8 +387,8 @@ def _root_agents_template_human_path(paths: RuntimePaths) -> Path:
     return paths.managed_targets_root / "AGENTS_human.md"
 
 
-def _root_agents_template_machine_path(paths: RuntimePaths) -> Path:
-    return paths.managed_targets_root / "AGENTS_machine.json"
+def _legacy_agents_machine_path(managed_human_path: Path) -> Path:
+    return managed_human_path.with_name(LEGACY_AGENTS_MACHINE_FILENAME)
 
 
 def ensure_within_workspace(paths: RuntimePaths, target_path: Path) -> Path:
@@ -348,7 +443,18 @@ def extract_internal_part_a(human_text: str) -> str:
 
 def load_machine_payload(machine_path: Path) -> object:
     if machine_path.exists():
-        return read_json(machine_path)
+        if machine_path.suffix == ".json":
+            return read_json(machine_path)
+        part_b_block = _extract_tag_block(machine_path.read_text(encoding="utf-8"), PART_B_OPEN, PART_B_CLOSE)
+        if part_b_block is None:
+            return {}
+        payload, payload_errors = _extract_fenced_json_payload(part_b_block)
+        if payload_errors:
+            raise ValueError(";".join(payload_errors))
+        return payload if payload is not None else {}
+    legacy_machine_path = _legacy_agents_machine_path(machine_path)
+    if legacy_machine_path.exists():
+        return read_json(legacy_machine_path)
     return {}
 
 
@@ -409,7 +515,7 @@ def _repo_root_for_runtime_paths(paths: RuntimePaths) -> Path:
     return (paths.workspace_root / REPO_ROOT_CANONICAL_NAME).resolve()
 
 
-def build_agents_payload_contract_command(paths: RuntimePaths, source_path: Path) -> str:
+def build_agents_maintain_command(paths: RuntimePaths, source_path: Path) -> str:
     source_rule = load_source_specific_agents_rules(paths).get(_relative_source_key(paths, source_path))
     if isinstance(source_rule, dict):
         command_template = source_rule.get("entry_command_template")
@@ -419,9 +525,7 @@ def build_agents_payload_contract_command(paths: RuntimePaths, source_path: Path
     repo_root = _repo_root_for_runtime_paths(paths)
     python_path = repo_root / ".venv_backend_skills" / "bin" / "python3"
     script_path = paths.mirror_skill_root / "scripts" / "Cli_Toolbox.py"
-    command = (
-        f'{python_path} {script_path} agents-payload-contract --source-path "{source_path.resolve()}" --json'
-    )
+    command = f'{python_path} {script_path} agents-maintain --intent "<natural language request>" --json'
     if source_path.parts[-3:] == (".codex", "skills", "AGENTS.md"):
         return f"MDM_WORKSPACE_ROOT={source_path.resolve().parents[2]} {command}"
     try:
@@ -445,10 +549,14 @@ def validate_source_specific_external_agents(
     if len(root_entry_items) != 1:
         return ["codex_skills_root_entry_command_count_invalid"]
     actual_command = _strip_inline_command_wrapper(root_entry_items[0])
-    expected_command = build_agents_payload_contract_command(paths, source_path)
+    expected_command = build_agents_maintain_command(paths, source_path)
     if actual_command != expected_command:
         return [f"codex_skills_root_entry_command_invalid:{actual_command}"]
     return []
+
+
+def build_agents_payload_contract_command(paths: RuntimePaths, source_path: Path) -> str:
+    return build_agents_maintain_command(paths, source_path)
 
 
 def _canonicalize_relative_path(relative_path: Path) -> Path:
@@ -750,6 +858,49 @@ def _source_path_from_managed_dir(
     return (base_root / relative / file_kind).resolve()
 
 
+def list_repo_orphan_managed_agents(paths: RuntimePaths) -> list[str]:
+    if not paths.managed_targets_root.exists():
+        return []
+    allowed_missing = {
+        relative_path
+        for relative_path in load_source_specific_agents_rules(paths).keys()
+        if isinstance(relative_path, str)
+    }
+    orphans: list[str] = []
+    for human_path in sorted(paths.managed_targets_root.rglob("AGENTS_human.md")):
+        source_path = _source_path_from_managed_dir(
+            paths,
+            paths.managed_targets_root,
+            human_path.parent,
+            "AGENTS.md",
+        )
+        relative_key = _relative_source_key(paths, source_path)
+        if relative_key in allowed_missing:
+            continue
+        if not source_path.exists():
+            orphans.append(str(human_path))
+    return orphans
+
+
+def prune_repo_orphan_managed_agents(paths: RuntimePaths, dry_run: bool) -> list[str]:
+    removed: list[str] = []
+    installed_root = installed_managed_targets_root(paths)
+    for raw_path in list_repo_orphan_managed_agents(paths):
+        human_path = Path(raw_path)
+        removed.append(str(human_path))
+        _remove_path(human_path, dry_run)
+        _prune_empty_parent_dirs(human_path, paths.managed_targets_root, dry_run)
+        try:
+            installed_path = installed_root / human_path.relative_to(paths.managed_targets_root)
+        except ValueError:
+            continue
+        if installed_path.exists():
+            removed.append(str(installed_path))
+            _remove_path(installed_path, dry_run)
+            _prune_empty_parent_dirs(installed_path, installed_root, dry_run)
+    return removed
+
+
 def iter_governed_sources(
     paths: RuntimePaths,
     *,
@@ -825,8 +976,6 @@ def build_entry(
     }
     if "human" in managed_files:
         entry["managed_human_path"] = managed_files["human"]
-    if "machine" in managed_files:
-        entry["managed_machine_path"] = managed_files["machine"]
     if "mapped" in managed_files:
         entry["managed_mapped_path"] = managed_files["mapped"]
     return entry
@@ -1147,10 +1296,13 @@ def _validate_parent_agents_duplicates(
     parent_entry = resolve_target_contract(paths, parent_source_path)
     if parent_entry.get("channel_id") != "AGENTS_MD":
         return []
-    parent_machine_path = Path(str(parent_entry["managed_files"]["machine"]))
-    if not parent_machine_path.exists():
+    parent_human_path = Path(str(parent_entry["managed_files"]["human"]))
+    if not parent_human_path.exists():
         return []
-    parent_payload = read_json(parent_machine_path)
+    try:
+        parent_payload = load_machine_payload(parent_human_path)
+    except (json.JSONDecodeError, ValueError):
+        return []
     if not isinstance(parent_payload, dict):
         return []
 
@@ -1224,70 +1376,38 @@ def validate_internal_human_agents(
     return errors
 
 
-def validate_machine_json(
-    machine_path: Path,
-    expected_owner: str,
-    payload_schema: dict[str, object] | None = None,
-) -> list[str]:
-    if not machine_path.exists():
-        return ["missing_machine_json"]
-    try:
-        payload = read_json(machine_path)
-    except json.JSONDecodeError as exc:
-        return [f"invalid_machine_json:{exc.msg}"]
-    if not isinstance(payload, dict):
-        return ["machine_payload_type_invalid"]
-    if payload.get("owner") is None:
-        return ["missing_owner_field"]
-    if payload.get("owner") != expected_owner:
-        return ["owner_field_mismatch"]
-    errors = _validate_default_meta_skill_uniqueness(payload)
-    errors.extend(_validate_standard_write_exec(payload))
-    if payload_schema is None:
-        return errors
-    errors.extend(_validate_payload_value(payload, payload_schema, "$"))
-    return errors
-
-
 def validate_managed_agents_pair(
     paths: RuntimePaths,
     source_path: Path,
     human_path: Path,
-    machine_path: Path,
 ) -> list[str]:
     errors: list[str] = []
     payload_schema = _payload_schema_for_source(paths, source_path)
     expected_owner = derive_owner_text(paths, source_path, "AGENTS_MD", "AGENTS.md")
     if payload_schema is None and not is_runtime_local_source(paths, source_path):
         return [f"missing_payload_structure_schema:{_relative_source_key(paths, source_path)}"]
+    managed_payload: object | None = None
     if not human_path.exists():
         errors.append("missing_managed_human")
     else:
+        human_text = human_path.read_text(encoding="utf-8")
+        errors.extend(validate_internal_human_agents(human_text, expected_owner, payload_schema))
+        try:
+            managed_payload = load_machine_payload(human_path)
+        except (json.JSONDecodeError, ValueError) as exc:
+            errors.append(f"invalid_internal_payload:{exc}")
+    external_text = source_path.read_text(encoding="utf-8") if source_path.exists() else None
+    if source_path.exists() and isinstance(managed_payload, dict):
+        if external_text is not None:
+            errors.extend(validate_agents_writeback_completion(external_text, managed_payload))
         errors.extend(
-            validate_internal_human_agents(
-                human_path.read_text(encoding="utf-8"),
-                expected_owner,
-                payload_schema,
+            _validate_parent_agents_duplicates(
+                paths,
+                source_path,
+                external_text or "",
+                managed_payload,
             )
         )
-    errors.extend(validate_machine_json(machine_path, expected_owner, payload_schema))
-    external_text = source_path.read_text(encoding="utf-8") if source_path.exists() else None
-    if source_path.exists() and machine_path.exists():
-        try:
-            machine_payload = read_json(machine_path)
-        except json.JSONDecodeError:
-            machine_payload = None
-        if isinstance(machine_payload, dict):
-            if external_text is not None:
-                errors.extend(validate_agents_writeback_completion(external_text, machine_payload))
-            errors.extend(
-                _validate_parent_agents_duplicates(
-                    paths,
-                    source_path,
-                    external_text or "",
-                    machine_payload,
-                )
-            )
     return errors
 
 
@@ -1334,7 +1454,6 @@ def lint_managed_entry(
                 paths,
                 source_path,
                 Path(entry["managed_human_path"]),
-                Path(entry["managed_machine_path"]),
             )
         )
         return errors
@@ -1496,9 +1615,9 @@ def scaffold_agents_machine_payload(
     source_path: Path,
     owner: str,
 ) -> ScaffoldAgentsMachinePayload:
-    template_path = _root_agents_template_machine_path(paths)
+    template_path = _root_agents_template_human_path(paths)
     if template_path.exists():
-        template_payload = read_json(template_path)
+        template_payload = load_machine_payload(template_path)
         if isinstance(template_payload, dict):
             payload = _scaffold_agents_value_from_root_template(template_payload, "$", owner)
             if isinstance(payload, dict):
@@ -1553,8 +1672,8 @@ def resolve_target_contract(paths: RuntimePaths, source_path: Path) -> dict[str,
         "structure_template": entry.get("structure_template"),
     }
     if entry["mapping_mode"] == "agents_ab":
-        machine_path = Path(entry["managed_machine_path"])
-        if not machine_path.exists():
-            raise FileNotFoundError("managed_machine_json_not_found")
-        result["payload"] = read_json(machine_path)
+        human_path = Path(entry["managed_human_path"])
+        if not human_path.exists():
+            raise FileNotFoundError("managed_human_agents_not_found")
+        result["payload"] = load_machine_payload(human_path)
     return result

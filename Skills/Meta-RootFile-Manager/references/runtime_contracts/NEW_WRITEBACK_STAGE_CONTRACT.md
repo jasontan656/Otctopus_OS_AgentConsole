@@ -21,9 +21,9 @@ anchors:
 ## Runtime Rule
 - `new-writeback` applies only to `AGENTS.md` governed targets.
 - The agent must replace every scaffold placeholder with either a concrete final value or `N/A` before running this stage.
-- `new-writeback` must fail if external `AGENTS.md` or managed `AGENTS_machine.json` still contains `replace_me`.
-- After validation passes, `new-writeback` must re-render `AGENTS_human.md` from external `Part A` plus machine payload and then run lint.
-- Source-specific external entry rules remain active during `new-writeback`; for `.codex/skills/AGENTS.md`, `1. 根入口命令` must be a single CLI command that resolves the payload contract, not prose.
+- `new-writeback` must fail if external `AGENTS.md` or managed `AGENTS_human.md` embedded payload still contains `replace_me`.
+- After validation passes, `new-writeback` must re-render `AGENTS_human.md` from external `Part A` plus the resolved embedded payload and then run lint.
+- Source-specific external entry rules remain active during `new-writeback`; for `.codex/skills/AGENTS.md`, `1. 根入口命令` must be a single CLI command that resolves the unified `agents-maintain` entry, not prose.
 
 ## Boundary
 - `new-writeback` is not the stage that decides user intent by itself; the agent still decides the fill content.

@@ -11,16 +11,17 @@ anchors:
 
 # AGENTS Payload Governance Contract
 
+- This contract is no longer the daily AGENTS maintenance entry. It remains only for payload-only surgery when the caller already knows the exact governed target and exact embedded `Part B` scope.
 - Entry command:
   `./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py agents-payload-contract --source-path "<external AGENTS path>" --json`
-- Use this entry whenever the task changes any governed `AGENTS_machine.json` payload.
+- Use this entry whenever the task changes any governed embedded `Part B` payload in `AGENTS_human.md`.
 - The workflow is mandatory:
   1. Load the target-specific payload contract.
   2. Load `$Meta-Enhance-Prompt` contract plus its `skill-directive` entry.
   3. Compress the user request into the smallest precise payload semantics only.
-  4. Edit only the governed `AGENTS_machine.json` payload scope.
-  5. Run `collect` for the same external `AGENTS.md` to re-render `AGENTS_human.md`.
-  6. Run `lint` for the same external `AGENTS.md`.
+  4. Edit only the governed embedded `Part B` payload scope inside `AGENTS_human.md`.
+  5. Run `lint` for the same external `AGENTS.md`.
+- If the task still needs target ranking, `Part A` vs payload placement, inheritance review, or centered-push execution, use `agents-maintain` instead of this narrow contract.
 
 ## Hard Constraints
 - Do not add reminders, process notes, extra routing, or extra obligations beyond the user request.

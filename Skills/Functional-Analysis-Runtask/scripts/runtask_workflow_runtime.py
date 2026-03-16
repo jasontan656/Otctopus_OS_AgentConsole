@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from datetime import datetime, timezone
 from pathlib import Path
 import re
 from typing import Any
@@ -8,9 +9,20 @@ import yaml
 
 
 SKILL_ROOT = Path(__file__).resolve().parents[1]
+REPO_ROOT = SKILL_ROOT.parents[1]
+MANAGED_ROOT_ENV = "FUNCTIONAL_ANALYSIS_RUNTASK_MANAGED_ROOT"
+TASK_RUNTIME_ROOT_ENV = "FUNCTIONAL_ANALYSIS_RUNTASK_TASK_RUNTIME_ROOT"
+DEFAULT_MANAGED_ROOT = Path("/home/jasontan656/AI_Projects/Human_Work_Zone")
+DEFAULT_TASK_RUNTIME_ROOT = REPO_ROOT / "Codex_Skill_Runtime" / "Functional-Analysis-Runtask"
+HUMENWORKZONE_COMMANDS = {
+    "contract": "./.venv_backend_skills/bin/python Skills/Functional-HumenWorkZone-Manager/scripts/Cli_Toolbox.py contract --json",
+    "task_routing": "./.venv_backend_skills/bin/python Skills/Functional-HumenWorkZone-Manager/scripts/Cli_Toolbox.py directive --topic task-routing --json",
+    "execution_boundary": "./.venv_backend_skills/bin/python Skills/Functional-HumenWorkZone-Manager/scripts/Cli_Toolbox.py directive --topic execution-boundary --json",
+    "paths": "./.venv_backend_skills/bin/python Skills/Functional-HumenWorkZone-Manager/scripts/Cli_Toolbox.py paths --json",
+}
 STAGE_ORDER = [
-    "research_baseline",
-    "architecture_convergence",
+    "research",
+    "design",
     "plan",
     "implementation",
     "validation",
@@ -18,6 +30,7 @@ STAGE_ORDER = [
 STAGE_STATUS_VALUES = {"pending", "in_progress", "blocked", "completed"}
 SLICE_STATUS_VALUES = {"queued", "active", "blocked", "completed"}
 ACTION_TYPES = {"implementation", "validation", "phase_decision", "state_writeback"}
+TASK_STATUS_VALUES = {"in_progress", "awaiting_user_selection", "blocked", "closed"}
 REMOTE_PREFIXES = ("http://", "https://")
 
 WORKSPACE_LAYOUT = {
@@ -29,11 +42,12 @@ WORKSPACE_LAYOUT = {
 }
 
 STAGES: dict[str, dict[str, Any]] = {
-    "research_baseline": {
+    "research": {
         "purpose": "锁定目标意图或目标项目、本地落地目标、来源资产与高信噪比证据入口。",
         "entry_requirements": [
             "明确本轮目标意图、目标项目或目标实现对象。",
             "识别当前应继承的旧资产与本地基线。",
+            "新任务启动前已经通过 task gate，且 task_runtime.yaml 已初始化。",
         ],
         "required_objects": [
             WORKSPACE_LAYOUT["manifest"],
@@ -53,11 +67,12 @@ STAGES: dict[str, dict[str, Any]] = {
             "evidence location 可追溯性",
         ],
     },
-    "architecture_convergence": {
-        "purpose": "把旧资产、外部借鉴与本地约束收敛成单技能多阶段目标形态。",
+    "design": {
+        "purpose": "消费 research 结论，先在 chat 发散方案，再把用户选定的设计收敛成目标形态。",
         "entry_requirements": [
-            "research_baseline 已形成可用 manifest 与 evidence registry。",
-            "已识别需要保留、推翻与升级的旧结论。",
+            "research 已形成可用 manifest 与 evidence registry。",
+            "research 报告已经可引用，且已在 chat 呈现至少 3 种候选方案。",
+            "用户已完成选型或给出自定义方案。",
         ],
         "required_objects": [
             WORKSPACE_LAYOUT["manifest"],
@@ -74,13 +89,13 @@ STAGES: dict[str, dict[str, Any]] = {
         "lint_focus": [
             "decision 引用有效性",
             "target_shape 与 phase_gate 完整性",
-            "前置 research_baseline 状态一致性",
+            "前置 research 状态一致性",
         ],
     },
     "plan": {
         "purpose": "把目标形态拆成最小切片施工合同。",
         "entry_requirements": [
-            "architecture_convergence 已形成有效 decision。",
+            "design 已形成有效 decision。",
             "当前目标形态可映射成离散施工切片。",
         ],
         "required_objects": [
@@ -151,6 +166,8 @@ STAGES: dict[str, dict[str, Any]] = {
 
 
 def runtime_contract_payload() -> dict[str, Any]:
+    managed_root = _managed_root()
+    task_runtime_root = _task_runtime_root()
     return {
         "status": "ok",
         "skill_name": "Functional-Analysis-Runtask",
@@ -163,12 +180,19 @@ def runtime_contract_payload() -> dict[str, Any]:
             "read-path-context",
             "stage-checklist",
             "stage-lint",
+            "task-gate-check",
+            "task-runtime-scaffold",
             "workspace-scaffold",
         ],
         "stage_order": STAGE_ORDER,
         "workspace_layout": WORKSPACE_LAYOUT,
         "layout_rule": "文档链与阶段顺序保持一致；小型对象是真相源，阶段沉淀文档是汇总层。",
         "compiler_rule": "SKILL.md 只暴露 analysis_loop 入口；下游 markdown 通过 reading_chain 编译完整上下文。",
+        "artifact_managed_root": str(managed_root),
+        "task_runtime_root": str(task_runtime_root),
+        "artifact_write_policy": "Task artifacts must first resolve a governed destination through Functional-HumenWorkZone-Manager and must not be written under the skill directory.",
+        "task_runtime_policy": "Each task must create a numbered task_runtime.yaml skeleton under Codex_Skill_Runtime before workspace scaffold. New tasks are blocked until prior task runtimes are fully closed.",
+        "artifact_handoff_commands": HUMENWORKZONE_COMMANDS,
     }
 
 
@@ -313,17 +337,31 @@ def stage_checklist_payload(stage: str) -> dict[str, Any]:
 
 def scaffold_workspace(workspace_root: Path, force: bool = False) -> dict[str, Any]:
     workspace_root = workspace_root.resolve()
+    boundary_error = _workspace_root_boundary_error(workspace_root)
+    if boundary_error is not None:
+        return boundary_error
+    if not workspace_root.exists():
+        gate_payload = task_gate_check_payload()
+        if gate_payload["status"] != "ok":
+            return {
+                "status": "fail",
+                "reason": "unfinished_task_exists",
+                "workspace_root": str(workspace_root),
+                "task_runtime_root": gate_payload["task_runtime_root"],
+                "open_tasks": gate_payload["open_tasks"],
+                "message": "存在未闭合历史任务，禁止创建新 workspace；请先 resume 或 closed 对应 task_runtime.yaml。",
+            }
     manifest = {
         "analysis_id": "fill_me",
         "intent_summary": "fill_me",
         "execution_mode": "continuous",
         "single_stage_focus": None,
-        "current_stage": "research_baseline",
+        "current_stage": "research",
         "source_assets": [],
         "target_scope": {"external_target": "", "local_target": ""},
         "stage_status": {
-            "research_baseline": "in_progress",
-            "architecture_convergence": "pending",
+            "research": "in_progress",
+            "design": "pending",
             "plan": "pending",
             "implementation": "pending",
             "validation": "pending",
@@ -363,6 +401,12 @@ def scaffold_workspace(workspace_root: Path, force: bool = False) -> dict[str, A
 
 def stage_lint_payload(workspace_root: Path, stage: str) -> dict[str, Any]:
     workspace_root = workspace_root.resolve()
+    boundary_error = _workspace_root_boundary_error(workspace_root)
+    if boundary_error is not None:
+        boundary_error["stage"] = stage
+        boundary_error["workspace_root"] = str(workspace_root)
+        boundary_error["checked_files"] = {key: str((workspace_root / value).resolve()) for key, value in WORKSPACE_LAYOUT.items()}
+        return boundary_error
     errors: list[dict[str, str]] = []
     warnings: list[dict[str, str]] = []
     loaded = _load_workspace(workspace_root, errors)
@@ -380,7 +424,7 @@ def stage_lint_payload(workspace_root: Path, stage: str) -> dict[str, Any]:
     source_asset_ids = _validate_manifest(workspace_root, manifest, errors, warnings)
     evidence_ids = _validate_evidence_registry(workspace_root, loaded["evidence_registry"], errors, warnings)
 
-    if stage in {"architecture_convergence", "plan", "implementation", "validation", "all"}:
+    if stage in {"design", "plan", "implementation", "validation", "all"}:
         decision_ids = _validate_architecture_decisions(
             loaded["architecture_decisions"],
             source_asset_ids,
@@ -452,6 +496,145 @@ def _load_workspace(workspace_root: Path, errors: list[dict[str, str]]) -> dict[
     return loaded
 
 
+def _managed_root() -> Path:
+    return Path(__import__("os").environ.get(MANAGED_ROOT_ENV, str(DEFAULT_MANAGED_ROOT))).expanduser().resolve()
+
+
+def _task_runtime_root() -> Path:
+    return Path(__import__("os").environ.get(TASK_RUNTIME_ROOT_ENV, str(DEFAULT_TASK_RUNTIME_ROOT))).expanduser().resolve()
+
+
+def _is_relative_to(path: Path, other: Path) -> bool:
+    try:
+        path.relative_to(other)
+        return True
+    except ValueError:
+        return False
+
+
+def _workspace_root_boundary_error(workspace_root: Path) -> dict[str, Any] | None:
+    managed_root = _managed_root()
+    if _is_relative_to(workspace_root, SKILL_ROOT):
+        return {
+            "status": "fail",
+            "reason": "workspace_root_forbidden_under_skill_root",
+            "workspace_root": str(workspace_root),
+            "managed_root": str(managed_root),
+            "message": "任务产物不得落到 Functional-Analysis-Runtask 技能目录内部；请先通过 Functional-HumenWorkZone-Manager 解析 Human_Work_Zone 受管落点。",
+            "artifact_handoff_commands": HUMENWORKZONE_COMMANDS,
+        }
+    if not _is_relative_to(workspace_root, managed_root):
+        return {
+            "status": "fail",
+            "reason": "workspace_root_must_be_under_managed_root",
+            "workspace_root": str(workspace_root),
+            "managed_root": str(managed_root),
+            "message": "workspace_root 必须位于 Human_Work_Zone 受管根下；请先通过 Functional-HumenWorkZone-Manager 解析目标分区。",
+            "artifact_handoff_commands": HUMENWORKZONE_COMMANDS,
+        }
+    return None
+
+
+def task_gate_check_payload(task_runtime_root: Path | None = None) -> dict[str, Any]:
+    runtime_root = (task_runtime_root or _task_runtime_root()).resolve()
+    open_tasks: list[dict[str, Any]] = []
+    warnings: list[dict[str, Any]] = []
+    if runtime_root.exists():
+        for task_dir in sorted(path for path in runtime_root.iterdir() if path.is_dir()):
+            runtime_file = task_dir / "task_runtime.yaml"
+            if not runtime_file.exists():
+                open_tasks.append(
+                    {
+                        "task_root": str(task_dir),
+                        "reason": "missing_task_runtime_file",
+                        "resume_hint": "补齐 task_runtime.yaml 后再继续。",
+                    }
+                )
+                continue
+            try:
+                payload = yaml.safe_load(runtime_file.read_text(encoding="utf-8"))
+            except yaml.YAMLError as exc:
+                open_tasks.append(
+                    {
+                        "task_root": str(task_dir),
+                        "reason": "task_runtime_yaml_parse_error",
+                        "detail": str(exc),
+                        "resume_hint": "修复 task_runtime.yaml 后再继续。",
+                    }
+                )
+                continue
+            if not isinstance(payload, dict):
+                open_tasks.append(
+                    {
+                        "task_root": str(task_dir),
+                        "reason": "invalid_task_runtime_root_type",
+                        "resume_hint": "task_runtime.yaml 根节点必须是映射。",
+                    }
+                )
+                continue
+            if _task_runtime_is_closed(payload):
+                continue
+            open_tasks.append(
+                {
+                    "task_root": str(task_dir),
+                    "task_id": payload.get("task_id", ""),
+                    "task_status": payload.get("task_status", ""),
+                    "current_stage": payload.get("current_stage", ""),
+                    "current_step": payload.get("current_step", ""),
+                    "ended_stage": payload.get("ended_stage", ""),
+                    "ended_step": payload.get("ended_step", ""),
+                    "resume_hint": payload.get("resume_hint", "继续推进当前 task_runtime.yaml，直至全部阶段完成并 closed。"),
+                }
+            )
+    if not runtime_root.exists():
+        warnings.append({"code": "task_runtime_root_missing", "message": "task runtime root 尚未创建；当前允许启动首个任务。"})
+    return {
+        "status": "ok" if not open_tasks else "fail",
+        "reason": "" if not open_tasks else "unfinished_task_exists",
+        "task_runtime_root": str(runtime_root),
+        "open_tasks": open_tasks,
+        "warnings": warnings,
+    }
+
+
+def task_runtime_scaffold(task_name: str, workspace_root: Path | None = None, force: bool = False) -> dict[str, Any]:
+    runtime_root = _task_runtime_root()
+    if workspace_root is not None:
+        workspace_root = workspace_root.resolve()
+        boundary_error = _workspace_root_boundary_error(workspace_root)
+        if boundary_error is not None:
+            return boundary_error
+    gate_payload = task_gate_check_payload(runtime_root)
+    if gate_payload["status"] != "ok":
+        return gate_payload
+    slug = _slugify(task_name)
+    prefix = _next_numbered_prefix(runtime_root)
+    task_dir = runtime_root / f"{prefix}_{slug}"
+    runtime_file = task_dir / "task_runtime.yaml"
+    if runtime_file.exists() and not force:
+        return {
+            "status": "fail",
+            "reason": "task_runtime_exists",
+            "task_root": str(task_dir),
+            "message": "task_runtime.yaml 已存在；如需覆盖请显式使用 force。",
+        }
+    task_dir.mkdir(parents=True, exist_ok=True)
+    payload = _task_runtime_template(
+        task_id=f"{prefix}_{slug}",
+        task_name=task_name,
+        task_slug=slug,
+        workspace_root=workspace_root,
+    )
+    runtime_file.write_text(yaml.safe_dump(payload, sort_keys=False, allow_unicode=True), encoding="utf-8")
+    return {
+        "status": "ok",
+        "task_root": str(task_dir),
+        "task_runtime_file": str(runtime_file),
+        "task_id": payload["task_id"],
+        "task_runtime_root": str(runtime_root),
+    }
+
+
 def _validate_manifest(
     workspace_root: Path,
     manifest: dict[str, Any],
@@ -518,7 +701,7 @@ def _validate_manifest(
             if resolved is not None and not resolved.exists():
                 _error(errors, "missing_asset_path_target", asset_source, f"source asset 路径不存在：{resolved}")
     if not source_assets:
-        _warning(warnings, "empty_source_assets", source, "source_assets 为空；research_baseline 未完成。")
+        _warning(warnings, "empty_source_assets", source, "source_assets 为空；research 未完成。")
     return source_asset_ids
 
 
@@ -558,7 +741,7 @@ def _validate_evidence_registry(
         if supports is not None and not isinstance(supports, list):
             _error(errors, "invalid_evidence_supports", item_source, "supports 必须是列表。")
     if not evidence_items:
-        _warning(warnings, "empty_evidence_registry", source, "evidence registry 为空；research_baseline 未完成。")
+        _warning(warnings, "empty_evidence_registry", source, "evidence registry 为空；research 未完成。")
     return evidence_ids
 
 
@@ -816,6 +999,72 @@ def _resolve_local_path(raw_path: str, workspace_root: Path) -> Path | None:
     if not path.is_absolute():
         path = workspace_root / path
     return path.resolve()
+
+
+def _task_runtime_is_closed(payload: dict[str, Any]) -> bool:
+    if payload.get("task_status") != "closed":
+        return False
+    if payload.get("ended_stage") != "validation":
+        return False
+    stages = payload.get("stages")
+    if not isinstance(stages, dict):
+        return False
+    for stage in STAGE_ORDER:
+        stage_payload = stages.get(stage)
+        if not isinstance(stage_payload, dict):
+            return False
+        if stage_payload.get("status") != "completed":
+            return False
+    return True
+
+
+def _task_runtime_template(
+    task_id: str,
+    task_name: str,
+    task_slug: str,
+    workspace_root: Path | None,
+) -> dict[str, Any]:
+    timestamp = datetime.now(timezone.utc).isoformat()
+    stages: dict[str, Any] = {}
+    for index, stage in enumerate(STAGE_ORDER):
+        stages[stage] = {
+            "status": "in_progress" if index == 0 else "pending",
+            "checklist": [],
+        }
+    return {
+        "task_id": task_id,
+        "task_name": task_name,
+        "task_slug": task_slug,
+        "task_status": "in_progress",
+        "workspace_root": "" if workspace_root is None else str(workspace_root.resolve()),
+        "created_at": timestamp,
+        "updated_at": timestamp,
+        "current_stage": "research",
+        "current_step": "",
+        "ended_stage": "",
+        "ended_step": "",
+        "ended_reason": "",
+        "resume_hint": "从 current_stage/current_step 指向的位置继续推进。",
+        "stages": stages,
+    }
+
+
+def _slugify(raw: str) -> str:
+    cleaned = re.sub(r"[^a-z0-9]+", "_", raw.strip().lower())
+    cleaned = re.sub(r"_+", "_", cleaned).strip("_")
+    return cleaned or "task"
+
+
+def _next_numbered_prefix(runtime_root: Path) -> str:
+    highest = 0
+    if runtime_root.exists():
+        for item in runtime_root.iterdir():
+            if not item.is_dir():
+                continue
+            match = re.match(r"^(?P<prefix>\d{3})_", item.name)
+            if match:
+                highest = max(highest, int(match.group("prefix")))
+    return f"{highest + 1:03d}"
 
 
 def _error(errors: list[dict[str, str]], code: str, source: str, message: str) -> None:

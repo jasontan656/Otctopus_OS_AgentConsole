@@ -15,12 +15,17 @@ CLI = SKILL_ROOT / "scripts" / "Cli_Toolbox.py"
 
 
 def run_cli(*args: str) -> subprocess.CompletedProcess[str]:
+    return run_cli_with_env(*args)
+
+
+def run_cli_with_env(*args: str, env: dict[str, str] | None = None) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         [sys.executable, str(CLI), *args],
         cwd=SKILL_ROOT,
         check=False,
         capture_output=True,
         text=True,
+        env={**dict(__import__("os").environ), **(env or {})},
     )
 
 
@@ -31,6 +36,8 @@ class CliToolboxRegressionTest(unittest.TestCase):
         payload = json.loads(result.stdout)
         self.assertEqual(payload["skill_mode"], "executable_workflow_skill")
         self.assertIn("stage-lint", payload["commands"])
+        self.assertIn("task-runtime-scaffold", payload["commands"])
+        self.assertEqual(payload["stage_order"], ["research", "design", "plan", "implementation", "validation"])
 
     def test_read_contract_context_can_descend_to_plan(self) -> None:
         result = run_cli("read-contract-context", "--entry", "analysis_loop", "--selection", "plan", "--json")
@@ -41,8 +48,10 @@ class CliToolboxRegressionTest(unittest.TestCase):
 
     def test_workspace_scaffold_and_stage_lint(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
-            workspace_root = Path(tmp_dir)
-            scaffold = run_cli("workspace-scaffold", "--workspace-root", str(workspace_root), "--json")
+            managed_root = Path(tmp_dir) / "Human_Work_Zone"
+            workspace_root = managed_root / "Temporary_Files" / "sample_runtask"
+            env = {"FUNCTIONAL_ANALYSIS_RUNTASK_MANAGED_ROOT": str(managed_root)}
+            scaffold = run_cli_with_env("workspace-scaffold", "--workspace-root", str(workspace_root), "--json", env=env)
             self.assertEqual(scaffold.returncode, 0, scaffold.stderr)
 
             (workspace_root / "sources").mkdir()
@@ -153,10 +162,76 @@ class CliToolboxRegressionTest(unittest.TestCase):
             }
             ledger_path.write_text(yaml.safe_dump(ledger, sort_keys=False, allow_unicode=True), encoding="utf-8")
 
-            result = run_cli("stage-lint", "--workspace-root", str(workspace_root), "--stage", "all", "--json")
+            result = run_cli_with_env("stage-lint", "--workspace-root", str(workspace_root), "--stage", "all", "--json", env=env)
             self.assertEqual(result.returncode, 0, result.stderr)
             payload = json.loads(result.stdout)
             self.assertEqual(payload["status"], "pass")
+
+    def test_workspace_scaffold_rejects_skill_local_path(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            managed_root = Path(tmp_dir) / "Human_Work_Zone"
+            forbidden_root = SKILL_ROOT / "tmp_artifacts"
+            result = run_cli_with_env(
+                "workspace-scaffold",
+                "--workspace-root",
+                str(forbidden_root),
+                "--json",
+                env={"FUNCTIONAL_ANALYSIS_RUNTASK_MANAGED_ROOT": str(managed_root)},
+            )
+            self.assertNotEqual(result.returncode, 0)
+            payload = json.loads(result.stdout)
+            self.assertEqual(payload["reason"], "workspace_root_forbidden_under_skill_root")
+
+    def test_task_runtime_scaffold_blocks_new_task_until_previous_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            managed_root = Path(tmp_dir) / "Human_Work_Zone"
+            runtime_root = Path(tmp_dir) / "Codex_Skill_Runtime" / "Functional-Analysis-Runtask"
+            env = {
+                "FUNCTIONAL_ANALYSIS_RUNTASK_MANAGED_ROOT": str(managed_root),
+                "FUNCTIONAL_ANALYSIS_RUNTASK_TASK_RUNTIME_ROOT": str(runtime_root),
+            }
+            workspace_root = managed_root / "Temporary_Files" / "sample_task"
+
+            first = run_cli_with_env(
+                "task-runtime-scaffold",
+                "--task-name",
+                "sample task",
+                "--workspace-root",
+                str(workspace_root),
+                "--json",
+                env=env,
+            )
+            self.assertEqual(first.returncode, 0, first.stderr)
+            first_payload = json.loads(first.stdout)
+            runtime_file = Path(first_payload["task_runtime_file"])
+            self.assertTrue(runtime_file.exists())
+
+            gate = run_cli_with_env("task-gate-check", "--json", env=env)
+            self.assertNotEqual(gate.returncode, 0)
+            gate_payload = json.loads(gate.stdout)
+            self.assertEqual(gate_payload["reason"], "unfinished_task_exists")
+            self.assertEqual(len(gate_payload["open_tasks"]), 1)
+
+            payload = yaml.safe_load(runtime_file.read_text(encoding="utf-8"))
+            payload["task_status"] = "closed"
+            payload["current_stage"] = "validation"
+            payload["ended_stage"] = "validation"
+            payload["ended_step"] = "final_validation"
+            payload["ended_reason"] = "completed"
+            for stage in payload["stages"].values():
+                stage["status"] = "completed"
+            runtime_file.write_text(yaml.safe_dump(payload, sort_keys=False, allow_unicode=True), encoding="utf-8")
+
+            second = run_cli_with_env(
+                "task-runtime-scaffold",
+                "--task-name",
+                "follow up task",
+                "--workspace-root",
+                str(managed_root / "Temporary_Files" / "follow_up_task"),
+                "--json",
+                env=env,
+            )
+            self.assertEqual(second.returncode, 0, second.stderr)
 
 
 if __name__ == "__main__":

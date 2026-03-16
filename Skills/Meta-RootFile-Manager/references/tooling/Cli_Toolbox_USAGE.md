@@ -14,6 +14,7 @@ anchors:
 ## Commands
 - `./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py contract --json`
 - `./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py scaffold`
+- `./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py agents-maintain --intent "<natural language request>" --json`
 - `./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py scan`
 - `./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py lint`
 - `./.venv_backend_skills/bin/python Skills/Meta-RootFile-Manager/scripts/Cli_Toolbox.py collect`
@@ -38,6 +39,8 @@ anchors:
 - `collect` treats external files as the source of truth, creates or refreshes the `治理映射模版`, and syncs mirror plus installed skill assets.
 - `push` treats the `治理映射模版` as the source of truth and overwrites external targets.
 - `target-contract`, `scan`, `collect`, `push`, and `scaffold` all surface a path-derived `owner`.
-- `agents-payload-contract` is the mandatory entry for governed `AGENTS_machine.json` payload edits; it returns the target-specific `$Meta-Enhance-Prompt -> payload writeback -> collect -> lint` workflow.
+- `agents-maintain` is the daily AGENTS maintenance entry; it accepts a natural-language request, ranks governed AGENTS targets, chooses `Part A` or embedded payload placement, updates the internal truth source, centered-pushes external `Part A`, and lints.
+- `agents-payload-contract` remains available only for payload-only surgery when the caller already knows the exact governed target and exact embedded payload scope.
+- For `AGENTS.md`, `collect` is no longer part of the normal daily maintenance loop; keep it for reverse-sync or recovery only.
 - If the managed content is json, `owner` is embedded into that json.
 - If the managed content is not json, `owner` is embedded through frontmatter in the same managed file.

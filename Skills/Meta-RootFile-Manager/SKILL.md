@@ -28,6 +28,7 @@ metadata:
 - 本技能提供可执行 CLI：
   - `contract`
   - `scaffold`
+  - `agents-maintain`
   - `new-writeback`
   - `scan`
   - `lint`
@@ -74,8 +75,12 @@ metadata:
 - `scaffold`
   - 说明：在外部目标目录创建第一版 root file，并同时创建技能内治理映射。
   - 阅读入口：`references/runtime_contracts/SCAFFOLD_STAGE_CONTRACT.md`
+- `agents-maintain`
+  - 说明：AGENTS 日常维护的唯一稳定统一入口；接收自然语言请求，自动完成 governed target ranking、placement gate、内部真源写入、centered push 与 lint。
+  - 强制主链：`自然语言意图 -> target ranking -> part classification -> ancestor/duplicate gate -> update AGENTS_human.md -> push -> lint`
+  - 阅读入口：`references/runtime_contracts/AGENTS_GOVERNANCE_ENTRY.md`
 - `new-writeback`
-  - 说明：由 agent 按用户需求回填 scaffold 生成的 `AGENTS.md + AGENTS_machine.json`，并要求不再残留 `replace_me`。
+  - 说明：由 agent 按用户需求回填 scaffold 生成的 `AGENTS.md + AGENTS_human.md`，并要求不再残留 `replace_me`。
   - 阅读入口：`references/runtime_contracts/NEW_WRITEBACK_STAGE_CONTRACT.md`
 - `scan`
   - 说明：按 channel 注册表发现当前已经受管的外部目标。
@@ -83,13 +88,14 @@ metadata:
 - `collect`
   - 说明：把外部真源回收覆盖到技能内部映射版本。
   - 额外规则：在写入 managed mirror 或 installed copy 之前必须先比对内容；一致则跳过，避免制造无意义 git 脏改。
+  - 当前定位：对 `AGENTS.md` 仅保留 reverse-sync / external recovery 语义，不再属于日常维护主链。
   - 阅读入口：`references/runtime_contracts/COLLECT_STAGE_CONTRACT.md`
 - `push`
   - 说明：把技能内部映射版本覆盖回外部目标。
   - 阅读入口：`references/runtime_contracts/PUSH_STAGE_CONTRACT.md`
 - `agents-payload-contract`
-  - 说明：治理 `AGENTS_machine.json` payload 的专用入口合同。
-  - 强制工作流：`$Meta-Enhance-Prompt 提取用户意图 -> 压缩为最小精确语义 -> 回写 AGENTS_machine.json -> collect 重渲染 AGENTS_human.md -> lint`
+  - 说明：治理 `AGENTS_human.md` 内嵌 `Part B` payload 的窄域入口合同；仅用于 payload-only surgery，不再是日常 AGENTS 维护主入口。
+  - 强制工作流：`$Meta-Enhance-Prompt 提取用户意图 -> 压缩为最小精确语义 -> 回写 AGENTS_human.md 的 embedded payload -> lint`
   - 强门禁：上一级 `AGENTS.md` 与其 payload 已出现的语义，不得在下一级 `AGENTS` surface 中重复；`lint` 必须拦截这类父子重复，技能名条目除外。
   - 固定例外：`execution_modes.WRITE_EXEC` 的标准固定提醒允许在各级 payload 中重复，且 `lint` 必须赦免这条刻意重复。
   - 阅读入口：`references/runtime_contracts/AGENTS_GOVERNANCE_ENTRY.md`
@@ -112,9 +118,10 @@ metadata:
 - 动态 governed target 发现必须来自受管 mirror 资产树与 runtime-local managed assets，不得继续回写到 `rules/scan_rules.json`。
 - 非 `AGENTS.md` 文件的技能内映射文件不得与外部真实文件同名。
 - `target-contract`、`scan`、`collect`、`push`、`scaffold` 的输出都必须暴露 `owner`。
-- `AGENTS_machine.json` payload 变更不得绕过 `agents-payload-contract` 入口合同。
+- 正常 AGENTS 维护必须走 `agents-maintain`；`agents-payload-contract` 仅保留为 payload-only surgery 入口。
 - 上一级 `AGENTS.md` 与其 payload 已声明的语义，不得在下一级 `AGENTS` surface 中重复；`lint` 必须以强门禁拦截父子重复，技能条目是唯一例外。
-- `collect` 必须以外部源为真源覆盖技能内映射。
+- `lint` 还必须拦截 repo-tracked 孤儿 AGENTS 映射、installed managed targets drift 与 runtime legacy sidecar 残留，避免旧形态静默回流。
+- `collect` 对 `AGENTS.md` 不再属于日常维护闭环；只保留 reverse-sync / recovery 语义。
 - `push` 必须以技能内映射为真源覆盖外部目标。
 - runtime 日志、latest 结果、临时镜像与其他临时/缓存产物必须落在 `Codex_Skill_Runtime/<skill>/...`，不得回写到技能目录。
 - workspace 外部源路径或临时工作区源路径必须按 runtime-local 处理，不得在 repo-tracked `assets/managed_targets/...` 下生成临时目录。

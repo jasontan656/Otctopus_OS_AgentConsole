@@ -12,6 +12,8 @@ from runtask_workflow_runtime import (
     scaffold_workspace,
     stage_checklist_payload,
     stage_lint_payload,
+    task_gate_check_payload,
+    task_runtime_scaffold,
 )
 
 
@@ -45,6 +47,15 @@ def cmd_stage_lint(args: argparse.Namespace) -> int:
     return emit(stage_lint_payload(Path(args.workspace_root), args.stage), args.json)
 
 
+def cmd_task_gate_check(args: argparse.Namespace) -> int:
+    return emit(task_gate_check_payload(), args.json)
+
+
+def cmd_task_runtime_scaffold(args: argparse.Namespace) -> int:
+    workspace_root = Path(args.workspace_root) if args.workspace_root else None
+    return emit(task_runtime_scaffold(args.task_name, workspace_root=workspace_root, force=args.force), args.json)
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="CLI toolbox for Functional-Analysis-Runtask.")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -70,6 +81,17 @@ def build_parser() -> argparse.ArgumentParser:
     workspace_scaffold.add_argument("--force", action="store_true")
     workspace_scaffold.add_argument("--json", action="store_true")
     workspace_scaffold.set_defaults(func=cmd_workspace_scaffold)
+
+    task_gate = subparsers.add_parser("task-gate-check")
+    task_gate.add_argument("--json", action="store_true")
+    task_gate.set_defaults(func=cmd_task_gate_check)
+
+    task_runtime = subparsers.add_parser("task-runtime-scaffold")
+    task_runtime.add_argument("--task-name", required=True)
+    task_runtime.add_argument("--workspace-root")
+    task_runtime.add_argument("--force", action="store_true")
+    task_runtime.add_argument("--json", action="store_true")
+    task_runtime.set_defaults(func=cmd_task_runtime_scaffold)
 
     stage_lint = subparsers.add_parser("stage-lint")
     stage_lint.add_argument("--workspace-root", required=True)

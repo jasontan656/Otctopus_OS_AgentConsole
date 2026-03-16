@@ -1,4 +1,4 @@
 interface:
   display_name: "Functional-Analysis-Runtask"
   short_description: "围绕明确目标意图或目标项目做分析、方案收敛、最小切片施工规划与实施验证证据沉淀的单技能多阶段 workflow。"
-  default_prompt: "当任务需要在同一技能内接收一个明确目标意图或目标项目，完成分析、架构收敛、plan 切片化、implementation 证据写回与 validation 收口时使用 `Functional-Analysis-Runtask`。默认按“research_baseline -> architecture_convergence -> plan -> implementation -> validation”执行；若只需单阶段，也在同一技能内进入对应阶段入口。若需要写入 `Human_Work_Zone`，继续联动 `Functional-HumenWorkZone-Manager` 负责命名、落盘、归档与 README 治理。"
+  default_prompt: "当任务需要在同一技能内接收一个明确目标意图或目标项目，完成 research、design、plan 切片化、implementation 证据写回与 validation 收口时使用 `Functional-Analysis-Runtask`。默认按“research -> design -> plan -> implementation -> validation”执行；若只需单阶段，也在同一技能内进入对应阶段入口。design 阶段必须先消费 research 结论并结合 `Functional-BrainStorm` 在 chat 输出至少 3 种方案，再等待用户选型后写回。任何调研报告、计划文档、阶段沉淀文档与类似任务产物都必须先联动 `Functional-HumenWorkZone-Manager` 解析 `Human_Work_Zone` 受管路径，禁止直接落到技能目录内部。"

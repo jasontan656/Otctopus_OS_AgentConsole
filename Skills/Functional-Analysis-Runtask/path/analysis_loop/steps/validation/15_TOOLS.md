@@ -14,6 +14,7 @@ reading_chain:
 - `python3 ./scripts/Cli_Toolbox.py stage-checklist --stage validation --json`
 - `python3 ./scripts/Cli_Toolbox.py stage-lint --workspace-root <path> --stage validation --json`
 - `python3 ./scripts/Cli_Toolbox.py stage-lint --workspace-root <path> --stage all --json`
+- `python3 ./scripts/Cli_Toolbox.py task-gate-check --json`
 
 ## 下一跳列表
 - [validation]：`30_VALIDATION.md`
