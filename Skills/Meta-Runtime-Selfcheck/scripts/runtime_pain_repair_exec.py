@@ -27,6 +27,11 @@ _LEGACY_SED_SUFFIX_ALIASES = (
     ("/postrun/errors.json", "/postrun_manifest.json"),
     ("/constitution_lint_rules/governance_rules.py", "/constitution_lint_rules/registry.py"),
 )
+_HELP_INTROSPECTION_SCRIPT_ALLOWLIST = {
+    "Cli_Toolbox.py",
+    "meta_github_operation_family.py",
+    "runtime_pain_batch.py",
+}
 _MIRROR_DIR_ALIASES = ("Otctopus_OS_AgentConsole", "Codex_Skills_Mirror")
 _PATH_RESOLUTION_EXCEPTIONS = (OSError, RuntimeError, ValueError)
 _SUBPROCESS_EXECUTION_EXCEPTIONS = (OSError, ValueError, subprocess.SubprocessError)
@@ -197,6 +202,96 @@ def _extract_flag_value(tokens: list[str], flag: str) -> str:
         if value.partition("=")[0] == flag and "=" in value:
             return value.partition("=")[2].strip()
     return ""
+
+
+def _token_flag_names(tokens: list[str]) -> list[str]:
+    flags: list[str] = []
+    for token in tokens:
+        value = str(token or "").strip()
+        if not value.startswith("--"):
+            continue
+        if value == "--":
+            continue
+        flags.append(value.partition("=")[0])
+    return flags
+
+
+def _help_output(python_exec: str, script_path: Path, extra_args: list[str], *, workdir: str | None) -> str:
+    try:
+        proc = subprocess.run(
+            [python_exec, str(script_path), *extra_args, "--help"],
+            capture_output=True,
+            text=True,
+            cwd=workdir,
+            timeout=5,
+        )
+    except _SUBPROCESS_EXECUTION_EXCEPTIONS:
+        return ""
+    if proc.returncode != 0 and not (proc.stdout or proc.stderr):
+        return ""
+    return f"{proc.stdout or ''}\n{proc.stderr or ''}".strip()
+
+
+def _extract_help_flags(help_text: str) -> set[str]:
+    return {match.group(1) for match in re.finditer(r"(--[A-Za-z0-9][A-Za-z0-9-]*)", help_text)}
+
+
+def _extract_help_subcommands(help_text: str) -> set[str]:
+    names: set[str] = set()
+    for raw_line in help_text.splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("-") or line.lower().startswith(("usage:", "options:", "arguments:")):
+            continue
+        first = line.split()[0]
+        if re.fullmatch(r"[A-Za-z][A-Za-z0-9_-]*", first):
+            names.add(first)
+    return names
+
+
+def _preflight_python_cli_semantics(
+    *,
+    tokens: list[str],
+    workdir: str | None,
+    resolved_script: Path,
+) -> tuple[bool, str, str]:
+    if resolved_script.name not in _HELP_INTROSPECTION_SCRIPT_ALLOWLIST:
+        return True, "", ""
+    python_exec = str(tokens[0] or "").strip()
+    root_help = _help_output(python_exec, resolved_script, [], workdir=workdir)
+    if not root_help:
+        return True, "", ""
+
+    subcommand = str(tokens[2] if len(tokens) > 2 else "").strip()
+    remaining_tokens = tokens[2:]
+    help_tokens = remaining_tokens
+    if subcommand and not subcommand.startswith("-"):
+        known_subcommands = _extract_help_subcommands(root_help)
+        if known_subcommands and subcommand not in known_subcommands:
+            return (
+                False,
+                "preflight_unknown_subcommand",
+                f"python CLI subcommand is not supported: {subcommand}",
+            )
+        sub_help = _help_output(python_exec, resolved_script, [subcommand], workdir=workdir)
+        help_tokens = tokens[3:]
+        if sub_help:
+            help_flags = _extract_help_flags(sub_help)
+            used_flags = _token_flag_names(help_tokens)
+            unknown_flag = next((flag for flag in used_flags if flag not in help_flags and flag != "--help"), "")
+            if unknown_flag:
+                return (
+                    False,
+                    "preflight_unknown_option",
+                    f"python CLI option is not supported: {unknown_flag}",
+                )
+        return True, "", ""
+
+    help_flags = _extract_help_flags(root_help)
+    used_flags = _token_flag_names(help_tokens)
+    unknown_flag = next((flag for flag in used_flags if flag not in help_flags and flag != "--help"), "")
+    if unknown_flag:
+        return False, "preflight_unknown_option", f"python CLI option is not supported: {unknown_flag}"
+    return True, "", ""
 
 
 def _suggest_legacy_sed_target(resolved_target: Path) -> Path | None:
@@ -384,6 +479,14 @@ def _preflight_python(tokens: list[str], workdir: str | None) -> tuple[bool, str
             f"python --task-context path does not exist: {resolved_task_context}",
         )
 
+    cli_semantic_ok, cli_reason, cli_detail = _preflight_python_cli_semantics(
+        tokens=tokens,
+        workdir=workdir,
+        resolved_script=resolved_script,
+    )
+    if not cli_semantic_ok:
+        return cli_semantic_ok, cli_reason, cli_detail
+
     if resolved_script.name != "meta_github_operation_family.py":
         handler = _PYTHON_SCRIPT_PREFLIGHT_HANDLERS.get(resolved_script.name, _preflight_python_passthrough)
         return handler(tokens, workdir)
@@ -453,6 +556,7 @@ def _preflight_segment(*, segment: str, workdir: str | None) -> tuple[bool, str,
         return False, "preflight_empty_command", "command has no executable token"
 
     executable = str(tokens[0] or "").strip().lower()
+    executable_name = Path(executable).name.lower()
     handlers = {
         "sed": _preflight_sed,
         "ls": _preflight_ls,
@@ -461,7 +565,7 @@ def _preflight_segment(*, segment: str, workdir: str | None) -> tuple[bool, str,
         "python3": _preflight_python,
         "git": _preflight_git,
     }
-    handler = handlers.get(executable)
+    handler = handlers.get(executable) or handlers.get(executable_name)
     if handler is None:
         return True, "", ""
     return handler(tokens, workdir)

@@ -21,6 +21,10 @@ class RuntimePainEvent(TypedDict, total=False):
     title: str
     tool_name: str
     why: str
+    owner_surface: str
+    canonical_fix_surface: str
+    repair_boundary: str
+    evidence_route: str
 
 
 class RuntimePainGroup(TypedDict, total=False):
@@ -97,9 +101,28 @@ class CommandExecutionResult(TypedDict, total=False):
     preflight_reason_codes: list[str]
 
 
+class AutoRepairRecord(TypedDict, total=False):
+    optimization_id: str
+    repair_type: str
+    command: str
+
+
+class TurnAuditCloseout(TypedDict, total=False):
+    required: bool
+    ran_at: str
+    status: str
+
+
+class TurnGroupSummary(TypedDict, total=False):
+    group_count: int
+    pending_group_count: int
+    resolved_group_count: int
+
+
 class RuntimePainBatchPayload(TypedDict, total=False):
     queue_summary: dict[str, object]
     group_summary: dict[str, object]
+    source_mode: str
 
 
 class RuntimePainBatchOutput(TypedDict, total=False):
@@ -114,6 +137,105 @@ class ObservabilityLogResult(TypedDict, total=False):
     human_log_path: str
     human_renderer: str
     error: str
+
+
+class WatcherState(TypedDict):
+    schema_version: str
+    codex_home: str
+    updated_at: str
+    file_cursors: dict[str, str]
+
+
+class TurnHookAudit(TypedDict, total=False):
+    schema_version: str
+    session_id: str
+    turn_id: str
+    session_file: str
+    started_at: str
+    completed_at: str
+    hook_mode: str
+    hook_status: str
+    source_mode: str
+    cwd: str
+    user_message: str
+    issues_detected: int
+    pending_issues: int
+    resolved_optimization_ids: list[str]
+    group_count: int
+    groups: list[RuntimePainGroup]
+    auto_repairs: list[AutoRepairRecord]
+    repair_execution_v1: CommandExecutionResult
+    residual_risks: list[str]
+    turn_audit_closeout: TurnAuditCloseout
+    audit_recorded_at: str
+
+
+class TurnHookResult(TypedDict, total=False):
+    status: str
+    hook_mode: str
+    turn_hook_status: str
+    session_id: str
+    turn_id: str
+    issues_detected: int
+    pending_issues: int
+    resolved_optimization_ids: list[str]
+    turn_audit_path: str
+    group_summary: TurnGroupSummary
+    source_mode: str
+    auto_repairs: list[AutoRepairRecord]
+    repair_execution_v1: CommandExecutionResult
+
+
+class WatchSessionsResult(TypedDict, total=False):
+    status: str
+    codex_home: str
+    processed_files: int
+    processed_turns: list[TurnHookResult]
+    watcher_state_json: str
+
+
+class SessionExecEvent(TypedDict, total=False):
+    session_id: str
+    turn_id: str
+    timestamp: str
+    session_file: str
+    citation: str
+    cwd: str
+    tool_name: str
+    call_id: str
+    raw_input: str
+    command_preview: str
+    command_signature: str
+    trigger_script: str
+    trigger_node: str
+    output_preview: str
+    output_raw: str
+    status: str
+    exit_code: int
+
+
+class TurnEvidence(TypedDict, total=False):
+    session_id: str
+    turn_id: str
+    session_file: str
+    started_at: str
+    completed_at: str
+    cwd: str
+    user_message: str
+    assistant_messages: list[str]
+    tool_events: list[SessionExecEvent]
+    final_reply: str
+    status: str
+
+
+class SessionFallbackQueue(TypedDict, total=False):
+    source_mode: str
+    total_items: int
+    pending_items: int
+    resolved_items: int
+    session_scope_mode: str
+    thread_id: str
+    items: list[dict[str, object]]
 
 
 class FocusGroupSummary(TypedDict, total=False):

@@ -6,6 +6,12 @@ import json
 from pathlib import Path
 from typing import Any
 
+from runtime_selfcheck_store import ensure_store_exists
+from runtime_selfcheck_store import load_turn_audit
+from runtime_selfcheck_store import turn_audit_json_path
+from runtime_selfcheck_store import watcher_state_json_path
+from runtime_selfcheck_turn_hook import run_turn_hook
+from runtime_selfcheck_turn_hook import watch_codex_sessions
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 SKILL_ROOT = SCRIPT_DIR.parent
@@ -98,6 +104,7 @@ def _command_directive(args: argparse.Namespace) -> int:
 
 
 def _command_paths(args: argparse.Namespace) -> int:
+    ensure_store_exists()
     payload = {
         "skill_name": SKILL_NAME,
         "resolved_paths": {
@@ -107,13 +114,45 @@ def _command_paths(args: argparse.Namespace) -> int:
             "runtime_root": str(RUNTIME_ROOT),
             "result_root": str(RESULT_ROOT),
             "default_history_path": str(DEFAULT_HISTORY_PATH),
+            "watcher_state_json": str(watcher_state_json_path()),
+            "session_turn_audits_root": str((RUNTIME_ROOT / "sessions").resolve()),
         },
         "environment_variables": {
-            "CODEX_RUNTIME_PAIN_PROVIDER": "Required unless --memory-runtime is passed.",
-            "CODEX_HOME": "Optional override for history.jsonl discovery.",
+            "CODEX_RUNTIME_PAIN_PROVIDER": "Optional. If absent, runtime selfcheck falls back to Codex session evidence.",
+            "CODEX_HOME": "Optional override for history.jsonl discovery and session-stream watcher commands.",
             "CODEX_SKILL_RUNTIME_ROOT": "Optional override for runtime log base root.",
         },
     }
+    return _emit(payload, args.json)
+
+
+def _command_run_turn_hook(args: argparse.Namespace) -> int:
+    payload = run_turn_hook(
+        codex_home_override=args.codex_home,
+        session_id=args.session_id,
+        turn_id=args.turn_id,
+        mode=args.mode,
+        auto_repair=bool(args.auto_repair),
+        auto_repair_limit=args.auto_repair_limit,
+    )
+    return _emit(payload, args.json)
+
+
+def _command_watch_codex_sessions(args: argparse.Namespace) -> int:
+    payload = watch_codex_sessions(
+        codex_home_override=args.codex_home,
+        poll_interval_ms=args.poll_interval_ms,
+        idle_exit_seconds=args.idle_exit_seconds,
+        once=args.once,
+        session_id_filter=args.session_id,
+    )
+    return _emit(payload, args.json)
+
+
+def _command_show_turn_audit(args: argparse.Namespace) -> int:
+    ensure_store_exists()
+    payload = load_turn_audit(args.session_id, args.turn_id)
+    payload["turn_audit_path"] = str(turn_audit_json_path(args.session_id, args.turn_id))
     return _emit(payload, args.json)
 
 
@@ -137,6 +176,34 @@ def build_parser() -> argparse.ArgumentParser:
     paths_parser = subparsers.add_parser("paths", help="Resolve governed runtime and result paths")
     paths_parser.add_argument("--json", action="store_true", help="Emit structured JSON")
     paths_parser.set_defaults(func=_command_paths)
+
+    hook_parser = subparsers.add_parser(
+        "run-turn-hook",
+        help="Run the governed turn hook against the latest or targeted Codex turn and persist a turn audit",
+    )
+    hook_parser.add_argument("--codex-home", help="Override Codex home; defaults to workspace/.codex, $CODEX_HOME, or ~/.codex")
+    hook_parser.add_argument("--session-id", help="Optional session id filter")
+    hook_parser.add_argument("--turn-id", help="Optional turn id filter")
+    hook_parser.add_argument("--mode", choices=["diagnose", "repair"], default="diagnose")
+    hook_parser.add_argument("--auto-repair", action=argparse.BooleanOptionalAction, default=False)
+    hook_parser.add_argument("--auto-repair-limit", type=int, default=3)
+    hook_parser.add_argument("--json", action="store_true", help="Emit structured JSON")
+    hook_parser.set_defaults(func=_command_run_turn_hook)
+
+    watch_parser = subparsers.add_parser("watch-codex-sessions", help="Watch Codex session logs and auto-emit selfcheck turn audits")
+    watch_parser.add_argument("--codex-home", help="Override Codex home; defaults to workspace/.codex, $CODEX_HOME, or ~/.codex")
+    watch_parser.add_argument("--poll-interval-ms", type=int, default=500, help="Polling interval for session log scan")
+    watch_parser.add_argument("--idle-exit-seconds", type=float, help="Exit after idle time with no new session events")
+    watch_parser.add_argument("--once", action="store_true", help="Scan available session logs once and exit")
+    watch_parser.add_argument("--session-id", help="Optional session id filter")
+    watch_parser.add_argument("--json", action="store_true", help="Emit structured JSON")
+    watch_parser.set_defaults(func=_command_watch_codex_sessions)
+
+    turn_audit_parser = subparsers.add_parser("show-turn-audit", help="Read a persisted turn audit payload")
+    turn_audit_parser.add_argument("--session-id", required=True, help="Codex session id")
+    turn_audit_parser.add_argument("--turn-id", required=True, help="Codex turn id")
+    turn_audit_parser.add_argument("--json", action="store_true", help="Emit structured JSON")
+    turn_audit_parser.set_defaults(func=_command_show_turn_audit)
     return parser
 
 

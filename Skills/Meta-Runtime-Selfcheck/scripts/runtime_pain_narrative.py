@@ -44,6 +44,21 @@ def _root_cause_hypotheses(
 ) -> list[dict[str, str]]:
     hypotheses: list[dict[str, str]] = []
     kind_hypotheses = {
+        "wrong_runtime_surface": (
+            "运行入口落在错误 runtime surface（如安装副本），导致脚本无法解析产品根或工作面。",
+            "high",
+            "kind 命中 wrong_runtime_surface。",
+        ),
+        "cli_semantic_mismatch": (
+            "CLI facade 与实际 parser 语义不一致，缺少事前 subcommand/option 预判。",
+            "high",
+            "kind 命中 cli_semantic_mismatch。",
+        ),
+        "path_misuse": (
+            "路径、repo root 或工作目录校验不完整，错误目录被当成可执行目标。",
+            "medium",
+            "kind 命中 path_misuse。",
+        ),
         "trial_and_error_loop": (
             "同一节点缺少决策阈值与退出条件，导致反复试错。",
             "high",
@@ -108,6 +123,9 @@ def _action_plan(
     script_hint = trigger_scripts[0] if trigger_scripts else "目标触发脚本"
     guard_step = "在触发前增加输入校验与环境预检，失败立即分流"
     guard_step_by_kind = {
+        "wrong_runtime_surface": "把命令面强制重写到 repo truth source，并阻断安装副本路径继续执行",
+        "cli_semantic_mismatch": "在执行前做 help-introspection 语义预检，提前阻断无效 subcommand/option",
+        "path_misuse": "在执行前解析 canonical workdir/repo root，并阻断非仓库容器路径",
         "trial_and_error_loop": "加入重试上限、超时与停止条件，避免同路径反复试错",
         "phase_incomplete": "补齐阶段完成门禁，未满足验收则禁止流转下一阶段",
     }

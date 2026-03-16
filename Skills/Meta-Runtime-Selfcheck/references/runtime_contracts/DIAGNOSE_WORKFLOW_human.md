@@ -32,24 +32,28 @@ anchors:
 ```json
 {
   "directive_name": "meta_runtime_selfcheck_turn_hook_self_repair",
-  "directive_version": "2.0.0",
+  "directive_version": "2.1.0",
   "doc_kind": "workflow",
   "topic": "turn-hook-self-repair",
   "purpose": "Run a default turn hook throughout the active turn; when issue evidence appears, diagnose it immediately and start repair before continuing the main task.",
   "instruction": [
     "Enter this workflow as soon as issue evidence appears anywhere in the active turn, and run a final closure pass before the final reply.",
+    "Use run-turn-hook or watch-codex-sessions as the technical carrier so the hook really runs and leaves turn-audit evidence.",
     "Treat the current turn's tool runs, failures, retries, user corrections, path mistakes, and hesitation as first-class evidence.",
-    "When the issue is concrete, local, and verifiable, do not stop at diagnosis; move directly into repair."
+    "When the issue is concrete, local, and verifiable, do not stop at diagnosis; move directly into bounded repair."
   ],
   "workflow": [
-    "Check whether the current turn has any tool failure, script failure, path misuse, repeated retry, user correction caused by misunderstanding, or obvious hesitation.",
+    "Check whether the current turn has any tool failure, script failure, path misuse, CLI semantic mismatch, repeated retry, user correction caused by misunderstanding, or obvious hesitation.",
     "If none are present, keep the hook quiet and continue the main task.",
+    "If CODEX_RUNTIME_PAIN_PROVIDER is absent, fall back to Codex session turn evidence instead of exiting with configuration error.",
     "If issues are present, classify them into: immediately repairable in this turn, not-yet-verifiable but still strengthenable, and residual risks that must be disclosed.",
-    "When a bounded fix is safe and within the active repo boundary, repair first and collect verification evidence before continuing.",
+    "When a bounded fix is safe and within the active repo boundary, repair first, collect verification evidence, and mark the turn audit with resolved optimization ids before continuing.",
     "Do not downgrade directly into advice when a local repair exists; only retain residual risk after the minimal correct repair has been applied."
   ],
   "issue_checklist": [
     "Tool command failed due to wrong path, wrong working directory, wrong entrypoint, or missing governed environment",
+    "CLI subcommand/option was invalid but the failure was only discovered after execution, revealing a preflight gap",
+    "Installed skill copy or non-canonical runtime surface was used instead of repo truth source",
     "The model hesitated, looped, retried blindly, or explored too many branches before converging",
     "The user had to correct intent, terminology, path, trigger wording, or missing assumptions",
     "A skill description, routing rule, trigger phrase, or default prompt caused confusion",

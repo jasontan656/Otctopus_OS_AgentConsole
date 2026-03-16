@@ -12,6 +12,7 @@ SKILL_ROOT = Path(__file__).resolve().parents[1]
 TOOLBOX = SKILL_ROOT / "scripts" / "Cli_Toolbox.py"
 BATCH_SCRIPT = SKILL_ROOT / "scripts" / "runtime_pain_batch.py"
 SCRIPTS_ROOT = SKILL_ROOT / "scripts"
+VENV_PYTHON = Path("/home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python")
 
 
 class TestMetaRuntimeSelfcheckSmoke:
@@ -32,20 +33,85 @@ class TestMetaRuntimeSelfcheckSmoke:
             env=merged_env,
         )
 
+    def make_codex_home(self, tmp_path: Path, *, command: str, output: str) -> Path:
+        codex_home = tmp_path / ".codex"
+        session_path = codex_home / "sessions" / "2026" / "03" / "17"
+        session_path.mkdir(parents=True, exist_ok=True)
+        session_file = session_path / "rollout-2026-03-17T00-08-52-019cf768-47cc-7882-bf9c-9d267e78188e.jsonl"
+        entries = [
+            {
+                "timestamp": "2026-03-17T00:08:52.452Z",
+                "type": "session_meta",
+                "payload": {"cwd": "/home/jasontan656/AI_Projects"},
+            },
+            {
+                "timestamp": "2026-03-17T00:08:53.000Z",
+                "type": "event_msg",
+                "payload": {"type": "task_started", "turn_id": "turn-001"},
+            },
+            {
+                "timestamp": "2026-03-17T00:08:53.500Z",
+                "type": "event_msg",
+                "payload": {"type": "user_message", "message": "test runtime selfcheck"},
+            },
+            {
+                "timestamp": "2026-03-17T00:08:54.000Z",
+                "type": "response_item",
+                "payload": {
+                    "type": "function_call",
+                    "name": "exec_command",
+                    "call_id": "call-001",
+                    "arguments": json.dumps({"cmd": command}, ensure_ascii=False),
+                },
+            },
+            {
+                "timestamp": "2026-03-17T00:08:55.000Z",
+                "type": "response_item",
+                "payload": {
+                    "type": "function_call_output",
+                    "call_id": "call-001",
+                    "output": output,
+                },
+            },
+            {
+                "timestamp": "2026-03-17T00:08:56.000Z",
+                "type": "event_msg",
+                "payload": {"type": "task_complete", "turn_id": "turn-001", "last_agent_message": "done"},
+            },
+        ]
+        session_file.write_text("".join(json.dumps(row, ensure_ascii=False) + "\n" for row in entries), encoding="utf-8")
+        return codex_home
+
     def test_runtime_pain_batch_help_starts(self) -> None:
         result = self.run_python(BATCH_SCRIPT, "--help")
         assert result.returncode == 0, result.stderr
         assert "Turn hook runtime self-repair" in result.stdout
         assert "--memory-runtime" in result.stdout
 
-    def test_runtime_pain_batch_reports_missing_provider_as_json(self) -> None:
-        env = dict(os.environ)
-        env.pop("CODEX_RUNTIME_PAIN_PROVIDER", None)
-        result = self.run_python(BATCH_SCRIPT, ">", env=env)
-        assert result.returncode == 1
+    def test_runtime_pain_batch_falls_back_to_session_evidence(self, tmp_path: Path) -> None:
+        command = (
+            "/home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python "
+            "/home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/Skills/Meta-github-operation/scripts/Cli_Toolbox.py "
+            "push-contract --repo Octopus_OS"
+        )
+        output = (
+            "Chunk ID: c7a699\n"
+            "Wall time: 0.1769 seconds\n"
+            "Process exited with code 2\n"
+            "Output:\n"
+            "Usage: Cli_Toolbox.py push-contract [OPTIONS]\n"
+            "Try 'Cli_Toolbox.py push-contract --help' for help.\n"
+            "No such option: --repo Did you mean --help?\n"
+        )
+        codex_home = self.make_codex_home(tmp_path, command=command, output=output)
+        env = {"CODEX_HOME": str(codex_home), "CODEX_RUNTIME_PAIN_PROVIDER": ""}
+        result = self.run_python(BATCH_SCRIPT, ">", "--thread-id", "turn-001", env=env)
+        assert result.returncode == 0, result.stderr
         payload = json.loads(result.stdout)
-        assert payload["status"] == "error"
-        assert payload["error"] == "pain_source_not_configured"
+        report = payload["runtime_pain_batch_selfcheck_v1"]["pain_context_report_v2"]
+        assert report["research_scope_v1"]["source_mode"] == "session_fallback"
+        focus_group = report["focus_pain_context_v2"]["full_group_context_v2"]
+        assert "cli_semantic_mismatch" in focus_group["kinds"]
 
     def test_paths_reports_governed_runtime_root(self) -> None:
         result = self.run_python(TOOLBOX, "paths", "--json")
@@ -54,6 +120,7 @@ class TestMetaRuntimeSelfcheckSmoke:
         runtime_root = Path(payload["resolved_paths"]["runtime_root"])
         assert runtime_root.name == "Meta-Runtime-Selfcheck"
         assert runtime_root.parent.name == "Codex_Skill_Runtime"
+        assert payload["resolved_paths"]["watcher_state_json"].endswith("OBSERVER_STATE.json")
 
     def test_runtime_contract_returns_cli_first_payload(self) -> None:
         result = self.run_python(TOOLBOX, "runtime-contract", "--json")
@@ -152,3 +219,70 @@ class TestMetaRuntimeSelfcheckSmoke:
         assert payload["preflight_failed_commands"] == 1
         assert payload["runs"][0]["status"] == "preflight_blocked"
         assert payload["runs"][0]["preflight_reason_code"] == "preflight_shell_operator_unsupported"
+
+    def test_execute_command_list_blocks_unknown_cli_option(self) -> None:
+        command = (
+            f"{VENV_PYTHON} "
+            "/home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/Skills/Meta-github-operation/scripts/Cli_Toolbox.py "
+            "push-contract --repo Octopus_OS"
+        )
+        script = (
+            "import json\n"
+            "from runtime_pain_repair_exec import execute_command_list\n"
+            f"result = execute_command_list(commands=['{command}'], timeout_sec=5, workdir='.', change_detection_root='')\n"
+            "print(json.dumps(result))\n"
+        )
+        result = subprocess.run(
+            [sys.executable, "-c", script],
+            cwd=str(SCRIPTS_ROOT),
+            text=True,
+            capture_output=True,
+            check=False,
+            env=os.environ.copy(),
+        )
+        assert result.returncode == 0, result.stderr
+        payload = json.loads(result.stdout)
+        assert payload["preflight_failed_commands"] == 1
+        assert payload["runs"][0]["preflight_reason_code"] == "preflight_unknown_option"
+
+    def test_run_turn_hook_writes_audit_and_repairs_installed_copy_command(self, tmp_path: Path) -> None:
+        command = (
+            "/home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python "
+            "/home/jasontan656/.codex/skills/Meta-github-operation/scripts/Cli_Toolbox.py "
+            "baseline-contract --json"
+        )
+        output = (
+            "Chunk ID: b7ceca\n"
+            "Wall time: 0.0179 seconds\n"
+            "Process exited with code 1\n"
+            "Output:\n"
+            "Traceback (most recent call last):\n"
+            "RuntimeError: cannot resolve product root from Meta-github-operation script path\n"
+        )
+        codex_home = self.make_codex_home(tmp_path, command=command, output=output)
+        runtime_root = tmp_path / "runtime"
+        env = {
+            "CODEX_HOME": str(codex_home),
+            "CODEX_SKILL_RUNTIME_ROOT": str(runtime_root),
+        }
+        result = self.run_python(
+            TOOLBOX,
+            "run-turn-hook",
+            "--mode",
+            "repair",
+            "--session-id",
+            "019cf768-47cc-7882-bf9c-9d267e78188e",
+            "--turn-id",
+            "turn-001",
+            "--json",
+            env=env,
+        )
+        assert result.returncode == 0, result.stderr
+        payload = json.loads(result.stdout)
+        assert payload["turn_hook_status"] == "repaired"
+        assert payload["resolved_optimization_ids"]
+        audit_path = Path(payload["turn_audit_path"])
+        assert audit_path.exists()
+        audit = json.loads(audit_path.read_text(encoding="utf-8"))
+        assert audit["resolved_optimization_ids"]
+        assert audit["hook_status"] == "repaired"

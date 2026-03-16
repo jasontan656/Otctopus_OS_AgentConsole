@@ -16,6 +16,7 @@ from runtime_pain_repair import (
 )
 from runtime_pain_batch_repair_mode import apply_repair_mode
 from runtime_pain_types import RuntimePainBatchOutput
+from runtime_selfcheck_session_source import build_session_fallback_queue
 from runtime_pain_batch_support import (
     DEFAULT_HISTORY,
     DEFAULT_MEMORY_RUNTIME,
@@ -49,39 +50,27 @@ def run_with_args(args: argparse.Namespace) -> int:
     mode = _detect_mode(mode=args.mode, raw_tokens=list(args.mode_token or []))
     run_id = new_run_id(mode)
     memory_runtime_raw = str(args.memory_runtime or "").strip()
-    if not memory_runtime_raw:
-        print(
-            json.dumps(
-                {
-                    "status": "error",
-                    "error": "pain_source_not_configured",
-                    "hint": "Set CODEX_RUNTIME_PAIN_PROVIDER or pass --memory-runtime <provider.py>.",
-                },
-                ensure_ascii=False,
-            )
+    source_mode = "memory_runtime"
+    memory_runtime: Path | None = None
+    if memory_runtime_raw:
+        memory_runtime = Path(memory_runtime_raw).expanduser().resolve()
+    if memory_runtime is None or not memory_runtime.exists():
+        source_mode = "session_fallback"
+        queue = build_session_fallback_queue(
+            codex_home_override="",
+            session_id_filter=str(args.session_id or "").strip() or None,
+            turn_id_filter=str(args.thread_id or "").strip() or None,
+            include_resolved=bool(args.include_resolved),
+            max_results=max(1, int(args.max_results)),
         )
-        return 1
-    memory_runtime = Path(memory_runtime_raw).expanduser().resolve()
-    if not memory_runtime.exists():
-        print(
-            json.dumps(
-                {
-                    "status": "error",
-                    "error": "pain_source_not_found",
-                    "pain_source": str(memory_runtime),
-                },
-                ensure_ascii=False,
-            )
+    else:
+        queue = _queue_items(
+            memory_runtime=memory_runtime,
+            max_results=max(1, int(args.max_results)),
+            include_resolved=bool(args.include_resolved),
+            session_scope_mode=str(args.session_scope_mode or "auto"),
+            thread_id=str(args.thread_id or "").strip(),
         )
-        return 1
-
-    queue = _queue_items(
-        memory_runtime=memory_runtime,
-        max_results=max(1, int(args.max_results)),
-        include_resolved=bool(args.include_resolved),
-        session_scope_mode=str(args.session_scope_mode or "auto"),
-        thread_id=str(args.thread_id or "").strip(),
-    )
     items = queue.get("items", []) if isinstance(queue, dict) else []
     if not isinstance(items, list):
         items = []
@@ -113,6 +102,7 @@ def run_with_args(args: argparse.Namespace) -> int:
                 "human_renderer": HUMAN_RENDERER,
             },
             "scope_policy": "all_threads_enforced",
+            "source_mode": source_mode,
             "session_scope_mode": str(queue.get("session_scope_mode", "") or FORCED_SCOPE_MODE),
             "thread_id": str(queue.get("thread_id", "") or args.thread_id),
             "queue_summary": {
@@ -170,6 +160,14 @@ def run_with_args(args: argparse.Namespace) -> int:
     }
 
     if mode != "repair":
+        _emit_report_only_output(run_id=run_id, mode=mode, output=output)
+        return 0
+
+    if source_mode != "memory_runtime" or memory_runtime is None:
+        output["status"] = "partial"
+        output["runtime_pain_batch_selfcheck_v1"]["repair_execution_v1"]["blocked_reason"] = (
+            "session_fallback_requires_run_turn_hook_repair"
+        )
         _emit_report_only_output(run_id=run_id, mode=mode, output=output)
         return 0
 

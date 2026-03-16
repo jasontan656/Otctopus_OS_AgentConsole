@@ -196,6 +196,9 @@ def _queue_items(
 
 def _action_for_group(kinds: set[str], tool_names: set[str]) -> str:
     prioritized_actions = (
+        ("wrong_runtime_surface", "把 runtime surface 收敛到 repo truth source，并补齐安装副本阻断与 canonical rewrite"),
+        ("cli_semantic_mismatch", "为受管 CLI 增加 subcommand/option preflight，并把 alias 收敛到 canonical command"),
+        ("path_misuse", "补齐 workdir/repo root/path preflight，并在失败时立即改写到 canonical 路径"),
         ("tool_failure_any", "为同节点增加失败分支处理与预检，失败后立即分流而不是重复调用"),
         ("trial_and_error_loop", "为同签名动作增加决策阈值与重试上限，避免犹豫循环"),
         ("phase_incomplete", "补齐阶段完成门禁与验收条件，避免阶段半完成状态反复出现"),
@@ -343,12 +346,17 @@ def _group_items(items: list[dict[str, Any]]) -> dict[str, Any]:
         command_signature_raw = _sanitize_text_for_event(str(source_event.get("command_signature", "") or ""), limit=EVENT_COMMAND_SIGNATURE_LIMIT)
         outcome = normalize_text(str(source_event.get("outcome", "") or ""), limit=220)
         next_hint = normalize_text(str(source_event.get("next", "") or ""), limit=160)
+        issue_subkind = normalize_text(str(raw.get("issue_subkind", "") or ""), limit=120)
+        owner_surface = normalize_text(str(source_event.get("owner_surface", "") or ""), limit=160)
+        canonical_fix_surface = normalize_text(str(source_event.get("canonical_fix_surface", "") or ""), limit=160)
+        repair_boundary = normalize_text(str(source_event.get("repair_boundary", "") or ""), limit=160)
 
         event_record = {
             "optimization_id": optimization_id,
             "is_resolved": is_resolved,
             "priority": priority,
             "kind": kind,
+            "issue_subkind": issue_subkind,
             "title": title,
             "suggested_action": suggested_action,
             "updated_at": updated_at,
@@ -359,12 +367,15 @@ def _group_items(items: list[dict[str, Any]]) -> dict[str, Any]:
             "command_signature": command_signature,
             "outcome": outcome,
             "summary": summary,
-                "why": why,
-                "next": next_hint,
-                "citation": merged_citation,
-                "command_preview_raw": command_preview_raw,
-                "command_signature_raw": command_signature_raw,
-            }
+            "why": why,
+            "next": next_hint,
+            "citation": merged_citation,
+            "command_preview_raw": command_preview_raw,
+            "command_signature_raw": command_signature_raw,
+            "owner_surface": owner_surface,
+            "canonical_fix_surface": canonical_fix_surface,
+            "repair_boundary": repair_boundary,
+        }
         bucket["optimization_ids"].append(
             {
                 "optimization_id": optimization_id,
@@ -403,6 +414,7 @@ def _group_items(items: list[dict[str, Any]]) -> dict[str, Any]:
                 "status": "resolved" if bool(event.get("is_resolved", False)) else "pending",
                 "priority": str(event.get("priority", "p2") or "p2"),
                 "kind": str(event.get("kind", "") or ""),
+                "issue_subkind": str(event.get("issue_subkind", "") or ""),
                 "title": str(event.get("title", "") or ""),
                 "suggested_action": str(event.get("suggested_action", "") or ""),
                 "trigger_node": str(event.get("trigger_node", "") or ""),
@@ -413,6 +425,8 @@ def _group_items(items: list[dict[str, Any]]) -> dict[str, Any]:
                 "outcome": str(event.get("outcome", "") or ""),
                 "summary": str(event.get("summary", "") or ""),
                 "why": str(event.get("why", "") or ""),
+                "owner_surface": str(event.get("owner_surface", "") or ""),
+                "canonical_fix_surface": str(event.get("canonical_fix_surface", "") or ""),
                 "updated_at": str(event.get("updated_at", "") or ""),
                 "citation": str(event.get("citation", "") or ""),
             }
@@ -424,6 +438,7 @@ def _group_items(items: list[dict[str, Any]]) -> dict[str, Any]:
                 "optimization_id": str(event.get("optimization_id", "") or ""),
                 "status": "resolved" if bool(event.get("is_resolved", False)) else "pending",
                 "kind": str(event.get("kind", "") or ""),
+                "issue_subkind": str(event.get("issue_subkind", "") or ""),
                 "trigger_node": str(event.get("trigger_node", "") or ""),
                 "title": str(event.get("title", "") or ""),
                 "citation": str(event.get("citation", "") or ""),
@@ -440,9 +455,12 @@ def _group_items(items: list[dict[str, Any]]) -> dict[str, Any]:
         trigger_scripts_sorted = sorted({str(v) for v in bucket["trigger_scripts"] if str(v)})
         tool_names_sorted = sorted(tools)
         kind_counts = _top_counts([str(event.get("kind", "") or "") for event in events], limit=6)
+        subkind_counts = _top_counts([str(event.get("issue_subkind", "") or "") for event in events], limit=6)
         node_counts = _top_counts([str(event.get("trigger_node", "") or "") for event in events], limit=5)
         script_counts = _top_counts([str(event.get("trigger_script", "") or "") for event in events], limit=5)
         tool_counts = _top_counts([str(event.get("tool_name", "") or "") for event in events], limit=5)
+        owner_surface_counts = _top_counts([str(event.get("owner_surface", "") or "") for event in events], limit=5)
+        fix_surface_counts = _top_counts([str(event.get("canonical_fix_surface", "") or "") for event in events], limit=5)
 
         problem_statement = (
             f"组 {bucket['pain_group_key']} 在 topic {bucket['pain_topic']} 下累计记录 {total_items} 次，"
@@ -506,9 +524,12 @@ def _group_items(items: list[dict[str, Any]]) -> dict[str, Any]:
                 "timeline_sample_items": len(timeline_v1),
                 "priority_top": str(bucket["priority_top"]),
                 "kind_counts": kind_counts,
+                "subkind_counts": subkind_counts,
                 "trigger_node_counts": node_counts,
                 "trigger_script_counts": script_counts,
                 "tool_counts": tool_counts,
+                "owner_surface_counts": owner_surface_counts,
+                "canonical_fix_surface_counts": fix_surface_counts,
             },
             "fact_evidence_samples": evidence_samples,
             "timeline_v1": timeline_v1,
@@ -748,14 +769,16 @@ def _build_report_only_output(
     next_pain = payload.get("next_pain_v1", {}) if isinstance(payload.get("next_pain_v1", {}), dict) else {}
     next_group_key = str(next_pain.get("pain_group_key", "") or "")
     mode = str(payload.get("mode", "diagnose") or "diagnose")
+    source_mode = str(payload.get("source_mode", "memory_runtime") or "memory_runtime")
     all_resolved = bool(payload.get("all_pain_resolved_v1", False))
 
     report_payload: dict[str, Any] = {
         "report_mode": "pain_context_report_only_v2",
         "research_scope_v1": {
-            "data_source": "external pain provider optimization-list",
+            "data_source": "external pain provider optimization-list" if source_mode == "memory_runtime" else "codex_session_turn_evidence",
             "grouping_basis": "pain_group_key",
             "scope_policy": "all_threads",
+            "source_mode": source_mode,
             "evidence_sample_count": len(
                 diagnosis_card.get("fact_evidence_samples", [])
                 if isinstance(diagnosis_card.get("fact_evidence_samples", []), list)

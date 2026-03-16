@@ -1,6 +1,6 @@
 {
   "contract_name": "meta_runtime_selfcheck_runtime_contract",
-  "contract_version": "2.0.0",
+  "contract_version": "2.1.0",
   "skill_name": "__SKILL_NAME__",
   "runtime_source_policy": {
     "primary_runtime_source": "CLI_JSON",
@@ -22,14 +22,19 @@
       "runtime-contract": "./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py runtime-contract --json",
       "directive": "./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py directive --topic <topic> --json",
       "paths": "./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py paths --json",
+      "run-turn-hook": "./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py run-turn-hook --mode diagnose --json",
+      "watch-codex-sessions": "./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py watch-codex-sessions --once --json",
+      "show-turn-audit": "./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py show-turn-audit --session-id <session_id> --turn-id <turn_id> --json",
       "diagnose": "./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/runtime_pain_batch.py \">\" --session-scope-mode all_threads --max-results 200",
-      "repair": "./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/runtime_pain_batch.py 修复 --manual-repair-applied --manual-repair-path <changed_file> --verify-cmd <verify_cmd>"
+      "repair": "./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py run-turn-hook --mode repair --auto-repair --json"
     }
   },
   "must_use_sequence": [
     "At turn start, call runtime-contract before consuming runtime guidance for this skill.",
+    "Use run-turn-hook as the technical carrier for automatic turn-start, mid-turn, and turn-end hook execution; do not leave auto-trigger as a contract-only statement.",
     "When issue evidence appears anywhere in the active turn, immediately read the turn-hook-self-repair directive.",
     "If the issue is local and verifiable inside the active boundary, repair first before continuing the main task.",
+    "Persist a turn audit before the final reply so the hook leaves verifiable closeout evidence.",
     "Before the final reply, read the final-reply-merge directive and disclose repaired items, verification evidence, and residual risk.",
     "Call paths --json when governed runtime or result paths matter.",
     "Open human mirrors only when the direct JSON payload still leaves a real gap."
@@ -60,11 +65,11 @@
     "pain_provider": {
       "environment_variable": "CODEX_RUNTIME_PAIN_PROVIDER",
       "cli_override": "--memory-runtime <provider.py>",
-      "required_for": [
+      "optional_for": [
         "diagnose",
         "repair"
       ],
-      "fallback_policy": "If unavailable, perform a lightweight selfcheck from the visible turn evidence instead of failing the user-facing answer."
+      "fallback_policy": "If unavailable, fall back to Codex session turn evidence and still emit a governed turn audit instead of failing."
     },
     "history_source": {
       "default_path": "__DEFAULT_HISTORY_PATH__",
@@ -73,11 +78,15 @@
   },
   "path_policy": {
     "runtime_log_root_rule": "__RUNTIME_ROOT__/logs/runtime_pain_batch/<run_id>",
+    "turn_audit_root_rule": "__RUNTIME_ROOT__/sessions/<session_id>/turns/<turn_id>.json",
+    "watcher_state_rule": "__RUNTIME_ROOT__/watcher/OBSERVER_STATE.json",
     "result_root_rule": "__RESULT_ROOT__",
     "resolved_paths_command": "./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py paths --json"
   },
   "hard_constraints": [
     "Use this skill as a default turn hook across the active turn, not only near final reply.",
+    "Do not claim auto-trigger coverage unless a concrete CLI carrier exists and can emit turn audits.",
+    "Do not fail the hook solely because CODEX_RUNTIME_PAIN_PROVIDER is absent; session fallback must still run.",
     "When issue evidence is concrete and locally repairable, repair first instead of downgrading directly into advice.",
     "Skip extra hook output only when the turn stayed smooth and no repair happened.",
     "Do not treat SKILL.md as the primary runtime instruction source.",

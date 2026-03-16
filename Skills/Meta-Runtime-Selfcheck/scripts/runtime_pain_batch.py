@@ -21,7 +21,7 @@ def build_parser() -> argparse.ArgumentParser:
     ap.add_argument(
         "--memory-runtime",
         default=DEFAULT_MEMORY_RUNTIME,
-        help="Path to an external runtime pain provider implementing optimization-list and optional optimization-resolve.",
+        help="Path to an external runtime pain provider implementing optimization-list and optional optimization-resolve. If omitted, fall back to Codex session evidence.",
     )
     ap.add_argument("--history-path", default=str(DEFAULT_HISTORY))
     ap.add_argument("--session-id", default="")

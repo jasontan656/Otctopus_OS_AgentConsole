@@ -24,9 +24,11 @@ metadata:
   - `./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py runtime-contract --json`
   - `./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py directive --topic <topic> --json`
   - `./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py paths --json`
+  - `./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py run-turn-hook --mode diagnose --json`
+  - `./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py watch-codex-sessions --once --json`
 - 运行时诊断与写回入口：
   - `./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/runtime_pain_batch.py ">" --session-scope-mode all_threads --max-results 200`
-  - `./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/runtime_pain_batch.py 修复 --manual-repair-applied --manual-repair-path <changed_file> --verify-cmd <verify_cmd>`
+  - `./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py run-turn-hook --mode repair --auto-repair --json`
 - 模型读取 runtime contract、workflow、output 规则时必须优先走 CLI JSON；`SKILL.md` 只做门面。
 
 ## 2. 适用域
@@ -37,23 +39,25 @@ metadata:
 
 ## 3. 必读顺序
 1. 先执行 `./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py runtime-contract --json`。
-2. 当本回合任意时刻出现问题证据时，立即读取默认 turn hook workflow：
+2. 当本回合进入 turn start / 中途卡壳 / turn end 收口时，用真实 carrier 运行 hook：
+   - `./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py run-turn-hook --mode diagnose --json`
+3. 当本回合任意时刻出现问题证据时，立即读取默认 turn hook workflow：
    - `./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py directive --topic turn-hook-self-repair --json`
-3. 若 hook 发现当前边界内存在可验证修复动作，再读取：
+4. 若 hook 发现当前边界内存在可验证修复动作，再读取：
    - `./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py directive --topic self-repair-writeback --json`
-4. 若任务涉及 runtime/result 路径时，再执行：
+5. 若任务涉及 runtime/result 路径时，再执行：
    - `./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py paths --json`
-5. 当最终汇报需要合并“已修复项 / 剩余风险 / 用户可继续裁决项”时，再读取：
+6. 当最终汇报需要合并“已修复项 / 剩余风险 / 用户可继续裁决项”时，再读取：
    - `./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py directive --topic final-reply-merge --json`
-6. 只有当 CLI JSON 仍留下真实语义缺口时，才打开 human mirrors。
+7. 只有当 CLI JSON 仍留下真实语义缺口时，才打开 human mirrors。
 
 ## 4. 运行边界
-- 默认触发：本技能是整个回合内的默认 turn hook，不需要用户手动点名才可进入；在 `turn end` 前还必须再跑一次最终收口检查。
+- 默认触发：本技能是整个回合内的默认 turn hook，不需要用户手动点名才可进入；在 `turn end` 前还必须再跑一次最终收口检查，并留下 turn audit。
 - 跳过条件：仅当本轮没有任何工具错误、路径误用、明显犹豫、重复失败、用户纠偏或流程迷路时，才不输出额外 hook 内容。
 - 自修原则：若本轮发现的问题在当前回合内可被安全、局部、受管地修复，必须先修复再继续，不允许只留建议后收尾。
 - 写回边界：允许修正文档、技能描述、技能触发语气、工具入口说明与局部脚本合同；不允许借自检之名无边界扩张修改面。
 - 输出规则：若发现问题，必须把 `已即时修复项 + 修复验证结果 + 剩余风险 + 用户后续可裁决项` 合并进 final reply，而不是单独开一轮空洞复盘。
-- 数据源来自外部 pain provider；若未提供 `CODEX_RUNTIME_PAIN_PROVIDER` 或 `--memory-runtime`，可退化为基于本轮可见运行证据的轻量自检，不把 provider 缺失本身伪装成用户问题。
+- 数据源优先来自外部 pain provider；若未提供 `CODEX_RUNTIME_PAIN_PROVIDER` 或 `--memory-runtime`，必须退化为基于 Codex session turn evidence 的 governed selfcheck，不把 provider 缺失本身伪装成用户问题。
 
 ## 5. 结构索引
 ```text
