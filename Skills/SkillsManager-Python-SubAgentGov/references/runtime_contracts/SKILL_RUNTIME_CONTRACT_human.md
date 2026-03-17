@@ -8,6 +8,7 @@ topic: Runtime contract for SkillsManager-Python-SubAgentGov
 
 ## 技能角色
 - `SkillsManager-Python-SubAgentGov` 是正式的 Python subagent 治理主控技能。
+- 本技能仅允许用户手工召唤，禁止自动触发。
 - 它把一次性 runtime 脚本沉淀为仓内可复用的 skill，并且保留以下关键行为：
   - 主控并发调度
   - 单技能 subagent 隔离

@@ -12,6 +12,8 @@ anchors:
 # Task Routing
 
 ## 1. 进入时机
+- 只有当用户显式点名 `SkillsManager-Python-SubAgentGov` 或明确要求使用这套主控时，才允许进入本技能。
+- 禁止因为“任务看起来像技能治理”就自动触发本技能。
 - 当任务目标是“对多个技能目录逐个做 Python 代码规范治理，并且每个技能都要保留独立 evidence / commit / mirror closeout”时，进入本技能。
 - 当任务只想查看哪些技能会被纳入或排除时，使用 `list-targets`。
 - 当任务是恢复中断治理、检查有哪些技能已经完成 closeout、还有哪些仍在跑时，使用 `status`。

@@ -1,6 +1,6 @@
 ---
 name: SkillsManager-Python-SubAgentGov
-description: 把 Python subagent 并行治理主控沉淀为仓内正式技能，负责受管技能的发现、并发编排、证据落盘、串行 closeout 与断点恢复。
+description: 仅允许用户手工召唤的 Python subagent 并行治理主控技能，负责受管技能的发现、并发编排、证据落盘、串行 closeout 与断点恢复，禁止自动触发。
 metadata:
   skill_profile:
     doc_topology: referenced
@@ -30,6 +30,7 @@ metadata:
 
 ## 1. 技能定位
 - 本技能把已经验证可运行的 Python subagent 并行治理主控产品化为仓内正式 skill。
+- 本技能仅允许用户手工召唤，禁止基于任务特征或模糊匹配自动触发。
 - 本技能负责五类稳定职责：
   - 发现 `Skills/` 下受管目标技能
   - 为单技能启动外部 `codex exec --json` + `tmux` background subagent

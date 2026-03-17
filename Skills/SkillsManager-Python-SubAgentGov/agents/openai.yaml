@@ -1,4 +1,4 @@
 interface:
   display_name: SkillsManager-Python-SubAgentGov
-  short_description: 对 Skills/ 下受管技能执行 Python subagent 并发治理，并串行完成 verify、Git 留痕、mirror sync 与断点恢复。
+  short_description: 仅在用户手工召唤时使用；对 Skills/ 下受管技能执行 Python subagent 并发治理，并串行完成 verify、Git 留痕、mirror sync 与断点恢复。
   default_prompt: Use $SkillsManager-Python-SubAgentGov.

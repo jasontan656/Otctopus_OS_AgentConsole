@@ -3,6 +3,12 @@
   "contract_version": "2.0.0",
   "skill_name": "SkillsManager-Python-SubAgentGov",
   "skill_role": "python_subagent_governor",
+  "invocation_policy": {
+    "mode": "manual_only",
+    "auto_trigger_allowed": false,
+    "manual_invoke_required": true,
+    "summary": "This skill may run only when the user explicitly names or invokes SkillsManager-Python-SubAgentGov."
+  },
   "runtime_source_policy": {
     "runtime_rule_source": "CLI_JSON",
     "documents_are_source_of_truth": true,
@@ -62,6 +68,7 @@
     }
   },
   "hard_constraints": [
+    "this skill is manual-invoke only and must not auto-trigger",
     "repo truth source is Skills/ under Otctopus_OS_AgentConsole",
     "installed mirror under ~/.codex/skills is never the governance source",
     "single-skill subagents may only edit one target skill directory",

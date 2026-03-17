@@ -42,6 +42,8 @@ def write_skill(skill_root: Path, skill_name: str) -> None:
 def test_contract_exposes_govern_entry() -> None:
     payload = run_cli("contract")
     assert payload["skill_role"] == "python_subagent_governor"
+    assert payload["invocation_policy"]["mode"] == "manual_only"
+    assert payload["invocation_policy"]["auto_trigger_allowed"] is False
     assert "govern" in payload["tool_entry"]["commands"]
 
 
