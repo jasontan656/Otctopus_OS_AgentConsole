@@ -8,6 +8,7 @@ from pathlib import Path
 SCRIPT_DIR = Path(__file__).resolve().parent
 CONTRACT_PATH = SCRIPT_DIR.parent / 'references' / 'runtime_contracts' / 'SKILL_RUNTIME_CONTRACT.json'
 
+
 def main() -> int:
     parser = argparse.ArgumentParser(description='Static runtime contract reader')
     parser.add_argument('command', choices=['contract'])
