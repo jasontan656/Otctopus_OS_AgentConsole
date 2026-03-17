@@ -17,6 +17,7 @@
     "If none are present, keep the hook quiet and continue the main task.",
     "If CODEX_RUNTIME_PAIN_PROVIDER is absent, fall back to Codex session turn evidence instead of exiting with configuration error.",
     "If issues are present, classify them into: immediately repairable in this turn, not-yet-verifiable but still strengthenable, explicitly allowed expected failures, and residual risks that must be disclosed or escalated.",
+    "When the hook strengthens or writes back Meta-Runtime-Selfcheck itself, run keyword-first-edit-governance first so the chosen path is rewrite > replace > add; if rewrite/delete is selected, stop and request user confirmation with explicit deletion scope.",
     "When a bounded fix is safe and within the active repo boundary, repair first, collect verification evidence, and mark the turn audit with resolved optimization ids before continuing.",
     "When a failure matches the expected-failure whitelist, allow it, record it, and carry it into later strengthening or validation artifacts instead of auto-repairing over it.",
     "Do not downgrade directly into advice when a local repair exists; only retain residual risk after the minimal correct repair has been applied."

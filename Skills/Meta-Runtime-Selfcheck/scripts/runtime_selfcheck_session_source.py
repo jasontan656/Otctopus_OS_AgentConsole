@@ -16,6 +16,7 @@ from runtime_pain_types import SessionExecEvent
 from runtime_pain_types import ExpectedFailureRule
 from runtime_pain_types import SessionFallbackQueue
 from runtime_pain_types import TurnEvidence
+from runtime_selfcheck_command_governance import adjudicate_keyword_first_edit
 from runtime_selfcheck_command_governance import analyze_runtime_failure
 from runtime_selfcheck_command_governance import derive_command_context
 from runtime_selfcheck_store import load_turn_audit
@@ -582,6 +583,38 @@ def _issue_record(
     return issue
 
 
+def _apply_keyword_first_governance(issue: dict[str, Any]) -> dict[str, Any]:
+    auto_repair = issue.get("auto_repair", {}) if isinstance(issue.get("auto_repair", {}), dict) else {}
+    repair_type_raw = str(auto_repair.get("repair_type", "") or "")
+    repair_types = [item.strip() for item in repair_type_raw.split(",") if item.strip()]
+    keyword_first_edit = adjudicate_keyword_first_edit(
+        issue_kind=str(issue.get("kind", "") or ""),
+        issue_subkind=str(issue.get("issue_subkind", "") or ""),
+        title=str(issue.get("title", "") or ""),
+        summary=str(issue.get("summary", "") or ""),
+        why=str(issue.get("why", "") or ""),
+        suggested_action=str(issue.get("suggested_action", "") or ""),
+        repair_types=repair_types,
+    )
+    issue["keyword_first_edit"] = keyword_first_edit
+    requires_confirmation = bool(keyword_first_edit.get("requires_user_confirmation", False))
+    current_adjudication = str(issue.get("adjudication", "") or "")
+    if requires_confirmation:
+        issue["adjudication"] = "pending_decision"
+        issue["pending_reason"] = "keyword_first_rewrite_requires_confirmation"
+        issue.pop("auto_repair", None)
+        return issue
+    if current_adjudication:
+        return issue
+    if auto_repair:
+        issue["adjudication"] = "immediate_repair"
+        auto_repair["decision"] = "immediate_repair"
+        auto_repair["keyword_first_decision"] = str(keyword_first_edit.get("decision", "") or "")
+        return issue
+    issue["adjudication"] = "strengthen_now"
+    return issue
+
+
 def _detect_event_issues(
     event: dict[str, Any],
     *,
@@ -623,16 +656,22 @@ def _detect_event_issues(
         latest_issue = issues[-1]
         latest_issue["adjudication"] = str(governance_issue.get("adjudication", "") or "")
         latest_issue["expected_failure"] = governance_issue.get("expected_failure", {"matched": False})
+        latest_issue["keyword_first_edit"] = governance_issue.get("keyword_first_edit", {})
         auto_repair = governance_issue.get("auto_repair", {})
-        if isinstance(auto_repair, dict) and str(auto_repair.get("normalized_command", "") or "").strip():
+        if (
+            isinstance(auto_repair, dict)
+            and str(auto_repair.get("normalized_command", "") or "").strip()
+            and not bool(latest_issue.get("keyword_first_edit", {}).get("requires_user_confirmation", False))
+        ):
             latest_issue["auto_repair"] = {
                 "repair_type": ",".join(list(auto_repair.get("repair_types", []))) or "governed_command_normalization",
                 "command": str(auto_repair.get("normalized_command", "") or ""),
                 "workdir": str(auto_repair.get("context", {}).get("workdir", "") or event.get("cwd", "") or ""),
                 "change_detection_root": str(auto_repair.get("context", {}).get("change_detection_root", "") or event.get("cwd", "") or ""),
                 "decision": str(governance_issue.get("adjudication", "") or ""),
+                "keyword_first_decision": str(latest_issue.get("keyword_first_edit", {}).get("decision", "") or ""),
             }
-        return issues
+        return [_apply_keyword_first_governance(issue) for issue in issues]
 
     if "cannot resolve product root" in lowered and "/.codex/skills/" in command:
         issues.append(
@@ -702,7 +741,7 @@ def _detect_event_issues(
                 source_event=event,
             )
         )
-    return issues
+    return [_apply_keyword_first_governance(issue) for issue in issues]
 
 
 def build_session_fallback_queue(

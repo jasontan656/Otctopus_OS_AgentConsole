@@ -17,6 +17,7 @@ VENV_PYTHON = Path("/home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/.venv
 if str(SCRIPTS_ROOT) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_ROOT))
 
+import runtime_selfcheck_command_governance as command_governance
 import runtime_selfcheck_session_source as session_source
 import runtime_selfcheck_turn_hook as turn_hook
 
@@ -178,6 +179,8 @@ class TestMetaRuntimeSelfcheckSmoke:
         assert "runtime-contract" in payload["tool_entry"]["commands"]
         assert "pre-exec-check" in payload["tool_entry"]["commands"]
         assert payload["trigger_policy"]["default_trigger"] == "turn_hook"
+        topics = {item["topic"] for item in payload["directive_topics"]}
+        assert "keyword-first-edit-governance" in topics
 
     def test_pre_exec_check_normalizes_repo_local_pytest(self) -> None:
         command = "python3 -m pytest Skills/Meta-Runtime-Selfcheck/tests/test_cli_toolbox.py"
@@ -193,6 +196,7 @@ class TestMetaRuntimeSelfcheckSmoke:
         payload = json.loads(result.stdout)
         assert payload["decision"] == "immediate_repair"
         assert "/.venv_backend_skills/bin/python3 -m pytest" in payload["normalized_command"]
+        assert payload["keyword_first_edit"]["decision"] == "replace"
 
     def test_pre_exec_check_normalizes_lint_file_targets(self) -> None:
         command = (
@@ -262,6 +266,25 @@ class TestMetaRuntimeSelfcheckSmoke:
         legacy_payload = json.loads(legacy_result.stdout)
         assert new_payload["topic"] == "turn-hook-self-repair"
         assert legacy_payload["purpose"] == new_payload["purpose"]
+
+    def test_keyword_first_edit_directive_is_available(self) -> None:
+        result = self.run_python(TOOLBOX, "directive", "--topic", "keyword-first-edit-governance", "--json")
+        assert result.returncode == 0, result.stderr
+        payload = json.loads(result.stdout)
+        assert payload["topic"] == "keyword-first-edit-governance"
+        assert "rewrite/delete first" in " ".join(payload["instruction"]).lower()
+
+    def test_keyword_first_edit_requests_confirmation_for_legacy_bridge(self) -> None:
+        decision = command_governance.adjudicate_keyword_first_edit(
+            issue_kind="runtime_contract_drift",
+            issue_subkind="legacy_bridge_detected",
+            summary="Current fix proposal keeps a compatibility layer and legacy alias bridge alive.",
+            suggested_action="Add an adapter bridge while preserving old mapping.",
+            repair_types=[],
+        )
+        assert decision["decision"] == "rewrite"
+        assert decision["requires_user_confirmation"] is True
+        assert "legacy" in decision["forbidden_patterns_present"]
 
     def test_observability_logs_follow_runtime_root_override(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -475,8 +498,10 @@ class TestMetaRuntimeSelfcheckSmoke:
         assert result.returncode == 0, result.stderr
         payload = json.loads(result.stdout)
         assert payload["issue_buckets"]["immediate_repair"] >= 1
+        assert payload["keyword_first_buckets"]["replace"] >= 1
         audit = json.loads(Path(payload["turn_audit_path"]).read_text(encoding="utf-8"))
         assert "issue_buckets" in audit
+        assert "keyword_first_buckets" in audit
 
     def test_session_filters_only_process_target_session_and_turn(self, tmp_path: Path) -> None:
         codex_home = tmp_path / ".codex"

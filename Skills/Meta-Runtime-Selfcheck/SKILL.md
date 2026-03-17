@@ -37,6 +37,7 @@ metadata:
 - 适用于：工具错误、脚本失败、路径误用、犹豫不决、重复试错、文档缺口、技能描述不清、触发语气不准、模型 confused 与迷宫式流程。
 - 适用于：发现问题后，先在当前边界内执行最小可验证修复，再把修复结果与残余风险合并进 final reply。
 - 适用于：在执行前判断某个失败是否属于阶段内预期信号，并按白名单做“记录后放行”。
+- 适用于：本技能自身进入真实修改、修复、强化、合同收敛、脚本调整、文档写回或 workflow 重构时，强制按 `$Meta-keyword-first-edit` 的 `删掉重写 > keyword first 替换 > 新增` 执行。
 - 不适用于：未结束任务中途强插复盘叙事、把 pain provider 协议本身当主要用户叙事、无边界地自动改写大范围资产。
 
 ## 3. 必读顺序
@@ -49,19 +50,23 @@ metadata:
    - `./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py directive --topic turn-hook-self-repair --json`
 5. 若当前阶段允许“预期失败白名单”，先读取：
    - `./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py directive --topic expected-failure-governance --json`
-6. 若 hook 发现当前边界内存在可验证修复动作，再读取：
+6. 若本技能自身即将发生写回、修复或强化，先读取：
+   - `./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py directive --topic keyword-first-edit-governance --json`
+7. 若 hook 发现当前边界内存在可验证修复动作，再读取：
    - `./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py directive --topic self-repair-writeback --json`
-7. 若任务涉及 runtime/result 路径时，再执行：
+8. 若任务涉及 runtime/result 路径时，再执行：
    - `./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py paths --json`
-8. 当最终汇报需要合并“已修复项 / 剩余风险 / 用户可继续裁决项”时，再读取：
+9. 当最终汇报需要合并“已修复项 / 剩余风险 / 用户可继续裁决项”时，再读取：
    - `./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py directive --topic final-reply-merge --json`
-9. 只有当 CLI JSON 仍留下真实语义缺口时，才打开 human mirrors。
+10. 只有当 CLI JSON 仍留下真实语义缺口时，才打开 human mirrors。
 
 ## 4. 运行边界
 - 默认触发：本技能是整个回合内的默认 turn hook，不需要用户手动点名才可进入；在 `turn end` 前还必须再跑一次最终收口检查，并留下 turn audit。
 - pre-exec 主线：当命令涉及 repo-local Python、lint、traceability 或其他高频运行痛点时，先用 `pre-exec-check` 做裁决，再决定执行或放行。
 - 跳过条件：仅当本轮没有任何工具错误、路径误用、明显犹豫、重复失败、用户纠偏或流程迷路时，才不输出额外 hook 内容。
 - 自修原则：若本轮发现的问题在当前回合内可被安全、局部、受管地修复，必须先修复再继续，不允许只留建议后收尾。
+- keyword-first 内建原则：本技能自身的任何写回都必须先裁决 `rewrite > replace > add`，不允许默认走兼容壳、legacy、mapping、alias、双轨桥接或说明性补丁。
+- 删除确认原则：若 selfcheck 判定应走 rewrite/delete/整段替换，必须先列出将被删除、覆盖或整段替换的具体文件/章节/规则块/函数并请求用户确认；确认前不得执行删除。
 - 预期失败原则：回归测试、lint、contract 校验等在某些阶段可被白名单声明为“记录后放行”的预期失败；它们不能被静默吞掉，也不能被误当成立即覆盖掉的运行痛点。
 - 写回边界：允许修正文档、技能描述、技能触发语气、工具入口说明与局部脚本合同；不允许借自检之名无边界扩张修改面。
 - 输出规则：若发现问题，必须把 `已即时修复项 + 修复验证结果 + 剩余风险 + 用户后续可裁决项` 合并进 final reply，而不是单独开一轮空洞复盘。

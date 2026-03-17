@@ -12,6 +12,8 @@ from runtime_pain_types import CommandGovernanceContext
 from runtime_pain_types import CommandNormalizationResult
 from runtime_pain_types import ExpectedFailureMatch
 from runtime_pain_types import ExpectedFailureRule
+from runtime_pain_types import KeywordFirstEditDecision
+from runtime_pain_types import KeywordFirstReplacement
 from runtime_pain_types import PreExecCheckResult
 from runtime_pain_types import RuntimeFailureAnalysis
 
@@ -53,6 +55,46 @@ WORKSPACE_ROOT = CONSOLE_REPO_ROOT.parent
 KNOWN_REPO_ROOTS = {
     "Otctopus_OS_AgentConsole": CONSOLE_REPO_ROOT,
     "Octopus_OS": WORKSPACE_ROOT / "Octopus_OS",
+}
+_KEYWORD_FIRST_FORBIDDEN_MARKERS = (
+    "legacy",
+    "compatibility",
+    "compatibility layer",
+    "alias",
+    "mapping",
+    "adapter",
+    "bridge",
+    "dual-track",
+    "dual track",
+    "双轨",
+    "兼容",
+    "过渡",
+)
+_REPAIR_TYPE_REPLACEMENTS: dict[str, tuple[str, str, str]] = {
+    "repo_local_python_alignment": (
+        "python3 / system python",
+        ".venv_backend_skills/bin/python3",
+        "Align repo-local Python execution in-place instead of adding wrappers.",
+    ),
+    "lint_target_directory_normalization": (
+        "file-level lint target",
+        "governed directory target",
+        "Replace invalid target shape directly at the command surface.",
+    ),
+    "traceability_message_normalization": (
+        "invalid traceability message",
+        "governed traceability message template",
+        "Replace the message body instead of layering explanatory patches.",
+    ),
+}
+_REPLACE_SUBKINDS = {
+    "installed_copy_product_root_mismatch",
+    "unknown_option",
+    "unknown_subcommand",
+    "system_python_missing_repo_pytest",
+    "lint_target_requires_directory",
+    "traceability_message_contract_violation",
+    "non_repo_git_target",
 }
 
 
@@ -338,6 +380,74 @@ def _normalize_traceability_message(tokens: list[str], context: dict[str, str]) 
     return _replace_single_flag_value(tokens, "--message", normalized), True
 
 
+def _collect_forbidden_markers(*texts: str) -> list[str]:
+    lowered = " ".join(str(text or "") for text in texts).lower()
+    return [marker for marker in _KEYWORD_FIRST_FORBIDDEN_MARKERS if marker in lowered]
+
+
+def _replacement_pairs_for_repair_types(repair_types: list[str]) -> list[KeywordFirstReplacement]:
+    pairs: list[KeywordFirstReplacement] = []
+    for repair_type in repair_types:
+        payload = _REPAIR_TYPE_REPLACEMENTS.get(str(repair_type or "").strip())
+        if payload is None:
+            continue
+        old_value, new_value, reason = payload
+        pairs.append({"old": old_value, "new": new_value, "reason": reason})
+    return pairs
+
+
+def adjudicate_keyword_first_edit(
+    *,
+    issue_kind: str,
+    issue_subkind: str,
+    title: str = "",
+    summary: str = "",
+    why: str = "",
+    suggested_action: str = "",
+    repair_types: list[str] | None = None,
+) -> KeywordFirstEditDecision:
+    normalized_repair_types = [str(item).strip() for item in repair_types or [] if str(item).strip()]
+    forbidden_markers = _collect_forbidden_markers(title, summary, why, suggested_action, " ".join(normalized_repair_types))
+    if forbidden_markers:
+        return {
+            "decision": "rewrite",
+            "rationale": "The described remediation path already carries legacy or compatibility residue, so local patch stacking is disallowed.",
+            "seamless_state": "Not seamless until the target surface is rewritten without legacy, compatibility shells, aliases, mappings, or bridge layers.",
+            "requires_user_confirmation": True,
+            "confirmation_reason": "Rewrite/delete path detected; enumerate the exact files or blocks to be removed or fully replaced before executing.",
+            "deletion_scope": [],
+            "replacement_pairs": [],
+            "forbidden_patterns_present": forbidden_markers,
+            "why_not_add": "Adding new layers would preserve the incompatible structure instead of converging the target surface.",
+        }
+
+    replacement_pairs = _replacement_pairs_for_repair_types(normalized_repair_types)
+    if replacement_pairs or issue_subkind in _REPLACE_SUBKINDS:
+        return {
+            "decision": "replace",
+            "rationale": "The target surface can converge by directly replacing the wrong governed entrypoint, parameter shape, or contract wording.",
+            "seamless_state": "Seamless once the incorrect governed surface is replaced in place with no compatibility residue.",
+            "requires_user_confirmation": False,
+            "confirmation_reason": "",
+            "deletion_scope": [],
+            "replacement_pairs": replacement_pairs,
+            "forbidden_patterns_present": [],
+            "why_not_add": "Adding a second track would leave the broken surface alive and violate keyword-first governance.",
+        }
+
+    return {
+        "decision": "add",
+        "rationale": "The current evidence points to a missing governed capability, and no safe rewrite or direct replacement can be proven from this signal alone.",
+        "seamless_state": "Seamless only if the new content is a single canonical addition rather than a compatibility overlay.",
+        "requires_user_confirmation": False,
+        "confirmation_reason": "",
+        "deletion_scope": [],
+        "replacement_pairs": [],
+        "forbidden_patterns_present": [],
+        "why_not_add": "",
+    }
+
+
 def normalize_command(command: str, *, workdir: str | None = None) -> CommandNormalizationResult:
     tokens = _command_tokens(command)
     if not tokens:
@@ -430,6 +540,13 @@ def adjudicate_pre_exec_command(
     context = derive_command_context(command, workdir=workdir)
     expected = match_expected_failure(command=command, stage=stage, rules=expected_failure_rules or [])
     normalized = normalize_command(command, workdir=context.get("workdir"))
+    keyword_first_edit = adjudicate_keyword_first_edit(
+        issue_kind="pre_exec_command_governance",
+        issue_subkind="normalized_command" if normalized.get("changed") else "preflight_gate",
+        summary="Meta-Runtime-Selfcheck must converge command surfaces through rewrite/replace/add governance before execution.",
+        suggested_action=", ".join(list(normalized.get("repair_types", []))) or "Record the pending command and decide whether a governed capability is missing.",
+        repair_types=list(normalized.get("repair_types", [])),
+    )
     from runtime_pain_repair_exec import preflight
 
     preflight_ok, reason_code, detail = preflight(
@@ -447,6 +564,7 @@ def adjudicate_pre_exec_command(
             "expected_failure": expected,
             "repair_types": normalized["repair_types"],
             "repair_context": context,
+            "keyword_first_edit": keyword_first_edit,
         }
     if normalized["changed"]:
         return {
@@ -459,6 +577,7 @@ def adjudicate_pre_exec_command(
             "expected_failure": {"matched": False},
             "repair_types": normalized["repair_types"],
             "repair_context": context,
+            "keyword_first_edit": keyword_first_edit,
         }
     if not preflight_ok:
         return {
@@ -471,6 +590,7 @@ def adjudicate_pre_exec_command(
             "expected_failure": {"matched": False},
             "repair_types": [],
             "repair_context": context,
+            "keyword_first_edit": keyword_first_edit,
         }
     return {
         "status": "ok",
@@ -482,6 +602,7 @@ def adjudicate_pre_exec_command(
         "expected_failure": {"matched": False},
         "repair_types": [],
         "repair_context": context,
+        "keyword_first_edit": keyword_first_edit,
     }
 
 
@@ -503,6 +624,15 @@ def analyze_runtime_failure(
     normalized_changed = bool(normalized.get("changed", False))
     lowered_output = str(output_text or "").lower()
     if _NO_PYTEST_RE.search(lowered_output) and "pytest" in str(command or ""):
+        keyword_first_edit = adjudicate_keyword_first_edit(
+            issue_kind="repo_local_env_mismatch",
+            issue_subkind="system_python_missing_repo_pytest",
+            title="Repo-local pytest command used the wrong Python interpreter",
+            summary="命令落到了系统 Python，未切到 repo-local `.venv_backend_skills`。",
+            why="repo-local Python contract 没有在执行前生效。",
+            suggested_action="把 repo-local pytest 与 repo-local Python script 执行统一归一化到 `.venv_backend_skills/bin/python3`。",
+            repair_types=list(normalized.get("repair_types", [])),
+        )
         return {
             "matched": True,
             "issue_kind": "repo_local_env_mismatch",
@@ -514,8 +644,18 @@ def analyze_runtime_failure(
             "adjudication": "allow_expected_failure" if expected.get("matched") else ("immediate_repair" if normalized_changed else "strengthen_now"),
             "expected_failure": expected,
             "auto_repair": normalized if normalized_changed and not expected.get("matched") else {},
+            "keyword_first_edit": keyword_first_edit,
         }
     if _LINT_TARGET_DIR_RE.search(output_text):
+        keyword_first_edit = adjudicate_keyword_first_edit(
+            issue_kind="contract_shape_mismatch",
+            issue_subkind="lint_target_requires_directory",
+            title="Governed lint command received file targets instead of directories",
+            summary="lint CLI 的输入合同只接受目录，但命令把文件路径直接传了进去。",
+            why="contract shape 没有在执行前被校验或归一化。",
+            suggested_action="在 pre-exec 阶段把 file targets 提升到受管目录集合。",
+            repair_types=list(normalized.get("repair_types", [])),
+        )
         return {
             "matched": True,
             "issue_kind": "contract_shape_mismatch",
@@ -527,8 +667,18 @@ def analyze_runtime_failure(
             "adjudication": "allow_expected_failure" if expected.get("matched") else ("immediate_repair" if normalized_changed else "strengthen_now"),
             "expected_failure": expected,
             "auto_repair": normalized if normalized_changed and not expected.get("matched") else {},
+            "keyword_first_edit": keyword_first_edit,
         }
     if _TRACEABILITY_RE.search(output_text):
+        keyword_first_edit = adjudicate_keyword_first_edit(
+            issue_kind="governed_validation_failure",
+            issue_subkind="traceability_message_contract_violation",
+            title="Governed traceability message did not satisfy commit contract",
+            summary="受管 Git traceability message 没写清问题、风险或结果，触发了技能级校验失败。",
+            why="governed CLI validation 是已知 contract，但命令未在执行前做 message adjudication。",
+            suggested_action="在 pre-exec 阶段校验并规范化 traceability message；无法安全生成时转 pending decision。",
+            repair_types=list(normalized.get("repair_types", [])),
+        )
         return {
             "matched": True,
             "issue_kind": "governed_validation_failure",
@@ -540,5 +690,6 @@ def analyze_runtime_failure(
             "adjudication": "allow_expected_failure" if expected.get("matched") else ("immediate_repair" if normalized_changed else "pending_decision"),
             "expected_failure": expected,
             "auto_repair": normalized if normalized_changed and not expected.get("matched") else {},
+            "keyword_first_edit": keyword_first_edit,
         }
     return {"matched": False}

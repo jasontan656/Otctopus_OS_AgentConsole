@@ -108,6 +108,7 @@ class AutoRepairRecord(TypedDict, total=False):
     workdir: str
     change_detection_root: str
     decision: str
+    keyword_first_decision: str
 
 
 class ExpectedFailureRule(TypedDict, total=False):
@@ -142,6 +143,24 @@ class CommandNormalizationResult(TypedDict, total=False):
     context: CommandGovernanceContext
 
 
+class KeywordFirstReplacement(TypedDict, total=False):
+    old: str
+    new: str
+    reason: str
+
+
+class KeywordFirstEditDecision(TypedDict, total=False):
+    decision: str
+    rationale: str
+    seamless_state: str
+    requires_user_confirmation: bool
+    confirmation_reason: str
+    deletion_scope: list[str]
+    replacement_pairs: list[KeywordFirstReplacement]
+    forbidden_patterns_present: list[str]
+    why_not_add: str
+
+
 class PreExecCheckResult(TypedDict, total=False):
     status: str
     decision: str
@@ -152,6 +171,7 @@ class PreExecCheckResult(TypedDict, total=False):
     expected_failure: ExpectedFailureMatch
     repair_types: list[str]
     repair_context: CommandGovernanceContext
+    keyword_first_edit: KeywordFirstEditDecision
 
 
 class RuntimeFailureAnalysis(TypedDict, total=False):
@@ -165,6 +185,7 @@ class RuntimeFailureAnalysis(TypedDict, total=False):
     adjudication: str
     expected_failure: ExpectedFailureMatch
     auto_repair: CommandNormalizationResult | dict[str, str]
+    keyword_first_edit: KeywordFirstEditDecision
 
 
 class TurnAuditCloseout(TypedDict, total=False):
@@ -226,9 +247,11 @@ class TurnHookAudit(TypedDict, total=False):
     auto_repairs: list[AutoRepairRecord]
     repair_execution_v1: CommandExecutionResult
     issue_buckets: dict[str, int]
+    keyword_first_buckets: dict[str, int]
     expected_failure_ids: list[str]
     strengthened_optimization_ids: list[str]
     pending_decision_ids: list[str]
+    confirmation_required_ids: list[str]
     residual_risks: list[str]
     turn_audit_closeout: TurnAuditCloseout
     audit_recorded_at: str
@@ -249,6 +272,8 @@ class TurnHookResult(TypedDict, total=False):
     auto_repairs: list[AutoRepairRecord]
     repair_execution_v1: CommandExecutionResult
     issue_buckets: dict[str, int]
+    keyword_first_buckets: dict[str, int]
+    confirmation_required_ids: list[str]
 
 
 class WatchSessionsResult(TypedDict, total=False):

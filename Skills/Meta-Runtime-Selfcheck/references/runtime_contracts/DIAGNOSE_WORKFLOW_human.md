@@ -25,6 +25,7 @@ anchors:
 - 本文件说明默认 `turn hook` 路径；一旦当前回合出现问题证据，应立刻进入，而不是等到 `turn end`。
 - hook 目标不是只给建议，而是先判断是否存在当前边界内的最小可验证修复，并立即执行。
 - 具体运行前仍应先读取 runtime contract。
+- 若要写回 selfcheck 自身，还必须先进入 keyword-first-edit 治理，并在 rewrite/delete 路径上先请求用户确认删除范围。
 </part_A>
 
 <part_B>
@@ -49,6 +50,7 @@ anchors:
     "If none are present, keep the hook quiet and continue the main task.",
     "If CODEX_RUNTIME_PAIN_PROVIDER is absent, fall back to Codex session turn evidence instead of exiting with configuration error.",
     "If issues are present, classify them into: immediately repairable in this turn, not-yet-verifiable but still strengthenable, explicitly allowed expected failures, and residual risks that must be disclosed or escalated.",
+    "When the hook strengthens or writes back Meta-Runtime-Selfcheck itself, run keyword-first-edit-governance first so the chosen path is rewrite > replace > add; if rewrite/delete is selected, stop and request user confirmation with explicit deletion scope.",
     "When a bounded fix is safe and within the active repo boundary, repair first, collect verification evidence, and mark the turn audit with resolved optimization ids before continuing.",
     "When a failure matches the expected-failure whitelist, allow it, record it, and carry it into later strengthening or validation artifacts instead of auto-repairing over it.",
     "Do not downgrade directly into advice when a local repair exists; only retain residual risk after the minimal correct repair has been applied."

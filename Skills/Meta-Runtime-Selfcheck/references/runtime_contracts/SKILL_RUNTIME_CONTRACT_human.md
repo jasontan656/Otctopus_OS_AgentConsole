@@ -25,6 +25,7 @@ anchors:
 - 人类阅读时可用本文件理解 `Meta-Runtime-Selfcheck` 的 CLI-first 入口。
 - 本技能当前不是“只有临近最终回复才进入”的后置复盘器，而是默认贯穿整个回合的 `turn hook` 修复合同。
 - 当任务进入具体 hook、自修或 final reply 合并语境时，再读取对应 directive。
+- 本技能自身一旦进入写回/修复/强化，必须先套用内建的 keyword-first-edit 治理，而不是靠外围提醒临时想起。
 </part_A>
 
 <part_B>
@@ -32,7 +33,7 @@ anchors:
 ```json
 {
   "contract_name": "meta_runtime_selfcheck_runtime_contract",
-  "contract_version": "3.0.0",
+  "contract_version": "4.0.0",
   "skill_name": "__SKILL_NAME__",
   "runtime_source_policy": {
     "primary_runtime_source": "CLI_JSON",
@@ -68,6 +69,7 @@ anchors:
     "Use run-turn-hook as the technical carrier for automatic turn-start, mid-turn, and turn-end hook execution; do not leave auto-trigger as a contract-only statement.",
     "When issue evidence appears anywhere in the active turn, immediately read the turn-hook-self-repair directive.",
     "If the active command belongs to a stage where failure is expected, load the expected-failure-governance directive and pass its whitelist into pre-exec-check or run-turn-hook.",
+    "Whenever Meta-Runtime-Selfcheck itself enters real modification, repair, strengthening, contract convergence, script adjustment, document writeback, or workflow refactor, load keyword-first-edit-governance and adjudicate rewrite > replace > add before writing.",
     "If the issue is local and verifiable inside the active boundary, repair first before continuing the main task.",
     "Persist a turn audit before the final reply so the hook leaves verifiable closeout evidence.",
     "Before the final reply, read the final-reply-merge directive and disclose repaired items, verification evidence, and residual risk.",
@@ -84,6 +86,11 @@ anchors:
       "topic": "expected-failure-governance",
       "doc_kind": "contract",
       "use_when": "A command may intentionally expose failing tests, lint, or contract gaps and must be recorded but not auto-killed."
+    },
+    {
+      "topic": "keyword-first-edit-governance",
+      "doc_kind": "contract",
+      "use_when": "Meta-Runtime-Selfcheck is about to modify its own scripts, contracts, docs, workflow, or any other governed writeback surface."
     },
     {
       "topic": "self-repair-writeback",
@@ -132,7 +139,9 @@ anchors:
     "Skip extra hook output only when the turn stayed smooth and no repair happened.",
     "Do not treat SKILL.md as the primary runtime instruction source.",
     "Do not perform speculative broad auto-repairs under the name of selfcheck.",
-    "Do not default logs or result artifacts to the current working directory."
+    "Do not default logs or result artifacts to the current working directory.",
+    "Do not patch-stack Meta-Runtime-Selfcheck with compatibility layers, legacy shells, aliases, mappings, adapters, or dual-track bridges when rewrite or direct replacement is the cleaner governed path.",
+    "If a rewrite/delete/whole-block replacement path is chosen, enumerate the exact deletion scope and ask the user to confirm before executing the removal."
   ]
 }
 ```

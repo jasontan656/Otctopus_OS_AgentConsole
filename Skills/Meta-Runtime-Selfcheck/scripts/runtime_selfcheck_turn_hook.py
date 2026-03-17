@@ -33,6 +33,9 @@ def _candidate_auto_repairs(items: list[dict[str, object]], *, limit: int) -> li
     seen_commands: set[str] = set()
     for item in items:
         auto = item.get("auto_repair", {}) if isinstance(item.get("auto_repair", {}), dict) else {}
+        decision = str(auto.get("decision", "") or "")
+        if decision and decision != "immediate_repair":
+            continue
         command = str(auto.get("command", "") or "").strip()
         if not command or command in seen_commands:
             continue
@@ -43,7 +46,8 @@ def _candidate_auto_repairs(items: list[dict[str, object]], *, limit: int) -> li
                 "command": command,
                 "workdir": str(auto.get("workdir", "") or ""),
                 "change_detection_root": str(auto.get("change_detection_root", "") or ""),
-                "decision": str(auto.get("decision", "") or ""),
+                "decision": decision,
+                "keyword_first_decision": str(auto.get("keyword_first_decision", "") or ""),
             }
         )
         seen_commands.add(command)
@@ -169,13 +173,23 @@ def run_turn_hook(
         "allow_expected_failure": 0,
         "pending_decision": 0,
     }
+    keyword_first_buckets = {
+        "rewrite": 0,
+        "replace": 0,
+        "add": 0,
+    }
     strengthened_ids: list[str] = []
     expected_failure_ids: list[str] = []
     pending_decision_ids: list[str] = []
+    confirmation_required_ids: list[str] = []
     for item in items:
         adjudication = str(item.get("adjudication", "") or "")
         if adjudication in issue_buckets:
             issue_buckets[adjudication] += 1
+        keyword_first = item.get("keyword_first_edit", {}) if isinstance(item.get("keyword_first_edit", {}), dict) else {}
+        keyword_decision = str(keyword_first.get("decision", "") or "")
+        if keyword_decision in keyword_first_buckets:
+            keyword_first_buckets[keyword_decision] += 1
         if adjudication == "strengthen_now":
             strengthened_ids.append(str(item.get("optimization_id", "") or ""))
         if adjudication == "allow_expected_failure":
@@ -183,6 +197,8 @@ def run_turn_hook(
             item["is_resolved"] = True
         if adjudication == "pending_decision":
             pending_decision_ids.append(str(item.get("optimization_id", "") or ""))
+        if bool(keyword_first.get("requires_user_confirmation", False)):
+            confirmation_required_ids.append(str(item.get("optimization_id", "") or ""))
     pending_items = sum(1 for item in items if not bool(item.get("is_resolved", False)))
     audit_payload: TurnHookAudit = {
         "session_id": str(turn.get("session_id", "") or ""),
@@ -201,9 +217,11 @@ def run_turn_hook(
         "group_count": int(grouped.get("group_count", 0) or 0),
         "groups": grouped.get("groups", []),
         "issue_buckets": issue_buckets,
+        "keyword_first_buckets": keyword_first_buckets,
         "expected_failure_ids": expected_failure_ids,
         "strengthened_optimization_ids": strengthened_ids,
         "pending_decision_ids": pending_decision_ids,
+        "confirmation_required_ids": confirmation_required_ids,
         "auto_repairs": repairs,
         "repair_execution_v1": execution_result,
         "residual_risks": [
@@ -238,6 +256,8 @@ def run_turn_hook(
         "auto_repairs": repairs,
         "repair_execution_v1": execution_result,
         "issue_buckets": dict(saved.get("issue_buckets", {})),
+        "keyword_first_buckets": dict(saved.get("keyword_first_buckets", {})),
+        "confirmation_required_ids": list(saved.get("confirmation_required_ids", [])),
     }
 
 

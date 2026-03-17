@@ -1,0 +1,78 @@
+---
+doc_id: "meta_runtime_selfcheck.keyword_first_edit_governance_contract"
+doc_type: "topic_atom"
+topic: "Embedded keyword-first-edit governance for Meta-Runtime-Selfcheck"
+node_role: "topic_atom"
+domain_type: "runtime_contract"
+anchors:
+  - target: "SKILL_RUNTIME_CONTRACT_human.md"
+    relation: "belongs_to"
+    direction: "upstream"
+    reason: "Keyword-first governance is now a required runtime branch under the main selfcheck contract."
+  - target: "REPAIR_WRITEBACK_CONTRACT_human.md"
+    relation: "governs"
+    direction: "downstream"
+    reason: "Self-repair writeback must obey rewrite > replace > add ordering."
+---
+
+# KEYWORD_FIRST_EDIT_GOVERNANCE_CONTRACT
+
+<part_A>
+- 本文件把 `$Meta-keyword-first-edit` 内置进 `Meta-Runtime-Selfcheck` 自身运行主线。
+- 它不是外围建议，而是 selfcheck 进入写回/修复/强化时的固定门禁。
+- 一旦需要 rewrite/delete/整段替换，必须先列删除范围并请求用户确认。
+</part_A>
+
+<part_B>
+
+```json
+{
+  "directive_name": "meta_runtime_selfcheck_keyword_first_edit_governance",
+  "directive_version": "1.0.0",
+  "doc_kind": "contract",
+  "topic": "keyword-first-edit-governance",
+  "purpose": "Embed Meta-keyword-first-edit as a permanent internal runtime hook for every Meta-Runtime-Selfcheck writeback, strengthening, repair, and workflow convergence path.",
+  "instruction": [
+    "Enter this contract before Meta-Runtime-Selfcheck modifies its own scripts, contracts, documents, examples, workflow assets, or any other governed writeback surface.",
+    "Adjudicate the write strategy in fixed order: rewrite/delete first, keyword-first replace second, add last.",
+    "Reject compatibility layers, legacy shells, mappings, aliases, adapters, dual-track bridges, and explanatory patch overlays unless the user explicitly requests that architecture."
+  ],
+  "workflow": [
+    "Read the full governed object or the smallest complete semantic unit before deciding how to edit it.",
+    "Decide whether the target surface should be rewritten, replaced in place, or extended by a new canonical addition.",
+    "If rewrite/delete/whole-block replacement is selected, enumerate the exact deletion scope first and request user confirmation before executing the removal.",
+    "Only proceed without confirmation when the governed path is a direct replace or a minimal additive completion that does not hide structural drift.",
+    "After the write, verify the repaired surface and confirm the result reads like a single canonical implementation with no patch residue."
+  ],
+  "rules": [
+    "Do not default to patch stacking, compatibility shims, mapping tables, legacy aliases, or bridge layers under the name of selfcheck strengthening.",
+    "Do not treat a large overwrite as implicitly authorized; user confirmation is mandatory when deletion scope exists.",
+    "Do not classify an additive patch as valid when rewrite or replace would produce a cleaner canonical surface.",
+    "The final modified object must satisfy seamless-state governance: it should read as though it was written correctly in one pass, ignoring Git/history traceability."
+  ],
+  "output_contract": {
+    "required_fields": [
+      "decision",
+      "seamless_state",
+      "requires_user_confirmation"
+    ],
+    "rewrite_requires": [
+      "rationale",
+      "confirmation_reason",
+      "deletion_scope"
+    ],
+    "replace_requires": [
+      "replacement_pairs"
+    ],
+    "forbidden_residue": [
+      "legacy",
+      "compatibility layer",
+      "mapping",
+      "alias",
+      "adapter",
+      "dual-track bridge"
+    ]
+  }
+}
+```
+</part_B>
