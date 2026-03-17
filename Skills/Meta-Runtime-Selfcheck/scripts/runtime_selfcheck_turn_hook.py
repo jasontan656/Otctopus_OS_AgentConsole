@@ -9,14 +9,13 @@ from runtime_pain_observability import normalize_text
 from runtime_pain_repair_exec import execute_command_list
 from runtime_pain_types import AutoRepairRecord
 from runtime_pain_types import CommandExecutionResult
-from runtime_pain_types import TurnEvidence
 from runtime_pain_types import TurnGroupSummary
 from runtime_pain_types import TurnHookAudit
 from runtime_pain_types import TurnHookResult
 from runtime_pain_types import WatchSessionsResult
 from runtime_selfcheck_session_source import build_session_fallback_queue
-from runtime_selfcheck_session_source import collect_turn_evidence
 from runtime_selfcheck_session_source import find_session_files
+from runtime_selfcheck_session_source import load_target_turn_evidence
 from runtime_selfcheck_session_source import resolve_codex_home
 from runtime_selfcheck_session_source import _session_id_from_path
 from runtime_selfcheck_store import ensure_store_exists
@@ -26,18 +25,6 @@ from runtime_selfcheck_store import save_turn_audit
 from runtime_selfcheck_store import save_watcher_state
 from runtime_selfcheck_store import turn_audit_json_path
 from runtime_selfcheck_store import watcher_state_json_path
-
-
-def _latest_turn(turns: list[TurnEvidence]) -> TurnEvidence:
-    ordered = sorted(
-        turns,
-        key=lambda row: (
-            str(row.get("completed_at", "") or row.get("started_at", "") or ""),
-            str(row.get("turn_id", "") or ""),
-        ),
-        reverse=True,
-    )
-    return ordered[0] if ordered else {}
 
 
 def _candidate_auto_repairs(items: list[dict[str, object]], *, limit: int) -> list[AutoRepairRecord]:
@@ -87,12 +74,11 @@ def run_turn_hook(
 ) -> TurnHookResult:
     ensure_store_exists()
     effective_auto_repair = auto_repair or mode == "repair"
-    turns = collect_turn_evidence(
+    turn = load_target_turn_evidence(
         codex_home_override=codex_home_override,
         session_id_filter=session_id,
         turn_id_filter=turn_id,
     )
-    turn = _latest_turn(turns)
     if not turn:
         return {
             "status": "ok",
@@ -102,8 +88,7 @@ def run_turn_hook(
         }
 
     queue = build_session_fallback_queue(
-        codex_home_override=codex_home_override,
-        session_id_filter=str(turn.get("session_id", "") or ""),
+        turns=[turn],
         turn_id_filter=str(turn.get("turn_id", "") or ""),
         include_resolved=True,
         max_results=200,

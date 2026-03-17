@@ -8,6 +8,7 @@ import os
 import re
 import shlex
 from pathlib import Path
+from typing import Callable
 from typing import Any
 
 from runtime_pain_observability import normalize_text
@@ -29,6 +30,27 @@ class PendingToolCall:
     tool_name: str
     raw_input: str
     timestamp: str
+    parsed_command: "ParsedExecCommand"
+
+
+@dataclass(frozen=True)
+class ParsedExecCommand:
+    command: str
+    signature: str
+    trigger_script: str
+    trigger_node: str
+
+
+def _latest_turn(turns: list[TurnEvidence]) -> TurnEvidence:
+    ordered = sorted(
+        turns,
+        key=lambda row: (
+            str(row.get("completed_at", "") or row.get("started_at", "") or ""),
+            str(row.get("turn_id", "") or ""),
+        ),
+        reverse=True,
+    )
+    return ordered[0] if ordered else {}
 
 
 def resolve_codex_home(override: str | None = None) -> Path:
@@ -49,13 +71,60 @@ def resolve_codex_home(override: str | None = None) -> Path:
     raise FileNotFoundError("Cannot resolve Codex home from override, workspace, $CODEX_HOME, or ~/.codex")
 
 
-def find_session_files(codex_home: Path, session_id_filter: str | None = None) -> list[Path]:
+def _latest_named_path(root: Path, *, predicate: Callable[[Path], bool]) -> Path | None:
+    candidates = [path for path in root.iterdir() if predicate(path)]
+    return max(candidates, key=lambda path: path.name, default=None)
+
+
+def _find_latest_session_file_structured(sessions_path: Path) -> Path | None:
+    if not sessions_path.exists():
+        return None
+
+    years = sorted(
+        [path for path in sessions_path.iterdir() if path.is_dir() and path.name.isdigit()],
+        key=lambda path: path.name,
+        reverse=True,
+    )
+    for year_dir in years:
+        months = sorted(
+            [path for path in year_dir.iterdir() if path.is_dir() and path.name.isdigit()],
+            key=lambda path: path.name,
+            reverse=True,
+        )
+        for month_dir in months:
+            days = sorted(
+                [path for path in month_dir.iterdir() if path.is_dir() and path.name.isdigit()],
+                key=lambda path: path.name,
+                reverse=True,
+            )
+            for day_dir in days:
+                latest_file = _latest_named_path(day_dir, predicate=lambda path: path.is_file() and path.suffix == ".jsonl")
+                if latest_file is not None:
+                    return latest_file
+    return None
+
+
+def find_session_files(
+    codex_home: Path,
+    session_id_filter: str | None = None,
+    *,
+    newest_first: bool = False,
+    limit: int | None = None,
+) -> list[Path]:
     sessions_path = codex_home / "sessions"
     if not sessions_path.exists():
         return []
     if session_id_filter:
-        return sorted(path for path in sessions_path.rglob(f"*{session_id_filter}*.jsonl") if path.is_file())
-    return sorted(path for path in sessions_path.rglob("*.jsonl") if path.is_file())
+        matches = sorted(
+            (path for path in sessions_path.rglob(f"*{session_id_filter}*.jsonl") if path.is_file()),
+            reverse=newest_first,
+        )
+        return matches[:limit] if limit is not None else matches
+    if newest_first and limit == 1:
+        latest_file = _find_latest_session_file_structured(sessions_path)
+        return [latest_file] if latest_file is not None else []
+    matches = sorted((path for path in sessions_path.rglob("*.jsonl") if path.is_file()), reverse=newest_first)
+    return matches[:limit] if limit is not None else matches
 
 
 def _session_id_from_path(path: Path) -> str | None:
@@ -87,22 +156,36 @@ def _extract_exec_command(raw_input: str) -> str:
     return str(payload.get("cmd", "") or "").strip()
 
 
-def _infer_trigger_script(command: str) -> str:
+def _split_command_tokens(command: str) -> tuple[str, ...]:
     try:
-        tokens = shlex.split(command)
+        return tuple(shlex.split(command))
     except ValueError:
-        return ""
+        return ()
+
+
+def _infer_trigger_script(tokens: tuple[str, ...]) -> str:
     for token in tokens[1:]:
         if token.endswith(".py"):
             return Path(token).name
     return str(tokens[0] if tokens else "").strip()
 
 
-def _infer_trigger_node(command: str) -> str:
-    script = _infer_trigger_script(command)
+def _infer_trigger_node(command: str, tokens: tuple[str, ...]) -> str:
+    script = _infer_trigger_script(tokens)
     if script:
         return script
     return str(command.split(" ", 1)[0]).strip()
+
+
+def _parse_exec_command(raw_input: str) -> ParsedExecCommand:
+    command = _extract_exec_command(raw_input)
+    tokens = _split_command_tokens(command)
+    return ParsedExecCommand(
+        command=command,
+        signature=_normalize_command_signature(command),
+        trigger_script=_infer_trigger_script(tokens),
+        trigger_node=_infer_trigger_node(command, tokens),
+    )
 
 
 def _parse_exec_event(
@@ -116,7 +199,6 @@ def _parse_exec_event(
     tool: PendingToolCall,
     output_text: str,
 ) -> SessionExecEvent:
-    command = _extract_exec_command(tool.raw_input)
     exit_match = EXIT_CODE_RE.search(output_text)
     exit_code = int(exit_match.group("code")) if exit_match else 0
     status = "error" if exit_code != 0 or "Traceback" in output_text else "ok"
@@ -130,15 +212,160 @@ def _parse_exec_event(
         "tool_name": tool.tool_name,
         "call_id": tool.call_id,
         "raw_input": tool.raw_input,
-        "command_preview": _trim_message(command, limit=420),
-        "command_signature": _normalize_command_signature(command),
-        "trigger_script": _infer_trigger_script(command),
-        "trigger_node": _infer_trigger_node(command),
+        "command_preview": _trim_message(tool.parsed_command.command, limit=420),
+        "command_signature": tool.parsed_command.signature,
+        "trigger_script": tool.parsed_command.trigger_script,
+        "trigger_node": tool.parsed_command.trigger_node,
         "output_preview": _trim_message(output_text, limit=400),
         "output_raw": output_text,
         "status": status,
         "exit_code": exit_code,
     }
+
+
+def _collect_turns_from_session_file(
+    session_file: Path,
+    *,
+    session_id: str,
+    turn_id_filter: str | None = None,
+) -> list[TurnEvidence]:
+    turns: list[TurnEvidence] = []
+    pending_tools: dict[str, PendingToolCall] = {}
+    current_turn: TurnEvidence | None = None
+    current_cwd = ""
+    with session_file.open("r", encoding="utf-8", errors="replace") as handle:
+        for line_no, raw_line in enumerate(handle, start=1):
+            line = raw_line.strip()
+            if not line:
+                continue
+            try:
+                entry = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            payload = entry.get("payload", {})
+            if not isinstance(payload, dict):
+                continue
+            entry_type = str(entry.get("type", "") or "")
+            timestamp = str(entry.get("timestamp", "") or "")
+            if entry_type == "session_meta":
+                current_cwd = str(payload.get("cwd", "") or current_cwd)
+                continue
+            if entry_type == "turn_context":
+                current_cwd = str(payload.get("cwd", "") or current_cwd)
+                if current_turn is not None:
+                    current_turn["cwd"] = current_cwd
+                continue
+            if entry_type == "event_msg":
+                event_type = str(payload.get("type", "") or "")
+                if event_type == "task_started":
+                    turn_id = str(payload.get("turn_id", "") or "").strip()
+                    if turn_id_filter and turn_id != turn_id_filter:
+                        current_turn = None
+                        pending_tools.clear()
+                        continue
+                    current_turn = {
+                        "session_id": session_id,
+                        "turn_id": turn_id,
+                        "session_file": str(session_file),
+                        "started_at": timestamp,
+                        "completed_at": "",
+                        "cwd": current_cwd,
+                        "user_message": "",
+                        "assistant_messages": [],
+                        "tool_events": [],
+                        "final_reply": "",
+                        "status": "active",
+                    }
+                    turns.append(current_turn)
+                    pending_tools.clear()
+                    continue
+                if current_turn is None:
+                    continue
+                if event_type == "user_message":
+                    current_turn["user_message"] = str(payload.get("message", "") or "")
+                    continue
+                if event_type == "agent_message":
+                    message = str(payload.get("message", "") or "").strip()
+                    if message:
+                        current_turn["assistant_messages"].append(message)
+                    continue
+                if event_type == "task_complete":
+                    current_turn["completed_at"] = timestamp
+                    current_turn["final_reply"] = str(payload.get("last_agent_message", "") or "")
+                    current_turn["status"] = "completed"
+                    continue
+            if entry_type != "response_item" or current_turn is None:
+                continue
+            payload_type = str(payload.get("type", "") or "")
+            if payload_type == "function_call":
+                tool_name = str(payload.get("name", "") or "")
+                pending_tools[str(payload.get("call_id", "") or "")] = PendingToolCall(
+                    call_id=str(payload.get("call_id", "") or ""),
+                    tool_name=tool_name,
+                    raw_input=str(payload.get("arguments", "") or ""),
+                    timestamp=timestamp,
+                    parsed_command=_parse_exec_command(str(payload.get("arguments", "") or ""))
+                    if tool_name == "exec_command"
+                    else ParsedExecCommand(command="", signature="", trigger_script="", trigger_node=""),
+                )
+                continue
+            if payload_type == "function_call_output":
+                call_id = str(payload.get("call_id", "") or "")
+                tool = pending_tools.pop(call_id, None)
+                if tool is None or tool.tool_name != "exec_command":
+                    continue
+                current_turn["tool_events"].append(
+                    _parse_exec_event(
+                        session_id=session_id,
+                        turn_id=str(current_turn.get("turn_id", "") or ""),
+                        session_file=session_file,
+                        timestamp=timestamp,
+                        line_no=line_no,
+                        cwd=str(current_turn.get("cwd", "") or ""),
+                        tool=tool,
+                        output_text=str(payload.get("output", "") or ""),
+                    )
+                )
+                continue
+            if payload_type == "message" and payload.get("role") == "assistant":
+                chunks = payload.get("content", [])
+                if isinstance(chunks, list):
+                    rendered = "\n".join(
+                        str(item.get("text", "") or "").strip()
+                        for item in chunks
+                        if isinstance(item, dict) and str(item.get("text", "") or "").strip()
+                    ).strip()
+                    if rendered:
+                        current_turn["assistant_messages"].append(rendered)
+    return turns
+
+
+def load_target_turn_evidence(
+    *,
+    codex_home_override: str | None = None,
+    session_id_filter: str | None = None,
+    turn_id_filter: str | None = None,
+) -> TurnEvidence | None:
+    codex_home = resolve_codex_home(codex_home_override)
+    if session_id_filter:
+        session_files = find_session_files(codex_home, session_id_filter=session_id_filter, newest_first=True)
+    elif turn_id_filter:
+        session_files = find_session_files(codex_home, newest_first=True)
+    else:
+        session_files = find_session_files(codex_home, newest_first=True, limit=1)
+
+    for session_file in session_files:
+        session_id = _session_id_from_path(session_file)
+        if session_id is None:
+            continue
+        turns = _collect_turns_from_session_file(
+            session_file,
+            session_id=session_id,
+            turn_id_filter=turn_id_filter,
+        )
+        if turns:
+            return _latest_turn(turns)
+    return None
 
 
 def collect_turn_evidence(
@@ -154,109 +381,13 @@ def collect_turn_evidence(
         session_id = _session_id_from_path(session_file)
         if session_id is None:
             continue
-        pending_tools: dict[str, PendingToolCall] = {}
-        current_turn: TurnEvidence | None = None
-        current_cwd = ""
-        with session_file.open("r", encoding="utf-8", errors="replace") as handle:
-            for line_no, raw_line in enumerate(handle, start=1):
-                line = raw_line.strip()
-                if not line:
-                    continue
-                try:
-                    entry = json.loads(line)
-                except json.JSONDecodeError:
-                    continue
-                payload = entry.get("payload", {})
-                if not isinstance(payload, dict):
-                    continue
-                entry_type = str(entry.get("type", "") or "")
-                timestamp = str(entry.get("timestamp", "") or "")
-                if entry_type == "session_meta":
-                    current_cwd = str(payload.get("cwd", "") or current_cwd)
-                    continue
-                if entry_type == "turn_context":
-                    current_cwd = str(payload.get("cwd", "") or current_cwd)
-                    if current_turn is not None:
-                        current_turn["cwd"] = current_cwd
-                    continue
-                if entry_type == "event_msg":
-                    event_type = str(payload.get("type", "") or "")
-                    if event_type == "task_started":
-                        turn_id = str(payload.get("turn_id", "") or "").strip()
-                        if turn_id_filter and turn_id != turn_id_filter:
-                            current_turn = None
-                            pending_tools.clear()
-                            continue
-                        current_turn = {
-                            "session_id": session_id,
-                            "turn_id": turn_id,
-                            "session_file": str(session_file),
-                            "started_at": timestamp,
-                            "completed_at": "",
-                            "cwd": current_cwd,
-                            "user_message": "",
-                            "assistant_messages": [],
-                            "tool_events": [],
-                            "final_reply": "",
-                            "status": "active",
-                        }
-                        turns.append(current_turn)
-                        pending_tools.clear()
-                        continue
-                    if current_turn is None:
-                        continue
-                    if event_type == "user_message":
-                        current_turn["user_message"] = str(payload.get("message", "") or "")
-                        continue
-                    if event_type == "agent_message":
-                        message = str(payload.get("message", "") or "").strip()
-                        if message:
-                            current_turn["assistant_messages"].append(message)
-                        continue
-                    if event_type == "task_complete":
-                        current_turn["completed_at"] = timestamp
-                        current_turn["final_reply"] = str(payload.get("last_agent_message", "") or "")
-                        current_turn["status"] = "completed"
-                        continue
-                if entry_type != "response_item" or current_turn is None:
-                    continue
-                payload_type = str(payload.get("type", "") or "")
-                if payload_type == "function_call":
-                    pending_tools[str(payload.get("call_id", "") or "")] = PendingToolCall(
-                        call_id=str(payload.get("call_id", "") or ""),
-                        tool_name=str(payload.get("name", "") or ""),
-                        raw_input=str(payload.get("arguments", "") or ""),
-                        timestamp=timestamp,
-                    )
-                    continue
-                if payload_type == "function_call_output":
-                    call_id = str(payload.get("call_id", "") or "")
-                    tool = pending_tools.pop(call_id, None)
-                    if tool is None or tool.tool_name != "exec_command":
-                        continue
-                    current_turn["tool_events"].append(
-                        _parse_exec_event(
-                            session_id=session_id,
-                            turn_id=str(current_turn.get("turn_id", "") or ""),
-                            session_file=session_file,
-                            timestamp=timestamp,
-                            line_no=line_no,
-                            cwd=str(current_turn.get("cwd", "") or ""),
-                            tool=tool,
-                            output_text=str(payload.get("output", "") or ""),
-                        )
-                    )
-                    continue
-                if payload_type == "message" and payload.get("role") == "assistant":
-                    chunks = payload.get("content", [])
-                    if isinstance(chunks, list):
-                        rendered = "\n".join(
-                            str(item.get("text", "") or "").strip()
-                            for item in chunks
-                            if isinstance(item, dict) and str(item.get("text", "") or "").strip()
-                        ).strip()
-                        if rendered:
-                            current_turn["assistant_messages"].append(rendered)
+        turns.extend(
+            _collect_turns_from_session_file(
+                session_file,
+                session_id=session_id,
+                turn_id_filter=turn_id_filter,
+            )
+        )
     return turns
 
 
@@ -523,19 +654,22 @@ def _detect_event_issues(event: dict[str, Any]) -> list[dict[str, Any]]:
 
 def build_session_fallback_queue(
     *,
+    turns: list[TurnEvidence] | None = None,
     codex_home_override: str | None = None,
     session_id_filter: str | None = None,
     turn_id_filter: str | None = None,
     include_resolved: bool = True,
     max_results: int = 200,
 ) -> SessionFallbackQueue:
-    turns = collect_turn_evidence(
-        codex_home_override=codex_home_override,
-        session_id_filter=session_id_filter,
-        turn_id_filter=turn_id_filter,
-    )
+    selected_turns = turns
+    if selected_turns is None:
+        selected_turns = collect_turn_evidence(
+            codex_home_override=codex_home_override,
+            session_id_filter=session_id_filter,
+            turn_id_filter=turn_id_filter,
+        )
     items: list[dict[str, Any]] = []
-    for turn in turns:
+    for turn in selected_turns:
         session_id = str(turn.get("session_id", "") or "")
         turn_id = str(turn.get("turn_id", "") or "")
         resolved_ids: set[str] = set()

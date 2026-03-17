@@ -14,8 +14,85 @@ BATCH_SCRIPT = SKILL_ROOT / "scripts" / "runtime_pain_batch.py"
 SCRIPTS_ROOT = SKILL_ROOT / "scripts"
 VENV_PYTHON = Path("/home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole/.venv_backend_skills/bin/python")
 
+if str(SCRIPTS_ROOT) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS_ROOT))
+
+import runtime_selfcheck_session_source as session_source
+import runtime_selfcheck_turn_hook as turn_hook
+
 
 class TestMetaRuntimeSelfcheckSmoke:
+    def write_session_file(
+        self,
+        codex_home: Path,
+        *,
+        session_id: str,
+        day: str,
+        turns: list[dict[str, str]],
+        cwd: str = "/home/jasontan656/AI_Projects",
+    ) -> Path:
+        session_path = codex_home / "sessions" / "2026" / "03" / day
+        session_path.mkdir(parents=True, exist_ok=True)
+        session_file = session_path / f"rollout-2026-03-{day}T00-08-52-{session_id}.jsonl"
+        entries: list[dict[str, object]] = [
+            {
+                "timestamp": f"2026-03-{day}T00:08:52.000Z",
+                "type": "session_meta",
+                "payload": {"cwd": cwd},
+            }
+        ]
+        for index, turn in enumerate(turns, start=1):
+            second = 52 + index * 10
+            turn_id = turn["turn_id"]
+            command = turn["command"]
+            output = turn["output"]
+            user_message = turn.get("user_message", f"message for {turn_id}")
+            final_reply = turn.get("final_reply", "done")
+            entries.extend(
+                [
+                    {
+                        "timestamp": f"2026-03-{day}T00:08:{second:02d}.000Z",
+                        "type": "event_msg",
+                        "payload": {"type": "task_started", "turn_id": turn_id},
+                    },
+                    {
+                        "timestamp": f"2026-03-{day}T00:08:{second + 1:02d}.000Z",
+                        "type": "event_msg",
+                        "payload": {"type": "user_message", "message": user_message},
+                    },
+                    {
+                        "timestamp": f"2026-03-{day}T00:08:{second + 2:02d}.000Z",
+                        "type": "response_item",
+                        "payload": {
+                            "type": "function_call",
+                            "name": "exec_command",
+                            "call_id": f"call-{index:03d}",
+                            "arguments": json.dumps({"cmd": command}, ensure_ascii=False),
+                        },
+                    },
+                    {
+                        "timestamp": f"2026-03-{day}T00:08:{second + 3:02d}.000Z",
+                        "type": "response_item",
+                        "payload": {
+                            "type": "function_call_output",
+                            "call_id": f"call-{index:03d}",
+                            "output": output,
+                        },
+                    },
+                    {
+                        "timestamp": f"2026-03-{day}T00:08:{second + 4:02d}.000Z",
+                        "type": "event_msg",
+                        "payload": {
+                            "type": "task_complete",
+                            "turn_id": turn_id,
+                            "last_agent_message": final_reply,
+                        },
+                    },
+                ]
+            )
+        session_file.write_text("".join(json.dumps(row, ensure_ascii=False) + "\n" for row in entries), encoding="utf-8")
+        return session_file
+
     def run_python(
         self,
         script: Path,
@@ -35,51 +112,20 @@ class TestMetaRuntimeSelfcheckSmoke:
 
     def make_codex_home(self, tmp_path: Path, *, command: str, output: str) -> Path:
         codex_home = tmp_path / ".codex"
-        session_path = codex_home / "sessions" / "2026" / "03" / "17"
-        session_path.mkdir(parents=True, exist_ok=True)
-        session_file = session_path / "rollout-2026-03-17T00-08-52-019cf768-47cc-7882-bf9c-9d267e78188e.jsonl"
-        entries = [
-            {
-                "timestamp": "2026-03-17T00:08:52.452Z",
-                "type": "session_meta",
-                "payload": {"cwd": "/home/jasontan656/AI_Projects"},
-            },
-            {
-                "timestamp": "2026-03-17T00:08:53.000Z",
-                "type": "event_msg",
-                "payload": {"type": "task_started", "turn_id": "turn-001"},
-            },
-            {
-                "timestamp": "2026-03-17T00:08:53.500Z",
-                "type": "event_msg",
-                "payload": {"type": "user_message", "message": "test runtime selfcheck"},
-            },
-            {
-                "timestamp": "2026-03-17T00:08:54.000Z",
-                "type": "response_item",
-                "payload": {
-                    "type": "function_call",
-                    "name": "exec_command",
-                    "call_id": "call-001",
-                    "arguments": json.dumps({"cmd": command}, ensure_ascii=False),
-                },
-            },
-            {
-                "timestamp": "2026-03-17T00:08:55.000Z",
-                "type": "response_item",
-                "payload": {
-                    "type": "function_call_output",
-                    "call_id": "call-001",
+        self.write_session_file(
+            codex_home,
+            session_id="019cf768-47cc-7882-bf9c-9d267e78188e",
+            day="17",
+            turns=[
+                {
+                    "turn_id": "turn-001",
+                    "command": command,
                     "output": output,
-                },
-            },
-            {
-                "timestamp": "2026-03-17T00:08:56.000Z",
-                "type": "event_msg",
-                "payload": {"type": "task_complete", "turn_id": "turn-001", "last_agent_message": "done"},
-            },
-        ]
-        session_file.write_text("".join(json.dumps(row, ensure_ascii=False) + "\n" for row in entries), encoding="utf-8")
+                    "user_message": "test runtime selfcheck",
+                    "final_reply": "done",
+                }
+            ],
+        )
         return codex_home
 
     def test_runtime_pain_batch_help_starts(self) -> None:
@@ -286,3 +332,95 @@ class TestMetaRuntimeSelfcheckSmoke:
         audit = json.loads(audit_path.read_text(encoding="utf-8"))
         assert audit["resolved_optimization_ids"]
         assert audit["hook_status"] == "repaired"
+
+    def test_session_filters_only_process_target_session_and_turn(self, tmp_path: Path) -> None:
+        codex_home = tmp_path / ".codex"
+        self.write_session_file(
+            codex_home,
+            session_id="019cf768-47cc-7882-bf9c-9d267e78188e",
+            day="17",
+            turns=[
+                {
+                    "turn_id": "turn-001",
+                    "command": f"{sys.executable} script.py --bad-flag",
+                    "output": "Process exited with code 2\nNo such option: --bad-flag\n",
+                },
+                {
+                    "turn_id": "turn-002",
+                    "command": f"{sys.executable} script.py contract",
+                    "output": "Process exited with code 2\nNo such command: 'contract'\n",
+                },
+            ],
+        )
+        self.write_session_file(
+            codex_home,
+            session_id="019cf768-47cc-7882-bf9c-9d267e78188f",
+            day="16",
+            turns=[
+                {
+                    "turn_id": "turn-noise",
+                    "command": f"{sys.executable} script.py --other",
+                    "output": "Process exited with code 2\nNo such option: --other\n",
+                }
+            ],
+        )
+
+        queue = session_source.build_session_fallback_queue(
+            codex_home_override=str(codex_home),
+            session_id_filter="019cf768-47cc-7882-bf9c-9d267e78188e",
+            turn_id_filter="turn-002",
+            include_resolved=True,
+            max_results=20,
+        )
+
+        assert queue["total_items"] == 1
+        item = queue["items"][0]
+        assert item["session_id"] == "019cf768-47cc-7882-bf9c-9d267e78188e"
+        assert item["thread_id"] == "turn-002"
+        assert item["issue_subkind"] == "unknown_subcommand"
+
+    def test_run_turn_hook_default_path_avoids_unbounded_history_rglob(self, tmp_path: Path, monkeypatch) -> None:
+        codex_home = tmp_path / ".codex"
+        self.write_session_file(
+            codex_home,
+            session_id="019cf768-47cc-7882-bf9c-9d267e78188e",
+            day="16",
+            turns=[
+                {
+                    "turn_id": "turn-old",
+                    "command": f"{sys.executable} script.py --old",
+                    "output": "Process exited with code 2\nNo such option: --old\n",
+                }
+            ],
+        )
+        self.write_session_file(
+            codex_home,
+            session_id="019cf768-47cc-7882-bf9c-9d267e78188f",
+            day="17",
+            turns=[
+                {
+                    "turn_id": "turn-new",
+                    "command": f"{sys.executable} script.py --new",
+                    "output": "Process exited with code 2\nNo such option: --new\n",
+                }
+            ],
+        )
+        runtime_root = tmp_path / "runtime"
+        monkeypatch.setenv("CODEX_SKILL_RUNTIME_ROOT", str(runtime_root))
+
+        original_rglob = Path.rglob
+
+        def fail_unbounded_rglob(self: Path, pattern: str):  # type: ignore[override]
+            if self == codex_home / "sessions" and pattern == "*.jsonl":
+                raise AssertionError("default run-turn-hook path should not rglob the full session history")
+            return original_rglob(self, pattern)
+
+        monkeypatch.setattr(Path, "rglob", fail_unbounded_rglob)
+
+        payload = turn_hook.run_turn_hook(codex_home_override=str(codex_home), mode="diagnose")
+
+        assert payload["status"] == "ok"
+        assert payload["turn_id"] == "turn-new"
+        assert payload["issues_detected"] == 1
+        audit = json.loads(Path(payload["turn_audit_path"]).read_text(encoding="utf-8"))
+        assert audit["turn_id"] == "turn-new"
