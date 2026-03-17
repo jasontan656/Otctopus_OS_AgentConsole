@@ -74,8 +74,8 @@ def emit(document: dict[str, object], as_json: bool) -> int:
     return 0
 
 
-def build_runtime_contract(payload_path: Path) -> dict[str, object]:
-    semantic_pool = load_semantic_pool_entries(payload_path)
+def _runtime_contract_document(payload_path: Path, semantic_pool: list[SemanticEntry]) -> dict[str, object]:
+    validate_payload(semantic_pool)
     return {
         "contract_name": "META_SEMANTIC_COLLECTION_RUNTIME_CONTRACT",
         "contract_version": "v1",
@@ -106,6 +106,10 @@ def build_runtime_contract(payload_path: Path) -> dict[str, object]:
         },
         "semantic_pool_payload": semantic_pool,
     }
+
+
+def build_runtime_contract(payload_path: Path) -> dict[str, object]:
+    return _runtime_contract_document(payload_path, load_semantic_pool_entries(payload_path))
 
 
 def normalize_terms(raw_terms: list[str]) -> list[str]:
@@ -220,37 +224,7 @@ def cmd_upsert_payload(args: argparse.Namespace) -> int:
 
 
 def build_runtime_contract_from_entries(payload_path: Path, semantic_pool: list[SemanticEntry]) -> dict[str, object]:
-    validate_payload(semantic_pool)
-    return {
-        "contract_name": "META_SEMANTIC_COLLECTION_RUNTIME_CONTRACT",
-        "contract_version": "v1",
-        "skill_name": "Meta-Semantic-Collection",
-        "enforcement_mode": "required",
-        "turn_start": {
-            "required": True,
-            "action": "load_semantic_pool_runtime_contract",
-            "cli_command": "./.venv_backend_skills/bin/python Skills/Meta-Semantic-Collection/scripts/Cli_Toolbox.py runtime-contract --json",
-        },
-        "turn_end": {
-            "required": False,
-            "action": "upsert_semantic_pool_on_valid_clarification",
-            "condition": "only when a new valid semantic clarification appears in this turn",
-        },
-        "translation_contract": {
-            "payload_file": str(payload_path),
-            "entry_schema": {
-                "collection": "list[str]",
-                "action_semantic_description": "str",
-            },
-            "hard_rules": [
-                "semantic_pool_payload must only be read through this runtime contract in normal execution",
-                "multiple terms may map to one action_semantic_description",
-                "one term must not map to multiple action_semantic_description values",
-                "when prompt terms hit the pool, pool semantics override model default interpretation",
-            ],
-        },
-        "semantic_pool_payload": semantic_pool,
-    }
+    return _runtime_contract_document(payload_path, semantic_pool)
 
 
 def build_parser() -> argparse.ArgumentParser:
