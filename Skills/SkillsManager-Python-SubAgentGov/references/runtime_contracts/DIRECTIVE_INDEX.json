@@ -1,0 +1,16 @@
+{
+  "topics": {
+    "execution_boundary": {
+      "json_path": "EXECUTION_BOUNDARY_DIRECTIVE.json",
+      "human_path": "EXECUTION_BOUNDARY_DIRECTIVE_human.md"
+    },
+    "runtime_layout": {
+      "json_path": "RUNTIME_LAYOUT_DIRECTIVE.json",
+      "human_path": "RUNTIME_LAYOUT_DIRECTIVE_human.md"
+    },
+    "closeout_sequence": {
+      "json_path": "CLOSEOUT_SEQUENCE_DIRECTIVE.json",
+      "human_path": "CLOSEOUT_SEQUENCE_DIRECTIVE_human.md"
+    }
+  }
+}

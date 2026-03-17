@@ -1,0 +1,11 @@
+{
+  "topic": "execution_boundary",
+  "summary": "Define the fixed controller/subagent boundary for Python governance runs.",
+  "rules": [
+    "The controller may discover targets, launch tmux-guarded codex workers, poll progress, verify outputs, commit-and-push, mirror sync, and close sessions.",
+    "A single worker may only edit Skills/<target_skill> and must emit result.json plus result.md under its runtime directory.",
+    "Workers may not edit ~/.codex/skills, Skills/.system, Skills/_shared, or any sibling skill directories.",
+    "Workers may not run Git commit, push, or mirror sync; those operations are controller-owned closeout steps.",
+    "All temporary files must stay inside Codex_Skill_Runtime/SkillsManager-Python-SubAgentGov/<target_skill>/tmp."
+  ]
+}

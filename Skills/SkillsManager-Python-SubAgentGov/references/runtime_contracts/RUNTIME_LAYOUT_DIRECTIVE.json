@@ -1,0 +1,10 @@
+{
+  "topic": "runtime_layout",
+  "summary": "Describe the runtime artifact layout used for resumable governance.",
+  "rules": [
+    "The controller status file lives at Codex_Skill_Runtime/SkillsManager-Python-SubAgentGov/controller_status.json.",
+    "Each target skill owns one runtime subdirectory named after the skill under Codex_Skill_Runtime/SkillsManager-Python-SubAgentGov/.",
+    "Each runtime subdirectory stores prompt.md, codex.jsonl, last_message.txt, exit_code.txt, state.txt, result.json, result.md, closure.json, and tmp/.",
+    "closure.json is the completion witness for the full per-skill governance loop, not merely the subagent run."
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "contract_name": "skillsmanager_python_subagentgov_runtime_contract",
+  "contract_version": "2.0.0",
+  "skill_name": "SkillsManager-Python-SubAgentGov",
+  "skill_role": "python_subagent_governor",
+  "runtime_source_policy": {
+    "runtime_rule_source": "CLI_JSON",
+    "documents_are_source_of_truth": true,
+    "command_names_are_repo_local_convention": true
+  },
+  "profile": {
+    "doc_topology": "referenced",
+    "tooling_surface": "automation_cli",
+    "workflow_control": "guardrailed"
+  },
+  "tool_entry": {
+    "script": "scripts/Cli_Toolbox.py",
+    "commands": {
+      "contract": "read the runtime contract",
+      "directive": "read a fixed directive",
+      "list-targets": "discover governed skill directories under Skills/",
+      "status": "summarize pending/active/completed runtime state",
+      "render-prompt": "render the single-skill subagent prompt and result destinations",
+      "govern": "launch or resume the full controlled governance loop"
+    }
+  },
+  "subagent_execution": {
+    "launcher": "codex exec --json",
+    "session_guard": "tmux",
+    "model": "gpt-5.4",
+    "reasoning_effort": "high",
+    "single_skill_per_subagent": true,
+    "runtime_tmp_scope": "Codex_Skill_Runtime/SkillsManager-Python-SubAgentGov/<skill_name>/tmp"
+  },
+  "controller_defaults": {
+    "max_parallel": 4,
+    "poll_seconds": 10,
+    "reserved_skill_names": [
+      ".system",
+      "_shared"
+    ],
+    "self_governance_default": "excluded_from_all_scope_until_explicitly_targeted"
+  },
+  "artifact_policy": {
+    "mode": "runtime_local_artifacts",
+    "resolver": "skill_runtime_contract",
+    "paths": {
+      "runtime_root_pattern": "Codex_Skill_Runtime/SkillsManager-Python-SubAgentGov",
+      "controller_status_path": "Codex_Skill_Runtime/SkillsManager-Python-SubAgentGov/controller_status.json",
+      "per_skill_runtime_pattern": "Codex_Skill_Runtime/SkillsManager-Python-SubAgentGov/<skill_name>/",
+      "per_skill_artifacts": [
+        "prompt.md",
+        "codex.jsonl",
+        "last_message.txt",
+        "exit_code.txt",
+        "state.txt",
+        "result.json",
+        "result.md",
+        "closure.json",
+        "tmp/"
+      ]
+    }
+  },
+  "hard_constraints": [
+    "repo truth source is Skills/ under Otctopus_OS_AgentConsole",
+    "installed mirror under ~/.codex/skills is never the governance source",
+    "single-skill subagents may only edit one target skill directory",
+    "verify, commit-and-push, mirror sync, and session closeout must remain serial",
+    "robustness handling must tolerate verification_commands string or object schemas and partially written result.json files"
+  ]
+}

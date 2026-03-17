@@ -1,0 +1,10 @@
+{
+  "topic": "closeout_sequence",
+  "summary": "Define the serial closeout order for every completed target skill.",
+  "rules": [
+    "When one worker completes, the controller must immediately enter serial closeout before filling the next slot.",
+    "The closeout order is fixed: verify -> commit-and-push -> mirror sync -> session closeout.",
+    "Remote writes must remain serial and must use the traceable record remote permitted by Meta-github-operation.",
+    "Mirror sync must run after Git traceability and must keep repo truth source plus ~/.codex/skills installation mirror consistent."
+  ]
+}
