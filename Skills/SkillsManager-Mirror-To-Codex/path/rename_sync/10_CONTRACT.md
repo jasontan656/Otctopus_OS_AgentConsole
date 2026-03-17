@@ -2,6 +2,35 @@
 doc_id: skillsmanager_mirror_to_codex.path.rename_sync.contract
 doc_type: contract_doc
 topic: Rename sync contract
+contract_name: skillsmanager_mirror_to_codex.rename_sync
+contract_version: "1.0"
+validation_mode: required_and_optional_fields_declared
+required_fields:
+  - status
+  - action
+  - scope
+  - skill_name
+  - source_skill_name
+  - destination_skill_name
+  - resolved_mode
+  - source
+  - destination
+  - mirror_root
+  - skills_root
+  - codex_root
+  - dry_run
+  - rename_from
+  - rename_from_destination_skill_name
+  - rename_from_destination
+  - staged_destination
+  - rename_source_exists
+  - rename_destination_preexisting
+  - removed_existing_new_destination
+  - renamed_path
+  - command
+  - workflow
+optional_fields:
+  - requested_skill_name
 reading_chain:
 - key: tools
   target: 15_TOOLS.md

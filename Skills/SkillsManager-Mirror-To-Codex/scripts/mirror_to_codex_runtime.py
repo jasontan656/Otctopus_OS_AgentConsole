@@ -2,12 +2,73 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
-from typing import Any
+from typing import Literal
+from typing import NotRequired
+from typing import TypedDict
 
 import yaml
 
 
-def runtime_payload() -> dict[str, Any]:
+class RuntimePayload(TypedDict):
+    status: Literal["ok"]
+    skill_name: str
+    skill_mode: str
+    runtime_entry: str
+    root_shape: list[str]
+    governed_scope: list[str]
+    commands: list[str]
+    notes: list[str]
+
+
+class FrontmatterEdge(TypedDict):
+    key: str
+    target: str
+    hop: str
+
+
+class CompiledSegment(TypedDict):
+    source: str
+    title: str
+    content: str
+
+
+class ReadingChainMissingSkill(TypedDict):
+    status: Literal["error"]
+    error: Literal["missing_skill_md"]
+    target_root: str
+
+
+class ReadingChainEntryNotFound(TypedDict):
+    status: Literal["error"]
+    error: Literal["entry_not_found"]
+    entry: str
+    available_entries: list[str]
+    target_root: str
+
+
+class ReadingChainBranchRequired(TypedDict):
+    status: Literal["branch_selection_required"]
+    target_root: str
+    entry: str
+    resolved_chain: list[str]
+    available_next: list[str]
+    current_source: str
+    segments: list[CompiledSegment]
+
+
+class ReadingChainSuccess(TypedDict):
+    status: Literal["ok"]
+    target_root: str
+    entry: str
+    resolved_chain: list[str]
+    segments: list[CompiledSegment]
+    compiled_markdown: str
+
+
+ReadingChainResult = ReadingChainMissingSkill | ReadingChainEntryNotFound | ReadingChainBranchRequired | ReadingChainSuccess
+
+
+def runtime_payload() -> RuntimePayload:
     return {
         "status": "ok",
         "skill_name": "SkillsManager-Mirror-To-Codex",
@@ -39,7 +100,7 @@ def _read_text(path: Path) -> str:
     return path.read_text(encoding="utf-8")
 
 
-def _parse_frontmatter(markdown_path: Path) -> tuple[dict[str, Any], str]:
+def _parse_frontmatter(markdown_path: Path) -> tuple[dict[str, object], str]:
     text = _read_text(markdown_path)
     if not text.startswith("---\n"):
         return {}, text
@@ -51,10 +112,10 @@ def _parse_frontmatter(markdown_path: Path) -> tuple[dict[str, Any], str]:
     return payload if isinstance(payload, dict) else {}, body
 
 
-def _facade_entries(markdown_path: Path) -> list[dict[str, str]]:
+def _facade_entries(markdown_path: Path) -> list[FrontmatterEdge]:
     _frontmatter, body = _parse_frontmatter(markdown_path)
-    items: list[dict[str, str]] = []
-    current: dict[str, str] | None = None
+    items: list[FrontmatterEdge] = []
+    current: FrontmatterEdge | None = None
     in_entries = False
     for raw_line in body.splitlines():
         stripped = raw_line.strip()
@@ -82,14 +143,14 @@ def _facade_entries(markdown_path: Path) -> list[dict[str, str]]:
     return items
 
 
-def _reading_chain(markdown_path: Path) -> list[dict[str, str]]:
+def _reading_chain(markdown_path: Path) -> list[FrontmatterEdge]:
     if markdown_path.name == "SKILL.md":
         return _facade_entries(markdown_path)
     frontmatter, _ = _parse_frontmatter(markdown_path)
     raw_chain = frontmatter.get("reading_chain")
     if not isinstance(raw_chain, list):
         return []
-    chain: list[dict[str, str]] = []
+    chain: list[FrontmatterEdge] = []
     for item in raw_chain:
         if not isinstance(item, dict):
             continue
@@ -108,7 +169,7 @@ def _extract_title(body: str) -> str:
     return ""
 
 
-def _select_edge(edges: list[dict[str, str]], key: str | None) -> tuple[dict[str, str] | None, list[str]]:
+def _select_edge(edges: list[FrontmatterEdge], key: str | None) -> tuple[FrontmatterEdge | None, list[str]]:
     if not edges:
         return None, []
     if key is None:
@@ -119,7 +180,7 @@ def _select_edge(edges: list[dict[str, str]], key: str | None) -> tuple[dict[str
     return None, [edge["key"] for edge in edges]
 
 
-def compile_reading_chain(target_root: Path, entry_key: str, selection_keys: list[str]) -> dict[str, Any]:
+def compile_reading_chain(target_root: Path, entry_key: str, selection_keys: list[str]) -> ReadingChainResult:
     skill_md = target_root / "SKILL.md"
     if not skill_md.is_file():
         return {"status": "error", "error": "missing_skill_md", "target_root": str(target_root)}
@@ -138,7 +199,7 @@ def compile_reading_chain(target_root: Path, entry_key: str, selection_keys: lis
     selection_queue = list(selection_keys)
     current = (skill_md.parent / first_edge["target"]).resolve()
     resolved_chain = ["SKILL.md"]
-    segments: list[dict[str, str]] = []
+    segments: list[CompiledSegment] = []
 
     _skill_frontmatter, skill_body = _parse_frontmatter(skill_md)
     segments.append({"source": "SKILL.md", "title": _extract_title(skill_body), "content": skill_body.strip()})
