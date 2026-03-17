@@ -24,12 +24,23 @@ class TestMetaEnhancePromptRuntime:
             env=env,
         )
 
-    def run_toolbox(self, *args: str, check: bool = True) -> subprocess.CompletedProcess[str]:
+    def run_toolbox(
+        self,
+        *args: str,
+        check: bool = True,
+        workspace_root: Path | None = None,
+        stdin_text: str | None = None,
+    ) -> subprocess.CompletedProcess[str]:
+        env = os.environ.copy()
+        if workspace_root is not None:
+            env["META_ENHANCE_PROMPT_WORKSPACE_ROOT"] = str(workspace_root)
         return subprocess.run(
             ["python3", str(TOOLBOX_SCRIPT), *args],
             check=check,
             capture_output=True,
             text=True,
+            input=stdin_text,
+            env=env,
         )
 
     def write_sample_session(self, codex_home: Path, *, session_id: str = "019c-example") -> Path:
@@ -285,9 +296,44 @@ class TestMetaEnhancePromptRuntime:
         session_context_payload = json.loads(session_context.stdout)
 
         assert contract_payload["contract_name"] == "meta_enhance_prompt_runtime_contract"
+        assert "Cli_Toolbox.py intent-clarify --input-file" in contract_payload["tool_entry"]["commands"]["intent_clarify"]
+        assert "Cli_Toolbox.py skill-directive --input-file" in contract_payload["tool_entry"]["commands"]["skill_directive"]
+        assert "--input-text" not in json.dumps(contract_payload["tool_entry"]["commands"], ensure_ascii=False)
         assert directive_payload["topic"] == "intent-clarify"
         assert legacy_alias_payload["topic"] == "intent-clarify"
         assert session_context_payload["topic"] == "session-context-read"
+
+    def test_toolbox_intent_clarify_reads_stdin_safely(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            completed = self.run_toolbox(
+                "intent-clarify",
+                "--json",
+                workspace_root=Path(tmp),
+                stdin_text="INTENT: 把原始文本安全地转成最终意图输出。",
+            )
+
+            payload = json.loads(completed.stdout)
+            assert payload["mode_decision"] == "intent_clarify_mode"
+            assert payload["extracted_intent"] == "把原始文本安全地转成最终意图输出。"
+            assert payload["final_intent_output"].startswith("INTENT:\n")
+
+    def test_toolbox_skill_directive_reads_input_file_safely(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            workspace_root = Path(tmp)
+            input_path = workspace_root / "raw_prompt.txt"
+            input_path.write_text("$Meta-Enhance-Prompt strengthen prompt", encoding="utf-8")
+
+            completed = self.run_toolbox(
+                "skill-directive",
+                "--input-file",
+                str(input_path),
+                "--json",
+                workspace_root=workspace_root,
+            )
+
+            payload = json.loads(completed.stdout)
+            assert payload["mode_decision"] == "skill_directive_mode"
+            assert payload["resolved_skills"][0]["skill_name"] == "Meta-Enhance-Prompt"
 
     def test_toolbox_read_session_context_defaults_to_last_assistant_plus_user_prompt(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

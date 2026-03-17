@@ -3,6 +3,8 @@ from __future__ import annotations
 
 import argparse
 import json
+import subprocess
+import sys
 from pathlib import Path
 from typing import Any, TypedDict, cast
 
@@ -13,6 +15,7 @@ SKILL_ROOT = SCRIPT_DIR.parent
 RUNTIME_CONTRACTS_ROOT = SKILL_ROOT / "references" / "runtime_contracts"
 CONTRACT_PATH = RUNTIME_CONTRACTS_ROOT / "SKILL_RUNTIME_CONTRACT.json"
 DIRECTIVE_INDEX_PATH = RUNTIME_CONTRACTS_ROOT / "DIRECTIVE_INDEX.json"
+FILTER_SCRIPT_PATH = SCRIPT_DIR / "filter_active_invoke_output.py"
 
 
 class ToolEntry(TypedDict):
@@ -171,6 +174,40 @@ def cmd_read_session_context(args: argparse.Namespace) -> int:
     return 0
 
 
+def _run_filter_entry(args: argparse.Namespace) -> int:
+    command = [sys.executable, str(FILTER_SCRIPT_PATH), "--mode", str(args.filter_mode or "intent_clarify")]
+    if args.input_file:
+        command.extend(["--input-file", str(args.input_file)])
+    if args.template_file:
+        command.extend(["--template-file", str(args.template_file)])
+    if args.output_path:
+        command.extend(["--output-path", str(args.output_path)])
+    if args.json:
+        command.append("--json")
+
+    stdin_text = None if args.input_file else sys.stdin.read()
+    completed = subprocess.run(command, input=stdin_text, capture_output=True, text=True)
+    if completed.stdout:
+        sys.stdout.write(completed.stdout)
+    if completed.stderr:
+        sys.stderr.write(completed.stderr)
+    return int(completed.returncode)
+
+
+def _add_filter_entry(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+    *,
+    command_name: str,
+    filter_mode: str,
+) -> None:
+    parser = subparsers.add_parser(command_name)
+    parser.add_argument("--input-file", help="Path to raw prompt text. If omitted, read from stdin.")
+    parser.add_argument("--template-file", help="Optional template override path.")
+    parser.add_argument("--output-path", help="Optional explicit output artifact path.")
+    parser.add_argument("--json", action="store_true")
+    parser.set_defaults(func=_run_filter_entry, filter_mode=filter_mode)
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Meta-Enhance-Prompt unified toolbox")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -205,6 +242,10 @@ def build_parser() -> argparse.ArgumentParser:
     session_context.add_argument("--case-sensitive", action="store_true")
     session_context.add_argument("--json", action="store_true")
     session_context.set_defaults(func=cmd_read_session_context)
+
+    _add_filter_entry(subparsers, command_name="intent-clarify", filter_mode="intent_clarify")
+    _add_filter_entry(subparsers, command_name="active-invoke", filter_mode="active_invoke")
+    _add_filter_entry(subparsers, command_name="skill-directive", filter_mode="skill_directive")
     return parser
 
 

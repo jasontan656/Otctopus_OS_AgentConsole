@@ -31,9 +31,10 @@ metadata:
   - 可直接用别名：`--codex-id <id>` / `--session-id <id>` / `--resume-id <id>`
   - 默认输出聚焦 `focused_chat.user_prompt + focused_chat.assistant_reply`；需要同会话其他上下文时，再补 `--message-key/--message-query/--context-mode`
 - 意图澄清过滤入口：
-  - `python3 scripts/filter_active_invoke_output.py --mode intent_clarify --input-text "<RAW_INTENT_DRAFT_OR_USER_PROMPT>" --json`
-  - `python3 scripts/filter_active_invoke_output.py --mode active_invoke --input-text "<RAW_INTENT_DRAFT_OR_USER_PROMPT>" --json`（兼容别名）
-  - `python3 scripts/filter_active_invoke_output.py --mode skill_directive --input-text "<USER_INTENT_TEXT>" --json`
+  - `./.venv_backend_skills/bin/python Skills/Meta-Enhance-Prompt/scripts/Cli_Toolbox.py intent-clarify --input-file <path_to_raw_intent_text_file> --json`
+  - `./.venv_backend_skills/bin/python Skills/Meta-Enhance-Prompt/scripts/Cli_Toolbox.py active-invoke --input-file <path_to_raw_intent_text_file> --json`（兼容别名）
+  - `./.venv_backend_skills/bin/python Skills/Meta-Enhance-Prompt/scripts/Cli_Toolbox.py skill-directive --input-file <path_to_user_intent_text_file> --json`
+  - 若未提供 `--input-file`，上述三个子命令默认从 `stdin` 读取原始文本，避免 shell quoting 风险
 - 模型读取合同、workflow、instruction、guide 时必须优先消费 CLI JSON；human markdown 只作为叙事镜像。
 
 ## 3. 必读顺序
@@ -56,6 +57,7 @@ metadata:
 - 输入里若出现 `codex id / session id / resume id` 与“先阅读最后一轮 assistant 回复”的描述，运行时必须先当作上下文读取参数处理，而不是把这段话直接写进最终 `INTENT:`。
 - 输入里若出现 `codex id / session id / resume id` 与“先阅读聊天记录”的描述，运行时必须优先使用 `read-session-context`；禁止退化成手工搜索原始 session jsonl。
 - `skill_directive` 不再把模型路由回 `SKILL.md`，而是返回 CLI-first 入口指引。
+- 原始长文本输入的 canonical 入口固定走 `Cli_Toolbox.py intent-clarify / active-invoke / skill-directive` 的 `--input-file` 或 `stdin`；不要把整段 prompt 继续塞进 shell 参数里的 `--input-text`。
 - 运行时日志默认治理到受管 runtime root；结果文件默认治理到受管 result root，并支持显式 `--output-path`。
 
 ## 5. 参考入口
