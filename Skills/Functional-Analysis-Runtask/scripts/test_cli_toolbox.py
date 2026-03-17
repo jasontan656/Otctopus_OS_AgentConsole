@@ -9,7 +9,6 @@ import unittest
 
 import yaml
 
-
 SKILL_ROOT = Path(__file__).resolve().parents[1]
 CLI = SKILL_ROOT / "scripts" / "Cli_Toolbox.py"
 
@@ -64,7 +63,6 @@ def write_closed_task_runtime(task_dir: Path, task_id: str, workspace_root: Path
     }
     task_dir.mkdir(parents=True, exist_ok=True)
     (task_dir / "task_runtime.yaml").write_text(yaml.safe_dump(payload, sort_keys=False, allow_unicode=True), encoding="utf-8")
-
 
 class CliToolboxRegressionTest(unittest.TestCase):
     def test_runtime_contract_exposes_nine_stage_workflow(self) -> None:

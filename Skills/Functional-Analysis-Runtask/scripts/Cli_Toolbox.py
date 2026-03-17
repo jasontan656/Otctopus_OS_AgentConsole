@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+from collections.abc import Mapping
 import json
 from pathlib import Path
 
@@ -17,13 +18,13 @@ from runtask_workflow_runtime import (
 )
 
 
-def emit(payload: dict[str, object], as_json: bool) -> int:
+def emit(response: Mapping[str, object], as_json: bool) -> int:
     if as_json:
-        print(json.dumps(payload, indent=2, ensure_ascii=False))
+        print(json.dumps(dict(response), indent=2, ensure_ascii=False))
     else:
-        for key, value in payload.items():
+        for key, value in response.items():
             print(f"{key}: {value}")
-    return 0 if payload.get("status", "ok") not in {"fail", "error"} else 1
+    return 0 if response.get("status", "ok") not in {"fail", "error"} else 1
 
 
 def cmd_runtime_contract(args: argparse.Namespace) -> int:
