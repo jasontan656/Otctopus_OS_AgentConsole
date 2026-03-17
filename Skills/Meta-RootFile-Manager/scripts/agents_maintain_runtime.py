@@ -3,7 +3,7 @@ from __future__ import annotations
 import re
 from copy import deepcopy
 from pathlib import Path
-from typing import Any
+from typing import Any, TypedDict, cast
 
 from rootfile_runtime import (
     _duplicate_phrase,
@@ -74,6 +74,73 @@ PAYLOAD_FIELD_ALIASES: dict[str, tuple[str, ...]] = {
 QUOTED_TEXT_PATTERN = re.compile(r"`([^`]+)`|“([^”]+)”|\"([^\"]+)\"|'([^']+)'")
 
 
+JSONScalar = str | int | float | bool | None
+JSONValue = JSONScalar | list["JSONValue"] | dict[str, "JSONValue"]
+
+
+class GovernedTargetCandidateReport(TypedDict):
+    source_path: str
+    relative_path: str
+    rank_score: int
+    hierarchy_role: str
+    reason: str
+    rank: int
+
+
+class SelectedTarget(TypedDict):
+    source_path: str
+    relative_path: str
+    hierarchy_role: str
+
+
+class InheritanceHit(TypedDict):
+    source_path: str
+    relative_path: str
+    surface_path: str
+    matched_phrase: str
+
+
+class DuplicateGate(TypedDict):
+    status: str
+    reason: str
+
+
+class PushPlan(TypedDict):
+    internal_truth_source: str
+    external_render_target: str
+    lint_required: bool
+
+
+class MaintainAgentsOperation(TypedDict):
+    managed_human_changed: bool
+    external_pushed: bool
+    installed_synced: bool
+    installed_sync_copied_files: list[str]
+    installed_sync_removed_extra_files: list[str]
+
+
+class MaintainAgentsResponse(TypedDict):
+    stage: str
+    intent: str
+    normalized_intent: str
+    governed_target_candidates: list[GovernedTargetCandidateReport]
+    selected_target: SelectedTarget | None
+    semantic_family: str
+    selected_part: str
+    payload_atoms: list[str]
+    part_a_atoms: list[str]
+    inheritance_hits: list[InheritanceHit]
+    duplicate_gate: DuplicateGate
+    mutation_mode: str
+    push_plan: PushPlan | None
+    write_status: str
+    operations: list[MaintainAgentsOperation]
+    lint_failures: list[str]
+    summary: str
+    details: list[str]
+    collect_used: bool
+
+
 def build_agents_maintain_command(paths: object, source_path: Path) -> str:
     from rootfile_runtime import build_agents_maintain_command as build_root_agents_maintain_command
 
@@ -95,23 +162,23 @@ def build_agents_maintain_command(paths: object, source_path: Path) -> str:
     return f'{python_path} {script_path} agents-maintain --intent "<natural language request>" --json'
 
 
-def maintain_agents(paths: object, intent: str, *, dry_run: bool = False) -> dict[str, Any]:
+def maintain_agents(paths: object, intent: str, *, dry_run: bool = False) -> MaintainAgentsResponse:
     normalized_intent = " ".join(intent.split())
     mutation_mode = _detect_mutation_mode(normalized_intent)
     candidates = _rank_candidates(paths, normalized_intent)
     target_decision = _select_target(normalized_intent, candidates)
     semantic = _classify_semantics(normalized_intent)
 
-    response: dict[str, Any] = {
+    response: MaintainAgentsResponse = {
         "stage": "agents_maintain",
         "intent": intent,
         "normalized_intent": normalized_intent,
-        "governed_target_candidates": [item["report"] for item in candidates],
-        "selected_target": target_decision.get("selected_target"),
+        "governed_target_candidates": cast(list[GovernedTargetCandidateReport], [item["report"] for item in candidates]),
+        "selected_target": cast(SelectedTarget | None, target_decision.get("selected_target")),
         "semantic_family": semantic["semantic_family"],
-        "selected_part": semantic["selected_part"],
-        "payload_atoms": semantic["payload_atoms"],
-        "part_a_atoms": semantic["part_a_atoms"],
+        "selected_part": cast(str, semantic["selected_part"]),
+        "payload_atoms": cast(list[str], semantic["payload_atoms"]),
+        "part_a_atoms": cast(list[str], semantic["part_a_atoms"]),
         "inheritance_hits": [],
         "duplicate_gate": {"status": "block", "reason": "uninitialized"},
         "mutation_mode": mutation_mode,
@@ -153,8 +220,8 @@ def maintain_agents(paths: object, intent: str, *, dry_run: bool = False) -> dic
     }
 
     gate = _evaluate_duplicate_gate(paths, source_path, entry, human_text, payload, semantic, mutation)
-    response["inheritance_hits"] = gate["inheritance_hits"]
-    response["duplicate_gate"] = gate["duplicate_gate"]
+    response["inheritance_hits"] = cast(list[InheritanceHit], gate["inheritance_hits"])
+    response["duplicate_gate"] = cast(DuplicateGate, gate["duplicate_gate"])
     if gate["duplicate_gate"]["status"] != "pass":
         response["semantic_family"] = gate.get("semantic_family", response["semantic_family"])
         response["write_status"] = "blocked"
@@ -220,11 +287,11 @@ def maintain_agents(paths: object, intent: str, *, dry_run: bool = False) -> dic
 
 
 def _blocked(
-    payload: dict[str, Any],
+    payload: MaintainAgentsResponse,
     gate_status: str,
     reason: str,
     lint_failures: list[str] | None = None,
-) -> dict[str, Any]:
+) -> MaintainAgentsResponse:
     payload["duplicate_gate"] = {"status": gate_status, "reason": reason}
     payload["lint_failures"] = lint_failures or []
     payload["summary"] = "agents-maintain blocked"
