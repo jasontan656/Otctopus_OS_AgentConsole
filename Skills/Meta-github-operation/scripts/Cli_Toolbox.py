@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
-import json
-from pathlib import Path
 from typing import Annotated, Literal
 
 import typer
 
+from cli_command_support import apply_scope, emit_payload, resolve_repo_root, resolve_scope
 from entry_support import baseline_contract_payload, push_contract_payload, rollback_contract_payload
 from git_cli_support import commit as git_commit
 from git_cli_support import create_annotated_tag
@@ -15,11 +14,10 @@ from git_cli_support import normalize_baseline_tag
 from git_cli_support import pull_rebase as git_pull_rebase
 from git_cli_support import push as git_push
 from git_cli_support import push_tag
-from git_cli_support import remote_urls, repo_status_payload, resolve_commit_scope, rollback_paths, rollback_sync, run_git, stage_paths
+from git_cli_support import remote_urls, repo_status_payload, rollback_paths, rollback_sync
 from github_bootstrap_support import bootstrap_private_origin
 from push_execution_support import normalize_traceability_message, serial_push_lock
-from runtime_contract_support import CommitScope
-from registry_repo import ensure_remote_write_allowed, registry_payload, remote_policy_payload, resolve_repo
+from registry_repo import ensure_remote_write_allowed, registry_payload, remote_policy_payload
 
 
 app = typer.Typer(add_completion=False, pretty_exceptions_enable=False)
@@ -30,54 +28,24 @@ JsonOption = Annotated[bool, typer.Option("--json")]
 PathListOption = Annotated[list[str] | None, typer.Option("--path")]
 
 
-def _emit(payload: object, *, as_json: bool = False) -> None:
-    if not isinstance(payload, dict):
-        raise TypeError("runtime payload must be a dictionary-backed object")
-    if as_json:
-        print(json.dumps(payload, ensure_ascii=False, indent=2))
-        return
-    for key, value in payload.items():
-        print(f"{key}: {value}")
-
-
-def _resolve_repo_root(repo: str | None, repo_path: str | None) -> tuple[str, Path]:
-    repo_name, repo_root = resolve_repo(repo, repo_path)
-    if not repo_root.exists():
-        raise ValueError(f"repo path does not exist: {repo_root}")
-    return repo_name, repo_root
-
-
-def _apply_scope(repo_root: Path, scope: CommitScope) -> None:
-    mode = scope["mode"]
-    if mode == "all":
-        run_git(repo_root, "add", "-A", check=True)
-        return
-    if mode == "paths":
-        stage_paths(repo_root, list(scope["paths"]))
-        return
-    if mode == "staged":
-        return
-    raise ValueError(f"unsupported scope mode: {mode}")
-
-
 @app.command("registry")
 def registry_command(json_output: JsonOption = False) -> None:
-    _emit(registry_payload(), as_json=json_output)
+    emit_payload(registry_payload(), as_json=json_output)
 
 
 @app.command("push-contract")
 def push_contract_command(json_output: JsonOption = False) -> None:
-    _emit(push_contract_payload(), as_json=json_output)
+    emit_payload(push_contract_payload(), as_json=json_output)
 
 
 @app.command("baseline-contract")
 def baseline_contract_command(json_output: JsonOption = False) -> None:
-    _emit(baseline_contract_payload(), as_json=json_output)
+    emit_payload(baseline_contract_payload(), as_json=json_output)
 
 
 @app.command("rollback-contract")
 def rollback_contract_command(json_output: JsonOption = False) -> None:
-    _emit(rollback_contract_payload(), as_json=json_output)
+    emit_payload(rollback_contract_payload(), as_json=json_output)
 
 
 @app.command("status")
@@ -87,10 +55,10 @@ def status_command(
     fetch: Annotated[bool, typer.Option("--fetch")] = False,
     json_output: JsonOption = False,
 ) -> None:
-    repo_name, repo_root = _resolve_repo_root(repo, repo_path)
+    repo_name, repo_root = resolve_repo_root(repo, repo_path)
     payload = dict(repo_status_payload(repo_root, fetch_first=fetch))
     payload["repo"] = repo_name
-    _emit(payload, as_json=json_output)
+    emit_payload(payload, as_json=json_output)
 
 
 @app.command("remote-info")
@@ -99,14 +67,14 @@ def remote_info_command(
     repo_path: RepoPathOption = None,
     json_output: JsonOption = False,
 ) -> None:
-    repo_name, repo_root = _resolve_repo_root(repo, repo_path)
+    repo_name, repo_root = resolve_repo_root(repo, repo_path)
     payload = {
         "repo": repo_name,
         "repo_root": str(repo_root),
         "remotes": remote_urls(repo_root),
         "managed_remote_policy": remote_policy_payload(repo_name),
     }
-    _emit(payload, as_json=json_output)
+    emit_payload(payload, as_json=json_output)
 
 
 @app.command("fetch")
@@ -116,11 +84,11 @@ def fetch_command(
     remote: Annotated[str, typer.Option("--remote")] = "origin",
     json_output: JsonOption = False,
 ) -> None:
-    repo_name, repo_root = _resolve_repo_root(repo, repo_path)
+    repo_name, repo_root = resolve_repo_root(repo, repo_path)
     payload = dict(git_fetch(repo_root, remote=remote))
     payload["repo"] = repo_name
     payload["repo_root"] = str(repo_root)
-    _emit(payload, as_json=json_output)
+    emit_payload(payload, as_json=json_output)
 
 
 @app.command("pull-rebase")
@@ -131,32 +99,11 @@ def pull_rebase_command(
     branch: Annotated[str | None, typer.Option("--branch")] = None,
     json_output: JsonOption = False,
 ) -> None:
-    repo_name, repo_root = _resolve_repo_root(repo, repo_path)
+    repo_name, repo_root = resolve_repo_root(repo, repo_path)
     payload = dict(git_pull_rebase(repo_root, remote=remote, branch=branch))
     payload["repo"] = repo_name
     payload["repo_root"] = str(repo_root)
-    _emit(payload, as_json=json_output)
-
-
-def _resolve_scope(
-    repo_root: Path,
-    *,
-    repo_name: str,
-    paths: list[str] | None,
-    claims_file: str | None,
-    use_latest_claims: bool,
-    auto_scope: bool,
-    use_all: bool,
-) -> CommitScope:
-    return resolve_commit_scope(
-        repo_root,
-        explicit_paths=list(paths or []),
-        repo_name=repo_name,
-        claims_file=claims_file,
-        use_latest_claims=use_latest_claims,
-        auto_scope=auto_scope,
-        use_all=use_all,
-    )
+    emit_payload(payload, as_json=json_output)
 
 
 @app.command("commit")
@@ -172,9 +119,9 @@ def commit_command(
     allow_empty: Annotated[bool, typer.Option("--allow-empty")] = False,
     json_output: JsonOption = False,
 ) -> None:
-    repo_name, repo_root = _resolve_repo_root(repo, repo_path)
+    repo_name, repo_root = resolve_repo_root(repo, repo_path)
     normalized_message = normalize_traceability_message(message)
-    scope = _resolve_scope(
+    scope = resolve_scope(
         repo_root,
         repo_name=repo_name,
         paths=paths,
@@ -183,10 +130,10 @@ def commit_command(
         auto_scope=auto_scope,
         use_all=use_all,
     )
-    _apply_scope(repo_root, scope)
+    apply_scope(repo_root, scope)
     payload = {"repo": repo_name, "repo_root": str(repo_root), "scope": scope, "message": normalized_message}
     payload.update(git_commit(repo_root, normalized_message, allow_empty=allow_empty))
-    _emit(payload, as_json=json_output)
+    emit_payload(payload, as_json=json_output)
 
 
 @app.command("commit-and-push")
@@ -206,7 +153,7 @@ def commit_and_push_command(
     force_with_lease: Annotated[bool, typer.Option("--force-with-lease")] = False,
     json_output: JsonOption = False,
 ) -> None:
-    repo_name, repo_root = _resolve_repo_root(repo, repo_path)
+    repo_name, repo_root = resolve_repo_root(repo, repo_path)
     normalized_message = normalize_traceability_message(message)
     ensure_remote_write_allowed(
         repo_name,
@@ -214,7 +161,7 @@ def commit_and_push_command(
         operation="commit-and-push",
         human_explicit_request=human_explicit_request,
     )
-    scope = _resolve_scope(
+    scope = resolve_scope(
         repo_root,
         repo_name=repo_name,
         paths=paths,
@@ -223,7 +170,7 @@ def commit_and_push_command(
         auto_scope=auto_scope,
         use_all=use_all,
     )
-    _apply_scope(repo_root, scope)
+    apply_scope(repo_root, scope)
     payload = {"repo": repo_name, "repo_root": str(repo_root), "scope": scope, "message": normalized_message}
     with serial_push_lock(repo_name, "commit-and-push") as push_lock:
         payload["push_lock"] = push_lock
@@ -234,7 +181,7 @@ def commit_and_push_command(
             branch=branch,
             force_with_lease=force_with_lease,
         )
-    _emit(payload, as_json=json_output)
+    emit_payload(payload, as_json=json_output)
 
 
 @app.command("push")
@@ -247,7 +194,7 @@ def push_command(
     force_with_lease: Annotated[bool, typer.Option("--force-with-lease")] = False,
     json_output: JsonOption = False,
 ) -> None:
-    repo_name, repo_root = _resolve_repo_root(repo, repo_path)
+    repo_name, repo_root = resolve_repo_root(repo, repo_path)
     ensure_remote_write_allowed(
         repo_name,
         remote,
@@ -265,7 +212,7 @@ def push_command(
                 force_with_lease=force_with_lease,
             )
         )
-    _emit(payload, as_json=json_output)
+    emit_payload(payload, as_json=json_output)
 
 
 @app.command("repo-bootstrap")
@@ -282,7 +229,7 @@ def repo_bootstrap_command(
     allow_empty: Annotated[bool, typer.Option("--allow-empty")] = False,
     json_output: JsonOption = False,
 ) -> None:
-    repo_name_resolved, repo_root = _resolve_repo_root(repo, repo_path)
+    repo_name_resolved, repo_root = resolve_repo_root(repo, repo_path)
     ensure_remote_write_allowed(
         repo_name_resolved,
         remote,
@@ -309,7 +256,7 @@ def repo_bootstrap_command(
                 allow_empty=allow_empty,
             )
         )
-    _emit(payload, as_json=json_output)
+    emit_payload(payload, as_json=json_output)
 
 
 @app.command("baseline-create")
@@ -329,7 +276,7 @@ def baseline_create_command(
     branch: Annotated[str | None, typer.Option("--branch")] = None,
     json_output: JsonOption = False,
 ) -> None:
-    repo_name, repo_root = _resolve_repo_root(repo, repo_path)
+    repo_name, repo_root = resolve_repo_root(repo, repo_path)
     status_payload = repo_status_payload(repo_root)
     dirty = bool(status_payload["dirty"])
     tag_name = normalize_baseline_tag(name)
@@ -345,7 +292,7 @@ def baseline_create_command(
     }
 
     if dirty:
-        scope = _resolve_scope(
+        scope = resolve_scope(
             repo_root,
             repo_name=repo_name,
             paths=paths,
@@ -354,7 +301,7 @@ def baseline_create_command(
             auto_scope=auto_scope,
             use_all=use_all,
         )
-        _apply_scope(repo_root, scope)
+        apply_scope(repo_root, scope)
         payload["scope"] = scope
         payload.update(git_commit(repo_root, resolved_message, allow_empty=False))
         payload["baseline_mode"] = "commit_plus_tag"
@@ -382,7 +329,7 @@ def baseline_create_command(
                     force_with_lease=False,
                 )
         payload["publish_result"] = published
-    _emit(payload, as_json=json_output)
+    emit_payload(payload, as_json=json_output)
 
 
 @app.command("rollback-paths")
@@ -393,11 +340,11 @@ def rollback_paths_command(
     paths: Annotated[list[str], typer.Option("--path")] = ...,
     json_output: JsonOption = False,
 ) -> None:
-    repo_name, repo_root = _resolve_repo_root(repo, repo_path)
+    repo_name, repo_root = resolve_repo_root(repo, repo_path)
     payload = dict(rollback_paths(repo_root, to_ref=to_ref, paths=list(paths)))
     payload["repo"] = repo_name
     payload["repo_root"] = str(repo_root)
-    _emit(payload, as_json=json_output)
+    emit_payload(payload, as_json=json_output)
 
 
 @app.command("rollback-sync")
@@ -411,7 +358,7 @@ def rollback_sync_command(
 ) -> None:
     if use_all == bool(paths):
         raise ValueError("pass exactly one of --all or at least one --path")
-    repo_name, repo_root = _resolve_repo_root(repo, repo_path)
+    repo_name, repo_root = resolve_repo_root(repo, repo_path)
     payload = dict(
         rollback_sync(
             repo_root,
@@ -422,7 +369,7 @@ def rollback_sync_command(
     )
     payload["repo"] = repo_name
     payload["repo_root"] = str(repo_root)
-    _emit(payload, as_json=json_output)
+    emit_payload(payload, as_json=json_output)
 
 
 def main() -> int:
