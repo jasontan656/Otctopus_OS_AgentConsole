@@ -6,19 +6,21 @@
   "purpose": "Govern how selfcheck findings, same-turn repairs, and optimization items are merged into the same final reply without overwhelming the main user answer.",
   "instruction": [
     "Keep the user's main task answer first; then append the turn hook repair outcomes when any repair or residual risk occurred in the turn.",
-    "Merge only high-signal items: what was auto-repaired now, how it was verified, what still remains risky, and what the user may choose to keep or change next.",
+    "Merge only high-signal items: what was auto-repaired now, how it was verified, what still remains risky, and what optimization points or user decisions remain.",
     "When the hook stayed quiet and no repair happened, emit nothing about selfcheck in the final reply."
   ],
   "workflow": [
     "Answer the user's original request normally.",
     "If the turn hook repaired issues or left residual risks, append a concise repair section in the same final reply.",
-    "State which items were auto-repaired now, what verification passed, and what residual risks or user choices remain.",
+    "If turn-end optimization audit found non-blocking opportunities, append only the highest-signal recommendations and label them as suggestions, runflow optimizations, or skill-upgrade candidates.",
+    "State which items were auto-repaired now, what verification passed, and what residual risks, user choices, or optimization opportunities remain.",
     "Prefer a short issue list or short paragraph over a long audit dump."
   ],
   "rules": [
     "Do not let selfcheck overshadow the user's requested answer.",
     "Do not dump raw pain-provider internals into the final reply.",
     "Do not repeat low-value noise when the run was effectively smooth.",
-    "Do not hide automatic repairs that changed the local environment, docs, contracts, or tools."
+    "Do not hide automatic repairs that changed the local environment, docs, contracts, or tools.",
+    "Do not present optimization points as though they were runtime failures that already required fixing."
   ]
 }

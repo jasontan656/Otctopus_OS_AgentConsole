@@ -14,6 +14,7 @@ from runtime_pain_types import TurnHookAudit
 from runtime_pain_types import TurnHookResult
 from runtime_pain_types import WatchSessionsResult
 from runtime_selfcheck_command_governance import load_expected_failure_rules
+from runtime_selfcheck_optimization_audit import build_turn_optimization_audit
 from runtime_selfcheck_session_source import build_session_fallback_queue
 from runtime_selfcheck_session_source import find_session_files
 from runtime_selfcheck_session_source import load_target_turn_evidence
@@ -145,6 +146,7 @@ def run_turn_hook(
     )
     items = queue.get("items", []) if isinstance(queue.get("items", []), list) else []
     grouped = _group_items(items)
+    optimization_audit = build_turn_optimization_audit(turn=turn, issue_items=items)
     repairs = _candidate_auto_repairs(items, limit=auto_repair_limit) if effective_auto_repair else []
     execution_result: CommandExecutionResult = _empty_execution_result()
     resolved_ids: list[str] = []
@@ -207,7 +209,19 @@ def run_turn_hook(
         "started_at": str(turn.get("started_at", "") or ""),
         "completed_at": str(turn.get("completed_at", "") or ""),
         "hook_mode": mode,
-        "hook_status": "repaired" if resolved_ids else ("issues_detected" if items else "smooth"),
+        "hook_status": (
+            "repaired"
+            if resolved_ids
+            else (
+                "issues_detected"
+                if items
+                else (
+                    "optimization_opportunities_detected"
+                    if int(optimization_audit.get("opportunity_count", 0) or 0) > 0
+                    else "smooth"
+                )
+            )
+        ),
         "source_mode": "session_fallback",
         "cwd": str(turn.get("cwd", "") or ""),
         "user_message": str(turn.get("user_message", "") or ""),
@@ -218,6 +232,7 @@ def run_turn_hook(
         "groups": grouped.get("groups", []),
         "issue_buckets": issue_buckets,
         "keyword_first_buckets": keyword_first_buckets,
+        "optimization_audit_v1": optimization_audit,
         "expected_failure_ids": expected_failure_ids,
         "strengthened_optimization_ids": strengthened_ids,
         "pending_decision_ids": pending_decision_ids,
@@ -258,6 +273,7 @@ def run_turn_hook(
         "issue_buckets": dict(saved.get("issue_buckets", {})),
         "keyword_first_buckets": dict(saved.get("keyword_first_buckets", {})),
         "confirmation_required_ids": list(saved.get("confirmation_required_ids", [])),
+        "optimization_audit_v1": dict(saved.get("optimization_audit_v1", {})),
     }
 
 

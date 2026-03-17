@@ -188,6 +188,33 @@ class RuntimeFailureAnalysis(TypedDict, total=False):
     keyword_first_edit: KeywordFirstEditDecision
 
 
+class OptimizationOpportunity(TypedDict, total=False):
+    optimization_id: str
+    classification: str
+    kind: str
+    priority: str
+    title: str
+    summary: str
+    evidence: list[str]
+    why_not_problem: str
+    why_not_expected_failure: str
+    recommendation_class: str
+    suggested_action: str
+    recommendation_reason: str
+    expected_benefit: str
+    risk: str
+    comparison_baseline: str
+    should_recommend_execution: bool
+
+
+class OptimizationAudit(TypedDict, total=False):
+    status: str
+    opportunity_count: int
+    recommendation_buckets: dict[str, int]
+    opportunities: list[OptimizationOpportunity]
+    summary: str
+
+
 class TurnAuditCloseout(TypedDict, total=False):
     required: bool
     ran_at: str
@@ -248,6 +275,7 @@ class TurnHookAudit(TypedDict, total=False):
     repair_execution_v1: CommandExecutionResult
     issue_buckets: dict[str, int]
     keyword_first_buckets: dict[str, int]
+    optimization_audit_v1: OptimizationAudit
     expected_failure_ids: list[str]
     strengthened_optimization_ids: list[str]
     pending_decision_ids: list[str]
@@ -274,6 +302,7 @@ class TurnHookResult(TypedDict, total=False):
     issue_buckets: dict[str, int]
     keyword_first_buckets: dict[str, int]
     confirmation_required_ids: list[str]
+    optimization_audit_v1: OptimizationAudit
 
 
 class WatchSessionsResult(TypedDict, total=False):

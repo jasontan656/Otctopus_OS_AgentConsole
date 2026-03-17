@@ -180,7 +180,9 @@ class TestMetaRuntimeSelfcheckSmoke:
         assert "pre-exec-check" in payload["tool_entry"]["commands"]
         assert payload["trigger_policy"]["default_trigger"] == "turn_hook"
         topics = {item["topic"] for item in payload["directive_topics"]}
+        assert "execution-taxonomy-governance" in topics
         assert "keyword-first-edit-governance" in topics
+        assert "optimization-audit-governance" in topics
 
     def test_pre_exec_check_normalizes_repo_local_pytest(self) -> None:
         command = "python3 -m pytest Skills/Meta-Runtime-Selfcheck/tests/test_cli_toolbox.py"
@@ -273,6 +275,20 @@ class TestMetaRuntimeSelfcheckSmoke:
         payload = json.loads(result.stdout)
         assert payload["topic"] == "keyword-first-edit-governance"
         assert "rewrite/delete first" in " ".join(payload["instruction"]).lower()
+
+    def test_execution_taxonomy_directive_is_available(self) -> None:
+        result = self.run_python(TOOLBOX, "directive", "--topic", "execution-taxonomy-governance", "--json")
+        assert result.returncode == 0, result.stderr
+        payload = json.loads(result.stdout)
+        assert payload["topic"] == "execution-taxonomy-governance"
+        assert "optimization point" in " ".join(payload["instruction"]).lower()
+
+    def test_optimization_audit_directive_is_available(self) -> None:
+        result = self.run_python(TOOLBOX, "directive", "--topic", "optimization-audit-governance", "--json")
+        assert result.returncode == 0, result.stderr
+        payload = json.loads(result.stdout)
+        assert payload["topic"] == "optimization-audit-governance"
+        assert "run this audit after runtime end or turn end once the full execution path is visible" in " ".join(payload["instruction"]).lower()
 
     def test_keyword_first_edit_requests_confirmation_for_legacy_bridge(self) -> None:
         decision = command_governance.adjudicate_keyword_first_edit(
@@ -502,6 +518,40 @@ class TestMetaRuntimeSelfcheckSmoke:
         audit = json.loads(Path(payload["turn_audit_path"]).read_text(encoding="utf-8"))
         assert "issue_buckets" in audit
         assert "keyword_first_buckets" in audit
+
+    def test_run_turn_hook_emits_optimization_audit_for_smooth_but_noncanonical_turn(self, tmp_path: Path) -> None:
+        codex_home = self.make_codex_home(
+            tmp_path,
+            command="python3 Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py runtime-contract --json",
+            output='{"contract_name":"meta_runtime_selfcheck_runtime_contract"}\n',
+        )
+        runtime_root = tmp_path / "runtime"
+        env = {
+            "CODEX_HOME": str(codex_home),
+            "CODEX_SKILL_RUNTIME_ROOT": str(runtime_root),
+        }
+        result = self.run_python(
+            TOOLBOX,
+            "run-turn-hook",
+            "--mode",
+            "diagnose",
+            "--session-id",
+            "019cf768-47cc-7882-bf9c-9d267e78188e",
+            "--turn-id",
+            "turn-001",
+            "--json",
+            env=env,
+        )
+        assert result.returncode == 0, result.stderr
+        payload = json.loads(result.stdout)
+        assert payload["issues_detected"] == 0
+        assert payload["turn_hook_status"] == "optimization_opportunities_detected"
+        optimization_audit = payload["optimization_audit_v1"]
+        assert optimization_audit["status"] == "completed"
+        assert optimization_audit["opportunity_count"] >= 1
+        assert optimization_audit["recommendation_buckets"]["optimize_runflow"] >= 1
+        audit = json.loads(Path(payload["turn_audit_path"]).read_text(encoding="utf-8"))
+        assert audit["optimization_audit_v1"]["opportunity_count"] >= 1
 
     def test_session_filters_only_process_target_session_and_turn(self, tmp_path: Path) -> None:
         codex_home = tmp_path / ".codex"

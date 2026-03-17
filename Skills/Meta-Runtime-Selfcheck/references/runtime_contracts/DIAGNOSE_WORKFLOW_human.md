@@ -26,6 +26,7 @@ anchors:
 - hook 目标不是只给建议，而是先判断是否存在当前边界内的最小可验证修复，并立即执行。
 - 具体运行前仍应先读取 runtime contract。
 - 若要写回 selfcheck 自身，还必须先进入 keyword-first-edit 治理，并在 rewrite/delete 路径上先请求用户确认删除范围。
+- 本 workflow 只治理“问题轨”；可优化点要在 turn end 进入独立优化审计轨。
 </part_A>
 
 <part_B>
@@ -39,6 +40,7 @@ anchors:
   "purpose": "Run a default turn hook throughout the active turn; when issue evidence appears, diagnose it immediately and start repair before continuing the main task.",
   "instruction": [
     "Enter this workflow as soon as issue evidence appears anywhere in the active turn, and run a final closure pass before the final reply.",
+    "Keep this workflow scoped to the runtime-problem lane; do not swallow optimization points that should be audited after the run completes.",
     "Before executing risky or governed commands, prefer pre-exec-check so the hook can adjudicate normalization or expected-failure handling before the first failure happens.",
     "Use run-turn-hook or watch-codex-sessions as the technical carrier so the hook really runs and leaves turn-audit evidence.",
     "Treat the current turn's tool runs, failures, retries, user corrections, path mistakes, and hesitation as first-class evidence.",
@@ -53,6 +55,7 @@ anchors:
     "When the hook strengthens or writes back Meta-Runtime-Selfcheck itself, run keyword-first-edit-governance first so the chosen path is rewrite > replace > add; if rewrite/delete is selected, stop and request user confirmation with explicit deletion scope.",
     "When a bounded fix is safe and within the active repo boundary, repair first, collect verification evidence, and mark the turn audit with resolved optimization ids before continuing.",
     "When a failure matches the expected-failure whitelist, allow it, record it, and carry it into later strengthening or validation artifacts instead of auto-repairing over it.",
+    "Leave non-blocking optimization points for the turn-end optimization audit instead of force-routing them into the immediate repair lane.",
     "Do not downgrade directly into advice when a local repair exists; only retain residual risk after the minimal correct repair has been applied."
   ],
   "issue_checklist": [

@@ -15,10 +15,20 @@
       "json_path": "EXPECTED_FAILURE_GOVERNANCE_CONTRACT.json",
       "human_path": "EXPECTED_FAILURE_GOVERNANCE_CONTRACT_human.md"
     },
+    "execution-taxonomy-governance": {
+      "doc_kind": "contract",
+      "json_path": "EXECUTION_TAXONOMY_CONTRACT.json",
+      "human_path": "EXECUTION_TAXONOMY_CONTRACT_human.md"
+    },
     "keyword-first-edit-governance": {
       "doc_kind": "contract",
       "json_path": "KEYWORD_FIRST_EDIT_GOVERNANCE_CONTRACT.json",
       "human_path": "KEYWORD_FIRST_EDIT_GOVERNANCE_CONTRACT_human.md"
+    },
+    "optimization-audit-governance": {
+      "doc_kind": "contract",
+      "json_path": "OPTIMIZATION_AUDIT_CONTRACT.json",
+      "human_path": "OPTIMIZATION_AUDIT_CONTRACT_human.md"
     },
     "self-repair-writeback": {
       "doc_kind": "contract",

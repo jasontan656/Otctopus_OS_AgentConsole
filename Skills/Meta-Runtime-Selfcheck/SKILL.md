@@ -38,6 +38,7 @@ metadata:
 - 适用于：发现问题后，先在当前边界内执行最小可验证修复，再把修复结果与残余风险合并进 final reply。
 - 适用于：在执行前判断某个失败是否属于阶段内预期信号，并按白名单做“记录后放行”。
 - 适用于：本技能自身进入真实修改、修复、强化、合同收敛、脚本调整、文档写回或 workflow 重构时，强制按 `$Meta-keyword-first-edit` 的 `删掉重写 > keyword first 替换 > 新增` 执行。
+- 适用于：在 runtime end / turn end 反向审计本次完整运行过程，识别“虽然没错、但明显不是当前最优实现”的可优化点，并形成正式建议交给用户裁决。
 - 不适用于：未结束任务中途强插复盘叙事、把 pain provider 协议本身当主要用户叙事、无边界地自动改写大范围资产。
 
 ## 3. 必读顺序
@@ -46,19 +47,23 @@ metadata:
    - `./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py run-turn-hook --mode diagnose --json`
 3. 当命令即将触达 repo-local Python、lint、traceability 或其他受管 CLI 时，先跑：
    - `cat <command_file> | ./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py pre-exec-check --workdir <repo_or_cwd> [--stage <stage>] [--expected-failure-file <rules.json>] --json`
-4. 当本回合任意时刻出现问题证据时，立即读取默认 turn hook workflow：
+4. 当需要判断某个信号属于问题 / 预期失败 / 可优化点哪一类时，先读取：
+   - `./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py directive --topic execution-taxonomy-governance --json`
+5. 当本回合任意时刻出现问题证据时，立即读取默认 turn hook workflow：
    - `./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py directive --topic turn-hook-self-repair --json`
-5. 若当前阶段允许“预期失败白名单”，先读取：
+6. 若当前阶段允许“预期失败白名单”，先读取：
    - `./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py directive --topic expected-failure-governance --json`
-6. 若本技能自身即将发生写回、修复或强化，先读取：
+7. 若本技能自身即将发生写回、修复或强化，先读取：
    - `./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py directive --topic keyword-first-edit-governance --json`
-7. 若 hook 发现当前边界内存在可验证修复动作，再读取：
+8. 若 hook 发现当前边界内存在可验证修复动作，再读取：
    - `./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py directive --topic self-repair-writeback --json`
-8. 若任务涉及 runtime/result 路径时，再执行：
+9. 当 turn 已完成且需要审计“是否还有更优做法”时，再读取：
+   - `./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py directive --topic optimization-audit-governance --json`
+10. 若任务涉及 runtime/result 路径时，再执行：
    - `./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py paths --json`
-9. 当最终汇报需要合并“已修复项 / 剩余风险 / 用户可继续裁决项”时，再读取：
+11. 当最终汇报需要合并“已修复项 / 剩余风险 / 用户可继续裁决项 / 可优化点”时，再读取：
    - `./.venv_backend_skills/bin/python Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py directive --topic final-reply-merge --json`
-10. 只有当 CLI JSON 仍留下真实语义缺口时，才打开 human mirrors。
+12. 只有当 CLI JSON 仍留下真实语义缺口时，才打开 human mirrors。
 
 ## 4. 运行边界
 - 默认触发：本技能是整个回合内的默认 turn hook，不需要用户手动点名才可进入；在 `turn end` 前还必须再跑一次最终收口检查，并留下 turn audit。
@@ -68,6 +73,8 @@ metadata:
 - keyword-first 内建原则：本技能自身的任何写回都必须先裁决 `rewrite > replace > add`，不允许默认走兼容壳、legacy、mapping、alias、双轨桥接或说明性补丁。
 - 删除确认原则：若 selfcheck 判定应走 rewrite/delete/整段替换，必须先列出将被删除、覆盖或整段替换的具体文件/章节/规则块/函数并请求用户确认；确认前不得执行删除。
 - 预期失败原则：回归测试、lint、contract 校验等在某些阶段可被白名单声明为“记录后放行”的预期失败；它们不能被静默吞掉，也不能被误当成立即覆盖掉的运行痛点。
+- 分类边界原则：`问题` 是需要当前回合立即修复或强化的真实运行痛点；`预期失败` 是白名单允许的故障暴露信号；`可优化点` 是未必错误但相对目标形态仍不够优的做法，必须进入 turn-end 优化审计而不是被忽略。
+- 双轨闭环原则：运行中优先走问题修复轨；turn 完成后再走优化审计轨，把建议优化、建议升级技能、建议优化运行流程分层输出给用户裁决。
 - 写回边界：允许修正文档、技能描述、技能触发语气、工具入口说明与局部脚本合同；不允许借自检之名无边界扩张修改面。
 - 输出规则：若发现问题，必须把 `已即时修复项 + 修复验证结果 + 剩余风险 + 用户后续可裁决项` 合并进 final reply，而不是单独开一轮空洞复盘。
 - 数据源优先来自外部 pain provider；若未提供 `CODEX_RUNTIME_PAIN_PROVIDER` 或 `--memory-runtime`，必须退化为基于 Codex session turn evidence 的 governed selfcheck，不把 provider 缺失本身伪装成用户问题。
