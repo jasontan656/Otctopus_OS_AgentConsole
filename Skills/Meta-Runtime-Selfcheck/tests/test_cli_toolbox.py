@@ -98,6 +98,7 @@ class TestMetaRuntimeSelfcheckSmoke:
         script: Path,
         *args: str,
         env: dict[str, str] | None = None,
+        input_text: str | None = None,
     ) -> subprocess.CompletedProcess[str]:
         merged_env = dict(os.environ)
         if env is not None:
@@ -108,6 +109,7 @@ class TestMetaRuntimeSelfcheckSmoke:
             capture_output=True,
             check=False,
             env=merged_env,
+            input=input_text,
         )
 
     def make_codex_home(self, tmp_path: Path, *, command: str, output: str) -> Path:
@@ -174,7 +176,82 @@ class TestMetaRuntimeSelfcheckSmoke:
         payload = json.loads(result.stdout)
         assert payload["skill_name"] == "Meta-Runtime-Selfcheck"
         assert "runtime-contract" in payload["tool_entry"]["commands"]
+        assert "pre-exec-check" in payload["tool_entry"]["commands"]
         assert payload["trigger_policy"]["default_trigger"] == "turn_hook"
+
+    def test_pre_exec_check_normalizes_repo_local_pytest(self) -> None:
+        command = "python3 -m pytest Skills/Meta-Runtime-Selfcheck/tests/test_cli_toolbox.py"
+        result = self.run_python(
+            TOOLBOX,
+            "pre-exec-check",
+            "--workdir",
+            str(SKILL_ROOT.parents[1]),
+            "--json",
+            input_text=command,
+        )
+        assert result.returncode == 0, result.stderr
+        payload = json.loads(result.stdout)
+        assert payload["decision"] == "immediate_repair"
+        assert "/.venv_backend_skills/bin/python3 -m pytest" in payload["normalized_command"]
+
+    def test_pre_exec_check_normalizes_lint_file_targets(self) -> None:
+        command = (
+            f"{VENV_PYTHON} "
+            "Skills/Dev-PythonCode-Constitution/scripts/run_python_code_lints.py "
+            "--target Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py "
+            "--target Skills/Meta-Runtime-Selfcheck/tests/test_cli_toolbox.py"
+        )
+        result = self.run_python(
+            TOOLBOX,
+            "pre-exec-check",
+            "--workdir",
+            str(SKILL_ROOT.parents[1]),
+            "--json",
+            input_text=command,
+        )
+        assert result.returncode == 0, result.stderr
+        payload = json.loads(result.stdout)
+        assert payload["decision"] == "immediate_repair"
+        assert payload["normalized_command"].count("--target") == 1
+        assert "Skills/Meta-Runtime-Selfcheck" in payload["normalized_command"]
+
+    def test_pre_exec_check_allows_expected_failure_rule(self, tmp_path: Path) -> None:
+        rules_path = tmp_path / "expected_failures.json"
+        rules_path.write_text(
+            json.dumps(
+                {
+                    "rules": [
+                        {
+                            "rule_id": "validation_pytest_failure",
+                            "stages": ["validation"],
+                            "command_contains": ["pytest"],
+                            "action": "allow_expected_failure",
+                            "reason": "validation phase may intentionally expose failing tests",
+                        }
+                    ]
+                },
+                ensure_ascii=False,
+                indent=2,
+            ),
+            encoding="utf-8",
+        )
+        command = "python3 -m pytest Skills/Meta-Runtime-Selfcheck/tests/test_cli_toolbox.py"
+        result = self.run_python(
+            TOOLBOX,
+            "pre-exec-check",
+            "--workdir",
+            str(SKILL_ROOT.parents[1]),
+            "--stage",
+            "validation",
+            "--expected-failure-file",
+            str(rules_path),
+            "--json",
+            input_text=command,
+        )
+        assert result.returncode == 0, result.stderr
+        payload = json.loads(result.stdout)
+        assert payload["decision"] == "allow_expected_failure"
+        assert payload["expected_failure"]["rule_id"] == "validation_pytest_failure"
 
     def test_turn_hook_directive_aliases_share_same_payload(self) -> None:
         new_result = self.run_python(TOOLBOX, "directive", "--topic", "turn-hook-self-repair", "--json")
@@ -332,6 +409,74 @@ class TestMetaRuntimeSelfcheckSmoke:
         audit = json.loads(audit_path.read_text(encoding="utf-8"))
         assert audit["resolved_optimization_ids"]
         assert audit["hook_status"] == "repaired"
+
+    def test_session_queue_attaches_repo_local_repair_context(self, tmp_path: Path) -> None:
+        codex_home = self.make_codex_home(
+            tmp_path,
+            command=(
+                f"{VENV_PYTHON} "
+                "Skills/Meta-github-operation/scripts/Cli_Toolbox.py "
+                "push-contract --repo Otctopus_OS_AgentConsole"
+            ),
+            output="Process exited with code 2\nNo such option: --repo\n",
+        )
+        queue = session_source.build_session_fallback_queue(
+            codex_home_override=str(codex_home),
+            session_id_filter="019cf768-47cc-7882-bf9c-9d267e78188e",
+            turn_id_filter="turn-001",
+            include_resolved=True,
+            max_results=20,
+        )
+        item = queue["items"][0]
+        assert item["auto_repair"]["workdir"] == str(SKILL_ROOT.parents[1])
+        assert item["auto_repair"]["change_detection_root"] == str(SKILL_ROOT.parents[1])
+
+    def test_run_turn_hook_detects_repo_env_and_contract_shape_buckets(self, tmp_path: Path) -> None:
+        codex_home = tmp_path / ".codex"
+        self.write_session_file(
+            codex_home,
+            session_id="019cf768-47cc-7882-bf9c-9d267e78188e",
+            day="17",
+            turns=[
+                {
+                    "turn_id": "turn-001",
+                    "command": "python3 -m pytest Skills/Meta-Runtime-Selfcheck/tests/test_cli_toolbox.py",
+                    "output": "Process exited with code 1\n/usr/bin/python3: No module named pytest\n",
+                },
+                {
+                    "turn_id": "turn-002",
+                    "command": (
+                        f"{VENV_PYTHON} "
+                        "Skills/Dev-PythonCode-Constitution/scripts/run_python_code_lints.py "
+                        "--target Skills/Meta-Runtime-Selfcheck/scripts/Cli_Toolbox.py"
+                    ),
+                    "output": "Process exited with code 2\nrun_python_code_lints.py: error: --target 必须是存在的目录。\n",
+                },
+            ],
+            cwd="/home/jasontan656/AI_Projects/Otctopus_OS_AgentConsole",
+        )
+        runtime_root = tmp_path / "runtime"
+        env = {
+            "CODEX_HOME": str(codex_home),
+            "CODEX_SKILL_RUNTIME_ROOT": str(runtime_root),
+        }
+        result = self.run_python(
+            TOOLBOX,
+            "run-turn-hook",
+            "--mode",
+            "diagnose",
+            "--session-id",
+            "019cf768-47cc-7882-bf9c-9d267e78188e",
+            "--turn-id",
+            "turn-002",
+            "--json",
+            env=env,
+        )
+        assert result.returncode == 0, result.stderr
+        payload = json.loads(result.stdout)
+        assert payload["issue_buckets"]["immediate_repair"] >= 1
+        audit = json.loads(Path(payload["turn_audit_path"]).read_text(encoding="utf-8"))
+        assert "issue_buckets" in audit
 
     def test_session_filters_only_process_target_session_and_turn(self, tmp_path: Path) -> None:
         codex_home = tmp_path / ".codex"

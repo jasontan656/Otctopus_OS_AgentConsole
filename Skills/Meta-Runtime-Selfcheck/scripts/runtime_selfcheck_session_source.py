@@ -13,8 +13,11 @@ from typing import Any
 
 from runtime_pain_observability import normalize_text
 from runtime_pain_types import SessionExecEvent
+from runtime_pain_types import ExpectedFailureRule
 from runtime_pain_types import SessionFallbackQueue
 from runtime_pain_types import TurnEvidence
+from runtime_selfcheck_command_governance import analyze_runtime_failure
+from runtime_selfcheck_command_governance import derive_command_context
 from runtime_selfcheck_store import load_turn_audit
 
 
@@ -505,18 +508,27 @@ def _auto_repair_for_issue(issue: dict[str, Any]) -> dict[str, Any]:
     source_event = issue.get("source_event", {}) if isinstance(issue.get("source_event", {}), dict) else {}
     command = str(source_event.get("command_preview", "") or "")
     subkind = str(issue.get("issue_subkind", "") or "")
+    context = derive_command_context(command, workdir=str(source_event.get("cwd", "") or ""))
+
+    def _with_context(payload: dict[str, Any]) -> dict[str, Any]:
+        if not payload:
+            return payload
+        payload["workdir"] = str(context.get("workdir", "") or "")
+        payload["change_detection_root"] = str(context.get("change_detection_root", "") or "")
+        return payload
+
     if subkind == "installed_copy_product_root_mismatch":
         normalized = _rewrite_installed_copy_command(command)
         if normalized:
-            return {"repair_type": "rerun_with_repo_truth_source", "command": normalized}
+            return _with_context({"repair_type": "rerun_with_repo_truth_source", "command": normalized})
     if subkind == "unknown_subcommand":
         normalized = _replace_cli_subcommand(command, from_name="contract", to_name="runtime-contract")
         if normalized:
-            return {"repair_type": "normalize_cli_subcommand", "command": normalized}
+            return _with_context({"repair_type": "normalize_cli_subcommand", "command": normalized})
     if subkind == "unknown_option" and "--repo" in command and "push-contract" in command:
         normalized = _remove_flag(command, "--repo")
         if normalized:
-            return {"repair_type": "drop_unknown_option", "command": normalized}
+            return _with_context({"repair_type": "drop_unknown_option", "command": normalized})
     return {}
 
 
@@ -570,7 +582,12 @@ def _issue_record(
     return issue
 
 
-def _detect_event_issues(event: dict[str, Any]) -> list[dict[str, Any]]:
+def _detect_event_issues(
+    event: dict[str, Any],
+    *,
+    stage: str | None = None,
+    expected_failure_rules: list[ExpectedFailureRule] | None = None,
+) -> list[dict[str, Any]]:
     issues: list[dict[str, Any]] = []
     if str(event.get("status", "") or "") != "error":
         return issues
@@ -580,6 +597,42 @@ def _detect_event_issues(event: dict[str, Any]) -> list[dict[str, Any]]:
     turn_id = str(event.get("turn_id", "") or "")
     timestamp = str(event.get("timestamp", "") or "")
     lowered = output_raw.lower()
+    governance_issue = analyze_runtime_failure(
+        command=command,
+        output_text=output_raw,
+        workdir=str(event.get("cwd", "") or ""),
+        stage=stage,
+        expected_failure_rules=expected_failure_rules,
+    )
+    if governance_issue.get("matched"):
+        issues.append(
+            _issue_record(
+                session_id=session_id,
+                turn_id=turn_id,
+                timestamp=timestamp,
+                priority="p1",
+                issue_kind=str(governance_issue.get("issue_kind", "") or "runtime_governance_gap"),
+                issue_subkind=str(governance_issue.get("issue_subkind", "") or "governance_gap"),
+                title=str(governance_issue.get("title", "") or "Runtime governance gap detected"),
+                summary=str(governance_issue.get("summary", "") or ""),
+                why=str(governance_issue.get("why", "") or ""),
+                suggested_action=str(governance_issue.get("suggested_action", "") or ""),
+                source_event=event,
+            )
+        )
+        latest_issue = issues[-1]
+        latest_issue["adjudication"] = str(governance_issue.get("adjudication", "") or "")
+        latest_issue["expected_failure"] = governance_issue.get("expected_failure", {"matched": False})
+        auto_repair = governance_issue.get("auto_repair", {})
+        if isinstance(auto_repair, dict) and str(auto_repair.get("normalized_command", "") or "").strip():
+            latest_issue["auto_repair"] = {
+                "repair_type": ",".join(list(auto_repair.get("repair_types", []))) or "governed_command_normalization",
+                "command": str(auto_repair.get("normalized_command", "") or ""),
+                "workdir": str(auto_repair.get("context", {}).get("workdir", "") or event.get("cwd", "") or ""),
+                "change_detection_root": str(auto_repair.get("context", {}).get("change_detection_root", "") or event.get("cwd", "") or ""),
+                "decision": str(governance_issue.get("adjudication", "") or ""),
+            }
+        return issues
 
     if "cannot resolve product root" in lowered and "/.codex/skills/" in command:
         issues.append(
@@ -660,6 +713,8 @@ def build_session_fallback_queue(
     turn_id_filter: str | None = None,
     include_resolved: bool = True,
     max_results: int = 200,
+    expected_failure_rules: list[ExpectedFailureRule] | None = None,
+    stage: str | None = None,
 ) -> SessionFallbackQueue:
     selected_turns = turns
     if selected_turns is None:
@@ -690,7 +745,11 @@ def build_session_fallback_queue(
         for event in turn.get("tool_events", []):
             if not isinstance(event, dict):
                 continue
-            issues = _detect_event_issues(event)
+            issues = _detect_event_issues(
+                event,
+                stage=stage,
+                expected_failure_rules=expected_failure_rules,
+            )
             event_issues.extend(issues)
             if str(event.get("status", "") or "") == "error":
                 signature = str(event.get("command_signature", "") or "")
@@ -720,6 +779,9 @@ def build_session_fallback_queue(
 
         for issue in event_issues:
             issue["is_resolved"] = issue["optimization_id"] in resolved_ids
+            expected_failure = issue.get("expected_failure", {})
+            if isinstance(expected_failure, dict) and bool(expected_failure.get("matched")):
+                issue["is_resolved"] = True
             if include_resolved or not issue["is_resolved"]:
                 items.append(issue)
 

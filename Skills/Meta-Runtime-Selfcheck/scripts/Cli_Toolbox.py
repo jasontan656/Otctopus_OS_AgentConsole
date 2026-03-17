@@ -4,8 +4,11 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
+import sys
 from typing import Any
 
+from runtime_selfcheck_command_governance import adjudicate_pre_exec_command
+from runtime_selfcheck_command_governance import load_expected_failure_rules
 from runtime_selfcheck_store import ensure_store_exists
 from runtime_selfcheck_store import load_turn_audit
 from runtime_selfcheck_store import turn_audit_json_path
@@ -57,6 +60,12 @@ def _read_json_payload(path: Path) -> dict[str, Any]:
 def _read_directive_index() -> dict[str, dict[str, str]]:
     payload = json.loads(DIRECTIVE_INDEX_PATH.read_text(encoding="utf-8"))
     return payload["topics"]
+
+
+def _read_text_input(*, input_file: str | None) -> str:
+    if input_file:
+        return Path(input_file).read_text(encoding="utf-8")
+    return sys.stdin.read()
 
 
 def _emit(payload: dict[str, Any], as_json: bool) -> int:
@@ -126,6 +135,18 @@ def _command_paths(args: argparse.Namespace) -> int:
     return _emit(payload, args.json)
 
 
+def _command_pre_exec_check(args: argparse.Namespace) -> int:
+    command = _read_text_input(input_file=args.command_file).strip()
+    expected_failure_rules = load_expected_failure_rules(args.expected_failure_file)
+    payload = adjudicate_pre_exec_command(
+        command=command,
+        workdir=args.workdir,
+        stage=args.stage,
+        expected_failure_rules=expected_failure_rules,
+    )
+    return _emit(payload, args.json)
+
+
 def _command_run_turn_hook(args: argparse.Namespace) -> int:
     payload = run_turn_hook(
         codex_home_override=args.codex_home,
@@ -134,6 +155,8 @@ def _command_run_turn_hook(args: argparse.Namespace) -> int:
         mode=args.mode,
         auto_repair=bool(args.auto_repair),
         auto_repair_limit=args.auto_repair_limit,
+        expected_failure_file=args.expected_failure_file,
+        stage=args.stage,
     )
     return _emit(payload, args.json)
 
@@ -177,6 +200,17 @@ def build_parser() -> argparse.ArgumentParser:
     paths_parser.add_argument("--json", action="store_true", help="Emit structured JSON")
     paths_parser.set_defaults(func=_command_paths)
 
+    pre_exec_parser = subparsers.add_parser(
+        "pre-exec-check",
+        help="Classify a command before execution, including repo-local normalization and expected-failure handling",
+    )
+    pre_exec_parser.add_argument("--command-file", help="Path to a file containing the raw command string; stdin is used when omitted")
+    pre_exec_parser.add_argument("--workdir", help="Optional working directory used for path resolution")
+    pre_exec_parser.add_argument("--stage", help="Optional stage hint for expected-failure matching")
+    pre_exec_parser.add_argument("--expected-failure-file", help="Optional JSON file with expected-failure whitelist rules")
+    pre_exec_parser.add_argument("--json", action="store_true", help="Emit structured JSON")
+    pre_exec_parser.set_defaults(func=_command_pre_exec_check)
+
     hook_parser = subparsers.add_parser(
         "run-turn-hook",
         help="Run the governed turn hook against the latest or targeted Codex turn and persist a turn audit",
@@ -187,6 +221,8 @@ def build_parser() -> argparse.ArgumentParser:
     hook_parser.add_argument("--mode", choices=["diagnose", "repair"], default="diagnose")
     hook_parser.add_argument("--auto-repair", action=argparse.BooleanOptionalAction, default=False)
     hook_parser.add_argument("--auto-repair-limit", type=int, default=3)
+    hook_parser.add_argument("--stage", help="Optional stage hint for expected-failure matching")
+    hook_parser.add_argument("--expected-failure-file", help="Optional JSON file with expected-failure whitelist rules")
     hook_parser.add_argument("--json", action="store_true", help="Emit structured JSON")
     hook_parser.set_defaults(func=_command_run_turn_hook)
 

@@ -1,21 +1,24 @@
 {
   "directive_name": "meta_runtime_selfcheck_turn_hook_self_repair",
-  "directive_version": "2.1.0",
+  "directive_version": "3.0.0",
   "doc_kind": "workflow",
   "topic": "turn-hook-self-repair",
   "purpose": "Run a default turn hook throughout the active turn; when issue evidence appears, diagnose it immediately and start repair before continuing the main task.",
   "instruction": [
     "Enter this workflow as soon as issue evidence appears anywhere in the active turn, and run a final closure pass before the final reply.",
+    "Before executing risky or governed commands, prefer pre-exec-check so the hook can adjudicate normalization or expected-failure handling before the first failure happens.",
     "Use run-turn-hook or watch-codex-sessions as the technical carrier so the hook really runs and leaves turn-audit evidence.",
     "Treat the current turn's tool runs, failures, retries, user corrections, path mistakes, and hesitation as first-class evidence.",
     "When the issue is concrete, local, and verifiable, do not stop at diagnosis; move directly into bounded repair."
   ],
   "workflow": [
+    "If a command is about to run and it touches governed Python, lint, repo-local validation, or traceability flows, call pre-exec-check first.",
     "Check whether the current turn has any tool failure, script failure, path misuse, CLI semantic mismatch, repeated retry, user correction caused by misunderstanding, or obvious hesitation.",
     "If none are present, keep the hook quiet and continue the main task.",
     "If CODEX_RUNTIME_PAIN_PROVIDER is absent, fall back to Codex session turn evidence instead of exiting with configuration error.",
-    "If issues are present, classify them into: immediately repairable in this turn, not-yet-verifiable but still strengthenable, and residual risks that must be disclosed.",
+    "If issues are present, classify them into: immediately repairable in this turn, not-yet-verifiable but still strengthenable, explicitly allowed expected failures, and residual risks that must be disclosed or escalated.",
     "When a bounded fix is safe and within the active repo boundary, repair first, collect verification evidence, and mark the turn audit with resolved optimization ids before continuing.",
+    "When a failure matches the expected-failure whitelist, allow it, record it, and carry it into later strengthening or validation artifacts instead of auto-repairing over it.",
     "Do not downgrade directly into advice when a local repair exists; only retain residual risk after the minimal correct repair has been applied."
   ],
   "issue_checklist": [
@@ -40,6 +43,7 @@
     "Do not emit extra hook text when the turn was smooth enough that the extra section would be noise.",
     "Do not describe failures without naming the missing guidance, document, script, workflow boundary, or decision gap.",
     "Do not use selfcheck as an excuse for unrelated broad refactors.",
+    "Do not auto-kill an expected failing test or lint run when the active stage explicitly whitelisted that failure shape.",
     "If the model can safely repair the issue now, repair first and disclose the outcome later; do not merely report the problem."
   ]
 }

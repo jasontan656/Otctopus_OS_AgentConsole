@@ -13,6 +13,7 @@ from runtime_pain_types import TurnGroupSummary
 from runtime_pain_types import TurnHookAudit
 from runtime_pain_types import TurnHookResult
 from runtime_pain_types import WatchSessionsResult
+from runtime_selfcheck_command_governance import load_expected_failure_rules
 from runtime_selfcheck_session_source import build_session_fallback_queue
 from runtime_selfcheck_session_source import find_session_files
 from runtime_selfcheck_session_source import load_target_turn_evidence
@@ -40,6 +41,9 @@ def _candidate_auto_repairs(items: list[dict[str, object]], *, limit: int) -> li
                 "optimization_id": str(item.get("optimization_id", "") or ""),
                 "repair_type": str(auto.get("repair_type", "") or ""),
                 "command": command,
+                "workdir": str(auto.get("workdir", "") or ""),
+                "change_detection_root": str(auto.get("change_detection_root", "") or ""),
+                "decision": str(auto.get("decision", "") or ""),
             }
         )
         seen_commands.add(command)
@@ -63,6 +67,43 @@ def _resolved_ids_from_repairs(
     return resolved
 
 
+def _empty_execution_result() -> CommandExecutionResult:
+    return {
+        "total_commands": 0,
+        "success_commands": 0,
+        "failed_commands": 0,
+        "all_succeeded": False,
+        "runs": [],
+        "all_changed_paths": [],
+        "all_changed_path_count": 0,
+        "preflight_failed_commands": 0,
+        "preflight_reason_codes": [],
+        "change_detection_supported": False,
+    }
+
+
+def _merge_execution_results(results: list[CommandExecutionResult]) -> CommandExecutionResult:
+    merged = _empty_execution_result()
+    all_changed_paths: set[str] = set()
+    preflight_reason_codes: list[str] = []
+    runs: list[dict[str, object]] = []
+    for result in results:
+        merged["total_commands"] += int(result.get("total_commands", 0) or 0)
+        merged["success_commands"] += int(result.get("success_commands", 0) or 0)
+        merged["failed_commands"] += int(result.get("failed_commands", 0) or 0)
+        merged["preflight_failed_commands"] += int(result.get("preflight_failed_commands", 0) or 0)
+        preflight_reason_codes.extend(list(result.get("preflight_reason_codes", [])))
+        runs.extend(list(result.get("runs", [])))
+        all_changed_paths.update(str(path) for path in list(result.get("all_changed_paths", [])) if str(path).strip())
+        merged["change_detection_supported"] = bool(merged.get("change_detection_supported", False) or result.get("change_detection_supported", False))
+    merged["runs"] = runs
+    merged["all_changed_paths"] = sorted(all_changed_paths)
+    merged["all_changed_path_count"] = len(all_changed_paths)
+    merged["preflight_reason_codes"] = sorted(set(preflight_reason_codes))
+    merged["all_succeeded"] = bool(merged["total_commands"]) and int(merged["failed_commands"]) == 0
+    return merged
+
+
 def run_turn_hook(
     *,
     codex_home_override: str | None = None,
@@ -71,9 +112,12 @@ def run_turn_hook(
     mode: str = "diagnose",
     auto_repair: bool = False,
     auto_repair_limit: int = 3,
+    expected_failure_file: str | None = None,
+    stage: str | None = None,
 ) -> TurnHookResult:
     ensure_store_exists()
     effective_auto_repair = auto_repair or mode == "repair"
+    expected_failure_rules = load_expected_failure_rules(expected_failure_file)
     turn = load_target_turn_evidence(
         codex_home_override=codex_home_override,
         session_id_filter=session_id,
@@ -92,31 +136,53 @@ def run_turn_hook(
         turn_id_filter=str(turn.get("turn_id", "") or ""),
         include_resolved=True,
         max_results=200,
+        expected_failure_rules=expected_failure_rules,
+        stage=stage,
     )
     items = queue.get("items", []) if isinstance(queue.get("items", []), list) else []
     grouped = _group_items(items)
     repairs = _candidate_auto_repairs(items, limit=auto_repair_limit) if effective_auto_repair else []
-    execution_result: CommandExecutionResult = {
-        "total_commands": 0,
-        "success_commands": 0,
-        "failed_commands": 0,
-        "all_succeeded": False,
-        "runs": [],
-    }
+    execution_result: CommandExecutionResult = _empty_execution_result()
     resolved_ids: list[str] = []
     if repairs:
-        execution_result = execute_command_list(
-            commands=[row["command"] for row in repairs],
-            timeout_sec=20,
-            workdir=str(turn.get("cwd", "") or ""),
-            change_detection_root=str(turn.get("cwd", "") or ""),
-        )
+        repair_runs: list[CommandExecutionResult] = []
+        fallback_workdir = str(turn.get("cwd", "") or "")
+        for repair in repairs:
+            repair_runs.append(
+                execute_command_list(
+                    commands=[str(repair.get("command", "") or "")],
+                    timeout_sec=20,
+                    workdir=str(repair.get("workdir", "") or fallback_workdir),
+                    change_detection_root=str(repair.get("change_detection_root", "") or fallback_workdir),
+                )
+            )
+        execution_result = _merge_execution_results(repair_runs)
         resolved_ids = _resolved_ids_from_repairs(repairs=repairs, execution_result=execution_result)
         for item in items:
             if str(item.get("optimization_id", "") or "") in resolved_ids:
                 item["is_resolved"] = True
         grouped = _group_items(items)
 
+    issue_buckets = {
+        "immediate_repair": 0,
+        "strengthen_now": 0,
+        "allow_expected_failure": 0,
+        "pending_decision": 0,
+    }
+    strengthened_ids: list[str] = []
+    expected_failure_ids: list[str] = []
+    pending_decision_ids: list[str] = []
+    for item in items:
+        adjudication = str(item.get("adjudication", "") or "")
+        if adjudication in issue_buckets:
+            issue_buckets[adjudication] += 1
+        if adjudication == "strengthen_now":
+            strengthened_ids.append(str(item.get("optimization_id", "") or ""))
+        if adjudication == "allow_expected_failure":
+            expected_failure_ids.append(str(item.get("optimization_id", "") or ""))
+            item["is_resolved"] = True
+        if adjudication == "pending_decision":
+            pending_decision_ids.append(str(item.get("optimization_id", "") or ""))
     pending_items = sum(1 for item in items if not bool(item.get("is_resolved", False)))
     audit_payload: TurnHookAudit = {
         "session_id": str(turn.get("session_id", "") or ""),
@@ -134,6 +200,10 @@ def run_turn_hook(
         "resolved_optimization_ids": resolved_ids,
         "group_count": int(grouped.get("group_count", 0) or 0),
         "groups": grouped.get("groups", []),
+        "issue_buckets": issue_buckets,
+        "expected_failure_ids": expected_failure_ids,
+        "strengthened_optimization_ids": strengthened_ids,
+        "pending_decision_ids": pending_decision_ids,
         "auto_repairs": repairs,
         "repair_execution_v1": execution_result,
         "residual_risks": [
@@ -167,6 +237,7 @@ def run_turn_hook(
         "source_mode": "session_fallback",
         "auto_repairs": repairs,
         "repair_execution_v1": execution_result,
+        "issue_buckets": dict(saved.get("issue_buckets", {})),
     }
 
 

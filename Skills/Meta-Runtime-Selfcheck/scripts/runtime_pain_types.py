@@ -105,6 +105,66 @@ class AutoRepairRecord(TypedDict, total=False):
     optimization_id: str
     repair_type: str
     command: str
+    workdir: str
+    change_detection_root: str
+    decision: str
+
+
+class ExpectedFailureRule(TypedDict, total=False):
+    rule_id: str
+    stages: list[str]
+    command_contains: list[str]
+    output_contains: list[str]
+    reason_codes: list[str]
+    action: str
+    reason: str
+
+
+class ExpectedFailureMatch(TypedDict, total=False):
+    matched: bool
+    rule_id: str
+    reason: str
+    action: str
+
+
+class CommandGovernanceContext(TypedDict, total=False):
+    repo_root: str
+    workdir: str
+    change_detection_root: str
+    backend_python: str
+
+
+class CommandNormalizationResult(TypedDict, total=False):
+    command: str
+    normalized_command: str
+    changed: bool
+    repair_types: list[str]
+    context: CommandGovernanceContext
+
+
+class PreExecCheckResult(TypedDict, total=False):
+    status: str
+    decision: str
+    command: str
+    normalized_command: str
+    reason_code: str
+    detail: str
+    expected_failure: ExpectedFailureMatch
+    repair_types: list[str]
+    repair_context: CommandGovernanceContext
+
+
+class RuntimeFailureAnalysis(TypedDict, total=False):
+    matched: bool
+    issue_kind: str
+    issue_subkind: str
+    title: str
+    summary: str
+    why: str
+    suggested_action: str
+    adjudication: str
+    expected_failure: ExpectedFailureMatch
+    auto_repair: CommandNormalizationResult | dict[str, str]
 
 
 class TurnAuditCloseout(TypedDict, total=False):
@@ -165,6 +225,10 @@ class TurnHookAudit(TypedDict, total=False):
     groups: list[RuntimePainGroup]
     auto_repairs: list[AutoRepairRecord]
     repair_execution_v1: CommandExecutionResult
+    issue_buckets: dict[str, int]
+    expected_failure_ids: list[str]
+    strengthened_optimization_ids: list[str]
+    pending_decision_ids: list[str]
     residual_risks: list[str]
     turn_audit_closeout: TurnAuditCloseout
     audit_recorded_at: str
@@ -184,6 +248,7 @@ class TurnHookResult(TypedDict, total=False):
     source_mode: str
     auto_repairs: list[AutoRepairRecord]
     repair_execution_v1: CommandExecutionResult
+    issue_buckets: dict[str, int]
 
 
 class WatchSessionsResult(TypedDict, total=False):
