@@ -3,10 +3,20 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any
 
-from memory_models import SCHEMA_VERSION
+from memory_models import ActiveRuntimePayload
+from memory_models import ActiveTaskPayload
 from memory_models import AUDIT_SCHEMA_VERSION
+from memory_models import CompiledMemoryPayload
+from memory_models import JsonObject
+from memory_models import JsonValue
+from memory_models import SCHEMA_VERSION
+from memory_models import SessionMemoryPayload
+from memory_models import TaskMemoryPayload
+from memory_models import TurnAuditPayload
+from memory_models import TurnDeltaEntryPayload
+from memory_models import UserMemoryPayload
+from memory_models import WatcherStatePayload
 from memory_models import iso_now
 from memory_models import validate_active_runtime
 from memory_models import validate_session_memory
@@ -136,23 +146,23 @@ def compiled_active_memory_md_path() -> Path:
     return compiled_root() / "ACTIVE_MEMORY.md"
 
 
-def _read_json(path: Path) -> Any:
+def _read_json(path: Path) -> JsonValue:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def _write_json(path: Path, payload: Any) -> None:
+def _write_json(path: Path, payload: JsonValue) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
-def _read_template_json(name: str, replacements: dict[str, str] | None = None) -> Any:
+def _read_template_json(name: str, replacements: dict[str, str] | None = None) -> JsonValue:
     rendered = (TEMPLATE_ROOT / name).read_text(encoding="utf-8")
     for key, value in (replacements or {}).items():
         rendered = rendered.replace(key, value)
     return json.loads(rendered)
 
 
-def deep_merge(base: Any, patch: Any) -> Any:
+def deep_merge(base: JsonValue, patch: JsonValue) -> JsonValue:
     if isinstance(base, dict) and isinstance(patch, dict):
         merged = dict(base)
         for key, value in patch.items():
@@ -164,7 +174,7 @@ def deep_merge(base: Any, patch: Any) -> Any:
     return patch
 
 
-def ensure_store_exists() -> dict[str, Any]:
+def ensure_store_exists() -> dict[str, object]:
     created: list[str] = []
     runtime_root().mkdir(parents=True, exist_ok=True)
     compiled_root().mkdir(parents=True, exist_ok=True)
@@ -229,15 +239,15 @@ def ensure_store_exists() -> dict[str, Any]:
     }
 
 
-def load_active_task() -> dict[str, Any]:
+def load_active_task() -> ActiveTaskPayload:
     return validate_active_task(_read_json(active_task_path()))
 
 
-def load_active_runtime() -> dict[str, Any]:
+def load_active_runtime() -> ActiveRuntimePayload:
     return validate_active_runtime(_read_json(active_runtime_path()))
 
 
-def save_active_task(active_task_id: str | None) -> dict[str, Any]:
+def save_active_task(active_task_id: str | None) -> ActiveTaskPayload:
     payload = {
         "schema_version": SCHEMA_VERSION,
         "active_task_id": active_task_id,
@@ -248,7 +258,7 @@ def save_active_task(active_task_id: str | None) -> dict[str, Any]:
     return payload
 
 
-def save_active_runtime(payload: dict[str, Any]) -> dict[str, Any]:
+def save_active_runtime(payload: ActiveRuntimePayload) -> ActiveRuntimePayload:
     payload["schema_version"] = AUDIT_SCHEMA_VERSION
     payload["updated_at"] = iso_now()
     validated = validate_active_runtime(payload)
@@ -256,11 +266,11 @@ def save_active_runtime(payload: dict[str, Any]) -> dict[str, Any]:
     return validated
 
 
-def load_user_memory() -> dict[str, Any]:
+def load_user_memory() -> UserMemoryPayload:
     return validate_user_memory(_read_json(user_memory_json_path()))
 
 
-def save_user_memory(payload: dict[str, Any]) -> dict[str, Any]:
+def save_user_memory(payload: UserMemoryPayload) -> UserMemoryPayload:
     payload["schema_version"] = SCHEMA_VERSION
     payload["memory_kind"] = "user"
     payload["updated_at"] = iso_now()
@@ -270,7 +280,7 @@ def save_user_memory(payload: dict[str, Any]) -> dict[str, Any]:
     return validated
 
 
-def create_task_memory(task_id: str, title: str) -> dict[str, Any]:
+def create_task_memory(task_id: str, title: str) -> TaskMemoryPayload:
     task_json = task_memory_json_path(task_id)
     if task_json.exists():
         return load_task_memory(task_id)
@@ -288,11 +298,11 @@ def create_task_memory(task_id: str, title: str) -> dict[str, Any]:
     return validated
 
 
-def load_task_memory(task_id: str) -> dict[str, Any]:
+def load_task_memory(task_id: str) -> TaskMemoryPayload:
     return validate_task_memory(_read_json(task_memory_json_path(task_id)))
 
 
-def save_task_memory(payload: dict[str, Any]) -> dict[str, Any]:
+def save_task_memory(payload: TaskMemoryPayload) -> TaskMemoryPayload:
     payload["schema_version"] = SCHEMA_VERSION
     payload["memory_kind"] = "task"
     payload["updated_at"] = iso_now()
@@ -302,22 +312,22 @@ def save_task_memory(payload: dict[str, Any]) -> dict[str, Any]:
     return validated
 
 
-def load_turn_delta(task_id: str) -> list[dict[str, Any]]:
+def load_turn_delta(task_id: str) -> list[TurnDeltaEntryPayload]:
     return validate_turn_delta_entries(_read_json(turn_delta_json_path(task_id)))
 
 
-def save_turn_delta(task_id: str, entries: list[dict[str, Any]]) -> list[dict[str, Any]]:
+def save_turn_delta(task_id: str, entries: list[TurnDeltaEntryPayload]) -> list[TurnDeltaEntryPayload]:
     validated = validate_turn_delta_entries(entries)
     _write_json(turn_delta_json_path(task_id), validated)
     turn_delta_md_path(task_id).write_text(render_turn_delta_md(validated), encoding="utf-8")
     return validated
 
 
-def load_session_memory(session_id: str) -> dict[str, Any]:
+def load_session_memory(session_id: str) -> SessionMemoryPayload:
     return validate_session_memory(_read_json(session_memory_json_path(session_id)))
 
 
-def save_session_memory(payload: dict[str, Any]) -> dict[str, Any]:
+def save_session_memory(payload: SessionMemoryPayload) -> SessionMemoryPayload:
     payload["schema_version"] = AUDIT_SCHEMA_VERSION
     payload["updated_at"] = iso_now()
     validated = validate_session_memory(payload)
@@ -325,11 +335,11 @@ def save_session_memory(payload: dict[str, Any]) -> dict[str, Any]:
     return validated
 
 
-def load_turn_audit(session_id: str, turn_id: str) -> dict[str, Any]:
+def load_turn_audit(session_id: str, turn_id: str) -> TurnAuditPayload:
     return validate_turn_audit(_read_json(turn_audit_json_path(session_id, turn_id)))
 
 
-def save_turn_audit(payload: dict[str, Any]) -> dict[str, Any]:
+def save_turn_audit(payload: TurnAuditPayload) -> TurnAuditPayload:
     payload["schema_version"] = AUDIT_SCHEMA_VERSION
     payload["audit_recorded_at"] = iso_now()
     validated = validate_turn_audit(payload)
@@ -337,14 +347,14 @@ def save_turn_audit(payload: dict[str, Any]) -> dict[str, Any]:
     return validated
 
 
-def load_watcher_state() -> dict[str, Any]:
+def load_watcher_state() -> WatcherStatePayload:
     payload = _read_json(watcher_state_json_path())
     if not payload.get("codex_home"):
         payload["codex_home"] = ""
     return validate_watcher_state(payload)
 
 
-def save_watcher_state(payload: dict[str, Any]) -> dict[str, Any]:
+def save_watcher_state(payload: WatcherStatePayload) -> WatcherStatePayload:
     payload["schema_version"] = AUDIT_SCHEMA_VERSION
     payload["updated_at"] = iso_now()
     validated = validate_watcher_state(payload)

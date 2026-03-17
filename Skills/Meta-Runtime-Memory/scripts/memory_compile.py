@@ -2,9 +2,8 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
-from typing import Any
 
+from memory_models import CompiledMemoryPayload
 from memory_models import iso_now
 from memory_models import validate_compiled_memory
 from memory_store import compiled_active_memory_json_path
@@ -24,7 +23,7 @@ IGNORE_BY_DEFAULT = [
 ]
 
 
-def compile_active_memory() -> dict[str, Any]:
+def compile_active_memory() -> CompiledMemoryPayload:
     compiled_root().mkdir(parents=True, exist_ok=True)
     active_task = load_active_task()
     user_memory = load_user_memory()

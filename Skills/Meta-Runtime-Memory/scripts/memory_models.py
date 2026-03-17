@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
-from typing import Any
+from typing import TypeAlias, TypedDict, cast
 
 
 SCHEMA_VERSION = "1.0.0"
@@ -89,6 +89,140 @@ VALIDATION_RUN_KEYS = {"command", "result"}
 WATCHER_STATE_KEYS = {"schema_version", "codex_home", "updated_at", "file_cursors"}
 
 
+JsonScalar: TypeAlias = str | int | float | bool | None
+JsonValue: TypeAlias = JsonScalar | list["JsonValue"] | dict[str, "JsonValue"]
+JsonObject: TypeAlias = dict[str, JsonValue]
+StringMap: TypeAlias = dict[str, str]
+
+
+class UserTopLayerPayload(TypedDict):
+    long_term_objectives: list[str]
+    communication_style: list[str]
+    work_style: list[str]
+    collaboration_style: list[str]
+    global_preferences: list[str]
+    habit_patterns: list[str]
+    stable_constraints: list[str]
+
+
+class TaskLayerPayload(TypedDict):
+    task_goal: str
+    current_state: list[str]
+    working_style: list[str]
+    constraints: list[str]
+    mindset: list[str]
+    next_steps: list[str]
+    open_questions: list[str]
+    artifacts: list[str]
+    handoff_notes: list[str]
+
+
+class ActiveTaskPayload(TypedDict):
+    schema_version: str
+    active_task_id: str | None
+    updated_at: str
+
+
+class ActiveRuntimePayload(TypedDict):
+    schema_version: str
+    status: str
+    session_id: str | None
+    turn_id: str | None
+    active_task_id: str | None
+    last_writeback_decision: str | None
+    last_turn_audit_path: str | None
+    updated_at: str
+
+
+class UserMemoryPayload(TypedDict):
+    schema_version: str
+    memory_kind: str
+    updated_at: str
+    top_layer: UserTopLayerPayload
+
+
+class TaskMemoryPayload(TypedDict):
+    schema_version: str
+    memory_kind: str
+    task_id: str
+    title: str
+    status: str
+    updated_at: str
+    task_layer: TaskLayerPayload
+
+
+class TurnDeltaEntryPayload(TypedDict):
+    timestamp: str
+    summary: str
+    user_memory_updates: list[str]
+    task_memory_updates: list[str]
+    next_actions: list[str]
+    writeback_decision: str
+
+
+class SessionMemoryPayload(TypedDict):
+    schema_version: str
+    session_id: str
+    session_file: str
+    started_at: str
+    updated_at: str
+    status: str
+    current_task_id: str | None
+    latest_turn_id: str | None
+    turn_ids: list[str]
+
+
+class ValidationRunPayload(TypedDict):
+    command: str
+    result: str
+
+
+class TurnAuditPayload(TypedDict):
+    schema_version: str
+    session_id: str
+    turn_id: str
+    session_file: str
+    started_at: str
+    user_message: str
+    task_id: str | None
+    task_title: str | None
+    turn_start_status: str
+    turn_start_bound_at: str | None
+    turn_start_compiled_at: str | None
+    completed_at: str | None
+    assistant_final_reply: str
+    changed_paths: list[str]
+    validation_runs: list[ValidationRunPayload]
+    writeback_decision: str
+    user_memory_updates: list[str]
+    task_memory_updates: list[str]
+    next_actions: list[str]
+    audit_recorded_at: str
+
+
+class WatcherStatePayload(TypedDict):
+    schema_version: str
+    codex_home: str
+    updated_at: str
+    file_cursors: StringMap
+
+
+class WritebackPolicyPayload(TypedDict, total=False):
+    turn_start: str
+    turn_end: str
+
+
+class CompiledMemoryPayload(TypedDict):
+    skill_name: str
+    compiled_at: str
+    memory_definition: str
+    active_task_id: str | None
+    user_memory: UserMemoryPayload
+    task_memory: TaskMemoryPayload | None
+    writeback_policy: WritebackPolicyPayload
+    ignore_by_default: list[str]
+
+
 class MemoryValidationError(ValueError):
     """Raised when a runtime memory payload violates the governed schema."""
 
@@ -97,10 +231,10 @@ def iso_now() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
 
-def ensure_object(payload: object, label: str) -> dict[str, Any]:
+def ensure_object(payload: object, label: str) -> JsonObject:
     if not isinstance(payload, dict):
         raise MemoryValidationError(f"{label} must be an object")
-    return payload
+    return cast(JsonObject, payload)
 
 
 def ensure_string(value: object, label: str, *, allow_empty: bool = False) -> str:
@@ -136,9 +270,9 @@ def ensure_optional_string(value: object, label: str) -> str | None:
     return ensure_string(value, label)
 
 
-def ensure_string_mapping(value: object, label: str) -> dict[str, str]:
+def ensure_string_mapping(value: object, label: str) -> StringMap:
     obj = ensure_object(value, label)
-    normalized: dict[str, str] = {}
+    normalized: StringMap = {}
     for key, item in obj.items():
         if not isinstance(key, str) or not key.strip():
             raise MemoryValidationError(f"{label} keys must be non-empty strings")
@@ -146,7 +280,7 @@ def ensure_string_mapping(value: object, label: str) -> dict[str, str]:
     return normalized
 
 
-def _ensure_exact_keys(payload: dict[str, Any], expected: set[str], label: str) -> None:
+def _ensure_exact_keys(payload: JsonObject, expected: set[str], label: str) -> None:
     keys = set(payload.keys())
     if keys != expected:
         missing = sorted(expected - keys)
@@ -159,8 +293,8 @@ def _ensure_exact_keys(payload: dict[str, Any], expected: set[str], label: str) 
         raise MemoryValidationError(f"{label} keys mismatch: {', '.join(problems)}")
 
 
-def validate_active_task(payload: object) -> dict[str, Any]:
-    obj = ensure_object(payload, "active_task")
+def validate_active_task(payload: object) -> ActiveTaskPayload:
+    obj = cast(ActiveTaskPayload, ensure_object(payload, "active_task"))
     _ensure_exact_keys(obj, ACTIVE_TASK_KEYS, "active_task")
     if obj["schema_version"] != SCHEMA_VERSION:
         raise MemoryValidationError("active_task.schema_version mismatch")
@@ -170,15 +304,15 @@ def validate_active_task(payload: object) -> dict[str, Any]:
     return obj
 
 
-def validate_user_memory(payload: object) -> dict[str, Any]:
-    obj = ensure_object(payload, "user_memory")
+def validate_user_memory(payload: object) -> UserMemoryPayload:
+    obj = cast(UserMemoryPayload, ensure_object(payload, "user_memory"))
     _ensure_exact_keys(obj, USER_MEMORY_KEYS, "user_memory")
     if obj["schema_version"] != SCHEMA_VERSION:
         raise MemoryValidationError("user_memory.schema_version mismatch")
     if obj["memory_kind"] != "user":
         raise MemoryValidationError("user_memory.memory_kind must be 'user'")
     obj["updated_at"] = ensure_string(obj["updated_at"], "user_memory.updated_at", allow_empty=True)
-    top_layer = ensure_object(obj["top_layer"], "user_memory.top_layer")
+    top_layer = cast(UserTopLayerPayload, ensure_object(obj["top_layer"], "user_memory.top_layer"))
     _ensure_exact_keys(top_layer, USER_TOP_LAYER_KEYS, "user_memory.top_layer")
     for key in sorted(USER_TOP_LAYER_KEYS):
         top_layer[key] = ensure_string_list(top_layer[key], f"user_memory.top_layer.{key}")
@@ -186,8 +320,8 @@ def validate_user_memory(payload: object) -> dict[str, Any]:
     return obj
 
 
-def validate_task_memory(payload: object) -> dict[str, Any]:
-    obj = ensure_object(payload, "task_memory")
+def validate_task_memory(payload: object) -> TaskMemoryPayload:
+    obj = cast(TaskMemoryPayload, ensure_object(payload, "task_memory"))
     _ensure_exact_keys(obj, TASK_MEMORY_KEYS, "task_memory")
     if obj["schema_version"] != SCHEMA_VERSION:
         raise MemoryValidationError("task_memory.schema_version mismatch")
@@ -200,7 +334,7 @@ def validate_task_memory(payload: object) -> dict[str, Any]:
     if status not in TASK_STATUSES:
         raise MemoryValidationError(f"task_memory.status must be one of {sorted(TASK_STATUSES)}")
     obj["status"] = status
-    task_layer = ensure_object(obj["task_layer"], "task_memory.task_layer")
+    task_layer = cast(TaskLayerPayload, ensure_object(obj["task_layer"], "task_memory.task_layer"))
     _ensure_exact_keys(task_layer, TASK_LAYER_KEYS, "task_memory.task_layer")
     task_layer["task_goal"] = ensure_string(task_layer["task_goal"], "task_memory.task_layer.task_goal", allow_empty=True)
     for key in sorted(TASK_LAYER_KEYS - {"task_goal"}):
@@ -209,12 +343,12 @@ def validate_task_memory(payload: object) -> dict[str, Any]:
     return obj
 
 
-def validate_turn_delta_entries(payload: object) -> list[dict[str, Any]]:
+def validate_turn_delta_entries(payload: object) -> list[TurnDeltaEntryPayload]:
     if not isinstance(payload, list):
         raise MemoryValidationError("turn_delta must be a list")
-    entries: list[dict[str, Any]] = []
+    entries: list[TurnDeltaEntryPayload] = []
     for index, item in enumerate(payload):
-        entry = ensure_object(item, f"turn_delta[{index}]")
+        entry = cast(TurnDeltaEntryPayload, ensure_object(item, f"turn_delta[{index}]"))
         _ensure_exact_keys(entry, TURN_DELTA_KEYS, f"turn_delta[{index}]")
         entry["timestamp"] = ensure_string(entry["timestamp"], f"turn_delta[{index}].timestamp")
         entry["summary"] = ensure_string(entry["summary"], f"turn_delta[{index}].summary")
@@ -235,8 +369,8 @@ def validate_turn_delta_entries(payload: object) -> list[dict[str, Any]]:
     return entries
 
 
-def validate_active_runtime(payload: object) -> dict[str, Any]:
-    obj = ensure_object(payload, "active_runtime")
+def validate_active_runtime(payload: object) -> ActiveRuntimePayload:
+    obj = cast(ActiveRuntimePayload, ensure_object(payload, "active_runtime"))
     _ensure_exact_keys(obj, ACTIVE_RUNTIME_KEYS, "active_runtime")
     if obj["schema_version"] != AUDIT_SCHEMA_VERSION:
         raise MemoryValidationError("active_runtime.schema_version mismatch")
@@ -258,8 +392,8 @@ def validate_active_runtime(payload: object) -> dict[str, Any]:
     return obj
 
 
-def validate_session_memory(payload: object) -> dict[str, Any]:
-    obj = ensure_object(payload, "session_memory")
+def validate_session_memory(payload: object) -> SessionMemoryPayload:
+    obj = cast(SessionMemoryPayload, ensure_object(payload, "session_memory"))
     _ensure_exact_keys(obj, SESSION_MEMORY_KEYS, "session_memory")
     if obj["schema_version"] != AUDIT_SCHEMA_VERSION:
         raise MemoryValidationError("session_memory.schema_version mismatch")
@@ -277,24 +411,24 @@ def validate_session_memory(payload: object) -> dict[str, Any]:
     return obj
 
 
-def validate_validation_runs(payload: object) -> list[dict[str, str]]:
+def validate_validation_runs(payload: object) -> list[ValidationRunPayload]:
     if not isinstance(payload, list):
         raise MemoryValidationError("validation_runs must be a list")
-    runs: list[dict[str, str]] = []
+    runs: list[ValidationRunPayload] = []
     for index, item in enumerate(payload):
-        run = ensure_object(item, f"validation_runs[{index}]")
+        run = cast(ValidationRunPayload, ensure_object(item, f"validation_runs[{index}]"))
         _ensure_exact_keys(run, VALIDATION_RUN_KEYS, f"validation_runs[{index}]")
         runs.append(
-            {
-                "command": ensure_string(run["command"], f"validation_runs[{index}].command"),
-                "result": ensure_string(run["result"], f"validation_runs[{index}].result"),
-            }
+            ValidationRunPayload(
+                command=ensure_string(run["command"], f"validation_runs[{index}].command"),
+                result=ensure_string(run["result"], f"validation_runs[{index}].result"),
+            )
         )
     return runs
 
 
-def validate_turn_audit(payload: object) -> dict[str, Any]:
-    obj = ensure_object(payload, "turn_audit")
+def validate_turn_audit(payload: object) -> TurnAuditPayload:
+    obj = cast(TurnAuditPayload, ensure_object(payload, "turn_audit"))
     _ensure_exact_keys(obj, TURN_AUDIT_KEYS, "turn_audit")
     if obj["schema_version"] != AUDIT_SCHEMA_VERSION:
         raise MemoryValidationError("turn_audit.schema_version mismatch")
@@ -327,8 +461,8 @@ def validate_turn_audit(payload: object) -> dict[str, Any]:
     return obj
 
 
-def validate_watcher_state(payload: object) -> dict[str, Any]:
-    obj = ensure_object(payload, "watcher_state")
+def validate_watcher_state(payload: object) -> WatcherStatePayload:
+    obj = cast(WatcherStatePayload, ensure_object(payload, "watcher_state"))
     _ensure_exact_keys(obj, WATCHER_STATE_KEYS, "watcher_state")
     if obj["schema_version"] != AUDIT_SCHEMA_VERSION:
         raise MemoryValidationError("watcher_state.schema_version mismatch")
@@ -338,8 +472,8 @@ def validate_watcher_state(payload: object) -> dict[str, Any]:
     return obj
 
 
-def validate_compiled_memory(payload: object) -> dict[str, Any]:
-    obj = ensure_object(payload, "compiled_memory")
+def validate_compiled_memory(payload: object) -> CompiledMemoryPayload:
+    obj = cast(CompiledMemoryPayload, ensure_object(payload, "compiled_memory"))
     required_keys = {
         "skill_name",
         "compiled_at",
@@ -359,6 +493,8 @@ def validate_compiled_memory(payload: object) -> dict[str, Any]:
     obj["user_memory"] = validate_user_memory(obj["user_memory"])
     if obj["task_memory"] is not None:
         obj["task_memory"] = validate_task_memory(obj["task_memory"])
-    obj["writeback_policy"] = ensure_object(obj["writeback_policy"], "compiled_memory.writeback_policy")
+    obj["writeback_policy"] = cast(
+        WritebackPolicyPayload, ensure_object(obj["writeback_policy"], "compiled_memory.writeback_policy")
+    )
     obj["ignore_by_default"] = ensure_string_list(obj["ignore_by_default"], "compiled_memory.ignore_by_default")
     return obj

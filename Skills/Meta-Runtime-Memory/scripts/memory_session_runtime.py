@@ -14,6 +14,8 @@ from memory_bind_task import bind_task
 from memory_bind_task import normalize_task_id
 from memory_compile import compile_active_memory
 from memory_models import AUDIT_SCHEMA_VERSION
+from memory_models import SessionMemoryPayload
+from memory_models import TurnAuditPayload
 from memory_models import iso_now
 from memory_store import active_runtime_path
 from memory_store import active_task_path
@@ -164,7 +166,7 @@ def _derive_task_id(session_id: str, title: str) -> str:
     return f"{slug[:48]}-{session_prefix}"
 
 
-def _load_or_create_session_memory(session_id: str, session_file: str, started_at: str) -> dict[str, Any]:
+def _load_or_create_session_memory(session_id: str, session_file: str, started_at: str) -> SessionMemoryPayload:
     path = session_memory_json_path(session_id)
     if path.exists():
         payload = load_session_memory(session_id)
@@ -186,7 +188,7 @@ def _load_or_create_session_memory(session_id: str, session_file: str, started_a
     return save_session_memory(payload)
 
 
-def _build_turn_audit(live_turn: LiveTurn) -> dict[str, Any]:
+def _build_turn_audit(live_turn: LiveTurn) -> TurnAuditPayload:
     return {
         "schema_version": AUDIT_SCHEMA_VERSION,
         "session_id": live_turn.session_id,
@@ -637,7 +639,7 @@ def watch_codex_sessions(
     idle_exit_seconds: float | None = None,
     once: bool = False,
     session_id_filter: str | None = None,
-) -> dict[str, Any]:
+) -> dict[str, object]:
     ensure_store_exists()
     codex_home = resolve_codex_home(codex_home_override)
     watcher_state = load_watcher_state()
@@ -694,11 +696,11 @@ def watch_codex_sessions(
     }
 
 
-def recall_memory(task_id: str | None = None, session_id: str | None = None, *, limit: int = 5) -> dict[str, Any]:
+def recall_memory(task_id: str | None = None, session_id: str | None = None, *, limit: int = 5) -> dict[str, object]:
     ensure_store_exists()
     if task_id is None and session_id is None:
         raise ValueError("Provide --task-id or --session-id.")
-    payload: dict[str, Any] = {"status": "ok"}
+    payload: dict[str, object] = {"status": "ok"}
     if task_id:
         task_memory = load_task_memory(task_id)
         turns = load_turn_delta(task_id)
@@ -719,7 +721,7 @@ def recall_memory(task_id: str | None = None, session_id: str | None = None, *, 
     return payload
 
 
-def search_memory(query: str, *, limit: int = 10) -> dict[str, Any]:
+def search_memory(query: str, *, limit: int = 10) -> dict[str, object]:
     ensure_store_exists()
     needle = query.strip().lower()
     if not needle:

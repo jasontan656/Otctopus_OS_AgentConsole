@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import re
-from typing import Any
 
 from memory_store import create_task_memory
 from memory_store import save_active_task
@@ -21,7 +20,7 @@ def normalize_task_id(value: str) -> str:
     return normalized
 
 
-def bind_task(task_id: str, title: str | None = None, goal: str | None = None) -> dict[str, Any]:
+def bind_task(task_id: str, title: str | None = None, goal: str | None = None) -> dict[str, object]:
     normalized_task_id = normalize_task_id(task_id)
     normalized_title = (title or task_id).strip() or normalized_task_id
     task_memory = create_task_memory(normalized_task_id, normalized_title)

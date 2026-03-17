@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
-from typing import Any
+from memory_models import CompiledMemoryPayload
+from memory_models import TaskMemoryPayload
+from memory_models import TurnDeltaEntryPayload
+from memory_models import UserMemoryPayload
 
 
 def _render_list(items: list[str]) -> list[str]:
@@ -10,7 +13,7 @@ def _render_list(items: list[str]) -> list[str]:
     return [f"- {item}" for item in items]
 
 
-def render_user_memory_md(payload: dict[str, Any]) -> str:
+def render_user_memory_md(payload: UserMemoryPayload) -> str:
     top_layer = payload["top_layer"]
     sections = [
         "# USER_MEMORY",
@@ -34,7 +37,7 @@ def render_user_memory_md(payload: dict[str, Any]) -> str:
     return "\n".join(sections).rstrip() + "\n"
 
 
-def render_task_memory_md(payload: dict[str, Any]) -> str:
+def render_task_memory_md(payload: TaskMemoryPayload) -> str:
     task_layer = payload["task_layer"]
     sections = [
         "# TASK_MEMORY",
@@ -65,7 +68,7 @@ def render_task_memory_md(payload: dict[str, Any]) -> str:
     return "\n".join(sections).rstrip() + "\n"
 
 
-def render_turn_delta_md(entries: list[dict[str, Any]]) -> str:
+def render_turn_delta_md(entries: list[TurnDeltaEntryPayload]) -> str:
     sections = ["# TURN_DELTA", ""]
     if not entries:
         sections.extend(["- (empty)", ""])
@@ -84,7 +87,7 @@ def render_turn_delta_md(entries: list[dict[str, Any]]) -> str:
     return "\n".join(sections).rstrip() + "\n"
 
 
-def render_active_memory_md(payload: dict[str, Any]) -> str:
+def render_active_memory_md(payload: CompiledMemoryPayload) -> str:
     sections = [
         "# ACTIVE_MEMORY",
         "",

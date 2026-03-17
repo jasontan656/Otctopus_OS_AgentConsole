@@ -1,9 +1,6 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
-from pathlib import Path
-from typing import Any
-
 from memory_models import validate_active_task
 from memory_models import validate_active_runtime
 from memory_models import validate_compiled_memory
@@ -27,7 +24,7 @@ from memory_store import tasks_root
 from memory_store import watcher_state_json_path
 
 
-def validate_store() -> dict[str, Any]:
+def validate_store() -> dict[str, object]:
     checked_files: list[str] = []
     task_ids: list[str] = []
 
