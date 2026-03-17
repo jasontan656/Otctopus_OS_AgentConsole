@@ -2,6 +2,13 @@
 doc_id: skillsmanager_naming_manager.path.naming_policy.entry
 doc_type: path_doc
 topic: Naming policy entry
+actor_id: skill_runtime_operator
+role: naming_governance_reader
+scope: naming_policy_entry
+action: read_contract_context
+policy_version: naming_manager_permission_v1
+authz_result: allow
+deny_code: none
 reading_chain:
 - key: contract
   target: 10_CONTRACT.md

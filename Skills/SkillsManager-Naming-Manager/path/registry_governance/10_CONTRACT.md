@@ -2,6 +2,16 @@
 doc_id: skillsmanager_naming_manager.path.registry_governance.contract
 doc_type: topic_atom
 topic: Registry governance contract
+contract_name: skillsmanager_naming_manager_registry_governance_contract
+contract_version: v1
+validation_mode: strict
+required_fields:
+- goal
+- invariants
+- next_hop
+optional_fields:
+- examples
+- notes
 reading_chain:
 - key: execution
   target: 20_EXECUTION.md

@@ -2,6 +2,23 @@
 doc_id: skillsmanager_naming_manager.path.naming_policy.contract
 doc_type: topic_atom
 topic: Naming policy contract
+contract_name: skillsmanager_naming_manager_naming_policy_contract
+contract_version: v1
+validation_mode: strict
+required_fields:
+- goal
+- invariants
+- next_hop
+optional_fields:
+- examples
+- notes
+actor_id: skill_runtime_operator
+role: naming_governance_reader
+scope: naming_policy_contract
+action: read_contract_context
+policy_version: naming_manager_permission_v1
+authz_result: allow
+deny_code: none
 reading_chain:
 - key: execution
   target: 20_EXECUTION.md
