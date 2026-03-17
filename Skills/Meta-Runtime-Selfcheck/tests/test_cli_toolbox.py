@@ -282,6 +282,8 @@ class TestMetaRuntimeSelfcheckSmoke:
         payload = json.loads(result.stdout)
         assert payload["topic"] == "execution-taxonomy-governance"
         assert "optimization point" in " ".join(payload["instruction"]).lower()
+        assert "equivalent_target_output" in payload["optimization_point_required_gates"]
+        assert any(item["level"] == "task" for item in payload["optimization_audit_levels"])
 
     def test_optimization_audit_directive_is_available(self) -> None:
         result = self.run_python(TOOLBOX, "directive", "--topic", "optimization-audit-governance", "--json")
@@ -289,6 +291,7 @@ class TestMetaRuntimeSelfcheckSmoke:
         payload = json.loads(result.stdout)
         assert payload["topic"] == "optimization-audit-governance"
         assert "run this audit after runtime end or turn end once the full execution path is visible" in " ".join(payload["instruction"]).lower()
+        assert "knowledge_comparison_basis" in payload["optimization_point_required_fields"]
 
     def test_keyword_first_edit_requests_confirmation_for_legacy_bridge(self) -> None:
         decision = command_governance.adjudicate_keyword_first_edit(
@@ -550,6 +553,12 @@ class TestMetaRuntimeSelfcheckSmoke:
         assert optimization_audit["status"] == "completed"
         assert optimization_audit["opportunity_count"] >= 1
         assert optimization_audit["recommendation_buckets"]["optimize_runflow"] >= 1
+        assert optimization_audit["optimization_level_buckets"]["code"] >= 1
+        first = optimization_audit["opportunities"][0]
+        assert first["optimization_level"] in {"code", "method", "skill", "task"}
+        assert first["better_pattern"]
+        assert first["equivalence_conditions"]
+        assert first["knowledge_comparison_basis"]
         audit = json.loads(Path(payload["turn_audit_path"]).read_text(encoding="utf-8"))
         assert audit["optimization_audit_v1"]["opportunity_count"] >= 1
 

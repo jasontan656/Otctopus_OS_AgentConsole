@@ -192,12 +192,18 @@ class OptimizationOpportunity(TypedDict, total=False):
     optimization_id: str
     classification: str
     kind: str
+    optimization_level: str
     priority: str
     title: str
     summary: str
     evidence: list[str]
+    current_approach: str
+    better_pattern: str
+    equivalence_conditions: list[str]
+    exclusion_conditions: list[str]
     why_not_problem: str
     why_not_expected_failure: str
+    knowledge_comparison_basis: str
     recommendation_class: str
     suggested_action: str
     recommendation_reason: str
@@ -211,6 +217,7 @@ class OptimizationAudit(TypedDict, total=False):
     status: str
     opportunity_count: int
     recommendation_buckets: dict[str, int]
+    optimization_level_buckets: dict[str, int]
     opportunities: list[OptimizationOpportunity]
     summary: str
 
