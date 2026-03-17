@@ -11,6 +11,17 @@ reading_chain:
 
 # analysis_loop 合同
 
+## Contract Header
+- `contract_name`: `skillsmanager_govtargetskill_analysis_loop_contract`
+- `contract_version`: `1.0.0`
+- `validation_mode`: `strict`
+- `required_fields`:
+  - `contract_name`
+  - `contract_version`
+  - `validation_mode`
+- `optional_fields`:
+  - `notes`
+
 ## 输入合同
 - 当前闭环一次只治理一个目标技能。
 - 输入必须至少包含以下两类信息：
