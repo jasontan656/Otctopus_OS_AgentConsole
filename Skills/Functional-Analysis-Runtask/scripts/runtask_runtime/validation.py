@@ -50,14 +50,14 @@ def stage_lint_payload(workspace_root: Path, stage: str) -> StageLintPayload | B
     _validate_manifest(resolved_workspace_root, manifest, errors, warnings)
 
     if stage in {"architect", "preview", "design", "impact", "plan", "implementation", "validation", "final_delivery", "all"}:
-        _validate_architect_assessment(loaded["architect_assessment"], errors)
-        _validate_preview_projection(loaded["preview_projection"], errors)
-        _validate_design_decisions(loaded["design_decisions"], errors)
-        _validate_impact_map(loaded["impact_map"], errors)
+        _validate_architect_assessment(resolved_workspace_root, loaded["architect_assessment"], evidence_ids, errors)
+        _validate_preview_projection(resolved_workspace_root, loaded["preview_projection"], evidence_ids, errors)
+        _validate_design_decisions(resolved_workspace_root, loaded["design_decisions"], evidence_ids, errors)
+        _validate_impact_map(resolved_workspace_root, loaded["impact_map"], evidence_ids, errors)
 
     package_ids, active_package_ids, completed_package_ids = set(), [], []
     if stage in {"plan", "implementation", "validation", "final_delivery", "all"}:
-        package_ids, active_package_ids, completed_package_ids = _validate_milestone_packages(loaded["milestone_packages"], errors)
+        package_ids, active_package_ids, completed_package_ids = _validate_milestone_packages(resolved_workspace_root, loaded["milestone_packages"], errors)
 
     if stage in {"implementation", "validation", "final_delivery", "all"}:
         _validate_implementation_ledger(resolved_workspace_root, loaded["implementation_ledger"], package_ids, evidence_ids, errors)

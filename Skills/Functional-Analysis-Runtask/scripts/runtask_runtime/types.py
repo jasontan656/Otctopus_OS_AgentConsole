@@ -10,6 +10,11 @@ class StageMetadata(TypedDict):
     required_artifacts: list[str]
     writeback_targets: list[str]
     lint_focus: list[str]
+    question_framework: list[str]
+    derivation_chain: list[str]
+    stage_blockers: list[str]
+    required_upstream_reports: list[str]
+    required_sections: list[str]
 
 
 class RuntimeContractPayload(TypedDict):

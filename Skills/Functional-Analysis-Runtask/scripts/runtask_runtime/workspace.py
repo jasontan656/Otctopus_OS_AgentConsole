@@ -4,7 +4,7 @@ from pathlib import Path
 
 import yaml
 
-from .catalog import STAGE_ARTIFACTS, STAGE_ORDER, WORKSPACE_LAYOUT
+from .catalog import STAGE_ARTIFACTS, STAGE_ORDER, STAGE_REQUIRED_SECTIONS, STAGE_TITLES, STAGE_UPSTREAM_REPORTS, WORKSPACE_LAYOUT
 from .task_runtime import normalize_numbered_workspace_root, task_gate_check_payload, workspace_root_boundary_error
 from .types import BoundaryErrorPayload, TaskGateCheckPayload, WorkspaceScaffoldPayload
 
@@ -51,11 +51,40 @@ def scaffold_workspace(workspace_root: Path, force: bool = False) -> WorkspaceSc
     objects = {
         WORKSPACE_LAYOUT["manifest"]: manifest,
         WORKSPACE_LAYOUT["evidence_registry"]: {"evidence_items": []},
-        WORKSPACE_LAYOUT["architect_assessment"]: {"should_change": [], "should_not_change": [], "architecture_judgement": ""},
-        WORKSPACE_LAYOUT["preview_projection"]: {"future_shape": [], "behavior_delta": [], "failure_modes": [], "rollback_triggers": []},
-        WORKSPACE_LAYOUT["design_decisions"]: {"decision_mode": "rewrite", "seamless_state": "", "decision_items": []},
+        WORKSPACE_LAYOUT["architect_assessment"]: {
+            "consumed_stage_reports": list(STAGE_UPSTREAM_REPORTS["architect"]),
+            "question_framework": [],
+            "judgement_chain": [],
+            "should_change": [],
+            "should_not_change": [],
+            "open_questions": [],
+            "architecture_judgement": "",
+            "evidence_refs": [],
+        },
+        WORKSPACE_LAYOUT["preview_projection"]: {
+            "consumed_stage_reports": list(STAGE_UPSTREAM_REPORTS["preview"]),
+            "question_framework": [],
+            "reasoning_chain": [],
+            "future_shape": [],
+            "behavior_delta": [],
+            "failure_modes": [],
+            "rollback_triggers": [],
+            "evidence_refs": [],
+        },
+        WORKSPACE_LAYOUT["design_decisions"]: {
+            "consumed_stage_reports": list(STAGE_UPSTREAM_REPORTS["design"]),
+            "question_framework": [],
+            "decision_mode": "rewrite",
+            "seamless_state": "",
+            "decision_chain": [],
+            "decision_items": [],
+            "evidence_refs": [],
+        },
         WORKSPACE_LAYOUT["impact_map"]: {
             "task_mode": "WRITE_INTENT",
+            "consumed_stage_reports": list(STAGE_UPSTREAM_REPORTS["impact"]),
+            "question_framework": [],
+            "judgement_chain": [],
             "direct_scope": [],
             "indirect_scope": [],
             "latent_related": [],
@@ -63,8 +92,18 @@ def scaffold_workspace(workspace_root: Path, force: bool = False) -> WorkspaceSc
             "must_update": [],
             "must_check_before_edit": [],
             "regression_surface": [],
+            "evidence_refs": [],
+            "confidence": "",
+            "evidence_gaps": [],
         },
-        WORKSPACE_LAYOUT["milestone_packages"]: {"milestone_packages": []},
+        WORKSPACE_LAYOUT["milestone_packages"]: {
+            "planning_basis": {
+                "consumed_stage_reports": list(STAGE_UPSTREAM_REPORTS["plan"]),
+                "question_framework": [],
+                "package_derivation_chain": [],
+            },
+            "milestone_packages": [],
+        },
         WORKSPACE_LAYOUT["implementation_ledger"]: {"entries": []},
     }
     created: list[str] = []
@@ -99,13 +138,22 @@ def scaffold_workspace(workspace_root: Path, force: bool = False) -> WorkspaceSc
 
 
 def stage_artifact_template(stage: str) -> str:
-    title_map = {
-        "research": "Research Report",
-        "architect": "Architecture Assessment Report",
-        "preview": "Future Shape Preview",
-        "design": "Design Strategy",
-        "impact": "Impact Investigation",
-        "validation": "Acceptance Report",
-        "final_delivery": "Final Delivery Brief",
-    }
-    return f"# {title_map[stage]}\n\n待当前任务在 `{stage}` 阶段补齐。\n"
+    sections = STAGE_REQUIRED_SECTIONS[stage]
+    upstream_reports = STAGE_UPSTREAM_REPORTS[stage]
+    lines = [f"# {STAGE_TITLES[stage]}", ""]
+    if not sections:
+        return "\n".join(lines + ["待当前任务在该阶段按对象合同补齐。", ""]) + "\n"
+
+    for index, section in enumerate(sections):
+        lines.append(f"## {section}")
+        if section == "消费的前序产物":
+            if upstream_reports:
+                lines.extend([f"- `{path}`" for path in upstream_reports])
+            else:
+                lines.append("- 本阶段无前序正式产物。")
+        else:
+            lines.append("- 待补齐。")
+        if index != len(sections) - 1:
+            lines.append("")
+    lines.append("")
+    return "\n".join(lines)

@@ -19,7 +19,12 @@ metadata:
 
 ### 2. 技能约束
 - 本技能的真相源优先级为：小型对象 > 阶段合同 > 阶段沉淀文档。
+- 本技能视“九阶段升级后没有把旧时代高密度问题驱动、强追问、显式推导链与重落盘治理迁移到每个新阶段”作为一次已知升级事故；当前合同必须把该事故修复为正式运行约束。
 - 旧资产必须继承，不得绕开当前已落盘的两份分析方法论文档另起平行方法论。
+- 九个阶段都必须各自维持旧 research 时代同等级的问题覆盖密度、追问强度、显式推导链与重落盘要求；不得再用 generic 占位话术糊过去。
+- 阶段互斥必须成立：后阶段只能在前阶段正式产物已经完成、被显式消费并完成写回后才能开始。
+- 阶段承接必须显式化：每个后阶段的判断、方案、计划、实现、验收与交付都必须引用前阶段正式报告来推导。
+- 禁止一次性预写九阶段内容再直接进入施工；这会破坏九阶段拆分的意义。
 - architect、preview、impact 不得被 research 或 design 吸收成模糊叙事，必须是正式阶段。
 - plan 阶段必须收敛为 milestone package，而不是泛泛计划或单段局部施工叙事。
 - implementation 阶段一旦发生真实实现、验证、状态裁决或关键判断更新，必须同回合写回证据对象。
@@ -34,6 +39,7 @@ metadata:
 - CLI 至少负责提供：运行时合同、文档链编译、阶段 checklist、workspace scaffold、task runtime scaffold、新任务门禁与 stage-specific lint。
 - `workspace-scaffold` 与 `stage-lint` 必须拒绝技能目录内落盘；task artifact root 必须位于 `Human_Work_Zone` 受管根下。
 - `workspace-scaffold` 必须一次性初始化九阶段对象与正式产物 skeleton；`task_runtime.yaml` 必须同步覆盖九阶段 checklist 与推进状态。
+- stage-lint 不得只检查“文件存在”；必须同时拦截占位文本、缺失问题框架、缺失显式推导链、缺失前序报告引用与虚假阶段完成。
 
 ## 2. 功能入口
 - [analysis_loop]：`path/analysis_loop/00_ANALYSIS_LOOP_ENTRY.md`
