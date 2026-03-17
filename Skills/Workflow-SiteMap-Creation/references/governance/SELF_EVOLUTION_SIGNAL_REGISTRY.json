@@ -1,0 +1,51 @@
+{
+  "skill_name": "Workflow-SiteMap-Creation",
+  "mainline_version": "2.0.0",
+  "processed_digests": [],
+  "execution_mainline": {
+    "factory": "required",
+    "intent_enhance": "required_via_meta_enhance_prompt",
+    "background_subagent": "required_via_tmux",
+    "functional_analysis_runtask": "required_analysis_loop",
+    "artifact_refresh": "required_after_subagent",
+    "validation_closeout": "required"
+  },
+  "subagent_policy": {
+    "model": "gpt-5.4",
+    "reasoning_effort": "high",
+    "idle_kill_seconds": 600,
+    "poll_required": true,
+    "manual_termination_required": true
+  },
+  "keyword_first_policy": {
+    "required": true,
+    "decision_order": [
+      "rewrite",
+      "keyword_first_replace",
+      "minimal_add"
+    ]
+  },
+  "architecture_rules": [
+    "统一架构必须服务 Workflow-MotherDoc-OctopusOS 的探索、回写与下游消费。",
+    "统一架构必须直接落盘到 Octopus_OS/Development_Docs/mother_doc。",
+    "统一架构必须覆盖全站开发文档、代码地图、使用说明书与衍生说明。",
+    "实验产物必须显式展示字段语义、frontmatter、文档关系与下游消费边界。"
+  ],
+  "lint_rules": [
+    "必备目录与必备文档必须存在。",
+    "frontmatter 必须承载足够的结构语义与消费语义。",
+    "禁用词不得出现。",
+    "九阶段 runtask 证据与 tmux subagent 摘要必须存在。"
+  ],
+  "workflow_rules": [
+    "每轮输入都先 factory 化。",
+    "factory 后必须调用 Meta-Enhance-Prompt。",
+    "增强后的 INTENT 必须交给 tmux background subagent。",
+    "subagent 必须执行 Functional-Analysis-Runtask 九阶段 analysis_loop。",
+    "主 AGENT 必须在 subagent 完成后回读结果并刷新实验产物。"
+  ],
+  "latest_execution_snapshot": {
+    "status": "reset_required",
+    "note": "等待新的 runtime 脚本按 2.0 主链回填。"
+  }
+}

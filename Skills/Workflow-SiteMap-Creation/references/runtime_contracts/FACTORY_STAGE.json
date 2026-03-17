@@ -1,0 +1,18 @@
+{
+  "topic": "factory_stage",
+  "contract": "Treat every user description as a factory-first request split, but never stop at factory.",
+  "required_fields": [
+    "problem_statement",
+    "artifact_side",
+    "skill_side",
+    "write_scope_hint",
+    "validation_scope_hint",
+    "downstream_consumers",
+    "keyword_first_candidates"
+  ],
+  "rules": [
+    "Do not treat factory payload as the final executable intent.",
+    "Do not reduce user input into a fixed normalized constant.",
+    "Factory output must be consumable by Meta-Enhance-Prompt."
+  ]
+}

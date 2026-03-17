@@ -1,0 +1,34 @@
+checklist_name: stage_runtime_checklist
+level: stage
+status: pending
+current_step: ''
+previous_output_ref: ''
+writeback_ref: ''
+must_consume_previous_output: true
+must_writeback_after_each_atomic_step: true
+must_drive_next_step_from_writeback: true
+items:
+- step_id: capture_keyword_first_decision
+  status: pending
+  expected_input_ref: architect_preview_impact_outputs
+  produced_output_ref: keyword_first_decision
+  writeback_ref: runtime/keyword_first_decision.json
+  notes: ''
+- step_id: verify_tmux_output_freshness
+  status: pending
+  expected_input_ref: tmux_session_id
+  produced_output_ref: freshness_snapshot
+  writeback_ref: runtime/tmux_freshness.json
+  notes: ''
+- step_id: verify_runtask_stage_evidence
+  status: pending
+  expected_input_ref: runtask_workspace
+  produced_output_ref: nine_stage_evidence_check
+  writeback_ref: runtime/runtask_evidence_check.json
+  notes: ''
+- step_id: verify_manual_termination
+  status: pending
+  expected_input_ref: subagent_finalize
+  produced_output_ref: process_termination_check
+  writeback_ref: runtime/process_termination_check.json
+  notes: ''

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Workflow-SiteMap-Creation"
+  short_description: "为 Workflow-MotherDoc-OctopusOS 提供上游站点级开发文档与代码地图架构，支持双入口自我治理与产物 lint 审计。"
+  default_prompt: "当任务要在 Octopus_OS/Development_Docs/mother_doc 设计或持续演化一套可直接落盘、可直接后续复用回写的全站开发文档、代码地图、使用说明书及衍生说明统一架构时，使用 Workflow-SiteMap-Creation。默认先走 self_governance，把用户描述 factory 化为双重目的输入，同时更新 mother_doc 真源与技能自身治理记录；若任务是在审计已有产物是否符合该架构，再走 artifact_lint_audit。"

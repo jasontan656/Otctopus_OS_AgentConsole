@@ -1,0 +1,102 @@
+{
+  "contract_name": "workflow_sitemap_creation_runtime_contract",
+  "contract_version": "2.0.0",
+  "skill_name": "Workflow-SiteMap-Creation",
+  "skill_role": "upstream_mother_doc_architecture_producer",
+  "runtime_source_policy": {
+    "runtime_rule_source": "CLI_JSON",
+    "documents_are_source_of_truth": true,
+    "treat_user_input_as_dual_purpose_factory_signal": true,
+    "factory_is_not_terminal_state": true
+  },
+  "entries": {
+    "self_governance": {
+      "path": "path/self_governance/00_SELF_GOVERNANCE_ENTRY.md",
+      "purpose": "Factory 化用户描述后，显式经过 Meta-Enhance-Prompt、background tmux subagent、Functional-Analysis-Runtask 九阶段闭环、artifact refresh 与 validation closeout。"
+    },
+    "artifact_lint_audit": {
+      "path": "path/artifact_lint_audit/00_ARTIFACT_AUDIT_ENTRY.md",
+      "purpose": "仅使用技能自身规则对受管文档架构执行 lint、审计与治理。"
+    }
+  },
+  "tool_entry": {
+    "script": "scripts/Cli_Toolbox.py",
+    "commands": {
+      "contract": "read the runtime contract",
+      "directive": "read a fixed directive",
+      "read-contract-context": "compile the reading chain for one entry",
+      "target-runtime-contract": "resolve Octopus_OS mother_doc truth root and client mirror root",
+      "factory-intake": "convert one user description into a factory-first dual-purpose payload",
+      "intent-enhance": "call Meta-Enhance-Prompt and publish a single INTENT block",
+      "runtask-subagent-run": "launch and poll the tmux background subagent that executes Functional-Analysis-Runtask analysis_loop",
+      "subagent-status": "inspect the current tmux subagent status and output freshness",
+      "artifact-refresh": "refresh governed experimental artifacts after rereading latest skill and runtask evidence",
+      "self-governance-run": "run the full managed mainline from factory to validation closeout",
+      "artifact-lint-audit": "lint and audit a managed mother_doc architecture"
+    }
+  },
+  "execution_pipeline": [
+    "factory_intake",
+    "intent_enhance",
+    "background_subagent",
+    "artifact_refresh",
+    "validation_closeout"
+  ],
+  "enhancement_policy": {
+    "required_skill": "Meta-Enhance-Prompt",
+    "required_output_shape": "INTENT:"
+  },
+  "subagent_policy": {
+    "terminal": "tmux",
+    "model": "gpt-5.4",
+    "reasoning_effort": "high",
+    "poll_required": true,
+    "idle_kill_seconds": 600,
+    "manual_termination_required": true
+  },
+  "runtask_policy": {
+    "required_skill": "Functional-Analysis-Runtask",
+    "required_entry": "analysis_loop",
+    "required_stages": [
+      "research",
+      "architect",
+      "preview",
+      "design",
+      "impact",
+      "plan",
+      "implementation",
+      "validation",
+      "final_delivery"
+    ],
+    "stage_folding_prohibited": true
+  },
+  "keyword_first_policy": {
+    "required": true,
+    "decision_order": [
+      "rewrite",
+      "keyword_first_replace",
+      "minimal_add"
+    ],
+    "explicit_decision_object_required": true
+  },
+  "artifact_policy": {
+    "mode": "skill_internal_write_plus_target_truth_write",
+    "resolver": "repo_local_integration_contract",
+    "skill_internal_write_paths": [
+      "references/governance/SELF_EVOLUTION_SIGNAL_REGISTRY.json",
+      "references/governance/ROUND_EVOLUTION_LOG.md"
+    ],
+    "target_truth_root": "<target-root>/Development_Docs/mother_doc",
+    "client_mirror_root": "<target-root>/Client_Applications/mother_doc"
+  },
+  "workflow_runtime": {
+    "required_checklists": [
+      "workflow_runtime_checklist",
+      "stage_runtime_checklist"
+    ],
+    "must_consume_previous_output": true,
+    "must_writeback_after_each_atomic_step": true,
+    "must_record_subagent_polling_state": true,
+    "must_record_runtask_stage_evidence": true
+  }
+}

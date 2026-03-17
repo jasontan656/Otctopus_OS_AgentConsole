@@ -1,0 +1,37 @@
+{
+  "topic": "background_subagent_mainline",
+  "terminal": "tmux",
+  "subagent_policy": {
+    "model": "gpt-5.4",
+    "reasoning_effort": "high",
+    "single_process_only": true,
+    "poll_required": true,
+    "idle_kill_seconds": 600,
+    "manual_termination_required": true
+  },
+  "runtask_policy": {
+    "required_skill": "Functional-Analysis-Runtask",
+    "required_entry": "analysis_loop",
+    "required_stages": [
+      "research",
+      "architect",
+      "preview",
+      "design",
+      "impact",
+      "plan",
+      "implementation",
+      "validation",
+      "final_delivery"
+    ],
+    "stage_folding_prohibited": true
+  },
+  "keyword_first_policy": {
+    "required": true,
+    "decision_order": [
+      "rewrite",
+      "keyword_first_replace",
+      "minimal_add"
+    ],
+    "explicit_decision_object_required": true
+  }
+}

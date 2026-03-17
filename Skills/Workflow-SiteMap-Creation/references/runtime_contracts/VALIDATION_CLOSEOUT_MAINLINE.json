@@ -1,0 +1,19 @@
+{
+  "topic": "validation_closeout_mainline",
+  "required_outputs": [
+    "factory_payload",
+    "enhanced_intent",
+    "subagent_summary",
+    "runtask_workspace_summary",
+    "keyword_first_decision_summary",
+    "artifact_refresh_summary",
+    "lint_audit_summary",
+    "git_traceability_summary"
+  ],
+  "rules": [
+    "Validation must prove the nine-stage runtask objects exist and are not folded.",
+    "Validation must prove implementation and validation evidence were written back.",
+    "Validation must prove the background process was terminated manually by the main agent.",
+    "Validation fails when only narrative exists without executable evidence."
+  ]
+}

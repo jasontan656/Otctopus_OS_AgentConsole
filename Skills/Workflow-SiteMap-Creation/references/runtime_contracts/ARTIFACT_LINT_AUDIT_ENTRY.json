@@ -1,0 +1,5 @@
+{
+  "topic": "artifact_lint_audit_entry",
+  "entry_path": "path/artifact_lint_audit/00_ARTIFACT_AUDIT_ENTRY.md",
+  "purpose": "仅使用技能自身规则对受管文档架构、字段语义、文档关系、消费边界与闭环证据执行 lint、审计与治理。"
+}

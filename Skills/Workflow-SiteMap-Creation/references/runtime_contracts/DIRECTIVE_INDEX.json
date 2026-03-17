@@ -1,0 +1,32 @@
+{
+  "topics": {
+    "self_governance_mainline": {
+      "json_path": "SELF_GOVERNANCE_MAINLINE.json",
+      "human_path": "SELF_GOVERNANCE_MAINLINE_human.md"
+    },
+    "artifact_lint_audit_entry": {
+      "json_path": "ARTIFACT_LINT_AUDIT_ENTRY.json",
+      "human_path": "ARTIFACT_LINT_AUDIT_ENTRY_human.md"
+    },
+    "factory_stage": {
+      "json_path": "FACTORY_STAGE.json",
+      "human_path": "FACTORY_STAGE_human.md"
+    },
+    "intent_enhance_stage": {
+      "json_path": "INTENT_ENHANCE_STAGE.json",
+      "human_path": "INTENT_ENHANCE_STAGE_human.md"
+    },
+    "background_subagent_mainline": {
+      "json_path": "BACKGROUND_SUBAGENT_MAINLINE.json",
+      "human_path": "BACKGROUND_SUBAGENT_MAINLINE_human.md"
+    },
+    "artifact_refresh_mainline": {
+      "json_path": "ARTIFACT_REFRESH_MAINLINE.json",
+      "human_path": "ARTIFACT_REFRESH_MAINLINE_human.md"
+    },
+    "validation_closeout_mainline": {
+      "json_path": "VALIDATION_CLOSEOUT_MAINLINE.json",
+      "human_path": "VALIDATION_CLOSEOUT_MAINLINE_human.md"
+    }
+  }
+}

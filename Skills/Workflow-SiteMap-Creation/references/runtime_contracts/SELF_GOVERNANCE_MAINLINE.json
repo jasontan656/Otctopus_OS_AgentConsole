@@ -1,0 +1,12 @@
+{
+  "topic": "self_governance_mainline",
+  "entry_path": "path/self_governance/00_SELF_GOVERNANCE_ENTRY.md",
+  "purpose": "Factory 先做结构化拆分，再进入 Meta-Enhance-Prompt、background tmux subagent、Functional-Analysis-Runtask 九阶段闭环、artifact refresh 与 validation closeout。",
+  "execution_pipeline": [
+    "factory_intake",
+    "intent_enhance",
+    "background_subagent",
+    "artifact_refresh",
+    "validation_closeout"
+  ]
+}

@@ -1,0 +1,52 @@
+checklist_name: workflow_runtime_checklist
+level: workflow
+status: pending
+current_step: ''
+previous_output_ref: ''
+writeback_ref: ''
+must_consume_previous_output: true
+must_writeback_after_each_atomic_step: true
+must_drive_next_step_from_writeback: true
+items:
+- step_id: factory_intake
+  status: pending
+  expected_input_ref: user_request
+  produced_output_ref: factory_payload
+  writeback_ref: runtime/factory_payload.json
+  notes: ''
+- step_id: intent_enhance
+  status: pending
+  expected_input_ref: factory_payload
+  produced_output_ref: enhanced_intent
+  writeback_ref: runtime/enhanced_intent.txt
+  notes: ''
+- step_id: runtask_subagent_launch
+  status: pending
+  expected_input_ref: enhanced_intent
+  produced_output_ref: tmux_session_id
+  writeback_ref: runtime/subagent_launch.json
+  notes: ''
+- step_id: runtask_subagent_poll
+  status: pending
+  expected_input_ref: tmux_session_id
+  produced_output_ref: subagent_progress
+  writeback_ref: runtime/subagent_polling.json
+  notes: ''
+- step_id: runtask_subagent_finalize
+  status: pending
+  expected_input_ref: subagent_progress
+  produced_output_ref: runtask_evidence_summary
+  writeback_ref: runtime/subagent_finalize.json
+  notes: ''
+- step_id: artifact_refresh
+  status: pending
+  expected_input_ref: runtask_evidence_summary
+  produced_output_ref: artifact_refresh_summary
+  writeback_ref: runtime/artifact_refresh.json
+  notes: ''
+- step_id: validation_closeout
+  status: pending
+  expected_input_ref: artifact_refresh_summary
+  produced_output_ref: closeout_summary
+  writeback_ref: runtime/validation_closeout.json
+  notes: ''

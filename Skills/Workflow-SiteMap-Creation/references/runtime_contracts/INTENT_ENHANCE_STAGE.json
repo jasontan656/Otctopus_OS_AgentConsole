@@ -1,0 +1,10 @@
+{
+  "topic": "intent_enhance_stage",
+  "required_skill": "Meta-Enhance-Prompt",
+  "required_output_shape": "INTENT:",
+  "rules": [
+    "The main agent must explicitly call Meta-Enhance-Prompt after factory.",
+    "The final publication must be a single INTENT block.",
+    "The enhanced intent becomes the only formal subagent input."
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "topic": "artifact_refresh_mainline",
+  "purpose": "Refresh managed mother_doc artifacts only after reading the latest skill result produced by the runtask subagent.",
+  "rules": [
+    "Refresh must read the latest skill facade, runtime contracts, governance rules, runstates, and runtask evidence first.",
+    "Refresh must show rule changes through observable artifact structure, field semantics, frontmatter, document relations, and consumer boundaries.",
+    "Refresh must use keyword-first structure decisions instead of unconditional full reset."
+  ]
+}
