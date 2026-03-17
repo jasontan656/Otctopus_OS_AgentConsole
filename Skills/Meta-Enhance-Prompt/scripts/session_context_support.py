@@ -4,7 +4,7 @@ from __future__ import annotations
 import json
 import os
 from pathlib import Path
-from typing import Any
+from typing import NotRequired, TypedDict
 
 
 SESSION_KEY_ALIASES = {
@@ -31,14 +31,122 @@ SESSION_NOT_FOUND = 2
 MESSAGE_NOT_FOUND = 3
 
 
+class SessionMetaPayload(TypedDict, total=False):
+    id: str
+    timestamp: str
+    cwd: str
+    originator: str
+    cli_version: str
+    source: str
+    model_provider: str
+
+
+class SessionRecord(TypedDict):
+    path: str
+    rollout_filename: str
+    rollout_stem: str
+    rollout_path: str
+    session_id: str
+    session_timestamp: str
+    session_meta: SessionMetaPayload
+    session_meta_line_number: int
+
+
+class MessageRecord(TypedDict):
+    timestamp: str
+    role: str
+    text: str
+    source_file: str
+    line_number: int
+    index: NotRequired[int]
+
+
+class SerializedMessage(TypedDict):
+    index: int
+    timestamp: str
+    role: str
+    source_file: str
+    line_number: int
+    text: str
+    text_length: int
+    text_truncated: bool
+
+
+class LookupPayload(TypedDict):
+    lookup_key: str
+    lookup_value: str
+    match_mode: str
+    case_sensitive: bool
+    matched_rollout_count: int
+
+
+class SessionMatchPayload(TypedDict):
+    session_id: str
+    session_timestamp: str
+    rollout_filename: str
+    rollout_stem: str
+    rollout_path: str
+    cwd: str
+    originator: str
+    cli_version: str
+    model_provider: str
+    source: str
+
+
+class SelectionPayload(TypedDict):
+    message_role: str
+    message_key: str
+    message_query: str
+    message_match_mode: str
+    select_mode: str
+    context_mode: str
+    window_before: int
+    window_after: int
+    include_roles: list[str]
+    matched_message_count: int
+
+
+class FocusedChatPayload(TypedDict):
+    user_prompt: SerializedMessage | None
+    assistant_reply: SerializedMessage | None
+    anchor_message: SerializedMessage | None
+
+
+class SessionContextPayload(TypedDict):
+    status: str
+    lookup: LookupPayload
+    matched_session: SessionMatchPayload
+    selection: SelectionPayload
+    focused_chat: FocusedChatPayload
+    context_items: list[SerializedMessage]
+    message_counts: dict[str, int]
+    codex_home: str
+    chat_focus_policy: str
+
+
+class ErrorPayload(TypedDict, total=False):
+    status: str
+    message: str
+    hint: str
+    lookup_key: str
+    lookup_value: str
+    match_mode: str
+    codex_home: str
+    sessions_root: str
+    message_role: str
+    message_key: str
+    message_query: str
+    rollout_path: str
+
+
 class SessionContextError(RuntimeError):
-    def __init__(self, code: int, payload: dict[str, object]) -> None:
+    def __init__(self, code: int, payload: ErrorPayload) -> None:
         super().__init__(str(payload.get("message", "")))
         self.code = code
         self.payload = payload
 
 
-def print_json(payload: dict[str, object]) -> None:
+def print_json(payload: ErrorPayload | SessionContextPayload) -> None:
     print(json.dumps(payload, ensure_ascii=False, indent=2))
 
 
@@ -118,7 +226,7 @@ def _match_value(candidate: object, query: str, *, match_mode: str, case_sensiti
     return left == right
 
 
-def _read_session_meta(path: Path) -> dict[str, object]:
+def _read_session_meta(path: Path) -> SessionRecord:
     with path.open("r", encoding="utf-8", errors="replace") as handle:
         for line_no, line in enumerate(handle, start=1):
             raw = line.strip()
@@ -131,16 +239,15 @@ def _read_session_meta(path: Path) -> dict[str, object]:
             if entry.get("type") != "session_meta":
                 continue
             payload = entry.get("payload") or {}
-            if not isinstance(payload, dict):
-                payload = {}
+            session_meta: SessionMetaPayload = payload if isinstance(payload, dict) else {}
             return {
                 "path": str(path),
                 "rollout_filename": path.name,
                 "rollout_stem": path.stem,
                 "rollout_path": str(path),
-                "session_id": str(payload.get("id", "") or "").strip(),
-                "session_timestamp": str(payload.get("timestamp", "") or entry.get("timestamp", "") or "").strip(),
-                "session_meta": payload,
+                "session_id": str(session_meta.get("id", "") or "").strip(),
+                "session_timestamp": str(session_meta.get("timestamp", "") or entry.get("timestamp", "") or "").strip(),
+                "session_meta": session_meta,
                 "session_meta_line_number": line_no,
             }
     return {
@@ -166,7 +273,7 @@ def _candidate_paths(codex_home: Path, lookup_key: str, lookup_value: str) -> li
     return sorted(path for path in sessions_root.rglob("*.jsonl") if path.is_file())
 
 
-def _session_values(record: dict[str, object], lookup_key: str) -> list[str]:
+def _session_values(record: SessionRecord, lookup_key: str) -> list[str]:
     normalized_key = _normalize_key(lookup_key)
     session_meta = record.get("session_meta")
     if not isinstance(session_meta, dict):
@@ -199,8 +306,8 @@ def locate_session_record(
     lookup_value: str,
     match_mode: str,
     case_sensitive: bool,
-) -> tuple[dict[str, object], list[dict[str, object]]]:
-    matches: list[dict[str, object]] = []
+) -> tuple[SessionRecord, list[SessionRecord]]:
+    matches: list[SessionRecord] = []
     for path in _candidate_paths(codex_home, lookup_key, lookup_value):
         record = _read_session_meta(path)
         for candidate in _session_values(record, lookup_key):
@@ -231,8 +338,8 @@ def _tool_call_text(payload: dict[str, object]) -> str:
     return name or arguments
 
 
-def iter_message_records(session_file: Path) -> list[dict[str, object]]:
-    records: list[dict[str, object]] = []
+def iter_message_records(session_file: Path) -> list[MessageRecord]:
+    records: list[MessageRecord] = []
     with session_file.open("r", encoding="utf-8", errors="replace") as handle:
         for line_no, line in enumerate(handle, start=1):
             raw = line.strip()
@@ -277,7 +384,7 @@ def iter_message_records(session_file: Path) -> list[dict[str, object]]:
 
 
 def _message_matches(
-    message: dict[str, object],
+    message: MessageRecord,
     *,
     message_role: str,
     message_key: str | None,
@@ -300,7 +407,7 @@ def _message_matches(
 
 
 def select_anchor_message(
-    messages: list[dict[str, object]],
+    messages: list[MessageRecord],
     *,
     message_role: str,
     message_key: str | None,
@@ -308,7 +415,7 @@ def select_anchor_message(
     message_match_mode: str,
     case_sensitive: bool,
     select_mode: str,
-) -> tuple[dict[str, object], list[dict[str, object]]]:
+) -> tuple[MessageRecord, list[MessageRecord]]:
     matched = [
         item
         for item in messages
@@ -336,7 +443,7 @@ def select_anchor_message(
     return selected, matched
 
 
-def _nearest_message(messages: list[dict[str, object]], *, start_index: int, role: str, reverse: bool) -> dict[str, object] | None:
+def _nearest_message(messages: list[MessageRecord], *, start_index: int, role: str, reverse: bool) -> MessageRecord | None:
     indices = range(start_index - 1, -1, -1) if reverse else range(start_index + 1, len(messages))
     for idx in indices:
         candidate = messages[idx]
@@ -345,7 +452,7 @@ def _nearest_message(messages: list[dict[str, object]], *, start_index: int, rol
     return None
 
 
-def build_focus_pair(messages: list[dict[str, object]], anchor: dict[str, object]) -> tuple[dict[str, object] | None, dict[str, object] | None]:
+def build_focus_pair(messages: list[MessageRecord], anchor: MessageRecord) -> tuple[MessageRecord | None, MessageRecord | None]:
     anchor_index = int(anchor.get("index", 0))
     anchor_role = str(anchor.get("role", "") or "")
     if anchor_role == "assistant":
@@ -360,7 +467,7 @@ def build_focus_pair(messages: list[dict[str, object]], anchor: dict[str, object
     )
 
 
-def _serialize_message(message: dict[str, object] | None, *, trim_chars: int) -> dict[str, object] | None:
+def _serialize_message(message: MessageRecord | None, *, trim_chars: int) -> SerializedMessage | None:
     if message is None:
         return None
     text = str(message.get("text", "") or "")
@@ -377,6 +484,15 @@ def _serialize_message(message: dict[str, object] | None, *, trim_chars: int) ->
     }
 
 
+def _serialize_messages(rows: list[MessageRecord], *, trim_chars: int) -> list[SerializedMessage]:
+    serialized: list[SerializedMessage] = []
+    for item in rows:
+        rendered = _serialize_message(item, trim_chars=trim_chars)
+        if rendered is not None:
+            serialized.append(rendered)
+    return serialized
+
+
 def _parse_context_roles(include_roles: list[str] | None) -> tuple[str, ...]:
     if not include_roles:
         return DEFAULT_CONTEXT_ROLES
@@ -390,31 +506,31 @@ def _parse_context_roles(include_roles: list[str] | None) -> tuple[str, ...]:
 
 
 def _context_items(
-    messages: list[dict[str, object]],
+    messages: list[MessageRecord],
     *,
-    anchor: dict[str, object],
+    anchor: MessageRecord,
     context_mode: str,
     window_before: int,
     window_after: int,
     include_roles: tuple[str, ...],
     trim_chars: int,
-) -> list[dict[str, object]]:
+) -> list[SerializedMessage]:
     normalized_mode = str(context_mode or "").strip().lower()
     anchor_index = int(anchor.get("index", 0))
     if normalized_mode == "all":
         rows = [item for item in messages if str(item.get("role", "")) in include_roles]
-        return [_serialize_message(item, trim_chars=trim_chars) for item in rows if item]  # type: ignore[list-item]
+        return _serialize_messages(rows, trim_chars=trim_chars)
     if normalized_mode == "window":
         start = max(0, anchor_index - max(0, window_before))
         end = min(len(messages), anchor_index + max(0, window_after) + 1)
         rows = [item for item in messages[start:end] if str(item.get("role", "")) in include_roles]
-        return [_serialize_message(item, trim_chars=trim_chars) for item in rows if item]  # type: ignore[list-item]
+        return _serialize_messages(rows, trim_chars=trim_chars)
 
     user_prompt, assistant_reply = build_focus_pair(messages, anchor)
     focus_rows = [row for row in (user_prompt, assistant_reply) if row is not None]
     if not focus_rows and str(anchor.get("role", "")) in include_roles:
         focus_rows = [anchor]
-    return [_serialize_message(item, trim_chars=trim_chars) for item in focus_rows if item]  # type: ignore[list-item]
+    return _serialize_messages(focus_rows, trim_chars=trim_chars)
 
 
 def _message_counts(messages: list[dict[str, object]]) -> dict[str, int]:
@@ -425,10 +541,8 @@ def _message_counts(messages: list[dict[str, object]]) -> dict[str, int]:
     return counts
 
 
-def _session_match_payload(record: dict[str, object]) -> dict[str, object]:
-    session_meta = record.get("session_meta")
-    if not isinstance(session_meta, dict):
-        session_meta = {}
+def _session_match_payload(record: SessionRecord) -> SessionMatchPayload:
+    session_meta = record.get("session_meta", {})
     return {
         "session_id": str(record.get("session_id", "") or ""),
         "session_timestamp": str(record.get("session_timestamp", "") or ""),
@@ -460,7 +574,7 @@ def read_session_context(
     window_after: int,
     include_roles: list[str] | None,
     trim_chars: int,
-) -> dict[str, object]:
+) -> SessionContextPayload:
     if not str(lookup_key or "").strip() or not str(lookup_value or "").strip():
         raise SessionContextError(
             SESSION_NOT_FOUND,
@@ -544,20 +658,20 @@ def read_session_context(
     }
 
 
-def render_session_context_text(payload: dict[str, object]) -> str:
-    matched_session = payload.get("matched_session") or {}
-    focused_chat = payload.get("focused_chat") or {}
-    user_prompt = focused_chat.get("user_prompt") if isinstance(focused_chat, dict) else None
-    assistant_reply = focused_chat.get("assistant_reply") if isinstance(focused_chat, dict) else None
+def render_session_context_text(payload: SessionContextPayload) -> str:
+    matched_session = payload.get("matched_session", {})
+    focused_chat = payload.get("focused_chat", {})
+    user_prompt = focused_chat.get("user_prompt")
+    assistant_reply = focused_chat.get("assistant_reply")
     lines = [
         "session-context",
         f"lookup: {payload.get('lookup', {})}",
         f"matched_session: {matched_session}",
         "",
         "user_prompt:",
-        str((user_prompt or {}).get("text", "") if isinstance(user_prompt, dict) else ""),
+        str((user_prompt or {}).get("text", "")),
         "",
         "assistant_reply:",
-        str((assistant_reply or {}).get("text", "") if isinstance(assistant_reply, dict) else ""),
+        str((assistant_reply or {}).get("text", "")),
     ]
     return "\n".join(lines).rstrip() + "\n"
